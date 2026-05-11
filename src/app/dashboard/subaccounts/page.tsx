@@ -9,6 +9,7 @@ import {
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface Subaccount {
   id: string;
@@ -135,200 +136,192 @@ export default function SubaccountsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-7xl mx-auto">
-      <PageHero
-        title="Subaccounts"
-        eyebrow="SUB-ACCOUNTS"
-        subtitle="Resell ShortStack to your clients under your own brand. Each subaccount is a separate billable seat."
-        icon={<Building2 className="w-6 h-6" />}
-        gradient="purple"
-        actions={
-          <button
-            onClick={() => setShowInvite(true)}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all"
-          >
-            <Plus className="w-4 h-4" />
-            Invite Subaccount
-          </button>
-        }
-      />
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {[
-          { label: "Total Subaccounts", value: stats.total, icon: <Users className="w-4 h-4" /> },
-          { label: "Active", value: stats.active, icon: <CheckCircle2 className="w-4 h-4" /> },
-          { label: "Monthly Recurring Revenue", value: formatMrr(stats.mrr_cents), icon: <DollarSign className="w-4 h-4" />, premium: true },
-        ].map((tile, i) => (
-          <motion.div
-            key={tile.label}
-            className="glass rounded-xl overflow-hidden"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06, duration: 0.4 }}
-          >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <StatCard label={tile.label} value={tile.value} icon={tile.icon} premium={tile.premium} />
-          </motion.div>
-        ))}
-      </div>
-
-      {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-[#2563EB]" />
-        </div>
-      ) : subs.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-black/10 p-10 text-center">
-          <Building2 className="w-10 h-10 text-black/20 mx-auto mb-3" />
-          <p className="text-black/60 text-sm">No subaccounts yet.</p>
-          <p className="text-black/40 text-xs mt-1">
-            Invite your first client to get started -- they sign up under your brand and you keep the markup.
-          </p>
-          <button
-            onClick={() => setShowInvite(true)}
-            className="mt-5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all"
-          >
-            <Plus className="w-4 h-4" />
-            Invite First Subaccount
-          </button>
-        </div>
-      ) : (
-        <div className="glass rounded-xl overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-black/3 text-xs uppercase tracking-widest text-black/40">
-              <tr>
-                <th className="text-left px-4 py-3">Subaccount</th>
-                <th className="text-left px-4 py-3">Plan</th>
-                <th className="text-left px-4 py-3">MRR</th>
-                <th className="text-left px-4 py-3">Status</th>
-                <th className="text-right px-4 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {subs.map((sub, i) => (
-                <motion.tr
-                  key={sub.id}
-                  className="border-t border-black/5 hover:bg-black/3 transition-all"
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.04 }}
+    <MotionPage className="flex flex-col gap-6 p-4 sm:p-6 max-w-7xl mx-auto"><PageHero
+              title="Subaccounts"
+              eyebrow="SUB-ACCOUNTS"
+              subtitle="Resell ShortStack to your clients under your own brand. Each subaccount is a separate billable seat."
+              icon={<Building2 className="w-6 h-6" />}
+              gradient="purple"
+              actions={
+                <button
+                  onClick={() => setShowInvite(true)}
+                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all"
                 >
-                  <td className="px-4 py-3">
-                    <p className="text-[#0A0A0B] font-medium">{sub.name}</p>
-                    <p className="text-xs text-black/40 flex items-center gap-1 mt-0.5">
-                      <Mail className="w-3 h-3" />
-                      {sub.email}
-                    </p>
-                  </td>
-                  <td className="px-4 py-3 text-black/65 capitalize">{sub.plan_tier}</td>
-                  <td className="px-4 py-3 text-[#0A0A0B]">{formatMrr(sub.monthly_amount_cents)}</td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-block px-2 py-0.5 rounded-md text-xs font-semibold capitalize ${STATUS_BADGE[sub.status]}`}>
-                      {sub.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex items-center gap-2 justify-end">
-                      {sub.status === "active" && (
-                        <button onClick={() => updateStatus(sub.id, "suspended")} className="p-1.5 rounded hover:bg-black/8 text-black/60" title="Suspend">
-                          <Pause className="w-4 h-4" />
-                        </button>
-                      )}
-                      {(sub.status === "suspended" || sub.status === "pending") && (
-                        <button onClick={() => updateStatus(sub.id, "active")} className="p-1.5 rounded hover:bg-black/8 text-emerald-600" title="Activate">
-                          <Play className="w-4 h-4" />
-                        </button>
-                      )}
-                      {sub.status !== "cancelled" && (
-                        <button onClick={() => cancel(sub.id)} className="p-1.5 rounded hover:bg-red-500/20 text-red-400" title="Cancel">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </motion.tr>
+                  <Plus className="w-4 h-4" />
+                  Invite Subaccount
+                </button>
+              }
+            /><div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                { label: "Total Subaccounts", value: stats.total, icon: <Users className="w-4 h-4" /> },
+                { label: "Active", value: stats.active, icon: <CheckCircle2 className="w-4 h-4" /> },
+                { label: "Monthly Recurring Revenue", value: formatMrr(stats.mrr_cents), icon: <DollarSign className="w-4 h-4" />, premium: true },
+              ].map((tile, i) => (
+                <motion.div
+                  key={tile.label}
+                  className="glass rounded-xl overflow-hidden"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06, duration: 0.4 }}
+                >
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                  <StatCard label={tile.label} value={tile.value} icon={tile.icon} premium={tile.premium} />
+                </motion.div>
               ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {showInvite && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="relative w-full max-w-md  border border-black/10 bg-white p-6 shadow-2xl">
-            <button onClick={() => setShowInvite(false)} className="absolute top-4 right-4 p-1.5 rounded hover:bg-black/8 text-black/60">
-              <X className="w-4 h-4" />
-            </button>
-            <div className="flex items-center gap-2 mb-1">
-              <Building2 className="w-5 h-5 text-[#2563EB]" />
-              <h2 className="text-lg font-bold text-[#0A0A0B]">Invite Subaccount</h2>
-            </div>
-            <p className="text-xs text-black/50 mb-5">
-              They will receive an email invite under your brand. Once they sign up, billing flows through your Stripe Connect account.
-            </p>
-            <div className="flex flex-col gap-3">
-              <div>
-                <label className="text-xs text-black/60 mb-1 block">Name</label>
-                <input
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Client Name"
-                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
-                />
+            </div>{loading ? (
+              <div className="flex items-center justify-center py-16">
+                <Loader2 className="w-6 h-6 animate-spin text-[#2563EB]" />
               </div>
-              <div>
-                <label className="text-xs text-black/60 mb-1 block">Email</label>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="client@theircompany.com"
-                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
-                />
-              </div>
-              <div>
-                <label className="text-xs text-black/60 mb-1 block">Plan</label>
-                <select
-                  value={form.plan_tier}
-                  onChange={(e) => setForm({ ...form, plan_tier: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
-                >
-                  {PLAN_TIERS.map((t) => (
-                    <option key={t.value} value={t.value} className="bg-white">
-                      {t.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="text-xs text-black/60 mb-1 block">Monthly amount (USD cents)</label>
-                <input
-                  type="number"
-                  min={0}
-                  value={form.monthly_amount_cents}
-                  onChange={(e) => setForm({ ...form, monthly_amount_cents: Number(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
-                />
-                <p className="text-xs text-black/40 mt-1">
-                  e.g. 9900 = $99.00. This is what you charge the client. ShortStack base fee is deducted via Stripe Connect.
+            ) : subs.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-black/10 p-10 text-center">
+                <Building2 className="w-10 h-10 text-black/20 mx-auto mb-3" />
+                <p className="text-black/60 text-sm">No subaccounts yet.</p>
+                <p className="text-black/40 text-xs mt-1">
+                  Invite your first client to get started -- they sign up under your brand and you keep the markup.
                 </p>
+                <button
+                  onClick={() => setShowInvite(true)}
+                  className="mt-5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all"
+                >
+                  <Plus className="w-4 h-4" />
+                  Invite First Subaccount
+                </button>
               </div>
-            </div>
-            <div className="flex items-center gap-2 mt-5">
-              <button onClick={() => setShowInvite(false)} className="flex-1 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/8 text-[#0A0A0B] text-sm font-medium">
-                Cancel
-              </button>
-              <button onClick={handleInvite} disabled={inviting} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#2563EB] hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60">
-                {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
-                Send Invite
-              </button>
-            </div>
-            <p className="mt-4 text-xs text-black/40 flex items-start gap-1.5">
-              <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-              Email delivery for invites is deferred to v2 -- see PR notes.
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
+            ) : (
+              <div className="glass rounded-xl overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead className="bg-black/3 text-xs uppercase tracking-widest text-black/40">
+                    <tr>
+                      <th className="text-left px-4 py-3">Subaccount</th>
+                      <th className="text-left px-4 py-3">Plan</th>
+                      <th className="text-left px-4 py-3">MRR</th>
+                      <th className="text-left px-4 py-3">Status</th>
+                      <th className="text-right px-4 py-3">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subs.map((sub, i) => (
+                      <motion.tr
+                        key={sub.id}
+                        className="border-t border-black/5 hover:bg-black/3 transition-all"
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.04 }}
+                      >
+                        <td className="px-4 py-3">
+                          <p className="text-[#0A0A0B] font-medium">{sub.name}</p>
+                          <p className="text-xs text-black/40 flex items-center gap-1 mt-0.5">
+                            <Mail className="w-3 h-3" />
+                            {sub.email}
+                          </p>
+                        </td>
+                        <td className="px-4 py-3 text-black/65 capitalize">{sub.plan_tier}</td>
+                        <td className="px-4 py-3 text-[#0A0A0B]">{formatMrr(sub.monthly_amount_cents)}</td>
+                        <td className="px-4 py-3">
+                          <span className={`inline-block px-2 py-0.5 rounded-md text-xs font-semibold capitalize ${STATUS_BADGE[sub.status]}`}>
+                            {sub.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <div className="flex items-center gap-2 justify-end">
+                            {sub.status === "active" && (
+                              <button onClick={() => updateStatus(sub.id, "suspended")} className="p-1.5 rounded hover:bg-black/8 text-black/60" title="Suspend">
+                                <Pause className="w-4 h-4" />
+                              </button>
+                            )}
+                            {(sub.status === "suspended" || sub.status === "pending") && (
+                              <button onClick={() => updateStatus(sub.id, "active")} className="p-1.5 rounded hover:bg-black/8 text-emerald-600" title="Activate">
+                                <Play className="w-4 h-4" />
+                              </button>
+                            )}
+                            {sub.status !== "cancelled" && (
+                              <button onClick={() => cancel(sub.id)} className="p-1.5 rounded hover:bg-red-500/20 text-red-400" title="Cancel">
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}{showInvite && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+                <div className="relative w-full max-w-md  border border-black/10 bg-white p-6 shadow-2xl">
+                  <button onClick={() => setShowInvite(false)} className="absolute top-4 right-4 p-1.5 rounded hover:bg-black/8 text-black/60">
+                    <X className="w-4 h-4" />
+                  </button>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Building2 className="w-5 h-5 text-[#2563EB]" />
+                    <h2 className="text-lg font-bold text-[#0A0A0B]">Invite Subaccount</h2>
+                  </div>
+                  <p className="text-xs text-black/50 mb-5">
+                    They will receive an email invite under your brand. Once they sign up, billing flows through your Stripe Connect account.
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <label className="text-xs text-black/60 mb-1 block">Name</label>
+                      <input
+                        value={form.name}
+                        onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        placeholder="Client Name"
+                        className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-black/60 mb-1 block">Email</label>
+                      <input
+                        type="email"
+                        value={form.email}
+                        onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        placeholder="client@theircompany.com"
+                        className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-black/60 mb-1 block">Plan</label>
+                      <select
+                        value={form.plan_tier}
+                        onChange={(e) => setForm({ ...form, plan_tier: e.target.value })}
+                        className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
+                      >
+                        {PLAN_TIERS.map((t) => (
+                          <option key={t.value} value={t.value} className="bg-white">
+                            {t.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs text-black/60 mb-1 block">Monthly amount (USD cents)</label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={form.monthly_amount_cents}
+                        onChange={(e) => setForm({ ...form, monthly_amount_cents: Number(e.target.value) || 0 })}
+                        className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
+                      />
+                      <p className="text-xs text-black/40 mt-1">
+                        e.g. 9900 = $99.00. This is what you charge the client. ShortStack base fee is deducted via Stripe Connect.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 mt-5">
+                    <button onClick={() => setShowInvite(false)} className="flex-1 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/8 text-[#0A0A0B] text-sm font-medium">
+                      Cancel
+                    </button>
+                    <button onClick={handleInvite} disabled={inviting} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#2563EB] hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60">
+                      {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+                      Send Invite
+                    </button>
+                  </div>
+                  <p className="mt-4 text-xs text-black/40 flex items-start gap-1.5">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                    Email delivery for invites is deferred to v2 -- see PR notes.
+                  </p>
+                </div>
+              </div>
+            )}</MotionPage>
   );
 }

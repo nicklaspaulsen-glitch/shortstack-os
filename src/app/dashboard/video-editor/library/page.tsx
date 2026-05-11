@@ -41,6 +41,7 @@ import { PresetSearchFilterBar } from "@/components/ui/preset-search-filter-bar"
 import { PresetEmptyState } from "@/components/ui/preset-empty-state";
 import { PresetGridSkeleton, AudioListSkeleton } from "@/components/ui/preset-tile-skeleton";
 import { PresetEditExamplePanel } from "@/components/ui/preset-edit-example-panel";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type Tab = "fonts" | "transitions" | "effects" | "sfx" | "music";
 
@@ -96,200 +97,193 @@ export default function PresetLibraryPage() {
     MUSIC_LIBRARY.length;
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto max-w-[1400px] px-6 py-8">
-        {/* Header */}
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <div>
-            <button
-              onClick={() => router.push("/dashboard/video-editor")}
-              className="mb-2 flex items-center gap-1 text-xs text-muted hover:text-foreground transition"
-            >
-              <ArrowLeft size={13} /> Back to Video Editor
-            </button>
-            <h1 className="text-2xl font-semibold">Preset Library</h1>
-            <p className="text-sm text-muted">
-              Try every font, transition, effect, sound, and track before
-              dropping it into a project.
-            </p>
-          </div>
-          <div className="flex items-center gap-2 text-xs text-muted">
-            <span>{totalPresets} presets</span>
-          </div>
-        </div>
+    <MotionPage className="min-h-screen bg-background text-foreground"><div className="mx-auto max-w-[1400px] px-6 py-8">
+              {/* Header */}
+              <div className="mb-6 flex items-center justify-between gap-4">
+                <div>
+                  <button
+                    onClick={() => router.push("/dashboard/video-editor")}
+                    className="mb-2 flex items-center gap-1 text-xs text-muted hover:text-foreground transition"
+                  >
+                    <ArrowLeft size={13} /> Back to Video Editor
+                  </button>
+                  <h1 className="text-2xl font-semibold">Preset Library</h1>
+                  <p className="text-sm text-muted">
+                    Try every font, transition, effect, sound, and track before
+                    dropping it into a project.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-muted">
+                  <span>{totalPresets} presets</span>
+                </div>
+              </div>
 
-        {/* Tabs */}
-        <div className="mb-4 flex flex-wrap gap-1 rounded-lg border border-border/50 bg-surface-light/30 p-1">
-          <TabButton
-            id="fonts"
-            active={tab}
-            icon={<TypeIcon size={13} />}
-            label="Fonts"
-            count={FONTS_LIBRARY.length}
-            onClick={setTab}
-          />
-          <TabButton
-            id="transitions"
-            active={tab}
-            icon={<Scissors size={13} />}
-            label="Transitions"
-            count={TRANSITIONS_LIBRARY.length}
-            onClick={setTab}
-          />
-          <TabButton
-            id="effects"
-            active={tab}
-            icon={<Wand2 size={13} />}
-            label="Effects"
-            count={EFFECTS_LIBRARY.length}
-            onClick={setTab}
-          />
-          <TabButton
-            id="sfx"
-            active={tab}
-            icon={<Volume2 size={13} />}
-            label="SFX"
-            count={SFX_LIBRARY.length}
-            onClick={setTab}
-          />
-          <TabButton
-            id="music"
-            active={tab}
-            icon={<Music size={13} />}
-            label="Music"
-            count={MUSIC_LIBRARY.length}
-            onClick={setTab}
-          />
-        </div>
+              {/* Tabs */}
+              <div className="mb-4 flex flex-wrap gap-1 rounded-lg border border-border/50 bg-surface-light/30 p-1">
+                <TabButton
+                  id="fonts"
+                  active={tab}
+                  icon={<TypeIcon size={13} />}
+                  label="Fonts"
+                  count={FONTS_LIBRARY.length}
+                  onClick={setTab}
+                />
+                <TabButton
+                  id="transitions"
+                  active={tab}
+                  icon={<Scissors size={13} />}
+                  label="Transitions"
+                  count={TRANSITIONS_LIBRARY.length}
+                  onClick={setTab}
+                />
+                <TabButton
+                  id="effects"
+                  active={tab}
+                  icon={<Wand2 size={13} />}
+                  label="Effects"
+                  count={EFFECTS_LIBRARY.length}
+                  onClick={setTab}
+                />
+                <TabButton
+                  id="sfx"
+                  active={tab}
+                  icon={<Volume2 size={13} />}
+                  label="SFX"
+                  count={SFX_LIBRARY.length}
+                  onClick={setTab}
+                />
+                <TabButton
+                  id="music"
+                  active={tab}
+                  icon={<Music size={13} />}
+                  label="Music"
+                  count={MUSIC_LIBRARY.length}
+                  onClick={setTab}
+                />
+              </div>
 
-        {/* Shared search + filter bar */}
-        <div className="mb-4">
-          <PresetSearchFilterBar
-            query={query}
-            onQueryChange={setQuery}
-            placeholder={`Search ${tab}…`}
-          />
-        </div>
+              {/* Shared search + filter bar */}
+              <div className="mb-4">
+                <PresetSearchFilterBar
+                  query={query}
+                  onQueryChange={setQuery}
+                  placeholder={`Search ${tab}…`}
+                />
+              </div>
 
-        {/* Tab bodies */}
-        {loading ? (
-          tab === "sfx" || tab === "music" ? (
-            <AudioListSkeleton count={9} />
-          ) : (
-            <PresetGridSkeleton count={9} />
-          )
-        ) : (
-          <>
-            {tab === "fonts" && (
-              <FontsTab
-                query={query}
-                category={category}
-                setCategory={setCategory}
-                copiedId={copiedId}
-                onCopy={copyId}
-                onEdit={setEditFont}
-                onReset={resetFilters}
+              {/* Tab bodies */}
+              {loading ? (
+                tab === "sfx" || tab === "music" ? (
+                  <AudioListSkeleton count={9} />
+                ) : (
+                  <PresetGridSkeleton count={9} />
+                )
+              ) : (
+                <>
+                  {tab === "fonts" && (
+                    <FontsTab
+                      query={query}
+                      category={category}
+                      setCategory={setCategory}
+                      copiedId={copiedId}
+                      onCopy={copyId}
+                      onEdit={setEditFont}
+                      onReset={resetFilters}
+                    />
+                  )}
+                  {tab === "transitions" && (
+                    <TransitionsTab
+                      query={query}
+                      category={category}
+                      setCategory={setCategory}
+                      copiedId={copiedId}
+                      onCopy={copyId}
+                      onEdit={setEditTransition}
+                      onReset={resetFilters}
+                    />
+                  )}
+                  {tab === "effects" && (
+                    <EffectsTab
+                      query={query}
+                      category={category}
+                      setCategory={setCategory}
+                      copiedId={copiedId}
+                      onCopy={copyId}
+                      onEdit={setEditEffect}
+                      onReset={resetFilters}
+                    />
+                  )}
+                  {tab === "sfx" && (
+                    <SfxTab
+                      query={query}
+                      category={category}
+                      setCategory={setCategory}
+                      copiedId={copiedId}
+                      onCopy={copyId}
+                      onReset={resetFilters}
+                    />
+                  )}
+                  {tab === "music" && (
+                    <MusicTab
+                      query={query}
+                      category={category}
+                      setCategory={setCategory}
+                      copiedId={copiedId}
+                      onCopy={copyId}
+                      onReset={resetFilters}
+                    />
+                  )}
+                </>
+              )}
+            </div>{/* Edit example panels */}{editFont && (
+              <PresetEditExamplePanel
+                kind="video"
+                preset={{
+                  id: editFont.id,
+                  name: editFont.family,
+                  category: editFont.category,
+                  style: editFont.category,
+                  duration: 30,
+                  aspect_ratio: "16:9",
+                  music_mood: "chill",
+                  caption_style: "word_highlight",
+                  target_platform: "instagram",
+                }}
+                onClose={() => setEditFont(null)}
               />
-            )}
-            {tab === "transitions" && (
-              <TransitionsTab
-                query={query}
-                category={category}
-                setCategory={setCategory}
-                copiedId={copiedId}
-                onCopy={copyId}
-                onEdit={setEditTransition}
-                onReset={resetFilters}
+            )}{editTransition && (
+              <PresetEditExamplePanel
+                kind="video"
+                preset={{
+                  id: editTransition.id,
+                  name: editTransition.name,
+                  category: editTransition.category,
+                  style: editTransition.category,
+                  duration: editTransition.duration_ms / 1000,
+                  aspect_ratio: "9:16",
+                  music_mood: "upbeat",
+                  caption_style: "none",
+                  target_platform: "tiktok",
+                }}
+                onClose={() => setEditTransition(null)}
               />
-            )}
-            {tab === "effects" && (
-              <EffectsTab
-                query={query}
-                category={category}
-                setCategory={setCategory}
-                copiedId={copiedId}
-                onCopy={copyId}
-                onEdit={setEditEffect}
-                onReset={resetFilters}
+            )}{editEffect && (
+              <PresetEditExamplePanel
+                kind="video"
+                preset={{
+                  id: editEffect.id,
+                  name: editEffect.name,
+                  category: editEffect.category,
+                  style: editEffect.category,
+                  duration: 15,
+                  aspect_ratio: "9:16",
+                  music_mood: "dramatic",
+                  caption_style: "none",
+                  target_platform: "instagram",
+                }}
+                onClose={() => setEditEffect(null)}
               />
-            )}
-            {tab === "sfx" && (
-              <SfxTab
-                query={query}
-                category={category}
-                setCategory={setCategory}
-                copiedId={copiedId}
-                onCopy={copyId}
-                onReset={resetFilters}
-              />
-            )}
-            {tab === "music" && (
-              <MusicTab
-                query={query}
-                category={category}
-                setCategory={setCategory}
-                copiedId={copiedId}
-                onCopy={copyId}
-                onReset={resetFilters}
-              />
-            )}
-          </>
-        )}
-      </div>
-
-      {/* Edit example panels */}
-      {editFont && (
-        <PresetEditExamplePanel
-          kind="video"
-          preset={{
-            id: editFont.id,
-            name: editFont.family,
-            category: editFont.category,
-            style: editFont.category,
-            duration: 30,
-            aspect_ratio: "16:9",
-            music_mood: "chill",
-            caption_style: "word_highlight",
-            target_platform: "instagram",
-          }}
-          onClose={() => setEditFont(null)}
-        />
-      )}
-      {editTransition && (
-        <PresetEditExamplePanel
-          kind="video"
-          preset={{
-            id: editTransition.id,
-            name: editTransition.name,
-            category: editTransition.category,
-            style: editTransition.category,
-            duration: editTransition.duration_ms / 1000,
-            aspect_ratio: "9:16",
-            music_mood: "upbeat",
-            caption_style: "none",
-            target_platform: "tiktok",
-          }}
-          onClose={() => setEditTransition(null)}
-        />
-      )}
-      {editEffect && (
-        <PresetEditExamplePanel
-          kind="video"
-          preset={{
-            id: editEffect.id,
-            name: editEffect.name,
-            category: editEffect.category,
-            style: editEffect.category,
-            duration: 15,
-            aspect_ratio: "9:16",
-            music_mood: "dramatic",
-            caption_style: "none",
-            target_platform: "instagram",
-          }}
-          onClose={() => setEditEffect(null)}
-        />
-      )}
-    </div>
+            )}</MotionPage>
   );
 }
 

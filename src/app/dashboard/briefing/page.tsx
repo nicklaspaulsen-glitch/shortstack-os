@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import { Coffee, Users, MessageSquare, Calendar, FileText, BookOpen, Loader2, Sparkles } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface BriefingStats {
   newLeads: number;
@@ -166,110 +167,99 @@ Be direct, specific, and action-oriented. No fluff.`;
   const dateStr = today.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        title="Daily Briefing"
-        eyebrow="DAILY BRIEFING"
-        subtitle={dateStr}
-        icon={<Coffee className="w-6 h-6" />}
-        gradient="sunset"
-        actions={
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={handleGenerateBriefing}
-            disabled={generating || loading}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/10 hover:bg-black/10 disabled:opacity-40 text-foreground text-sm font-medium transition-colors border border-border"
-          >
-            {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            {generating ? "Generating…" : "Generate AI briefing"}
-          </motion.button>
-        }
-      />
-
-      {/* Stats cards */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"
-      >
-        {tiles.map(({ label, value, icon: Icon, color, bgColor }) => (
-          <motion.div
-            key={label}
-            variants={tileVariants}
-            whileHover={{ y: -2 }}
-            className={`glass rounded-xl p-4 border relative overflow-hidden ${bgColor}`}
-          >
-            <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
-            <div className="flex items-center gap-2 mb-2 mt-1">
-              <Icon className={`w-4 h-4 ${color}`} />
-              <span className="text-xs text-muted">{label}</span>
-            </div>
-            {loading ? (
-              <div className="h-8 w-12 bg-[rgba(0,0,0,0.06)] rounded animate-pulse" />
-            ) : (
-              <div className={`text-3xl font-bold ${color}`}>{value}</div>
-            )}
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Activity summary card */}
-      {!loading && (
-        <motion.div
-          variants={panelVariants}
-          initial="hidden"
-          animate="visible"
-          className="glass rounded-xl p-6"
-        >
-          <h2 className="text-base font-semibold text-[#111827] mb-4 flex items-center gap-2">
-            <Coffee className="w-4 h-4 text-orange-500" />
-            Morning snapshot
-          </h2>
-          <div className="grid sm:grid-cols-2 gap-4 text-sm">
-            <div className="space-y-2">
-              <p className="text-muted">
-                <span className="text-[#111827] font-medium">{stats.newLeads}</span> new lead{stats.newLeads !== 1 ? "s" : ""} captured in the last 24 hours.
-              </p>
-              <p className="text-muted">
-                <span className="text-[#111827] font-medium">{stats.messagesReceived}</span> inbound message{stats.messagesReceived !== 1 ? "s" : ""} across all channels.
-              </p>
-              <p className="text-muted">
-                <span className="text-[#111827] font-medium">{stats.appointmentsToday}</span> appointment{stats.appointmentsToday !== 1 ? "s" : ""} scheduled for today.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <p className="text-muted">
-                <span className={`font-medium ${stats.invoicesDue > 0 ? "text-[#2563EB]" : "text-[#111827]"}`}>{stats.invoicesDue}</span> invoice{stats.invoicesDue !== 1 ? "s" : ""} due or overdue.
-              </p>
-              <p className="text-muted">
-                <span className="text-[#111827] font-medium">{stats.contentScheduled}</span> content piece{stats.contentScheduled !== 1 ? "s" : ""} queued to publish today.
-              </p>
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      {/* AI briefing output */}
-      {(aiText || generating) && (
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="glass rounded-xl p-6"
-        >
-          <h2 className="text-base font-semibold text-[#111827] mb-4 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#2563EB]" />
-            AI Briefing
-            {generating && <Loader2 className="w-3.5 h-3.5 animate-spin text-muted ml-1" />}
-          </h2>
-          <div className="text-sm text-[#374151] leading-relaxed whitespace-pre-wrap font-serif">
-            {aiText}
-            {generating && <span className="inline-block w-1 h-4 bg-[#2563EB] animate-pulse ml-0.5 align-middle" />}
-          </div>
-        </motion.div>
-      )}
-    </div>
+    <MotionPage className="space-y-6"><PageHero
+              title="Daily Briefing"
+              eyebrow="DAILY BRIEFING"
+              subtitle={dateStr}
+              icon={<Coffee className="w-6 h-6" />}
+              gradient="sunset"
+              actions={
+                <motion.button
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleGenerateBriefing}
+                  disabled={generating || loading}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/10 hover:bg-black/10 disabled:opacity-40 text-foreground text-sm font-medium transition-colors border border-border"
+                >
+                  {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                  {generating ? "Generating…" : "Generate AI briefing"}
+                </motion.button>
+              }
+            />{/* Stats cards */}<motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"
+            >
+              {tiles.map(({ label, value, icon: Icon, color, bgColor }) => (
+                <motion.div
+                  key={label}
+                  variants={tileVariants}
+                  whileHover={{ y: -2 }}
+                  className={`glass rounded-xl p-4 border relative overflow-hidden ${bgColor}`}
+                >
+                  <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
+                  <div className="flex items-center gap-2 mb-2 mt-1">
+                    <Icon className={`w-4 h-4 ${color}`} />
+                    <span className="text-xs text-muted">{label}</span>
+                  </div>
+                  {loading ? (
+                    <div className="h-8 w-12 bg-[rgba(0,0,0,0.06)] rounded animate-pulse" />
+                  ) : (
+                    <div className={`text-3xl font-bold ${color}`}>{value}</div>
+                  )}
+                </motion.div>
+              ))}
+            </motion.div>{/* Activity summary card */}{!loading && (
+              <motion.div
+                variants={panelVariants}
+                initial="hidden"
+                animate="visible"
+                className="glass rounded-xl p-6"
+              >
+                <h2 className="text-base font-semibold text-[#111827] mb-4 flex items-center gap-2">
+                  <Coffee className="w-4 h-4 text-orange-500" />
+                  Morning snapshot
+                </h2>
+                <div className="grid sm:grid-cols-2 gap-4 text-sm">
+                  <div className="space-y-2">
+                    <p className="text-muted">
+                      <span className="text-[#111827] font-medium">{stats.newLeads}</span> new lead{stats.newLeads !== 1 ? "s" : ""} captured in the last 24 hours.
+                    </p>
+                    <p className="text-muted">
+                      <span className="text-[#111827] font-medium">{stats.messagesReceived}</span> inbound message{stats.messagesReceived !== 1 ? "s" : ""} across all channels.
+                    </p>
+                    <p className="text-muted">
+                      <span className="text-[#111827] font-medium">{stats.appointmentsToday}</span> appointment{stats.appointmentsToday !== 1 ? "s" : ""} scheduled for today.
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-muted">
+                      <span className={`font-medium ${stats.invoicesDue > 0 ? "text-[#2563EB]" : "text-[#111827]"}`}>{stats.invoicesDue}</span> invoice{stats.invoicesDue !== 1 ? "s" : ""} due or overdue.
+                    </p>
+                    <p className="text-muted">
+                      <span className="text-[#111827] font-medium">{stats.contentScheduled}</span> content piece{stats.contentScheduled !== 1 ? "s" : ""} queued to publish today.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}{/* AI briefing output */}{(aiText || generating) && (
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="glass rounded-xl p-6"
+              >
+                <h2 className="text-base font-semibold text-[#111827] mb-4 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#2563EB]" />
+                  AI Briefing
+                  {generating && <Loader2 className="w-3.5 h-3.5 animate-spin text-muted ml-1" />}
+                </h2>
+                <div className="text-sm text-[#374151] leading-relaxed whitespace-pre-wrap font-serif">
+                  {aiText}
+                  {generating && <span className="inline-block w-1 h-4 bg-[#2563EB] animate-pulse ml-0.5 align-middle" />}
+                </div>
+              </motion.div>
+            )}</MotionPage>
   );
 }

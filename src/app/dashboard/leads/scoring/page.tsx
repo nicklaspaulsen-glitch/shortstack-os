@@ -44,6 +44,7 @@ import ScoreGradeBadge, {
   type ScoreGrade,
 } from "@/components/ui/score-grade-badge";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type GradeFilter = "all" | "hot" | "warm" | "cold" | "customer";
 
@@ -533,300 +534,285 @@ export default function LeadScoringPage() {
   }
 
   return (
-    <div className="fade-in space-y-4">
-      <PageHero
-        icon={<Target size={28} />}
-        title="AI Lead Scoring"
-        eyebrow="LEAD SCORING"
-        subtitle="Claude-powered hybrid scoring (rules + AI). 0-100 hot/warm/cold grades update hourly + on every engagement event."
-        gradient="purple"
-        actions={
-          <>
-            <Link
-              href="/dashboard/leads"
-              className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all"
-            >
-              Back to Leads
-            </Link>
-            <button
-              onClick={handleRecomputeAllStale}
-              disabled={batchRunning}
-              className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5 disabled:opacity-50"
-            >
-              {batchRunning ? (
-                <Loader size={12} className="animate-spin" />
-              ) : (
-                <RefreshCw size={12} />
-              )}
-              Recompute stale
-            </button>
-          </>
-        }
-      />
-
-      <CollapsibleStats
-        storageKey="lead-scoring"
-        icon={<Target size={14} className="text-[#2563EB]" />}
-        title="Grade Mix"
-        summary={
-          <>
-            <span>
-              <span className="text-orange-400 font-semibold">
-                {counts.hot}
-              </span>{" "}
-              hot
-            </span>
-            <span className="opacity-30">·</span>
-            <span>
-              <span className="text-yellow-400 font-semibold">
-                {counts.warm}
-              </span>{" "}
-              warm
-            </span>
-            <span className="opacity-30">·</span>
-            <span>
-              <span className="text-[#2563EB] font-semibold">
-                {counts.cold}
-              </span>{" "}
-              cold
-            </span>
-            <span className="opacity-30">·</span>
-            <span>
-              <span className="text-emerald-400 font-semibold">
-                {counts.customer}
-              </span>{" "}
-              customer
-            </span>
-          </>
-        }
-      >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            {
-              label: "Hot",
-              value: counts.hot,
-              icon: <Flame size={12} />,
-              color: "text-orange-400",
-            },
-            {
-              label: "Warm",
-              value: counts.warm,
-              icon: <Sun size={12} />,
-              color: "text-yellow-400",
-            },
-            {
-              label: "Cold",
-              value: counts.cold,
-              icon: <Snowflake size={12} />,
-              color: "text-[#2563EB]",
-            },
-            {
-              label: "Customer",
-              value: counts.customer,
-              icon: <BadgeCheck size={12} />,
-              color: "text-emerald-400",
-            },
-          ].map((stat, i) => (
-            <div key={i} className="card text-center p-3">
-              <div
-                className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}
-              >
-                {stat.icon}
-              </div>
-              <p className="text-lg font-bold">{stat.value}</p>
-              <p className="text-[9px] text-muted">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </CollapsibleStats>
-
-      {/* Filter pills + bulk action toolbar */}
-      <div className="flex flex-wrap gap-2 items-center justify-between">
-        <div className="flex flex-wrap gap-2">
-          {(
-            [
-              { key: "all", label: "All" },
-              { key: "hot", label: "Hot" },
-              { key: "warm", label: "Warm" },
-              { key: "cold", label: "Cold" },
-              { key: "customer", label: "Customer" },
-            ] as Array<{ key: GradeFilter; label: string }>
-          ).map((p) => (
-            <button
-              key={p.key}
-              onClick={() => setGradeFilter(p.key)}
-              className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
-                gradeFilter === p.key
-                  ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.4)] text-[#2563EB]"
-                  : "border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
-              }`}
-            >
-              {p.label}
-            </button>
-          ))}
-          <button
-            onClick={() => setSortByScore((v) => !v)}
-            className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
-              sortByScore
-                ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
-                : "border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
-            }`}
-          >
-            <Target size={11} /> Sort by score
-          </button>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] text-muted">
-            {selected.size} selected
-          </span>
-          <button
-            onClick={handleBulkRecompute}
-            disabled={selected.size === 0 || bulkRunning}
-            className="text-xs px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-40"
-          >
-            {bulkRunning ? (
-              <Loader size={11} className="animate-spin" />
-            ) : (
-              <RefreshCw size={11} />
-            )}
-            Recompute selected
-          </button>
-        </div>
-      </div>
-
-      {/* Lead table */}
-      <div className="space-y-1.5">
-        <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-2 px-3">
-          <span className="col-span-1 flex items-center">
-            <input
-              type="checkbox"
-              checked={
-                leads.length > 0 &&
-                leads.every((l) => selected.has(l.id))
+    <MotionPage className="fade-in space-y-4"><PageHero
+              icon={<Target size={28} />}
+              title="AI Lead Scoring"
+              eyebrow="LEAD SCORING"
+              subtitle="Claude-powered hybrid scoring (rules + AI). 0-100 hot/warm/cold grades update hourly + on every engagement event."
+              gradient="purple"
+              actions={
+                <>
+                  <Link
+                    href="/dashboard/leads"
+                    className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all"
+                  >
+                    Back to Leads
+                  </Link>
+                  <button
+                    onClick={handleRecomputeAllStale}
+                    disabled={batchRunning}
+                    className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5 disabled:opacity-50"
+                  >
+                    {batchRunning ? (
+                      <Loader size={12} className="animate-spin" />
+                    ) : (
+                      <RefreshCw size={12} />
+                    )}
+                    Recompute stale
+                  </button>
+                </>
               }
-              onChange={toggleSelectAll}
-              aria-label="Select all leads on this page"
-            />
-          </span>
-          <span className="col-span-3">Business</span>
-          <span className="col-span-2">Contact</span>
-          <span className="col-span-2 text-center">Grade · Score</span>
-          <span className="col-span-3">Signals</span>
-          <span className="col-span-1 text-center">Updated</span>
-        </div>
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader size={20} className="animate-spin text-[#2563EB]" />
-          </div>
-        ) : leads.length === 0 ? (
-          <EmptyState
-            type="no-leads"
-            title="No leads in this view"
-            description="Try a different grade filter, or import leads to start scoring."
-          />
-        ) : (
-          leads.map((lead) => {
-            const grade =
-              lead.score_grade ?? inferGrade(lead.score, lead.status);
-            const checked = selected.has(lead.id);
-            return (
-              <div
-                key={lead.id}
-                onClick={() => setDetailLead(lead)}
-                className="grid grid-cols-12 items-center py-2 px-3 rounded-lg bg-surface-light border border-border hover:border-[rgba(37,99,235,0.1)] transition-all cursor-pointer text-[10px]"
-              >
-                <div
-                  className="col-span-1"
-                  onClick={(e) => e.stopPropagation()}
+            /><CollapsibleStats
+              storageKey="lead-scoring"
+              icon={<Target size={14} className="text-[#2563EB]" />}
+              title="Grade Mix"
+              summary={
+                <>
+                  <span>
+                    <span className="text-orange-400 font-semibold">
+                      {counts.hot}
+                    </span>{" "}
+                    hot
+                  </span>
+                  <span className="opacity-30">·</span>
+                  <span>
+                    <span className="text-yellow-400 font-semibold">
+                      {counts.warm}
+                    </span>{" "}
+                    warm
+                  </span>
+                  <span className="opacity-30">·</span>
+                  <span>
+                    <span className="text-[#2563EB] font-semibold">
+                      {counts.cold}
+                    </span>{" "}
+                    cold
+                  </span>
+                  <span className="opacity-30">·</span>
+                  <span>
+                    <span className="text-emerald-400 font-semibold">
+                      {counts.customer}
+                    </span>{" "}
+                    customer
+                  </span>
+                </>
+              }
+            >
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[
+                  {
+                    label: "Hot",
+                    value: counts.hot,
+                    icon: <Flame size={12} />,
+                    color: "text-orange-400",
+                  },
+                  {
+                    label: "Warm",
+                    value: counts.warm,
+                    icon: <Sun size={12} />,
+                    color: "text-yellow-400",
+                  },
+                  {
+                    label: "Cold",
+                    value: counts.cold,
+                    icon: <Snowflake size={12} />,
+                    color: "text-[#2563EB]",
+                  },
+                  {
+                    label: "Customer",
+                    value: counts.customer,
+                    icon: <BadgeCheck size={12} />,
+                    color: "text-emerald-400",
+                  },
+                ].map((stat, i) => (
+                  <div key={i} className="card text-center p-3">
+                    <div
+                      className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}
+                    >
+                      {stat.icon}
+                    </div>
+                    <p className="text-lg font-bold">{stat.value}</p>
+                    <p className="text-[9px] text-muted">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            </CollapsibleStats>{/* Filter pills + bulk action toolbar */}<div className="flex flex-wrap gap-2 items-center justify-between">
+              <div className="flex flex-wrap gap-2">
+                {(
+                  [
+                    { key: "all", label: "All" },
+                    { key: "hot", label: "Hot" },
+                    { key: "warm", label: "Warm" },
+                    { key: "cold", label: "Cold" },
+                    { key: "customer", label: "Customer" },
+                  ] as Array<{ key: GradeFilter; label: string }>
+                ).map((p) => (
+                  <button
+                    key={p.key}
+                    onClick={() => setGradeFilter(p.key)}
+                    className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
+                      gradeFilter === p.key
+                        ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.4)] text-[#2563EB]"
+                        : "border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setSortByScore((v) => !v)}
+                  className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
+                    sortByScore
+                      ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                      : "border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
+                  }`}
                 >
+                  <Target size={11} /> Sort by score
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-muted">
+                  {selected.size} selected
+                </span>
+                <button
+                  onClick={handleBulkRecompute}
+                  disabled={selected.size === 0 || bulkRunning}
+                  className="text-xs px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-40"
+                >
+                  {bulkRunning ? (
+                    <Loader size={11} className="animate-spin" />
+                  ) : (
+                    <RefreshCw size={11} />
+                  )}
+                  Recompute selected
+                </button>
+              </div>
+            </div>{/* Lead table */}<div className="space-y-1.5">
+              <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-2 px-3">
+                <span className="col-span-1 flex items-center">
                   <input
                     type="checkbox"
-                    checked={checked}
-                    onChange={() => toggleSelect(lead.id)}
-                    aria-label={`Select ${lead.business_name}`}
+                    checked={
+                      leads.length > 0 &&
+                      leads.every((l) => selected.has(l.id))
+                    }
+                    onChange={toggleSelectAll}
+                    aria-label="Select all leads on this page"
                   />
+                </span>
+                <span className="col-span-3">Business</span>
+                <span className="col-span-2">Contact</span>
+                <span className="col-span-2 text-center">Grade · Score</span>
+                <span className="col-span-3">Signals</span>
+                <span className="col-span-1 text-center">Updated</span>
+              </div>
+              {loading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader size={20} className="animate-spin text-[#2563EB]" />
                 </div>
-                <div className="col-span-3">
-                  <p className="text-xs font-semibold">
-                    {lead.business_name}
-                  </p>
-                  <p className="text-[9px] text-muted">
-                    {lead.industry ?? "Unknown"}
-                    {lead.city ? ` · ${lead.city}` : ""}
-                  </p>
-                </div>
-                <div className="col-span-2">
-                  <p className="text-muted truncate">{lead.email ?? "—"}</p>
-                  <p className="text-muted truncate">{lead.phone ?? "—"}</p>
-                </div>
-                <div className="col-span-2 flex items-center justify-center">
-                  <ScoreGradeBadge
-                    score={lead.score}
-                    grade={grade}
-                    status={lead.status}
-                    showScore
-                  />
-                </div>
-                <div className="col-span-3">
-                  <SignalBreakdownPills breakdown={lead.score_signals} />
-                </div>
-                <div className="col-span-1 text-center text-[9px] text-muted">
-                  {formatRelative(lead.score_updated_at)}
+              ) : leads.length === 0 ? (
+                <EmptyState
+                  type="no-leads"
+                  title="No leads in this view"
+                  description="Try a different grade filter, or import leads to start scoring."
+                />
+              ) : (
+                leads.map((lead) => {
+                  const grade =
+                    lead.score_grade ?? inferGrade(lead.score, lead.status);
+                  const checked = selected.has(lead.id);
+                  return (
+                    <div
+                      key={lead.id}
+                      onClick={() => setDetailLead(lead)}
+                      className="grid grid-cols-12 items-center py-2 px-3 rounded-lg bg-surface-light border border-border hover:border-[rgba(37,99,235,0.1)] transition-all cursor-pointer text-[10px]"
+                    >
+                      <div
+                        className="col-span-1"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleSelect(lead.id)}
+                          aria-label={`Select ${lead.business_name}`}
+                        />
+                      </div>
+                      <div className="col-span-3">
+                        <p className="text-xs font-semibold">
+                          {lead.business_name}
+                        </p>
+                        <p className="text-[9px] text-muted">
+                          {lead.industry ?? "Unknown"}
+                          {lead.city ? ` · ${lead.city}` : ""}
+                        </p>
+                      </div>
+                      <div className="col-span-2">
+                        <p className="text-muted truncate">{lead.email ?? "—"}</p>
+                        <p className="text-muted truncate">{lead.phone ?? "—"}</p>
+                      </div>
+                      <div className="col-span-2 flex items-center justify-center">
+                        <ScoreGradeBadge
+                          score={lead.score}
+                          grade={grade}
+                          status={lead.status}
+                          showScore
+                        />
+                      </div>
+                      <div className="col-span-3">
+                        <SignalBreakdownPills breakdown={lead.score_signals} />
+                      </div>
+                      <div className="col-span-1 text-center text-[9px] text-muted">
+                        {formatRelative(lead.score_updated_at)}
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>{/* Pagination */}{!loading && totalPages > 1 ? (
+              <div className="flex items-center justify-between pt-3">
+                <p className="text-[10px] text-muted">
+                  Showing {(page - 1) * PAGE_LIMIT + 1}–
+                  {Math.min(page * PAGE_LIMIT, totalCount)} of{" "}
+                  {totalCount.toLocaleString()} leads
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page <= 1}
+                    className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all"
+                    aria-label="Previous page"
+                  >
+                    <ChevronLeft size={14} />
+                  </button>
+                  <span className="text-xs font-mono text-muted">
+                    {page} / {totalPages}
+                  </span>
+                  <button
+                    onClick={() =>
+                      setPage((p) => Math.min(totalPages, p + 1))
+                    }
+                    disabled={page >= totalPages}
+                    className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all"
+                    aria-label="Next page"
+                  >
+                    <ChevronRight size={14} />
+                  </button>
                 </div>
               </div>
-            );
-          })
-        )}
-      </div>
-
-      {/* Pagination */}
-      {!loading && totalPages > 1 ? (
-        <div className="flex items-center justify-between pt-3">
-          <p className="text-[10px] text-muted">
-            Showing {(page - 1) * PAGE_LIMIT + 1}–
-            {Math.min(page * PAGE_LIMIT, totalCount)} of{" "}
-            {totalCount.toLocaleString()} leads
-          </p>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1}
-              className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all"
-              aria-label="Previous page"
-            >
-              <ChevronLeft size={14} />
-            </button>
-            <span className="text-xs font-mono text-muted">
-              {page} / {totalPages}
-            </span>
-            <button
-              onClick={() =>
-                setPage((p) => Math.min(totalPages, p + 1))
-              }
-              disabled={page >= totalPages}
-              className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all"
-              aria-label="Next page"
-            >
-              <ChevronRight size={14} />
-            </button>
-          </div>
-        </div>
-      ) : null}
-
-      {detailLead ? (
-        <ScoreDetailModal
-          lead={detailLead}
-          onClose={() => setDetailLead(null)}
-          onRecomputed={(next) => {
-            setDetailLead((cur) => (cur ? { ...cur, ...next } : cur));
-            setLeads((cur) =>
-              cur.map((l) =>
-                l.id === detailLead.id ? { ...l, ...next } : l,
-              ),
-            );
-          }}
-        />
-      ) : null}
-    </div>
+            ) : null}{detailLead ? (
+              <ScoreDetailModal
+                lead={detailLead}
+                onClose={() => setDetailLead(null)}
+                onRecomputed={(next) => {
+                  setDetailLead((cur) => (cur ? { ...cur, ...next } : cur));
+                  setLeads((cur) =>
+                    cur.map((l) =>
+                      l.id === detailLead.id ? { ...l, ...next } : l,
+                    ),
+                  );
+                }}
+              />
+            ) : null}</MotionPage>
   );
 }

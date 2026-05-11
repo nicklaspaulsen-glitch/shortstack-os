@@ -21,6 +21,7 @@ import {
 import PageHero from "@/components/ui/page-hero";
 import { Wizard, type WizardStepDef } from "@/components/ui/wizard";
 import { motion } from "framer-motion";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* ── Types ──────────────────────────────────────────────────── */
 
@@ -315,20 +316,22 @@ export default function ReportGeneratorPage() {
             {METRIC_OPTIONS.filter(m => m.group === group).map(m => {
               const on = metrics.includes(m.id);
               return (
-                <label
-                  key={m.id}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer text-xs transition-all ${
-                    on ? "border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)] text-foreground" : "border-border/30 bg-surface-light text-muted hover:text-foreground"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={on}
-                    onChange={() => toggleMetric(m.id)}
-                    className="accent-[#2563EB]"
-                  />
-                  <span>{m.label}</span>
-                </label>
+                <MotionPage>
+                                    <label
+                                    key={m.id}
+                                    className={`flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer text-xs transition-all ${
+                                      on ? "border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)] text-foreground" : "border-border/30 bg-surface-light text-muted hover:text-foreground"
+                                    }`}
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={on}
+                                      onChange={() => toggleMetric(m.id)}
+                                      className="accent-[#2563EB]"
+                                    />
+                                    <span>{m.label}</span>
+                                  </label>
+                                  </MotionPage>
               );
             })}
           </div>

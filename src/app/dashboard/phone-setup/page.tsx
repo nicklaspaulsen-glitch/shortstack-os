@@ -38,6 +38,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import PlanPickerCard from "@/components/phone-setup/plan-picker-card";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface Client {
   id: string;
@@ -287,500 +288,496 @@ export default function PhoneSetupPage() {
   const planTierLabel = usage?.plan_tier || "Starter";
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <PageHero
-        title="Phone Setup"
-        eyebrow="PHONE SETUP"
-        subtitle="Buy a Twilio phone number for your client. AI receptionist + SMS + voice — all wired in one click."
-        icon={<Phone size={20} />}
-        actions={
-          usage ? (
-            <div className="flex items-center gap-1.5 rounded-lg border border-border bg-black/5 px-2.5 py-1.5 text-[10px] text-foreground">
-              <Phone size={11} />
-              <span>
-                <span className="font-semibold">{phoneUsed}</span>
-                <span className="opacity-70"> / {phoneLimitDisplay}</span>
-                <span className="opacity-60"> numbers · {planTierLabel}</span>
-              </span>
-            </div>
-          ) : undefined
-        }
-      />
-
-      <div className="mx-auto max-w-4xl px-6 pb-10 pt-4 space-y-4">
-        {/* Plan picker card — GHL-style plan summary + per-number cost
-            preview. Per Apr 26 user ask: "what they have to pay for it
-            and how to set everything up". Sits above the existing
-            wizard so users see the cost BEFORE running the buy flow. */}
-        <PlanPickerCard />
-
-        {/* Quota / agency-pays hint — always visible under the hero */}
-        <div className="mb-4 flex flex-wrap items-start gap-3 rounded-xl border border-border/40 bg-surface-light/20 p-3 text-[11px] text-muted">
-          <div className="flex items-center gap-1.5 text-[11px] text-foreground/80">
-            <Sparkles size={12} className="text-[#2563EB]" />
-            <span>
-              You&apos;ve provisioned{" "}
-              <span className="font-semibold text-foreground">{phoneUsed}</span> of{" "}
-              <span className="font-semibold text-foreground">{phoneLimitDisplay}</span> numbers on
-              your <span className="font-semibold text-foreground">{planTierLabel}</span> plan.
-            </span>
-          </div>
-          <span className="opacity-40">·</span>
-          <span>
-            ~$1/mo per number is billed to <span className="font-semibold">your</span> Twilio
-            account — rebill clients however you like.
-          </span>
-        </div>
-
-        {/* At-limit: replace wizard with upgrade card so the user never wanders
-            into the wizard only to fail on the final step. */}
-        {atLimit && step !== 4 && (
-          <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-6">
-            <div className="mb-2 flex items-center gap-2">
-              <AlertTriangle size={18} className="text-amber-400" />
-              <h2 className="text-base font-semibold">
-                You&apos;ve hit your {planTierLabel} plan&apos;s phone-number cap
-              </h2>
-            </div>
-            <p className="mb-4 text-sm text-muted">
-              You&apos;re using <span className="font-semibold text-foreground">{phoneUsed}</span>{" "}
-              of <span className="font-semibold text-foreground">{phoneLimitDisplay}</span>{" "}
-              numbers. Upgrade to a higher tier to provision another, or release an existing
-              number from{" "}
-              <a href="/dashboard/phone-email" className="text-[#2563EB] hover:underline">
-                Phone &amp; Email
-              </a>
-              .
-            </p>
-            <div className="flex flex-wrap items-center gap-2">
-              <a
-                href="/dashboard/upgrade"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
-              >
-                <ArrowUpRight size={14} /> See plans
-              </a>
-              <a
-                href="/dashboard/phone-email"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 px-4 py-2 text-sm text-muted transition hover:text-foreground"
-              >
-                <Settings size={14} /> Manage existing numbers
-              </a>
-            </div>
-          </div>
-        )}
-
-        {/* Progress bar */}
-        <div className="mb-6 flex items-center gap-2">
-          {[1, 2, 3, 4].map((n) => {
-            const label =
-              n === 1 ? "Client" : n === 2 ? "Number" : n === 3 ? "Confirm" : "Done";
-            const active = step === n;
-            const done = step > n;
-            return (
-              <div key={n} className="flex flex-1 items-center gap-2">
-                <div
-                  className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold transition ${
-                    done
-                      ? "bg-[#2563EB] text-white"
-                      : active
-                        ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] ring-2 ring-[rgba(37,99,235,0.4)]"
-                        : "bg-surface-light text-muted"
-                  }`}
-                >
-                  {done ? <Check size={12} /> : n}
-                </div>
-                <span
-                  className={`text-[11px] font-medium ${active ? "text-foreground" : "text-muted"}`}
-                >
-                  {label}
-                </span>
-                {n < 4 && <div className="ml-1 flex-1 h-px bg-border/60" />}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Step 1: Pick client */}
-        {step === 1 && (
-          <div className="glass rounded-xl p-6">
-            <h2 className="mb-1 text-lg font-semibold">Which client is this number for?</h2>
-            <p className="mb-5 text-sm text-muted">
-              The phone will be attached to this client so their calls + SMS route correctly.
-            </p>
-
-            {loadingClients ? (
-              <div className="flex items-center gap-2 text-sm text-muted">
-                <Loader size={14} className="animate-spin" /> Loading your clients…
-              </div>
-            ) : clients.length === 0 ? (
-              <div className="rounded-lg border border-dashed border-border/50 bg-background/30 p-8 text-center">
-                <Users size={28} className="mx-auto mb-3 text-muted/40" />
-                <p className="mb-1 text-sm font-semibold text-foreground">
-                  You need to add a client first
-                </p>
-                <p className="mb-4 text-[12px] text-muted">
-                  Phone numbers are attached to a specific client so calls + SMS route
-                  correctly. Add a client, then come back here.
-                </p>
-                <a
-                  href="/dashboard/clients"
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#1D4ED8]"
-                >
-                  <ArrowRight size={12} /> Go to Clients
-                </a>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {clients.map((c, idx) => {
-                  const selected = selectedClient?.id === c.id;
-                  const alreadyHas = !!c.twilio_phone_number;
-                  return (
-                    <motion.button
-                      key={c.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: idx * 0.04 }}
-                      onClick={() => !alreadyHas && setSelectedClient(c)}
-                      disabled={alreadyHas}
-                      className={`flex items-center gap-3 rounded-lg border p-3 text-left transition ${
-                        selected
-                          ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]"
-                          : alreadyHas
-                            ? "border-border/30 bg-surface-light/10 opacity-50 cursor-not-allowed"
-                            : "border-border/50 hover:border-[rgba(37,99,235,0.2)]"
-                      }`}
-                    >
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-semibold">
-                        {c.business_name[0] || "?"}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold">{c.business_name}</p>
-                        <p className="truncate text-[11px] text-muted">
-                          {alreadyHas
-                            ? `Already has ${c.twilio_phone_number}`
-                            : c.contact_name || c.email || "—"}
-                        </p>
-                      </div>
-                      {selected && <Check size={16} className="text-[#2563EB]" />}
-                    </motion.button>
-                  );
-                })}
-              </div>
-            )}
-
-            <div className="mt-6 flex justify-end">
-              <button
-                onClick={() => setStep(2)}
-                disabled={!canProceedStep1}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                Next <ArrowRight size={14} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 2: Pick number */}
-        {step === 2 && (
-          <div className="glass rounded-xl p-6">
-            <h2 className="mb-1 text-lg font-semibold">Pick a phone number</h2>
-            <p className="mb-4 text-sm text-muted">
-              Search by area code and pick any available number. Numbers are $1/mo from Twilio.
-            </p>
-
-            {/* Search controls */}
-            <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-[180px_1fr_auto]">
-              <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted">
-                  Country
-                </label>
-                <select
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                  className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
-                >
-                  {COUNTRIES.map((c) => (
-                    <option key={c.code} value={c.code}>
-                      {c.flag} {c.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted">
-                  Area code (optional)
-                </label>
-                <input
-                  type="text"
-                  value={areaCode}
-                  onChange={(e) => setAreaCode(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                  placeholder="415, 212, 305…"
-                  className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm placeholder:text-muted"
-                />
-              </div>
-              <div className="flex items-end">
-                <button
-                  onClick={searchNumbers}
-                  disabled={loadingNumbers}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-4 py-2 text-sm font-semibold transition hover:bg-surface-light disabled:opacity-40"
-                >
-                  {loadingNumbers ? (
-                    <Loader size={14} className="animate-spin" />
-                  ) : (
-                    <Search size={14} />
-                  )}
-                  Search
-                </button>
-              </div>
-            </div>
-
-            {/* Results */}
-            {availableNumbers.length === 0 && !loadingNumbers ? (
-              <div className="rounded-lg border border-dashed border-border/50 p-8 text-center text-sm text-muted">
-                <Globe size={20} className="mx-auto mb-2 opacity-50" />
-                Click Search to see available numbers.
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {availableNumbers.map((n, idx) => {
-                  const selected = selectedNumber?.phone === n.phone;
-                  return (
-                    <motion.button
-                      key={n.phone}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: idx * 0.04 }}
-                      onClick={() => setSelectedNumber(n)}
-                      className={`rounded-lg border p-3 text-left transition ${
-                        selected
-                          ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]"
-                          : "border-border/50 hover:border-[rgba(37,99,235,0.2)]"
-                      }`}
-                    >
-                      <p className="font-mono text-sm font-semibold">{n.phone}</p>
-                      <p className="text-[11px] text-muted">
-                        {n.locality || "—"}, {n.region || country}
-                      </p>
-                    </motion.button>
-                  );
-                })}
-              </div>
-            )}
-
-            <div className="mt-6 flex justify-between">
-              <button
-                onClick={() => setStep(1)}
-                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted hover:text-foreground"
-              >
-                <ArrowLeft size={14} /> Back
-              </button>
-              <button
-                onClick={() => setStep(3)}
-                disabled={!canProceedStep2}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                Next <ArrowRight size={14} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Confirm */}
-        {step === 3 && selectedClient && selectedNumber && (
-          <div className="glass rounded-xl p-6">
-            <h2 className="mb-1 text-lg font-semibold">Confirm purchase</h2>
-            <p className="mb-5 text-sm text-muted">
-              Review before we charge your Twilio balance.
-            </p>
-
-            <div className="mb-5 space-y-3 rounded-lg border border-border/40 bg-background/40 p-4">
-              <Row label="Client" value={selectedClient.business_name} />
-              <Row
-                label="Phone number"
-                value={
-                  <span className="font-mono font-semibold text-foreground">
-                    {selectedNumber.phone}
-                  </span>
-                }
-              />
-              <Row label="Location" value={`${selectedNumber.locality || "—"}, ${selectedNumber.region || country}`} />
-              <Row label="Monthly cost" value="~$1.00 USD (Twilio)" />
-              <Row
-                label="Includes"
-                value={
-                  <span className="text-[13px]">
-                    SMS webhook · Voice webhook · ElevenLabs phone import · Auto-created AI
-                    receptionist agent
-                  </span>
-                }
-              />
-            </div>
-
-            <div className="mb-5 flex items-start gap-2 rounded-lg bg-amber-500/10 p-3 text-[11px] text-amber-300">
-              <AlertTriangle size={13} className="mt-0.5 shrink-0" />
-              <p>
-                This is a real purchase against your Twilio account. The number stays yours
-                until you release it from the Twilio dashboard.
-              </p>
-            </div>
-
-            {/* Live progress during the 2-3s Twilio → ElevenLabs pipeline */}
-            {buying && (
-              <div className="mb-5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-4">
-                <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-[#2563EB]">
-                  <Loader size={13} className="animate-spin" /> Provisioning your number —
-                  hang tight, this takes 2-3 seconds
-                </div>
-                <div className="space-y-1.5 text-[11px] text-muted">
-                  <PipelineStep
-                    label="Purchasing from Twilio"
-                    active={buyingStage === "purchasing"}
-                    done={["importing", "agent", "saving"].includes(buyingStage)}
-                  />
-                  <PipelineStep
-                    label="Importing to ElevenLabs"
-                    active={buyingStage === "importing"}
-                    done={["agent", "saving"].includes(buyingStage)}
-                  />
-                  <PipelineStep
-                    label="Creating AI receptionist agent"
-                    active={buyingStage === "agent"}
-                    done={buyingStage === "saving"}
-                  />
-                  <PipelineStep
-                    label="Wiring SMS + voice webhooks"
-                    active={buyingStage === "saving"}
-                    done={false}
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="flex justify-between">
-              <button
-                onClick={() => setStep(2)}
-                disabled={buying}
-                className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted hover:text-foreground disabled:opacity-40"
-              >
-                <ArrowLeft size={14} /> Back
-              </button>
-              <button
-                onClick={provision}
-                disabled={buying}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
-              >
-                {buying ? (
-                  <>
-                    <Loader size={14} className="animate-spin" /> Buying number…
-                  </>
-                ) : (
-                  <>
-                    <Sparkles size={14} /> Buy this number
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 4: Done */}
-        {step === 4 && purchaseResult && selectedClient && (
-          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-6">
-            <div className="mb-4 flex items-center gap-2">
-              <CheckCircle2 size={22} className="text-emerald-400" />
-              <h2 className="text-lg font-semibold">Number is live!</h2>
-            </div>
-
-            <div className="mb-5 space-y-3 rounded-lg border border-border/40 bg-background/40 p-4">
-              <Row label="Client" value={selectedClient.business_name} />
-              <Row
-                label="Phone"
-                value={
-                  <span className="font-mono text-base font-semibold text-emerald-300">
-                    {purchaseResult.phone_number}
-                  </span>
-                }
-              />
-              <Row label="Twilio SID" value={<span className="font-mono text-[11px]">{purchaseResult.twilio_sid}</span>} />
-              {purchaseResult.eleven_agent_id && (
-                <Row
-                  label="AI Agent"
-                  value={
-                    <span className="inline-flex items-center gap-1 text-[12px]">
-                      <Check size={11} className="text-emerald-400" /> Created
+    <MotionPage className="min-h-screen bg-background text-foreground"><PageHero
+              title="Phone Setup"
+              eyebrow="PHONE SETUP"
+              subtitle="Buy a Twilio phone number for your client. AI receptionist + SMS + voice — all wired in one click."
+              icon={<Phone size={20} />}
+              actions={
+                usage ? (
+                  <div className="flex items-center gap-1.5 rounded-lg border border-border bg-black/5 px-2.5 py-1.5 text-[10px] text-foreground">
+                    <Phone size={11} />
+                    <span>
+                      <span className="font-semibold">{phoneUsed}</span>
+                      <span className="opacity-70"> / {phoneLimitDisplay}</span>
+                      <span className="opacity-60"> numbers · {planTierLabel}</span>
                     </span>
-                  }
-                />
+                  </div>
+                ) : undefined
+              }
+            /><div className="mx-auto max-w-4xl px-6 pb-10 pt-4 space-y-4">
+              {/* Plan picker card — GHL-style plan summary + per-number cost
+                  preview. Per Apr 26 user ask: "what they have to pay for it
+                  and how to set everything up". Sits above the existing
+                  wizard so users see the cost BEFORE running the buy flow. */}
+              <PlanPickerCard />
+
+              {/* Quota / agency-pays hint — always visible under the hero */}
+              <div className="mb-4 flex flex-wrap items-start gap-3 rounded-xl border border-border/40 bg-surface-light/20 p-3 text-[11px] text-muted">
+                <div className="flex items-center gap-1.5 text-[11px] text-foreground/80">
+                  <Sparkles size={12} className="text-[#2563EB]" />
+                  <span>
+                    You&apos;ve provisioned{" "}
+                    <span className="font-semibold text-foreground">{phoneUsed}</span> of{" "}
+                    <span className="font-semibold text-foreground">{phoneLimitDisplay}</span> numbers on
+                    your <span className="font-semibold text-foreground">{planTierLabel}</span> plan.
+                  </span>
+                </div>
+                <span className="opacity-40">·</span>
+                <span>
+                  ~$1/mo per number is billed to <span className="font-semibold">your</span> Twilio
+                  account — rebill clients however you like.
+                </span>
+              </div>
+
+              {/* At-limit: replace wizard with upgrade card so the user never wanders
+                  into the wizard only to fail on the final step. */}
+              {atLimit && step !== 4 && (
+                <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-6">
+                  <div className="mb-2 flex items-center gap-2">
+                    <AlertTriangle size={18} className="text-amber-400" />
+                    <h2 className="text-base font-semibold">
+                      You&apos;ve hit your {planTierLabel} plan&apos;s phone-number cap
+                    </h2>
+                  </div>
+                  <p className="mb-4 text-sm text-muted">
+                    You&apos;re using <span className="font-semibold text-foreground">{phoneUsed}</span>{" "}
+                    of <span className="font-semibold text-foreground">{phoneLimitDisplay}</span>{" "}
+                    numbers. Upgrade to a higher tier to provision another, or release an existing
+                    number from{" "}
+                    <a href="/dashboard/phone-email" className="text-[#2563EB] hover:underline">
+                      Phone &amp; Email
+                    </a>
+                    .
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <a
+                      href="/dashboard/upgrade"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
+                    >
+                      <ArrowUpRight size={14} /> See plans
+                    </a>
+                    <a
+                      href="/dashboard/phone-email"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 px-4 py-2 text-sm text-muted transition hover:text-foreground"
+                    >
+                      <Settings size={14} /> Manage existing numbers
+                    </a>
+                  </div>
+                </div>
               )}
-            </div>
 
-            <p className="mb-4 text-sm text-muted">
-              <MessageSquare size={12} className="mr-1 inline" /> SMS webhook wired → inbound
-              messages appear in Conversations.
-              <br />
-              <Phone size={12} className="mr-1 inline" /> Voice webhook wired → inbound calls
-              route to the ElevenLabs AI receptionist.
-            </p>
+              {/* Progress bar */}
+              <div className="mb-6 flex items-center gap-2">
+                {[1, 2, 3, 4].map((n) => {
+                  const label =
+                    n === 1 ? "Client" : n === 2 ? "Number" : n === 3 ? "Confirm" : "Done";
+                  const active = step === n;
+                  const done = step > n;
+                  return (
+                    <div key={n} className="flex flex-1 items-center gap-2">
+                      <div
+                        className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold transition ${
+                          done
+                            ? "bg-[#2563EB] text-white"
+                            : active
+                              ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] ring-2 ring-[rgba(37,99,235,0.4)]"
+                              : "bg-surface-light text-muted"
+                        }`}
+                      >
+                        {done ? <Check size={12} /> : n}
+                      </div>
+                      <span
+                        className={`text-[11px] font-medium ${active ? "text-foreground" : "text-muted"}`}
+                      >
+                        {label}
+                      </span>
+                      {n < 4 && <div className="ml-1 flex-1 h-px bg-border/60" />}
+                    </div>
+                  );
+                })}
+              </div>
 
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={sendTestSms}
-                disabled={testSending}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
-              >
-                {testSending ? (
-                  <>
-                    <Loader size={14} className="animate-spin" /> Sending…
-                  </>
-                ) : (
-                  <>
-                    <Send size={14} /> Send test SMS
-                  </>
-                )}
-              </button>
-              <a
-                href="/dashboard/phone-email"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-surface-light/60 px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-surface-light"
-              >
-                <Settings size={14} /> Manage this number
-              </a>
-              <button
-                onClick={() => {
-                  setStep(1);
-                  setSelectedClient(null);
-                  setSelectedNumber(null);
-                  setAvailableNumbers([]);
-                  setAreaCode("");
-                  setPurchaseResult(null);
-                  void refreshUsage();
-                }}
-                disabled={atLimit}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-4 py-2 text-sm font-semibold transition hover:bg-surface-light disabled:cursor-not-allowed disabled:opacity-50"
-                title={atLimit ? "You've hit your plan's phone-number cap" : undefined}
-              >
-                <Sparkles size={14} /> Provision another
-              </button>
-              <a
-                href="/dashboard/eleven-agents"
-                className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm text-muted transition hover:text-foreground"
-              >
-                Customise the AI agent →
-              </a>
-            </div>
+              {/* Step 1: Pick client */}
+              {step === 1 && (
+                <div className="glass rounded-xl p-6">
+                  <h2 className="mb-1 text-lg font-semibold">Which client is this number for?</h2>
+                  <p className="mb-5 text-sm text-muted">
+                    The phone will be attached to this client so their calls + SMS route correctly.
+                  </p>
 
-            {/* Next-step nudge — connect this number to a real inbox + outbound */}
-            <div className="mt-5 rounded-lg border border-border/40 bg-background/40 p-3 text-[11px] text-muted">
-              <span className="font-semibold text-foreground">Next step:</span> assign a sender
-              identity and compose your first broadcast from{" "}
-              <a href="/dashboard/phone-email" className="text-[#2563EB] hover:underline">
-                Phone &amp; Email
-              </a>
-              .
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+                  {loadingClients ? (
+                    <div className="flex items-center gap-2 text-sm text-muted">
+                      <Loader size={14} className="animate-spin" /> Loading your clients…
+                    </div>
+                  ) : clients.length === 0 ? (
+                    <div className="rounded-lg border border-dashed border-border/50 bg-background/30 p-8 text-center">
+                      <Users size={28} className="mx-auto mb-3 text-muted/40" />
+                      <p className="mb-1 text-sm font-semibold text-foreground">
+                        You need to add a client first
+                      </p>
+                      <p className="mb-4 text-[12px] text-muted">
+                        Phone numbers are attached to a specific client so calls + SMS route
+                        correctly. Add a client, then come back here.
+                      </p>
+                      <a
+                        href="/dashboard/clients"
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#1D4ED8]"
+                      >
+                        <ArrowRight size={12} /> Go to Clients
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {clients.map((c, idx) => {
+                        const selected = selectedClient?.id === c.id;
+                        const alreadyHas = !!c.twilio_phone_number;
+                        return (
+                          <motion.button
+                            key={c.id}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.04 }}
+                            onClick={() => !alreadyHas && setSelectedClient(c)}
+                            disabled={alreadyHas}
+                            className={`flex items-center gap-3 rounded-lg border p-3 text-left transition ${
+                              selected
+                                ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]"
+                                : alreadyHas
+                                  ? "border-border/30 bg-surface-light/10 opacity-50 cursor-not-allowed"
+                                  : "border-border/50 hover:border-[rgba(37,99,235,0.2)]"
+                            }`}
+                          >
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-semibold">
+                              {c.business_name[0] || "?"}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-sm font-semibold">{c.business_name}</p>
+                              <p className="truncate text-[11px] text-muted">
+                                {alreadyHas
+                                  ? `Already has ${c.twilio_phone_number}`
+                                  : c.contact_name || c.email || "—"}
+                              </p>
+                            </div>
+                            {selected && <Check size={16} className="text-[#2563EB]" />}
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  <div className="mt-6 flex justify-end">
+                    <button
+                      onClick={() => setStep(2)}
+                      disabled={!canProceedStep1}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Next <ArrowRight size={14} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 2: Pick number */}
+              {step === 2 && (
+                <div className="glass rounded-xl p-6">
+                  <h2 className="mb-1 text-lg font-semibold">Pick a phone number</h2>
+                  <p className="mb-4 text-sm text-muted">
+                    Search by area code and pick any available number. Numbers are $1/mo from Twilio.
+                  </p>
+
+                  {/* Search controls */}
+                  <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-[180px_1fr_auto]">
+                    <div>
+                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted">
+                        Country
+                      </label>
+                      <select
+                        value={country}
+                        onChange={(e) => setCountry(e.target.value)}
+                        className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
+                      >
+                        {COUNTRIES.map((c) => (
+                          <option key={c.code} value={c.code}>
+                            {c.flag} {c.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted">
+                        Area code (optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={areaCode}
+                        onChange={(e) => setAreaCode(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                        placeholder="415, 212, 305…"
+                        className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm placeholder:text-muted"
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <button
+                        onClick={searchNumbers}
+                        disabled={loadingNumbers}
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-4 py-2 text-sm font-semibold transition hover:bg-surface-light disabled:opacity-40"
+                      >
+                        {loadingNumbers ? (
+                          <Loader size={14} className="animate-spin" />
+                        ) : (
+                          <Search size={14} />
+                        )}
+                        Search
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Results */}
+                  {availableNumbers.length === 0 && !loadingNumbers ? (
+                    <div className="rounded-lg border border-dashed border-border/50 p-8 text-center text-sm text-muted">
+                      <Globe size={20} className="mx-auto mb-2 opacity-50" />
+                      Click Search to see available numbers.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {availableNumbers.map((n, idx) => {
+                        const selected = selectedNumber?.phone === n.phone;
+                        return (
+                          <motion.button
+                            key={n.phone}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.04 }}
+                            onClick={() => setSelectedNumber(n)}
+                            className={`rounded-lg border p-3 text-left transition ${
+                              selected
+                                ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]"
+                                : "border-border/50 hover:border-[rgba(37,99,235,0.2)]"
+                            }`}
+                          >
+                            <p className="font-mono text-sm font-semibold">{n.phone}</p>
+                            <p className="text-[11px] text-muted">
+                              {n.locality || "—"}, {n.region || country}
+                            </p>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  <div className="mt-6 flex justify-between">
+                    <button
+                      onClick={() => setStep(1)}
+                      className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted hover:text-foreground"
+                    >
+                      <ArrowLeft size={14} /> Back
+                    </button>
+                    <button
+                      onClick={() => setStep(3)}
+                      disabled={!canProceedStep2}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Next <ArrowRight size={14} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Confirm */}
+              {step === 3 && selectedClient && selectedNumber && (
+                <div className="glass rounded-xl p-6">
+                  <h2 className="mb-1 text-lg font-semibold">Confirm purchase</h2>
+                  <p className="mb-5 text-sm text-muted">
+                    Review before we charge your Twilio balance.
+                  </p>
+
+                  <div className="mb-5 space-y-3 rounded-lg border border-border/40 bg-background/40 p-4">
+                    <Row label="Client" value={selectedClient.business_name} />
+                    <Row
+                      label="Phone number"
+                      value={
+                        <span className="font-mono font-semibold text-foreground">
+                          {selectedNumber.phone}
+                        </span>
+                      }
+                    />
+                    <Row label="Location" value={`${selectedNumber.locality || "—"}, ${selectedNumber.region || country}`} />
+                    <Row label="Monthly cost" value="~$1.00 USD (Twilio)" />
+                    <Row
+                      label="Includes"
+                      value={
+                        <span className="text-[13px]">
+                          SMS webhook · Voice webhook · ElevenLabs phone import · Auto-created AI
+                          receptionist agent
+                        </span>
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-5 flex items-start gap-2 rounded-lg bg-amber-500/10 p-3 text-[11px] text-amber-300">
+                    <AlertTriangle size={13} className="mt-0.5 shrink-0" />
+                    <p>
+                      This is a real purchase against your Twilio account. The number stays yours
+                      until you release it from the Twilio dashboard.
+                    </p>
+                  </div>
+
+                  {/* Live progress during the 2-3s Twilio → ElevenLabs pipeline */}
+                  {buying && (
+                    <div className="mb-5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-4">
+                      <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-[#2563EB]">
+                        <Loader size={13} className="animate-spin" /> Provisioning your number —
+                        hang tight, this takes 2-3 seconds
+                      </div>
+                      <div className="space-y-1.5 text-[11px] text-muted">
+                        <PipelineStep
+                          label="Purchasing from Twilio"
+                          active={buyingStage === "purchasing"}
+                          done={["importing", "agent", "saving"].includes(buyingStage)}
+                        />
+                        <PipelineStep
+                          label="Importing to ElevenLabs"
+                          active={buyingStage === "importing"}
+                          done={["agent", "saving"].includes(buyingStage)}
+                        />
+                        <PipelineStep
+                          label="Creating AI receptionist agent"
+                          active={buyingStage === "agent"}
+                          done={buyingStage === "saving"}
+                        />
+                        <PipelineStep
+                          label="Wiring SMS + voice webhooks"
+                          active={buyingStage === "saving"}
+                          done={false}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between">
+                    <button
+                      onClick={() => setStep(2)}
+                      disabled={buying}
+                      className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted hover:text-foreground disabled:opacity-40"
+                    >
+                      <ArrowLeft size={14} /> Back
+                    </button>
+                    <button
+                      onClick={provision}
+                      disabled={buying}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
+                    >
+                      {buying ? (
+                        <>
+                          <Loader size={14} className="animate-spin" /> Buying number…
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles size={14} /> Buy this number
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 4: Done */}
+              {step === 4 && purchaseResult && selectedClient && (
+                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-6">
+                  <div className="mb-4 flex items-center gap-2">
+                    <CheckCircle2 size={22} className="text-emerald-400" />
+                    <h2 className="text-lg font-semibold">Number is live!</h2>
+                  </div>
+
+                  <div className="mb-5 space-y-3 rounded-lg border border-border/40 bg-background/40 p-4">
+                    <Row label="Client" value={selectedClient.business_name} />
+                    <Row
+                      label="Phone"
+                      value={
+                        <span className="font-mono text-base font-semibold text-emerald-300">
+                          {purchaseResult.phone_number}
+                        </span>
+                      }
+                    />
+                    <Row label="Twilio SID" value={<span className="font-mono text-[11px]">{purchaseResult.twilio_sid}</span>} />
+                    {purchaseResult.eleven_agent_id && (
+                      <Row
+                        label="AI Agent"
+                        value={
+                          <span className="inline-flex items-center gap-1 text-[12px]">
+                            <Check size={11} className="text-emerald-400" /> Created
+                          </span>
+                        }
+                      />
+                    )}
+                  </div>
+
+                  <p className="mb-4 text-sm text-muted">
+                    <MessageSquare size={12} className="mr-1 inline" /> SMS webhook wired → inbound
+                    messages appear in Conversations.
+                    <br />
+                    <Phone size={12} className="mr-1 inline" /> Voice webhook wired → inbound calls
+                    route to the ElevenLabs AI receptionist.
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={sendTestSms}
+                      disabled={testSending}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
+                    >
+                      {testSending ? (
+                        <>
+                          <Loader size={14} className="animate-spin" /> Sending…
+                        </>
+                      ) : (
+                        <>
+                          <Send size={14} /> Send test SMS
+                        </>
+                      )}
+                    </button>
+                    <a
+                      href="/dashboard/phone-email"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-surface-light/60 px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-surface-light"
+                    >
+                      <Settings size={14} /> Manage this number
+                    </a>
+                    <button
+                      onClick={() => {
+                        setStep(1);
+                        setSelectedClient(null);
+                        setSelectedNumber(null);
+                        setAvailableNumbers([]);
+                        setAreaCode("");
+                        setPurchaseResult(null);
+                        void refreshUsage();
+                      }}
+                      disabled={atLimit}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-4 py-2 text-sm font-semibold transition hover:bg-surface-light disabled:cursor-not-allowed disabled:opacity-50"
+                      title={atLimit ? "You've hit your plan's phone-number cap" : undefined}
+                    >
+                      <Sparkles size={14} /> Provision another
+                    </button>
+                    <a
+                      href="/dashboard/eleven-agents"
+                      className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm text-muted transition hover:text-foreground"
+                    >
+                      Customise the AI agent →
+                    </a>
+                  </div>
+
+                  {/* Next-step nudge — connect this number to a real inbox + outbound */}
+                  <div className="mt-5 rounded-lg border border-border/40 bg-background/40 p-3 text-[11px] text-muted">
+                    <span className="font-semibold text-foreground">Next step:</span> assign a sender
+                    identity and compose your first broadcast from{" "}
+                    <a href="/dashboard/phone-email" className="text-[#2563EB] hover:underline">
+                      Phone &amp; Email
+                    </a>
+                    .
+                  </div>
+                </div>
+              )}
+            </div></MotionPage>
   );
 }
 

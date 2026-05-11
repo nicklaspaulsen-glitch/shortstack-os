@@ -14,6 +14,7 @@ import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { GoogleIcon, OutlookIcon } from "@/components/ui/platform-icons";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type ViewMode = "month" | "week" | "day";
 type EventCategory = "meeting" | "deadline" | "content" | "call";
@@ -304,538 +305,515 @@ export default function CalendarPage() {
   ];
 
   return (
-    <div className="fade-in space-y-5">
-      {/* Hero Header */}
-      <PageHero
-        eyebrow="TIME COMMAND"
-        icon={<Calendar size={22} />}
-        title="Calendar"
-        subtitle="Schedule appointments, calls, and meetings. Sync with Google or Outlook � AI detects conflicts automatically."
-        gradient="blue"
-        actions={
-          <>
-            <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all flex items-center gap-1.5">
-              <Filter size={12} /> Filters
-            </button>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] text-[#0A0A0B] text-xs font-semibold hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5">
-                <Plus size={12} /> New Event
-              </button>
-            </motion.div>
-          </>
-        }
-      />
-
-      {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
-        {TABS.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-              tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
-            }`}>
-            {t.icon} {t.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Loading State */}
-      {loading && (
-        <div className="space-y-3">
-          <TableSkeleton rows={4} />
-        </div>
-      )}
-
-      {/* Filters Panel */}
-      {showFilters && (
-        <div className="card p-4 space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/* View Mode Toggle */}
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">View</label>
-              <div className="flex gap-1">
-                {(["month", "week", "day"] as const).map(v => (
-                  <button key={v} onClick={() => setViewMode(v)}
-                    className={`px-2.5 py-1 text-[10px] rounded-md capitalize transition-all ${viewMode === v ? "bg-[#2563EB] text-white font-medium" : "bg-surface-light text-muted"}`}>
-                    {v}
+    <MotionPage className="fade-in space-y-5">{/* Hero Header */}<PageHero
+              eyebrow="TIME COMMAND"
+              icon={<Calendar size={22} />}
+              title="Calendar"
+              subtitle="Schedule appointments, calls, and meetings. Sync with Google or Outlook � AI detects conflicts automatically."
+              gradient="blue"
+              actions={
+                <>
+                  <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all flex items-center gap-1.5">
+                    <Filter size={12} /> Filters
                   </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Team Filter */}
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Team Member</label>
-              <select value={selectedTeam} onChange={e => setSelectedTeam(e.target.value)} className="input w-full text-xs">
-                {TEAM_MEMBERS.map(m => <option key={m} value={m}>{m}</option>)}
-              </select>
-            </div>
-
-            {/* Client Filter */}
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Client</label>
-              <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="input w-full text-xs">
-                {CLIENTS.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </div>
-
-            {/* Timezone */}
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Timezone</label>
-              <select value={timezone} onChange={e => setTimezone(e.target.value)} className="input w-full text-xs">
-                {TIMEZONES.map(tz => <option key={tz.value} value={tz.value}>{tz.label}</option>)}
-              </select>
-            </div>
-          </div>
-
-          {/* Category Filters */}
-          <div>
-            <label className="block text-[10px] text-muted mb-1.5 uppercase tracking-wider font-semibold">Categories</label>
-            <div className="flex gap-2">
-              {(Object.keys(CATEGORY_CONFIG) as EventCategory[]).map(cat => (
-                <button key={cat} onClick={() => toggleCategory(cat)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border transition-all ${
-                    selectedCategories.includes(cat) ? `${CATEGORY_CONFIG[cat].bg} ${CATEGORY_CONFIG[cat].color} border-transparent` : "border-border text-muted"
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] text-[#0A0A0B] text-xs font-semibold hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5">
+                      <Plus size={12} /> New Event
+                    </button>
+                  </motion.div>
+                </>
+              }
+            />{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
+              {TABS.map(t => (
+                <button key={t.id} onClick={() => setTab(t.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
+                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
                   }`}>
-                  <div className="w-2 h-2 rounded-full" style={{ background: cat === "meeting" ? "#1D4ED8" : cat === "deadline" ? "#dc2626" : cat === "content" ? "#7c3aed" : "#1D4ED8" }} />
-                  {CATEGORY_CONFIG[cat].label}
+                  {t.icon} {t.label}
                 </button>
               ))}
-            </div>
-          </div>
-
-          {/* Calendar Sync Status */}
-          <div>
-            <label className="block text-[10px] text-muted mb-1.5 uppercase tracking-wider font-semibold">Calendar Sync</label>
-            <div className="flex gap-3">
-              {Object.entries(syncStatus).map(([name, connected]) => (
-                <div key={name} className="flex items-center gap-1.5 text-xs">
-                  <div className={`w-2 h-2 rounded-full ${connected ? "bg-emerald-400" : "bg-red-400"}`} />
-                  <span className="capitalize text-muted">{name}</span>
-                  <span className={`text-[9px] ${connected ? "text-emerald-400" : "text-red-400"}`}>
-                    {connected ? "Synced" : "Not Connected"}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Export */}
-          <div className="flex gap-2">
-            <button onClick={() => exportIcs("google")} className="btn-secondary text-[10px] flex items-center gap-1.5">
-              <GoogleIcon size={12} /> Export to Google
-            </button>
-            <button onClick={() => exportIcs("outlook")} className="btn-secondary text-[10px] flex items-center gap-1.5">
-              <OutlookIcon size={12} /> Export to Outlook
-            </button>
-          </div>
-        </div>
-      )}
-
-      {!loading && tab === "calendar" && (
-        <>
-          {/* Week Navigation */}
-          <div className="flex items-center justify-between">
-            <button onClick={prevWeek} className="btn-ghost p-2" aria-label="Previous week"><ChevronLeft size={16} /></button>
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold">
-                {weekDays[0].toLocaleDateString("en-US", { month: "short", day: "numeric" })} � {weekDays[6].toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-              </span>
-              <button onClick={goToday} className="btn-secondary text-[10px] px-2 py-0.5">Today</button>
-            </div>
-            <button onClick={nextWeek} className="btn-ghost p-2" aria-label="Next week"><ChevronRight size={16} /></button>
-          </div>
-
-          {/* Month View */}
-          {viewMode === "month" && (
-            <div>
-              <div className="grid grid-cols-7 gap-px mb-px">
-                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(d => (
-                  <div key={d} className="text-center text-[10px] text-muted py-1 font-semibold">{d}</div>
-                ))}
+            </div>{/* Loading State */}{loading && (
+              <div className="space-y-3">
+                <TableSkeleton rows={4} />
               </div>
-              <div className="grid grid-cols-7 gap-1">
-                {monthGrid.map((day, idx) => {
-                  const dateStr = day.toISOString().split("T")[0];
-                  const dayEvts = filteredEvents.filter(e => e.date === dateStr);
-                  const isToday = dateStr === today;
-                  const isCurrentMonth = day.getMonth() === currentWeek.getMonth();
-                  return (
-                    <div key={idx}
-                      onDragOver={e => e.preventDefault()}
-                      onDrop={() => handleDrop(dateStr)}
-                      className={`rounded-lg p-1.5 min-h-[80px] border transition-all ${
-                        isToday ? "ring-1 ring-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.1)]" : "border-border"
-                      } ${!isCurrentMonth ? "opacity-30" : "bg-surface-light"}`}>
-                      <p className={`text-[10px] font-medium text-center ${isToday ? "text-[#2563EB]" : ""}`}>{day.getDate()}</p>
-                      {dayEvts.slice(0, 3).map(evt => (
-                        <div key={evt.id} draggable onDragStart={() => handleDragStart(evt.id)}
-                          className="text-[8px] px-1 py-0.5 rounded mt-0.5 truncate cursor-move"
-                          style={{ background: `${evt.color}20`, color: evt.color, borderLeft: `2px solid ${evt.color}` }}>
-                          {evt.time} {evt.title}
-                        </div>
+            )}{/* Filters Panel */}{showFilters && (
+              <div className="card p-4 space-y-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {/* View Mode Toggle */}
+                  <div>
+                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">View</label>
+                    <div className="flex gap-1">
+                      {(["month", "week", "day"] as const).map(v => (
+                        <button key={v} onClick={() => setViewMode(v)}
+                          className={`px-2.5 py-1 text-[10px] rounded-md capitalize transition-all ${viewMode === v ? "bg-[#2563EB] text-white font-medium" : "bg-surface-light text-muted"}`}>
+                          {v}
+                        </button>
                       ))}
-                      {dayEvts.length > 3 && (
-                        <p className="text-[8px] text-muted text-center mt-0.5">+{dayEvts.length - 3} more</p>
-                      )}
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+                  </div>
 
-          {/* Week View */}
-          {viewMode === "week" && (
-            <div className="overflow-x-auto lg:overflow-x-visible">
-            <div className="grid grid-cols-7 gap-2 min-w-[560px] lg:min-w-0">
-              {weekDays.map(day => {
-                const dateStr = day.toISOString().split("T")[0];
-                const dayAppts = filteredEvents.filter(a => a.date === dateStr);
-                const isToday = dateStr === today;
-                return (
-                  <div key={dateStr}
-                    onDragOver={e => e.preventDefault()}
-                    onDrop={() => handleDrop(dateStr)}
-                    className={`rounded-xl p-3 min-h-[220px] border border-border ${
-                      isToday ? "ring-1 ring-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)]" : "bg-surface-light"
-                    }`}>
-                    <div className="text-center mb-2">
-                      <p className="text-[10px] text-muted uppercase">{day.toLocaleDateString("en-US", { weekday: "short" })}</p>
-                      <p className={`text-lg font-bold ${isToday ? "text-[#2563EB]" : "text-foreground"}`}>{day.getDate()}</p>
+                  {/* Team Filter */}
+                  <div>
+                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Team Member</label>
+                    <select value={selectedTeam} onChange={e => setSelectedTeam(e.target.value)} className="input w-full text-xs">
+                      {TEAM_MEMBERS.map(m => <option key={m} value={m}>{m}</option>)}
+                    </select>
+                  </div>
+
+                  {/* Client Filter */}
+                  <div>
+                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Client</label>
+                    <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="input w-full text-xs">
+                      {CLIENTS.map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  </div>
+
+                  {/* Timezone */}
+                  <div>
+                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Timezone</label>
+                    <select value={timezone} onChange={e => setTimezone(e.target.value)} className="input w-full text-xs">
+                      {TIMEZONES.map(tz => <option key={tz.value} value={tz.value}>{tz.label}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Category Filters */}
+                <div>
+                  <label className="block text-[10px] text-muted mb-1.5 uppercase tracking-wider font-semibold">Categories</label>
+                  <div className="flex gap-2">
+                    {(Object.keys(CATEGORY_CONFIG) as EventCategory[]).map(cat => (
+                      <button key={cat} onClick={() => toggleCategory(cat)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border transition-all ${
+                          selectedCategories.includes(cat) ? `${CATEGORY_CONFIG[cat].bg} ${CATEGORY_CONFIG[cat].color} border-transparent` : "border-border text-muted"
+                        }`}>
+                        <div className="w-2 h-2 rounded-full" style={{ background: cat === "meeting" ? "#1D4ED8" : cat === "deadline" ? "#dc2626" : cat === "content" ? "#7c3aed" : "#1D4ED8" }} />
+                        {CATEGORY_CONFIG[cat].label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Calendar Sync Status */}
+                <div>
+                  <label className="block text-[10px] text-muted mb-1.5 uppercase tracking-wider font-semibold">Calendar Sync</label>
+                  <div className="flex gap-3">
+                    {Object.entries(syncStatus).map(([name, connected]) => (
+                      <div key={name} className="flex items-center gap-1.5 text-xs">
+                        <div className={`w-2 h-2 rounded-full ${connected ? "bg-emerald-400" : "bg-red-400"}`} />
+                        <span className="capitalize text-muted">{name}</span>
+                        <span className={`text-[9px] ${connected ? "text-emerald-400" : "text-red-400"}`}>
+                          {connected ? "Synced" : "Not Connected"}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Export */}
+                <div className="flex gap-2">
+                  <button onClick={() => exportIcs("google")} className="btn-secondary text-[10px] flex items-center gap-1.5">
+                    <GoogleIcon size={12} /> Export to Google
+                  </button>
+                  <button onClick={() => exportIcs("outlook")} className="btn-secondary text-[10px] flex items-center gap-1.5">
+                    <OutlookIcon size={12} /> Export to Outlook
+                  </button>
+                </div>
+              </div>
+            )}{!loading && tab === "calendar" && (
+              <>
+                {/* Week Navigation */}
+                <div className="flex items-center justify-between">
+                  <button onClick={prevWeek} className="btn-ghost p-2" aria-label="Previous week"><ChevronLeft size={16} /></button>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-semibold">
+                      {weekDays[0].toLocaleDateString("en-US", { month: "short", day: "numeric" })} � {weekDays[6].toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                    </span>
+                    <button onClick={goToday} className="btn-secondary text-[10px] px-2 py-0.5">Today</button>
+                  </div>
+                  <button onClick={nextWeek} className="btn-ghost p-2" aria-label="Next week"><ChevronRight size={16} /></button>
+                </div>
+
+                {/* Month View */}
+                {viewMode === "month" && (
+                  <div>
+                    <div className="grid grid-cols-7 gap-px mb-px">
+                      {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(d => (
+                        <div key={d} className="text-center text-[10px] text-muted py-1 font-semibold">{d}</div>
+                      ))}
                     </div>
-                    <div className="space-y-1.5">
-                      {dayAppts.map(appt => {
-                        const catConfig = CATEGORY_CONFIG[appt.category];
+                    <div className="grid grid-cols-7 gap-1">
+                      {monthGrid.map((day, idx) => {
+                        const dateStr = day.toISOString().split("T")[0];
+                        const dayEvts = filteredEvents.filter(e => e.date === dateStr);
+                        const isToday = dateStr === today;
+                        const isCurrentMonth = day.getMonth() === currentWeek.getMonth();
                         return (
-                          <div key={appt.id} draggable onDragStart={() => handleDragStart(appt.id)}
-                            className="p-2 rounded-lg text-[10px] cursor-move hover:opacity-80 transition-opacity border"
-                            style={{ background: `${appt.color}10`, borderColor: `${appt.color}20` }}>
-                            <div className="flex items-center gap-1 mb-0.5">
-                              <span className={catConfig.color}>{TYPE_ICONS[appt.type]}</span>
-                              <span className="font-semibold truncate">{appt.time}</span>
-                              {appt.recurring && <Repeat size={7} className="text-muted" />}
-                            </div>
-                            <p className="truncate font-medium">{appt.client}</p>
-                            <p className="text-muted truncate">{appt.title}</p>
+                          <div key={idx}
+                            onDragOver={e => e.preventDefault()}
+                            onDrop={() => handleDrop(dateStr)}
+                            className={`rounded-lg p-1.5 min-h-[80px] border transition-all ${
+                              isToday ? "ring-1 ring-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.1)]" : "border-border"
+                            } ${!isCurrentMonth ? "opacity-30" : "bg-surface-light"}`}>
+                            <p className={`text-[10px] font-medium text-center ${isToday ? "text-[#2563EB]" : ""}`}>{day.getDate()}</p>
+                            {dayEvts.slice(0, 3).map(evt => (
+                              <div key={evt.id} draggable onDragStart={() => handleDragStart(evt.id)}
+                                className="text-[8px] px-1 py-0.5 rounded mt-0.5 truncate cursor-move"
+                                style={{ background: `${evt.color}20`, color: evt.color, borderLeft: `2px solid ${evt.color}` }}>
+                                {evt.time} {evt.title}
+                              </div>
+                            ))}
+                            {dayEvts.length > 3 && (
+                              <p className="text-[8px] text-muted text-center mt-0.5">+{dayEvts.length - 3} more</p>
+                            )}
                           </div>
                         );
                       })}
-                      {dayAppts.length === 0 && (
-                        <button onClick={() => { setNewEvent({ ...newEvent, date: dateStr }); setShowCreate(true); }}
-                          className="w-full py-3 text-[9px] text-[#71717A]/50 hover:text-[#71717A] transition-colors text-center rounded-lg border border-dashed border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.16)]">
-                          + Add
-                        </button>
-                      )}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-            </div>
-          )}
+                )}
 
-          {/* Day View */}
-          {viewMode === "day" && (
-            <div className="card">
-              <h2 className="section-header flex items-center gap-2">
-                <Eye size={13} className="text-[#2563EB]" />
-                {new Date(today).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
-              </h2>
-              <div className="space-y-1">
-                {["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00"].map(slot => {
-                  const slotEvents = filteredEvents.filter(e => e.date === today && e.time === slot);
-                  return (
-                    <div key={slot} className="flex gap-3 py-2 border-b border-border">
-                      <span className="text-[10px] text-muted w-12 shrink-0 pt-0.5">{slot}</span>
-                      <div className="flex-1 min-h-[32px]">
-                        {slotEvents.map(evt => (
-                          <div key={evt.id} className="flex items-center gap-2 p-2 rounded-lg text-xs" style={{ background: `${evt.color}10`, borderLeft: `3px solid ${evt.color}` }}>
-                            <span className={CATEGORY_CONFIG[evt.category].color}>{TYPE_ICONS[evt.type]}</span>
-                            <span className="font-medium">{evt.title}</span>
-                            <span className="text-muted">with {evt.client}</span>
-                            <span className="text-[10px] text-muted ml-auto">{evt.duration}min</span>
-                            {evt.recurring && <Repeat size={10} className="text-muted" />}
+                {/* Week View */}
+                {viewMode === "week" && (
+                  <div className="overflow-x-auto lg:overflow-x-visible">
+                  <div className="grid grid-cols-7 gap-2 min-w-[560px] lg:min-w-0">
+                    {weekDays.map(day => {
+                      const dateStr = day.toISOString().split("T")[0];
+                      const dayAppts = filteredEvents.filter(a => a.date === dateStr);
+                      const isToday = dateStr === today;
+                      return (
+                        <div key={dateStr}
+                          onDragOver={e => e.preventDefault()}
+                          onDrop={() => handleDrop(dateStr)}
+                          className={`rounded-xl p-3 min-h-[220px] border border-border ${
+                            isToday ? "ring-1 ring-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)]" : "bg-surface-light"
+                          }`}>
+                          <div className="text-center mb-2">
+                            <p className="text-[10px] text-muted uppercase">{day.toLocaleDateString("en-US", { weekday: "short" })}</p>
+                            <p className={`text-lg font-bold ${isToday ? "text-[#2563EB]" : "text-foreground"}`}>{day.getDate()}</p>
                           </div>
+                          <div className="space-y-1.5">
+                            {dayAppts.map(appt => {
+                              const catConfig = CATEGORY_CONFIG[appt.category];
+                              return (
+                                <div key={appt.id} draggable onDragStart={() => handleDragStart(appt.id)}
+                                  className="p-2 rounded-lg text-[10px] cursor-move hover:opacity-80 transition-opacity border"
+                                  style={{ background: `${appt.color}10`, borderColor: `${appt.color}20` }}>
+                                  <div className="flex items-center gap-1 mb-0.5">
+                                    <span className={catConfig.color}>{TYPE_ICONS[appt.type]}</span>
+                                    <span className="font-semibold truncate">{appt.time}</span>
+                                    {appt.recurring && <Repeat size={7} className="text-muted" />}
+                                  </div>
+                                  <p className="truncate font-medium">{appt.client}</p>
+                                  <p className="text-muted truncate">{appt.title}</p>
+                                </div>
+                              );
+                            })}
+                            {dayAppts.length === 0 && (
+                              <button onClick={() => { setNewEvent({ ...newEvent, date: dateStr }); setShowCreate(true); }}
+                                className="w-full py-3 text-[9px] text-[#71717A]/50 hover:text-[#71717A] transition-colors text-center rounded-lg border border-dashed border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.16)]">
+                                + Add
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  </div>
+                )}
+
+                {/* Day View */}
+                {viewMode === "day" && (
+                  <div className="card">
+                    <h2 className="section-header flex items-center gap-2">
+                      <Eye size={13} className="text-[#2563EB]" />
+                      {new Date(today).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+                    </h2>
+                    <div className="space-y-1">
+                      {["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00"].map(slot => {
+                        const slotEvents = filteredEvents.filter(e => e.date === today && e.time === slot);
+                        return (
+                          <div key={slot} className="flex gap-3 py-2 border-b border-border">
+                            <span className="text-[10px] text-muted w-12 shrink-0 pt-0.5">{slot}</span>
+                            <div className="flex-1 min-h-[32px]">
+                              {slotEvents.map(evt => (
+                                <div key={evt.id} className="flex items-center gap-2 p-2 rounded-lg text-xs" style={{ background: `${evt.color}10`, borderLeft: `3px solid ${evt.color}` }}>
+                                  <span className={CATEGORY_CONFIG[evt.category].color}>{TYPE_ICONS[evt.type]}</span>
+                                  <span className="font-medium">{evt.title}</span>
+                                  <span className="text-muted">with {evt.client}</span>
+                                  <span className="text-[10px] text-muted ml-auto">{evt.duration}min</span>
+                                  {evt.recurring && <Repeat size={10} className="text-muted" />}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}{/* Today's Agenda Tab */}{!loading && tab === "agenda" && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div className="lg:col-span-2 space-y-3">
+                  <PrismPanel padding="p-4" rainbow>
+                    <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-[#2563EB]" /> Today&apos;s Schedule</h2>
+                    {todaysEvents.length === 0 ? (
+                      <EmptyState
+                        type="no-calendar"
+                        size={140}
+                        title="No events today"
+                        description="Your schedule is clear � enjoy the quiet."
+                      />
+                    ) : (
+                      <div className="space-y-2">
+                        {todaysEvents.map((evt, index) => (
+                          <motion.div
+                            key={evt.id}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.18, delay: index * 0.04 }}
+                            whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                            className="flex items-center gap-3 p-3 rounded-lg border border-border transition-colors">
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${CATEGORY_CONFIG[evt.category].bg}`}>
+                              <span className={CATEGORY_CONFIG[evt.category].color}>{TYPE_ICONS[evt.type]}</span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-semibold">{evt.title}</p>
+                              <p className="text-[10px] text-muted">{evt.client} - {evt.teamMember} - {evt.duration}min</p>
+                            </div>
+                            <div className="text-right shrink-0">
+                              <p className="text-xs font-medium">{evt.time}</p>
+                              <div className="flex items-center gap-1">
+                                {evt.recurring && <Repeat size={9} className="text-muted" />}
+                                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${CATEGORY_CONFIG[evt.category].bg} ${CATEGORY_CONFIG[evt.category].color}`}>
+                                  {CATEGORY_CONFIG[evt.category].label}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex gap-1 shrink-0">
+                              <button onClick={() => confirmEvent(evt.id)} title="Mark complete" aria-label="Mark complete" className="p-1.5 rounded-md hover:bg-emerald-500/10 text-emerald-500/60 hover:text-emerald-500 transition-colors"><Check size={12} /></button>
+                              <button onClick={() => declineEvent(evt.id)} title="Remove" aria-label="Remove event" className="p-1.5 rounded-md hover:bg-red-500/10 text-red-500/60 hover:text-red-500 transition-colors"><X size={12} /></button>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
+                  </PrismPanel>
+                </div>
+                <div className="space-y-3">
+                  <PrismPanel padding="p-0" rainbow>
+                    <div className="p-4">
+                      <h2 className="section-header flex items-center gap-2"><Star size={13} className="text-[#2563EB]" /> Quick Stats</h2>
+                      <div className="space-y-2">
+                        {[
+                          { label: "Today", value: `${todaysEvents.length} events`, color: "" },
+                          { label: "This Week", value: `${filteredEvents.filter(e => weekDays.some(d => d.toISOString().split("T")[0] === e.date)).length} events`, color: "" },
+                          { label: "Calls Today", value: todaysEvents.filter(e => e.category === "call").length, color: "text-emerald-400" },
+                          { label: "Recurring", value: `${events.filter(e => e.recurring).length} events`, color: "text-[#2563EB]" },
+                        ].map((stat, index) => (
+                          <motion.div
+                            key={stat.label}
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.22, delay: index * 0.06 }}
+                            whileHover={{ y: -2 }}
+                            className="rounded-xl overflow-hidden relative"
+                            style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
+                          >
+                            <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)" }} className="absolute top-0 left-0 right-0" />
+                            <div className="flex justify-between text-xs p-2 pt-3">
+                              <span className="text-muted">{stat.label}</span>
+                              <span className={`font-bold ${stat.color}`}>{stat.value}</span>
+                            </div>
+                          </motion.div>
                         ))}
                       </div>
                     </div>
-                  );
-                })}
+                  </PrismPanel>
+                  <PrismPanel padding="p-4">
+                    <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-[#2563EB]" /> Team Today</h2>
+                    <div className="space-y-1.5">
+                      {TEAM_MEMBERS.filter(m => m !== "All").map(member => {
+                        const count = todaysEvents.filter(e => e.teamMember === member).length;
+                        return (
+                          <div key={member} className="flex items-center gap-2 text-xs p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.03)]">
+                            <div className="w-6 h-6 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[9px] font-bold text-[#2563EB]">{member[0]}</div>
+                            <span className="flex-1">{member}</span>
+                            <span className="text-muted">{count} event{count !== 1 ? "s" : ""}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </PrismPanel>
+                </div>
               </div>
-            </div>
-          )}
-        </>
-      )}
-
-      {/* Today's Agenda Tab */}
-      {!loading && tab === "agenda" && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2 space-y-3">
-            <PrismPanel padding="p-4" rainbow>
-              <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-[#2563EB]" /> Today&apos;s Schedule</h2>
-              {todaysEvents.length === 0 ? (
-                <EmptyState
-                  type="no-calendar"
-                  size={140}
-                  title="No events today"
-                  description="Your schedule is clear � enjoy the quiet."
-                />
-              ) : (
-                <div className="space-y-2">
-                  {todaysEvents.map((evt, index) => (
-                    <motion.div
-                      key={evt.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
-                      className="flex items-center gap-3 p-3 rounded-lg border border-border transition-colors">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${CATEGORY_CONFIG[evt.category].bg}`}>
-                        <span className={CATEGORY_CONFIG[evt.category].color}>{TYPE_ICONS[evt.type]}</span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold">{evt.title}</p>
-                        <p className="text-[10px] text-muted">{evt.client} - {evt.teamMember} - {evt.duration}min</p>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <p className="text-xs font-medium">{evt.time}</p>
-                        <div className="flex items-center gap-1">
-                          {evt.recurring && <Repeat size={9} className="text-muted" />}
+            )}{/* Deadlines Tab */}{!loading && tab === "deadlines" && (
+              <div className="space-y-3">
+                <PrismPanel padding="p-4" rainbow>
+                  <h2 className="section-header flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Upcoming Deadlines</h2>
+                  {upcomingDeadlines.length === 0 ? (
+                    <p className="text-xs text-muted text-center py-8">No upcoming deadlines</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {upcomingDeadlines.map((dl, index) => {
+                        const daysLeft = Math.ceil((new Date(dl.date).getTime() - new Date(today).getTime()) / 86400000);
+                        return (
+                          <motion.div
+                            key={dl.id}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.18, delay: index * 0.04 }}
+                            whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                            className="flex items-center gap-3 p-3 rounded-lg border border-border"
+                          >
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${daysLeft <= 1 ? "bg-red-400/10" : daysLeft <= 3 ? "bg-yellow-400/10" : "bg-blue-400/10"}`}>
+                              <AlertCircle size={16} className={daysLeft <= 1 ? "text-red-400" : daysLeft <= 3 ? "text-yellow-400" : "text-blue-400"} />
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-xs font-semibold">{dl.title}</p>
+                              <p className="text-[10px] text-muted">{dl.client} - {dl.teamMember}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-xs font-medium">{dl.date}</p>
+                              <p className={`text-[10px] font-bold ${daysLeft <= 1 ? "text-red-400" : daysLeft <= 3 ? "text-yellow-400" : "text-muted"}`}>
+                                {daysLeft === 0 ? "Today!" : `${daysLeft} day${daysLeft !== 1 ? "s" : ""} left`}
+                              </p>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </PrismPanel>
+                {/* Recurring Events */}
+                <PrismPanel padding="p-4">
+                  <h2 className="section-header flex items-center gap-2"><Repeat size={13} className="text-[#2563EB]" /> Recurring Events</h2>
+                  <div className="space-y-2">
+                    {events.filter(e => e.recurring).length === 0 ? (
+                      <p className="text-xs text-muted text-center py-8">No recurring events</p>
+                    ) : (
+                      events.filter(e => e.recurring).map((evt, index) => (
+                        <motion.div
+                          key={evt.id}
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.18, delay: index * 0.04 }}
+                          whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                          className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border"
+                        >
+                          <Repeat size={12} className="text-[#2563EB] shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium truncate">{evt.title}</p>
+                            <p className="text-[10px] text-muted">{evt.client} - Every {new Date(evt.date).toLocaleDateString("en-US", { weekday: "long" })} at {evt.time}</p>
+                          </div>
                           <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${CATEGORY_CONFIG[evt.category].bg} ${CATEGORY_CONFIG[evt.category].color}`}>
                             {CATEGORY_CONFIG[evt.category].label}
                           </span>
-                        </div>
-                      </div>
-                      <div className="flex gap-1 shrink-0">
-                        <button onClick={() => confirmEvent(evt.id)} title="Mark complete" aria-label="Mark complete" className="p-1.5 rounded-md hover:bg-emerald-500/10 text-emerald-500/60 hover:text-emerald-500 transition-colors"><Check size={12} /></button>
-                        <button onClick={() => declineEvent(evt.id)} title="Remove" aria-label="Remove event" className="p-1.5 rounded-md hover:bg-red-500/10 text-red-500/60 hover:text-red-500 transition-colors"><X size={12} /></button>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              )}
-            </PrismPanel>
-          </div>
-          <div className="space-y-3">
-            <PrismPanel padding="p-0" rainbow>
-              <div className="p-4">
-                <h2 className="section-header flex items-center gap-2"><Star size={13} className="text-[#2563EB]" /> Quick Stats</h2>
-                <div className="space-y-2">
-                  {[
-                    { label: "Today", value: `${todaysEvents.length} events`, color: "" },
-                    { label: "This Week", value: `${filteredEvents.filter(e => weekDays.some(d => d.toISOString().split("T")[0] === e.date)).length} events`, color: "" },
-                    { label: "Calls Today", value: todaysEvents.filter(e => e.category === "call").length, color: "text-emerald-400" },
-                    { label: "Recurring", value: `${events.filter(e => e.recurring).length} events`, color: "text-[#2563EB]" },
-                  ].map((stat, index) => (
-                    <motion.div
-                      key={stat.label}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.22, delay: index * 0.06 }}
-                      whileHover={{ y: -2 }}
-                      className="rounded-xl overflow-hidden relative"
-                      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}
-                    >
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)" }} className="absolute top-0 left-0 right-0" />
-                      <div className="flex justify-between text-xs p-2 pt-3">
-                        <span className="text-muted">{stat.label}</span>
-                        <span className={`font-bold ${stat.color}`}>{stat.value}</span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                        </motion.div>
+                      ))
+                    )}
+                  </div>
+                </PrismPanel>
               </div>
-            </PrismPanel>
-            <PrismPanel padding="p-4">
-              <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-[#2563EB]" /> Team Today</h2>
-              <div className="space-y-1.5">
-                {TEAM_MEMBERS.filter(m => m !== "All").map(member => {
-                  const count = todaysEvents.filter(e => e.teamMember === member).length;
-                  return (
-                    <div key={member} className="flex items-center gap-2 text-xs p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.03)]">
-                      <div className="w-6 h-6 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[9px] font-bold text-[#2563EB]">{member[0]}</div>
-                      <span className="flex-1">{member}</span>
-                      <span className="text-muted">{count} event{count !== 1 ? "s" : ""}</span>
+            )}{/* Create Event Modal */}{showCreate && (
+              <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCreate(false)}>
+                <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-3" onClick={e => e.stopPropagation()}>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-[#2563EB]" /> New Event</h3>
+                    <button onClick={() => setShowCreate(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Title</label>
+                    <input value={newEvent.title} onChange={e => setNewEvent({ ...newEvent, title: e.target.value })}
+                      className="input w-full text-xs" placeholder="Event title" />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Client</label>
+                      <select value={newEvent.client} onChange={e => setNewEvent({ ...newEvent, client: e.target.value })} className="input w-full text-xs">
+                        {CLIENTS.filter(c => c !== "All").map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
                     </div>
-                  );
-                })}
-              </div>
-            </PrismPanel>
-          </div>
-        </div>
-      )}
-
-      {/* Deadlines Tab */}
-      {!loading && tab === "deadlines" && (
-        <div className="space-y-3">
-          <PrismPanel padding="p-4" rainbow>
-            <h2 className="section-header flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Upcoming Deadlines</h2>
-            {upcomingDeadlines.length === 0 ? (
-              <p className="text-xs text-muted text-center py-8">No upcoming deadlines</p>
-            ) : (
-              <div className="space-y-2">
-                {upcomingDeadlines.map((dl, index) => {
-                  const daysLeft = Math.ceil((new Date(dl.date).getTime() - new Date(today).getTime()) / 86400000);
-                  return (
-                    <motion.div
-                      key={dl.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
-                      className="flex items-center gap-3 p-3 rounded-lg border border-border"
-                    >
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${daysLeft <= 1 ? "bg-red-400/10" : daysLeft <= 3 ? "bg-yellow-400/10" : "bg-blue-400/10"}`}>
-                        <AlertCircle size={16} className={daysLeft <= 1 ? "text-red-400" : daysLeft <= 3 ? "text-yellow-400" : "text-blue-400"} />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-xs font-semibold">{dl.title}</p>
-                        <p className="text-[10px] text-muted">{dl.client} - {dl.teamMember}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xs font-medium">{dl.date}</p>
-                        <p className={`text-[10px] font-bold ${daysLeft <= 1 ? "text-red-400" : daysLeft <= 3 ? "text-yellow-400" : "text-muted"}`}>
-                          {daysLeft === 0 ? "Today!" : `${daysLeft} day${daysLeft !== 1 ? "s" : ""} left`}
-                        </p>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            )}
-          </PrismPanel>
-          {/* Recurring Events */}
-          <PrismPanel padding="p-4">
-            <h2 className="section-header flex items-center gap-2"><Repeat size={13} className="text-[#2563EB]" /> Recurring Events</h2>
-            <div className="space-y-2">
-              {events.filter(e => e.recurring).length === 0 ? (
-                <p className="text-xs text-muted text-center py-8">No recurring events</p>
-              ) : (
-                events.filter(e => e.recurring).map((evt, index) => (
-                  <motion.div
-                    key={evt.id}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
-                    className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border"
-                  >
-                    <Repeat size={12} className="text-[#2563EB] shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium truncate">{evt.title}</p>
-                      <p className="text-[10px] text-muted">{evt.client} - Every {new Date(evt.date).toLocaleDateString("en-US", { weekday: "long" })} at {evt.time}</p>
+                    <div>
+                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Team Member</label>
+                      <select value={newEvent.teamMember} onChange={e => setNewEvent({ ...newEvent, teamMember: e.target.value })} className="input w-full text-xs">
+                        {TEAM_MEMBERS.filter(m => m !== "All").map(m => <option key={m} value={m}>{m}</option>)}
+                      </select>
                     </div>
-                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${CATEGORY_CONFIG[evt.category].bg} ${CATEGORY_CONFIG[evt.category].color}`}>
-                      {CATEGORY_CONFIG[evt.category].label}
-                    </span>
-                  </motion.div>
-                ))
-              )}
-            </div>
-          </PrismPanel>
-        </div>
-      )}
+                  </div>
 
-      {/* Create Event Modal */}
-      {showCreate && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCreate(false)}>
-          <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-3" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-[#2563EB]" /> New Event</h3>
-              <button onClick={() => setShowCreate(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>
-            </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Date</label>
+                      <input type="date" value={newEvent.date} onChange={e => setNewEvent({ ...newEvent, date: e.target.value })} className="input w-full text-xs" />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Time</label>
+                      <input type="time" value={newEvent.time} onChange={e => setNewEvent({ ...newEvent, time: e.target.value })} className="input w-full text-xs" />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Duration</label>
+                      <select value={newEvent.duration} onChange={e => setNewEvent({ ...newEvent, duration: parseInt(e.target.value) })} className="input w-full text-xs">
+                        <option value={15}>15 min</option>
+                        <option value={30}>30 min</option>
+                        <option value={45}>45 min</option>
+                        <option value={60}>60 min</option>
+                        <option value={90}>90 min</option>
+                        <option value={120}>2 hours</option>
+                      </select>
+                    </div>
+                  </div>
 
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Title</label>
-              <input value={newEvent.title} onChange={e => setNewEvent({ ...newEvent, title: e.target.value })}
-                className="input w-full text-xs" placeholder="Event title" />
-            </div>
+                  <div>
+                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Category</label>
+                    <div className="flex gap-2">
+                      {(Object.keys(CATEGORY_CONFIG) as EventCategory[]).map(cat => (
+                        <button key={cat} onClick={() => setNewEvent({ ...newEvent, category: cat })}
+                          className={`flex-1 p-2 rounded-lg border text-xs text-center transition-all ${
+                            newEvent.category === cat ? `${CATEGORY_CONFIG[cat].bg} ${CATEGORY_CONFIG[cat].color} border-transparent` : "border-border text-muted"
+                          }`}>
+                          {CATEGORY_CONFIG[cat].label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Client</label>
-                <select value={newEvent.client} onChange={e => setNewEvent({ ...newEvent, client: e.target.value })} className="input w-full text-xs">
-                  {CLIENTS.filter(c => c !== "All").map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
+                  <div>
+                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Type</label>
+                    <div className="flex gap-2">
+                      {([
+                        { id: "call" as const, label: "Phone", icon: <Phone size={12} /> },
+                        { id: "video" as const, label: "Video", icon: <Video size={12} /> },
+                        { id: "in_person" as const, label: "In Person", icon: <MapPin size={12} /> },
+                      ] as const).map(t => (
+                        <button key={t.id} onClick={() => setNewEvent({ ...newEvent, type: t.id })}
+                          className={`flex-1 flex items-center justify-center gap-1.5 p-2 rounded-lg border text-xs transition-all ${
+                            newEvent.type === t.id ? "border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] text-[#2563EB]" : "border-border text-muted"
+                          }`}>
+                          {t.icon} {t.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <label className="flex items-center gap-2 text-xs text-muted cursor-pointer">
+                    <input type="checkbox" checked={newEvent.recurring} onChange={e => setNewEvent({ ...newEvent, recurring: e.target.checked })} className="accent-[#2563EB]" />
+                    <Repeat size={12} /> Make recurring (weekly)
+                  </label>
+
+                  <div className="flex justify-end gap-2 pt-1">
+                    <button onClick={() => setShowCreate(false)} className="btn-secondary text-xs">Cancel</button>
+                    <button onClick={createEvent} disabled={!newEvent.title || saving} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
+                      {saving ? <Loader2 size={12} className="animate-spin" /> : <Calendar size={12} />}
+                      {saving ? "Saving..." : "Create Event"}
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Team Member</label>
-                <select value={newEvent.teamMember} onChange={e => setNewEvent({ ...newEvent, teamMember: e.target.value })} className="input w-full text-xs">
-                  {TEAM_MEMBERS.filter(m => m !== "All").map(m => <option key={m} value={m}>{m}</option>)}
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Date</label>
-                <input type="date" value={newEvent.date} onChange={e => setNewEvent({ ...newEvent, date: e.target.value })} className="input w-full text-xs" />
-              </div>
-              <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Time</label>
-                <input type="time" value={newEvent.time} onChange={e => setNewEvent({ ...newEvent, time: e.target.value })} className="input w-full text-xs" />
-              </div>
-              <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Duration</label>
-                <select value={newEvent.duration} onChange={e => setNewEvent({ ...newEvent, duration: parseInt(e.target.value) })} className="input w-full text-xs">
-                  <option value={15}>15 min</option>
-                  <option value={30}>30 min</option>
-                  <option value={45}>45 min</option>
-                  <option value={60}>60 min</option>
-                  <option value={90}>90 min</option>
-                  <option value={120}>2 hours</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Category</label>
-              <div className="flex gap-2">
-                {(Object.keys(CATEGORY_CONFIG) as EventCategory[]).map(cat => (
-                  <button key={cat} onClick={() => setNewEvent({ ...newEvent, category: cat })}
-                    className={`flex-1 p-2 rounded-lg border text-xs text-center transition-all ${
-                      newEvent.category === cat ? `${CATEGORY_CONFIG[cat].bg} ${CATEGORY_CONFIG[cat].color} border-transparent` : "border-border text-muted"
-                    }`}>
-                    {CATEGORY_CONFIG[cat].label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Type</label>
-              <div className="flex gap-2">
-                {([
-                  { id: "call" as const, label: "Phone", icon: <Phone size={12} /> },
-                  { id: "video" as const, label: "Video", icon: <Video size={12} /> },
-                  { id: "in_person" as const, label: "In Person", icon: <MapPin size={12} /> },
-                ] as const).map(t => (
-                  <button key={t.id} onClick={() => setNewEvent({ ...newEvent, type: t.id })}
-                    className={`flex-1 flex items-center justify-center gap-1.5 p-2 rounded-lg border text-xs transition-all ${
-                      newEvent.type === t.id ? "border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] text-[#2563EB]" : "border-border text-muted"
-                    }`}>
-                    {t.icon} {t.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <label className="flex items-center gap-2 text-xs text-muted cursor-pointer">
-              <input type="checkbox" checked={newEvent.recurring} onChange={e => setNewEvent({ ...newEvent, recurring: e.target.checked })} className="accent-[#2563EB]" />
-              <Repeat size={12} /> Make recurring (weekly)
-            </label>
-
-            <div className="flex justify-end gap-2 pt-1">
-              <button onClick={() => setShowCreate(false)} className="btn-secondary text-xs">Cancel</button>
-              <button onClick={createEvent} disabled={!newEvent.title || saving} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                {saving ? <Loader2 size={12} className="animate-spin" /> : <Calendar size={12} />}
-                {saving ? "Saving..." : "Create Event"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            )}</MotionPage>
   );
 }
 

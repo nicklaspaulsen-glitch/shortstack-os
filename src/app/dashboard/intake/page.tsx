@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import Modal from "@/components/ui/modal";
 import { createClient as createClientSupabase } from "@/lib/supabase/client";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // --- Types -------------------------------------------------------------------
 
@@ -242,444 +243,434 @@ export default function IntakePage() {
   // --- Render -----------------------------------------------------------------
 
   return (
-    <div className="flex flex-col h-full min-h-screen bg-[#FAFAFB]">
-      <PageHero
-        icon={<Zap size={18} className="text-[#2563EB]" />}
-        title="Intake Forms"
-        subtitle="AI-powered lead qualification forms you can embed anywhere"
-        gradient="blue"
-      />
-
-      <div className="flex-1 p-4 md:p-6 max-w-6xl mx-auto w-full">
-        {/* Tabs */}
-        <div className="flex items-center gap-1 mb-6">
-          {(["forms", "submissions"] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                activeTab === tab
-                  ? "bg-[rgba(0,0,0,0.08)] text-[#2563EB]"
-                  : "text-[rgba(0,0,0,0.4)] hover:text-[rgba(0,0,0,0.7)]"
-              }`}
-            >
-              {tab === "forms" ? "Forms" : "Submissions"}
-            </button>
-          ))}
-          <div className="ml-auto">
-            {activeTab === "forms" && (
-              <button
-                onClick={() => openBuilder()}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium rounded-lg transition-colors"
-              >
-                <Plus size={14} />
-                New Form
-              </button>
-            )}
-            {activeTab === "submissions" && forms.length > 0 && (
-              <select
-                value={selectedFormId ?? ""}
-                onChange={(e) => setSelectedFormId(e.target.value || null)}
-                className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[rgba(0,0,0,0.65)] text-xs rounded-lg px-2 py-1.5 outline-none"
-              >
-                <option value="">All forms</option>
-                {forms.map((f) => (
-                  <option key={f.id} value={f.id}>{f.name}</option>
+    <MotionPage className="flex flex-col h-full min-h-screen bg-[#FAFAFB]"><PageHero
+              icon={<Zap size={18} className="text-[#2563EB]" />}
+              title="Intake Forms"
+              subtitle="AI-powered lead qualification forms you can embed anywhere"
+              gradient="blue"
+            /><div className="flex-1 p-4 md:p-6 max-w-6xl mx-auto w-full">
+              {/* Tabs */}
+              <div className="flex items-center gap-1 mb-6">
+                {(["forms", "submissions"] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                      activeTab === tab
+                        ? "bg-[rgba(0,0,0,0.08)] text-[#2563EB]"
+                        : "text-[rgba(0,0,0,0.4)] hover:text-[rgba(0,0,0,0.7)]"
+                    }`}
+                  >
+                    {tab === "forms" ? "Forms" : "Submissions"}
+                  </button>
                 ))}
-              </select>
-            )}
-          </div>
-        </div>
-
-        {/* -- Forms list -- */}
-        {activeTab === "forms" && (
-          <div>
-            {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-6 h-6 animate-spin text-[rgba(0,0,0,0.25)]" />
-              </div>
-            ) : forms.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
-                <div className="w-14 h-14  bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] flex items-center justify-center">
-                  <Zap size={22} className="text-[#2563EB]/60" />
+                <div className="ml-auto">
+                  {activeTab === "forms" && (
+                    <button
+                      onClick={() => openBuilder()}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium rounded-lg transition-colors"
+                    >
+                      <Plus size={14} />
+                      New Form
+                    </button>
+                  )}
+                  {activeTab === "submissions" && forms.length > 0 && (
+                    <select
+                      value={selectedFormId ?? ""}
+                      onChange={(e) => setSelectedFormId(e.target.value || null)}
+                      className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[rgba(0,0,0,0.65)] text-xs rounded-lg px-2 py-1.5 outline-none"
+                    >
+                      <option value="">All forms</option>
+                      {forms.map((f) => (
+                        <option key={f.id} value={f.id}>{f.name}</option>
+                      ))}
+                    </select>
+                  )}
                 </div>
+              </div>
+
+              {/* -- Forms list -- */}
+              {activeTab === "forms" && (
                 <div>
-                  <p className="text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1">No intake forms yet</p>
-                  <p className="text-xs text-[rgba(0,0,0,0.3)] max-w-xs">
-                    Create a form to embed on your website or send to prospects. Claude will auto-qualify every submission.
-                  </p>
-                </div>
-                <button
-                  onClick={() => openBuilder()}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium rounded-lg transition-colors"
-                >
-                  <Plus size={14} />
-                  Create your first form
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {forms.map((form, i) => {
-                  const embedUrl = `${appUrl}/intake/${form.id}`;
-                  return (
-                    <motion.div
-                      key={form.id}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.06, duration: 0.4 }}
-                      whileHover={{ y: -4, scale: 1.01 }}
-                      className="glass rounded-xl overflow-hidden p-4 flex flex-col gap-3"
-                    >
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0", marginTop: -16, marginLeft: -16, marginRight: -16, marginBottom: 4, width: "calc(100% + 32px)" }} />
-                      <div className="flex items-start gap-3">
-                        <div
-                          className="w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center"
-                          style={{ background: `${form.brand_color}18`, border: `1px solid ${form.brand_color}30` }}
-                        >
-                          <ChevronRight size={14} style={{ color: form.brand_color }} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-semibold text-[rgba(0,0,0,0.85)] truncate">{form.name}</h3>
-                          <p className="text-[10px] text-[rgba(0,0,0,0.35)] mt-0.5">
-                            {form.fields.length} fields � {form.ai_qualification ? "AI scoring on" : "No AI"}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => toggleActive(form)}
-                          className={`text-[10px] font-medium px-2 py-0.5 rounded-full border transition-all ${
-                            form.is_active
-                              ? "text-green-700 border-green-700/30 bg-green-700/10"
-                              : "text-[rgba(0,0,0,0.35)] border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)]"
-                          }`}
-                        >
-                          {form.is_active ? "Live" : "Off"}
-                        </button>
+                  {loading ? (
+                    <div className="flex items-center justify-center py-20">
+                      <Loader2 className="w-6 h-6 animate-spin text-[rgba(0,0,0,0.25)]" />
+                    </div>
+                  ) : forms.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
+                      <div className="w-14 h-14  bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] flex items-center justify-center">
+                        <Zap size={22} className="text-[#2563EB]/60" />
                       </div>
-
-                      {/* Embed URL */}
-                      <div className="glass-md rounded-lg px-2.5 py-2 flex items-center gap-2">
-                        <span className="text-[10px] text-[rgba(0,0,0,0.35)] truncate flex-1 font-mono">{embedUrl}</span>
-                        <button
-                          onClick={() => {
-                            navigator.clipboard.writeText(embedUrl);
-                            toast.success("Link copied");
-                          }}
-                          className="text-[rgba(0,0,0,0.35)] hover:text-[rgba(0,0,0,0.5)] transition-colors flex-shrink-0"
-                          title="Copy link"
-                        >
-                          <Copy size={12} />
-                        </button>
-                        <a
-                          href={embedUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-[rgba(0,0,0,0.35)] hover:text-[rgba(0,0,0,0.5)] transition-colors flex-shrink-0"
-                          title="Preview form"
-                        >
-                          <ExternalLink size={12} />
-                        </a>
-                      </div>
-
-                      {/* Actions */}
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => openBuilder(form)}
-                          className="flex items-center gap-1 px-2.5 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)] text-xs rounded-lg transition-colors"
-                        >
-                          <Settings size={11} />
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedFormId(form.id);
-                            setActiveTab("submissions");
-                          }}
-                          className="flex items-center gap-1 px-2.5 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)] text-xs rounded-lg transition-colors"
-                        >
-                          <BarChart3 size={11} />
-                          Submissions
-                        </button>
-                        <button
-                          onClick={() => {
-                            const iframeCode = `<iframe src="${embedUrl}" width="100%" height="700" frameborder="0" style="border-radius:12px"></iframe>`;
-                            navigator.clipboard.writeText(iframeCode);
-                            toast.success("Embed code copied");
-                          }}
-                          className="flex items-center gap-1 px-2.5 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)] text-xs rounded-lg transition-colors"
-                          title="Copy iframe embed code"
-                        >
-                          <Eye size={11} />
-                          Embed
-                        </button>
-                        <button
-                          onClick={() => deleteForm(form.id)}
-                          className="ml-auto flex items-center gap-1 px-2.5 py-1.5 hover:bg-red-50 text-[rgba(0,0,0,0.35)] hover:text-red-700 text-xs rounded-lg transition-colors"
-                        >
-                          <Trash2 size={11} />
-                        </button>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* -- Submissions -- */}
-        {activeTab === "submissions" && (
-          <div>
-            {submissions.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
-                <div className="w-12 h-12  bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] flex items-center justify-center">
-                  <Users size={18} className="text-[rgba(0,0,0,0.25)]" />
-                </div>
-                <p className="text-sm text-[rgba(0,0,0,0.4)]">No submissions yet</p>
-                <p className="text-xs text-[rgba(0,0,0,0.25)] max-w-xs">
-                  Share your form link to start receiving qualified leads.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {submissions.map((sub, i) => {
-                  const meta = STATUS_META[sub.status];
-                  return (
-                    <motion.button
-                      key={sub.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.04 }}
-                      onClick={() => setSubDetail(sub)}
-                      className="w-full text-left glass rounded-xl p-3.5 flex items-center gap-3 transition-all hover:border-[rgba(0,0,0,0.12)]"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-sm font-medium text-[rgba(0,0,0,0.65)] truncate">
-                            {sub.contact_name ?? "Anonymous"}
-                          </span>
-                          {sub.contact_email && (
-                            <span className="text-[10px] text-[rgba(0,0,0,0.35)]">{sub.contact_email}</span>
-                          )}
-                        </div>
-                        <p className="text-[10px] text-[rgba(0,0,0,0.35)] mt-0.5">
-                          {new Date(sub.created_at).toLocaleDateString()}
-                          {sub.ai_summary && ` � ${sub.ai_summary.slice(0, 80)}�`}
+                      <div>
+                        <p className="text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1">No intake forms yet</p>
+                        <p className="text-xs text-[rgba(0,0,0,0.3)] max-w-xs">
+                          Create a form to embed on your website or send to prospects. Claude will auto-qualify every submission.
                         </p>
                       </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <ScoreBadge score={sub.ai_score} />
-                        <span
-                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
-                          style={{ background: `${meta.color}15`, color: meta.color, border: `1px solid ${meta.color}25` }}
-                        >
-                          {meta.icon}
-                          {meta.label}
-                        </span>
+                      <button
+                        onClick={() => openBuilder()}
+                        className="flex items-center gap-1.5 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium rounded-lg transition-colors"
+                      >
+                        <Plus size={14} />
+                        Create your first form
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                      {forms.map((form, i) => {
+                        const embedUrl = `${appUrl}/intake/${form.id}`;
+                        return (
+                          <motion.div
+                            key={form.id}
+                            initial={{ opacity: 0, y: 16 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.06, duration: 0.4 }}
+                            whileHover={{ y: -4, scale: 1.01 }}
+                            className="glass rounded-xl overflow-hidden p-4 flex flex-col gap-3"
+                          >
+                            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0", marginTop: -16, marginLeft: -16, marginRight: -16, marginBottom: 4, width: "calc(100% + 32px)" }} />
+                            <div className="flex items-start gap-3">
+                              <div
+                                className="w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center"
+                                style={{ background: `${form.brand_color}18`, border: `1px solid ${form.brand_color}30` }}
+                              >
+                                <ChevronRight size={14} style={{ color: form.brand_color }} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="text-sm font-semibold text-[rgba(0,0,0,0.85)] truncate">{form.name}</h3>
+                                <p className="text-[10px] text-[rgba(0,0,0,0.35)] mt-0.5">
+                                  {form.fields.length} fields � {form.ai_qualification ? "AI scoring on" : "No AI"}
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => toggleActive(form)}
+                                className={`text-[10px] font-medium px-2 py-0.5 rounded-full border transition-all ${
+                                  form.is_active
+                                    ? "text-green-700 border-green-700/30 bg-green-700/10"
+                                    : "text-[rgba(0,0,0,0.35)] border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)]"
+                                }`}
+                              >
+                                {form.is_active ? "Live" : "Off"}
+                              </button>
+                            </div>
+
+                            {/* Embed URL */}
+                            <div className="glass-md rounded-lg px-2.5 py-2 flex items-center gap-2">
+                              <span className="text-[10px] text-[rgba(0,0,0,0.35)] truncate flex-1 font-mono">{embedUrl}</span>
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(embedUrl);
+                                  toast.success("Link copied");
+                                }}
+                                className="text-[rgba(0,0,0,0.35)] hover:text-[rgba(0,0,0,0.5)] transition-colors flex-shrink-0"
+                                title="Copy link"
+                              >
+                                <Copy size={12} />
+                              </button>
+                              <a
+                                href={embedUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-[rgba(0,0,0,0.35)] hover:text-[rgba(0,0,0,0.5)] transition-colors flex-shrink-0"
+                                title="Preview form"
+                              >
+                                <ExternalLink size={12} />
+                              </a>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex items-center gap-1">
+                              <button
+                                onClick={() => openBuilder(form)}
+                                className="flex items-center gap-1 px-2.5 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)] text-xs rounded-lg transition-colors"
+                              >
+                                <Settings size={11} />
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setSelectedFormId(form.id);
+                                  setActiveTab("submissions");
+                                }}
+                                className="flex items-center gap-1 px-2.5 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)] text-xs rounded-lg transition-colors"
+                              >
+                                <BarChart3 size={11} />
+                                Submissions
+                              </button>
+                              <button
+                                onClick={() => {
+                                  const iframeCode = `<iframe src="${embedUrl}" width="100%" height="700" frameborder="0" style="border-radius:12px"></iframe>`;
+                                  navigator.clipboard.writeText(iframeCode);
+                                  toast.success("Embed code copied");
+                                }}
+                                className="flex items-center gap-1 px-2.5 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)] text-xs rounded-lg transition-colors"
+                                title="Copy iframe embed code"
+                              >
+                                <Eye size={11} />
+                                Embed
+                              </button>
+                              <button
+                                onClick={() => deleteForm(form.id)}
+                                className="ml-auto flex items-center gap-1 px-2.5 py-1.5 hover:bg-red-50 text-[rgba(0,0,0,0.35)] hover:text-red-700 text-xs rounded-lg transition-colors"
+                              >
+                                <Trash2 size={11} />
+                              </button>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* -- Submissions -- */}
+              {activeTab === "submissions" && (
+                <div>
+                  {submissions.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
+                      <div className="w-12 h-12  bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] flex items-center justify-center">
+                        <Users size={18} className="text-[rgba(0,0,0,0.25)]" />
                       </div>
-                    </motion.button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+                      <p className="text-sm text-[rgba(0,0,0,0.4)]">No submissions yet</p>
+                      <p className="text-xs text-[rgba(0,0,0,0.25)] max-w-xs">
+                        Share your form link to start receiving qualified leads.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {submissions.map((sub, i) => {
+                        const meta = STATUS_META[sub.status];
+                        return (
+                          <motion.button
+                            key={sub.id}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.04 }}
+                            onClick={() => setSubDetail(sub)}
+                            className="w-full text-left glass rounded-xl p-3.5 flex items-center gap-3 transition-all hover:border-[rgba(0,0,0,0.12)]"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-sm font-medium text-[rgba(0,0,0,0.65)] truncate">
+                                  {sub.contact_name ?? "Anonymous"}
+                                </span>
+                                {sub.contact_email && (
+                                  <span className="text-[10px] text-[rgba(0,0,0,0.35)]">{sub.contact_email}</span>
+                                )}
+                              </div>
+                              <p className="text-[10px] text-[rgba(0,0,0,0.35)] mt-0.5">
+                                {new Date(sub.created_at).toLocaleDateString()}
+                                {sub.ai_summary && ` � ${sub.ai_summary.slice(0, 80)}�`}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                              <ScoreBadge score={sub.ai_score} />
+                              <span
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
+                                style={{ background: `${meta.color}15`, color: meta.color, border: `1px solid ${meta.color}25` }}
+                              >
+                                {meta.icon}
+                                {meta.label}
+                              </span>
+                            </div>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>{/* -- Form Builder Modal -- */}<Modal isOpen={builderOpen} onClose={() => setBuilderOpen(false)} title={editingForm ? "Edit Form" : "New Intake Form"} size="lg">
+              <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-1">
+                {/* Basic settings */}
+                <div className="space-y-3">
+                  <p className="text-[11px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Settings</p>
 
-      {/* -- Form Builder Modal -- */}
-      <Modal isOpen={builderOpen} onClose={() => setBuilderOpen(false)} title={editingForm ? "Edit Form" : "New Intake Form"} size="lg">
-        <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-1">
-          {/* Basic settings */}
-          <div className="space-y-3">
-            <p className="text-[11px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Settings</p>
+                  <div className="space-y-1.5">
+                    <label className="text-xs text-[rgba(0,0,0,0.5)]">Form name</label>
+                    <input
+                      value={bName}
+                      onChange={(e) => setBName(e.target.value)}
+                      className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-[#2563EB]/50"
+                    />
+                  </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs text-[rgba(0,0,0,0.5)]">Form name</label>
-              <input
-                value={bName}
-                onChange={(e) => setBName(e.target.value)}
-                className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-[#2563EB]/50"
-              />
-            </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs text-[rgba(0,0,0,0.5)]">Welcome message</label>
+                    <textarea
+                      value={bWelcome}
+                      onChange={(e) => setBWelcome(e.target.value)}
+                      rows={2}
+                      className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-[#2563EB]/50 resize-none"
+                    />
+                  </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs text-[rgba(0,0,0,0.5)]">Welcome message</label>
-              <textarea
-                value={bWelcome}
-                onChange={(e) => setBWelcome(e.target.value)}
-                rows={2}
-                className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-[#2563EB]/50 resize-none"
-              />
-            </div>
+                  <div className="flex items-center gap-4">
+                    <div className="space-y-1.5 flex-1">
+                      <label className="text-xs text-[rgba(0,0,0,0.5)]">Brand color</label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="color"
+                          value={bColor}
+                          onChange={(e) => setBColor(e.target.value)}
+                          className="w-9 h-9 rounded-lg border border-[rgba(0,0,0,0.08)] bg-transparent cursor-pointer"
+                        />
+                        <input
+                          value={bColor}
+                          onChange={(e) => setBColor(e.target.value)}
+                          className="flex-1 bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none font-mono"
+                        />
+                      </div>
+                    </div>
 
-            <div className="flex items-center gap-4">
-              <div className="space-y-1.5 flex-1">
-                <label className="text-xs text-[rgba(0,0,0,0.5)]">Brand color</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="color"
-                    value={bColor}
-                    onChange={(e) => setBColor(e.target.value)}
-                    className="w-9 h-9 rounded-lg border border-[rgba(0,0,0,0.08)] bg-transparent cursor-pointer"
-                  />
-                  <input
-                    value={bColor}
-                    onChange={(e) => setBColor(e.target.value)}
-                    className="flex-1 bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none font-mono"
-                  />
+                    <div className="space-y-1.5">
+                      <label className="text-xs text-[rgba(0,0,0,0.5)]">AI scoring</label>
+                      <button
+                        onClick={() => setBAI((p) => !p)}
+                        className={`relative w-11 h-6 rounded-full transition-colors ${bAI ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.10)]"}`}
+                      >
+                        <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${bAI ? "left-6" : "left-1"}`} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {bAI && (
+                    <div className="space-y-1.5">
+                      <label className="text-xs text-[rgba(0,0,0,0.5)]">Custom AI prompt (optional � leave blank to use default)</label>
+                      <textarea
+                        value={bPrompt}
+                        onChange={(e) => setBPrompt(e.target.value)}
+                        rows={3}
+                        placeholder="You are an expert lead qualifier for [your business]�"
+                        className="w-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-xs text-[rgba(0,0,0,0.65)] placeholder:text-[rgba(0,0,0,0.25)] outline-none focus:border-[#2563EB]/50 resize-none font-mono"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Fields */}
+                <div className="space-y-3">
+                  <p className="text-[11px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Fields</p>
+                  <p className="text-[10px] text-[rgba(0,0,0,0.35)]">Name, email, and phone are always collected. Add custom questions below.</p>
+
+                  {bFields.map((field) => (
+                    <FieldEditor
+                      key={field.id}
+                      field={field}
+                      onChange={(patch) => updateField(field.id, patch)}
+                      onRemove={() => removeField(field.id)}
+                    />
+                  ))}
+
+                  {/* Add field buttons */}
+                  <div className="flex flex-wrap gap-2">
+                    {FIELD_TYPES.map((ft) => (
+                      <button
+                        key={ft.value}
+                        onClick={() => addField(ft.value)}
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)] text-xs rounded-lg transition-colors border border-[rgba(0,0,0,0.06)]"
+                      >
+                        {ft.icon}
+                        {ft.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs text-[rgba(0,0,0,0.5)]">AI scoring</label>
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[rgba(0,0,0,0.06)] mt-4">
                 <button
-                  onClick={() => setBAI((p) => !p)}
-                  className={`relative w-11 h-6 rounded-full transition-colors ${bAI ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.10)]"}`}
+                  onClick={() => setBuilderOpen(false)}
+                  className="px-4 py-2 text-sm text-[rgba(0,0,0,0.5)] hover:text-[rgba(0,0,0,0.65)] transition-colors"
                 >
-                  <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${bAI ? "left-6" : "left-1"}`} />
+                  Cancel
+                </button>
+                <button
+                  onClick={saveForm}
+                  disabled={saving || !bName.trim()}
+                  className="flex items-center gap-2 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {saving && <Loader2 size={14} className="animate-spin" />}
+                  {editingForm ? "Save changes" : "Create form"}
                 </button>
               </div>
-            </div>
+            </Modal>{/* -- Submission detail modal -- */}{subDetail && (
+              <Modal isOpen onClose={() => setSubDetail(null)} title="Submission detail" size="md">
+                <div className="space-y-4 max-h-[65vh] overflow-y-auto pr-1">
+                  <div className="flex items-center gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-[rgba(0,0,0,0.85)]">{subDetail.contact_name ?? "Anonymous"}</p>
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                        {subDetail.contact_email && <span className="text-[10px] text-[rgba(0,0,0,0.4)]">{subDetail.contact_email}</span>}
+                        {subDetail.contact_phone && <span className="text-[10px] text-[rgba(0,0,0,0.4)]">{subDetail.contact_phone}</span>}
+                      </div>
+                    </div>
+                    <div className="ml-auto">
+                      <ScoreBadge score={subDetail.ai_score} />
+                    </div>
+                  </div>
 
-            {bAI && (
-              <div className="space-y-1.5">
-                <label className="text-xs text-[rgba(0,0,0,0.5)]">Custom AI prompt (optional � leave blank to use default)</label>
-                <textarea
-                  value={bPrompt}
-                  onChange={(e) => setBPrompt(e.target.value)}
-                  rows={3}
-                  placeholder="You are an expert lead qualifier for [your business]�"
-                  className="w-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-xs text-[rgba(0,0,0,0.65)] placeholder:text-[rgba(0,0,0,0.25)] outline-none focus:border-[#2563EB]/50 resize-none font-mono"
-                />
-              </div>
-            )}
-          </div>
+                  {subDetail.ai_summary && (
+                    <div className="bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] rounded-xl p-3">
+                      <p className="text-[10px] font-medium text-[#2563EB] mb-1.5 flex items-center gap-1">
+                        <Sparkles size={10} /> AI Summary
+                      </p>
+                      <p className="text-xs text-[rgba(0,0,0,0.65)] leading-relaxed">{subDetail.ai_summary}</p>
+                    </div>
+                  )}
 
-          {/* Fields */}
-          <div className="space-y-3">
-            <p className="text-[11px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Fields</p>
-            <p className="text-[10px] text-[rgba(0,0,0,0.35)]">Name, email, and phone are always collected. Add custom questions below.</p>
+                  {subDetail.ai_questions.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Follow-up questions</p>
+                      {subDetail.ai_questions.map((q, i) => (
+                        <div key={i} className="flex items-start gap-2">
+                          <span className="text-[10px] font-bold text-[#2563EB]/60 mt-0.5">{i + 1}.</span>
+                          <p className="text-xs text-[rgba(0,0,0,0.5)] leading-relaxed">{q}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
-            {bFields.map((field) => (
-              <FieldEditor
-                key={field.id}
-                field={field}
-                onChange={(patch) => updateField(field.id, patch)}
-                onRemove={() => removeField(field.id)}
-              />
-            ))}
+                  {Object.keys(subDetail.responses).length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Responses</p>
+                      {Object.entries(subDetail.responses).map(([k, v]) => (
+                        <div key={k} className="bg-[rgba(0,0,0,0.03)] rounded-lg p-2.5">
+                          <p className="text-[10px] text-[rgba(0,0,0,0.35)] mb-0.5">{k}</p>
+                          <p className="text-xs text-[rgba(0,0,0,0.65)]">{String(v)}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
-            {/* Add field buttons */}
-            <div className="flex flex-wrap gap-2">
-              {FIELD_TYPES.map((ft) => (
-                <button
-                  key={ft.value}
-                  onClick={() => addField(ft.value)}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)] text-xs rounded-lg transition-colors border border-[rgba(0,0,0,0.06)]"
-                >
-                  {ft.icon}
-                  {ft.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[rgba(0,0,0,0.06)] mt-4">
-          <button
-            onClick={() => setBuilderOpen(false)}
-            className="px-4 py-2 text-sm text-[rgba(0,0,0,0.5)] hover:text-[rgba(0,0,0,0.65)] transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={saveForm}
-            disabled={saving || !bName.trim()}
-            className="flex items-center gap-2 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
-          >
-            {saving && <Loader2 size={14} className="animate-spin" />}
-            {editingForm ? "Save changes" : "Create form"}
-          </button>
-        </div>
-      </Modal>
-
-      {/* -- Submission detail modal -- */}
-      {subDetail && (
-        <Modal isOpen onClose={() => setSubDetail(null)} title="Submission detail" size="md">
-          <div className="space-y-4 max-h-[65vh] overflow-y-auto pr-1">
-            <div className="flex items-center gap-3">
-              <div>
-                <p className="text-sm font-semibold text-[rgba(0,0,0,0.85)]">{subDetail.contact_name ?? "Anonymous"}</p>
-                <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                  {subDetail.contact_email && <span className="text-[10px] text-[rgba(0,0,0,0.4)]">{subDetail.contact_email}</span>}
-                  {subDetail.contact_phone && <span className="text-[10px] text-[rgba(0,0,0,0.4)]">{subDetail.contact_phone}</span>}
+                  {/* Status */}
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Status</p>
+                    <div className="flex flex-wrap gap-2">
+                      {(Object.keys(STATUS_META) as Submission["status"][]).map((s) => {
+                        const meta = STATUS_META[s];
+                        return (
+                          <button
+                            key={s}
+                            onClick={() => updateStatus(subDetail.id, s)}
+                            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all"
+                            style={{
+                              background: subDetail.status === s ? `${meta.color}20` : "rgba(0,0,0,0.04)",
+                              color: subDetail.status === s ? meta.color : "rgba(0,0,0,0.45)",
+                              border: `1px solid ${subDetail.status === s ? `${meta.color}40` : "rgba(0,0,0,0.08)"}`,
+                            }}
+                          >
+                            {meta.icon}
+                            {meta.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="ml-auto">
-                <ScoreBadge score={subDetail.ai_score} />
-              </div>
-            </div>
-
-            {subDetail.ai_summary && (
-              <div className="bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] rounded-xl p-3">
-                <p className="text-[10px] font-medium text-[#2563EB] mb-1.5 flex items-center gap-1">
-                  <Sparkles size={10} /> AI Summary
-                </p>
-                <p className="text-xs text-[rgba(0,0,0,0.65)] leading-relaxed">{subDetail.ai_summary}</p>
-              </div>
-            )}
-
-            {subDetail.ai_questions.length > 0 && (
-              <div className="space-y-2">
-                <p className="text-[10px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Follow-up questions</p>
-                {subDetail.ai_questions.map((q, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <span className="text-[10px] font-bold text-[#2563EB]/60 mt-0.5">{i + 1}.</span>
-                    <p className="text-xs text-[rgba(0,0,0,0.5)] leading-relaxed">{q}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {Object.keys(subDetail.responses).length > 0 && (
-              <div className="space-y-2">
-                <p className="text-[10px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Responses</p>
-                {Object.entries(subDetail.responses).map(([k, v]) => (
-                  <div key={k} className="bg-[rgba(0,0,0,0.03)] rounded-lg p-2.5">
-                    <p className="text-[10px] text-[rgba(0,0,0,0.35)] mb-0.5">{k}</p>
-                    <p className="text-xs text-[rgba(0,0,0,0.65)]">{String(v)}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Status */}
-            <div className="space-y-2">
-              <p className="text-[10px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Status</p>
-              <div className="flex flex-wrap gap-2">
-                {(Object.keys(STATUS_META) as Submission["status"][]).map((s) => {
-                  const meta = STATUS_META[s];
-                  return (
-                    <button
-                      key={s}
-                      onClick={() => updateStatus(subDetail.id, s)}
-                      className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all"
-                      style={{
-                        background: subDetail.status === s ? `${meta.color}20` : "rgba(0,0,0,0.04)",
-                        color: subDetail.status === s ? meta.color : "rgba(0,0,0,0.45)",
-                        border: `1px solid ${subDetail.status === s ? `${meta.color}40` : "rgba(0,0,0,0.08)"}`,
-                      }}
-                    >
-                      {meta.icon}
-                      {meta.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </Modal>
-      )}
-    </div>
+              </Modal>
+            )}</MotionPage>
   );
 }
 

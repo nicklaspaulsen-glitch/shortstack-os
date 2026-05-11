@@ -11,6 +11,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // -- Widget definitions ---------------------------------------------------------
 const WIDGET_TYPES = [
@@ -189,9 +190,7 @@ export default function CustomDashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" />
-      </div>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" /></MotionPage>
     );
   }
 

@@ -25,6 +25,7 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface TraceRow {
   id: string;
@@ -151,9 +152,8 @@ export default function AgentTracesDashboard() {
 
   if (authLoading || state === "loading") {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] text-muted text-sm">
-        Loading agent traces…
-      </div>
+      <MotionPage className="flex items-center justify-center min-h-[60vh] text-muted text-sm">Loading agent traces…
+              </MotionPage>
     );
   }
 

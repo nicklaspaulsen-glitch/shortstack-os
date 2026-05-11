@@ -22,6 +22,7 @@ import InlineSocialConnect from "@/components/inline-social-connect";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import { PrismPanel } from "@/components/prism";
 import { createClient } from "@/lib/supabase/client";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* ---------------- Types ---------------- */
 
@@ -355,18 +356,20 @@ export default function ContentPlanPage() {
             clients.map(c => {
               const selected = wizardClientId === c.id;
               return (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => setWizardClientId(c.id)}
-                  className={`w-full text-left p-3.5 rounded-xl border transition-all ${
-                    selected
-                      ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
-                      : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
-                  }`}
-                >
-                  <p className="text-sm font-semibold">{c.business_name}</p>
-                </button>
+                <MotionPage>
+                                    <button
+                                    key={c.id}
+                                    type="button"
+                                    onClick={() => setWizardClientId(c.id)}
+                                    className={`w-full text-left p-3.5 rounded-xl border transition-all ${
+                                      selected
+                                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                                        : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                                    }`}
+                                  >
+                                    <p className="text-sm font-semibold">{c.business_name}</p>
+                                  </button>
+                                  </MotionPage>
               );
             })
           )}

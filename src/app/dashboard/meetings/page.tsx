@@ -17,6 +17,7 @@ import {
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface MeetingRow {
   id: string;
@@ -145,151 +146,141 @@ export default function MeetingsPage() {
   }
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Mic size={22} />}
-        title="Meetings"
-        eyebrow="MEETINGS"
-        subtitle={`${meetings.length} recorded — transcripts, action items, and decisions on every call.`}
-        gradient="blue"
-        actions={
-          <Link
-            href="/dashboard/meetings/new"
-            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all"
-          >
-            <Upload size={12} /> Upload audio
-          </Link>
-        }
-      />
-
-      {/* Killer-feature banner */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="glass rounded-xl p-4 border-[rgba(37,99,235,0.25)] bg-gradient-to-r from-[rgba(37,99,235,0.08)] to-transparent"
-      >
-        <div className="flex items-center gap-2 text-[11px] font-semibold mb-1">
-          <Sparkles size={11} className="text-[#2563EB]" /> AI Notetaker
-        </div>
-        <p className="text-[10px] text-muted leading-relaxed">
-          Drop in a recording or paste a Zoom/Loom share URL — Whisper transcribes,
-          Claude extracts action items, decisions, and key moments, and you can
-          push the summary into the linked contact&apos;s CRM activity feed in one click.
-          Replaces Otter ($16/mo) + Fathom ($24/mo).
-        </p>
-      </motion.div>
-
-      {/* Quick-create */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.06, duration: 0.4 }}
-        className="glass rounded-xl p-4 space-y-3"
-      >
-        <div className="flex gap-3 items-center">
-          <input
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && (urlMode ? ingestFromUrl() : quickCreate())}
-            placeholder="Title — e.g., 'Strategy kickoff, Acme Co'"
-            className="input flex-1 text-xs"
-          />
-          {urlMode ? (
-            <button
-              onClick={ingestFromUrl}
-              disabled={urlBusy || !newTitle.trim() || !urlValue.trim()}
-              className="btn-primary text-xs flex items-center gap-1.5 px-4 disabled:opacity-50"
-            >
-              {urlBusy ? <Loader2 size={12} className="animate-spin" /> : <Link2 size={12} />}
-              Ingest URL
-            </button>
-          ) : (
-            <button
-              onClick={quickCreate}
-              disabled={creating || !newTitle.trim()}
-              className="btn-primary text-xs flex items-center gap-1.5 px-4 disabled:opacity-50"
-            >
-              {creating ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />} New
-            </button>
-          )}
-        </div>
-        {urlMode && (
-          <input
-            value={urlValue}
-            onChange={(e) => setUrlValue(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && ingestFromUrl()}
-            placeholder="Paste a Zoom share URL or Loom share link..."
-            className="input w-full text-xs"
-          />
-        )}
-        <div className="flex items-center gap-3 text-[10px] text-muted">
-          <button
-            onClick={() => setUrlMode((v) => !v)}
-            className="hover:text-[#2563EB] transition-colors flex items-center gap-1"
-          >
-            <Link2 size={9} /> {urlMode ? "Switch to manual entry" : "Or ingest from URL"}
-          </button>
-          <span>·</span>
-          <Link
-            href="/dashboard/meetings/new"
-            className="hover:text-[#2563EB] transition-colors flex items-center gap-1"
-          >
-            <Upload size={9} /> Upload audio file
-          </Link>
-        </div>
-      </motion.div>
-
-      {loading ? (
-        <p className="text-[11px] text-muted flex items-center gap-1.5">
-          <Loader2 size={11} className="animate-spin" /> Loading meetings...
-        </p>
-      ) : meetings.length === 0 ? (
-        <EmptyState
-          type="no-invoices"
-          title="No meetings yet"
-          description="Upload a recording or create a meeting to generate transcripts, action items, and decisions."
-          action={
-            <Link href="/dashboard/meetings/new" className="btn-primary text-xs">
-              Upload your first recording
-            </Link>
-          }
-        />
-      ) : (
-        <div className="space-y-2">
-          {meetings.map((m, i) => (
-            <motion.div
-              key={m.id}
+    <MotionPage className="fade-in space-y-5"><PageHero
+              icon={<Mic size={22} />}
+              title="Meetings"
+              eyebrow="MEETINGS"
+              subtitle={`${meetings.length} recorded — transcripts, action items, and decisions on every call.`}
+              gradient="blue"
+              actions={
+                <Link
+                  href="/dashboard/meetings/new"
+                  className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all"
+                >
+                  <Upload size={12} /> Upload audio
+                </Link>
+              }
+            />{/* Killer-feature banner */}<motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05, duration: 0.4 }}
-              whileHover={{ y: -4, scale: 1.01 }}
-              className="glass rounded-xl overflow-hidden"
+              transition={{ duration: 0.4 }}
+              className="glass rounded-xl p-4 border-[rgba(37,99,235,0.25)] bg-gradient-to-r from-[rgba(37,99,235,0.08)] to-transparent"
             >
-              <div style={{ height: 3, background: RAINBOW }} />
-              <Link
-                href={`/dashboard/meetings/${m.id}`}
-                className="flex items-center justify-between p-4"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center flex-shrink-0">
-                    <Mic size={16} className="text-[#2563EB]" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold truncate">{m.title}</p>
-                    <p className="text-[10px] text-muted truncate">
-                      {new Date(m.created_at).toLocaleString()} · {formatDuration(m.duration_seconds)}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  {statusBadge(m.status)}
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      )}
-    </div>
+              <div className="flex items-center gap-2 text-[11px] font-semibold mb-1">
+                <Sparkles size={11} className="text-[#2563EB]" /> AI Notetaker
+              </div>
+              <p className="text-[10px] text-muted leading-relaxed">
+                Drop in a recording or paste a Zoom/Loom share URL — Whisper transcribes,
+                Claude extracts action items, decisions, and key moments, and you can
+                push the summary into the linked contact&apos;s CRM activity feed in one click.
+                Replaces Otter ($16/mo) + Fathom ($24/mo).
+              </p>
+            </motion.div>{/* Quick-create */}<motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.06, duration: 0.4 }}
+              className="glass rounded-xl p-4 space-y-3"
+            >
+              <div className="flex gap-3 items-center">
+                <input
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && (urlMode ? ingestFromUrl() : quickCreate())}
+                  placeholder="Title — e.g., 'Strategy kickoff, Acme Co'"
+                  className="input flex-1 text-xs"
+                />
+                {urlMode ? (
+                  <button
+                    onClick={ingestFromUrl}
+                    disabled={urlBusy || !newTitle.trim() || !urlValue.trim()}
+                    className="btn-primary text-xs flex items-center gap-1.5 px-4 disabled:opacity-50"
+                  >
+                    {urlBusy ? <Loader2 size={12} className="animate-spin" /> : <Link2 size={12} />}
+                    Ingest URL
+                  </button>
+                ) : (
+                  <button
+                    onClick={quickCreate}
+                    disabled={creating || !newTitle.trim()}
+                    className="btn-primary text-xs flex items-center gap-1.5 px-4 disabled:opacity-50"
+                  >
+                    {creating ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />} New
+                  </button>
+                )}
+              </div>
+              {urlMode && (
+                <input
+                  value={urlValue}
+                  onChange={(e) => setUrlValue(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && ingestFromUrl()}
+                  placeholder="Paste a Zoom share URL or Loom share link..."
+                  className="input w-full text-xs"
+                />
+              )}
+              <div className="flex items-center gap-3 text-[10px] text-muted">
+                <button
+                  onClick={() => setUrlMode((v) => !v)}
+                  className="hover:text-[#2563EB] transition-colors flex items-center gap-1"
+                >
+                  <Link2 size={9} /> {urlMode ? "Switch to manual entry" : "Or ingest from URL"}
+                </button>
+                <span>·</span>
+                <Link
+                  href="/dashboard/meetings/new"
+                  className="hover:text-[#2563EB] transition-colors flex items-center gap-1"
+                >
+                  <Upload size={9} /> Upload audio file
+                </Link>
+              </div>
+            </motion.div>{loading ? (
+              <p className="text-[11px] text-muted flex items-center gap-1.5">
+                <Loader2 size={11} className="animate-spin" /> Loading meetings...
+              </p>
+            ) : meetings.length === 0 ? (
+              <EmptyState
+                type="no-invoices"
+                title="No meetings yet"
+                description="Upload a recording or create a meeting to generate transcripts, action items, and decisions."
+                action={
+                  <Link href="/dashboard/meetings/new" className="btn-primary text-xs">
+                    Upload your first recording
+                  </Link>
+                }
+              />
+            ) : (
+              <div className="space-y-2">
+                {meetings.map((m, i) => (
+                  <motion.div
+                    key={m.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05, duration: 0.4 }}
+                    whileHover={{ y: -4, scale: 1.01 }}
+                    className="glass rounded-xl overflow-hidden"
+                  >
+                    <div style={{ height: 3, background: RAINBOW }} />
+                    <Link
+                      href={`/dashboard/meetings/${m.id}`}
+                      className="flex items-center justify-between p-4"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center flex-shrink-0">
+                          <Mic size={16} className="text-[#2563EB]" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold truncate">{m.title}</p>
+                          <p className="text-[10px] text-muted truncate">
+                            {new Date(m.created_at).toLocaleString()} · {formatDuration(m.duration_seconds)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        {statusBadge(m.status)}
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            )}</MotionPage>
   );
 }

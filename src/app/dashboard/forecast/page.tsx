@@ -7,6 +7,7 @@ import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { PrismPanel } from "@/components/prism";
 import { createClient } from "@/lib/supabase/client";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface Deal {
   id: string;
@@ -148,187 +149,183 @@ export default function ForecastPage() {
   const wonTotal = deals.filter((d) => d.stage === "closed_won").reduce((s, d) => s + d.value, 0);
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        title="Revenue Forecast"
-        eyebrow="REVENUE FORECAST"
-        subtitle="Weighted pipeline by close date � next 6 months."
-        icon={<TrendingUp size={22} />}
-        gradient="gold"
-      />
-
-      {loading ? <TableSkeleton rows={8} /> : error ? (
-        <PrismPanel padding="p-8" className="flex flex-col items-center gap-3 text-center">
-          <AlertCircle size={32} className="text-red-700" />
-          <p className="text-[#0A0A0B] font-semibold">Failed to load deals</p>
-          <p className="text-muted text-sm">{error}</p>
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={fetchDeals}
-            className="btn-primary text-sm px-4 py-2 rounded-lg flex items-center gap-2 mt-2"
-          >
-            <Loader2 size={14} /> Retry
-          </motion.button>
-        </PrismPanel>
-      ) : (
-        <>
-          {/* Hero stats */}
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-          >
-            {[
-              {
-                label: "Total Weighted Pipeline",
-                value: fmt(totalPipeline),
-                sub: `across ${deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length} open deals`,
-                valueClass: "text-[#0A0A0B]",
-              },
-              {
-                label: "Likely This Month",
-                value: fmt(likelyClose.reduce((s, d) => s + d.value * (d.probability / 100), 0)),
-                sub: `${likelyClose.length} deal${likelyClose.length !== 1 ? "s" : ""} =70% probability`,
-                valueClass: "text-amber-700",
-              },
-              {
-                label: "Closed Won (All Time)",
-                value: fmt(wonTotal),
-                sub: `${deals.filter((d) => d.stage === "closed_won").length} deals won`,
-                valueClass: "text-green-700",
-              },
-            ].map((stat, i) => (
-              <motion.div
-                key={i}
-                variants={fadeUp}
-                whileHover={{ y: -2 }}
-                className=" border p-5 overflow-hidden relative"
-                style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.08)" }}
-              >
-                <div className={`absolute top-0 left-0 right-0 h-0.5 ${STAT_BARS[i]}`} />
-                <p className="text-xs text-muted uppercase tracking-wider mb-1">{stat.label}</p>
-                <p className={`text-3xl font-bold ${stat.valueClass}`}>{stat.value}</p>
-                <p className="text-xs text-muted mt-1">{stat.sub}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length === 0 ? (
-            <PrismPanel padding="p-10" className="flex flex-col items-center gap-3 text-center">
-              <TrendingUp size={36} className="text-muted opacity-30" />
-              <p className="text-[#0A0A0B] font-semibold">No open deals to forecast</p>
-              <p className="text-muted text-sm max-w-xs">Add deals with expected close dates and probabilities to see your revenue forecast.</p>
-              <a href="/dashboard/deals" className="btn-primary text-sm px-4 py-2 rounded-lg mt-2">Go to Deals ?</a>
-            </PrismPanel>
-          ) : (
-            <>
-              <BarChart buckets={buckets} />
-
-              {/* Likely to close this month */}
-              {likelyClose.length > 0 && (
-                <PrismPanel padding="p-0" className="overflow-hidden">
-                  <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.06)]">
-                    <p className="text-sm font-semibold text-[#0A0A0B]">Likely to Close This Month</p>
-                    <p className="text-xs text-muted mt-0.5">Deals with =70% probability closing in {new Date().toLocaleString("default", { month: "long" })}</p>
-                  </div>
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
-                        <th className="text-left px-4 py-2.5 font-medium">Deal</th>
-                        <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">Client</th>
-                        <th className="text-right px-4 py-2.5 font-medium">Value</th>
-                        <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Probability</th>
-                        <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Weighted</th>
-                      </tr>
-                    </thead>
-                    <motion.tbody
-                      className="divide-y divide-[rgba(0,0,0,0.06)]"
-                      variants={containerVariants}
-                      initial="hidden"
-                      animate="show"
-                    >
-                      {likelyClose.map((d) => (
-                        <motion.tr
-                          key={d.id}
-                          variants={slideX}
-                          className="hover:bg-indigo-500/5 transition-colors"
-                        >
-                          <td className="px-4 py-3 text-[#0A0A0B] font-medium">{d.title}</td>
-                          <td className="px-4 py-3 text-muted hidden sm:table-cell">{d.client_name}</td>
-                          <td className="px-4 py-3 text-right text-[#0A0A0B]">{fmt(d.value)}</td>
-                          <td className="px-4 py-3 text-right hidden md:table-cell">
-                            <span className="text-xs bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded-full">
-                              {d.probability}%
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-right text-amber-700 font-medium hidden md:table-cell">
-                            {fmt(d.value * d.probability / 100)}
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </motion.tbody>
-                  </table>
-                </PrismPanel>
-              )}
-
-              {/* Full pipeline table */}
-              <PrismPanel padding="p-0" className="overflow-hidden">
-                <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.06)]">
-                  <p className="text-sm font-semibold text-[#0A0A0B]">Full Open Pipeline</p>
-                </div>
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
-                      <th className="text-left px-4 py-2.5 font-medium">Deal</th>
-                      <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">Stage</th>
-                      <th className="text-right px-4 py-2.5 font-medium">Value</th>
-                      <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Close Date</th>
-                      <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Weighted</th>
-                    </tr>
-                  </thead>
-                  <motion.tbody
-                    className="divide-y divide-[rgba(0,0,0,0.06)]"
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="show"
-                  >
-                    {deals
-                      .filter((d) => !CLOSED_STAGES.has(d.stage))
-                      .sort((a, b) => b.value * b.probability - a.value * a.probability)
-                      .map((d) => (
-                        <motion.tr
-                          key={d.id}
-                          variants={slideX}
-                          className="hover:bg-indigo-500/5 transition-colors"
-                        >
-                          <td className="px-4 py-3">
-                            <p className="text-[#0A0A0B]">{d.title}</p>
-                            <p className="text-muted text-xs">{d.client_name}</p>
-                          </td>
-                          <td className="px-4 py-3 text-muted text-xs hidden sm:table-cell">
-                            {d.stage.replace(/_/g, " ")}
-                          </td>
-                          <td className="px-4 py-3 text-right text-[#0A0A0B]">{fmt(d.value)}</td>
-                          <td className="px-4 py-3 text-right text-muted hidden md:table-cell">
-                            {d.expected_close_date
-                              ? new Date(d.expected_close_date).toLocaleDateString()
-                              : "�"}
-                          </td>
-                          <td className="px-4 py-3 text-right text-amber-700 hidden md:table-cell">
-                            {fmt(d.value * d.probability / 100)}
-                          </td>
-                        </motion.tr>
-                      ))}
-                  </motion.tbody>
-                </table>
+    <MotionPage className="space-y-6"><PageHero
+              title="Revenue Forecast"
+              eyebrow="REVENUE FORECAST"
+              subtitle="Weighted pipeline by close date � next 6 months."
+              icon={<TrendingUp size={22} />}
+              gradient="gold"
+            />{loading ? <TableSkeleton rows={8} /> : error ? (
+              <PrismPanel padding="p-8" className="flex flex-col items-center gap-3 text-center">
+                <AlertCircle size={32} className="text-red-700" />
+                <p className="text-[#0A0A0B] font-semibold">Failed to load deals</p>
+                <p className="text-muted text-sm">{error}</p>
+                <motion.button
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  onClick={fetchDeals}
+                  className="btn-primary text-sm px-4 py-2 rounded-lg flex items-center gap-2 mt-2"
+                >
+                  <Loader2 size={14} /> Retry
+                </motion.button>
               </PrismPanel>
-            </>
-          )}
-        </>
-      )}
-    </div>
+            ) : (
+              <>
+                {/* Hero stats */}
+                <motion.div
+                  className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="show"
+                >
+                  {[
+                    {
+                      label: "Total Weighted Pipeline",
+                      value: fmt(totalPipeline),
+                      sub: `across ${deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length} open deals`,
+                      valueClass: "text-[#0A0A0B]",
+                    },
+                    {
+                      label: "Likely This Month",
+                      value: fmt(likelyClose.reduce((s, d) => s + d.value * (d.probability / 100), 0)),
+                      sub: `${likelyClose.length} deal${likelyClose.length !== 1 ? "s" : ""} =70% probability`,
+                      valueClass: "text-amber-700",
+                    },
+                    {
+                      label: "Closed Won (All Time)",
+                      value: fmt(wonTotal),
+                      sub: `${deals.filter((d) => d.stage === "closed_won").length} deals won`,
+                      valueClass: "text-green-700",
+                    },
+                  ].map((stat, i) => (
+                    <motion.div
+                      key={i}
+                      variants={fadeUp}
+                      whileHover={{ y: -2 }}
+                      className=" border p-5 overflow-hidden relative"
+                      style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.08)" }}
+                    >
+                      <div className={`absolute top-0 left-0 right-0 h-0.5 ${STAT_BARS[i]}`} />
+                      <p className="text-xs text-muted uppercase tracking-wider mb-1">{stat.label}</p>
+                      <p className={`text-3xl font-bold ${stat.valueClass}`}>{stat.value}</p>
+                      <p className="text-xs text-muted mt-1">{stat.sub}</p>
+                    </motion.div>
+                  ))}
+                </motion.div>
+
+                {deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length === 0 ? (
+                  <PrismPanel padding="p-10" className="flex flex-col items-center gap-3 text-center">
+                    <TrendingUp size={36} className="text-muted opacity-30" />
+                    <p className="text-[#0A0A0B] font-semibold">No open deals to forecast</p>
+                    <p className="text-muted text-sm max-w-xs">Add deals with expected close dates and probabilities to see your revenue forecast.</p>
+                    <a href="/dashboard/deals" className="btn-primary text-sm px-4 py-2 rounded-lg mt-2">Go to Deals ?</a>
+                  </PrismPanel>
+                ) : (
+                  <>
+                    <BarChart buckets={buckets} />
+
+                    {/* Likely to close this month */}
+                    {likelyClose.length > 0 && (
+                      <PrismPanel padding="p-0" className="overflow-hidden">
+                        <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.06)]">
+                          <p className="text-sm font-semibold text-[#0A0A0B]">Likely to Close This Month</p>
+                          <p className="text-xs text-muted mt-0.5">Deals with =70% probability closing in {new Date().toLocaleString("default", { month: "long" })}</p>
+                        </div>
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
+                              <th className="text-left px-4 py-2.5 font-medium">Deal</th>
+                              <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">Client</th>
+                              <th className="text-right px-4 py-2.5 font-medium">Value</th>
+                              <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Probability</th>
+                              <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Weighted</th>
+                            </tr>
+                          </thead>
+                          <motion.tbody
+                            className="divide-y divide-[rgba(0,0,0,0.06)]"
+                            variants={containerVariants}
+                            initial="hidden"
+                            animate="show"
+                          >
+                            {likelyClose.map((d) => (
+                              <motion.tr
+                                key={d.id}
+                                variants={slideX}
+                                className="hover:bg-indigo-500/5 transition-colors"
+                              >
+                                <td className="px-4 py-3 text-[#0A0A0B] font-medium">{d.title}</td>
+                                <td className="px-4 py-3 text-muted hidden sm:table-cell">{d.client_name}</td>
+                                <td className="px-4 py-3 text-right text-[#0A0A0B]">{fmt(d.value)}</td>
+                                <td className="px-4 py-3 text-right hidden md:table-cell">
+                                  <span className="text-xs bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded-full">
+                                    {d.probability}%
+                                  </span>
+                                </td>
+                                <td className="px-4 py-3 text-right text-amber-700 font-medium hidden md:table-cell">
+                                  {fmt(d.value * d.probability / 100)}
+                                </td>
+                              </motion.tr>
+                            ))}
+                          </motion.tbody>
+                        </table>
+                      </PrismPanel>
+                    )}
+
+                    {/* Full pipeline table */}
+                    <PrismPanel padding="p-0" className="overflow-hidden">
+                      <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.06)]">
+                        <p className="text-sm font-semibold text-[#0A0A0B]">Full Open Pipeline</p>
+                      </div>
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
+                            <th className="text-left px-4 py-2.5 font-medium">Deal</th>
+                            <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">Stage</th>
+                            <th className="text-right px-4 py-2.5 font-medium">Value</th>
+                            <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Close Date</th>
+                            <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Weighted</th>
+                          </tr>
+                        </thead>
+                        <motion.tbody
+                          className="divide-y divide-[rgba(0,0,0,0.06)]"
+                          variants={containerVariants}
+                          initial="hidden"
+                          animate="show"
+                        >
+                          {deals
+                            .filter((d) => !CLOSED_STAGES.has(d.stage))
+                            .sort((a, b) => b.value * b.probability - a.value * a.probability)
+                            .map((d) => (
+                              <motion.tr
+                                key={d.id}
+                                variants={slideX}
+                                className="hover:bg-indigo-500/5 transition-colors"
+                              >
+                                <td className="px-4 py-3">
+                                  <p className="text-[#0A0A0B]">{d.title}</p>
+                                  <p className="text-muted text-xs">{d.client_name}</p>
+                                </td>
+                                <td className="px-4 py-3 text-muted text-xs hidden sm:table-cell">
+                                  {d.stage.replace(/_/g, " ")}
+                                </td>
+                                <td className="px-4 py-3 text-right text-[#0A0A0B]">{fmt(d.value)}</td>
+                                <td className="px-4 py-3 text-right text-muted hidden md:table-cell">
+                                  {d.expected_close_date
+                                    ? new Date(d.expected_close_date).toLocaleDateString()
+                                    : "�"}
+                                </td>
+                                <td className="px-4 py-3 text-right text-amber-700 hidden md:table-cell">
+                                  {fmt(d.value * d.probability / 100)}
+                                </td>
+                              </motion.tr>
+                            ))}
+                        </motion.tbody>
+                      </table>
+                    </PrismPanel>
+                  </>
+                )}
+              </>
+            )}</MotionPage>
   );
 }
 

@@ -20,6 +20,7 @@ import {
   Mail,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /**
  * Desktop download page — offers the Electron native app for Windows, macOS, Linux.
@@ -152,191 +153,177 @@ export default function DownloadDesktopPage() {
   const isAvailable = Boolean(manifest?.available);
 
   return (
-    <div className="space-y-6 pb-10">
-      <PageHero
-        eyebrow="Desktop App"
-        title="Download Trinity for Desktop"
-        subtitle="Work faster with a native app. Chrome browser built in, AI-assisted clicks, keyboard automation."
-        icon={<Download size={22} />}
-        gradient="gold"
-        actions={
-          <a
-            href={GH_RELEASES}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 hover:bg-black/10 text-foreground border border-border transition-colors"
-          >
-            View all releases <ExternalLink size={12} />
-          </a>
-        }
-      />
-
-      {/* ── Unavailable banner (graceful fallback) ───────────────── */}
-      {!loading && !isAvailable && (
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="flex items-start gap-3 glass rounded-xl border border-amber-500/30 p-4"
-        >
-          <AlertTriangle size={18} className="shrink-0 mt-0.5 text-amber-500" />
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold text-amber-700">
-              Installer temporarily unavailable
-            </div>
-            <div className="text-xs text-amber-600 mt-0.5">
-              Our desktop installer is currently being staged. You can still grab it from
-              GitHub releases, or email support and we&apos;ll send a direct link.
-            </div>
-            <div className="flex flex-wrap items-center gap-2 mt-2.5">
+    <MotionPage className="space-y-6 pb-10"><PageHero
+              eyebrow="Desktop App"
+              title="Download Trinity for Desktop"
+              subtitle="Work faster with a native app. Chrome browser built in, AI-assisted clicks, keyboard automation."
+              icon={<Download size={22} />}
+              gradient="gold"
+              actions={
+                <a
+                  href={GH_RELEASES}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 hover:bg-black/10 text-foreground border border-border transition-colors"
+                >
+                  View all releases <ExternalLink size={12} />
+                </a>
+              }
+            />{/* ── Unavailable banner (graceful fallback) ───────────────── */}{!loading && !isAvailable && (
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="flex items-start gap-3 glass rounded-xl border border-amber-500/30 p-4"
+              >
+                <AlertTriangle size={18} className="shrink-0 mt-0.5 text-amber-500" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold text-amber-700">
+                    Installer temporarily unavailable
+                  </div>
+                  <div className="text-xs text-amber-600 mt-0.5">
+                    Our desktop installer is currently being staged. You can still grab it from
+                    GitHub releases, or email support and we&apos;ll send a direct link.
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 mt-2.5">
+                    <a
+                      href={GH_RELEASES}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200"
+                    >
+                      GitHub releases <ExternalLink size={11} />
+                    </a>
+                    <a
+                      href={SUPPORT_MAILTO}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[#374151] border border-[rgba(0,0,0,0.08)]"
+                    >
+                      <Mail size={11} /> Contact support
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            )}{/* ── Download cards ────────────────────────────────────────── */}<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {PLATFORMS.map((p, index) => {
+                const isRecommended = detectedOS === p.id;
+                const entry = manifest?.files?.[p.id] ?? null;
+                const size = formatBytes(entry?.size);
+                const href = `/api/desktop/download/${p.id}`;
+                return (
+                  <motion.a
+                    key={p.id}
+                    href={href}
+                    download
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.06, duration: 0.4 }}
+                    whileHover={{ y: -4, scale: 1.01 }}
+                    className={`group relative glass rounded-xl p-5 transition-all ${
+                      isRecommended
+                        ? "border-[rgba(37,99,235,0.5)] shadow-[0_0_20px_rgba(37,99,235,0.12)]"
+                        : ""
+                    }`}
+                  >
+                    {isRecommended && (
+                      <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-[#2563EB] text-[10px] font-bold text-white uppercase tracking-wider">
+                        Recommended for you
+                      </div>
+                    )}
+                    <div className="flex items-start justify-between mb-4">
+                      <div
+                        className="w-12 h-12 rounded-xl flex items-center justify-center border"
+                        style={{
+                          background: `${p.accent}18`,
+                          borderColor: `${p.accent}44`,
+                          color: p.accent,
+                        }}
+                      >
+                        {p.icon}
+                      </div>
+                      <Download
+                        size={18}
+                        className="text-muted group-hover:text-[#2563EB] transition-colors"
+                      />
+                    </div>
+                    <div className="text-lg font-semibold text-foreground mb-0.5">{p.title}</div>
+                    <div className="text-xs text-muted mb-3">{p.subtitle}</div>
+                    <div className="text-[11px] text-muted-light mb-4">
+                      {p.fileNote}
+                      {size ? ` · ${size}` : ""}
+                    </div>
+                    <div className="flex items-center justify-between pt-3 border-t border-border">
+                      <span className="text-[11px] text-muted">v{version}</span>
+                      <span className="text-xs font-medium text-[#2563EB] group-hover:underline">
+                        Download
+                      </span>
+                    </div>
+                  </motion.a>
+                );
+              })}
+            </div>{/* ── What's included ──────────────────────────────────────── */}<motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.15 }}
+              className="glass rounded-xl p-6"
+            >
+              <div className="mb-5">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-[#2563EB] mb-1">
+                  What&apos;s included
+                </div>
+                <h2 className="text-xl font-semibold text-foreground">
+                  Everything the web app does — plus native superpowers
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {FEATURES.map((f, i) => (
+                  <motion.div
+                    key={f.title}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    className="flex items-start gap-3 p-3 glass-md rounded-xl"
+                  >
+                    <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]">
+                      <CheckCircle2 size={16} />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                        <span className="text-[#2563EB]">{f.icon}</span>
+                        {f.title}
+                      </div>
+                      <div className="text-[11px] text-muted mt-0.5 leading-relaxed">{f.desc}</div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>{/* ── Version + changelog ──────────────────────────────────── */}<motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 glass rounded-xl p-4"
+            >
+              <div className="flex items-center gap-3 text-xs text-muted">
+                <Keyboard size={14} className="text-[#2563EB]" />
+                <span>
+                  Current version{" "}
+                  <span className="font-mono font-semibold text-foreground">v{version}</span>
+                  {updatedStr ? (
+                    <>
+                      {" · Updated "}
+                      <span className="text-foreground">{updatedStr}</span>
+                    </>
+                  ) : null}
+                  {" · Built with Electron & electron-builder"}
+                </span>
+              </div>
               <a
                 href={GH_RELEASES}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200"
+                className="text-xs font-medium text-[#2563EB] hover:underline flex items-center gap-1"
               >
-                GitHub releases <ExternalLink size={11} />
+                View changelog <ExternalLink size={11} />
               </a>
-              <a
-                href={SUPPORT_MAILTO}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[#374151] border border-[rgba(0,0,0,0.08)]"
-              >
-                <Mail size={11} /> Contact support
-              </a>
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      {/* ── Download cards ────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {PLATFORMS.map((p, index) => {
-          const isRecommended = detectedOS === p.id;
-          const entry = manifest?.files?.[p.id] ?? null;
-          const size = formatBytes(entry?.size);
-          const href = `/api/desktop/download/${p.id}`;
-          return (
-            <motion.a
-              key={p.id}
-              href={href}
-              download
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.06, duration: 0.4 }}
-              whileHover={{ y: -4, scale: 1.01 }}
-              className={`group relative glass rounded-xl p-5 transition-all ${
-                isRecommended
-                  ? "border-[rgba(37,99,235,0.5)] shadow-[0_0_20px_rgba(37,99,235,0.12)]"
-                  : ""
-              }`}
-            >
-              {isRecommended && (
-                <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-[#2563EB] text-[10px] font-bold text-white uppercase tracking-wider">
-                  Recommended for you
-                </div>
-              )}
-              <div className="flex items-start justify-between mb-4">
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center border"
-                  style={{
-                    background: `${p.accent}18`,
-                    borderColor: `${p.accent}44`,
-                    color: p.accent,
-                  }}
-                >
-                  {p.icon}
-                </div>
-                <Download
-                  size={18}
-                  className="text-muted group-hover:text-[#2563EB] transition-colors"
-                />
-              </div>
-              <div className="text-lg font-semibold text-foreground mb-0.5">{p.title}</div>
-              <div className="text-xs text-muted mb-3">{p.subtitle}</div>
-              <div className="text-[11px] text-muted-light mb-4">
-                {p.fileNote}
-                {size ? ` · ${size}` : ""}
-              </div>
-              <div className="flex items-center justify-between pt-3 border-t border-border">
-                <span className="text-[11px] text-muted">v{version}</span>
-                <span className="text-xs font-medium text-[#2563EB] group-hover:underline">
-                  Download
-                </span>
-              </div>
-            </motion.a>
-          );
-        })}
-      </div>
-
-      {/* ── What's included ──────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.15 }}
-        className="glass rounded-xl p-6"
-      >
-        <div className="mb-5">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-[#2563EB] mb-1">
-            What&apos;s included
-          </div>
-          <h2 className="text-xl font-semibold text-foreground">
-            Everything the web app does — plus native superpowers
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {FEATURES.map((f, i) => (
-            <motion.div
-              key={f.title}
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.04 }}
-              className="flex items-start gap-3 p-3 glass-md rounded-xl"
-            >
-              <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]">
-                <CheckCircle2 size={16} />
-              </div>
-              <div className="min-w-0">
-                <div className="text-sm font-semibold text-foreground flex items-center gap-1.5">
-                  <span className="text-[#2563EB]">{f.icon}</span>
-                  {f.title}
-                </div>
-                <div className="text-[11px] text-muted mt-0.5 leading-relaxed">{f.desc}</div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* ── Version + changelog ──────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.2 }}
-        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 glass rounded-xl p-4"
-      >
-        <div className="flex items-center gap-3 text-xs text-muted">
-          <Keyboard size={14} className="text-[#2563EB]" />
-          <span>
-            Current version{" "}
-            <span className="font-mono font-semibold text-foreground">v{version}</span>
-            {updatedStr ? (
-              <>
-                {" · Updated "}
-                <span className="text-foreground">{updatedStr}</span>
-              </>
-            ) : null}
-            {" · Built with Electron & electron-builder"}
-          </span>
-        </div>
-        <a
-          href={GH_RELEASES}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs font-medium text-[#2563EB] hover:underline flex items-center gap-1"
-        >
-          View changelog <ExternalLink size={11} />
-        </a>
-      </motion.div>
-    </div>
+            </motion.div></MotionPage>
   );
 }

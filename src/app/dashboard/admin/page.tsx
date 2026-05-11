@@ -11,6 +11,7 @@ import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import Link from "next/link";
 import { Activity, DollarSign, Zap, FlaskConical, Shield } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const ADMIN_LINKS = [
   {
@@ -44,9 +45,8 @@ export default function AdminIndexPage() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-[40vh] text-muted text-sm">
-        Loading…
-      </div>
+      <MotionPage className="flex items-center justify-center min-h-[40vh] text-muted text-sm">Loading…
+              </MotionPage>
     );
   }
 

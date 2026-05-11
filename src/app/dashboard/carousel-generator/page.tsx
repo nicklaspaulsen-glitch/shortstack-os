@@ -14,6 +14,7 @@ import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { trackGeneration } from "@/lib/track-generation";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // Real viral carousel-style thumbnails served from ytimg.com (public CDN).
 // RollingPreview with fetchRemote + tool="carousel" replaces these with the
@@ -604,866 +605,854 @@ export default function CarouselGeneratorPage() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto animate-fade-in">
-      <CarouselWizard
-        open={wizardOpen}
-        onClose={() => setWizardOpen(false)}
-        onComplete={async (data) => {
-          setTopic(data.topic);
-          setSlideCount(data.slideCount);
-          setStyle(data.style);
-          await runGenerate({
-            topic: data.topic,
-            slideCount: data.slideCount,
-            style: data.style,
-            template,
-            brandColors,
-            contentDirection: data.contentDirection,
-          });
-        }}
-      />
-
-      <PageHero
-        className="mb-6"
-        icon={<Layers size={28} />}
-        eyebrow="CAROUSEL BUILDER"
-        title="Carousel Generator"
-        subtitle="Create scroll-stopping Instagram & LinkedIn carousels."
-        gradient="blue"
-        actions={
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-            {advancedMode && (
-              <button
-                onClick={() => setWizardOpen(true)}
-                className="relative group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#2563EB] to-amber-500 text-black text-xs font-bold shadow-lg shadow-[rgba(37,99,235,0.2)] hover:shadow-[rgba(37,99,235,0.4)] hover-lift transition-all"
-              >
-                <Sparkles size={13} className="animate-pulse" />
-                + New with AI
-                <span className="ml-0.5 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wider">
-                  Recommended
-                </span>
-              </button>
-            )}
-            {slides.length > 0 && (
-              <>
-                <button
-                  onClick={handleCopyAll}
-                  className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-border bg-black/5 text-foreground hover:bg-black/10 transition-all"
-                >
-                  {copied ? <Check size={13} /> : <Copy size={13} />}
-                  {copied ? "Copied!" : "Copy Text"}
-                </button>
-                <button
-                  onClick={handleDownload}
-                  className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground hover:bg-black/15 transition-all"
-                >
-                  <Download size={13} />
-                  Download All
-                </button>
-              </>
-            )}
-          </div>
-        }
-      />
-
-      {/* Guided Mode � "4-year-old friendly" */}
-      {!advancedMode && (
-        <Wizard
-          className="mb-6"
-          steps={[
-            {
-              id: "topic",
-              title: "What's your carousel about?",
-              description: "One sentence � what's the post teaching, telling, or selling?",
-              icon: <Sparkles size={18} />,
-              canProceed: topic.trim().length > 0,
-              component: (
-                <div className="space-y-3">
-                  <input
-                    type="text"
-                    value={topic}
-                    onChange={e => setTopic(e.target.value)}
-                    placeholder="e.g., 5 mistakes new founders make in their first year"
-                    className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.5)] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all"
-                    autoFocus
-                  />
-                  <div>
-                    <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Starter templates</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {TEMPLATES.slice(0, 5).map(t => (
-                        <button
-                          key={t.id}
-                          onClick={() => { setTopic(t.example); setTemplate(t.id); }}
-                          className="text-[10px] text-muted hover:text-foreground bg-surface-light hover:bg-[rgba(37,99,235,0.08)] hover:border-[rgba(37,99,235,0.25)] px-2.5 py-1 rounded-full border border-border/50 transition-all"
-                        >
-                          {t.name}: {t.example.slice(0, 30)}�
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ),
-            },
-            {
-              id: "style",
-              title: "Pick a look",
-              description: "The style sets the mood � elegant, bold, fun, premium.",
-              icon: <Palette size={18} />,
-              component: (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                  {STYLES.map(s => {
-                    const selected = style === s.id;
-                    return (
+    <MotionPage className="max-w-7xl mx-auto animate-fade-in"><CarouselWizard
+              open={wizardOpen}
+              onClose={() => setWizardOpen(false)}
+              onComplete={async (data) => {
+                setTopic(data.topic);
+                setSlideCount(data.slideCount);
+                setStyle(data.style);
+                await runGenerate({
+                  topic: data.topic,
+                  slideCount: data.slideCount,
+                  style: data.style,
+                  template,
+                  brandColors,
+                  contentDirection: data.contentDirection,
+                });
+              }}
+            /><PageHero
+              className="mb-6"
+              icon={<Layers size={28} />}
+              eyebrow="CAROUSEL BUILDER"
+              title="Carousel Generator"
+              subtitle="Create scroll-stopping Instagram & LinkedIn carousels."
+              gradient="blue"
+              actions={
+                <div className="flex flex-wrap items-center justify-end gap-2">
+                  <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+                  {advancedMode && (
+                    <button
+                      onClick={() => setWizardOpen(true)}
+                      className="relative group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#2563EB] to-amber-500 text-black text-xs font-bold shadow-lg shadow-[rgba(37,99,235,0.2)] hover:shadow-[rgba(37,99,235,0.4)] hover-lift transition-all"
+                    >
+                      <Sparkles size={13} className="animate-pulse" />
+                      + New with AI
+                      <span className="ml-0.5 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wider">
+                        Recommended
+                      </span>
+                    </button>
+                  )}
+                  {slides.length > 0 && (
+                    <>
                       <button
-                        key={s.id}
-                        onClick={() => setStyle(s.id)}
-                        className={`text-left rounded-xl border overflow-hidden transition-all ${
-                          selected ? "border-[#2563EB] ring-2 ring-[rgba(37,99,235,0.25)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"
-                        }`}
+                        onClick={handleCopyAll}
+                        className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-border bg-black/5 text-foreground hover:bg-black/10 transition-all"
                       >
-                        <div className="h-16" style={{ background: s.preview }}>
-                          <div className="h-full flex items-center justify-center">
-                            <span className="text-xs font-bold" style={{ color: s.text }}>Aa</span>
+                        {copied ? <Check size={13} /> : <Copy size={13} />}
+                        {copied ? "Copied!" : "Copy Text"}
+                      </button>
+                      <button
+                        onClick={handleDownload}
+                        className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground hover:bg-black/15 transition-all"
+                      >
+                        <Download size={13} />
+                        Download All
+                      </button>
+                    </>
+                  )}
+                </div>
+              }
+            />{/* Guided Mode � "4-year-old friendly" */}{!advancedMode && (
+              <Wizard
+                className="mb-6"
+                steps={[
+                  {
+                    id: "topic",
+                    title: "What's your carousel about?",
+                    description: "One sentence � what's the post teaching, telling, or selling?",
+                    icon: <Sparkles size={18} />,
+                    canProceed: topic.trim().length > 0,
+                    component: (
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          value={topic}
+                          onChange={e => setTopic(e.target.value)}
+                          placeholder="e.g., 5 mistakes new founders make in their first year"
+                          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.5)] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all"
+                          autoFocus
+                        />
+                        <div>
+                          <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Starter templates</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {TEMPLATES.slice(0, 5).map(t => (
+                              <button
+                                key={t.id}
+                                onClick={() => { setTopic(t.example); setTemplate(t.id); }}
+                                className="text-[10px] text-muted hover:text-foreground bg-surface-light hover:bg-[rgba(37,99,235,0.08)] hover:border-[rgba(37,99,235,0.25)] px-2.5 py-1 rounded-full border border-border/50 transition-all"
+                              >
+                                {t.name}: {t.example.slice(0, 30)}�
+                              </button>
+                            ))}
                           </div>
                         </div>
-                        <div className="p-2.5 bg-surface-light">
-                          <p className="text-xs font-semibold">{s.name}</p>
-                          <p className="text-[10px] text-muted">{s.desc}</p>
+                      </div>
+                    ),
+                  },
+                  {
+                    id: "style",
+                    title: "Pick a look",
+                    description: "The style sets the mood � elegant, bold, fun, premium.",
+                    icon: <Palette size={18} />,
+                    component: (
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                        {STYLES.map(s => {
+                          const selected = style === s.id;
+                          return (
+                            <button
+                              key={s.id}
+                              onClick={() => setStyle(s.id)}
+                              className={`text-left rounded-xl border overflow-hidden transition-all ${
+                                selected ? "border-[#2563EB] ring-2 ring-[rgba(37,99,235,0.25)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"
+                              }`}
+                            >
+                              <div className="h-16" style={{ background: s.preview }}>
+                                <div className="h-full flex items-center justify-center">
+                                  <span className="text-xs font-bold" style={{ color: s.text }}>Aa</span>
+                                </div>
+                              </div>
+                              <div className="p-2.5 bg-surface-light">
+                                <p className="text-xs font-semibold">{s.name}</p>
+                                <p className="text-[10px] text-muted">{s.desc}</p>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ),
+                  },
+                  {
+                    id: "slides",
+                    title: "How many slides?",
+                    description: "Most carousels do best at 6-8 slides. More than 10 loses people.",
+                    icon: <LayoutGrid size={18} />,
+                    component: (
+                      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                        {[4, 6, 8, 10, 12].map(n => (
+                          <button
+                            key={n}
+                            onClick={() => setSlideCount(n)}
+                            className={`p-4 rounded-xl border text-center transition-all ${
+                              slideCount === n
+                                ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.08)]"
+                                : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                            }`}
+                          >
+                            <p className="text-2xl font-bold">{n}</p>
+                            <p className="text-[10px] text-muted">slides</p>
+                          </button>
+                        ))}
+                      </div>
+                    ),
+                  },
+                  {
+                    id: "review",
+                    title: "Ready to generate?",
+                    description: "We'll draft all your slides now. You can tweak individual cards in Advanced mode.",
+                    icon: <Wand2 size={18} />,
+                    component: (
+                      <div className="card bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.2)] space-y-2">
+                        <div className="grid grid-cols-3 gap-3">
+                          <div>
+                            <p className="text-[9px] uppercase tracking-wider text-muted">Style</p>
+                            <p className="text-xs font-semibold capitalize">{style}</p>
+                          </div>
+                          <div>
+                            <p className="text-[9px] uppercase tracking-wider text-muted">Slides</p>
+                            <p className="text-xs font-semibold">{slideCount}</p>
+                          </div>
+                          <div>
+                            <p className="text-[9px] uppercase tracking-wider text-muted">Template</p>
+                            <p className="text-xs font-semibold">{TEMPLATES.find(t => t.id === template)?.name || "Custom"}</p>
+                          </div>
                         </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              ),
-            },
-            {
-              id: "slides",
-              title: "How many slides?",
-              description: "Most carousels do best at 6-8 slides. More than 10 loses people.",
-              icon: <LayoutGrid size={18} />,
-              component: (
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                  {[4, 6, 8, 10, 12].map(n => (
-                    <button
-                      key={n}
-                      onClick={() => setSlideCount(n)}
-                      className={`p-4 rounded-xl border text-center transition-all ${
-                        slideCount === n
-                          ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.08)]"
-                          : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
-                      }`}
-                    >
-                      <p className="text-2xl font-bold">{n}</p>
-                      <p className="text-[10px] text-muted">slides</p>
-                    </button>
-                  ))}
-                </div>
-              ),
-            },
-            {
-              id: "review",
-              title: "Ready to generate?",
-              description: "We'll draft all your slides now. You can tweak individual cards in Advanced mode.",
-              icon: <Wand2 size={18} />,
-              component: (
-                <div className="card bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.2)] space-y-2">
-                  <div className="grid grid-cols-3 gap-3">
-                    <div>
-                      <p className="text-[9px] uppercase tracking-wider text-muted">Style</p>
-                      <p className="text-xs font-semibold capitalize">{style}</p>
-                    </div>
-                    <div>
-                      <p className="text-[9px] uppercase tracking-wider text-muted">Slides</p>
-                      <p className="text-xs font-semibold">{slideCount}</p>
-                    </div>
-                    <div>
-                      <p className="text-[9px] uppercase tracking-wider text-muted">Template</p>
-                      <p className="text-xs font-semibold">{TEMPLATES.find(t => t.id === template)?.name || "Custom"}</p>
-                    </div>
-                  </div>
-                  <div className="pt-2 border-t border-border/50">
-                    <p className="text-[9px] uppercase tracking-wider text-muted">Topic</p>
-                    <p className="text-sm font-semibold">{topic || <span className="text-muted italic">(none)</span>}</p>
-                  </div>
-                </div>
-              ),
-            },
-          ]}
-          activeIdx={guidedStep}
-          onStepChange={setGuidedStep}
-          finishLabel={generating ? "Generating�" : "Generate slides"}
-          busy={generating}
-          onFinish={handleGenerate}
-          onCancel={() => setAdvancedMode(true)}
-          cancelLabel="Advanced mode"
-        />
-      )}
-
-      {/* Slide preview in guided mode (after generation) */}
-      {!advancedMode && slides.length > 0 && (
-        <div className="card mb-6 space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="section-header flex items-center gap-2">
-              <LayoutGrid size={14} className="text-[#2563EB]" /> Your carousel ({slides.length} slides)
-            </h2>
-            <button
-              onClick={handleCopyAll}
-              className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors"
-            >
-              {copied ? <Check size={11} /> : <Copy size={11} />} {copied ? "Copied!" : "Copy text"}
-            </button>
-          </div>
-          <motion.div
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"
-          >
-            {slides.map(s => (
-              <motion.div
-                key={s.slideNumber}
-                variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } }}
-                className="rounded-xl border border-border bg-surface-light p-3 aspect-square flex flex-col"
-              >
-                <span className="text-[9px] uppercase tracking-wider text-muted">Slide {s.slideNumber}</span>
-                <p className="text-sm font-bold leading-tight mt-1 line-clamp-3">{s.headline}</p>
-                <p className="text-[10px] text-muted line-clamp-4 mt-2">{s.body}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-          <p className="text-[11px] text-muted text-center pt-2">
-            Need to edit slides or change brand colors? Flip to <span className="text-[#2563EB] font-semibold">Advanced mode</span>.
-          </p>
-        </div>
-      )}
-
-      {advancedMode && (
-      <>
-      {/* Rolling preview of example carousels � 1:1 Instagram-native aspect */}
-      <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6 mb-5">
-        <div className="absolute inset-0 pointer-events-none">
-          <RollingPreview
-            items={CAROUSEL_PREVIEW_FALLBACK}
-            rows={2}
-            aspectRatio="1:1"
-            opacity={0.45}
-            speed="medium"
-            fetchRemote
-            tool="carousel"
-          />
-        </div>
-        <div className="relative text-center px-4">
-          <p className="text-[11px] uppercase tracking-widest text-[rgba(37,99,235,0.8)] font-semibold">
-            Example carousel library
-          </p>
-          <h3 className="text-lg font-bold text-foreground mt-1">
-            Scroll-stopping carousels in every niche
-          </h3>
-          <p className="text-xs text-muted max-w-md mx-auto mt-1">
-            How-tos, listicles, myths-vs-facts � pick a template and we
-            generate all slides, headlines, and body copy in one pass.
-          </p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* -------------------------------------------
-            LEFT PANEL � Configuration
-            ------------------------------------------- */}
-        <div className="lg:col-span-4 space-y-4">
-
-          {/* Topic Input */}
-          <motion.div
-            className="glass rounded-xl p-4"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: 0 }}
-          >
-            <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
-              <Type size={13} className="text-[#2563EB]" />
-              Topic
-            </label>
-            <textarea
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-              placeholder="e.g. 5 mistakes killing your Instagram growth..."
-              rows={3}
-              className="w-full text-sm rounded-xl px-3 py-2.5 resize-none transition-all focus:outline-none"
-              style={{
-                background: "var(--color-surface-light)",
-                border: "1px solid var(--color-border)",
-                color: "var(--color-foreground)",
-              }}
-            />
-
-            {/* Slide count */}
-            <div className="mt-3">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs font-medium text-muted">Slides</span>
-                <span className="text-xs font-bold text-foreground">{slideCount}</span>
-              </div>
-              <input
-                type="range"
-                min={3}
-                max={10}
-                value={slideCount}
-                onChange={(e) => setSlideCount(Number(e.target.value))}
-                className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
-                style={{
-                  background: `linear-gradient(to right, var(--color-accent) ${((slideCount - 3) / 7) * 100}%, var(--color-border) ${((slideCount - 3) / 7) * 100}%)`,
-                }}
+                        <div className="pt-2 border-t border-border/50">
+                          <p className="text-[9px] uppercase tracking-wider text-muted">Topic</p>
+                          <p className="text-sm font-semibold">{topic || <span className="text-muted italic">(none)</span>}</p>
+                        </div>
+                      </div>
+                    ),
+                  },
+                ]}
+                activeIdx={guidedStep}
+                onStepChange={setGuidedStep}
+                finishLabel={generating ? "Generating�" : "Generate slides"}
+                busy={generating}
+                onFinish={handleGenerate}
+                onCancel={() => setAdvancedMode(true)}
+                cancelLabel="Advanced mode"
               />
-              <div className="flex justify-between mt-1">
-                <span className="text-[10px] text-muted">3</span>
-                <span className="text-[10px] text-muted">10</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Style Picker */}
-          <motion.div
-            className="glass rounded-xl p-4"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: 0.06 }}
-          >
-            <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
-              <Palette size={13} className="text-[#2563EB]" />
-              Style
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              {STYLES.map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => setStyle(s.id)}
-                  className="relative text-left p-2.5 rounded-xl border transition-all group"
-                  style={{
-                    borderColor: style === s.id ? "var(--color-accent)" : "var(--color-border)",
-                    background: style === s.id ? "color-mix(in srgb, var(--color-accent) 6%, var(--color-surface))" : "var(--color-surface)",
-                  }}
+            )}{/* Slide preview in guided mode (after generation) */}{!advancedMode && slides.length > 0 && (
+              <div className="card mb-6 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h2 className="section-header flex items-center gap-2">
+                    <LayoutGrid size={14} className="text-[#2563EB]" /> Your carousel ({slides.length} slides)
+                  </h2>
+                  <button
+                    onClick={handleCopyAll}
+                    className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors"
+                  >
+                    {copied ? <Check size={11} /> : <Copy size={11} />} {copied ? "Copied!" : "Copy text"}
+                  </button>
+                </div>
+                <motion.div
+                  variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
+                  initial="hidden"
+                  animate="visible"
+                  className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"
                 >
-                  <div
-                    className="w-full h-8 rounded-lg mb-1.5"
-                    style={{ background: s.preview }}
-                  />
-                  <div className="text-[10px] font-semibold text-foreground">{s.name}</div>
-                  <div className="text-[9px] text-muted">{s.desc}</div>
-                  {style === s.id && (
-                    <div
-                      className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center"
-                      style={{ background: "var(--color-accent)" }}
+                  {slides.map(s => (
+                    <motion.div
+                      key={s.slideNumber}
+                      variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } }}
+                      className="rounded-xl border border-border bg-surface-light p-3 aspect-square flex flex-col"
                     >
-                      <Check size={10} color="#fff" />
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Brand Colors */}
-          <motion.div
-            className="glass rounded-xl p-4"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: 0.12 }}
-          >
-            <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
-              <Palette size={13} className="text-[#2563EB]" />
-              Brand Colors
-            </label>
-
-            {/* Preset palette row */}
-            <div className="flex gap-1.5 mb-3 flex-wrap">
-              {PRESET_COLORS.map((p) => (
-                <button
-                  key={p.name}
-                  onClick={() => setBrandColors({ primary: p.primary, secondary: p.secondary })}
-                  title={p.name}
-                  className="w-7 h-7 rounded-lg border-2 transition-all flex items-center justify-center overflow-hidden"
-                  style={{
-                    borderColor:
-                      brandColors.primary === p.primary && brandColors.secondary === p.secondary
-                        ? "var(--color-accent)"
-                        : "transparent",
-                  }}
-                >
-                  <div className="w-full h-full flex">
-                    <div className="w-1/2 h-full" style={{ background: p.primary }} />
-                    <div className="w-1/2 h-full" style={{ background: p.secondary }} />
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            {/* Custom color pickers */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <span className="text-[10px] text-muted block mb-1">Primary</span>
-                <div
-                  className="flex items-center gap-2 rounded-lg px-2 py-1.5"
-                  style={{
-                    background: "var(--color-surface-light)",
-                    border: "1px solid var(--color-border)",
-                  }}
-                >
-                  <input
-                    type="color"
-                    value={brandColors.primary}
-                    onChange={(e) => setBrandColors((c) => ({ ...c, primary: e.target.value }))}
-                    className="w-5 h-5 rounded cursor-pointer border-0 p-0"
-                  />
-                  <span className="text-[10px] font-mono text-muted">{brandColors.primary}</span>
-                </div>
-              </div>
-              <div>
-                <span className="text-[10px] text-muted block mb-1">Secondary</span>
-                <div
-                  className="flex items-center gap-2 rounded-lg px-2 py-1.5"
-                  style={{
-                    background: "var(--color-surface-light)",
-                    border: "1px solid var(--color-border)",
-                  }}
-                >
-                  <input
-                    type="color"
-                    value={brandColors.secondary}
-                    onChange={(e) => setBrandColors((c) => ({ ...c, secondary: e.target.value }))}
-                    className="w-5 h-5 rounded cursor-pointer border-0 p-0"
-                  />
-                  <span className="text-[10px] font-mono text-muted">{brandColors.secondary}</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Template Gallery */}
-          <motion.div
-            className="glass rounded-xl p-4"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: 0.18 }}
-          >
-            <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
-              <LayoutGrid size={13} className="text-[#2563EB]" />
-              Template
-              <span className="text-[9px] text-muted font-normal ml-1">(optional)</span>
-            </label>
-            <div className="space-y-1.5">
-              {TEMPLATES.map((t) => {
-                const Icon = t.icon;
-                const active = template === t.id;
-                return (
-                  <button
-                    key={t.id}
-                    onClick={() => setTemplate(active ? null : t.id)}
-                    className="w-full text-left flex items-start gap-2.5 p-2.5 rounded-xl border transition-all"
-                    style={{
-                      borderColor: active ? "var(--color-accent)" : "var(--color-border)",
-                      background: active
-                        ? "color-mix(in srgb, var(--color-accent) 6%, var(--color-surface))"
-                        : "var(--color-surface)",
-                    }}
-                  >
-                    <div
-                      className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-                      style={{
-                        background: active
-                          ? "color-mix(in srgb, var(--color-accent) 15%, transparent)"
-                          : "var(--color-surface-light)",
-                      }}
-                    >
-                      <Icon size={13} style={{ color: active ? "var(--color-accent)" : "var(--color-muted)" }} />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-[11px] font-semibold text-foreground">{t.name}</div>
-                      <div className="text-[9px] text-muted">{t.desc}</div>
-                      <div
-                        className="text-[9px] mt-0.5 italic truncate"
-                        style={{ color: "var(--color-muted)" }}
-                      >
-                        {t.example}
-                      </div>
-                    </div>
-                    {active && (
-                      <div
-                        className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-1"
-                        style={{ background: "var(--color-accent)" }}
-                      >
-                        <Check size={10} color="#fff" />
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </motion.div>
-
-          {/* Generate Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: 0.24 }}
-            whileHover={generating || !topic.trim() ? {} : { scale: 1.02 }}
-            whileTap={generating || !topic.trim() ? {} : { scale: 0.97 }}
-          >
-            <button
-              onClick={handleGenerate}
-              disabled={generating || !topic.trim()}
-              className="w-full flex items-center justify-center gap-2 py-3  text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed text-white"
-              style={{
-                background: generating
-                  ? "var(--color-muted)"
-                  : "linear-gradient(135deg, var(--color-accent) 0%, color-mix(in srgb, var(--color-accent) 80%, #000) 100%)",
-                boxShadow: generating ? "none" : "0 4px 16px color-mix(in srgb, var(--color-accent) 30%, transparent)",
-              }}
-            >
-              {generating ? (
-                <>
-                  <Loader size={16} className="animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <Sparkles size={16} />
-                  Generate Carousel
-                </>
-              )}
-            </button>
-          </motion.div>
-        </div>
-
-        {/* -------------------------------------------
-            RIGHT PANEL � Preview
-            ------------------------------------------- */}
-        <div className="lg:col-span-8">
-          <motion.div
-            className="glass rounded-xl p-5 min-h-[500px]"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: 0.06 }}
-          >
-            {/* Preview header */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <ImageIcon size={14} className="text-[#2563EB]" />
-                <span className="text-xs font-semibold text-foreground">Preview</span>
-                {slides.length > 0 && (
-                  <span
-                    className="text-[9px] font-medium px-2 py-0.5 rounded-full"
-                    style={{
-                      background: "color-mix(in srgb, var(--color-accent) 12%, transparent)",
-                      color: "var(--color-accent)",
-                    }}
-                  >
-                    {slides.length} slides
-                  </span>
-                )}
-              </div>
-              {slides.length > 0 && (
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => {
-                      setSlides([]);
-                      setEditingSlide(null);
-                    }}
-                    className="flex items-center gap-1 text-[10px] text-muted px-2 py-1 rounded-lg transition-colors"
-                    style={{ background: "var(--color-surface-light)" }}
-                  >
-                    <RotateCcw size={10} /> Reset
-                  </button>
-                  <button
-                    onClick={() => scrollPreview("left")}
-                    className="p-1.5 rounded-lg transition-colors"
-                    style={{ background: "var(--color-surface-light)", color: "var(--color-muted)" }}
-                  >
-                    <ChevronLeft size={14} />
-                  </button>
-                  <button
-                    onClick={() => scrollPreview("right")}
-                    className="p-1.5 rounded-lg transition-colors"
-                    style={{ background: "var(--color-surface-light)", color: "var(--color-muted)" }}
-                  >
-                    <ChevronRight size={14} />
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Empty state */}
-            {slides.length === 0 && !generating && (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <div
-                  className="w-16 h-16  flex items-center justify-center mb-4"
-                  style={{ background: "color-mix(in srgb, var(--color-accent) 10%, transparent)" }}
-                >
-                  <Layers size={28} style={{ color: "var(--color-accent)" }} />
-                </div>
-                <h3 className="text-sm font-semibold text-foreground mb-1">No carousel yet</h3>
-                <p className="text-xs text-muted max-w-xs">
-                  Enter a topic, pick your style, and hit Generate to create a stunning carousel in seconds.
+                      <span className="text-[9px] uppercase tracking-wider text-muted">Slide {s.slideNumber}</span>
+                      <p className="text-sm font-bold leading-tight mt-1 line-clamp-3">{s.headline}</p>
+                      <p className="text-[10px] text-muted line-clamp-4 mt-2">{s.body}</p>
+                    </motion.div>
+                  ))}
+                </motion.div>
+                <p className="text-[11px] text-muted text-center pt-2">
+                  Need to edit slides or change brand colors? Flip to <span className="text-[#2563EB] font-semibold">Advanced mode</span>.
                 </p>
               </div>
-            )}
+            )}{advancedMode && (
+            <>
+            {/* Rolling preview of example carousels � 1:1 Instagram-native aspect */}
+            <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6 mb-5">
+              <div className="absolute inset-0 pointer-events-none">
+                <RollingPreview
+                  items={CAROUSEL_PREVIEW_FALLBACK}
+                  rows={2}
+                  aspectRatio="1:1"
+                  opacity={0.45}
+                  speed="medium"
+                  fetchRemote
+                  tool="carousel"
+                />
+              </div>
+              <div className="relative text-center px-4">
+                <p className="text-[11px] uppercase tracking-widest text-[rgba(37,99,235,0.8)] font-semibold">
+                  Example carousel library
+                </p>
+                <h3 className="text-lg font-bold text-foreground mt-1">
+                  Scroll-stopping carousels in every niche
+                </h3>
+                <p className="text-xs text-muted max-w-md mx-auto mt-1">
+                  How-tos, listicles, myths-vs-facts � pick a template and we
+                  generate all slides, headlines, and body copy in one pass.
+                </p>
+              </div>
+            </div>
 
-            {/* Loading skeleton */}
-            {generating && (
-              <div className="flex gap-4 overflow-hidden py-4">
-                {Array.from({ length: Math.min(slideCount, 4) }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="flex-shrink-0 w-[280px] h-[280px]  overflow-hidden"
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              {/* -------------------------------------------
+                  LEFT PANEL � Configuration
+                  ------------------------------------------- */}
+              <div className="lg:col-span-4 space-y-4">
+
+                {/* Topic Input */}
+                <motion.div
+                  className="glass rounded-xl p-4"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: 0 }}
+                >
+                  <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
+                    <Type size={13} className="text-[#2563EB]" />
+                    Topic
+                  </label>
+                  <textarea
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                    placeholder="e.g. 5 mistakes killing your Instagram growth..."
+                    rows={3}
+                    className="w-full text-sm rounded-xl px-3 py-2.5 resize-none transition-all focus:outline-none"
                     style={{
                       background: "var(--color-surface-light)",
                       border: "1px solid var(--color-border)",
+                      color: "var(--color-foreground)",
                     }}
-                  >
-                    <div className="h-full flex flex-col items-center justify-center p-6 gap-4">
-                      <div
-                        className="w-24 h-3 rounded-full animate-pulse"
-                        style={{ background: "var(--color-border)" }}
-                      />
-                      <div
-                        className="w-32 h-2 rounded-full animate-pulse"
-                        style={{ background: "var(--color-border)", animationDelay: "0.15s" }}
-                      />
-                      <div
-                        className="w-28 h-2 rounded-full animate-pulse"
-                        style={{ background: "var(--color-border)", animationDelay: "0.3s" }}
-                      />
-                      <div className="mt-4">
-                        <Loader
-                          size={18}
-                          className="animate-spin"
-                          style={{ color: "var(--color-accent)" }}
+                  />
+
+                  {/* Slide count */}
+                  <div className="mt-3">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs font-medium text-muted">Slides</span>
+                      <span className="text-xs font-bold text-foreground">{slideCount}</span>
+                    </div>
+                    <input
+                      type="range"
+                      min={3}
+                      max={10}
+                      value={slideCount}
+                      onChange={(e) => setSlideCount(Number(e.target.value))}
+                      className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
+                      style={{
+                        background: `linear-gradient(to right, var(--color-accent) ${((slideCount - 3) / 7) * 100}%, var(--color-border) ${((slideCount - 3) / 7) * 100}%)`,
+                      }}
+                    />
+                    <div className="flex justify-between mt-1">
+                      <span className="text-[10px] text-muted">3</span>
+                      <span className="text-[10px] text-muted">10</span>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Style Picker */}
+                <motion.div
+                  className="glass rounded-xl p-4"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: 0.06 }}
+                >
+                  <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
+                    <Palette size={13} className="text-[#2563EB]" />
+                    Style
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {STYLES.map((s) => (
+                      <button
+                        key={s.id}
+                        onClick={() => setStyle(s.id)}
+                        className="relative text-left p-2.5 rounded-xl border transition-all group"
+                        style={{
+                          borderColor: style === s.id ? "var(--color-accent)" : "var(--color-border)",
+                          background: style === s.id ? "color-mix(in srgb, var(--color-accent) 6%, var(--color-surface))" : "var(--color-surface)",
+                        }}
+                      >
+                        <div
+                          className="w-full h-8 rounded-lg mb-1.5"
+                          style={{ background: s.preview }}
                         />
+                        <div className="text-[10px] font-semibold text-foreground">{s.name}</div>
+                        <div className="text-[9px] text-muted">{s.desc}</div>
+                        {style === s.id && (
+                          <div
+                            className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center"
+                            style={{ background: "var(--color-accent)" }}
+                          >
+                            <Check size={10} color="#fff" />
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* Brand Colors */}
+                <motion.div
+                  className="glass rounded-xl p-4"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: 0.12 }}
+                >
+                  <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
+                    <Palette size={13} className="text-[#2563EB]" />
+                    Brand Colors
+                  </label>
+
+                  {/* Preset palette row */}
+                  <div className="flex gap-1.5 mb-3 flex-wrap">
+                    {PRESET_COLORS.map((p) => (
+                      <button
+                        key={p.name}
+                        onClick={() => setBrandColors({ primary: p.primary, secondary: p.secondary })}
+                        title={p.name}
+                        className="w-7 h-7 rounded-lg border-2 transition-all flex items-center justify-center overflow-hidden"
+                        style={{
+                          borderColor:
+                            brandColors.primary === p.primary && brandColors.secondary === p.secondary
+                              ? "var(--color-accent)"
+                              : "transparent",
+                        }}
+                      >
+                        <div className="w-full h-full flex">
+                          <div className="w-1/2 h-full" style={{ background: p.primary }} />
+                          <div className="w-1/2 h-full" style={{ background: p.secondary }} />
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Custom color pickers */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <span className="text-[10px] text-muted block mb-1">Primary</span>
+                      <div
+                        className="flex items-center gap-2 rounded-lg px-2 py-1.5"
+                        style={{
+                          background: "var(--color-surface-light)",
+                          border: "1px solid var(--color-border)",
+                        }}
+                      >
+                        <input
+                          type="color"
+                          value={brandColors.primary}
+                          onChange={(e) => setBrandColors((c) => ({ ...c, primary: e.target.value }))}
+                          className="w-5 h-5 rounded cursor-pointer border-0 p-0"
+                        />
+                        <span className="text-[10px] font-mono text-muted">{brandColors.primary}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-muted block mb-1">Secondary</span>
+                      <div
+                        className="flex items-center gap-2 rounded-lg px-2 py-1.5"
+                        style={{
+                          background: "var(--color-surface-light)",
+                          border: "1px solid var(--color-border)",
+                        }}
+                      >
+                        <input
+                          type="color"
+                          value={brandColors.secondary}
+                          onChange={(e) => setBrandColors((c) => ({ ...c, secondary: e.target.value }))}
+                          className="w-5 h-5 rounded cursor-pointer border-0 p-0"
+                        />
+                        <span className="text-[10px] font-mono text-muted">{brandColors.secondary}</span>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
+                </motion.div>
 
-            {/* Slide carousel preview */}
-            {slides.length > 0 && !generating && (
-              <>
-                <div
-                  ref={scrollRef}
-                  className="flex gap-4 overflow-x-auto py-4 scroll-smooth"
-                  style={{ scrollbarWidth: "thin" }}
+                {/* Template Gallery */}
+                <motion.div
+                  className="glass rounded-xl p-4"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: 0.18 }}
                 >
-                  {slides.map((slide, idx) => {
-                    const bg = getSlideBackground(style, brandColors, idx, slides.length);
-                    const colors = getSlideTextColor(style, idx);
-                    const isEditing = editingSlide === idx;
-                    const isFirst = idx === 0;
-                    const isLast = idx === slides.length - 1;
-
-                    return (
-                      <motion.div
-                        key={idx}
-                        className="flex-shrink-0 w-[280px] h-[280px] glass rounded-xl overflow-hidden relative group cursor-pointer"
-                        style={{
-                          background: bg,
-                          boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
-                        }}
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.22, delay: idx * 0.06 }}
-                        whileHover={{ y: -4, scale: 1.02 }}
-                        onClick={() => setEditingSlide(isEditing ? null : idx)}
-                      >
-                        {/* Slide number badge */}
-                        <div
-                          className="absolute top-3 left-3 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
+                  <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
+                    <LayoutGrid size={13} className="text-[#2563EB]" />
+                    Template
+                    <span className="text-[9px] text-muted font-normal ml-1">(optional)</span>
+                  </label>
+                  <div className="space-y-1.5">
+                    {TEMPLATES.map((t) => {
+                      const Icon = t.icon;
+                      const active = template === t.id;
+                      return (
+                        <button
+                          key={t.id}
+                          onClick={() => setTemplate(active ? null : t.id)}
+                          className="w-full text-left flex items-start gap-2.5 p-2.5 rounded-xl border transition-all"
                           style={{
-                            background: "rgba(255,255,255,0.2)",
-                            color: colors.headline,
-                            backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+                            borderColor: active ? "var(--color-accent)" : "var(--color-border)",
+                            background: active
+                              ? "color-mix(in srgb, var(--color-accent) 6%, var(--color-surface))"
+                              : "var(--color-surface)",
                           }}
                         >
-                          {slide.slideNumber}
-                        </div>
+                          <div
+                            className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                            style={{
+                              background: active
+                                ? "color-mix(in srgb, var(--color-accent) 15%, transparent)"
+                                : "var(--color-surface-light)",
+                            }}
+                          >
+                            <Icon size={13} style={{ color: active ? "var(--color-accent)" : "var(--color-muted)" }} />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="text-[11px] font-semibold text-foreground">{t.name}</div>
+                            <div className="text-[9px] text-muted">{t.desc}</div>
+                            <div
+                              className="text-[9px] mt-0.5 italic truncate"
+                              style={{ color: "var(--color-muted)" }}
+                            >
+                              {t.example}
+                            </div>
+                          </div>
+                          {active && (
+                            <div
+                              className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-1"
+                              style={{ background: "var(--color-accent)" }}
+                            >
+                              <Check size={10} color="#fff" />
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </motion.div>
 
-                        {/* Edit indicator */}
-                        <div
-                          className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity"
+                {/* Generate Button */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: 0.24 }}
+                  whileHover={generating || !topic.trim() ? {} : { scale: 1.02 }}
+                  whileTap={generating || !topic.trim() ? {} : { scale: 0.97 }}
+                >
+                  <button
+                    onClick={handleGenerate}
+                    disabled={generating || !topic.trim()}
+                    className="w-full flex items-center justify-center gap-2 py-3  text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed text-white"
+                    style={{
+                      background: generating
+                        ? "var(--color-muted)"
+                        : "linear-gradient(135deg, var(--color-accent) 0%, color-mix(in srgb, var(--color-accent) 80%, #000) 100%)",
+                      boxShadow: generating ? "none" : "0 4px 16px color-mix(in srgb, var(--color-accent) 30%, transparent)",
+                    }}
+                  >
+                    {generating ? (
+                      <>
+                        <Loader size={16} className="animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles size={16} />
+                        Generate Carousel
+                      </>
+                    )}
+                  </button>
+                </motion.div>
+              </div>
+
+              {/* -------------------------------------------
+                  RIGHT PANEL � Preview
+                  ------------------------------------------- */}
+              <div className="lg:col-span-8">
+                <motion.div
+                  className="glass rounded-xl p-5 min-h-[500px]"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: 0.06 }}
+                >
+                  {/* Preview header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <ImageIcon size={14} className="text-[#2563EB]" />
+                      <span className="text-xs font-semibold text-foreground">Preview</span>
+                      {slides.length > 0 && (
+                        <span
+                          className="text-[9px] font-medium px-2 py-0.5 rounded-full"
+                          style={{
+                            background: "color-mix(in srgb, var(--color-accent) 12%, transparent)",
+                            color: "var(--color-accent)",
+                          }}
                         >
-                          <div
-                            className="w-6 h-6 rounded-full flex items-center justify-center"
-                            style={{
-                              background: "rgba(255,255,255,0.2)",
-                              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-                            }}
-                          >
-                            <Edit3 size={10} style={{ color: colors.headline }} />
+                          {slides.length} slides
+                        </span>
+                      )}
+                    </div>
+                    {slides.length > 0 && (
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => {
+                            setSlides([]);
+                            setEditingSlide(null);
+                          }}
+                          className="flex items-center gap-1 text-[10px] text-muted px-2 py-1 rounded-lg transition-colors"
+                          style={{ background: "var(--color-surface-light)" }}
+                        >
+                          <RotateCcw size={10} /> Reset
+                        </button>
+                        <button
+                          onClick={() => scrollPreview("left")}
+                          className="p-1.5 rounded-lg transition-colors"
+                          style={{ background: "var(--color-surface-light)", color: "var(--color-muted)" }}
+                        >
+                          <ChevronLeft size={14} />
+                        </button>
+                        <button
+                          onClick={() => scrollPreview("right")}
+                          className="p-1.5 rounded-lg transition-colors"
+                          style={{ background: "var(--color-surface-light)", color: "var(--color-muted)" }}
+                        >
+                          <ChevronRight size={14} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Empty state */}
+                  {slides.length === 0 && !generating && (
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                      <div
+                        className="w-16 h-16  flex items-center justify-center mb-4"
+                        style={{ background: "color-mix(in srgb, var(--color-accent) 10%, transparent)" }}
+                      >
+                        <Layers size={28} style={{ color: "var(--color-accent)" }} />
+                      </div>
+                      <h3 className="text-sm font-semibold text-foreground mb-1">No carousel yet</h3>
+                      <p className="text-xs text-muted max-w-xs">
+                        Enter a topic, pick your style, and hit Generate to create a stunning carousel in seconds.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Loading skeleton */}
+                  {generating && (
+                    <div className="flex gap-4 overflow-hidden py-4">
+                      {Array.from({ length: Math.min(slideCount, 4) }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="flex-shrink-0 w-[280px] h-[280px]  overflow-hidden"
+                          style={{
+                            background: "var(--color-surface-light)",
+                            border: "1px solid var(--color-border)",
+                          }}
+                        >
+                          <div className="h-full flex flex-col items-center justify-center p-6 gap-4">
+                            <div
+                              className="w-24 h-3 rounded-full animate-pulse"
+                              style={{ background: "var(--color-border)" }}
+                            />
+                            <div
+                              className="w-32 h-2 rounded-full animate-pulse"
+                              style={{ background: "var(--color-border)", animationDelay: "0.15s" }}
+                            />
+                            <div
+                              className="w-28 h-2 rounded-full animate-pulse"
+                              style={{ background: "var(--color-border)", animationDelay: "0.3s" }}
+                            />
+                            <div className="mt-4">
+                              <Loader
+                                size={18}
+                                className="animate-spin"
+                                style={{ color: "var(--color-accent)" }}
+                              />
+                            </div>
                           </div>
                         </div>
+                      ))}
+                    </div>
+                  )}
 
-                        {/* Slide type indicator */}
-                        {(isFirst || isLast) && (
-                          <div
-                            className="absolute top-3 left-1/2 -translate-x-1/2 text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
-                            style={{
-                              background: "rgba(255,255,255,0.15)",
-                              color: colors.headline,
-                              backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-                            }}
-                          >
-                            {isFirst ? "Hook" : "CTA"}
-                          </div>
-                        )}
+                  {/* Slide carousel preview */}
+                  {slides.length > 0 && !generating && (
+                    <>
+                      <div
+                        ref={scrollRef}
+                        className="flex gap-4 overflow-x-auto py-4 scroll-smooth"
+                        style={{ scrollbarWidth: "thin" }}
+                      >
+                        {slides.map((slide, idx) => {
+                          const bg = getSlideBackground(style, brandColors, idx, slides.length);
+                          const colors = getSlideTextColor(style, idx);
+                          const isEditing = editingSlide === idx;
+                          const isFirst = idx === 0;
+                          const isLast = idx === slides.length - 1;
 
-                        {/* Content */}
-                        <div className="h-full flex flex-col items-center justify-center p-7 text-center">
-                          {isEditing ? (
-                            <div className="w-full space-y-2" onClick={(e) => e.stopPropagation()}>
-                              <input
-                                value={slide.headline}
-                                onChange={(e) => updateSlide(idx, "headline", e.target.value)}
-                                className="w-full text-center font-extrabold text-lg bg-transparent border-b-2 focus:outline-none px-1 py-0.5"
-                                style={{
-                                  color: colors.headline,
-                                  borderColor: `${colors.headline}44`,
-                                }}
-                              />
-                              <textarea
-                                value={slide.body}
-                                onChange={(e) => updateSlide(idx, "body", e.target.value)}
-                                rows={3}
-                                className="w-full text-center text-xs bg-transparent border-b focus:outline-none px-1 py-0.5 resize-none"
-                                style={{
-                                  color: colors.body,
-                                  borderColor: `${colors.body}33`,
-                                }}
-                              />
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setEditingSlide(null);
-                                }}
-                                className="mx-auto flex items-center gap-1 text-[9px] font-medium px-2 py-1 rounded-full"
+                          return (
+                            <motion.div
+                              key={idx}
+                              className="flex-shrink-0 w-[280px] h-[280px] glass rounded-xl overflow-hidden relative group cursor-pointer"
+                              style={{
+                                background: bg,
+                                boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
+                              }}
+                              initial={{ opacity: 0, y: 12 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.22, delay: idx * 0.06 }}
+                              whileHover={{ y: -4, scale: 1.02 }}
+                              onClick={() => setEditingSlide(isEditing ? null : idx)}
+                            >
+                              {/* Slide number badge */}
+                              <div
+                                className="absolute top-3 left-3 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
                                 style={{
                                   background: "rgba(255,255,255,0.2)",
                                   color: colors.headline,
                                   backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
                                 }}
                               >
-                                <Check size={9} /> Done
-                              </button>
+                                {slide.slideNumber}
+                              </div>
+
+                              {/* Edit indicator */}
+                              <div
+                                className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <div
+                                  className="w-6 h-6 rounded-full flex items-center justify-center"
+                                  style={{
+                                    background: "rgba(255,255,255,0.2)",
+                                    backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+                                  }}
+                                >
+                                  <Edit3 size={10} style={{ color: colors.headline }} />
+                                </div>
+                              </div>
+
+                              {/* Slide type indicator */}
+                              {(isFirst || isLast) && (
+                                <div
+                                  className="absolute top-3 left-1/2 -translate-x-1/2 text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                                  style={{
+                                    background: "rgba(255,255,255,0.15)",
+                                    color: colors.headline,
+                                    backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+                                  }}
+                                >
+                                  {isFirst ? "Hook" : "CTA"}
+                                </div>
+                              )}
+
+                              {/* Content */}
+                              <div className="h-full flex flex-col items-center justify-center p-7 text-center">
+                                {isEditing ? (
+                                  <div className="w-full space-y-2" onClick={(e) => e.stopPropagation()}>
+                                    <input
+                                      value={slide.headline}
+                                      onChange={(e) => updateSlide(idx, "headline", e.target.value)}
+                                      className="w-full text-center font-extrabold text-lg bg-transparent border-b-2 focus:outline-none px-1 py-0.5"
+                                      style={{
+                                        color: colors.headline,
+                                        borderColor: `${colors.headline}44`,
+                                      }}
+                                    />
+                                    <textarea
+                                      value={slide.body}
+                                      onChange={(e) => updateSlide(idx, "body", e.target.value)}
+                                      rows={3}
+                                      className="w-full text-center text-xs bg-transparent border-b focus:outline-none px-1 py-0.5 resize-none"
+                                      style={{
+                                        color: colors.body,
+                                        borderColor: `${colors.body}33`,
+                                      }}
+                                    />
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setEditingSlide(null);
+                                      }}
+                                      className="mx-auto flex items-center gap-1 text-[9px] font-medium px-2 py-1 rounded-full"
+                                      style={{
+                                        background: "rgba(255,255,255,0.2)",
+                                        color: colors.headline,
+                                        backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+                                      }}
+                                    >
+                                      <Check size={9} /> Done
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <h3
+                                      className="font-extrabold text-lg leading-tight mb-3 max-w-[220px]"
+                                      style={{ color: colors.headline }}
+                                    >
+                                      {slide.headline}
+                                    </h3>
+                                    <p
+                                      className="text-xs leading-relaxed max-w-[200px]"
+                                      style={{ color: colors.body }}
+                                    >
+                                      {slide.body}
+                                    </p>
+                                  </>
+                                )}
+                              </div>
+
+                              {/* Bottom gradient for depth */}
+                              <div
+                                className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
+                                style={{
+                                  background: `linear-gradient(to top, rgba(0,0,0,0.08) 0%, transparent 100%)`,
+                                }}
+                              />
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Slide list (text view for quick editing) */}
+                      <div className="mt-5 space-y-2">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Wand2 size={13} className="text-[#2563EB]" />
+                          <span className="text-xs font-semibold text-foreground">Slide Content</span>
+                        </div>
+                        {slides.map((slide, idx) => (
+                          <motion.div
+                            key={idx}
+                            className="flex items-start gap-3 p-3 rounded-xl transition-all"
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.22, delay: idx * 0.04 }}
+                            whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                            style={{
+                              background: editingSlide === idx
+                                ? "color-mix(in srgb, var(--color-accent) 5%, var(--color-surface-light))"
+                                : "var(--color-surface-light)",
+                              border: editingSlide === idx
+                                ? "1px solid color-mix(in srgb, var(--color-accent) 25%, var(--color-border))"
+                                : "1px solid transparent",
+                            }}
+                          >
+                            <div
+                              className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5"
+                              style={{
+                                background: "color-mix(in srgb, var(--color-accent) 12%, transparent)",
+                                color: "var(--color-accent)",
+                              }}
+                            >
+                              {slide.slideNumber}
                             </div>
-                          ) : (
-                            <>
-                              <h3
-                                className="font-extrabold text-lg leading-tight mb-3 max-w-[220px]"
-                                style={{ color: colors.headline }}
-                              >
+                            <div className="flex-1 min-w-0">
+                              <div className="text-xs font-semibold text-foreground truncate">
                                 {slide.headline}
-                              </h3>
-                              <p
-                                className="text-xs leading-relaxed max-w-[200px]"
-                                style={{ color: colors.body }}
-                              >
+                              </div>
+                              <div className="text-[10px] text-muted mt-0.5 line-clamp-2">
                                 {slide.body}
-                              </p>
-                            </>
-                          )}
-                        </div>
-
-                        {/* Bottom gradient for depth */}
-                        <div
-                          className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
-                          style={{
-                            background: `linear-gradient(to top, rgba(0,0,0,0.08) 0%, transparent 100%)`,
-                          }}
-                        />
-                      </motion.div>
-                    );
-                  })}
-                </div>
-
-                {/* Slide list (text view for quick editing) */}
-                <div className="mt-5 space-y-2">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Wand2 size={13} className="text-[#2563EB]" />
-                    <span className="text-xs font-semibold text-foreground">Slide Content</span>
-                  </div>
-                  {slides.map((slide, idx) => (
-                    <motion.div
-                      key={idx}
-                      className="flex items-start gap-3 p-3 rounded-xl transition-all"
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.22, delay: idx * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
-                      style={{
-                        background: editingSlide === idx
-                          ? "color-mix(in srgb, var(--color-accent) 5%, var(--color-surface-light))"
-                          : "var(--color-surface-light)",
-                        border: editingSlide === idx
-                          ? "1px solid color-mix(in srgb, var(--color-accent) 25%, var(--color-border))"
-                          : "1px solid transparent",
-                      }}
-                    >
-                      <div
-                        className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5"
-                        style={{
-                          background: "color-mix(in srgb, var(--color-accent) 12%, transparent)",
-                          color: "var(--color-accent)",
-                        }}
-                      >
-                        {slide.slideNumber}
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => setEditingSlide(editingSlide === idx ? null : idx)}
+                              className="p-1.5 rounded-lg transition-colors flex-shrink-0"
+                              style={{
+                                color: editingSlide === idx ? "var(--color-accent)" : "var(--color-muted)",
+                                background: editingSlide === idx
+                                  ? "color-mix(in srgb, var(--color-accent) 10%, transparent)"
+                                  : "transparent",
+                              }}
+                            >
+                              {editingSlide === idx ? <X size={12} /> : <Edit3 size={12} />}
+                            </button>
+                          </motion.div>
+                        ))}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs font-semibold text-foreground truncate">
-                          {slide.headline}
-                        </div>
-                        <div className="text-[10px] text-muted mt-0.5 line-clamp-2">
-                          {slide.body}
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => setEditingSlide(editingSlide === idx ? null : idx)}
-                        className="p-1.5 rounded-lg transition-colors flex-shrink-0"
-                        style={{
-                          color: editingSlide === idx ? "var(--color-accent)" : "var(--color-muted)",
-                          background: editingSlide === idx
-                            ? "color-mix(in srgb, var(--color-accent) 10%, transparent)"
-                            : "transparent",
-                        }}
-                      >
-                        {editingSlide === idx ? <X size={12} /> : <Edit3 size={12} />}
-                      </button>
-                    </motion.div>
-                  ))}
-                </div>
 
-                {/* Regenerate bar */}
-                <div className="mt-4 flex items-center justify-between pt-4" style={{ borderTop: "1px solid var(--color-border)" }}>
-                  <div className="flex items-center gap-1.5">
-                    <Zap size={12} style={{ color: "var(--color-accent)" }} />
-                    <span className="text-[10px] text-muted">
-                      {slides.length} slides generated for &ldquo;{topic.slice(0, 40)}{topic.length > 40 ? "..." : ""}&rdquo;
-                    </span>
-                  </div>
-                  <button
-                    onClick={handleGenerate}
-                    disabled={generating}
-                    className="flex items-center gap-1.5 text-[10px] font-medium px-3 py-1.5 rounded-lg transition-all text-white disabled:opacity-50"
-                    style={{ background: "var(--color-accent)" }}
-                  >
-                    <RotateCcw size={10} />
-                    Regenerate
-                  </button>
-                </div>
-              </>
-            )}
-          </motion.div>
-        </div>
-      </div>
-      </>
-      )}
-    </div>
+                      {/* Regenerate bar */}
+                      <div className="mt-4 flex items-center justify-between pt-4" style={{ borderTop: "1px solid var(--color-border)" }}>
+                        <div className="flex items-center gap-1.5">
+                          <Zap size={12} style={{ color: "var(--color-accent)" }} />
+                          <span className="text-[10px] text-muted">
+                            {slides.length} slides generated for &ldquo;{topic.slice(0, 40)}{topic.length > 40 ? "..." : ""}&rdquo;
+                          </span>
+                        </div>
+                        <button
+                          onClick={handleGenerate}
+                          disabled={generating}
+                          className="flex items-center gap-1.5 text-[10px] font-medium px-3 py-1.5 rounded-lg transition-all text-white disabled:opacity-50"
+                          style={{ background: "var(--color-accent)" }}
+                        >
+                          <RotateCcw size={10} />
+                          Regenerate
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </motion.div>
+              </div>
+            </div>
+            </>
+            )}</MotionPage>
   );
 }

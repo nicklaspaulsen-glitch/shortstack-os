@@ -24,6 +24,7 @@ import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/c
 import { trackGeneration } from "@/lib/track-generation";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // Example "phone mockup" script cards used in the landing state marquee.
 // Each card shows 2-3 lines of a sample script opener � just enough to
@@ -1199,19 +1200,21 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           {SCRIPT_TYPES.slice(0, 6).map(st => {
             const selected = config.script_type === st.id;
             return (
-              <button
-                key={st.id}
-                onClick={() => setConfig(prev => ({ ...prev, script_type: st.id }))}
-                className={`text-left p-3 rounded-xl border transition-all ${
-                  selected ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[#2563EB]">{st.icon}</span>
-                  <p className="text-xs font-semibold">{st.name}</p>
-                </div>
-                <p className="text-[10px] text-muted">{st.desc}</p>
-              </button>
+              <MotionPage>
+                                <button
+                                key={st.id}
+                                onClick={() => setConfig(prev => ({ ...prev, script_type: st.id }))}
+                                className={`text-left p-3 rounded-xl border transition-all ${
+                                  selected ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                                }`}
+                              >
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className="text-[#2563EB]">{st.icon}</span>
+                                  <p className="text-xs font-semibold">{st.name}</p>
+                                </div>
+                                <p className="text-[10px] text-muted">{st.desc}</p>
+                              </button>
+                              </MotionPage>
             );
           })}
         </div>

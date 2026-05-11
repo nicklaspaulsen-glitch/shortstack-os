@@ -9,6 +9,7 @@ import {
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import { motion } from "framer-motion";
+import { MotionPage } from "@/components/motion/motion-page";
 
 export default function ProfilePage() {
   const { profile, refreshProfile } = useAuth();
@@ -144,187 +145,173 @@ export default function ProfilePage() {
   const avatarUrl = profile?.avatar_url;
 
   return (
-    <div className="fade-in space-y-5 max-w-2xl">
-      <PageHero
-        icon={<User size={22} />}
-        eyebrow="YOUR PROFILE"
-        title="Profile"
-        subtitle="Manage your account and identity."
-        gradient="blue"
-      />
-
-      {/* Avatar + Identity Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0 * 0.06, duration: 0.4 }}
-        className="glass rounded-xl overflow-hidden"
-        whileHover={{ y: -4, scale: 1.01 }}
-      >
-        <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-        <div className="p-5">
-        <div className="flex items-center gap-5">
-          <div className="relative group">
-            {avatarUrl ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img src={avatarUrl} alt="" className="w-20 h-20 rounded-full object-cover border-2 border-border" />
-            ) : (
-              <div className="w-20 h-20 rounded-full flex items-center justify-center border-2 border-border" style={{ background: "color-mix(in srgb, var(--color-accent) 12%, transparent)" }}>
-                <span className="text-3xl font-bold text-[#2563EB]">{displayName.charAt(0)}</span>
-              </div>
-            )}
-            <button
-              onClick={() => fileRef.current?.click()}
-              disabled={uploadingAvatar}
-              className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+    <MotionPage className="fade-in space-y-5 max-w-2xl"><PageHero
+              icon={<User size={22} />}
+              eyebrow="YOUR PROFILE"
+              title="Profile"
+              subtitle="Manage your account and identity."
+              gradient="blue"
+            />{/* Avatar + Identity Card */}<motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0 * 0.06, duration: 0.4 }}
+              className="glass rounded-xl overflow-hidden"
+              whileHover={{ y: -4, scale: 1.01 }}
             >
-              {uploadingAvatar ? (
-                <Loader size={16} className="text-white animate-spin" />
-              ) : (
-                <Camera size={16} className="text-white" />
+              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+              <div className="p-5">
+              <div className="flex items-center gap-5">
+                <div className="relative group">
+                  {avatarUrl ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={avatarUrl} alt="" className="w-20 h-20 rounded-full object-cover border-2 border-border" />
+                  ) : (
+                    <div className="w-20 h-20 rounded-full flex items-center justify-center border-2 border-border" style={{ background: "color-mix(in srgb, var(--color-accent) 12%, transparent)" }}>
+                      <span className="text-3xl font-bold text-[#2563EB]">{displayName.charAt(0)}</span>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => fileRef.current?.click()}
+                    disabled={uploadingAvatar}
+                    className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+                  >
+                    {uploadingAvatar ? (
+                      <Loader size={16} className="text-white animate-spin" />
+                    ) : (
+                      <Camera size={16} className="text-white" />
+                    )}
+                  </button>
+                  <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
+                </div>
+                <div className="flex-1">
+                  <p className="text-lg font-bold">{displayName}</p>
+                  {form.username && (
+                    <p className="text-sm text-muted flex items-center gap-1">
+                      <AtSign size={12} />{form.username}
+                    </p>
+                  )}
+                  <p className="text-xs text-muted mt-0.5 capitalize">{profile?.role === "admin" ? "Founder" : (profile?.role?.replace("_", " ") || "Admin")} &middot; {form.email}</p>
+                </div>
+              </div>
+              </div>
+            </motion.div>{/* Username + Nickname */}<motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1 * 0.06, duration: 0.4 }}
+              className="glass rounded-xl overflow-hidden"
+              whileHover={{ y: -4, scale: 1.01 }}
+            >
+              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+            <div className="p-5 space-y-3">
+              <h2 className="section-header flex items-center gap-2">
+                <AtSign size={14} className="text-[#2563EB]" /> Identity
+              </h2>
+              <p className="text-[10px] text-muted -mt-2 mb-2">Your username is unique and permanent. Your nickname is what others see.</p>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Username *</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm">@</span>
+                    <input
+                      value={form.username}
+                      onChange={e => handleUsernameChange(e.target.value)}
+                      className="input w-full pl-7 pr-8"
+                      placeholder="your.username"
+                    />
+                    <span className="absolute right-2.5 top-1/2 -translate-y-1/2">
+                      {checkingUsername ? (
+                        <Loader size={12} className="text-muted animate-spin" />
+                      ) : usernameAvailable === true ? (
+                        <Check size={12} className="text-success" />
+                      ) : usernameAvailable === false ? (
+                        <X size={12} className="text-danger" />
+                      ) : null}
+                    </span>
+                  </div>
+                  <p className="text-[9px] text-muted mt-1">Lowercase, numbers, dots, dashes. Min 3 chars.</p>
+                </div>
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Nickname</label>
+                  <input
+                    value={form.nickname}
+                    onChange={e => setForm({ ...form, nickname: e.target.value })}
+                    className="input w-full"
+                    placeholder="Display name"
+                  />
+                  <p className="text-[9px] text-muted mt-1">Shown to others. Can be anything.</p>
+                </div>
+              </div>
+
+              {usernameAvailable === false && (
+                <div className="flex items-center gap-2 text-[10px] text-danger bg-danger/5 border border-danger/10 rounded-lg px-3 py-2">
+                  <AlertCircle size={12} /> This username is already taken. Try another one.
+                </div>
               )}
-            </button>
-            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
-          </div>
-          <div className="flex-1">
-            <p className="text-lg font-bold">{displayName}</p>
-            {form.username && (
-              <p className="text-sm text-muted flex items-center gap-1">
-                <AtSign size={12} />{form.username}
-              </p>
-            )}
-            <p className="text-xs text-muted mt-0.5 capitalize">{profile?.role === "admin" ? "Founder" : (profile?.role?.replace("_", " ") || "Admin")} &middot; {form.email}</p>
-          </div>
-        </div>
-        </div>
-      </motion.div>
-
-      {/* Username + Nickname */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1 * 0.06, duration: 0.4 }}
-        className="glass rounded-xl overflow-hidden"
-        whileHover={{ y: -4, scale: 1.01 }}
-      >
-        <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-      <div className="p-5 space-y-3">
-        <h2 className="section-header flex items-center gap-2">
-          <AtSign size={14} className="text-[#2563EB]" /> Identity
-        </h2>
-        <p className="text-[10px] text-muted -mt-2 mb-2">Your username is unique and permanent. Your nickname is what others see.</p>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Username *</label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm">@</span>
-              <input
-                value={form.username}
-                onChange={e => handleUsernameChange(e.target.value)}
-                className="input w-full pl-7 pr-8"
-                placeholder="your.username"
-              />
-              <span className="absolute right-2.5 top-1/2 -translate-y-1/2">
-                {checkingUsername ? (
-                  <Loader size={12} className="text-muted animate-spin" />
-                ) : usernameAvailable === true ? (
-                  <Check size={12} className="text-success" />
-                ) : usernameAvailable === false ? (
-                  <X size={12} className="text-danger" />
-                ) : null}
-              </span>
             </div>
-            <p className="text-[9px] text-muted mt-1">Lowercase, numbers, dots, dashes. Min 3 chars.</p>
-          </div>
-          <div>
-            <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Nickname</label>
-            <input
-              value={form.nickname}
-              onChange={e => setForm({ ...form, nickname: e.target.value })}
-              className="input w-full"
-              placeholder="Display name"
-            />
-            <p className="text-[9px] text-muted mt-1">Shown to others. Can be anything.</p>
-          </div>
-        </div>
-
-        {usernameAvailable === false && (
-          <div className="flex items-center gap-2 text-[10px] text-danger bg-danger/5 border border-danger/10 rounded-lg px-3 py-2">
-            <AlertCircle size={12} /> This username is already taken. Try another one.
-          </div>
-        )}
-      </div>
-      </motion.div>
-
-      {/* Personal Info */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 2 * 0.06, duration: 0.4 }}
-        className="glass rounded-xl overflow-hidden"
-        whileHover={{ y: -4, scale: 1.01 }}
-      >
-        <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-      <div className="p-5 space-y-3">
-        <h2 className="section-header">Personal Information</h2>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Full Name</label>
-            <input value={form.full_name} onChange={e => setForm({ ...form, full_name: e.target.value })} className="input w-full" />
-          </div>
-          <div>
-            <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Email</label>
-            <input value={form.email} disabled className="input w-full opacity-50 cursor-not-allowed" />
-          </div>
-          <div>
-            <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Phone</label>
-            <input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="input w-full" placeholder="+45 12345678" />
-          </div>
-          <div>
-            <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Timezone</label>
-            <select value={form.timezone} onChange={e => setForm({ ...form, timezone: e.target.value })} className="input w-full">
-              <option value="Europe/Copenhagen">Europe/Copenhagen</option>
-              <option value="America/New_York">America/New York</option>
-              <option value="America/Los_Angeles">America/Los Angeles</option>
-              <option value="America/Chicago">America/Chicago</option>
-              <option value="Europe/London">Europe/London</option>
-              <option value="Europe/Berlin">Europe/Berlin</option>
-              <option value="Asia/Tokyo">Asia/Tokyo</option>
-              <option value="Australia/Sydney">Australia/Sydney</option>
-            </select>
-          </div>
-        </div>
-        <button onClick={saveProfile} disabled={saving || usernameAvailable === false} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-          {saving ? <Loader size={12} className="animate-spin" /> : <Save size={12} />}
-          {saving ? "Saving..." : "Save Changes"}
-        </button>
-      </div>
-      </motion.div>
-
-      {/* Change Password */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 3 * 0.06, duration: 0.4 }}
-        className="glass rounded-xl overflow-hidden"
-        whileHover={{ y: -4, scale: 1.01 }}
-      >
-        <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-      <div className="p-5 space-y-3">
-        <h2 className="section-header flex items-center gap-2"><Key size={14} className="text-[#2563EB]" /> Change Password</h2>
-        <div className="space-y-2">
-          <input type="password" value={password.new} onChange={e => setPassword({ ...password, new: e.target.value })}
-            className="input w-full" placeholder="New password (min 6 characters)" />
-          <input type="password" value={password.confirm} onChange={e => setPassword({ ...password, confirm: e.target.value })}
-            className="input w-full" placeholder="Confirm new password" />
-        </div>
-        <button onClick={changePassword} disabled={!password.new || !password.confirm}
-          className="btn-secondary text-xs flex items-center gap-1.5 disabled:opacity-50">
-          <Key size={12} /> Change Password
-        </button>
-      </div>
-      </motion.div>
-    </div>
+            </motion.div>{/* Personal Info */}<motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2 * 0.06, duration: 0.4 }}
+              className="glass rounded-xl overflow-hidden"
+              whileHover={{ y: -4, scale: 1.01 }}
+            >
+              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+            <div className="p-5 space-y-3">
+              <h2 className="section-header">Personal Information</h2>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Full Name</label>
+                  <input value={form.full_name} onChange={e => setForm({ ...form, full_name: e.target.value })} className="input w-full" />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Email</label>
+                  <input value={form.email} disabled className="input w-full opacity-50 cursor-not-allowed" />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Phone</label>
+                  <input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="input w-full" placeholder="+45 12345678" />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Timezone</label>
+                  <select value={form.timezone} onChange={e => setForm({ ...form, timezone: e.target.value })} className="input w-full">
+                    <option value="Europe/Copenhagen">Europe/Copenhagen</option>
+                    <option value="America/New_York">America/New York</option>
+                    <option value="America/Los_Angeles">America/Los Angeles</option>
+                    <option value="America/Chicago">America/Chicago</option>
+                    <option value="Europe/London">Europe/London</option>
+                    <option value="Europe/Berlin">Europe/Berlin</option>
+                    <option value="Asia/Tokyo">Asia/Tokyo</option>
+                    <option value="Australia/Sydney">Australia/Sydney</option>
+                  </select>
+                </div>
+              </div>
+              <button onClick={saveProfile} disabled={saving || usernameAvailable === false} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
+                {saving ? <Loader size={12} className="animate-spin" /> : <Save size={12} />}
+                {saving ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
+            </motion.div>{/* Change Password */}<motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 3 * 0.06, duration: 0.4 }}
+              className="glass rounded-xl overflow-hidden"
+              whileHover={{ y: -4, scale: 1.01 }}
+            >
+              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+            <div className="p-5 space-y-3">
+              <h2 className="section-header flex items-center gap-2"><Key size={14} className="text-[#2563EB]" /> Change Password</h2>
+              <div className="space-y-2">
+                <input type="password" value={password.new} onChange={e => setPassword({ ...password, new: e.target.value })}
+                  className="input w-full" placeholder="New password (min 6 characters)" />
+                <input type="password" value={password.confirm} onChange={e => setPassword({ ...password, confirm: e.target.value })}
+                  className="input w-full" placeholder="Confirm new password" />
+              </div>
+              <button onClick={changePassword} disabled={!password.new || !password.confirm}
+                className="btn-secondary text-xs flex items-center gap-1.5 disabled:opacity-50">
+                <Key size={12} /> Change Password
+              </button>
+            </div>
+            </motion.div></MotionPage>
   );
 }

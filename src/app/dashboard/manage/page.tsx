@@ -10,6 +10,7 @@ import {
   Calculator, Activity, FileBarChart2, Store, Download,
   UserPlus, Crown, DollarSign,
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // Muted, operations-focused blueprint cards — these are the artefacts a
 // founder/ops lead juggles: team invites, invoices, domains, health.
@@ -32,174 +33,176 @@ export default function ManageHubPage() {
   useAuth();
 
   return (
-    <SectionHub
-      section="manage"
-      title="Manage"
-      eyebrow="Section · Operations"
-      subtitle="Your team, workspaces, billing, and everything operational."
-      heroIcon={<Briefcase size={22} />}
-      heroGradient="gold"
-      preview={{
-        items: MANAGE_HUB_PREVIEW,
-        variant: "text",
-        aspectRatio: "16:9",
-        opacity: 0.5,
-        caption: "Team, billing, clients, reports — the engine room",
-      }}
-      quickActions={[
-        { label: "Add to Agency", href: "/dashboard/team", icon: UserPlus },
-        { label: "Invite Team Member", href: "/dashboard/team", icon: UsersRound },
-        { label: "Upgrade Plan", href: "/dashboard/pricing", icon: Crown },
-        { label: "Download Desktop", href: "/dashboard/download", icon: Download },
-      ]}
-      stats={[
-        { label: "Team Members", key: "team_members", icon: UsersRound, color: "text-[#2563EB]" },
-        { label: "Workspaces", key: "workspaces", icon: Building2, color: "text-[#2563EB]" },
-        { label: "Plan", key: "plan_tier", icon: Crown, color: "text-amber-700", format: "passthrough" },
-        { label: "Spend (30d)", key: "monthly_spend", icon: DollarSign, color: "text-emerald-700", format: "currency" },
-      ]}
-      tools={[
-        {
-          slug: "workspaces",
-          label: "Workspaces",
-          description: "Separate workspaces for clients or sub-agencies.",
-          href: "/dashboard/workspaces",
-          icon: Building2,
-        },
-        {
-          slug: "team",
-          label: "Team",
-          description: "Invite members, assign roles, control access.",
-          href: "/dashboard/team",
-          icon: UsersRound,
-        },
-        {
-          slug: "production",
-          label: "Production",
-          description: "Kanban board for content and delivery work.",
-          href: "/dashboard/production",
-          icon: Kanban,
-        },
-        {
-          slug: "projects",
-          label: "Projects",
-          description: "Track every client project end-to-end.",
-          href: "/dashboard/projects",
-          icon: Kanban,
-        },
-        {
-          slug: "financials",
-          label: "Financials",
-          description: "Revenue, spend, MRR and margin at a glance.",
-          href: "/dashboard/financials",
-          icon: BarChart3,
-        },
-        {
-          slug: "invoices",
-          label: "Invoices",
-          description: "Draft, send, and auto-chase invoices.",
-          href: "/dashboard/invoices",
-          icon: Receipt,
-        },
-        {
-          slug: "billing",
-          label: "Billing",
-          description: "Manage your subscription and payment methods.",
-          href: "/dashboard/billing",
-          icon: CreditCard,
-        },
-        {
-          slug: "pricing",
-          label: "Pricing",
-          description: "Compare plans and upgrade your tier.",
-          href: "/dashboard/pricing",
-          icon: CreditCard,
-        },
-        {
-          slug: "usage",
-          label: "Usage & Tokens",
-          description: "Track AI, email, and SMS usage in real time.",
-          href: "/dashboard/usage",
-          icon: Zap,
-        },
-        {
-          slug: "phone-email",
-          label: "Phone & Email",
-          description: "Provision and assign business phone numbers.",
-          href: "/dashboard/phone-email",
-          icon: Phone,
-        },
-        {
-          slug: "domains",
-          label: "Domains",
-          description: "Buy and wire up custom domains.",
-          href: "/dashboard/domains",
-          icon: Link2,
-        },
-        {
-          slug: "client-health",
-          label: "Client Health",
-          description: "Retention risk scores for every client.",
-          href: "/dashboard/client-health",
-          icon: Heart,
-        },
-        {
-          slug: "reviews",
-          label: "Reviews",
-          description: "Collect and respond to public reviews.",
-          href: "/dashboard/reviews",
-          icon: Star,
-        },
-        {
-          slug: "tickets",
-          label: "Tickets",
-          description: "Client support inbox with SLA tracking.",
-          href: "/dashboard/tickets",
-          icon: LifeBuoy,
-        },
-        {
-          slug: "referrals",
-          label: "Referrals",
-          description: "Track partner referrals and payouts.",
-          href: "/dashboard/referrals",
-          icon: Gift,
-        },
-        {
-          slug: "roi-calculator",
-          label: "ROI Calculator",
-          description: "Show clients their ROI in live dashboards.",
-          href: "/dashboard/roi-calculator",
-          icon: Calculator,
-        },
-        {
-          slug: "monitor",
-          label: "Monitor",
-          description: "Live status of every connected service.",
-          href: "/dashboard/monitor",
-          icon: Activity,
-        },
-        {
-          slug: "report-generator",
-          label: "Reports Gen",
-          description: "Generate branded PDF reports on demand.",
-          href: "/dashboard/report-generator",
-          icon: FileBarChart2,
-        },
-        {
-          slug: "marketplace",
-          label: "Marketplace",
-          description: "Install templates, workflows, and prebuilt agents.",
-          href: "/dashboard/marketplace",
-          icon: Store,
-        },
-        {
-          slug: "download",
-          label: "Download Desktop",
-          description: "Get the ShortStack macOS and Windows app.",
-          href: "/dashboard/download",
-          icon: Download,
-        },
-      ]}
-    />
+    <MotionPage>
+            <SectionHub
+            section="manage"
+            title="Manage"
+            eyebrow="Section · Operations"
+            subtitle="Your team, workspaces, billing, and everything operational."
+            heroIcon={<Briefcase size={22} />}
+            heroGradient="gold"
+            preview={{
+              items: MANAGE_HUB_PREVIEW,
+              variant: "text",
+              aspectRatio: "16:9",
+              opacity: 0.5,
+              caption: "Team, billing, clients, reports — the engine room",
+            }}
+            quickActions={[
+              { label: "Add to Agency", href: "/dashboard/team", icon: UserPlus },
+              { label: "Invite Team Member", href: "/dashboard/team", icon: UsersRound },
+              { label: "Upgrade Plan", href: "/dashboard/pricing", icon: Crown },
+              { label: "Download Desktop", href: "/dashboard/download", icon: Download },
+            ]}
+            stats={[
+              { label: "Team Members", key: "team_members", icon: UsersRound, color: "text-[#2563EB]" },
+              { label: "Workspaces", key: "workspaces", icon: Building2, color: "text-[#2563EB]" },
+              { label: "Plan", key: "plan_tier", icon: Crown, color: "text-amber-700", format: "passthrough" },
+              { label: "Spend (30d)", key: "monthly_spend", icon: DollarSign, color: "text-emerald-700", format: "currency" },
+            ]}
+            tools={[
+              {
+                slug: "workspaces",
+                label: "Workspaces",
+                description: "Separate workspaces for clients or sub-agencies.",
+                href: "/dashboard/workspaces",
+                icon: Building2,
+              },
+              {
+                slug: "team",
+                label: "Team",
+                description: "Invite members, assign roles, control access.",
+                href: "/dashboard/team",
+                icon: UsersRound,
+              },
+              {
+                slug: "production",
+                label: "Production",
+                description: "Kanban board for content and delivery work.",
+                href: "/dashboard/production",
+                icon: Kanban,
+              },
+              {
+                slug: "projects",
+                label: "Projects",
+                description: "Track every client project end-to-end.",
+                href: "/dashboard/projects",
+                icon: Kanban,
+              },
+              {
+                slug: "financials",
+                label: "Financials",
+                description: "Revenue, spend, MRR and margin at a glance.",
+                href: "/dashboard/financials",
+                icon: BarChart3,
+              },
+              {
+                slug: "invoices",
+                label: "Invoices",
+                description: "Draft, send, and auto-chase invoices.",
+                href: "/dashboard/invoices",
+                icon: Receipt,
+              },
+              {
+                slug: "billing",
+                label: "Billing",
+                description: "Manage your subscription and payment methods.",
+                href: "/dashboard/billing",
+                icon: CreditCard,
+              },
+              {
+                slug: "pricing",
+                label: "Pricing",
+                description: "Compare plans and upgrade your tier.",
+                href: "/dashboard/pricing",
+                icon: CreditCard,
+              },
+              {
+                slug: "usage",
+                label: "Usage & Tokens",
+                description: "Track AI, email, and SMS usage in real time.",
+                href: "/dashboard/usage",
+                icon: Zap,
+              },
+              {
+                slug: "phone-email",
+                label: "Phone & Email",
+                description: "Provision and assign business phone numbers.",
+                href: "/dashboard/phone-email",
+                icon: Phone,
+              },
+              {
+                slug: "domains",
+                label: "Domains",
+                description: "Buy and wire up custom domains.",
+                href: "/dashboard/domains",
+                icon: Link2,
+              },
+              {
+                slug: "client-health",
+                label: "Client Health",
+                description: "Retention risk scores for every client.",
+                href: "/dashboard/client-health",
+                icon: Heart,
+              },
+              {
+                slug: "reviews",
+                label: "Reviews",
+                description: "Collect and respond to public reviews.",
+                href: "/dashboard/reviews",
+                icon: Star,
+              },
+              {
+                slug: "tickets",
+                label: "Tickets",
+                description: "Client support inbox with SLA tracking.",
+                href: "/dashboard/tickets",
+                icon: LifeBuoy,
+              },
+              {
+                slug: "referrals",
+                label: "Referrals",
+                description: "Track partner referrals and payouts.",
+                href: "/dashboard/referrals",
+                icon: Gift,
+              },
+              {
+                slug: "roi-calculator",
+                label: "ROI Calculator",
+                description: "Show clients their ROI in live dashboards.",
+                href: "/dashboard/roi-calculator",
+                icon: Calculator,
+              },
+              {
+                slug: "monitor",
+                label: "Monitor",
+                description: "Live status of every connected service.",
+                href: "/dashboard/monitor",
+                icon: Activity,
+              },
+              {
+                slug: "report-generator",
+                label: "Reports Gen",
+                description: "Generate branded PDF reports on demand.",
+                href: "/dashboard/report-generator",
+                icon: FileBarChart2,
+              },
+              {
+                slug: "marketplace",
+                label: "Marketplace",
+                description: "Install templates, workflows, and prebuilt agents.",
+                href: "/dashboard/marketplace",
+                icon: Store,
+              },
+              {
+                slug: "download",
+                label: "Download Desktop",
+                description: "Get the ShortStack macOS and Windows app.",
+                href: "/dashboard/download",
+                icon: Download,
+              },
+            ]}
+          />
+          </MotionPage>
   );
 }

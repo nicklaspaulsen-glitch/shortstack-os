@@ -30,6 +30,7 @@ import {
 import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import StatCard from "@/components/ui/stat-card";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface CoachAnalysisRow {
   id: string;
@@ -188,278 +189,257 @@ export default function CoachPage() {
   }, [data]);
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        title="AI Sales Coach"
-        subtitle="Personalized feedback on every call and email � talk-time, objections, next-best-action."
-        gradient="gold"
-        icon={<Award className="h-6 w-6" />}
-        eyebrow="Coaching"
-      />
-
-      {/* Stat tiles with stagger entrance */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-1 sm:grid-cols-3 gap-4"
-      >
-        {[
-          { label: "Calls analyzed this week", value: data?.stats.analyses_this_week ?? 0, icon: <Sparkles className="h-4 w-4" /> },
-          { label: "Average coach score", value: data?.stats.avg_score ?? 0, icon: <TrendingUp className="h-4 w-4" /> },
-          { label: "Top performer score", value: data?.stats.top_rep_score ?? 0, icon: <Award className="h-4 w-4" />, premium: true },
-        ].map(({ label, value, icon, premium }) => (
-          <PrismPanel
-            key={label}
-            rainbow
-            padding="p-4"
-          >
-            <StatCard
-              label={label}
-              value={value}
-              icon={icon}
-              premium={premium}
-            />
-          </PrismPanel>
-        ))}
-      </motion.div>
-
-      {/* Tab bar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-black/5 pb-2">
-        {(
-          [
-            { id: "recent", label: "Recent Calls" },
-            { id: "by-rep", label: "By Rep" },
-            { id: "leaderboard", label: "Leaderboard" },
-          ] as const
-        ).map((t) => (
-          <motion.button
-            key={t.id}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => setTab(t.id)}
-            className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-              tab === t.id
-                ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
-                : "text-black/60 hover:bg-black/5 hover:text-[#0A0A0B]"
-            }`}
-          >
-            {t.label}
-          </motion.button>
-        ))}
-      </div>
-
-      {loading && (
-        <div className="flex items-center gap-2 text-black/60 text-sm">
-          <Loader2 className="h-4 w-4 animate-spin" /> Loading analyses�
-        </div>
-      )}
-
-      {error && !loading && (
-        <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700">
-          {error}
-        </div>
-      )}
-
-      {/* -- RECENT CALLS -- */}
-      {!loading && tab === "recent" && data && (
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
-        >
-          {data.analyses.length === 0 ? (
-            <div className="px-6 py-12 text-center text-black/60">
-              <Sparkles className="mx-auto mb-3 h-8 w-8 opacity-50" />
-              <p className="text-base font-medium text-[#0A0A0B]">No analyses yet.</p>
-              <p className="mt-1 text-sm">
-                The coach runs hourly on new voice calls and meetings. Trigger one manually from a
-                call detail page.
-              </p>
-            </div>
-          ) : (
-            data.analyses.map((row) => {
-              const Icon = SOURCE_ICONS[row.source_type] ?? Sparkles;
-              const topInsight = row.insights[0];
-              const talkRatio = Math.round(((row.metrics?.talk_ratio ?? 0) as number) * 100);
-              return (
-                <motion.div key={row.id} variants={rowVariants}>
-                  <Link
-                    href={`/dashboard/coach/analyses/${row.id}`}
-                    className="group flex items-center gap-4 border-b border-black/5 last:border-0 px-4 py-3 transition-colors hover:bg-[rgba(37,99,235,0.04)]"
-                  >
-                    <div className="rounded-lg border border-black/10 bg-black/5 p-2 text-black/65">
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-[#0A0A0B]">
-                          {row.source_type === "voice_call"
-                            ? "Voice call"
-                            : row.source_type === "meeting"
-                              ? "Meeting"
-                              : "Email thread"}
-                        </span>
-                        <span className="text-xs text-black/40">
-                          {formatRelativeTime(row.created_at)}
-                        </span>
-                      </div>
-                      {topInsight ? (
-                        <p className="truncate text-xs text-black/60">
-                          {topInsight.category.replace("_", " ")}: {topInsight.text}
-                        </p>
-                      ) : (
-                        <p className="text-xs text-black/40">No qualitative findings.</p>
-                      )}
-                    </div>
-                    <div className="hidden text-xs text-black/50 sm:block">
-                      Talk {talkRatio}%
-                    </div>
-                    <ScoreBadge score={row.overall_score} />
-                    <ArrowRight className="h-4 w-4 text-black/35 transition-colors group-hover:text-[#2563EB]" />
-                  </Link>
-                </motion.div>
-              );
-            })
-          )}
-        </motion.div>
-      )}
-
-      {/* -- BY REP -- */}
-      {!loading && tab === "by-rep" && data && (
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-3"
-        >
-          {repBuckets.length === 0 ? (
-            <PrismPanel padding="px-6 py-8">
-              <p className="text-center text-black/60">No rep-level data yet.</p>
-            </PrismPanel>
-          ) : (
-            repBuckets.map((bucket) => (
+    <MotionPage className="space-y-6"><PageHero
+              title="AI Sales Coach"
+              subtitle="Personalized feedback on every call and email � talk-time, objections, next-best-action."
+              gradient="gold"
+              icon={<Award className="h-6 w-6" />}
+              eyebrow="Coaching"
+            />{/* Stat tiles with stagger entrance */}<motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+            >
+              {[
+                { label: "Calls analyzed this week", value: data?.stats.analyses_this_week ?? 0, icon: <Sparkles className="h-4 w-4" /> },
+                { label: "Average coach score", value: data?.stats.avg_score ?? 0, icon: <TrendingUp className="h-4 w-4" /> },
+                { label: "Top performer score", value: data?.stats.top_rep_score ?? 0, icon: <Award className="h-4 w-4" />, premium: true },
+              ].map(({ label, value, icon, premium }) => (
+                <PrismPanel
+                  key={label}
+                  rainbow
+                  padding="p-4"
+                >
+                  <StatCard
+                    label={label}
+                    value={value}
+                    icon={icon}
+                    premium={premium}
+                  />
+                </PrismPanel>
+              ))}
+            </motion.div>{/* Tab bar */}<div className="flex flex-wrap items-center gap-2 border-b border-black/5 pb-2">
+              {(
+                [
+                  { id: "recent", label: "Recent Calls" },
+                  { id: "by-rep", label: "By Rep" },
+                  { id: "leaderboard", label: "Leaderboard" },
+                ] as const
+              ).map((t) => (
+                <motion.button
+                  key={t.id}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => setTab(t.id)}
+                  className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                    tab === t.id
+                      ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
+                      : "text-black/60 hover:bg-black/5 hover:text-[#0A0A0B]"
+                  }`}
+                >
+                  {t.label}
+                </motion.button>
+              ))}
+            </div>{loading && (
+              <div className="flex items-center gap-2 text-black/60 text-sm">
+                <Loader2 className="h-4 w-4 animate-spin" /> Loading analyses�
+              </div>
+            )}{error && !loading && (
+              <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700">
+                {error}
+              </div>
+            )}{/* -- RECENT CALLS -- */}{!loading && tab === "recent" && data && (
               <motion.div
-                key={bucket.repId}
-                variants={cardVariants}
-                whileHover={{ y: -1 }}
-                className="rounded-xl p-4" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
               >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-sm font-semibold text-[#0A0A0B]">
-                      {bucket.repId === "__owner" ? "Unassigned" : bucket.repId.slice(0, 8)}
-                    </div>
-                    <div className="text-xs text-black/50">
-                      {bucket.rows.length} analyses � avg {bucket.avg}
-                    </div>
+                {data.analyses.length === 0 ? (
+                  <div className="px-6 py-12 text-center text-black/60">
+                    <Sparkles className="mx-auto mb-3 h-8 w-8 opacity-50" />
+                    <p className="text-base font-medium text-[#0A0A0B]">No analyses yet.</p>
+                    <p className="mt-1 text-sm">
+                      The coach runs hourly on new voice calls and meetings. Trigger one manually from a
+                      call detail page.
+                    </p>
                   </div>
-                  <ScoreBadge score={bucket.avg} />
-                </div>
-                <div className="mt-3 flex items-center gap-1">
-                  {bucket.rows.slice(0, 20).reverse().map((row) => {
-                    const value = row.overall_score ?? 0;
-                    const color = value >= 80 ? "bg-emerald-400" : value >= 60 ? "bg-amber-400" : "bg-rose-400";
+                ) : (
+                  data.analyses.map((row) => {
+                    const Icon = SOURCE_ICONS[row.source_type] ?? Sparkles;
+                    const topInsight = row.insights[0];
+                    const talkRatio = Math.round(((row.metrics?.talk_ratio ?? 0) as number) * 100);
                     return (
-                      <span
-                        key={row.id}
-                        title={`${value} � ${formatRelativeTime(row.created_at)}`}
-                        className={`h-6 w-1.5 rounded-sm ${color}`}
-                        style={{ opacity: 0.4 + (value / 100) * 0.6 }}
-                      />
+                      <motion.div key={row.id} variants={rowVariants}>
+                        <Link
+                          href={`/dashboard/coach/analyses/${row.id}`}
+                          className="group flex items-center gap-4 border-b border-black/5 last:border-0 px-4 py-3 transition-colors hover:bg-[rgba(37,99,235,0.04)]"
+                        >
+                          <div className="rounded-lg border border-black/10 bg-black/5 p-2 text-black/65">
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium text-[#0A0A0B]">
+                                {row.source_type === "voice_call"
+                                  ? "Voice call"
+                                  : row.source_type === "meeting"
+                                    ? "Meeting"
+                                    : "Email thread"}
+                              </span>
+                              <span className="text-xs text-black/40">
+                                {formatRelativeTime(row.created_at)}
+                              </span>
+                            </div>
+                            {topInsight ? (
+                              <p className="truncate text-xs text-black/60">
+                                {topInsight.category.replace("_", " ")}: {topInsight.text}
+                              </p>
+                            ) : (
+                              <p className="text-xs text-black/40">No qualitative findings.</p>
+                            )}
+                          </div>
+                          <div className="hidden text-xs text-black/50 sm:block">
+                            Talk {talkRatio}%
+                          </div>
+                          <ScoreBadge score={row.overall_score} />
+                          <ArrowRight className="h-4 w-4 text-black/35 transition-colors group-hover:text-[#2563EB]" />
+                        </Link>
+                      </motion.div>
                     );
-                  })}
-                </div>
+                  })
+                )}
               </motion.div>
-            ))
-          )}
-        </motion.div>
-      )}
-
-      {/* -- LEADERBOARD -- */}
-      {!loading && tab === "leaderboard" && (
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-4"
-        >
-          <motion.div variants={cardVariants} className="flex items-center gap-2">
-            {(
-              [
-                { id: "week", label: "This week" },
-                { id: "month", label: "Month" },
-                { id: "quarter", label: "Quarter" },
-                { id: "all", label: "All time" },
-              ] as const
-            ).map((p) => (
-              <motion.button
-                key={p.id}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => setPeriod(p.id)}
-                className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-                  period === p.id
-                    ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                    : "border-black/10 text-black/60 hover:border-black/15 hover:text-[#0A0A0B]"
-                }`}
+            )}{/* -- BY REP -- */}{!loading && tab === "by-rep" && data && (
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-3"
               >
-                {p.label}
-              </motion.button>
-            ))}
-          </motion.div>
-
-          {!leaderboard || leaderboard.leaderboard.length === 0 ? (
-            <motion.div variants={cardVariants} className="rounded-xl px-6 py-8 text-center text-black/60" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-              Leaderboard requires at least 3 analyses per rep. Once your team accumulates more
-              calls, rankings will appear here.
-            </motion.div>
-          ) : (
-            <motion.div variants={cardVariants} className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-              <table className="w-full text-sm">
-                <thead className="bg-black/[0.03] text-xs uppercase tracking-wider text-black/50">
-                  <tr>
-                    <th className="px-4 py-2 text-left">#</th>
-                    <th className="px-4 py-2 text-left">Rep</th>
-                    <th className="px-4 py-2 text-right">Calls</th>
-                    <th className="px-4 py-2 text-right">Avg</th>
-                    <th className="px-4 py-2 text-right">Best</th>
-                    <th className="px-4 py-2 text-right">Worst</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-black/5">
-                  {leaderboard.leaderboard.map((entry, idx) => (
-                    <motion.tr
-                      key={entry.rep_id}
-                      variants={rowVariants}
-                      className="text-black/65 hover:bg-[rgba(37,99,235,0.04)] transition-colors"
+                {repBuckets.length === 0 ? (
+                  <PrismPanel padding="px-6 py-8">
+                    <p className="text-center text-black/60">No rep-level data yet.</p>
+                  </PrismPanel>
+                ) : (
+                  repBuckets.map((bucket) => (
+                    <motion.div
+                      key={bucket.repId}
+                      variants={cardVariants}
+                      whileHover={{ y: -1 }}
+                      className="rounded-xl p-4" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
                     >
-                      <td className="px-4 py-3 font-semibold text-black/60">{idx + 1}</td>
-                      <td className="px-4 py-3 text-[#0A0A0B]">
-                        {entry.rep_name || entry.rep_email || entry.rep_id.slice(0, 8)}
-                      </td>
-                      <td className="px-4 py-3 text-right text-black/65">
-                        {entry.analyses_count}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <ScoreBadge score={entry.avg_score} />
-                      </td>
-                      <td className="px-4 py-3 text-right text-emerald-700">
-                        {entry.best_score}
-                      </td>
-                      <td className="px-4 py-3 text-right text-rose-700">
-                        {entry.worst_score}
-                      </td>
-                    </motion.tr>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-sm font-semibold text-[#0A0A0B]">
+                            {bucket.repId === "__owner" ? "Unassigned" : bucket.repId.slice(0, 8)}
+                          </div>
+                          <div className="text-xs text-black/50">
+                            {bucket.rows.length} analyses � avg {bucket.avg}
+                          </div>
+                        </div>
+                        <ScoreBadge score={bucket.avg} />
+                      </div>
+                      <div className="mt-3 flex items-center gap-1">
+                        {bucket.rows.slice(0, 20).reverse().map((row) => {
+                          const value = row.overall_score ?? 0;
+                          const color = value >= 80 ? "bg-emerald-400" : value >= 60 ? "bg-amber-400" : "bg-rose-400";
+                          return (
+                            <span
+                              key={row.id}
+                              title={`${value} � ${formatRelativeTime(row.created_at)}`}
+                              className={`h-6 w-1.5 rounded-sm ${color}`}
+                              style={{ opacity: 0.4 + (value / 100) * 0.6 }}
+                            />
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  ))
+                )}
+              </motion.div>
+            )}{/* -- LEADERBOARD -- */}{!loading && tab === "leaderboard" && (
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-4"
+              >
+                <motion.div variants={cardVariants} className="flex items-center gap-2">
+                  {(
+                    [
+                      { id: "week", label: "This week" },
+                      { id: "month", label: "Month" },
+                      { id: "quarter", label: "Quarter" },
+                      { id: "all", label: "All time" },
+                    ] as const
+                  ).map((p) => (
+                    <motion.button
+                      key={p.id}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.96 }}
+                      onClick={() => setPeriod(p.id)}
+                      className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                        period === p.id
+                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                          : "border-black/10 text-black/60 hover:border-black/15 hover:text-[#0A0A0B]"
+                      }`}
+                    >
+                      {p.label}
+                    </motion.button>
                   ))}
-                </tbody>
-              </table>
-            </motion.div>
-          )}
-        </motion.div>
-      )}
-    </div>
+                </motion.div>
+
+                {!leaderboard || leaderboard.leaderboard.length === 0 ? (
+                  <motion.div variants={cardVariants} className="rounded-xl px-6 py-8 text-center text-black/60" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                    Leaderboard requires at least 3 analyses per rep. Once your team accumulates more
+                    calls, rankings will appear here.
+                  </motion.div>
+                ) : (
+                  <motion.div variants={cardVariants} className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                    <table className="w-full text-sm">
+                      <thead className="bg-black/[0.03] text-xs uppercase tracking-wider text-black/50">
+                        <tr>
+                          <th className="px-4 py-2 text-left">#</th>
+                          <th className="px-4 py-2 text-left">Rep</th>
+                          <th className="px-4 py-2 text-right">Calls</th>
+                          <th className="px-4 py-2 text-right">Avg</th>
+                          <th className="px-4 py-2 text-right">Best</th>
+                          <th className="px-4 py-2 text-right">Worst</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-black/5">
+                        {leaderboard.leaderboard.map((entry, idx) => (
+                          <motion.tr
+                            key={entry.rep_id}
+                            variants={rowVariants}
+                            className="text-black/65 hover:bg-[rgba(37,99,235,0.04)] transition-colors"
+                          >
+                            <td className="px-4 py-3 font-semibold text-black/60">{idx + 1}</td>
+                            <td className="px-4 py-3 text-[#0A0A0B]">
+                              {entry.rep_name || entry.rep_email || entry.rep_id.slice(0, 8)}
+                            </td>
+                            <td className="px-4 py-3 text-right text-black/65">
+                              {entry.analyses_count}
+                            </td>
+                            <td className="px-4 py-3 text-right">
+                              <ScoreBadge score={entry.avg_score} />
+                            </td>
+                            <td className="px-4 py-3 text-right text-emerald-700">
+                              {entry.best_score}
+                            </td>
+                            <td className="px-4 py-3 text-right text-rose-700">
+                              {entry.worst_score}
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </motion.div>
+                )}
+              </motion.div>
+            )}</MotionPage>
   );
 }
 

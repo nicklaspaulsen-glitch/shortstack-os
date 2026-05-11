@@ -13,6 +13,7 @@ import EmptyState from "@/components/empty-state";
 import PageHero from "@/components/ui/page-hero";
 import { ZoomIcon, CalendlyIcon, GoogleIcon } from "@/components/ui/platform-icons";
 import { PageSkeleton } from "@/components/ui/skeleton";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /** Pick a small brand icon for a meeting location_type value. */
 function LocationIcon({ type, size = 10 }: { type: string; size?: number }) {
@@ -257,7 +258,9 @@ export default function SchedulingPage() {
   ];
 
   if (loading) {
-    return <PageSkeleton />;
+    return <MotionPage>
+                 <PageSkeleton />
+               </MotionPage>;
   }
 
   return (

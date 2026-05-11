@@ -22,6 +22,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface VerticalSummary {
   vertical: "real_estate" | "coaches" | "ecommerce";
@@ -123,103 +124,99 @@ export default function VerticalsIndexPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB]">
-      <PageHero
-        title="Vertical Templates"
-        subtitle="Pre-configured ShortStack OS bundles for specific agency niches. Pick a vertical, choose modules, and we provision automations, content, scripts, and a course in your tenant — typically a 5-day onboarding compressed into 5 minutes."
-        icon={<Briefcase size={28} />}
-        gradient="gold"
-        eyebrow={
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase opacity-90">
-            <Sparkles size={12} />
-            Niche-ready setup
-          </span>
-        }
-      />
+    <MotionPage className="min-h-screen bg-[#FAFAFB]"><PageHero
+              title="Vertical Templates"
+              subtitle="Pre-configured ShortStack OS bundles for specific agency niches. Pick a vertical, choose modules, and we provision automations, content, scripts, and a course in your tenant — typically a 5-day onboarding compressed into 5 minutes."
+              icon={<Briefcase size={28} />}
+              gradient="gold"
+              eyebrow={
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase opacity-90">
+                  <Sparkles size={12} />
+                  Niche-ready setup
+                </span>
+              }
+            /><div className="max-w-7xl mx-auto px-6 py-10">
+              {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className=" bg-[rgba(0,0,0,0.04)] h-72 animate-pulse" />
+                  ))}
+                </div>
+              ) : verticals.length === 0 ? (
+                <div className="text-center py-24 text-black/40">
+                  <Briefcase size={48} className="mx-auto mb-4 opacity-30" />
+                  <p className="text-lg">No vertical templates available</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {verticals.map((v, i) => {
+                    const Icon = ICON_MAP[v.icon] ?? Briefcase;
+                    const appliedModules = appliedByVertical[v.vertical] ?? [];
+                    const isApplied = appliedModules.length > 0;
 
-      <div className="max-w-7xl mx-auto px-6 py-10">
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className=" bg-[rgba(0,0,0,0.04)] h-72 animate-pulse" />
-            ))}
-          </div>
-        ) : verticals.length === 0 ? (
-          <div className="text-center py-24 text-black/40">
-            <Briefcase size={48} className="mx-auto mb-4 opacity-30" />
-            <p className="text-lg">No vertical templates available</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {verticals.map((v, i) => {
-              const Icon = ICON_MAP[v.icon] ?? Briefcase;
-              const appliedModules = appliedByVertical[v.vertical] ?? [];
-              const isApplied = appliedModules.length > 0;
+                    return (
+                      <motion.div
+                        key={v.vertical}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.06, duration: 0.4 }}
+                        whileHover={{ y: -4, scale: 1.01 }}
+                      >
+                      <Link
+                        href={`/dashboard/verticals/${v.vertical}`}
+                        className={`group relative block glass  border bg-gradient-to-br ${
+                          ACCENT_RING[v.accent] ?? ACCENT_RING.gold
+                        } p-6 transition-shadow`}
+                      >
+                        {isApplied && (
+                          <div className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 px-2.5 py-1 text-xs text-emerald-600">
+                            <Check size={11} />
+                            Applied
+                          </div>
+                        )}
 
-              return (
-                <motion.div
-                  key={v.vertical}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.4 }}
-                  whileHover={{ y: -4, scale: 1.01 }}
-                >
-                <Link
-                  href={`/dashboard/verticals/${v.vertical}`}
-                  className={`group relative block glass  border bg-gradient-to-br ${
-                    ACCENT_RING[v.accent] ?? ACCENT_RING.gold
-                  } p-6 transition-shadow`}
-                >
-                  {isApplied && (
-                    <div className="absolute top-4 right-4 inline-flex items-center gap-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 px-2.5 py-1 text-xs text-emerald-600">
-                      <Check size={11} />
-                      Applied
-                    </div>
-                  )}
+                        <div
+                          className={`inline-flex h-12 w-12 items-center justify-center rounded-xl mb-4 ${
+                            ACCENT_ICON_BG[v.accent] ?? ACCENT_ICON_BG.gold
+                          }`}
+                        >
+                          <Icon size={22} />
+                        </div>
 
-                  <div
-                    className={`inline-flex h-12 w-12 items-center justify-center rounded-xl mb-4 ${
-                      ACCENT_ICON_BG[v.accent] ?? ACCENT_ICON_BG.gold
-                    }`}
-                  >
-                    <Icon size={22} />
-                  </div>
+                        <h2 className="text-xl font-semibold text-[#0A0A0B] mb-1">
+                          {v.display_name}
+                        </h2>
+                        <p className="text-sm text-black/60 mb-5">{v.tagline}</p>
 
-                  <h2 className="text-xl font-semibold text-[#0A0A0B] mb-1">
-                    {v.display_name}
-                  </h2>
-                  <p className="text-sm text-black/60 mb-5">{v.tagline}</p>
+                        {/* Counts grid */}
+                        <div className="grid grid-cols-3 gap-2 mb-5">
+                          <CountTile label="Automations" value={v.counts.automations} />
+                          <CountTile label="SMS" value={v.counts.sms} />
+                          <CountTile label="Emails" value={v.counts.email} />
+                          <CountTile label="Scripts" value={v.counts.scripts} />
+                          <CountTile label="Scoring" value={v.counts.scoring} />
+                          <CountTile label="Funnel" value={v.counts.funnel_steps} />
+                        </div>
 
-                  {/* Counts grid */}
-                  <div className="grid grid-cols-3 gap-2 mb-5">
-                    <CountTile label="Automations" value={v.counts.automations} />
-                    <CountTile label="SMS" value={v.counts.sms} />
-                    <CountTile label="Emails" value={v.counts.email} />
-                    <CountTile label="Scripts" value={v.counts.scripts} />
-                    <CountTile label="Scoring" value={v.counts.scoring} />
-                    <CountTile label="Funnel" value={v.counts.funnel_steps} />
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-black/40">
-                      Course: {v.counts.course_modules} modules · {v.counts.course_lessons} lessons
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-black/65 group-hover:text-[#0A0A0B]">
-                      Configure
-                      <ArrowRight
-                        size={14}
-                        className="transition-transform group-hover:translate-x-0.5"
-                      />
-                    </span>
-                  </div>
-                </Link>
-                </motion.div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    </div>
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-black/40">
+                            Course: {v.counts.course_modules} modules · {v.counts.course_lessons} lessons
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-black/65 group-hover:text-[#0A0A0B]">
+                            Configure
+                            <ArrowRight
+                              size={14}
+                              className="transition-transform group-hover:translate-x-0.5"
+                            />
+                          </span>
+                        </div>
+                      </Link>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
+            </div></MotionPage>
   );
 }
 

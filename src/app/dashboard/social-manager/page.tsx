@@ -36,6 +36,7 @@ import {
   InstagramIcon, FacebookIcon, TikTokIcon, LinkedInIcon, XTwitterIcon,
   ThreadsIcon, PinterestIcon, YouTubeShortsIcon,
 } from "@/components/ui/platform-icons";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const SUPPORTED_PLATFORMS = [
   { key: "instagram", label: "Instagram", color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/20", description: "Connect your Instagram Business or Creator account" },
@@ -394,7 +395,9 @@ export default function SocialManagerPage() {
   const currentClient = clients.find(c => c.id === selectedClient);
   const isAutopilot = !!autopilotConfig.enabled;
 
-  if (loading) return <PageSkeleton />;
+  if (loading) return <MotionPage>
+                          <PageSkeleton />
+                        </MotionPage>;
 
   return (
     <div className="fade-in space-y-5">

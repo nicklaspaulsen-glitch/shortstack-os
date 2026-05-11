@@ -24,6 +24,7 @@ import type {
   ActivityEvent,
   ClientLane,
 } from "@/lib/workspace/aggregator";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const SURFACE_NAME = "whiteboard";
 const REFRESH_INTERVAL_MS = 15_000;
@@ -204,57 +205,48 @@ export default function WhiteboardPage() {
   );
 
   return (
-    <div className="space-y-6 pb-12">
-      <PageHero
-        title="Workspace Whiteboard"
-        subtitle="Live production board — every render, post, deal, and task across every client, in real time."
-        gradient="sunset"
-        icon={<LayoutGrid size={22} />}
-        eyebrow="Workspace"
-        actions={
-          <div className="flex items-center gap-2 text-xs text-[#374151]">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-            </span>
-            <span>Updated {snapshot ? timeAgo(snapshot.generated_at) : "…"}</span>
-          </div>
-        }
-      />
+    <MotionPage className="space-y-6 pb-12"><PageHero
+              title="Workspace Whiteboard"
+              subtitle="Live production board — every render, post, deal, and task across every client, in real time."
+              gradient="sunset"
+              icon={<LayoutGrid size={22} />}
+              eyebrow="Workspace"
+              actions={
+                <div className="flex items-center gap-2 text-xs text-[#374151]">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                  </span>
+                  <span>Updated {snapshot ? timeAgo(snapshot.generated_at) : "…"}</span>
+                </div>
+              }
+            />{/* Online now strip */}<PresenceStrip users={snapshot?.active_users ?? []} loading={loading} />{error && !snapshot && (
+              <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-700">
+                Couldn&apos;t load the whiteboard: {error}
+              </div>
+            )}<div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6">
+              {/* Lanes */}
+              <div className="min-w-0">
+                {loading && !snapshot ? (
+                  <LanesSkeleton />
+                ) : totalItems === 0 ? (
+                  <EmptyState
+                    icon={<Activity size={28} className="text-[#2563EB]" />}
+                    title="Nothing in flight"
+                    description="No active renders, scheduled posts, open deals, or in-progress tasks yet. Once your team starts shipping work, it'll show up here in real time."
+                  />
+                ) : (
+                  <div className="flex gap-4 overflow-x-auto pb-2 snap-x">
+                    {lanes.map((lane) => (
+                      <ClientLaneCard key={lane.client_id} lane={lane} />
+                    ))}
+                  </div>
+                )}
+              </div>
 
-      {/* Online now strip */}
-      <PresenceStrip users={snapshot?.active_users ?? []} loading={loading} />
-
-      {error && !snapshot && (
-        <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-700">
-          Couldn&apos;t load the whiteboard: {error}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6">
-        {/* Lanes */}
-        <div className="min-w-0">
-          {loading && !snapshot ? (
-            <LanesSkeleton />
-          ) : totalItems === 0 ? (
-            <EmptyState
-              icon={<Activity size={28} className="text-[#2563EB]" />}
-              title="Nothing in flight"
-              description="No active renders, scheduled posts, open deals, or in-progress tasks yet. Once your team starts shipping work, it'll show up here in real time."
-            />
-          ) : (
-            <div className="flex gap-4 overflow-x-auto pb-2 snap-x">
-              {lanes.map((lane) => (
-                <ClientLaneCard key={lane.client_id} lane={lane} />
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Recent activity sidebar */}
-        <ActivitySidebar events={snapshot?.recent_activity ?? []} loading={loading && !snapshot} />
-      </div>
-    </div>
+              {/* Recent activity sidebar */}
+              <ActivitySidebar events={snapshot?.recent_activity ?? []} loading={loading && !snapshot} />
+            </div></MotionPage>
   );
 }
 

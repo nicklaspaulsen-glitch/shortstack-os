@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import { Copy, Phone, Building2, CheckCircle, Loader2, RefreshCw, AlertTriangle } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface Lead {
   id: string;
@@ -144,132 +145,125 @@ export default function DedupPage() {
   const pendingGroups = groups.filter(g => !merged.has(g.key));
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        title="Lead Deduplication"
-        eyebrow="DEDUPLICATION"
-        subtitle="Finds leads sharing the same phone or business name — preview, then merge."
-        icon={<Copy className="w-6 h-6" />}
-        gradient="gold"
-        actions={
-          <button
-            onClick={load}
-            disabled={loading}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm transition-colors border border-border disabled:opacity-50"
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-            Re-scan
-          </button>
-        }
-      />
-
-      {/* Summary */}
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { value: leads.length.toLocaleString(), label: "Leads scanned", color: "text-foreground" },
-          { value: pendingGroups.length, label: "Duplicate groups", color: pendingGroups.length > 0 ? "text-amber-700" : "text-emerald-700" },
-          { value: merged.size, label: "Merged this session", color: "text-emerald-700" },
-        ].map((stat, i) => (
-          <motion.div key={stat.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-4 text-center">
-              <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
-              <div className="text-xs text-muted mt-0.5">{stat.label}</div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {loading ? (
-        <div className="space-y-4">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="glass rounded-xl p-5 animate-pulse">
-              <div className="h-4 bg-black/6 rounded w-1/3 mb-4" />
-              <div className="h-24 bg-black/4 rounded" />
-            </div>
-          ))}
-        </div>
-      ) : pendingGroups.length === 0 ? (
-        <div className="glass rounded-xl p-12 text-center text-muted">
-          <CheckCircle className="w-12 h-12 mx-auto mb-4 text-emerald-600 opacity-50" />
-          <p className="font-semibold text-foreground/70 mb-1">
-            {merged.size > 0 ? "All duplicates resolved!" : "No duplicates found"}
-          </p>
-          <p className="text-sm">
-            {merged.size > 0
-              ? `Merged ${merged.size} group${merged.size !== 1 ? "s" : ""} this session.`
-              : "Your leads database looks clean across phone numbers and business names."}
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 text-sm text-amber-400/80">
-            <AlertTriangle className="w-4 h-4" />
-            {pendingGroups.length} duplicate group{pendingGroups.length !== 1 ? "s" : ""} found — review and merge below.
-          </div>
-
-          {pendingGroups.map((group, idx) => {
-            const sorted = [...group.leads].sort((a, b) => completeness(b) - completeness(a));
-            const winner = sorted[0];
-            const loser = sorted[1];
-            const isMerging = merging[group.key];
-
-            return (
-              <motion.div key={group.key} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl overflow-hidden">
-                {/* Header */}
-                <div className="px-5 py-3 border-b border-black/6 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    {group.matchType === "phone"
-                      ? <Phone className="w-4 h-4 text-blue-400" />
-                      : <Building2 className="w-4 h-4 text-purple-400" />}
-                    <span className="text-xs text-muted">
-                      Match by <span className="text-foreground font-medium">{group.matchType === "phone" ? "phone number" : "business name"}</span>
-                    </span>
-                    <span className="text-xs text-muted">— {group.leads.length} records</span>
+    <MotionPage className="space-y-6"><PageHero
+              title="Lead Deduplication"
+              eyebrow="DEDUPLICATION"
+              subtitle="Finds leads sharing the same phone or business name — preview, then merge."
+              icon={<Copy className="w-6 h-6" />}
+              gradient="gold"
+              actions={
+                <button
+                  onClick={load}
+                  disabled={loading}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm transition-colors border border-border disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+                  Re-scan
+                </button>
+              }
+            />{/* Summary */}<div className="grid grid-cols-3 gap-3">
+              {[
+                { value: leads.length.toLocaleString(), label: "Leads scanned", color: "text-foreground" },
+                { value: pendingGroups.length, label: "Duplicate groups", color: pendingGroups.length > 0 ? "text-amber-700" : "text-emerald-700" },
+                { value: merged.size, label: "Merged this session", color: "text-emerald-700" },
+              ].map((stat, i) => (
+                <motion.div key={stat.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                  <div className="p-4 text-center">
+                    <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+                    <div className="text-xs text-muted mt-0.5">{stat.label}</div>
                   </div>
-                  <button
-                    onClick={() => handleMerge(group)}
-                    disabled={isMerging}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 text-xs font-medium border border-emerald-500/25 transition-colors disabled:opacity-50"
-                  >
-                    {isMerging ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
-                    {isMerging ? "Merging…" : "Merge"}
-                  </button>
+                </motion.div>
+              ))}
+            </div>{loading ? (
+              <div className="space-y-4">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="glass rounded-xl p-5 animate-pulse">
+                    <div className="h-4 bg-black/6 rounded w-1/3 mb-4" />
+                    <div className="h-24 bg-black/4 rounded" />
+                  </div>
+                ))}
+              </div>
+            ) : pendingGroups.length === 0 ? (
+              <div className="glass rounded-xl p-12 text-center text-muted">
+                <CheckCircle className="w-12 h-12 mx-auto mb-4 text-emerald-600 opacity-50" />
+                <p className="font-semibold text-foreground/70 mb-1">
+                  {merged.size > 0 ? "All duplicates resolved!" : "No duplicates found"}
+                </p>
+                <p className="text-sm">
+                  {merged.size > 0
+                    ? `Merged ${merged.size} group${merged.size !== 1 ? "s" : ""} this session.`
+                    : "Your leads database looks clean across phone numbers and business names."}
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-sm text-amber-400/80">
+                  <AlertTriangle className="w-4 h-4" />
+                  {pendingGroups.length} duplicate group{pendingGroups.length !== 1 ? "s" : ""} found — review and merge below.
                 </div>
 
-                {/* Side-by-side diff */}
-                <div className="p-5">
-                  <div className="grid grid-cols-[100px_1fr_1fr] gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted/60 mb-2 pb-2 border-b border-black/6">
-                    <span>Field</span>
-                    <span className="text-foreground/40">Keep (most complete)</span>
-                    <span className="text-emerald-700/60">Merge from</span>
-                  </div>
+                {pendingGroups.map((group, idx) => {
+                  const sorted = [...group.leads].sort((a, b) => completeness(b) - completeness(a));
+                  const winner = sorted[0];
+                  const loser = sorted[1];
+                  const isMerging = merging[group.key];
 
-                  <div className="divide-y divide-black/4">
-                    <FieldRow label="Business" a={winner.business_name} b={loser?.business_name ?? null} />
-                    <FieldRow label="Owner" a={winner.owner_name} b={loser?.owner_name ?? null} />
-                    <FieldRow label="Phone" a={winner.phone} b={loser?.phone ?? null} />
-                    <FieldRow label="Email" a={winner.email} b={loser?.email ?? null} />
-                    <FieldRow label="City" a={winner.city} b={loser?.city ?? null} />
-                    <FieldRow label="Source" a={winner.source} b={loser?.source ?? null} />
-                    <FieldRow label="Status" a={winner.status} b={loser?.status ?? null} />
-                  </div>
+                  return (
+                    <motion.div key={group.key} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl overflow-hidden">
+                      {/* Header */}
+                      <div className="px-5 py-3 border-b border-black/6 flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          {group.matchType === "phone"
+                            ? <Phone className="w-4 h-4 text-blue-400" />
+                            : <Building2 className="w-4 h-4 text-purple-400" />}
+                          <span className="text-xs text-muted">
+                            Match by <span className="text-foreground font-medium">{group.matchType === "phone" ? "phone number" : "business name"}</span>
+                          </span>
+                          <span className="text-xs text-muted">— {group.leads.length} records</span>
+                        </div>
+                        <button
+                          onClick={() => handleMerge(group)}
+                          disabled={isMerging}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 text-xs font-medium border border-emerald-500/25 transition-colors disabled:opacity-50"
+                        >
+                          {isMerging ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
+                          {isMerging ? "Merging…" : "Merge"}
+                        </button>
+                      </div>
 
-                  {group.leads.length > 2 && (
-                    <p className="text-[10px] text-muted mt-3">
-                      + {group.leads.length - 2} more duplicate{group.leads.length - 2 !== 1 ? "s" : ""} will also be soft-deleted.
-                    </p>
-                  )}
+                      {/* Side-by-side diff */}
+                      <div className="p-5">
+                        <div className="grid grid-cols-[100px_1fr_1fr] gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted/60 mb-2 pb-2 border-b border-black/6">
+                          <span>Field</span>
+                          <span className="text-foreground/40">Keep (most complete)</span>
+                          <span className="text-emerald-700/60">Merge from</span>
+                        </div>
 
-                  <p className="text-[10px] text-muted/60 mt-2">
-                    Merge sets <code className="font-mono">status = &apos;merged&apos;</code> on duplicates. No data is permanently deleted.
-                  </p>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      )}
-    </div>
+                        <div className="divide-y divide-black/4">
+                          <FieldRow label="Business" a={winner.business_name} b={loser?.business_name ?? null} />
+                          <FieldRow label="Owner" a={winner.owner_name} b={loser?.owner_name ?? null} />
+                          <FieldRow label="Phone" a={winner.phone} b={loser?.phone ?? null} />
+                          <FieldRow label="Email" a={winner.email} b={loser?.email ?? null} />
+                          <FieldRow label="City" a={winner.city} b={loser?.city ?? null} />
+                          <FieldRow label="Source" a={winner.source} b={loser?.source ?? null} />
+                          <FieldRow label="Status" a={winner.status} b={loser?.status ?? null} />
+                        </div>
+
+                        {group.leads.length > 2 && (
+                          <p className="text-[10px] text-muted mt-3">
+                            + {group.leads.length - 2} more duplicate{group.leads.length - 2 !== 1 ? "s" : ""} will also be soft-deleted.
+                          </p>
+                        )}
+
+                        <p className="text-[10px] text-muted/60 mt-2">
+                          Merge sets <code className="font-mono">status = &apos;merged&apos;</code> on duplicates. No data is permanently deleted.
+                        </p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}</MotionPage>
   );
 }

@@ -7,6 +7,7 @@ import PageHero from "@/components/ui/page-hero";
 import DialerTab from "./_components/DialerTab";
 import SMSConsoleTab from "./_components/SMSConsoleTab";
 import DMComposerTab from "./_components/DMComposerTab";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const TABS = ["Power Dialer", "SMS Console", "DM Composer"] as const;
 type Tab = (typeof TABS)[number];
@@ -24,52 +25,48 @@ export default function DialerPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Power Dialer");
 
   return (
-    <div className="min-h-screen pb-12 bg-[#F3F6FA]">
-      <PageHero
-        eyebrow="AI DIALER"
-        title="Dialer"
-        subtitle="Power dialer, manual SMS, and direct messaging — closes the GHL Voice gap."
-        gradient="sunset"
-        icon={<Phone size={28} />}
-      />
+    <MotionPage className="min-h-screen pb-12 bg-[#F3F6FA]"><PageHero
+              eyebrow="AI DIALER"
+              title="Dialer"
+              subtitle="Power dialer, manual SMS, and direct messaging — closes the GHL Voice gap."
+              gradient="sunset"
+              icon={<Phone size={28} />}
+            /><div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
+              <div className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl overflow-hidden">
+                <div className="border-b border-[rgba(0,0,0,0.08)]">
+                  <nav className="flex gap-1 overflow-x-auto px-2" aria-label="Dialer tabs">
+                    {TABS.map((tab, index) => {
+                      const isActive = activeTab === tab;
+                      return (
+                        <motion.button
+                          key={tab}
+                          type="button"
+                          onClick={() => setActiveTab(tab)}
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.22, delay: index * 0.06 }}
+                          whileHover={{ y: -1 }}
+                          className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
+                            isActive
+                              ? "border-[#2563EB] text-[#2563EB]"
+                              : "border-transparent text-[#6B7280] hover:text-[#374151]"
+                          }`}
+                          aria-current={isActive ? "page" : undefined}
+                        >
+                          {TAB_ICON[tab]}
+                          {tab}
+                        </motion.button>
+                      );
+                    })}
+                  </nav>
+                </div>
 
-      <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
-        <div className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl overflow-hidden">
-          <div className="border-b border-[rgba(0,0,0,0.08)]">
-            <nav className="flex gap-1 overflow-x-auto px-2" aria-label="Dialer tabs">
-              {TABS.map((tab, index) => {
-                const isActive = activeTab === tab;
-                return (
-                  <motion.button
-                    key={tab}
-                    type="button"
-                    onClick={() => setActiveTab(tab)}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.22, delay: index * 0.06 }}
-                    whileHover={{ y: -1 }}
-                    className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
-                      isActive
-                        ? "border-[#2563EB] text-[#2563EB]"
-                        : "border-transparent text-[#6B7280] hover:text-[#374151]"
-                    }`}
-                    aria-current={isActive ? "page" : undefined}
-                  >
-                    {TAB_ICON[tab]}
-                    {tab}
-                  </motion.button>
-                );
-              })}
-            </nav>
-          </div>
-
-          <div className="p-6">
-            {activeTab === "Power Dialer" && <DialerTab />}
-            {activeTab === "SMS Console" && <SMSConsoleTab />}
-            {activeTab === "DM Composer" && <DMComposerTab />}
-          </div>
-        </div>
-      </div>
-    </div>
+                <div className="p-6">
+                  {activeTab === "Power Dialer" && <DialerTab />}
+                  {activeTab === "SMS Console" && <SMSConsoleTab />}
+                  {activeTab === "DM Composer" && <DMComposerTab />}
+                </div>
+              </div>
+            </div></MotionPage>
   );
 }

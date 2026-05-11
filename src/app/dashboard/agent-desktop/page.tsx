@@ -7,6 +7,7 @@ import PageHero from "@/components/ui/page-hero";
 import { Monitor, RefreshCw, Activity, AlertTriangle, CheckCircle, XCircle, Clock } from "lucide-react";
 import Link from "next/link";
 import { getPlatformIcon } from "@/components/ui/platform-icons";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface AgentService {
   id: string;
@@ -84,118 +85,110 @@ export default function AgentDesktopPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        title="Agent Desktop"
-        subtitle="All deployed AI agents and integrations — status, heartbeat, and controls."
-        icon={<Monitor className="w-6 h-6" />}
-        gradient="gold"
-        actions={
-          <button
-            onClick={load}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm transition-colors border border-border"
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-            Refresh
-          </button>
-        }
-      />
-
-      {/* Summary bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {[
-          { label: "Healthy", count: counts.healthy, cls: "text-emerald-400" },
-          { label: "Degraded", count: counts.degraded, cls: "text-[#2563EB]" },
-          { label: "Down", count: counts.down, cls: "text-red-400" },
-          { label: "Unknown", count: counts.unknown, cls: "text-slate-400" },
-        ].map(({ label, count, cls }, i) => (
-          <motion.div key={label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-4 text-center">
-              <div className={`text-2xl font-bold ${cls}`}>{count}</div>
-              <div className="text-xs text-muted mt-0.5">{label}</div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Agent grid */}
-      {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="glass rounded-xl p-5 animate-pulse">
-              <div className="h-4 bg-[rgba(0,0,0,0.06)] rounded w-1/2 mb-3" />
-              <div className="h-3 bg-[rgba(0,0,0,0.04)] rounded w-1/3" />
-            </div>
-          ))}
-        </div>
-      ) : agents.length === 0 ? (
-        <div className="glass rounded-xl p-10 text-center text-muted">
-          <Monitor className="w-10 h-10 mx-auto mb-3 opacity-30" />
-          <p>No agents found in system_health table.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {agents.map((agent, idx) => (
-            <motion.div key={agent.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-5 flex flex-col gap-3">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-2 min-w-0">
-                  {/* Brand icon for the integration. getPlatformIcon
-                      normalizes input like "Claude (Anthropic)" /
-                      "GoHighLevel" / "ElevenLabs" and falls back to a
-                      colored letter tile when no brand match exists. */}
-                  <span className="shrink-0 inline-flex">
-                    {getPlatformIcon(agent.integration_name, 22)}
-                  </span>
-                  <span className="font-semibold text-[#111827] text-sm truncate">{agent.integration_name}</span>
-                </div>
-                <StatusChip status={agent.status} />
-              </div>
-
-              <div className="space-y-1 text-xs text-muted">
-                <div className="flex justify-between">
-                  <span>Last heartbeat</span>
-                  <span className="text-[#6B7280]">{timeAgo(agent.last_check_at)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Last healthy</span>
-                  <span className="text-[#6B7280]">{timeAgo(agent.last_healthy_at)}</span>
-                </div>
-                {agent.response_time_ms != null && (
-                  <div className="flex justify-between">
-                    <span>Response time</span>
-                    <span className="text-[#6B7280]">{agent.response_time_ms}ms</span>
-                  </div>
-                )}
-              </div>
-
-              {agent.error_message && (
-                <div className="text-xs text-red-400/80 bg-red-500/10 rounded-lg px-3 py-2 border border-red-500/20 truncate">
-                  {agent.error_message}
-                </div>
-              )}
-
-              <div className="flex gap-2 pt-1">
+    <MotionPage className="space-y-6"><PageHero
+              title="Agent Desktop"
+              subtitle="All deployed AI agents and integrations — status, heartbeat, and controls."
+              icon={<Monitor className="w-6 h-6" />}
+              gradient="gold"
+              actions={
                 <button
-                  onClick={() => handleRestart(agent)}
-                  disabled={restarting[agent.id]}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-xs font-medium border border-[rgba(37,99,235,0.25)] transition-colors disabled:opacity-50"
+                  onClick={load}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm transition-colors border border-border"
                 >
-                  <RefreshCw className={`w-3 h-3 ${restarting[agent.id] ? "animate-spin" : ""}`} />
-                  {restarting[agent.id] ? "Restarting…" : "Restart"}
+                  <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+                  Refresh
                 </button>
-                <Link
-                  href="/dashboard/monitor"
-                  className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] text-xs font-medium border border-[rgba(0,0,0,0.08)] transition-colors"
-                >
-                  <Activity className="w-3 h-3" />
-                  Logs
-                </Link>
+              }
+            />{/* Summary bar */}<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[
+                { label: "Healthy", count: counts.healthy, cls: "text-emerald-400" },
+                { label: "Degraded", count: counts.degraded, cls: "text-[#2563EB]" },
+                { label: "Down", count: counts.down, cls: "text-red-400" },
+                { label: "Unknown", count: counts.unknown, cls: "text-slate-400" },
+              ].map(({ label, count, cls }, i) => (
+                <motion.div key={label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                  <div className="p-4 text-center">
+                    <div className={`text-2xl font-bold ${cls}`}>{count}</div>
+                    <div className="text-xs text-muted mt-0.5">{label}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>{/* Agent grid */}{loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="glass rounded-xl p-5 animate-pulse">
+                    <div className="h-4 bg-[rgba(0,0,0,0.06)] rounded w-1/2 mb-3" />
+                    <div className="h-3 bg-[rgba(0,0,0,0.04)] rounded w-1/3" />
+                  </div>
+                ))}
               </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
-    </div>
+            ) : agents.length === 0 ? (
+              <div className="glass rounded-xl p-10 text-center text-muted">
+                <Monitor className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                <p>No agents found in system_health table.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {agents.map((agent, idx) => (
+                  <motion.div key={agent.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-5 flex flex-col gap-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        {/* Brand icon for the integration. getPlatformIcon
+                            normalizes input like "Claude (Anthropic)" /
+                            "GoHighLevel" / "ElevenLabs" and falls back to a
+                            colored letter tile when no brand match exists. */}
+                        <span className="shrink-0 inline-flex">
+                          {getPlatformIcon(agent.integration_name, 22)}
+                        </span>
+                        <span className="font-semibold text-[#111827] text-sm truncate">{agent.integration_name}</span>
+                      </div>
+                      <StatusChip status={agent.status} />
+                    </div>
+
+                    <div className="space-y-1 text-xs text-muted">
+                      <div className="flex justify-between">
+                        <span>Last heartbeat</span>
+                        <span className="text-[#6B7280]">{timeAgo(agent.last_check_at)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Last healthy</span>
+                        <span className="text-[#6B7280]">{timeAgo(agent.last_healthy_at)}</span>
+                      </div>
+                      {agent.response_time_ms != null && (
+                        <div className="flex justify-between">
+                          <span>Response time</span>
+                          <span className="text-[#6B7280]">{agent.response_time_ms}ms</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {agent.error_message && (
+                      <div className="text-xs text-red-400/80 bg-red-500/10 rounded-lg px-3 py-2 border border-red-500/20 truncate">
+                        {agent.error_message}
+                      </div>
+                    )}
+
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        onClick={() => handleRestart(agent)}
+                        disabled={restarting[agent.id]}
+                        className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-xs font-medium border border-[rgba(37,99,235,0.25)] transition-colors disabled:opacity-50"
+                      >
+                        <RefreshCw className={`w-3 h-3 ${restarting[agent.id] ? "animate-spin" : ""}`} />
+                        {restarting[agent.id] ? "Restarting…" : "Restart"}
+                      </button>
+                      <Link
+                        href="/dashboard/monitor"
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] text-xs font-medium border border-[rgba(0,0,0,0.08)] transition-colors"
+                      >
+                        <Activity className="w-3 h-3" />
+                        Logs
+                      </Link>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}</MotionPage>
   );
 }

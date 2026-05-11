@@ -11,6 +11,7 @@ import {
   Clock, CheckCircle2, Archive, Trash2, Copy, Pencil,
   ChevronRight, Filter, Layers,
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type FunnelStatus = "draft" | "published" | "archived";
 
@@ -117,198 +118,187 @@ export default function FunnelsPage() {
   ];
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
-      <PageHero
-        title="Funnels"
-        eyebrow="FUNNELS"
-        subtitle="Build multi-step conversion funnels and track drop-off at every stage."
-        icon={<GitBranch size={22} />}
-        gradient="purple"
-        actions={
-          <button
-            onClick={() => router.push("/dashboard/funnels/new")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-white text-zinc-900 hover:bg-zinc-100 transition-colors"
-          >
-            <Plus size={15} />
-            New Funnel
-          </button>
-        }
-      />
-
-      {/* Tabs + Search */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-1 bg-black/[0.04] border border-black/[0.08] rounded-lg p-1">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setFilter(tab.id)}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                filter === tab.id
-                  ? "bg-[rgba(37,99,235,0.08)] text-blue-700 border border-[rgba(37,99,235,0.25)]"
-                  : "text-[#6B7280] hover:text-[#374151]"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search funnels…"
-            className="bg-white border border-black/[0.08] rounded-lg pl-9 pr-4 py-2 text-sm text-[#374151] placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)] w-56"
-          />
-        </div>
-      </div>
-
-      {/* Grid */}
-      {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-48 rounded-xl bg-black/[0.04] animate-pulse" />
-          ))}
-        </div>
-      ) : filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-4">
-          <div className="w-16 h-16  bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
-            <Layers size={28} className="text-purple-600" />
-          </div>
-          <div className="text-center">
-            <p className="text-[#111827] font-semibold text-lg">No funnels yet</p>
-            <p className="text-[#6B7280] text-sm mt-1">Create your first funnel to start converting visitors.</p>
-          </div>
-          <button
-            onClick={() => router.push("/dashboard/funnels/new")}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold transition-colors"
-          >
-            <Plus size={15} />
-            Create Funnel
-          </button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((funnel, index) => {
-            const sc = STATUS_CONFIG[funnel.status];
-            return (
-              <motion.div
-                key={funnel.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: index * 0.06 }}
-                whileHover={{ y: -4, scale: 1.01 }}
-                className="group relative bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 cursor-pointer"
-                onClick={() => router.push(`/dashboard/funnels/${funnel.id}`)}
-              >
-                {/* Header */}
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-[#111827] font-semibold text-base truncate">{funnel.name}</h3>
-                    {funnel.description && (
-                      <p className="text-[#6B7280] text-xs mt-0.5 line-clamp-1">{funnel.description}</p>
-                    )}
-                  </div>
-                  <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${sc.color} shrink-0`}>
-                    {sc.icon}
-                    {sc.label}
-                  </span>
-                </div>
-
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-2 mb-4">
-                  <div className="bg-black/[0.04] rounded-lg p-2 text-center">
-                    <div className="text-[#111827] font-bold text-lg leading-none">{funnel.step_count}</div>
-                    <div className="text-[#6B7280] text-[10px] mt-0.5">Steps</div>
-                  </div>
-                  <div className="bg-black/[0.04] rounded-lg p-2 text-center">
-                    <div className="text-[#111827] font-bold text-lg leading-none flex items-center justify-center gap-0.5">
-                      <Eye size={12} className="text-[#9CA3AF]" />
-                      {funnel.total_views.toLocaleString()}
-                    </div>
-                    <div className="text-[#6B7280] text-[10px] mt-0.5">Views</div>
-                  </div>
-                  <div className="bg-black/[0.04] rounded-lg p-2 text-center">
-                    <div className={`font-bold text-lg leading-none ${funnel.conversion_rate >= 20 ? "text-emerald-700" : funnel.conversion_rate >= 10 ? "text-amber-700" : "text-[#6B7280]"}`}>
-                      {funnel.conversion_rate}%
-                    </div>
-                    <div className="text-[#6B7280] text-[10px] mt-0.5">Conv.</div>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center justify-between">
-                  <span className="text-[#9CA3AF] text-xs">
-                    {new Date(funnel.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                  </span>
-                  <div
-                    className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={(e) => e.stopPropagation()}
+    <MotionPage className="p-6 space-y-6 max-w-7xl mx-auto"><PageHero
+              title="Funnels"
+              eyebrow="FUNNELS"
+              subtitle="Build multi-step conversion funnels and track drop-off at every stage."
+              icon={<GitBranch size={22} />}
+              gradient="purple"
+              actions={
+                <button
+                  onClick={() => router.push("/dashboard/funnels/new")}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-white text-zinc-900 hover:bg-zinc-100 transition-colors"
+                >
+                  <Plus size={15} />
+                  New Funnel
+                </button>
+              }
+            />{/* Tabs + Search */}<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-1 bg-black/[0.04] border border-black/[0.08] rounded-lg p-1">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setFilter(tab.id)}
+                    className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+                      filter === tab.id
+                        ? "bg-[rgba(37,99,235,0.08)] text-blue-700 border border-[rgba(37,99,235,0.25)]"
+                        : "text-[#6B7280] hover:text-[#374151]"
+                    }`}
                   >
-                    <button
-                      onClick={() => handleDuplicate(funnel)}
-                      className="p-1.5 rounded-md hover:bg-black/[0.06] text-[#9CA3AF] hover:text-[#374151] transition-colors"
-                      title="Duplicate"
-                    >
-                      <Copy size={13} />
-                    </button>
-                    <button
-                      onClick={() => router.push(`/dashboard/funnels/${funnel.id}`)}
-                      className="p-1.5 rounded-md hover:bg-black/[0.06] text-[#9CA3AF] hover:text-[#374151] transition-colors"
-                      title="Edit"
-                    >
-                      <Pencil size={13} />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(funnel.id)}
-                      disabled={deletingId === funnel.id}
-                      className="p-1.5 rounded-md hover:bg-red-500/10 text-[#9CA3AF] hover:text-red-600 transition-colors"
-                      title="Delete"
-                    >
-                      <Trash2 size={13} />
-                    </button>
-                    <ChevronRight size={13} className="text-[#9CA3AF] ml-1" />
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      )}
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
 
-      {/* Stats summary */}
-      {funnels.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
-          {[
-            { label: "Total Funnels", value: funnels.length, icon: <Filter size={16} />, color: "text-blue-600" },
-            { label: "Published", value: funnels.filter((f) => f.status === "published").length, icon: <CheckCircle2 size={16} />, color: "text-emerald-700" },
-            { label: "Total Views", value: funnels.reduce((a, f) => a + f.total_views, 0).toLocaleString(), icon: <Eye size={16} />, color: "text-blue-700" },
-            {
-              label: "Avg Conversion",
-              value: funnels.length
-                ? `${Math.round(funnels.reduce((a, f) => a + f.conversion_rate, 0) / funnels.length)}%`
-                : "0%",
-              icon: <TrendingUp size={16} />,
-              color: "text-amber-700",
-            },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.22, delay: index * 0.06 }}
-              whileHover={{ y: -2 }}
-              className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-4 relative overflow-hidden"
-            >
-              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
-              <div className={`${stat.color} mb-2 mt-1`}>{stat.icon}</div>
-              <div className="text-[#111827] font-bold text-xl">{stat.value}</div>
-              <div className="text-[#6B7280] text-xs mt-0.5">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
-      )}
-    </div>
+              <div className="relative">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search funnels…"
+                  className="bg-white border border-black/[0.08] rounded-lg pl-9 pr-4 py-2 text-sm text-[#374151] placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)] w-56"
+                />
+              </div>
+            </div>{/* Grid */}{loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="h-48 rounded-xl bg-black/[0.04] animate-pulse" />
+                ))}
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-24 gap-4">
+                <div className="w-16 h-16  bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                  <Layers size={28} className="text-purple-600" />
+                </div>
+                <div className="text-center">
+                  <p className="text-[#111827] font-semibold text-lg">No funnels yet</p>
+                  <p className="text-[#6B7280] text-sm mt-1">Create your first funnel to start converting visitors.</p>
+                </div>
+                <button
+                  onClick={() => router.push("/dashboard/funnels/new")}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold transition-colors"
+                >
+                  <Plus size={15} />
+                  Create Funnel
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filtered.map((funnel, index) => {
+                  const sc = STATUS_CONFIG[funnel.status];
+                  return (
+                    <motion.div
+                      key={funnel.id}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.22, delay: index * 0.06 }}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                      className="group relative bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 cursor-pointer"
+                      onClick={() => router.push(`/dashboard/funnels/${funnel.id}`)}
+                    >
+                      {/* Header */}
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-[#111827] font-semibold text-base truncate">{funnel.name}</h3>
+                          {funnel.description && (
+                            <p className="text-[#6B7280] text-xs mt-0.5 line-clamp-1">{funnel.description}</p>
+                          )}
+                        </div>
+                        <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${sc.color} shrink-0`}>
+                          {sc.icon}
+                          {sc.label}
+                        </span>
+                      </div>
+
+                      {/* Stats */}
+                      <div className="grid grid-cols-3 gap-2 mb-4">
+                        <div className="bg-black/[0.04] rounded-lg p-2 text-center">
+                          <div className="text-[#111827] font-bold text-lg leading-none">{funnel.step_count}</div>
+                          <div className="text-[#6B7280] text-[10px] mt-0.5">Steps</div>
+                        </div>
+                        <div className="bg-black/[0.04] rounded-lg p-2 text-center">
+                          <div className="text-[#111827] font-bold text-lg leading-none flex items-center justify-center gap-0.5">
+                            <Eye size={12} className="text-[#9CA3AF]" />
+                            {funnel.total_views.toLocaleString()}
+                          </div>
+                          <div className="text-[#6B7280] text-[10px] mt-0.5">Views</div>
+                        </div>
+                        <div className="bg-black/[0.04] rounded-lg p-2 text-center">
+                          <div className={`font-bold text-lg leading-none ${funnel.conversion_rate >= 20 ? "text-emerald-700" : funnel.conversion_rate >= 10 ? "text-amber-700" : "text-[#6B7280]"}`}>
+                            {funnel.conversion_rate}%
+                          </div>
+                          <div className="text-[#6B7280] text-[10px] mt-0.5">Conv.</div>
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#9CA3AF] text-xs">
+                          {new Date(funnel.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        </span>
+                        <div
+                          className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <button
+                            onClick={() => handleDuplicate(funnel)}
+                            className="p-1.5 rounded-md hover:bg-black/[0.06] text-[#9CA3AF] hover:text-[#374151] transition-colors"
+                            title="Duplicate"
+                          >
+                            <Copy size={13} />
+                          </button>
+                          <button
+                            onClick={() => router.push(`/dashboard/funnels/${funnel.id}`)}
+                            className="p-1.5 rounded-md hover:bg-black/[0.06] text-[#9CA3AF] hover:text-[#374151] transition-colors"
+                            title="Edit"
+                          >
+                            <Pencil size={13} />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(funnel.id)}
+                            disabled={deletingId === funnel.id}
+                            className="p-1.5 rounded-md hover:bg-red-500/10 text-[#9CA3AF] hover:text-red-600 transition-colors"
+                            title="Delete"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                          <ChevronRight size={13} className="text-[#9CA3AF] ml-1" />
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}{/* Stats summary */}{funnels.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+                {[
+                  { label: "Total Funnels", value: funnels.length, icon: <Filter size={16} />, color: "text-blue-600" },
+                  { label: "Published", value: funnels.filter((f) => f.status === "published").length, icon: <CheckCircle2 size={16} />, color: "text-emerald-700" },
+                  { label: "Total Views", value: funnels.reduce((a, f) => a + f.total_views, 0).toLocaleString(), icon: <Eye size={16} />, color: "text-blue-700" },
+                  {
+                    label: "Avg Conversion",
+                    value: funnels.length
+                      ? `${Math.round(funnels.reduce((a, f) => a + f.conversion_rate, 0) / funnels.length)}%`
+                      : "0%",
+                    icon: <TrendingUp size={16} />,
+                    color: "text-amber-700",
+                  },
+                ].map((stat, index) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, delay: index * 0.06 }}
+                    whileHover={{ y: -2 }}
+                    className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-4 relative overflow-hidden"
+                  >
+                    <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
+                    <div className={`${stat.color} mb-2 mt-1`}>{stat.icon}</div>
+                    <div className="text-[#111827] font-bold text-xl">{stat.value}</div>
+                    <div className="text-[#6B7280] text-xs mt-0.5">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </div>
+            )}</MotionPage>
   );
 }

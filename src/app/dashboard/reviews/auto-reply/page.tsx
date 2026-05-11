@@ -24,6 +24,7 @@ import {
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/ui/empty-state";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface ReviewDraft {
   id: string;
@@ -195,276 +196,272 @@ export default function ReviewsAutoReplyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F3F6FA] text-[#111827]">
-      <PageHero
-        eyebrow="AUTO-REPLY"
-        title="Review Auto-Reply"
-        subtitle="AI-drafted replies for incoming reviews. Approve before publishing."
-        icon={<Sparkles size={20} />}
-        gradient="purple"
-        actions={
-          <div className="flex items-center gap-2">
-            <Link
-              href="/dashboard/reviews"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-muted hover:text-foreground bg-black/5 hover:bg-black/5 transition-all"
-            >
-              <ArrowLeft size={14} /> Back
-            </Link>
-            <button
-              onClick={() => setShowCompose((v) => !v)}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-purple-500/80 hover:bg-purple-500 text-white transition-all"
-            >
-              <Sparkles size={14} /> New Draft
-            </button>
-          </div>
-        }
-      />
-
-      <div className="mx-auto max-w-5xl px-6 py-6 space-y-6">
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3">
-          {[
-            { label: "Total Drafts", value: stats.total },
-            { label: "Pending Review", value: stats.pending },
-            { label: "Published", value: stats.published },
-          ].map((s) => (
-            <div key={s.label} className="rounded-xl border border-black/[0.06] bg-white p-4 text-center">
-              <p className="text-2xl font-bold text-[#111827]">{s.value}</p>
-              <p className="text-xs text-[#9CA3AF] mt-1">{s.label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Compose */}
-        {showCompose && (
-          <div className="card p-5 space-y-3 border border-black/[0.06] rounded-xl bg-white">
-            <p className="font-semibold text-[#111827] text-sm flex items-center gap-2">
-              <Sparkles size={14} className="text-[#2563EB]" /> Generate AI Reply
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input
-                className="input text-sm"
-                placeholder="Review ID (your platform's review ID)"
-                value={reviewId}
-                onChange={(e) => setReviewId(e.target.value)}
-              />
-              <select
-                className="input text-sm"
-                value={platform}
-                onChange={(e) => setPlatform(e.target.value)}
-              >
-                {PLATFORMS.map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
-              </select>
-              <input
-                className="input text-sm"
-                placeholder="Reviewer name (optional)"
-                value={reviewAuthor}
-                onChange={(e) => setReviewAuthor(e.target.value)}
-              />
-              <select
-                className="input text-sm"
-                value={reviewRating === "" ? "" : String(reviewRating)}
-                onChange={(e) => setReviewRating(e.target.value ? Number(e.target.value) : "")}
-              >
-                <option value="">No rating</option>
-                {[1, 2, 3, 4, 5].map((r) => (
-                  <option key={r} value={r}>
-                    {r} star{r === 1 ? "" : "s"}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <textarea
-              className="input text-sm w-full resize-none"
-              rows={4}
-              placeholder="Paste the review text here..."
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value.slice(0, 4000))}
-            />
-            <input
-              className="input text-sm w-full"
-              placeholder="Brand voice (optional, e.g. 'warm, casual, witty')"
-              value={brandVoice}
-              onChange={(e) => setBrandVoice(e.target.value)}
-            />
-            <label className="flex items-center gap-2 text-xs text-[#374151]">
-              <input
-                type="checkbox"
-                checked={autoPublish}
-                onChange={(e) => setAutoPublish(e.target.checked)}
-                className="accent-[#2563EB]"
-              />
-              Auto-approve (skip review). Publish step is still manual.
-            </label>
-            <div className="flex gap-2">
-              <button
-                onClick={handleGenerate}
-                disabled={generating}
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#3B82F6] text-white disabled:opacity-50 transition-all"
-              >
-                {generating ? (
-                  <Loader2 size={14} className="animate-spin" />
-                ) : (
-                  <Sparkles size={14} />
-                )}{" "}
-                Generate Reply
-              </button>
-              <button
-                onClick={() => {
-                  resetForm();
-                  setShowCompose(false);
-                }}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm text-[#374151] bg-black/[0.04] hover:bg-black/[0.06] transition-all"
-              >
-                <X size={14} /> Cancel
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* List */}
-        {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 size={28} className="animate-spin text-[#9CA3AF]" />
-          </div>
-        ) : drafts.length === 0 ? (
-          <EmptyState
-            title="No drafts yet"
-            description="Paste a review and Claude will generate a reply you can approve."
-            icon={<Sparkles size={28} />}
-          />
-        ) : (
-          <div className="space-y-3">
-            {drafts.map((d) => {
-              const cfg = STATUS_STYLES[d.status];
-              const isEditing = editingId === d.id;
-              return (
-                <div
-                  key={d.id}
-                  className="rounded-xl border border-black/[0.06] bg-white hover:bg-[#F8FAFC] p-4 transition-all"
-                >
-                  <div className="flex items-start justify-between gap-3 mb-3">
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${cfg.tint}`}>
-                        {cfg.label}
-                      </span>
-                      <span className="text-xs text-[#6B7280] capitalize">{d.platform}</span>
-                      <Stars rating={d.review_rating} />
-                      {d.review_author && (
-                        <span className="text-xs text-[#9CA3AF]">— {d.review_author}</span>
-                      )}
-                    </div>
-                    <span className="text-[11px] text-[#9CA3AF]">
-                      {new Date(d.created_at).toLocaleDateString()}
-                    </span>
+    <MotionPage className="min-h-screen bg-[#F3F6FA] text-[#111827]"><PageHero
+              eyebrow="AUTO-REPLY"
+              title="Review Auto-Reply"
+              subtitle="AI-drafted replies for incoming reviews. Approve before publishing."
+              icon={<Sparkles size={20} />}
+              gradient="purple"
+              actions={
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/dashboard/reviews"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-muted hover:text-foreground bg-black/5 hover:bg-black/5 transition-all"
+                  >
+                    <ArrowLeft size={14} /> Back
+                  </Link>
+                  <button
+                    onClick={() => setShowCompose((v) => !v)}
+                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-purple-500/80 hover:bg-purple-500 text-white transition-all"
+                  >
+                    <Sparkles size={14} /> New Draft
+                  </button>
+                </div>
+              }
+            /><div className="mx-auto max-w-5xl px-6 py-6 space-y-6">
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { label: "Total Drafts", value: stats.total },
+                  { label: "Pending Review", value: stats.pending },
+                  { label: "Published", value: stats.published },
+                ].map((s) => (
+                  <div key={s.label} className="rounded-xl border border-black/[0.06] bg-white p-4 text-center">
+                    <p className="text-2xl font-bold text-[#111827]">{s.value}</p>
+                    <p className="text-xs text-[#9CA3AF] mt-1">{s.label}</p>
                   </div>
+                ))}
+              </div>
 
-                  {d.review_text && (
-                    <div className="mb-3 px-3 py-2 rounded-lg bg-[#F3F6FA] border border-black/[0.06]">
-                      <p className="text-[11px] uppercase tracking-wider text-[#9CA3AF] mb-1">
-                        Original Review
-                      </p>
-                      <p className="text-sm text-[#374151] whitespace-pre-wrap">{d.review_text}</p>
-                    </div>
-                  )}
-
-                  <div className="px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)]">
-                    <p className="text-[11px] uppercase tracking-wider text-[#2563EB] mb-1 flex items-center gap-1.5">
-                      <Sparkles size={10} /> AI Draft
-                    </p>
-                    {isEditing ? (
-                      <textarea
-                        className="input text-sm w-full resize-none bg-white"
-                        rows={4}
-                        value={editingText}
-                        onChange={(e) => setEditingText(e.target.value)}
-                      />
-                    ) : (
-                      <p className="text-sm text-[#111827] whitespace-pre-wrap">
-                        {d.approved_text ?? d.ai_draft}
-                      </p>
-                    )}
+              {/* Compose */}
+              {showCompose && (
+                <div className="card p-5 space-y-3 border border-black/[0.06] rounded-xl bg-white">
+                  <p className="font-semibold text-[#111827] text-sm flex items-center gap-2">
+                    <Sparkles size={14} className="text-[#2563EB]" /> Generate AI Reply
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input
+                      className="input text-sm"
+                      placeholder="Review ID (your platform's review ID)"
+                      value={reviewId}
+                      onChange={(e) => setReviewId(e.target.value)}
+                    />
+                    <select
+                      className="input text-sm"
+                      value={platform}
+                      onChange={(e) => setPlatform(e.target.value)}
+                    >
+                      {PLATFORMS.map((p) => (
+                        <option key={p} value={p}>
+                          {p}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      className="input text-sm"
+                      placeholder="Reviewer name (optional)"
+                      value={reviewAuthor}
+                      onChange={(e) => setReviewAuthor(e.target.value)}
+                    />
+                    <select
+                      className="input text-sm"
+                      value={reviewRating === "" ? "" : String(reviewRating)}
+                      onChange={(e) => setReviewRating(e.target.value ? Number(e.target.value) : "")}
+                    >
+                      <option value="">No rating</option>
+                      {[1, 2, 3, 4, 5].map((r) => (
+                        <option key={r} value={r}>
+                          {r} star{r === 1 ? "" : "s"}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-2 mt-3 flex-wrap">
-                    {isEditing ? (
-                      <>
-                        <button
-                          onClick={() => void saveEdit(d)}
-                          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-100 hover:bg-emerald-200 text-emerald-700"
-                        >
-                          <Check size={12} /> Save
-                        </button>
-                        <button
-                          onClick={() => {
-                            setEditingId(null);
-                            setEditingText("");
-                          }}
-                          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-[#374151] bg-black/[0.04] hover:bg-black/[0.06]"
-                        >
-                          <X size={12} /> Cancel
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => {
-                            setEditingId(d.id);
-                            setEditingText(d.approved_text ?? d.ai_draft);
-                          }}
-                          className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-[#374151] bg-black/[0.04] hover:bg-black/[0.06]"
-                          disabled={d.status === "published"}
-                        >
-                          <RefreshCw size={12} /> Edit
-                        </button>
-                        {d.status === "pending" && (
-                          <button
-                            onClick={() => void approve(d)}
-                            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-sky-100 hover:bg-sky-200 text-sky-700"
-                          >
-                            <Check size={12} /> Approve
-                          </button>
-                        )}
-                        {(d.status === "approved" || d.status === "pending") && (
-                          <button
-                            onClick={() => void publish(d)}
-                            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-100 hover:bg-emerald-200 text-emerald-700"
-                          >
-                            <Send size={12} /> Publish
-                          </button>
-                        )}
-                        {d.status !== "published" && d.status !== "rejected" && (
-                          <button
-                            onClick={() => void reject(d)}
-                            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-rose-700 bg-rose-50 hover:bg-rose-100"
-                          >
-                            <X size={12} /> Reject
-                          </button>
-                        )}
-                      </>
-                    )}
+                  <textarea
+                    className="input text-sm w-full resize-none"
+                    rows={4}
+                    placeholder="Paste the review text here..."
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value.slice(0, 4000))}
+                  />
+                  <input
+                    className="input text-sm w-full"
+                    placeholder="Brand voice (optional, e.g. 'warm, casual, witty')"
+                    value={brandVoice}
+                    onChange={(e) => setBrandVoice(e.target.value)}
+                  />
+                  <label className="flex items-center gap-2 text-xs text-[#374151]">
+                    <input
+                      type="checkbox"
+                      checked={autoPublish}
+                      onChange={(e) => setAutoPublish(e.target.checked)}
+                      className="accent-[#2563EB]"
+                    />
+                    Auto-approve (skip review). Publish step is still manual.
+                  </label>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleGenerate}
+                      disabled={generating}
+                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#3B82F6] text-white disabled:opacity-50 transition-all"
+                    >
+                      {generating ? (
+                        <Loader2 size={14} className="animate-spin" />
+                      ) : (
+                        <Sparkles size={14} />
+                      )}{" "}
+                      Generate Reply
+                    </button>
+                    <button
+                      onClick={() => {
+                        resetForm();
+                        setShowCompose(false);
+                      }}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm text-[#374151] bg-black/[0.04] hover:bg-black/[0.06] transition-all"
+                    >
+                      <X size={14} /> Cancel
+                    </button>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
+              )}
 
-        {/* Footnote */}
-        <div className="rounded-lg border border-black/[0.06] bg-white p-3 flex items-start gap-2 text-xs text-[#9CA3AF]">
-          <AlertCircle size={14} className="text-amber-500 shrink-0 mt-0.5" />
-          <p>
-            v1 stores approved replies locally. Auto-posting back to Google
-            Business / Yelp / Facebook is wired through the same OAuth as the
-            existing review-fetch integrations and lands in v2.
-          </p>
-        </div>
-      </div>
-    </div>
+              {/* List */}
+              {loading ? (
+                <div className="flex items-center justify-center py-16">
+                  <Loader2 size={28} className="animate-spin text-[#9CA3AF]" />
+                </div>
+              ) : drafts.length === 0 ? (
+                <EmptyState
+                  title="No drafts yet"
+                  description="Paste a review and Claude will generate a reply you can approve."
+                  icon={<Sparkles size={28} />}
+                />
+              ) : (
+                <div className="space-y-3">
+                  {drafts.map((d) => {
+                    const cfg = STATUS_STYLES[d.status];
+                    const isEditing = editingId === d.id;
+                    return (
+                      <div
+                        key={d.id}
+                        className="rounded-xl border border-black/[0.06] bg-white hover:bg-[#F8FAFC] p-4 transition-all"
+                      >
+                        <div className="flex items-start justify-between gap-3 mb-3">
+                          <div className="flex items-center gap-3 flex-wrap">
+                            <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${cfg.tint}`}>
+                              {cfg.label}
+                            </span>
+                            <span className="text-xs text-[#6B7280] capitalize">{d.platform}</span>
+                            <Stars rating={d.review_rating} />
+                            {d.review_author && (
+                              <span className="text-xs text-[#9CA3AF]">— {d.review_author}</span>
+                            )}
+                          </div>
+                          <span className="text-[11px] text-[#9CA3AF]">
+                            {new Date(d.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+
+                        {d.review_text && (
+                          <div className="mb-3 px-3 py-2 rounded-lg bg-[#F3F6FA] border border-black/[0.06]">
+                            <p className="text-[11px] uppercase tracking-wider text-[#9CA3AF] mb-1">
+                              Original Review
+                            </p>
+                            <p className="text-sm text-[#374151] whitespace-pre-wrap">{d.review_text}</p>
+                          </div>
+                        )}
+
+                        <div className="px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)]">
+                          <p className="text-[11px] uppercase tracking-wider text-[#2563EB] mb-1 flex items-center gap-1.5">
+                            <Sparkles size={10} /> AI Draft
+                          </p>
+                          {isEditing ? (
+                            <textarea
+                              className="input text-sm w-full resize-none bg-white"
+                              rows={4}
+                              value={editingText}
+                              onChange={(e) => setEditingText(e.target.value)}
+                            />
+                          ) : (
+                            <p className="text-sm text-[#111827] whitespace-pre-wrap">
+                              {d.approved_text ?? d.ai_draft}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-2 mt-3 flex-wrap">
+                          {isEditing ? (
+                            <>
+                              <button
+                                onClick={() => void saveEdit(d)}
+                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-100 hover:bg-emerald-200 text-emerald-700"
+                              >
+                                <Check size={12} /> Save
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setEditingId(null);
+                                  setEditingText("");
+                                }}
+                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-[#374151] bg-black/[0.04] hover:bg-black/[0.06]"
+                              >
+                                <X size={12} /> Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                onClick={() => {
+                                  setEditingId(d.id);
+                                  setEditingText(d.approved_text ?? d.ai_draft);
+                                }}
+                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-[#374151] bg-black/[0.04] hover:bg-black/[0.06]"
+                                disabled={d.status === "published"}
+                              >
+                                <RefreshCw size={12} /> Edit
+                              </button>
+                              {d.status === "pending" && (
+                                <button
+                                  onClick={() => void approve(d)}
+                                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-sky-100 hover:bg-sky-200 text-sky-700"
+                                >
+                                  <Check size={12} /> Approve
+                                </button>
+                              )}
+                              {(d.status === "approved" || d.status === "pending") && (
+                                <button
+                                  onClick={() => void publish(d)}
+                                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-100 hover:bg-emerald-200 text-emerald-700"
+                                >
+                                  <Send size={12} /> Publish
+                                </button>
+                              )}
+                              {d.status !== "published" && d.status !== "rejected" && (
+                                <button
+                                  onClick={() => void reject(d)}
+                                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-rose-700 bg-rose-50 hover:bg-rose-100"
+                                >
+                                  <X size={12} /> Reject
+                                </button>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Footnote */}
+              <div className="rounded-lg border border-black/[0.06] bg-white p-3 flex items-start gap-2 text-xs text-[#9CA3AF]">
+                <AlertCircle size={14} className="text-amber-500 shrink-0 mt-0.5" />
+                <p>
+                  v1 stores approved replies locally. Auto-posting back to Google
+                  Business / Yelp / Facebook is wired through the same OAuth as the
+                  existing review-fetch integrations and lands in v2.
+                </p>
+              </div>
+            </div></MotionPage>
   );
 }

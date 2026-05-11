@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import TranscriptViewer, { TranscriptSegment } from "@/components/meetings/transcript-viewer";
 import ActionItems, { ActionItem } from "@/components/meetings/action-items";
 import CrmLinkPanel from "@/components/meetings/crm-link-panel";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface MeetingDetail {
   id: string;
@@ -174,9 +175,8 @@ export default function MeetingDetailPage() {
 
   if (loading) {
     return (
-      <div className="p-6 text-[11px] text-muted flex items-center gap-2">
-        <Loader2 size={12} className="animate-spin" /> Loading...
-      </div>
+      <MotionPage className="p-6 text-[11px] text-muted flex items-center gap-2"><Loader2 size={12} className="animate-spin" />Loading...
+              </MotionPage>
     );
   }
   if (!meeting) return null;

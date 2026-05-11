@@ -30,6 +30,7 @@ import ErrorLog, { type TrinityErrorRow } from "@/components/admin/console/Error
 import WebhookHealth, { type ProviderDedup } from "@/components/admin/console/WebhookHealth";
 import CronCalendar, { type CronEntry } from "@/components/admin/console/CronCalendar";
 import vercelConfig from "../../../../vercel.json";
+import { MotionPage } from "@/components/motion/motion-page";
 
 export const dynamic = "force-dynamic";
 
@@ -319,33 +320,19 @@ export default async function AdminConsolePage() {
   const cronEntries = buildCronEntries();
 
   return (
-    <div className="fade-in max-w-6xl mx-auto space-y-5">
-      <PageHero
-        icon={<Terminal size={26} />}
-        title="Admin Console"
-        subtitle="Internal dev-tools dashboard — env vars, DB health, errors, webhooks, and cron jobs."
-        gradient="blue"
-        eyebrow="Admin · /dashboard/console"
-        sparkles={false}
-      />
-
-      {/* Row 1: Env-var presence + Self-test history */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <EnvPanel items={envItems} />
-        <SelfTestHistory runs={selfTestRuns} />
-      </div>
-
-      {/* Row 2: DB row counts + Webhook dedup health */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <DbRowCounts counts={dbCounts} />
-        <WebhookHealth providers={webhookProviders} />
-      </div>
-
-      {/* Row 3: Recent error log (full width) */}
-      <ErrorLog rows={errorRows} />
-
-      {/* Row 4: Cron calendar (full width) */}
-      <CronCalendar entries={cronEntries} />
-    </div>
+    <MotionPage className="fade-in max-w-6xl mx-auto space-y-5"><PageHero
+              icon={<Terminal size={26} />}
+              title="Admin Console"
+              subtitle="Internal dev-tools dashboard — env vars, DB health, errors, webhooks, and cron jobs."
+              gradient="blue"
+              eyebrow="Admin · /dashboard/console"
+              sparkles={false}
+            />{/* Row 1: Env-var presence + Self-test history */}<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <EnvPanel items={envItems} />
+              <SelfTestHistory runs={selfTestRuns} />
+            </div>{/* Row 2: DB row counts + Webhook dedup health */}<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <DbRowCounts counts={dbCounts} />
+              <WebhookHealth providers={webhookProviders} />
+            </div>{/* Row 3: Recent error log (full width) */}<ErrorLog rows={errorRows} />{/* Row 4: Cron calendar (full width) */}<CronCalendar entries={cronEntries} /></MotionPage>
   );
 }

@@ -18,6 +18,7 @@ import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPre
 import { trackGeneration } from "@/lib/track-generation";
 import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // Fake-screenshot text cards used as the rolling marquee on the copywriter
 // landing state. Each card = one example of the kind of copy this tool
@@ -1050,546 +1051,525 @@ export default function CopywriterPage() {
   }, [audience]);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto fade-in space-y-6">
-      <PageHero
-        className="mb-6"
-        icon={<Pen size={28} />}
-        eyebrow="COPY ENGINE"
-        title="AI Copywriter"
-        subtitle="Blog posts, emails, social � copy that converts, in seconds."
-        gradient="purple"
-        actions={
-          <>
-            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-            {advancedMode && (
-              <>
-                <button
-                  onClick={() => setWizardOpen(true)}
-                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white shadow-lg shadow-[rgba(37,99,235,0.25)] hover:shadow-[rgba(37,99,235,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all"
-                >
-                  <Sparkles size={13} className="animate-pulse" />
-                  New with AI
-                  <span className="ml-1 text-[8px] uppercase bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setOutput("");
-                    setTopic("");
-                    setKeywords("");
-                    toast.success("Blank canvas ready");
-                  }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-transparent border border-border text-foreground hover:bg-black/5 transition-all"
-                >
-                  <Plus size={13} />
-                  Blank
-                </button>
-                <button
-                  onClick={() => setShowTemplates(!showTemplates)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/10 transition-all"
-                >
-                  <Layers size={13} />
-                  Templates
-                </button>
-                <button
-                  onClick={() => setShowHistory(!showHistory)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/10 transition-all"
-                >
-                  <Clock size={13} />
-                  History
-                  {history.length > 0 && (
-                    <span className="ml-1 text-[9px] bg-black/10 text-foreground px-1.5 py-0.5 rounded-full font-semibold">
-                      {history.length}
-                    </span>
-                  )}
-                </button>
-              </>
-            )}
-          </>
-        }
-      />
-
-      {/* Guided Mode � the "4-year-old friendly" path */}
-      {!advancedMode && (
-        <Wizard
-          className="mb-6"
-          steps={guidedSteps}
-          activeIdx={guidedStep}
-          onStepChange={setGuidedStep}
-          finishLabel={generating ? "Writing�" : "Generate copy"}
-          busy={generating}
-          onFinish={async () => {
-            await handleGenerate();
-          }}
-          onCancel={() => setAdvancedMode(true)}
-          cancelLabel="Advanced mode"
-        />
-      )}
-
-      {/* Output preview shown in guided mode once generated */}
-      {!advancedMode && output && (
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="glass rounded-xl p-5 space-y-3"
-        >
-          <div className="flex items-center justify-between">
-            <h2 className="section-header flex items-center gap-2">
-              <CheckCircle size={14} className="text-success" /> Your copy is ready
-            </h2>
-            <motion.button
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={copyToClipboard}
-              className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)] transition-colors"
-            >
-              <Copy size={11} /> Copy
-            </motion.button>
-          </div>
-          <div className="rounded-xl bg-surface-light border border-border p-4 max-h-[420px] overflow-y-auto">
-            <pre className="text-xs text-foreground whitespace-pre-wrap font-sans leading-relaxed">{output}</pre>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Rolling preview of example copywriter outputs */}
-      {advancedMode && (
-        <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6 mb-6">
-          <div className="absolute inset-0 pointer-events-none">
-            <RollingPreview
-              items={COPYWRITER_PREVIEW_FALLBACK}
-              variant="text"
-              rows={2}
-              aspectRatio="16:9"
-              opacity={0.55}
-              speed="medium"
-            />
-          </div>
-          <div className="relative text-center px-4">
-            <p className="text-[11px] uppercase tracking-widest text-[rgba(37,99,235,0.80)] font-semibold">
-              Example copy library
-            </p>
-            <h3 className="text-lg font-bold text-foreground mt-1">
-              Every angle, every tone, every funnel stage
-            </h3>
-            <p className="text-xs text-muted max-w-md mx-auto mt-1">
-              Subject lines, ad headlines, landing heros � pick a template or
-              start blank. ShortStack writes in your brand voice automatically.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Creation Wizard */}
-      <CreationWizard
-        open={wizardOpen}
-        title="Create with AI"
-        subtitle="5 quick steps � we handle the rest"
-        icon={<Wand2 size={18} />}
-        submitLabel="Generate Content"
-        steps={wizardSteps}
-        initialData={{
-          contentTypes: [contentType],
-          topic,
-          tones: [tone],
-          keywords,
-          lengths: [wordCount <= 300 ? "short" : wordCount >= 1000 ? "long" : "medium"],
-        }}
-        onClose={() => setWizardOpen(false)}
-        onComplete={handleWizardComplete}
-      />
-
-      {/* Template Gallery */}
-      {showTemplates && (
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
-          className="glass rounded-xl p-5"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Layers size={16} className="text-[#2563EB]" />
-              <h2 className="text-sm font-bold text-foreground">Template Gallery</h2>
-              <span className="text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-2 py-0.5 rounded-full font-medium">
-                {TEMPLATES.length} templates
-              </span>
-            </div>
-            <button onClick={() => setShowTemplates(false)} className="text-muted hover:text-foreground transition-colors" aria-label="Close templates">
-              <X size={16} />
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-            {TEMPLATES.map((template, i) => {
-              const Icon = template.icon;
-              return (
-                <motion.button
-                  key={template.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.04, duration: 0.3 }}
-                  whileHover={{ y: -4, scale: 1.01 }}
-                  onClick={() => applyTemplate(template)}
-                  className="text-left p-3 glass rounded-xl hover:border-[rgba(37,99,235,0.25)] transition-all group"
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <div
-                      className="w-7 h-7 rounded-lg flex items-center justify-center"
-                      style={{ background: `${template.color}18` }}
-                    >
-                      <Icon size={13} style={{ color: template.color }} />
-                    </div>
-                    <span className="text-xs font-semibold text-foreground group-hover:text-[#2563EB] transition-colors">
-                      {template.name}
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-muted leading-relaxed">{template.description}</p>
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-surface-light text-muted border border-border">
-                      {CONTENT_TYPES.find(c => c.id === template.type)?.label}
-                    </span>
-                    <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-surface-light text-muted border border-border">
-                      {template.tone}
-                    </span>
-                  </div>
-                </motion.button>
-              );
-            })}
-          </div>
-        </motion.div>
-      )}
-
-      {/* History Sidebar Overlay */}
-      {showHistory && (
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
-          className="glass rounded-xl p-5"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Clock size={16} className="text-[#2563EB]" />
-              <h2 className="text-sm font-bold text-foreground">Recent Generations</h2>
-            </div>
-            <button onClick={() => setShowHistory(false)} className="text-muted hover:text-foreground transition-colors" aria-label="Close history">
-              <X size={16} />
-            </button>
-          </div>
-          {history.length === 0 ? (
-            <div className="text-center py-8">
-              <Clock size={24} className="mx-auto mb-2 text-muted/40" />
-              <p className="text-xs text-muted">No generations yet</p>
-              <p className="text-[10px] text-muted/60 mt-1">Your generated content will appear here</p>
-            </div>
-          ) : (
-            <div className="glass rounded-xl overflow-hidden">
-              {history.map((item, i) => {
-                const typeConfig = CONTENT_TYPES.find(t => t.id === item.type)!;
-                const TypeIcon = typeConfig.icon;
-                return (
-                  <motion.button
-                    key={item.id}
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.04, duration: 0.28 }}
-                    whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
-                    onClick={() => loadFromHistory(item)}
-                    className="w-full text-left p-3 border-b border-[rgba(0,0,0,0.08)] last:border-0 transition-all group flex items-start gap-3"
-                  >
-                    <div
-                      className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
-                      style={{ background: `${typeConfig.color}18` }}
-                    >
-                      <TypeIcon size={14} style={{ color: typeConfig.color }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-foreground truncate group-hover:text-[#2563EB] transition-colors">
-                        {item.topic}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[9px] text-muted">{typeConfig.label}</span>
-                        <span className="text-[9px] text-muted/40">|</span>
-                        <span className="text-[9px] text-muted">{item.wordCount} words</span>
-                        <span className="text-[9px] text-muted/40">|</span>
-                        <span className="text-[9px] text-muted">
-                          {item.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                        </span>
-                      </div>
-                    </div>
-                    <ChevronRight size={14} className="text-muted/30 group-hover:text-[#2563EB] shrink-0 mt-1 transition-colors" />
-                  </motion.button>
-                );
-              })}
-            </div>
-          )}
-          {history.length > 0 && (
-            <button
-              onClick={() => { setHistory([]); toast.success("History cleared"); }}
-              className="mt-3 flex items-center gap-1 text-[10px] text-muted hover:text-danger transition-colors"
-            >
-              <Trash2 size={10} /> Clear history
-            </button>
-          )}
-        </motion.div>
-      )}
-
-      {advancedMode && (
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        {/* Left Column - Input Form */}
-        <div className="lg:col-span-2 space-y-5">
-          {/* Content Type Selector */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35 }}
-            className="glass rounded-xl p-5"
-          >
-            <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
-              <Type size={13} className="text-[#2563EB]" />
-              Content Type
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              {CONTENT_TYPES.map((type, i) => {
-                const Icon = type.icon;
-                const active = contentType === type.id;
-                return (
-                  <motion.button
-                    key={type.id}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.04 }}
-                    whileHover={{ y: -2 }}
-                    onClick={() => setContentType(type.id)}
-                    className={`text-left p-2.5 rounded-xl border transition-all ${
-                      active
-                        ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.06)]"
-                        : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] hover:bg-[rgba(0,0,0,0.04)]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-6 h-6 rounded-lg flex items-center justify-center"
-                        style={{ background: active ? `${type.color}25` : `${type.color}12` }}
+    <MotionPage className="p-6 max-w-7xl mx-auto fade-in space-y-6"><PageHero
+              className="mb-6"
+              icon={<Pen size={28} />}
+              eyebrow="COPY ENGINE"
+              title="AI Copywriter"
+              subtitle="Blog posts, emails, social � copy that converts, in seconds."
+              gradient="purple"
+              actions={
+                <>
+                  <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+                  {advancedMode && (
+                    <>
+                      <button
+                        onClick={() => setWizardOpen(true)}
+                        className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white shadow-lg shadow-[rgba(37,99,235,0.25)] hover:shadow-[rgba(37,99,235,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all"
                       >
-                        <Icon size={12} style={{ color: type.color }} />
-                      </div>
-                      <div>
-                        <span className={`text-[11px] font-semibold block leading-tight ${active ? "text-foreground" : "text-muted"}`}>
-                          {type.label}
-                        </span>
-                        <span className="text-[8px] text-muted leading-tight">{type.description}</span>
-                      </div>
-                    </div>
-                  </motion.button>
-                );
-              })}
-            </div>
-          </motion.div>
-
-          {/* Input Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.06, duration: 0.35 }}
-            className="glass rounded-xl p-5 space-y-4"
-          >
-            {/* Topic / Brief */}
-            <div>
-              <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
-                <Sparkles size={13} className="text-[#2563EB]" />
-                Topic / Brief
-              </label>
-              <textarea
-                value={topic}
-                onChange={e => setTopic(e.target.value)}
-                placeholder={`Describe what you want to write about...\n\nExample: "How AI is transforming small business marketing in 2026"`}
-                rows={4}
-                className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.20)] transition-all resize-none"
-              />
-            </div>
-
-            {/* Tone */}
-            <div>
-              <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
-                <Sliders size={13} className="text-[#2563EB]" />
-                Tone
-              </label>
-              <div className="flex gap-2">
-                {TONES.map(t => (
-                  <button
-                    key={t.id}
-                    onClick={() => setTone(t.id)}
-                    className={`flex-1 py-2 text-[11px] font-medium rounded-lg border transition-all ${
-                      tone === t.id
-                        ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-foreground"
-                        : "border-border bg-surface-light text-muted hover:text-foreground hover:bg-surface"
-                    }`}
-                  >
-                    {t.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Target Audience */}
-            <div>
-              <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
-                <Users size={13} className="text-[#2563EB]" />
-                Target Audience
-              </label>
-              <input
-                type="text"
-                value={audience}
-                onChange={e => setAudience(e.target.value)}
-                placeholder="e.g., SaaS founders, e-commerce brands, local businesses"
-                className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.20)] transition-all"
-              />
-            </div>
-
-            {/* Keywords */}
-            <div>
-              <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
-                <Hash size={13} className="text-[#2563EB]" />
-                Keywords
-              </label>
-              <input
-                type="text"
-                value={keywords}
-                onChange={e => setKeywords(e.target.value)}
-                placeholder="Comma-separated: growth, automation, ROI, conversions"
-                className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.20)] transition-all"
-              />
-            </div>
-
-            {/* Word Count Slider */}
-            <div>
-              <label className="text-xs font-semibold text-foreground flex items-center justify-between mb-2">
-                <span className="flex items-center gap-1.5">
-                  <Target size={13} className="text-[#2563EB]" />
-                  Word Count
-                </span>
-                <span className="text-[10px] font-mono bg-surface-light border border-border px-2 py-0.5 rounded-lg text-muted">
-                  {wordCount} words
-                </span>
-              </label>
-              <input
-                type="range"
-                min={100}
-                max={2000}
-                step={50}
-                value={wordCount}
-                onChange={e => setWordCount(Number(e.target.value))}
-                className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-blue-600"
-                style={{
-                  background: `linear-gradient(to right, rgb(var(--color-accent-rgb, 201 168 76)) ${((wordCount - 100) / 1900) * 100}%, rgb(var(--color-border-rgb, 232 229 224)) ${((wordCount - 100) / 1900) * 100}%)`,
+                        <Sparkles size={13} className="animate-pulse" />
+                        New with AI
+                        <span className="ml-1 text-[8px] uppercase bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setOutput("");
+                          setTopic("");
+                          setKeywords("");
+                          toast.success("Blank canvas ready");
+                        }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-transparent border border-border text-foreground hover:bg-black/5 transition-all"
+                      >
+                        <Plus size={13} />
+                        Blank
+                      </button>
+                      <button
+                        onClick={() => setShowTemplates(!showTemplates)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/10 transition-all"
+                      >
+                        <Layers size={13} />
+                        Templates
+                      </button>
+                      <button
+                        onClick={() => setShowHistory(!showHistory)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/10 transition-all"
+                      >
+                        <Clock size={13} />
+                        History
+                        {history.length > 0 && (
+                          <span className="ml-1 text-[9px] bg-black/10 text-foreground px-1.5 py-0.5 rounded-full font-semibold">
+                            {history.length}
+                          </span>
+                        )}
+                      </button>
+                    </>
+                  )}
+                </>
+              }
+            />{/* Guided Mode � the "4-year-old friendly" path */}{!advancedMode && (
+              <Wizard
+                className="mb-6"
+                steps={guidedSteps}
+                activeIdx={guidedStep}
+                onStepChange={setGuidedStep}
+                finishLabel={generating ? "Writing�" : "Generate copy"}
+                busy={generating}
+                onFinish={async () => {
+                  await handleGenerate();
                 }}
+                onCancel={() => setAdvancedMode(true)}
+                cancelLabel="Advanced mode"
               />
-              <div className="flex justify-between mt-1">
-                <span className="text-[8px] text-muted">100</span>
-                <span className="text-[8px] text-muted">2000</span>
-              </div>
-            </div>
-
-            {/* Generate Button */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={handleGenerate}
-              disabled={generating || !topic.trim()}
-              className="w-full py-3 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2 transition-all disabled:opacity-40 bg-gradient-to-r from-[#2563EB] to-violet-500 shadow-lg shadow-[#2563EB]/25 hover:shadow-[#2563EB]/40"
-            >
-              {generating ? (
-                <>
-                  <Loader size={15} className="animate-spin" />
-                  Generating {activeType.label}...
-                </>
-              ) : (
-                <>
-                  <Wand2 size={15} />
-                  Generate {activeType.label}
-                </>
-              )}
-            </motion.button>
-          </motion.div>
-
-          {/* Quick Stats */}
-          {history.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.12, duration: 0.35 }}
-              className="glass rounded-xl p-4"
-            >
-              <div className="h-px bg-gradient-to-r from-[#2563EB] via-violet-400 to-[#2563EB] mb-3 rounded-full" />
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { label: "Generated", value: history.length },
-                  { label: "Total Words", value: history.reduce((sum, h) => sum + h.wordCount, 0).toLocaleString() },
-                  { label: "Saved", value: savedItems.size },
-                ].map((stat, i) => (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.14 + i * 0.05 }}
-                    whileHover={{ y: -2 }}
-                    className="text-center"
+            )}{/* Output preview shown in guided mode once generated */}{!advancedMode && output && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="glass rounded-xl p-5 space-y-3"
+              >
+                <div className="flex items-center justify-between">
+                  <h2 className="section-header flex items-center gap-2">
+                    <CheckCircle size={14} className="text-success" /> Your copy is ready
+                  </h2>
+                  <motion.button
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={copyToClipboard}
+                    className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)] transition-colors"
                   >
-                    <p className="text-lg font-bold text-foreground">{stat.value}</p>
-                    <p className="text-[9px] text-muted">{stat.label}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Right Column - Output */}
-        <div className="lg:col-span-3">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.09, duration: 0.35 }}
-            className="glass rounded-xl p-5 min-h-[600px] flex flex-col"
-          >
-            {/* Output Header */}
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-7 h-7 rounded-lg flex items-center justify-center"
-                  style={{ background: `${activeType.color}18` }}
-                >
-                  {(() => { const Icon = activeType.icon; return <Icon size={14} style={{ color: activeType.color }} />; })()}
+                    <Copy size={11} /> Copy
+                  </motion.button>
                 </div>
-                <div>
-                  <h2 className="text-sm font-bold text-foreground">{activeType.label} Output</h2>
-                  <p className="text-[9px] text-muted">
-                    {output ? `${output.split(/\s+/).length} words generated` : "Configure your brief and hit Generate"}
+                <div className="rounded-xl bg-surface-light border border-border p-4 max-h-[420px] overflow-y-auto">
+                  <pre className="text-xs text-foreground whitespace-pre-wrap font-sans leading-relaxed">{output}</pre>
+                </div>
+              </motion.div>
+            )}{/* Rolling preview of example copywriter outputs */}{advancedMode && (
+              <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6 mb-6">
+                <div className="absolute inset-0 pointer-events-none">
+                  <RollingPreview
+                    items={COPYWRITER_PREVIEW_FALLBACK}
+                    variant="text"
+                    rows={2}
+                    aspectRatio="16:9"
+                    opacity={0.55}
+                    speed="medium"
+                  />
+                </div>
+                <div className="relative text-center px-4">
+                  <p className="text-[11px] uppercase tracking-widest text-[rgba(37,99,235,0.80)] font-semibold">
+                    Example copy library
+                  </p>
+                  <h3 className="text-lg font-bold text-foreground mt-1">
+                    Every angle, every tone, every funnel stage
+                  </h3>
+                  <p className="text-xs text-muted max-w-md mx-auto mt-1">
+                    Subject lines, ad headlines, landing heros � pick a template or
+                    start blank. ShortStack writes in your brand voice automatically.
                   </p>
                 </div>
               </div>
-              {output && (
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={copyToClipboard}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-lg bg-surface-light border border-border text-foreground hover:bg-[rgba(37,99,235,0.05)] hover:border-[rgba(37,99,235,0.2)] transition-all"
-                  >
-                    <Copy size={12} />
-                    Copy
-                  </button>
-                  <button
-                    onClick={saveToLibrary}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-all"
-                  >
-                    <BookmarkPlus size={12} />
-                    Save to Library
+            )}{/* Creation Wizard */}<CreationWizard
+              open={wizardOpen}
+              title="Create with AI"
+              subtitle="5 quick steps � we handle the rest"
+              icon={<Wand2 size={18} />}
+              submitLabel="Generate Content"
+              steps={wizardSteps}
+              initialData={{
+                contentTypes: [contentType],
+                topic,
+                tones: [tone],
+                keywords,
+                lengths: [wordCount <= 300 ? "short" : wordCount >= 1000 ? "long" : "medium"],
+              }}
+              onClose={() => setWizardOpen(false)}
+              onComplete={handleWizardComplete}
+            />{/* Template Gallery */}{showTemplates && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+                className="glass rounded-xl p-5"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <Layers size={16} className="text-[#2563EB]" />
+                    <h2 className="text-sm font-bold text-foreground">Template Gallery</h2>
+                    <span className="text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-2 py-0.5 rounded-full font-medium">
+                      {TEMPLATES.length} templates
+                    </span>
+                  </div>
+                  <button onClick={() => setShowTemplates(false)} className="text-muted hover:text-foreground transition-colors" aria-label="Close templates">
+                    <X size={16} />
                   </button>
                 </div>
-              )}
-            </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {TEMPLATES.map((template, i) => {
+                    const Icon = template.icon;
+                    return (
+                      <motion.button
+                        key={template.id}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.04, duration: 0.3 }}
+                        whileHover={{ y: -4, scale: 1.01 }}
+                        onClick={() => applyTemplate(template)}
+                        className="text-left p-3 glass rounded-xl hover:border-[rgba(37,99,235,0.25)] transition-all group"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <div
+                            className="w-7 h-7 rounded-lg flex items-center justify-center"
+                            style={{ background: `${template.color}18` }}
+                          >
+                            <Icon size={13} style={{ color: template.color }} />
+                          </div>
+                          <span className="text-xs font-semibold text-foreground group-hover:text-[#2563EB] transition-colors">
+                            {template.name}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-muted leading-relaxed">{template.description}</p>
+                        <div className="flex items-center gap-1.5 mt-2">
+                          <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-surface-light text-muted border border-border">
+                            {CONTENT_TYPES.find(c => c.id === template.type)?.label}
+                          </span>
+                          <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-surface-light text-muted border border-border">
+                            {template.tone}
+                          </span>
+                        </div>
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}{/* History Sidebar Overlay */}{showHistory && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+                className="glass rounded-xl p-5"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <Clock size={16} className="text-[#2563EB]" />
+                    <h2 className="text-sm font-bold text-foreground">Recent Generations</h2>
+                  </div>
+                  <button onClick={() => setShowHistory(false)} className="text-muted hover:text-foreground transition-colors" aria-label="Close history">
+                    <X size={16} />
+                  </button>
+                </div>
+                {history.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Clock size={24} className="mx-auto mb-2 text-muted/40" />
+                    <p className="text-xs text-muted">No generations yet</p>
+                    <p className="text-[10px] text-muted/60 mt-1">Your generated content will appear here</p>
+                  </div>
+                ) : (
+                  <div className="glass rounded-xl overflow-hidden">
+                    {history.map((item, i) => {
+                      const typeConfig = CONTENT_TYPES.find(t => t.id === item.type)!;
+                      const TypeIcon = typeConfig.icon;
+                      return (
+                        <motion.button
+                          key={item.id}
+                          initial={{ opacity: 0, x: -16 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.04, duration: 0.28 }}
+                          whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                          onClick={() => loadFromHistory(item)}
+                          className="w-full text-left p-3 border-b border-[rgba(0,0,0,0.08)] last:border-0 transition-all group flex items-start gap-3"
+                        >
+                          <div
+                            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
+                            style={{ background: `${typeConfig.color}18` }}
+                          >
+                            <TypeIcon size={14} style={{ color: typeConfig.color }} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium text-foreground truncate group-hover:text-[#2563EB] transition-colors">
+                              {item.topic}
+                            </p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-[9px] text-muted">{typeConfig.label}</span>
+                              <span className="text-[9px] text-muted/40">|</span>
+                              <span className="text-[9px] text-muted">{item.wordCount} words</span>
+                              <span className="text-[9px] text-muted/40">|</span>
+                              <span className="text-[9px] text-muted">
+                                {item.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                              </span>
+                            </div>
+                          </div>
+                          <ChevronRight size={14} className="text-muted/30 group-hover:text-[#2563EB] shrink-0 mt-1 transition-colors" />
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                )}
+                {history.length > 0 && (
+                  <button
+                    onClick={() => { setHistory([]); toast.success("History cleared"); }}
+                    className="mt-3 flex items-center gap-1 text-[10px] text-muted hover:text-danger transition-colors"
+                  >
+                    <Trash2 size={10} /> Clear history
+                  </button>
+                )}
+              </motion.div>
+            )}{advancedMode && (
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+              {/* Left Column - Input Form */}
+              <div className="lg:col-span-2 space-y-5">
+                {/* Content Type Selector */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35 }}
+                  className="glass rounded-xl p-5"
+                >
+                  <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
+                    <Type size={13} className="text-[#2563EB]" />
+                    Content Type
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {CONTENT_TYPES.map((type, i) => {
+                      const Icon = type.icon;
+                      const active = contentType === type.id;
+                      return (
+                        <motion.button
+                          key={type.id}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.04 }}
+                          whileHover={{ y: -2 }}
+                          onClick={() => setContentType(type.id)}
+                          className={`text-left p-2.5 rounded-xl border transition-all ${
+                            active
+                              ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.06)]"
+                              : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] hover:bg-[rgba(0,0,0,0.04)]"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-6 h-6 rounded-lg flex items-center justify-center"
+                              style={{ background: active ? `${type.color}25` : `${type.color}12` }}
+                            >
+                              <Icon size={12} style={{ color: type.color }} />
+                            </div>
+                            <div>
+                              <span className={`text-[11px] font-semibold block leading-tight ${active ? "text-foreground" : "text-muted"}`}>
+                                {type.label}
+                              </span>
+                              <span className="text-[8px] text-muted leading-tight">{type.description}</span>
+                            </div>
+                          </div>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </motion.div>
 
-            {/* Output Content */}
+                {/* Input Form */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.06, duration: 0.35 }}
+                  className="glass rounded-xl p-5 space-y-4"
+                >
+                  {/* Topic / Brief */}
+                  <div>
+                    <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
+                      <Sparkles size={13} className="text-[#2563EB]" />
+                      Topic / Brief
+                    </label>
+                    <textarea
+                      value={topic}
+                      onChange={e => setTopic(e.target.value)}
+                      placeholder={`Describe what you want to write about...\n\nExample: "How AI is transforming small business marketing in 2026"`}
+                      rows={4}
+                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.20)] transition-all resize-none"
+                    />
+                  </div>
+
+                  {/* Tone */}
+                  <div>
+                    <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
+                      <Sliders size={13} className="text-[#2563EB]" />
+                      Tone
+                    </label>
+                    <div className="flex gap-2">
+                      {TONES.map(t => (
+                        <button
+                          key={t.id}
+                          onClick={() => setTone(t.id)}
+                          className={`flex-1 py-2 text-[11px] font-medium rounded-lg border transition-all ${
+                            tone === t.id
+                              ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-foreground"
+                              : "border-border bg-surface-light text-muted hover:text-foreground hover:bg-surface"
+                          }`}
+                        >
+                          {t.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Target Audience */}
+                  <div>
+                    <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
+                      <Users size={13} className="text-[#2563EB]" />
+                      Target Audience
+                    </label>
+                    <input
+                      type="text"
+                      value={audience}
+                      onChange={e => setAudience(e.target.value)}
+                      placeholder="e.g., SaaS founders, e-commerce brands, local businesses"
+                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.20)] transition-all"
+                    />
+                  </div>
+
+                  {/* Keywords */}
+                  <div>
+                    <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
+                      <Hash size={13} className="text-[#2563EB]" />
+                      Keywords
+                    </label>
+                    <input
+                      type="text"
+                      value={keywords}
+                      onChange={e => setKeywords(e.target.value)}
+                      placeholder="Comma-separated: growth, automation, ROI, conversions"
+                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.20)] transition-all"
+                    />
+                  </div>
+
+                  {/* Word Count Slider */}
+                  <div>
+                    <label className="text-xs font-semibold text-foreground flex items-center justify-between mb-2">
+                      <span className="flex items-center gap-1.5">
+                        <Target size={13} className="text-[#2563EB]" />
+                        Word Count
+                      </span>
+                      <span className="text-[10px] font-mono bg-surface-light border border-border px-2 py-0.5 rounded-lg text-muted">
+                        {wordCount} words
+                      </span>
+                    </label>
+                    <input
+                      type="range"
+                      min={100}
+                      max={2000}
+                      step={50}
+                      value={wordCount}
+                      onChange={e => setWordCount(Number(e.target.value))}
+                      className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-blue-600"
+                      style={{
+                        background: `linear-gradient(to right, rgb(var(--color-accent-rgb, 201 168 76)) ${((wordCount - 100) / 1900) * 100}%, rgb(var(--color-border-rgb, 232 229 224)) ${((wordCount - 100) / 1900) * 100}%)`,
+                      }}
+                    />
+                    <div className="flex justify-between mt-1">
+                      <span className="text-[8px] text-muted">100</span>
+                      <span className="text-[8px] text-muted">2000</span>
+                    </div>
+                  </div>
+
+                  {/* Generate Button */}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={handleGenerate}
+                    disabled={generating || !topic.trim()}
+                    className="w-full py-3 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2 transition-all disabled:opacity-40 bg-gradient-to-r from-[#2563EB] to-violet-500 shadow-lg shadow-[#2563EB]/25 hover:shadow-[#2563EB]/40"
+                  >
+                    {generating ? (
+                      <>
+                        <Loader size={15} className="animate-spin" />
+                        Generating {activeType.label}...
+                      </>
+                    ) : (
+                      <>
+                        <Wand2 size={15} />
+                        Generate {activeType.label}
+                      </>
+                    )}
+                  </motion.button>
+                </motion.div>
+
+                {/* Quick Stats */}
+                {history.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.12, duration: 0.35 }}
+                    className="glass rounded-xl p-4"
+                  >
+                    <div className="h-px bg-gradient-to-r from-[#2563EB] via-violet-400 to-[#2563EB] mb-3 rounded-full" />
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { label: "Generated", value: history.length },
+                        { label: "Total Words", value: history.reduce((sum, h) => sum + h.wordCount, 0).toLocaleString() },
+                        { label: "Saved", value: savedItems.size },
+                      ].map((stat, i) => (
+                        <motion.div
+                          key={stat.label}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.14 + i * 0.05 }}
+                          whileHover={{ y: -2 }}
+                          className="text-center"
+                        >
+                          <p className="text-lg font-bold text-foreground">{stat.value}</p>
+                          <p className="text-[9px] text-muted">{stat.label}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* Right Column - Output */}
+              <div className="lg:col-span-3">
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.09, duration: 0.35 }}
+                  className="glass rounded-xl p-5 min-h-[600px] flex flex-col"
+                >
+                  {/* Output Header */}
+                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-7 h-7 rounded-lg flex items-center justify-center"
+                        style={{ background: `${activeType.color}18` }}
+                      >
+                        {(() => { const Icon = activeType.icon; return <Icon size={14} style={{ color: activeType.color }} />; })()}
+                      </div>
+                      <div>
+                        <h2 className="text-sm font-bold text-foreground">{activeType.label} Output</h2>
+                        <p className="text-[9px] text-muted">
+                          {output ? `${output.split(/\s+/).length} words generated` : "Configure your brief and hit Generate"}
+                        </p>
+                      </div>
+                    </div>
+                    {output && (
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={copyToClipboard}
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-lg bg-surface-light border border-border text-foreground hover:bg-[rgba(37,99,235,0.05)] hover:border-[rgba(37,99,235,0.2)] transition-all"
+                        >
+                          <Copy size={12} />
+                          Copy
+                        </button>
+                        <button
+                          onClick={saveToLibrary}
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-all"
+                        >
+                          <BookmarkPlus size={12} />
+                          Save to Library
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Output Content */}
             <div className="flex-1">
               {generating ? (
                 <div className="space-y-4 animate-pulse">
@@ -1753,8 +1733,7 @@ export default function CopywriterPage() {
           </motion.div>
         </div>
       </div>
-      )}
-    </div>
+      )}</MotionPage>
   );
 }
 

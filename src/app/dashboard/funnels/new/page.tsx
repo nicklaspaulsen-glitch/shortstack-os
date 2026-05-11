@@ -8,6 +8,7 @@ import {
   GitBranch, ChevronRight, ChevronLeft, Sparkles, Users, Video,
   ShoppingCart, TrendingUp, Zap, Check, Plus, ArrowRight,
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface StepTemplate {
   title: string;
@@ -155,182 +156,173 @@ export default function NewFunnelPage() {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-4xl mx-auto">
-      <PageHero
-        title="New Funnel"
-        subtitle="Pick a template to get started in seconds, or build from scratch."
-        icon={<GitBranch size={22} />}
-        gradient="purple"
-      />
-
-      {/* Step indicator */}
-      <div className="flex items-center gap-2">
-        {[
-          { n: 1, label: "Name & Template" },
-          { n: 2, label: "Review & Create" },
-        ].map((s, idx) => (
-          <div key={s.n} className="flex items-center gap-2">
-            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${step === s.n ? "bg-[rgba(37,99,235,0.08)] text-blue-700 border border-[rgba(37,99,235,0.25)]" : step > s.n ? "text-emerald-700" : "text-[#9CA3AF]"}`}>
-              {step > s.n ? <Check size={14} /> : <span className="w-4 h-4 rounded-full bg-current/20 flex items-center justify-center text-xs">{s.n}</span>}
-              {s.label}
-            </div>
-            {idx < 1 && <ChevronRight size={14} className="text-[#D1D5DB]" />}
-          </div>
-        ))}
-      </div>
-
-      {step === 1 && (
-        <div className="space-y-6">
-          {/* Name */}
-          <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-4">
-            <h2 className="text-[#111827] font-semibold text-base">Funnel Details</h2>
-            <div>
-              <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Funnel Name *</label>
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Lead Gen — Free Audit"
-                className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)]"
-              />
-            </div>
-            <div>
-              <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Description (optional)</label>
-              <input
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Short description of the funnel goal"
-                className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)]"
-              />
-            </div>
-          </div>
-
-          {/* Templates */}
-          <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-4">
-            <div className="flex items-center gap-2">
-              <Sparkles size={15} className="text-purple-600" />
-              <h2 className="text-[#111827] font-semibold text-base">Choose a Template</h2>
-              <span className="text-[#9CA3AF] text-xs ml-1">(optional)</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {/* Blank option */}
-              <button
-                onClick={() => setSelectedTemplate(null)}
-                className={`text-left p-4 rounded-lg border transition-all ${!selectedTemplate ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-black/[0.06] hover:border-black/[0.12] bg-[#F8FAFC]"}`}
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-md bg-black/[0.04] border border-black/[0.08] flex items-center justify-center">
-                    <Plus size={15} className="text-[#6B7280]" />
+    <MotionPage className="p-6 space-y-6 max-w-4xl mx-auto"><PageHero
+              title="New Funnel"
+              subtitle="Pick a template to get started in seconds, or build from scratch."
+              icon={<GitBranch size={22} />}
+              gradient="purple"
+            />{/* Step indicator */}<div className="flex items-center gap-2">
+              {[
+                { n: 1, label: "Name & Template" },
+                { n: 2, label: "Review & Create" },
+              ].map((s, idx) => (
+                <div key={s.n} className="flex items-center gap-2">
+                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${step === s.n ? "bg-[rgba(37,99,235,0.08)] text-blue-700 border border-[rgba(37,99,235,0.25)]" : step > s.n ? "text-emerald-700" : "text-[#9CA3AF]"}`}>
+                    {step > s.n ? <Check size={14} /> : <span className="w-4 h-4 rounded-full bg-current/20 flex items-center justify-center text-xs">{s.n}</span>}
+                    {s.label}
                   </div>
-                  <span className="text-[#111827] text-sm font-semibold">Blank</span>
+                  {idx < 1 && <ChevronRight size={14} className="text-[#D1D5DB]" />}
                 </div>
-                <p className="text-[#6B7280] text-xs">Start with an empty canvas.</p>
-              </button>
-
-              {TEMPLATES.map((tpl) => (
-                <button
-                  key={tpl.id}
-                  onClick={() => setSelectedTemplate(tpl)}
-                  className={`text-left p-4 rounded-lg border transition-all ${selectedTemplate?.id === tpl.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-black/[0.06] hover:border-black/[0.12] bg-[#F8FAFC]"}`}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className={`w-8 h-8 rounded-md border flex items-center justify-center ${tpl.color}`}>
-                      {tpl.icon}
-                    </div>
-                    <span className="text-[#111827] text-sm font-semibold">{tpl.name}</span>
+              ))}
+            </div>{step === 1 && (
+              <div className="space-y-6">
+                {/* Name */}
+                <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-4">
+                  <h2 className="text-[#111827] font-semibold text-base">Funnel Details</h2>
+                  <div>
+                    <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Funnel Name *</label>
+                    <input
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="e.g. Lead Gen — Free Audit"
+                      className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)]"
+                    />
                   </div>
-                  <p className="text-[#6B7280] text-xs">{tpl.description}</p>
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {tpl.steps.map((s) => (
-                      <span key={s.title} className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${STEP_TYPE_COLORS[s.step_type] ?? "bg-zinc-500/10 text-[#6B7280] border-zinc-500/20"}`}>
-                        {STEP_TYPE_LABELS[s.step_type] ?? s.step_type}
-                      </span>
+                  <div>
+                    <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Description (optional)</label>
+                    <input
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Short description of the funnel goal"
+                      className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)]"
+                    />
+                  </div>
+                </div>
+
+                {/* Templates */}
+                <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Sparkles size={15} className="text-purple-600" />
+                    <h2 className="text-[#111827] font-semibold text-base">Choose a Template</h2>
+                    <span className="text-[#9CA3AF] text-xs ml-1">(optional)</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {/* Blank option */}
+                    <button
+                      onClick={() => setSelectedTemplate(null)}
+                      className={`text-left p-4 rounded-lg border transition-all ${!selectedTemplate ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-black/[0.06] hover:border-black/[0.12] bg-[#F8FAFC]"}`}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-8 h-8 rounded-md bg-black/[0.04] border border-black/[0.08] flex items-center justify-center">
+                          <Plus size={15} className="text-[#6B7280]" />
+                        </div>
+                        <span className="text-[#111827] text-sm font-semibold">Blank</span>
+                      </div>
+                      <p className="text-[#6B7280] text-xs">Start with an empty canvas.</p>
+                    </button>
+
+                    {TEMPLATES.map((tpl) => (
+                      <button
+                        key={tpl.id}
+                        onClick={() => setSelectedTemplate(tpl)}
+                        className={`text-left p-4 rounded-lg border transition-all ${selectedTemplate?.id === tpl.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-black/[0.06] hover:border-black/[0.12] bg-[#F8FAFC]"}`}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className={`w-8 h-8 rounded-md border flex items-center justify-center ${tpl.color}`}>
+                            {tpl.icon}
+                          </div>
+                          <span className="text-[#111827] text-sm font-semibold">{tpl.name}</span>
+                        </div>
+                        <p className="text-[#6B7280] text-xs">{tpl.description}</p>
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {tpl.steps.map((s) => (
+                            <span key={s.title} className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${STEP_TYPE_COLORS[s.step_type] ?? "bg-zinc-500/10 text-[#6B7280] border-zinc-500/20"}`}>
+                              {STEP_TYPE_LABELS[s.step_type] ?? s.step_type}
+                            </span>
+                          ))}
+                        </div>
+                      </button>
                     ))}
                   </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex justify-end">
-            <button
-              onClick={() => {
-                if (!name.trim()) { toast.error("Enter a funnel name"); return; }
-                setStep(2);
-              }}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-semibold text-sm transition-colors"
-            >
-              Review Steps
-              <ChevronRight size={15} />
-            </button>
-          </div>
-        </div>
-      )}
-
-      {step === 2 && (
-        <div className="space-y-6">
-          <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-4">
-            <h2 className="text-[#111827] font-semibold text-base">Funnel Summary</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="text-[#6B7280] text-xs">Name</span>
-                <p className="text-[#111827] font-medium mt-0.5">{name}</p>
-              </div>
-              {description && (
-                <div>
-                  <span className="text-[#6B7280] text-xs">Description</span>
-                  <p className="text-[#111827] font-medium mt-0.5">{description}</p>
                 </div>
-              )}
-              <div>
-                <span className="text-[#6B7280] text-xs">Template</span>
-                <p className="text-[#111827] font-medium mt-0.5">{selectedTemplate?.name ?? "Blank"}</p>
-              </div>
-            </div>
-          </div>
 
-          {selectedTemplate && (
-            <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-3">
-              <h2 className="text-[#111827] font-semibold text-base">Steps Preview</h2>
-              <div className="flex items-center gap-2 overflow-x-auto pb-2">
-                {selectedTemplate.steps.map((s, idx) => (
-                  <div key={idx} className="flex items-center gap-2 shrink-0">
-                    <div className="bg-[#F8FAFC] border border-black/[0.06] rounded-lg px-4 py-3 min-w-[120px]">
-                      <div className="text-[#9CA3AF] text-[10px] font-bold uppercase tracking-widest mb-1">
-                        Step {idx + 1}
-                      </div>
-                      <div className="text-[#111827] text-sm font-medium mb-1.5">{s.title}</div>
-                      <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${STEP_TYPE_COLORS[s.step_type] ?? "bg-zinc-500/10 text-[#6B7280] border-zinc-500/20"}`}>
-                        {STEP_TYPE_LABELS[s.step_type] ?? s.step_type}
-                      </span>
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => {
+                      if (!name.trim()) { toast.error("Enter a funnel name"); return; }
+                      setStep(2);
+                    }}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-semibold text-sm transition-colors"
+                  >
+                    Review Steps
+                    <ChevronRight size={15} />
+                  </button>
+                </div>
+              </div>
+            )}{step === 2 && (
+              <div className="space-y-6">
+                <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-4">
+                  <h2 className="text-[#111827] font-semibold text-base">Funnel Summary</h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <span className="text-[#6B7280] text-xs">Name</span>
+                      <p className="text-[#111827] font-medium mt-0.5">{name}</p>
                     </div>
-                    {idx < selectedTemplate.steps.length - 1 && (
-                      <ArrowRight size={16} className="text-[#9CA3AF] shrink-0" />
+                    {description && (
+                      <div>
+                        <span className="text-[#6B7280] text-xs">Description</span>
+                        <p className="text-[#111827] font-medium mt-0.5">{description}</p>
+                      </div>
                     )}
+                    <div>
+                      <span className="text-[#6B7280] text-xs">Template</span>
+                      <p className="text-[#111827] font-medium mt-0.5">{selectedTemplate?.name ?? "Blank"}</p>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
+                </div>
 
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() => setStep(1)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-black/[0.08] text-[#6B7280] hover:text-[#111827] text-sm font-medium transition-colors"
-            >
-              <ChevronLeft size={15} />
-              Back
-            </button>
-            <button
-              onClick={handleCreate}
-              disabled={creating}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white font-semibold text-sm transition-colors"
-            >
-              {creating ? "Creating…" : "Create Funnel"}
-              <GitBranch size={15} />
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+                {selectedTemplate && (
+                  <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-3">
+                    <h2 className="text-[#111827] font-semibold text-base">Steps Preview</h2>
+                    <div className="flex items-center gap-2 overflow-x-auto pb-2">
+                      {selectedTemplate.steps.map((s, idx) => (
+                        <div key={idx} className="flex items-center gap-2 shrink-0">
+                          <div className="bg-[#F8FAFC] border border-black/[0.06] rounded-lg px-4 py-3 min-w-[120px]">
+                            <div className="text-[#9CA3AF] text-[10px] font-bold uppercase tracking-widest mb-1">
+                              Step {idx + 1}
+                            </div>
+                            <div className="text-[#111827] text-sm font-medium mb-1.5">{s.title}</div>
+                            <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${STEP_TYPE_COLORS[s.step_type] ?? "bg-zinc-500/10 text-[#6B7280] border-zinc-500/20"}`}>
+                              {STEP_TYPE_LABELS[s.step_type] ?? s.step_type}
+                            </span>
+                          </div>
+                          {idx < selectedTemplate.steps.length - 1 && (
+                            <ArrowRight size={16} className="text-[#9CA3AF] shrink-0" />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={() => setStep(1)}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-black/[0.08] text-[#6B7280] hover:text-[#111827] text-sm font-medium transition-colors"
+                  >
+                    <ChevronLeft size={15} />
+                    Back
+                  </button>
+                  <button
+                    onClick={handleCreate}
+                    disabled={creating}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white font-semibold text-sm transition-colors"
+                  >
+                    {creating ? "Creating…" : "Create Funnel"}
+                    <GitBranch size={15} />
+                  </button>
+                </div>
+              </div>
+            )}</MotionPage>
   );
 }

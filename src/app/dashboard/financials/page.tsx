@@ -19,6 +19,7 @@ import PageHero from "@/components/ui/page-hero";
 import { PRISM_GLASS, PRISM_BORDERS } from "@/components/prism/constants";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { StatSkeleton } from "@/components/ui/skeleton";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -476,1017 +477,966 @@ export default function FinancialsPage() {
   const mostExpensive = subscriptions.reduce((m, s) => s.cost_monthly > (m?.cost_monthly || 0) ? s : m, null as typeof subscriptions[number] | null);
 
   return (
-    <div className="fade-in space-y-5">
-      {/* Hero Header */}
-      <PageHero
-        eyebrow="FINANCIALS"
-        icon={<PiggyBank size={22} />}
-        title="Financials"
-        subtitle="Revenue, expenses, invoicing, and financial planning."
-        gradient="gold"
-      />
-      <div className="flex items-center justify-end">
-        <div className="flex gap-2">
-          {!stripeSynced ? (
-            <button onClick={() => toast("Connect Stripe in Settings > Integrations")} className="btn-secondary text-xs flex items-center gap-1.5">
-              <StripeIcon size={14} /> Connect Stripe
-            </button>
-          ) : (
-            <span className="text-[10px] text-emerald-700 flex items-center gap-1">
-              <CheckCircle size={10} /> Synced {lastSyncTime || "just now"}
-            </span>
-          )}
-          {activeTab === "expenses" && (
-            <button onClick={openAdd} className="btn-primary text-xs flex items-center gap-1.5">
-              <Plus size={12} /> Add Expense
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 border-b border-border pb-0">
-        {TABS.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-colors ${
-              activeTab === tab.id
-                ? "bg-surface-light text-[#2563EB] border border-border border-b-transparent -mb-px"
-                : "text-muted hover:text-foreground"
-            }`}
-          >
-            <tab.icon size={12} /> {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* ================================================================== */}
-      {/* OVERVIEW TAB                                                        */}
-      {/* ================================================================== */}
-
-      {activeTab === "overview" && loading && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-          {Array.from({ length: 4 }).map((_, i) => <StatSkeleton key={i} />)}
-        </div>
-      )}
-
-      {activeTab === "overview" && !loading && (
-        <>
-          {/* Key Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            {[
-              { icon: <DollarSign size={12} className="text-[#2563EB]" />, label: "MRR", value: formatCurrency(totalMRR), color: "text-[#2563EB]", sub: `${activeClients.length} active clients` },
-              { icon: <Globe size={12} className="text-blue-400" />, label: "ARR", value: formatCurrency(annualRecurringRevenue), color: "text-blue-400", sub: "annualized" },
-              { icon: <TrendingUp size={12} className={netProfit >= 0 ? "text-emerald-700" : "text-rose-700"} />, label: "Net Profit", value: formatCurrency(netProfit), color: netProfit >= 0 ? "text-emerald-700" : "text-rose-700", sub: <span className="flex items-center gap-0.5">{marginPct >= 0 ? <ArrowUpRight size={10} className="text-emerald-700" /> : <ArrowDownRight size={10} className="text-rose-700" />}{marginPct.toFixed(1)}% margin</span> },
-              { icon: <AlertTriangle size={12} className={churnRate > 5 ? "text-rose-700" : "text-amber-600"} />, label: "Churn Rate", value: `${churnRate.toFixed(1)}%`, color: churnRate > 5 ? "text-rose-700" : "text-amber-600", sub: `${churnedThisMonth} churned / ${totalClients} total` },
-            ].map((tile, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                <div className="p-3">
-                  <div className="flex items-center gap-1.5 mb-1">
-                    {tile.icon}
-                    <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
-                  </div>
-                  <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
-                  <p className="text-[10px] text-muted mt-0.5">{tile.sub}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Extended Metrics Row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            {[
-              { icon: <Minus size={12} className="text-rose-700" />, label: "Monthly Expenses", value: formatCurrency(totalMonthlyExpenses), color: "text-rose-700", sub: `${expenses.length} subscriptions` },
-              { icon: <Users size={12} className="text-purple-400" />, label: "Avg / Client", value: formatCurrency(avgRevenue), color: "text-purple-400", sub: `${activeClients.length} clients` },
-              { icon: <Zap size={12} className="text-[#2563EB]" />, label: "Client LTV", value: formatCurrency(clv), color: "text-[#2563EB]", sub: `avg ${avgClientLifeMonths} months` },
-              { icon: <Shield size={12} className="text-orange-400" />, label: "Est. Annual Tax", value: formatCurrency(estimatedTax), color: "text-orange-400", sub: `${estimatedTaxRate}% effective rate` },
-            ].map((tile, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                <div className="p-3">
-                  <div className="flex items-center gap-1.5 mb-1">
-                    {tile.icon}
-                    <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
-                  </div>
-                  <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
-                  <p className="text-[10px] text-muted mt-0.5">{tile.sub}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Revenue vs Expenses Bar */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-            <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
-              <BarChart3 size={13} className="text-[#2563EB]" /> Revenue vs Expenses vs Profit
-            </p>
-            <div className="space-y-3">
-              <div>
-                <div className="flex justify-between text-[10px] mb-1">
-                  <span className="text-muted">Revenue</span>
-                  <span className="text-[#2563EB] font-semibold">{formatCurrency(totalMRR)}</span>
-                </div>
-                <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
-                  <div className="h-full rounded-lg transition-all duration-500" style={{ width: barWidth(totalMRR), background: "rgba(37,99,235,0.7)" }} />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-[10px] mb-1">
-                  <span className="text-muted">Expenses</span>
-                  <span className="text-rose-700 font-semibold">{formatCurrency(totalMonthlyExpenses)}</span>
-                </div>
-                <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
-                  <div className="h-full rounded-lg bg-red-500/60 transition-all duration-500" style={{ width: barWidth(totalMonthlyExpenses) }} />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-[10px] mb-1">
-                  <span className="text-muted">Net Profit</span>
-                  <span className={`font-semibold ${netProfit >= 0 ? "text-emerald-700" : "text-rose-700"}`}>{formatCurrency(netProfit)}</span>
-                </div>
-                <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
-                  <div className={`h-full rounded-lg transition-all duration-500 ${netProfit >= 0 ? "bg-green-500/60" : "bg-red-500/60"}`} style={{ width: barWidth(netProfit) }} />
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* MRR Trend */}
-          {mrrTrend.length > 1 && (
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-              <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                <TrendingUp size={13} className="text-[#2563EB]" /> MRR Growth Trend
-              </p>
-              <div className="flex items-end gap-1.5 h-32">
-                {mrrTrend.map((item, i) => {
-                  const maxMRR = Math.max(...mrrTrend.map((t) => t.mrr), 1);
-                  const height = `${Math.max((item.mrr / maxMRR) * 100, 4)}%`;
-                  return (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                      <span className="text-[8px] text-muted">{formatCurrency(item.mrr)}</span>
-                      <div className="w-full flex-1 flex items-end">
-                        <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(37,99,235,0.6)" }} />
-                      </div>
-                      <span className="text-[8px] text-muted">{item.month}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          )}
-
-          {/* Revenue by Plan Tier */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <Layers size={13} className="text-[#2563EB]" /> Revenue by Plan Tier
-            </p>
-            <div className="space-y-2">
-              {revenueByTier.map(tier => (
-                <div key={tier.name} className="flex items-center gap-3">
-                  <span className="text-[10px] text-muted w-20 shrink-0">{tier.name}</span>
-                  <div className="flex-1 h-4 rounded bg-surface-light border border-border overflow-hidden">
-                    <div
-                      className={`h-full rounded ${tier.color}/60 transition-all duration-500`}
-                      style={{ width: `${totalTierRevenue > 0 ? Math.max((tier.revenue / totalTierRevenue) * 100, 2) : 2}%` }}
-                    />
-                  </div>
-                  <span className="text-[10px] text-muted w-8 text-center">{tier.count}</span>
-                  <span className="text-[10px] font-semibold text-foreground w-20 text-right">{formatCurrency(tier.revenue)}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Payment Method Distribution */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <CreditCard size={13} className="text-[#2563EB]" /> Payment Method Distribution
-            </p>
-            {paymentMethods.length === 0 ? (
-              <p className="text-xs text-muted text-center py-6">Connect Stripe to see payment method data</p>
-            ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-              {paymentMethods.map(pm => (
-                <div key={pm.method} className="bg-surface-light border border-border rounded-lg p-3">
-                  <p className="text-[10px] text-muted">{pm.method}</p>
-                  <p className="text-lg font-bold text-foreground">{pm.count}</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <div className="flex-1 h-1.5 rounded bg-surface border border-border overflow-hidden">
-                      <div className="h-full rounded" style={{ width: `${pm.pct}%`, background: "rgba(37,99,235,0.6)" }} />
-                    </div>
-                    <span className="text-[9px] text-muted">{pm.pct}%</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            )}
-          </motion.div>
-        </>
-      )}
-
-      {/* ================================================================== */}
-      {/* EXPENSES TAB                                                        */}
-      {/* ================================================================== */}
-
-      {activeTab === "expenses" && (
-        <>
-          {/* Expense Summary Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            {[
-              { icon: <Minus size={12} className="text-rose-700" />, label: "Monthly Total", value: formatCurrency(totalMonthlyExpenses), color: "text-rose-700" },
-              { icon: <Calendar size={12} className="text-orange-400" />, label: "Annual Total", value: formatCurrency(totalMonthlyExpenses * 12), color: "text-orange-400" },
-              { icon: <Layers size={12} className="text-blue-400" />, label: "Categories", value: String(categoryTotals.length), color: "text-blue-400" },
-              { icon: <Percent size={12} className={marginPct >= 0 ? "text-emerald-700" : "text-rose-700"} />, label: "Profit Margin", value: `${marginPct.toFixed(1)}%`, color: marginPct >= 0 ? "text-emerald-700" : "text-rose-700" },
-            ].map((tile, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                <div className="p-3">
-                  <div className="flex items-center gap-1.5 mb-1">
-                    {tile.icon}
-                    <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
-                  </div>
-                  <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Budget vs Actual */}
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <Target size={13} className="text-[#2563EB]" /> Budget vs Actual
-            </p>
-            <div className="space-y-2.5">
-              {budgetsWithActual.map(b => (
-                <div key={b.category} className="flex items-center gap-3">
-                  <span className="text-[10px] text-muted w-28 shrink-0">{b.category}</span>
-                  <div className="flex-1 relative">
-                    <div className="h-4 rounded bg-surface-light border border-border overflow-hidden">
-                      <div
-                        className={`h-full rounded transition-all duration-500 ${b.actual > b.budget ? "bg-red-500/60" : "bg-green-500/40"}`}
-                        style={{ width: `${Math.min((b.actual / (b.budget || 1)) * 100, 100)}%` }}
-                      />
-                    </div>
-                    {b.budget > 0 && (
-                      <div
-                        className="absolute top-0 h-4 w-0.5 bg-[#2563EB]/80"
-                        style={{ left: `${Math.min(100, 100)}%` }}
-                      />
-                    )}
-                  </div>
-                  <span className="text-[10px] text-muted w-16 text-right">{formatCurrency(b.actual)}</span>
-                  <span className="text-[10px] text-muted w-2">/</span>
-                  <span className="text-[10px] font-semibold text-foreground w-16">{formatCurrency(b.budget)}</span>
-                  <span className={`text-[10px] w-16 text-right font-semibold ${b.variance >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
-                    {b.variance >= 0 ? "+" : ""}{formatCurrency(b.variance)}
+    <MotionPage className="fade-in space-y-5">{/* Hero Header */}<PageHero
+              eyebrow="FINANCIALS"
+              icon={<PiggyBank size={22} />}
+              title="Financials"
+              subtitle="Revenue, expenses, invoicing, and financial planning."
+              gradient="gold"
+            /><div className="flex items-center justify-end">
+              <div className="flex gap-2">
+                {!stripeSynced ? (
+                  <button onClick={() => toast("Connect Stripe in Settings > Integrations")} className="btn-secondary text-xs flex items-center gap-1.5">
+                    <StripeIcon size={14} /> Connect Stripe
+                  </button>
+                ) : (
+                  <span className="text-[10px] text-emerald-700 flex items-center gap-1">
+                    <CheckCircle size={10} /> Synced {lastSyncTime || "just now"}
                   </span>
-                </div>
+                )}
+                {activeTab === "expenses" && (
+                  <button onClick={openAdd} className="btn-primary text-xs flex items-center gap-1.5">
+                    <Plus size={12} /> Add Expense
+                  </button>
+                )}
+              </div>
+            </div>{/* Tabs */}<div className="flex gap-1 border-b border-border pb-0">
+              {TABS.map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-colors ${
+                    activeTab === tab.id
+                      ? "bg-surface-light text-[#2563EB] border border-border border-b-transparent -mb-px"
+                      : "text-muted hover:text-foreground"
+                  }`}
+                >
+                  <tab.icon size={12} /> {tab.label}
+                </button>
               ))}
-            </div>
-          </motion.div>
-
-          {/* Category Breakdown */}
-          {categoryTotals.length > 0 && (
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-              <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                <Receipt size={13} className="text-[#2563EB]" /> Expense Categories
-              </p>
-              <div className="space-y-2">
-                {categoryTotals.map((cat) => (
-                  <div key={cat.category} className="flex items-center gap-3">
-                    <span className="text-[10px] text-muted w-28 shrink-0">{cat.category}</span>
-                    <div className="flex-1 h-3 rounded bg-surface-light border border-border overflow-hidden">
-                      <div className="h-full rounded bg-red-500/40 transition-all duration-500" style={{ width: `${Math.max((cat.total / (totalMonthlyExpenses || 1)) * 100, 2)}%` }} />
-                    </div>
-                    <span className="text-[10px] font-semibold text-foreground w-16 text-right">{formatCurrency(cat.total)}</span>
-                  </div>
-                ))}
+            </div>{/* ================================================================== */}{/* OVERVIEW TAB                                                        */}{/* ================================================================== */}{activeTab === "overview" && loading && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                {Array.from({ length: 4 }).map((_, i) => <StatSkeleton key={i} />)}
               </div>
-            </motion.div>
-          )}
-
-          {/* Preset Drawer */}
-          <div className="flex gap-2 mb-2">
-            <button onClick={() => setShowPresets(!showPresets)} className="btn-secondary text-xs flex items-center gap-1.5">
-              <Receipt size={12} /> {showPresets ? "Hide Presets" : "Quick-Add Presets"}
-            </button>
-          </div>
-
-          {showPresets && (
-            <div className="card p-4">
-              <p className="text-xs font-semibold mb-3">Quick-Add Presets</p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {PRESET_EXPENSES.map((preset) => {
-                  const exists = expenses.some((e) => e.name === preset.name);
-                  return (
-                    <button
-                      key={preset.name}
-                      onClick={() => addPreset(preset)}
-                      disabled={exists}
-                      className={`text-left p-2.5 rounded-lg border text-xs transition-all ${
-                        exists ? "border-border/30 text-muted/40 cursor-not-allowed" : "border-border hover:border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.05)]"
-                      }`}
-                    >
-                      <p className="font-semibold">{preset.name}</p>
-                      <p className="text-[10px] text-muted">
-                        {preset.cost === 0 ? "Usage-based" : `${formatCurrency(preset.cost)}/mo`} · {preset.category}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Expense Table */}
-          <div>
-            <p className="section-header text-[10px] uppercase tracking-wider text-muted">
-              Expense Subscriptions ({expenses.length})
-            </p>
-
-            {expenses.length === 0 ? (
-              <div className="card text-center py-12">
-                <Receipt size={24} className="mx-auto mb-2 text-muted/30" />
-                <p className="text-xs text-muted">No expenses tracked yet</p>
-                <p className="text-[10px] text-muted mt-1">Add your tool subscriptions to calculate real profit</p>
-              </div>
-            ) : (
-              <div className="space-y-1.5">
-                <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
-                  <div className="col-span-4">Name</div>
-                  <div className="col-span-2">Category</div>
-                  <div className="col-span-2 text-right">Cost</div>
-                  <div className="col-span-2 text-right">Monthly</div>
-                  <div className="col-span-2 text-right">Actions</div>
-                </div>
-                {expenses.map((exp) => (
-                  <div key={exp.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2.5 rounded-xl bg-surface-light border border-border transition-all hover:border-border/80">
-                    <div className="col-span-4"><p className="text-sm font-semibold">{exp.name}</p></div>
-                    <div className="col-span-2">
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-muted">{exp.category}</span>
-                    </div>
-                    <div className="col-span-2 text-right">
-                      <p className="text-sm">{formatCurrency(exp.cost)}</p>
-                      <p className="text-[9px] text-muted">/{exp.interval === "annual" ? "yr" : "mo"}</p>
-                    </div>
-                    <div className="col-span-2 text-right">
-                      <p className="text-sm font-semibold text-rose-700">{formatCurrency(monthlyEquivalent(exp))}</p>
-                    </div>
-                    <div className="col-span-2 flex justify-end gap-1.5">
-                      <button onClick={() => openEdit(exp)} className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors" aria-label="Edit expense"><Pencil size={12} /></button>
-                      <button onClick={() => deleteExpense(exp.id)} className="p-1.5 rounded-md hover:bg-rose-50 text-muted hover:text-rose-700 transition-colors" aria-label="Delete expense"><Trash2 size={12} /></button>
-                    </div>
-                  </div>
-                ))}
-                <div className="grid grid-cols-12 gap-2 px-4 py-2.5 border-t border-border mt-1">
-                  <div className="col-span-8 text-xs font-semibold text-muted">Total Monthly</div>
-                  <div className="col-span-2 text-right"><p className="text-sm font-bold text-rose-700">{formatCurrency(totalMonthlyExpenses)}</p></div>
-                  <div className="col-span-2" />
-                </div>
-              </div>
-            )}
-          </div>
-        </>
-      )}
-
-      {/* ================================================================== */}
-      {/* SUBSCRIPTIONS TAB                                                   */}
-      {/* ================================================================== */}
-
-      {activeTab === "subscriptions" && (
-        <>
-          {/* Summary cards */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-            {[
-              { label: "Monthly Spend", value: formatCurrency(totalMonthlySubs), color: "text-rose-700", sub: `${activeSubs} active tools` },
-              { label: "Annual Spend", value: formatCurrency(totalAnnualSubs), color: "text-foreground", sub: "Projected" },
-              { label: "Active", value: String(activeSubs), color: "text-emerald-700", sub: `of ${subscriptions.length} total` },
-              { label: "Renewals ≤7d", value: String(upcomingRenewals), color: "text-amber-600", sub: "Upcoming charges" },
-              { label: "Top Cost", value: mostExpensive?.tool_name || "—", color: "text-[#2563EB]", sub: mostExpensive ? formatCurrency(mostExpensive.cost_monthly) + "/mo" : "No data", small: true },
-            ].map((tile, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                <div className="p-4">
-                  <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
-                  <p className={`${tile.small ? "text-sm font-semibold truncate" : "text-lg font-bold"} ${tile.color}`}>{tile.value}</p>
-                  <p className="text-[9px] text-muted">{tile.sub}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Header + Add button */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-sm font-semibold text-foreground">Software & Subscriptions</h2>
-              <p className="text-[11px] text-muted">Track every tool you and your clients pay for.</p>
-            </div>
-            <button onClick={() => setShowAddSub(true)} className="btn-primary text-xs flex items-center gap-1.5">
-              <Plus size={12} /> Add Subscription
-            </button>
-          </div>
-
-          {/* Subscriptions list */}
-          <div className="card p-0 overflow-hidden">
-            {subsLoading ? (
-              <div className="p-8 text-center text-xs text-muted">Loading...</div>
-            ) : subscriptions.length === 0 ? (
-              <div className="p-12 text-center">
-                <Package size={32} className="text-muted/30 mx-auto mb-3" />
-                <p className="text-sm font-medium text-foreground mb-1">No subscriptions tracked yet</p>
-                <p className="text-xs text-muted mb-4">Track your agency software spend to cut unused tools and optimize costs.</p>
-                <button onClick={() => setShowAddSub(true)} className="btn-primary text-xs">Add your first tool</button>
-              </div>
-            ) : (
-              <div className="divide-y divide-border">
-                <div className="grid grid-cols-12 px-4 py-2.5 bg-surface-light/40 text-[10px] uppercase tracking-wider text-muted font-semibold">
-                  <div className="col-span-4">Tool</div>
-                  <div className="col-span-2">Category</div>
-                  <div className="col-span-2 text-right">Cost</div>
-                  <div className="col-span-2">Renews</div>
-                  <div className="col-span-1">Used By</div>
-                  <div className="col-span-1 text-right">Actions</div>
-                </div>
-                {subscriptions.map(s => (
-                  <div key={s.id} className="grid grid-cols-12 px-4 py-3 items-center hover:bg-surface-light/30 transition-colors text-xs">
-                    <div className="col-span-4 flex items-center gap-2">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8]" : "bg-surface-light text-muted"}`}>
-                        {s.tool_name.charAt(0).toUpperCase()}
+            )}{activeTab === "overview" && !loading && (
+              <>
+                {/* Key Metrics */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                  {[
+                    { icon: <DollarSign size={12} className="text-[#2563EB]" />, label: "MRR", value: formatCurrency(totalMRR), color: "text-[#2563EB]", sub: `${activeClients.length} active clients` },
+                    { icon: <Globe size={12} className="text-blue-400" />, label: "ARR", value: formatCurrency(annualRecurringRevenue), color: "text-blue-400", sub: "annualized" },
+                    { icon: <TrendingUp size={12} className={netProfit >= 0 ? "text-emerald-700" : "text-rose-700"} />, label: "Net Profit", value: formatCurrency(netProfit), color: netProfit >= 0 ? "text-emerald-700" : "text-rose-700", sub: <span className="flex items-center gap-0.5">{marginPct >= 0 ? <ArrowUpRight size={10} className="text-emerald-700" /> : <ArrowDownRight size={10} className="text-rose-700" />}{marginPct.toFixed(1)}% margin</span> },
+                    { icon: <AlertTriangle size={12} className={churnRate > 5 ? "text-rose-700" : "text-amber-600"} />, label: "Churn Rate", value: `${churnRate.toFixed(1)}%`, color: churnRate > 5 ? "text-rose-700" : "text-amber-600", sub: `${churnedThisMonth} churned / ${totalClients} total` },
+                  ].map((tile, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                      <div className="p-3">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          {tile.icon}
+                          <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
+                        </div>
+                        <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
+                        <p className="text-[10px] text-muted mt-0.5">{tile.sub}</p>
                       </div>
-                      <div>
-                        <p className="font-medium text-foreground">{s.tool_name}</p>
-                        {s.notes && <p className="text-[9px] text-muted truncate max-w-[180px]">{s.notes}</p>}
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Extended Metrics Row */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                  {[
+                    { icon: <Minus size={12} className="text-rose-700" />, label: "Monthly Expenses", value: formatCurrency(totalMonthlyExpenses), color: "text-rose-700", sub: `${expenses.length} subscriptions` },
+                    { icon: <Users size={12} className="text-purple-400" />, label: "Avg / Client", value: formatCurrency(avgRevenue), color: "text-purple-400", sub: `${activeClients.length} clients` },
+                    { icon: <Zap size={12} className="text-[#2563EB]" />, label: "Client LTV", value: formatCurrency(clv), color: "text-[#2563EB]", sub: `avg ${avgClientLifeMonths} months` },
+                    { icon: <Shield size={12} className="text-orange-400" />, label: "Est. Annual Tax", value: formatCurrency(estimatedTax), color: "text-orange-400", sub: `${estimatedTaxRate}% effective rate` },
+                  ].map((tile, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                      <div className="p-3">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          {tile.icon}
+                          <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
+                        </div>
+                        <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
+                        <p className="text-[10px] text-muted mt-0.5">{tile.sub}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Revenue vs Expenses Bar */}
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                  <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
+                    <BarChart3 size={13} className="text-[#2563EB]" /> Revenue vs Expenses vs Profit
+                  </p>
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex justify-between text-[10px] mb-1">
+                        <span className="text-muted">Revenue</span>
+                        <span className="text-[#2563EB] font-semibold">{formatCurrency(totalMRR)}</span>
+                      </div>
+                      <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
+                        <div className="h-full rounded-lg transition-all duration-500" style={{ width: barWidth(totalMRR), background: "rgba(37,99,235,0.7)" }} />
                       </div>
                     </div>
-                    <div className="col-span-2 text-muted">{s.category}</div>
-                    <div className="col-span-2 text-right">
-                      <p className="font-semibold text-foreground">{formatCurrency(s.cost_monthly)}</p>
-                      <p className="text-[9px] text-muted">/{s.billing_cycle.slice(0,2)}</p>
+                    <div>
+                      <div className="flex justify-between text-[10px] mb-1">
+                        <span className="text-muted">Expenses</span>
+                        <span className="text-rose-700 font-semibold">{formatCurrency(totalMonthlyExpenses)}</span>
+                      </div>
+                      <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
+                        <div className="h-full rounded-lg bg-red-500/60 transition-all duration-500" style={{ width: barWidth(totalMonthlyExpenses) }} />
+                      </div>
                     </div>
-                    <div className="col-span-2 text-muted">
-                      {s.next_charge_date ? new Date(s.next_charge_date).toLocaleDateString() : "—"}
-                    </div>
-                    <div className="col-span-1">
-                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light border border-border capitalize">
-                        {s.used_by}
-                      </span>
-                    </div>
-                    <div className="col-span-1 text-right">
-                      <button onClick={() => deleteSubscription(s.id)} className="text-rose-700 hover:text-rose-900 text-[10px]">Remove</button>
+                    <div>
+                      <div className="flex justify-between text-[10px] mb-1">
+                        <span className="text-muted">Net Profit</span>
+                        <span className={`font-semibold ${netProfit >= 0 ? "text-emerald-700" : "text-rose-700"}`}>{formatCurrency(netProfit)}</span>
+                      </div>
+                      <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
+                        <div className={`h-full rounded-lg transition-all duration-500 ${netProfit >= 0 ? "bg-green-500/60" : "bg-red-500/60"}`} style={{ width: barWidth(netProfit) }} />
+                      </div>
                     </div>
                   </div>
-                ))}
-                <div className="grid grid-cols-12 px-4 py-3 bg-surface-light/40 text-xs font-semibold">
-                  <div className="col-span-6 text-muted">Total Monthly</div>
-                  <div className="col-span-2 text-right text-rose-700">{formatCurrency(totalMonthlySubs)}</div>
-                  <div className="col-span-4" />
-                </div>
-              </div>
-            )}
-          </div>
+                </motion.div>
 
-          {/* Add Subscription Modal */}
-          {showAddSub && (
-            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowAddSub(false)}>
-              <div className="card max-w-lg w-full p-5 space-y-3" onClick={e => e.stopPropagation()}>
+                {/* MRR Trend */}
+                {mrrTrend.length > 1 && (
+                  <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                    <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
+                      <TrendingUp size={13} className="text-[#2563EB]" /> MRR Growth Trend
+                    </p>
+                    <div className="flex items-end gap-1.5 h-32">
+                      {mrrTrend.map((item, i) => {
+                        const maxMRR = Math.max(...mrrTrend.map((t) => t.mrr), 1);
+                        const height = `${Math.max((item.mrr / maxMRR) * 100, 4)}%`;
+                        return (
+                          <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                            <span className="text-[8px] text-muted">{formatCurrency(item.mrr)}</span>
+                            <div className="w-full flex-1 flex items-end">
+                              <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(37,99,235,0.6)" }} />
+                            </div>
+                            <span className="text-[8px] text-muted">{item.month}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Revenue by Plan Tier */}
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
+                    <Layers size={13} className="text-[#2563EB]" /> Revenue by Plan Tier
+                  </p>
+                  <div className="space-y-2">
+                    {revenueByTier.map(tier => (
+                      <div key={tier.name} className="flex items-center gap-3">
+                        <span className="text-[10px] text-muted w-20 shrink-0">{tier.name}</span>
+                        <div className="flex-1 h-4 rounded bg-surface-light border border-border overflow-hidden">
+                          <div
+                            className={`h-full rounded ${tier.color}/60 transition-all duration-500`}
+                            style={{ width: `${totalTierRevenue > 0 ? Math.max((tier.revenue / totalTierRevenue) * 100, 2) : 2}%` }}
+                          />
+                        </div>
+                        <span className="text-[10px] text-muted w-8 text-center">{tier.count}</span>
+                        <span className="text-[10px] font-semibold text-foreground w-20 text-right">{formatCurrency(tier.revenue)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* Payment Method Distribution */}
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
+                    <CreditCard size={13} className="text-[#2563EB]" /> Payment Method Distribution
+                  </p>
+                  {paymentMethods.length === 0 ? (
+                    <p className="text-xs text-muted text-center py-6">Connect Stripe to see payment method data</p>
+                  ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                    {paymentMethods.map(pm => (
+                      <div key={pm.method} className="bg-surface-light border border-border rounded-lg p-3">
+                        <p className="text-[10px] text-muted">{pm.method}</p>
+                        <p className="text-lg font-bold text-foreground">{pm.count}</p>
+                        <div className="flex items-center gap-1 mt-1">
+                          <div className="flex-1 h-1.5 rounded bg-surface border border-border overflow-hidden">
+                            <div className="h-full rounded" style={{ width: `${pm.pct}%`, background: "rgba(37,99,235,0.6)" }} />
+                          </div>
+                          <span className="text-[9px] text-muted">{pm.pct}%</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  )}
+                </motion.div>
+              </>
+            )}{/* ================================================================== */}{/* EXPENSES TAB                                                        */}{/* ================================================================== */}{activeTab === "expenses" && (
+              <>
+                {/* Expense Summary Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                  {[
+                    { icon: <Minus size={12} className="text-rose-700" />, label: "Monthly Total", value: formatCurrency(totalMonthlyExpenses), color: "text-rose-700" },
+                    { icon: <Calendar size={12} className="text-orange-400" />, label: "Annual Total", value: formatCurrency(totalMonthlyExpenses * 12), color: "text-orange-400" },
+                    { icon: <Layers size={12} className="text-blue-400" />, label: "Categories", value: String(categoryTotals.length), color: "text-blue-400" },
+                    { icon: <Percent size={12} className={marginPct >= 0 ? "text-emerald-700" : "text-rose-700"} />, label: "Profit Margin", value: `${marginPct.toFixed(1)}%`, color: marginPct >= 0 ? "text-emerald-700" : "text-rose-700" },
+                  ].map((tile, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                      <div className="p-3">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          {tile.icon}
+                          <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
+                        </div>
+                        <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Budget vs Actual */}
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
+                    <Target size={13} className="text-[#2563EB]" /> Budget vs Actual
+                  </p>
+                  <div className="space-y-2.5">
+                    {budgetsWithActual.map(b => (
+                      <div key={b.category} className="flex items-center gap-3">
+                        <span className="text-[10px] text-muted w-28 shrink-0">{b.category}</span>
+                        <div className="flex-1 relative">
+                          <div className="h-4 rounded bg-surface-light border border-border overflow-hidden">
+                            <div
+                              className={`h-full rounded transition-all duration-500 ${b.actual > b.budget ? "bg-red-500/60" : "bg-green-500/40"}`}
+                              style={{ width: `${Math.min((b.actual / (b.budget || 1)) * 100, 100)}%` }}
+                            />
+                          </div>
+                          {b.budget > 0 && (
+                            <div
+                              className="absolute top-0 h-4 w-0.5 bg-[#2563EB]/80"
+                              style={{ left: `${Math.min(100, 100)}%` }}
+                            />
+                          )}
+                        </div>
+                        <span className="text-[10px] text-muted w-16 text-right">{formatCurrency(b.actual)}</span>
+                        <span className="text-[10px] text-muted w-2">/</span>
+                        <span className="text-[10px] font-semibold text-foreground w-16">{formatCurrency(b.budget)}</span>
+                        <span className={`text-[10px] w-16 text-right font-semibold ${b.variance >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
+                          {b.variance >= 0 ? "+" : ""}{formatCurrency(b.variance)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* Category Breakdown */}
+                {categoryTotals.length > 0 && (
+                  <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                    <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
+                      <Receipt size={13} className="text-[#2563EB]" /> Expense Categories
+                    </p>
+                    <div className="space-y-2">
+                      {categoryTotals.map((cat) => (
+                        <div key={cat.category} className="flex items-center gap-3">
+                          <span className="text-[10px] text-muted w-28 shrink-0">{cat.category}</span>
+                          <div className="flex-1 h-3 rounded bg-surface-light border border-border overflow-hidden">
+                            <div className="h-full rounded bg-red-500/40 transition-all duration-500" style={{ width: `${Math.max((cat.total / (totalMonthlyExpenses || 1)) * 100, 2)}%` }} />
+                          </div>
+                          <span className="text-[10px] font-semibold text-foreground w-16 text-right">{formatCurrency(cat.total)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Preset Drawer */}
+                <div className="flex gap-2 mb-2">
+                  <button onClick={() => setShowPresets(!showPresets)} className="btn-secondary text-xs flex items-center gap-1.5">
+                    <Receipt size={12} /> {showPresets ? "Hide Presets" : "Quick-Add Presets"}
+                  </button>
+                </div>
+
+                {showPresets && (
+                  <div className="card p-4">
+                    <p className="text-xs font-semibold mb-3">Quick-Add Presets</p>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      {PRESET_EXPENSES.map((preset) => {
+                        const exists = expenses.some((e) => e.name === preset.name);
+                        return (
+                          <button
+                            key={preset.name}
+                            onClick={() => addPreset(preset)}
+                            disabled={exists}
+                            className={`text-left p-2.5 rounded-lg border text-xs transition-all ${
+                              exists ? "border-border/30 text-muted/40 cursor-not-allowed" : "border-border hover:border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.05)]"
+                            }`}
+                          >
+                            <p className="font-semibold">{preset.name}</p>
+                            <p className="text-[10px] text-muted">
+                              {preset.cost === 0 ? "Usage-based" : `${formatCurrency(preset.cost)}/mo`} · {preset.category}
+                            </p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Expense Table */}
+                <div>
+                  <p className="section-header text-[10px] uppercase tracking-wider text-muted">
+                    Expense Subscriptions ({expenses.length})
+                  </p>
+
+                  {expenses.length === 0 ? (
+                    <div className="card text-center py-12">
+                      <Receipt size={24} className="mx-auto mb-2 text-muted/30" />
+                      <p className="text-xs text-muted">No expenses tracked yet</p>
+                      <p className="text-[10px] text-muted mt-1">Add your tool subscriptions to calculate real profit</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-1.5">
+                      <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
+                        <div className="col-span-4">Name</div>
+                        <div className="col-span-2">Category</div>
+                        <div className="col-span-2 text-right">Cost</div>
+                        <div className="col-span-2 text-right">Monthly</div>
+                        <div className="col-span-2 text-right">Actions</div>
+                      </div>
+                      {expenses.map((exp) => (
+                        <div key={exp.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2.5 rounded-xl bg-surface-light border border-border transition-all hover:border-border/80">
+                          <div className="col-span-4"><p className="text-sm font-semibold">{exp.name}</p></div>
+                          <div className="col-span-2">
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-muted">{exp.category}</span>
+                          </div>
+                          <div className="col-span-2 text-right">
+                            <p className="text-sm">{formatCurrency(exp.cost)}</p>
+                            <p className="text-[9px] text-muted">/{exp.interval === "annual" ? "yr" : "mo"}</p>
+                          </div>
+                          <div className="col-span-2 text-right">
+                            <p className="text-sm font-semibold text-rose-700">{formatCurrency(monthlyEquivalent(exp))}</p>
+                          </div>
+                          <div className="col-span-2 flex justify-end gap-1.5">
+                            <button onClick={() => openEdit(exp)} className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors" aria-label="Edit expense"><Pencil size={12} /></button>
+                            <button onClick={() => deleteExpense(exp.id)} className="p-1.5 rounded-md hover:bg-rose-50 text-muted hover:text-rose-700 transition-colors" aria-label="Delete expense"><Trash2 size={12} /></button>
+                          </div>
+                        </div>
+                      ))}
+                      <div className="grid grid-cols-12 gap-2 px-4 py-2.5 border-t border-border mt-1">
+                        <div className="col-span-8 text-xs font-semibold text-muted">Total Monthly</div>
+                        <div className="col-span-2 text-right"><p className="text-sm font-bold text-rose-700">{formatCurrency(totalMonthlyExpenses)}</p></div>
+                        <div className="col-span-2" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}{/* ================================================================== */}{/* SUBSCRIPTIONS TAB                                                   */}{/* ================================================================== */}{activeTab === "subscriptions" && (
+              <>
+                {/* Summary cards */}
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+                  {[
+                    { label: "Monthly Spend", value: formatCurrency(totalMonthlySubs), color: "text-rose-700", sub: `${activeSubs} active tools` },
+                    { label: "Annual Spend", value: formatCurrency(totalAnnualSubs), color: "text-foreground", sub: "Projected" },
+                    { label: "Active", value: String(activeSubs), color: "text-emerald-700", sub: `of ${subscriptions.length} total` },
+                    { label: "Renewals ≤7d", value: String(upcomingRenewals), color: "text-amber-600", sub: "Upcoming charges" },
+                    { label: "Top Cost", value: mostExpensive?.tool_name || "—", color: "text-[#2563EB]", sub: mostExpensive ? formatCurrency(mostExpensive.cost_monthly) + "/mo" : "No data", small: true },
+                  ].map((tile, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                      <div className="p-4">
+                        <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
+                        <p className={`${tile.small ? "text-sm font-semibold truncate" : "text-lg font-bold"} ${tile.color}`}>{tile.value}</p>
+                        <p className="text-[9px] text-muted">{tile.sub}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Header + Add button */}
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold">Add Subscription</h3>
-                  <button onClick={() => setShowAddSub(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>
-                </div>
-                <input list="saas-list" className="input w-full text-xs" placeholder="Tool name (e.g., Canva)" value={newSub.tool_name} onChange={e => setNewSub({...newSub, tool_name: e.target.value})} />
-                <datalist id="saas-list">
-                  {["Canva","Figma","Notion","Slack","Zoom","Google Workspace","Microsoft 365","Adobe Creative Cloud","Stripe","Shopify","Mailchimp","HubSpot","Calendly","Loom","Webflow","Vercel","Supabase","OpenAI","Anthropic Claude","Midjourney","Runway ML","ElevenLabs","Zapier","Airtable","Asana","Monday.com","ClickUp","Trello","Linear","GitHub","Semrush","Ahrefs","Hootsuite","Buffer","Later","ActiveCampaign","ConvertKit","Klaviyo","Intercom","Zendesk","Mixpanel","Amplitude","Hotjar","Typeform","Jotform","1Password","Dropbox"].map(n => <option key={n} value={n} />)}
-                </datalist>
-                <div className="grid grid-cols-2 gap-2">
-                  <select className="input text-xs" value={newSub.category} onChange={e => setNewSub({...newSub, category: e.target.value})}>
-                    {["Design","Marketing","CRM","Analytics","Communication","Productivity","Finance","AI Tools","Development","Hosting","Other"].map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                  <select className="input text-xs" value={newSub.billing_cycle} onChange={e => setNewSub({...newSub, billing_cycle: e.target.value})}>
-                    <option value="monthly">Monthly</option>
-                    <option value="quarterly">Quarterly</option>
-                    <option value="annual">Annual</option>
-                    <option value="one_time">One-time</option>
-                  </select>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <input type="number" className="input text-xs" placeholder="Monthly cost" value={newSub.cost_monthly} onChange={e => setNewSub({...newSub, cost_monthly: parseFloat(e.target.value) || 0})} />
-                  <input type="date" className="input text-xs" value={newSub.next_charge_date} onChange={e => setNewSub({...newSub, next_charge_date: e.target.value})} />
-                </div>
-                <select className="input text-xs w-full" value={newSub.used_by} onChange={e => setNewSub({...newSub, used_by: e.target.value})}>
-                  <option value="me">Used by me</option>
-                  <option value="clients">Used by clients</option>
-                  <option value="both">Both</option>
-                </select>
-                <textarea className="input text-xs w-full" placeholder="Notes (optional)" value={newSub.notes} onChange={e => setNewSub({...newSub, notes: e.target.value})} rows={2} />
-                <div className="flex gap-2 pt-2">
-                  <button onClick={() => setShowAddSub(false)} className="btn-secondary text-xs flex-1">Cancel</button>
-                  <button onClick={saveSubscription} className="btn-primary text-xs flex-1">Save</button>
-                </div>
-              </div>
-            </div>
-          )}
-        </>
-      )}
-
-      {/* ================================================================== */}
-      {/* INVOICING TAB                                                       */}
-      {/* ================================================================== */}
-
-      {activeTab === "invoicing" && (
-        <>
-          {/* Invoice Summary */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            {[
-              { icon: <AlertTriangle size={12} className="text-rose-700" />, label: "Overdue", value: formatCurrency(invoiceTotals.overdue), color: "text-rose-700", sub: `${invoices.filter(i => i.status === "overdue").length} invoices` },
-              { icon: <Clock size={12} className="text-amber-600" />, label: "Due Soon", value: formatCurrency(invoiceTotals.dueSoon), color: "text-amber-600", sub: `${invoices.filter(i => i.status === "due_soon").length} invoices` },
-              { icon: <FileText size={12} className="text-blue-400" />, label: "Pending", value: formatCurrency(invoiceTotals.pending), color: "text-blue-400", sub: `${invoices.filter(i => i.status === "pending").length} invoices` },
-              { icon: <CheckCircle size={12} className="text-emerald-700" />, label: "Paid", value: formatCurrency(invoiceTotals.paid), color: "text-emerald-700", sub: `${invoices.filter(i => i.status === "paid").length} invoices` },
-            ].map((tile, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                <div className="p-3">
-                  <div className="flex items-center gap-1.5 mb-1">
-                    {tile.icon}
-                    <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
-                  </div>
-                  <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
-                  <p className="text-[10px] text-muted mt-0.5">{tile.sub}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Invoice Aging Chart */}
-          <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <Clock size={13} className="text-[#2563EB]" /> Invoice Aging Report
-            </p>
-            <div className="grid grid-cols-4 gap-2 mb-4">
-              {[
-                { label: "Current (0-30)", amount: invoiceTotals.pending + invoiceTotals.dueSoon, color: "bg-green-400" },
-                { label: "31-60 Days", amount: invoiceTotals.overdue * 0.4, color: "bg-yellow-400" },
-                { label: "61-90 Days", amount: invoiceTotals.overdue * 0.35, color: "bg-orange-400" },
-                { label: "90+ Days", amount: invoiceTotals.overdue * 0.25, color: "bg-red-400" },
-              ].map(bucket => (
-                <div key={bucket.label} className="text-center">
-                  <div className="h-20 flex items-end justify-center mb-1">
-                    <div
-                      className={`w-full max-w-[60px] rounded-t-md ${bucket.color}/60`}
-                      style={{ height: `${Math.max((bucket.amount / (invoiceTotals.overdue + invoiceTotals.pending + invoiceTotals.dueSoon || 1)) * 100, 8)}%` }}
-                    />
-                  </div>
-                  <p className="text-[9px] text-muted">{bucket.label}</p>
-                  <p className="text-[10px] font-semibold text-foreground">{formatCurrency(bucket.amount)}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Invoice List */}
-          <div>
-            <p className="section-header text-[10px] uppercase tracking-wider text-muted">
-              All Invoices ({invoices.length})
-            </p>
-            {invoices.length === 0 ? (
-              <div className="card">
-                <EmptyState
-                  type="no-invoices"
-                  title="No invoices yet"
-                  description="Connect Stripe or create invoices to track billing here."
-                />
-              </div>
-            ) : (
-            <div className="space-y-1.5">
-              <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
-                <div className="col-span-2">Invoice</div>
-                <div className="col-span-3">Client</div>
-                <div className="col-span-2 text-right">Amount</div>
-                <div className="col-span-3">Due Date</div>
-                <div className="col-span-2 text-right">Status</div>
-              </div>
-              {invoices.map(inv => (
-                <div key={inv.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2.5 rounded-xl bg-surface-light border border-border transition-all hover:border-border/80">
-                  <div className="col-span-2"><p className="text-xs font-mono font-semibold">{inv.id}</p></div>
-                  <div className="col-span-3"><p className="text-sm">{inv.client}</p></div>
-                  <div className="col-span-2 text-right"><p className="text-sm font-semibold">{formatCurrency(inv.amount)}</p></div>
-                  <div className="col-span-3"><p className="text-xs text-muted">{inv.due}</p></div>
-                  <div className="col-span-2 text-right">
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full border ${
-                      inv.status === "paid" ? "text-emerald-700 border-emerald-200 bg-emerald-50" :
-                      inv.status === "overdue" ? "text-rose-700 border-rose-200 bg-rose-50" :
-                      inv.status === "due_soon" ? "text-amber-600 border-amber-200 bg-amber-50" :
-                      "text-blue-700 border-blue-200 bg-blue-50"
-                    }`}>
-                      {inv.status === "due_soon" ? "Due Soon" : inv.status.charAt(0).toUpperCase() + inv.status.slice(1)}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            )}
-          </div>
-
-          {/* Quick Actions — route to real features, don't fake success. */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            <button
-              onClick={() => { window.location.href = "/dashboard/clients"; }}
-              className="card-hover p-3 text-left">
-              <Plus size={14} className="text-[#2563EB] mb-1.5" />
-              <p className="text-xs font-semibold">Create Invoice</p>
-              <p className="text-[10px] text-muted">Open a client → Billing tab</p>
-            </button>
-            <button
-              onClick={() => toast("Automated reminders ship with the invoicing backend. For now, chase manually from the client's Billing tab.", { icon: "💡", duration: 6000 })}
-              className="card-hover p-3 text-left">
-              <RefreshCw size={14} className="text-blue-400 mb-1.5" />
-              <p className="text-xs font-semibold">Send Reminders</p>
-              <p className="text-[10px] text-muted">Coming soon</p>
-            </button>
-            <button
-              onClick={() => { window.location.href = "/dashboard/clients"; }}
-              className="card-hover p-3 text-left">
-              <Calendar size={14} className="text-purple-400 mb-1.5" />
-              <p className="text-xs font-semibold">Recurring Invoice</p>
-              <p className="text-[10px] text-muted">Open a client → Subscribe</p>
-            </button>
-            <button
-              onClick={() => toast("Batch invoice export is not yet wired. Export individual invoices from Stripe via Billing → Manage subscription.", { icon: "💡", duration: 6000 })}
-              className="card-hover p-3 text-left">
-              <Download size={14} className="text-emerald-700 mb-1.5" />
-              <p className="text-xs font-semibold">Export Invoices</p>
-              <p className="text-[10px] text-muted">Coming soon</p>
-            </button>
-          </div>
-        </>
-      )}
-
-      {/* ================================================================== */}
-      {/* FORECASTING TAB                                                     */}
-      {/* ================================================================== */}
-
-      {activeTab === "forecasting" && (
-        <>
-          {/* Forecast Config */}
-          <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <Target size={13} className="text-[#2563EB]" /> Forecast Parameters
-            </p>
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Forecast Period</label>
-                <p className="text-sm font-semibold text-foreground">{forecastMonths} months</p>
-              </div>
-              <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Monthly Growth Rate</label>
-                <p className="text-sm font-semibold text-emerald-700">{monthlyGrowthRate}%</p>
-              </div>
-              <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Monthly Churn Rate</label>
-                <p className="text-sm font-semibold text-rose-700">{monthlyChurnRate}%</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Forecast Chart */}
-          <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <TrendingUp size={13} className="text-[#2563EB]" /> Revenue Forecast ({forecastMonths}-Month)
-            </p>
-            <div className="flex items-end gap-2 h-40">
-              {forecast.map((item, i) => {
-                const maxVal = Math.max(...forecast.map(f => f.projected), 1);
-                const height = `${Math.max((item.projected / maxVal) * 100, 4)}%`;
-                return (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                    <span className="text-[8px] text-muted">{formatCurrency(item.projected)}</span>
-                    <div className="w-full flex-1 flex items-end">
-                      <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(37,99,235,0.5)" }} />
-                    </div>
-                    <span className="text-[8px] text-muted">{item.month}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Forecast Table */}
-          <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <BarChart3 size={13} className="text-[#2563EB]" /> Projected P&L
-            </p>
-            <div className="space-y-1.5">
-              <div className="grid grid-cols-4 gap-2 px-3 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
-                <div>Month</div>
-                <div className="text-right">Revenue</div>
-                <div className="text-right">Expenses</div>
-                <div className="text-right">Net Profit</div>
-              </div>
-              {forecast.map((item, i) => (
-                <div key={i} className="grid grid-cols-4 gap-2 px-3 py-2 rounded-lg bg-surface-light border border-border">
-                  <div className="text-xs font-semibold">{item.month}</div>
-                  <div className="text-xs text-right text-[#2563EB]">{formatCurrency(item.projected)}</div>
-                  <div className="text-xs text-right text-rose-700">{formatCurrency(item.expenses)}</div>
-                  <div className={`text-xs text-right font-semibold ${item.profit >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
-                    {formatCurrency(item.profit)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Key Projections */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-            <div className="card p-3">
-              <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Projected MRR ({forecastMonths}mo)</p>
-              <p className="text-lg font-bold text-[#2563EB]">{formatCurrency(forecast[forecast.length - 1]?.projected || 0)}</p>
-            </div>
-            <div className="card p-3">
-              <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Projected ARR ({forecastMonths}mo)</p>
-              <p className="text-lg font-bold text-blue-400">{formatCurrency((forecast[forecast.length - 1]?.projected || 0) * 12)}</p>
-            </div>
-            <div className="card p-3">
-              <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Cumulative Profit</p>
-              <p className={`text-lg font-bold ${forecast.reduce((s, f) => s + f.profit, 0) >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
-                {formatCurrency(forecast.reduce((s, f) => s + f.profit, 0))}
-              </p>
-            </div>
-          </div>
-
-          {/* Tax Summary */}
-          <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <Shield size={13} className="text-[#2563EB]" /> Tax Summary (Estimated)
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div>
-                <p className="text-[10px] text-muted">Annual Revenue</p>
-                <p className="text-sm font-bold text-[#2563EB]">{formatCurrency(annualRecurringRevenue)}</p>
-              </div>
-              <div>
-                <p className="text-[10px] text-muted">Annual Expenses</p>
-                <p className="text-sm font-bold text-rose-700">{formatCurrency(totalMonthlyExpenses * 12)}</p>
-              </div>
-              <div>
-                <p className="text-[10px] text-muted">Taxable Income</p>
-                <p className="text-sm font-bold text-foreground">{formatCurrency(annualProfit)}</p>
-              </div>
-              <div>
-                <p className="text-[10px] text-muted">Estimated Tax ({estimatedTaxRate}%)</p>
-                <p className="text-sm font-bold text-orange-400">{formatCurrency(estimatedTax)}</p>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* ================================================================== */}
-      {/* EXPORT TAB                                                          */}
-      {/* ================================================================== */}
-
-      {activeTab === "export" && (
-        <>
-          {/* Export Config */}
-          <div className="card p-4">
-            <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
-              <Download size={13} className="text-[#2563EB]" /> Financial Export
-            </p>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Format</label>
-                <div className="flex gap-2">
-                  {(["csv", "pdf", "xlsx"] as const).map(fmt => (
-                    <button
-                      key={fmt}
-                      onClick={() => setExportFormat(fmt)}
-                      className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
-                        exportFormat === fmt ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#1D4ED8]" : "border-border text-muted hover:text-foreground"
-                      }`}
-                    >
-                      {fmt.toUpperCase()}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Date Range</label>
-                <div className="flex gap-2">
-                  {(["month", "quarter", "year", "all"] as const).map(range => (
-                    <button
-                      key={range}
-                      onClick={() => setExportRange(range)}
-                      className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
-                        exportRange === range ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#1D4ED8]" : "border-border text-muted hover:text-foreground"
-                      }`}
-                    >
-                      {range.charAt(0).toUpperCase() + range.slice(1)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Export Types */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-            {[
-              { label: "Revenue Report", desc: "MRR, ARR, growth trends", icon: TrendingUp, color: "text-[#2563EB]" },
-              { label: "Expense Report", desc: "All tracked subscriptions", icon: Receipt, color: "text-rose-700" },
-              { label: "Profit & Loss", desc: "Full P&L statement", icon: BarChart3, color: "text-emerald-700" },
-              { label: "Invoice Report", desc: "All invoices & aging", icon: FileText, color: "text-blue-400" },
-              { label: "Tax Summary", desc: "Tax-ready financials", icon: Shield, color: "text-orange-400" },
-              { label: "Client Revenue", desc: "Revenue by client/tier", icon: Users, color: "text-purple-400" },
-            ].map(report => (
-              <button
-                key={report.label}
-                onClick={() => toast(`${report.label} export is coming soon. Use Stripe's portal for payment reports today.`, { icon: "💡", duration: 6000 })}
-                className="card-hover p-4 text-left"
-              >
-                <report.icon size={16} className={`${report.color} mb-2`} />
-                <p className="text-xs font-semibold">{report.label}</p>
-                <p className="text-[10px] text-muted mt-0.5">{report.desc}</p>
-                <p className="text-[10px] text-[#2563EB] mt-2 flex items-center gap-1">
-                  <Download size={10} /> Coming soon
-                </p>
-              </button>
-            ))}
-          </div>
-
-          {/* Payment Processors */}
-          <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <CreditCard size={13} className="text-[#2563EB]" /> Payment Processors
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {/* Stripe */}
-              <div className="p-3 rounded-lg border border-border bg-surface-light">
-                <div className="flex items-center gap-2 mb-2">
-                  <StripeIcon size={22} />
                   <div>
-                    <p className="text-xs font-semibold">Stripe</p>
-                    <p className="text-[9px] text-muted">
-                      {stripeSynced ? `Synced ${lastSyncTime || "just now"}` : "Not connected"}
+                    <h2 className="text-sm font-semibold text-foreground">Software & Subscriptions</h2>
+                    <p className="text-[11px] text-muted">Track every tool you and your clients pay for.</p>
+                  </div>
+                  <button onClick={() => setShowAddSub(true)} className="btn-primary text-xs flex items-center gap-1.5">
+                    <Plus size={12} /> Add Subscription
+                  </button>
+                </div>
+
+                {/* Subscriptions list */}
+                <div className="card p-0 overflow-hidden">
+                  {subsLoading ? (
+                    <div className="p-8 text-center text-xs text-muted">Loading...</div>
+                  ) : subscriptions.length === 0 ? (
+                    <div className="p-12 text-center">
+                      <Package size={32} className="text-muted/30 mx-auto mb-3" />
+                      <p className="text-sm font-medium text-foreground mb-1">No subscriptions tracked yet</p>
+                      <p className="text-xs text-muted mb-4">Track your agency software spend to cut unused tools and optimize costs.</p>
+                      <button onClick={() => setShowAddSub(true)} className="btn-primary text-xs">Add your first tool</button>
+                    </div>
+                  ) : (
+                    <div className="divide-y divide-border">
+                      <div className="grid grid-cols-12 px-4 py-2.5 bg-surface-light/40 text-[10px] uppercase tracking-wider text-muted font-semibold">
+                        <div className="col-span-4">Tool</div>
+                        <div className="col-span-2">Category</div>
+                        <div className="col-span-2 text-right">Cost</div>
+                        <div className="col-span-2">Renews</div>
+                        <div className="col-span-1">Used By</div>
+                        <div className="col-span-1 text-right">Actions</div>
+                      </div>
+                      {subscriptions.map(s => (
+                        <div key={s.id} className="grid grid-cols-12 px-4 py-3 items-center hover:bg-surface-light/30 transition-colors text-xs">
+                          <div className="col-span-4 flex items-center gap-2">
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8]" : "bg-surface-light text-muted"}`}>
+                              {s.tool_name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="font-medium text-foreground">{s.tool_name}</p>
+                              {s.notes && <p className="text-[9px] text-muted truncate max-w-[180px]">{s.notes}</p>}
+                            </div>
+                          </div>
+                          <div className="col-span-2 text-muted">{s.category}</div>
+                          <div className="col-span-2 text-right">
+                            <p className="font-semibold text-foreground">{formatCurrency(s.cost_monthly)}</p>
+                            <p className="text-[9px] text-muted">/{s.billing_cycle.slice(0,2)}</p>
+                          </div>
+                          <div className="col-span-2 text-muted">
+                            {s.next_charge_date ? new Date(s.next_charge_date).toLocaleDateString() : "—"}
+                          </div>
+                          <div className="col-span-1">
+                            <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light border border-border capitalize">
+                              {s.used_by}
+                            </span>
+                          </div>
+                          <div className="col-span-1 text-right">
+                            <button onClick={() => deleteSubscription(s.id)} className="text-rose-700 hover:text-rose-900 text-[10px]">Remove</button>
+                          </div>
+                        </div>
+                      ))}
+                      <div className="grid grid-cols-12 px-4 py-3 bg-surface-light/40 text-xs font-semibold">
+                        <div className="col-span-6 text-muted">Total Monthly</div>
+                        <div className="col-span-2 text-right text-rose-700">{formatCurrency(totalMonthlySubs)}</div>
+                        <div className="col-span-4" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Add Subscription Modal */}
+                {showAddSub && (
+                  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowAddSub(false)}>
+                    <div className="card max-w-lg w-full p-5 space-y-3" onClick={e => e.stopPropagation()}>
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold">Add Subscription</h3>
+                        <button onClick={() => setShowAddSub(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>
+                      </div>
+                      <input list="saas-list" className="input w-full text-xs" placeholder="Tool name (e.g., Canva)" value={newSub.tool_name} onChange={e => setNewSub({...newSub, tool_name: e.target.value})} />
+                      <datalist id="saas-list">
+                        {["Canva","Figma","Notion","Slack","Zoom","Google Workspace","Microsoft 365","Adobe Creative Cloud","Stripe","Shopify","Mailchimp","HubSpot","Calendly","Loom","Webflow","Vercel","Supabase","OpenAI","Anthropic Claude","Midjourney","Runway ML","ElevenLabs","Zapier","Airtable","Asana","Monday.com","ClickUp","Trello","Linear","GitHub","Semrush","Ahrefs","Hootsuite","Buffer","Later","ActiveCampaign","ConvertKit","Klaviyo","Intercom","Zendesk","Mixpanel","Amplitude","Hotjar","Typeform","Jotform","1Password","Dropbox"].map(n => <option key={n} value={n} />)}
+                      </datalist>
+                      <div className="grid grid-cols-2 gap-2">
+                        <select className="input text-xs" value={newSub.category} onChange={e => setNewSub({...newSub, category: e.target.value})}>
+                          {["Design","Marketing","CRM","Analytics","Communication","Productivity","Finance","AI Tools","Development","Hosting","Other"].map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                        <select className="input text-xs" value={newSub.billing_cycle} onChange={e => setNewSub({...newSub, billing_cycle: e.target.value})}>
+                          <option value="monthly">Monthly</option>
+                          <option value="quarterly">Quarterly</option>
+                          <option value="annual">Annual</option>
+                          <option value="one_time">One-time</option>
+                        </select>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <input type="number" className="input text-xs" placeholder="Monthly cost" value={newSub.cost_monthly} onChange={e => setNewSub({...newSub, cost_monthly: parseFloat(e.target.value) || 0})} />
+                        <input type="date" className="input text-xs" value={newSub.next_charge_date} onChange={e => setNewSub({...newSub, next_charge_date: e.target.value})} />
+                      </div>
+                      <select className="input text-xs w-full" value={newSub.used_by} onChange={e => setNewSub({...newSub, used_by: e.target.value})}>
+                        <option value="me">Used by me</option>
+                        <option value="clients">Used by clients</option>
+                        <option value="both">Both</option>
+                      </select>
+                      <textarea className="input text-xs w-full" placeholder="Notes (optional)" value={newSub.notes} onChange={e => setNewSub({...newSub, notes: e.target.value})} rows={2} />
+                      <div className="flex gap-2 pt-2">
+                        <button onClick={() => setShowAddSub(false)} className="btn-secondary text-xs flex-1">Cancel</button>
+                        <button onClick={saveSubscription} className="btn-primary text-xs flex-1">Save</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}{/* ================================================================== */}{/* INVOICING TAB                                                       */}{/* ================================================================== */}{activeTab === "invoicing" && (
+              <>
+                {/* Invoice Summary */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                  {[
+                    { icon: <AlertTriangle size={12} className="text-rose-700" />, label: "Overdue", value: formatCurrency(invoiceTotals.overdue), color: "text-rose-700", sub: `${invoices.filter(i => i.status === "overdue").length} invoices` },
+                    { icon: <Clock size={12} className="text-amber-600" />, label: "Due Soon", value: formatCurrency(invoiceTotals.dueSoon), color: "text-amber-600", sub: `${invoices.filter(i => i.status === "due_soon").length} invoices` },
+                    { icon: <FileText size={12} className="text-blue-400" />, label: "Pending", value: formatCurrency(invoiceTotals.pending), color: "text-blue-400", sub: `${invoices.filter(i => i.status === "pending").length} invoices` },
+                    { icon: <CheckCircle size={12} className="text-emerald-700" />, label: "Paid", value: formatCurrency(invoiceTotals.paid), color: "text-emerald-700", sub: `${invoices.filter(i => i.status === "paid").length} invoices` },
+                  ].map((tile, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                      <div className="p-3">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          {tile.icon}
+                          <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
+                        </div>
+                        <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
+                        <p className="text-[10px] text-muted mt-0.5">{tile.sub}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Invoice Aging Chart */}
+                <div className="card p-4">
+                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
+                    <Clock size={13} className="text-[#2563EB]" /> Invoice Aging Report
+                  </p>
+                  <div className="grid grid-cols-4 gap-2 mb-4">
+                    {[
+                      { label: "Current (0-30)", amount: invoiceTotals.pending + invoiceTotals.dueSoon, color: "bg-green-400" },
+                      { label: "31-60 Days", amount: invoiceTotals.overdue * 0.4, color: "bg-yellow-400" },
+                      { label: "61-90 Days", amount: invoiceTotals.overdue * 0.35, color: "bg-orange-400" },
+                      { label: "90+ Days", amount: invoiceTotals.overdue * 0.25, color: "bg-red-400" },
+                    ].map(bucket => (
+                      <div key={bucket.label} className="text-center">
+                        <div className="h-20 flex items-end justify-center mb-1">
+                          <div
+                            className={`w-full max-w-[60px] rounded-t-md ${bucket.color}/60`}
+                            style={{ height: `${Math.max((bucket.amount / (invoiceTotals.overdue + invoiceTotals.pending + invoiceTotals.dueSoon || 1)) * 100, 8)}%` }}
+                          />
+                        </div>
+                        <p className="text-[9px] text-muted">{bucket.label}</p>
+                        <p className="text-[10px] font-semibold text-foreground">{formatCurrency(bucket.amount)}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Invoice List */}
+                <div>
+                  <p className="section-header text-[10px] uppercase tracking-wider text-muted">
+                    All Invoices ({invoices.length})
+                  </p>
+                  {invoices.length === 0 ? (
+                    <div className="card">
+                      <EmptyState
+                        type="no-invoices"
+                        title="No invoices yet"
+                        description="Connect Stripe or create invoices to track billing here."
+                      />
+                    </div>
+                  ) : (
+                  <div className="space-y-1.5">
+                    <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
+                      <div className="col-span-2">Invoice</div>
+                      <div className="col-span-3">Client</div>
+                      <div className="col-span-2 text-right">Amount</div>
+                      <div className="col-span-3">Due Date</div>
+                      <div className="col-span-2 text-right">Status</div>
+                    </div>
+                    {invoices.map(inv => (
+                      <div key={inv.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2.5 rounded-xl bg-surface-light border border-border transition-all hover:border-border/80">
+                        <div className="col-span-2"><p className="text-xs font-mono font-semibold">{inv.id}</p></div>
+                        <div className="col-span-3"><p className="text-sm">{inv.client}</p></div>
+                        <div className="col-span-2 text-right"><p className="text-sm font-semibold">{formatCurrency(inv.amount)}</p></div>
+                        <div className="col-span-3"><p className="text-xs text-muted">{inv.due}</p></div>
+                        <div className="col-span-2 text-right">
+                          <span className={`text-[10px] px-2 py-0.5 rounded-full border ${
+                            inv.status === "paid" ? "text-emerald-700 border-emerald-200 bg-emerald-50" :
+                            inv.status === "overdue" ? "text-rose-700 border-rose-200 bg-rose-50" :
+                            inv.status === "due_soon" ? "text-amber-600 border-amber-200 bg-amber-50" :
+                            "text-blue-700 border-blue-200 bg-blue-50"
+                          }`}>
+                            {inv.status === "due_soon" ? "Due Soon" : inv.status.charAt(0).toUpperCase() + inv.status.slice(1)}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  )}
+                </div>
+
+                {/* Quick Actions — route to real features, don't fake success. */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  <button
+                    onClick={() => { window.location.href = "/dashboard/clients"; }}
+                    className="card-hover p-3 text-left">
+                    <Plus size={14} className="text-[#2563EB] mb-1.5" />
+                    <p className="text-xs font-semibold">Create Invoice</p>
+                    <p className="text-[10px] text-muted">Open a client → Billing tab</p>
+                  </button>
+                  <button
+                    onClick={() => toast("Automated reminders ship with the invoicing backend. For now, chase manually from the client's Billing tab.", { icon: "💡", duration: 6000 })}
+                    className="card-hover p-3 text-left">
+                    <RefreshCw size={14} className="text-blue-400 mb-1.5" />
+                    <p className="text-xs font-semibold">Send Reminders</p>
+                    <p className="text-[10px] text-muted">Coming soon</p>
+                  </button>
+                  <button
+                    onClick={() => { window.location.href = "/dashboard/clients"; }}
+                    className="card-hover p-3 text-left">
+                    <Calendar size={14} className="text-purple-400 mb-1.5" />
+                    <p className="text-xs font-semibold">Recurring Invoice</p>
+                    <p className="text-[10px] text-muted">Open a client → Subscribe</p>
+                  </button>
+                  <button
+                    onClick={() => toast("Batch invoice export is not yet wired. Export individual invoices from Stripe via Billing → Manage subscription.", { icon: "💡", duration: 6000 })}
+                    className="card-hover p-3 text-left">
+                    <Download size={14} className="text-emerald-700 mb-1.5" />
+                    <p className="text-xs font-semibold">Export Invoices</p>
+                    <p className="text-[10px] text-muted">Coming soon</p>
+                  </button>
+                </div>
+              </>
+            )}{/* ================================================================== */}{/* FORECASTING TAB                                                     */}{/* ================================================================== */}{activeTab === "forecasting" && (
+              <>
+                {/* Forecast Config */}
+                <div className="card p-4">
+                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
+                    <Target size={13} className="text-[#2563EB]" /> Forecast Parameters
+                  </p>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Forecast Period</label>
+                      <p className="text-sm font-semibold text-foreground">{forecastMonths} months</p>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Monthly Growth Rate</label>
+                      <p className="text-sm font-semibold text-emerald-700">{monthlyGrowthRate}%</p>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Monthly Churn Rate</label>
+                      <p className="text-sm font-semibold text-rose-700">{monthlyChurnRate}%</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Forecast Chart */}
+                <div className="card p-4">
+                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
+                    <TrendingUp size={13} className="text-[#2563EB]" /> Revenue Forecast ({forecastMonths}-Month)
+                  </p>
+                  <div className="flex items-end gap-2 h-40">
+                    {forecast.map((item, i) => {
+                      const maxVal = Math.max(...forecast.map(f => f.projected), 1);
+                      const height = `${Math.max((item.projected / maxVal) * 100, 4)}%`;
+                      return (
+                        <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                          <span className="text-[8px] text-muted">{formatCurrency(item.projected)}</span>
+                          <div className="w-full flex-1 flex items-end">
+                            <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(37,99,235,0.5)" }} />
+                          </div>
+                          <span className="text-[8px] text-muted">{item.month}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Forecast Table */}
+                <div className="card p-4">
+                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
+                    <BarChart3 size={13} className="text-[#2563EB]" /> Projected P&L
+                  </p>
+                  <div className="space-y-1.5">
+                    <div className="grid grid-cols-4 gap-2 px-3 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
+                      <div>Month</div>
+                      <div className="text-right">Revenue</div>
+                      <div className="text-right">Expenses</div>
+                      <div className="text-right">Net Profit</div>
+                    </div>
+                    {forecast.map((item, i) => (
+                      <div key={i} className="grid grid-cols-4 gap-2 px-3 py-2 rounded-lg bg-surface-light border border-border">
+                        <div className="text-xs font-semibold">{item.month}</div>
+                        <div className="text-xs text-right text-[#2563EB]">{formatCurrency(item.projected)}</div>
+                        <div className="text-xs text-right text-rose-700">{formatCurrency(item.expenses)}</div>
+                        <div className={`text-xs text-right font-semibold ${item.profit >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
+                          {formatCurrency(item.profit)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Key Projections */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                  <div className="card p-3">
+                    <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Projected MRR ({forecastMonths}mo)</p>
+                    <p className="text-lg font-bold text-[#2563EB]">{formatCurrency(forecast[forecast.length - 1]?.projected || 0)}</p>
+                  </div>
+                  <div className="card p-3">
+                    <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Projected ARR ({forecastMonths}mo)</p>
+                    <p className="text-lg font-bold text-blue-400">{formatCurrency((forecast[forecast.length - 1]?.projected || 0) * 12)}</p>
+                  </div>
+                  <div className="card p-3">
+                    <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Cumulative Profit</p>
+                    <p className={`text-lg font-bold ${forecast.reduce((s, f) => s + f.profit, 0) >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
+                      {formatCurrency(forecast.reduce((s, f) => s + f.profit, 0))}
                     </p>
                   </div>
                 </div>
-                <button
-                  onClick={() => toast(stripeSynced ? "Syncing..." : "Configure Stripe in Settings > Integrations")}
-                  className="w-full text-[10px] py-1.5 rounded bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center justify-center gap-1"
-                >
-                  <RefreshCw size={10} /> {stripeSynced ? "Sync Now" : "Connect"}
-                </button>
-              </div>
-              {/* PayPal */}
-              <div className="p-3 rounded-lg border border-border bg-surface-light">
-                <div className="flex items-center gap-2 mb-2">
-                  <PayPalIcon size={22} />
-                  <div>
-                    <p className="text-xs font-semibold">PayPal</p>
-                    <p className="text-[9px] text-muted">Not connected</p>
+
+                {/* Tax Summary */}
+                <div className="card p-4">
+                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
+                    <Shield size={13} className="text-[#2563EB]" /> Tax Summary (Estimated)
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div>
+                      <p className="text-[10px] text-muted">Annual Revenue</p>
+                      <p className="text-sm font-bold text-[#2563EB]">{formatCurrency(annualRecurringRevenue)}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-muted">Annual Expenses</p>
+                      <p className="text-sm font-bold text-rose-700">{formatCurrency(totalMonthlyExpenses * 12)}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-muted">Taxable Income</p>
+                      <p className="text-sm font-bold text-foreground">{formatCurrency(annualProfit)}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-muted">Estimated Tax ({estimatedTaxRate}%)</p>
+                      <p className="text-sm font-bold text-orange-400">{formatCurrency(estimatedTax)}</p>
+                    </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => toast("Configure PayPal in Settings > Integrations")}
-                  className="w-full text-[10px] py-1.5 rounded border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-all flex items-center justify-center gap-1"
-                >
-                  <Plus size={10} /> Connect
-                </button>
-              </div>
-              {/* Square */}
-              <div className="p-3 rounded-lg border border-border bg-surface-light">
-                <div className="flex items-center gap-2 mb-2">
-                  <SquareIcon size={22} />
-                  <div>
-                    <p className="text-xs font-semibold">Square</p>
-                    <p className="text-[9px] text-muted">Not connected</p>
+              </>
+            )}{/* ================================================================== */}{/* EXPORT TAB                                                          */}{/* ================================================================== */}{activeTab === "export" && (
+              <>
+                {/* Export Config */}
+                <div className="card p-4">
+                  <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
+                    <Download size={13} className="text-[#2563EB]" /> Financial Export
+                  </p>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Format</label>
+                      <div className="flex gap-2">
+                        {(["csv", "pdf", "xlsx"] as const).map(fmt => (
+                          <button
+                            key={fmt}
+                            onClick={() => setExportFormat(fmt)}
+                            className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
+                              exportFormat === fmt ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#1D4ED8]" : "border-border text-muted hover:text-foreground"
+                            }`}
+                          >
+                            {fmt.toUpperCase()}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Date Range</label>
+                      <div className="flex gap-2">
+                        {(["month", "quarter", "year", "all"] as const).map(range => (
+                          <button
+                            key={range}
+                            onClick={() => setExportRange(range)}
+                            className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
+                              exportRange === range ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#1D4ED8]" : "border-border text-muted hover:text-foreground"
+                            }`}
+                          >
+                            {range.charAt(0).toUpperCase() + range.slice(1)}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => toast("Configure Square in Settings > Integrations")}
-                  className="w-full text-[10px] py-1.5 rounded border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-all flex items-center justify-center gap-1"
-                >
-                  <Plus size={10} /> Connect
-                </button>
-              </div>
-            </div>
-          </div>
 
-          {/* Import Section */}
-          <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <FileText size={13} className="text-[#2563EB]" /> Import Financial Data
-            </p>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => toast("CSV import is coming soon. Add expenses manually via the Expenses tab → Add Expense.", { icon: "💡", duration: 6000 })}
-                className="p-4 rounded-lg border-2 border-dashed border-border hover:border-[rgba(37,99,235,0.25)] transition-colors text-center">
-                <FileText size={20} className="mx-auto mb-2 text-muted" />
-                <p className="text-xs font-semibold">Import CSV</p>
-                <p className="text-[10px] text-muted mt-0.5">Coming soon</p>
-              </button>
-              <button
-                onClick={() => toast("QuickBooks sync is on the roadmap. For now, enter expenses manually or use the Subscriptions tab.", { icon: "💡", duration: 6000 })}
-                className="p-4 rounded-lg border-2 border-dashed border-border hover:border-[rgba(37,99,235,0.25)] transition-colors text-center">
-                <Globe size={20} className="mx-auto mb-2 text-muted" />
-                <p className="text-xs font-semibold">QuickBooks Import</p>
-                <p className="text-[10px] text-muted mt-0.5">Coming soon</p>
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+                {/* Export Types */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                  {[
+                    { label: "Revenue Report", desc: "MRR, ARR, growth trends", icon: TrendingUp, color: "text-[#2563EB]" },
+                    { label: "Expense Report", desc: "All tracked subscriptions", icon: Receipt, color: "text-rose-700" },
+                    { label: "Profit & Loss", desc: "Full P&L statement", icon: BarChart3, color: "text-emerald-700" },
+                    { label: "Invoice Report", desc: "All invoices & aging", icon: FileText, color: "text-blue-400" },
+                    { label: "Tax Summary", desc: "Tax-ready financials", icon: Shield, color: "text-orange-400" },
+                    { label: "Client Revenue", desc: "Revenue by client/tier", icon: Users, color: "text-purple-400" },
+                  ].map(report => (
+                    <button
+                      key={report.label}
+                      onClick={() => toast(`${report.label} export is coming soon. Use Stripe's portal for payment reports today.`, { icon: "💡", duration: 6000 })}
+                      className="card-hover p-4 text-left"
+                    >
+                      <report.icon size={16} className={`${report.color} mb-2`} />
+                      <p className="text-xs font-semibold">{report.label}</p>
+                      <p className="text-[10px] text-muted mt-0.5">{report.desc}</p>
+                      <p className="text-[10px] text-[#2563EB] mt-2 flex items-center gap-1">
+                        <Download size={10} /> Coming soon
+                      </p>
+                    </button>
+                  ))}
+                </div>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Add / Edit Modal                                                    */}
-      {/* ------------------------------------------------------------------ */}
+                {/* Payment Processors */}
+                <div className="card p-4">
+                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
+                    <CreditCard size={13} className="text-[#2563EB]" /> Payment Processors
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {/* Stripe */}
+                    <div className="p-3 rounded-lg border border-border bg-surface-light">
+                      <div className="flex items-center gap-2 mb-2">
+                        <StripeIcon size={22} />
+                        <div>
+                          <p className="text-xs font-semibold">Stripe</p>
+                          <p className="text-[9px] text-muted">
+                            {stripeSynced ? `Synced ${lastSyncTime || "just now"}` : "Not connected"}
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => toast(stripeSynced ? "Syncing..." : "Configure Stripe in Settings > Integrations")}
+                        className="w-full text-[10px] py-1.5 rounded bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center justify-center gap-1"
+                      >
+                        <RefreshCw size={10} /> {stripeSynced ? "Sync Now" : "Connect"}
+                      </button>
+                    </div>
+                    {/* PayPal */}
+                    <div className="p-3 rounded-lg border border-border bg-surface-light">
+                      <div className="flex items-center gap-2 mb-2">
+                        <PayPalIcon size={22} />
+                        <div>
+                          <p className="text-xs font-semibold">PayPal</p>
+                          <p className="text-[9px] text-muted">Not connected</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => toast("Configure PayPal in Settings > Integrations")}
+                        className="w-full text-[10px] py-1.5 rounded border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-all flex items-center justify-center gap-1"
+                      >
+                        <Plus size={10} /> Connect
+                      </button>
+                    </div>
+                    {/* Square */}
+                    <div className="p-3 rounded-lg border border-border bg-surface-light">
+                      <div className="flex items-center gap-2 mb-2">
+                        <SquareIcon size={22} />
+                        <div>
+                          <p className="text-xs font-semibold">Square</p>
+                          <p className="text-[9px] text-muted">Not connected</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => toast("Configure Square in Settings > Integrations")}
+                        className="w-full text-[10px] py-1.5 rounded border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-all flex items-center justify-center gap-1"
+                      >
+                        <Plus size={10} /> Connect
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
-      <Modal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        title={editing ? "Edit Expense" : "Add Expense"}
-        size="sm"
-      >
-        <div className="space-y-3">
-          <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">
-              Name *
-            </label>
-            <input
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="input w-full"
-              placeholder="e.g. Supabase Pro"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">
-                Cost *
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted text-xs">$</span>
-                <input
-                  type="number"
-                  min={0}
-                  step="0.01"
-                  value={form.cost}
-                  onChange={(e) => setForm({ ...form, cost: parseFloat(e.target.value) || 0 })}
-                  className="input w-full pl-7"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">
-                Interval
-              </label>
-              <select
-                value={form.interval}
-                onChange={(e) =>
-                  setForm({ ...form, interval: e.target.value as "monthly" | "annual" })
-                }
-                className="input w-full"
-              >
-                <option value="monthly">Monthly</option>
-                <option value="annual">Annual</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">
-              Category
-            </label>
-            <select
-              value={form.category}
-              onChange={(e) => setForm({ ...form, category: e.target.value })}
-              className="input w-full"
+                {/* Import Section */}
+                <div className="card p-4">
+                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
+                    <FileText size={13} className="text-[#2563EB]" /> Import Financial Data
+                  </p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => toast("CSV import is coming soon. Add expenses manually via the Expenses tab → Add Expense.", { icon: "💡", duration: 6000 })}
+                      className="p-4 rounded-lg border-2 border-dashed border-border hover:border-[rgba(37,99,235,0.25)] transition-colors text-center">
+                      <FileText size={20} className="mx-auto mb-2 text-muted" />
+                      <p className="text-xs font-semibold">Import CSV</p>
+                      <p className="text-[10px] text-muted mt-0.5">Coming soon</p>
+                    </button>
+                    <button
+                      onClick={() => toast("QuickBooks sync is on the roadmap. For now, enter expenses manually or use the Subscriptions tab.", { icon: "💡", duration: 6000 })}
+                      className="p-4 rounded-lg border-2 border-dashed border-border hover:border-[rgba(37,99,235,0.25)] transition-colors text-center">
+                      <Globe size={20} className="mx-auto mb-2 text-muted" />
+                      <p className="text-xs font-semibold">QuickBooks Import</p>
+                      <p className="text-[10px] text-muted mt-0.5">Coming soon</p>
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}{/* ------------------------------------------------------------------ */}{/* Add / Edit Modal                                                    */}{/* ------------------------------------------------------------------ */}<Modal
+              isOpen={showModal}
+              onClose={() => setShowModal(false)}
+              title={editing ? "Edit Expense" : "Add Expense"}
+              size="sm"
             >
-              {EXPENSE_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">
+                    Name *
+                  </label>
+                  <input
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    className="input w-full"
+                    placeholder="e.g. Supabase Pro"
+                  />
+                </div>
 
-          {form.interval === "annual" && form.cost > 0 && (
-            <p className="text-[10px] text-muted bg-surface-light border border-border rounded-lg px-3 py-2">
-              Monthly equivalent: <span className="text-[#2563EB] font-semibold">{formatCurrency(form.cost / 12)}</span>/mo
-            </p>
-          )}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">
+                      Cost *
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted text-xs">$</span>
+                      <input
+                        type="number"
+                        min={0}
+                        step="0.01"
+                        value={form.cost}
+                        onChange={(e) => setForm({ ...form, cost: parseFloat(e.target.value) || 0 })}
+                        className="input w-full pl-7"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">
+                      Interval
+                    </label>
+                    <select
+                      value={form.interval}
+                      onChange={(e) =>
+                        setForm({ ...form, interval: e.target.value as "monthly" | "annual" })
+                      }
+                      className="input w-full"
+                    >
+                      <option value="monthly">Monthly</option>
+                      <option value="annual">Annual</option>
+                    </select>
+                  </div>
+                </div>
 
-          <div className="flex justify-end gap-2 pt-1">
-            <button onClick={() => setShowModal(false)} className="btn-secondary text-xs">
-              Cancel
-            </button>
-            <button onClick={saveExpense} className="btn-primary text-xs flex items-center gap-1.5">
-              <DollarSign size={12} /> {editing ? "Update" : "Add Expense"}
-            </button>
-          </div>
-        </div>
-      </Modal>
-    </div>
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">
+                    Category
+                  </label>
+                  <select
+                    value={form.category}
+                    onChange={(e) => setForm({ ...form, category: e.target.value })}
+                    className="input w-full"
+                  >
+                    {EXPENSE_CATEGORIES.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {form.interval === "annual" && form.cost > 0 && (
+                  <p className="text-[10px] text-muted bg-surface-light border border-border rounded-lg px-3 py-2">
+                    Monthly equivalent: <span className="text-[#2563EB] font-semibold">{formatCurrency(form.cost / 12)}</span>/mo
+                  </p>
+                )}
+
+                <div className="flex justify-end gap-2 pt-1">
+                  <button onClick={() => setShowModal(false)} className="btn-secondary text-xs">
+                    Cancel
+                  </button>
+                  <button onClick={saveExpense} className="btn-primary text-xs flex items-center gap-1.5">
+                    <DollarSign size={12} /> {editing ? "Update" : "Add Expense"}
+                  </button>
+                </div>
+              </div>
+            </Modal></MotionPage>
   );
 }

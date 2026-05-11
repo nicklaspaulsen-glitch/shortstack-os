@@ -16,6 +16,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { AlertTriangle, Download, ArrowLeftRight, Trash2 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 export default function DangerZonePage() {
   const [busy, setBusy] = useState<string | null>(null);
@@ -68,97 +69,89 @@ export default function DangerZonePage() {
   }
 
   return (
-    <div className="space-y-6 max-w-3xl">
-      <PageHero
-        variant="default"
-        gradient="sunset"
-        eyebrow="Settings"
-        title="Danger Zone"
-        subtitle="Irreversible account actions. Each one will pause for a confirmation step before anything is sent."
-      />
-
-      <section className="card">
-        <div className="flex items-start gap-4">
-          <div className="rounded-lg bg-surface-light p-2.5 text-text-secondary">
-            <Download size={18} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-semibold text-text-primary">Export workspace data</h3>
-            <p className="mt-1 text-[13px] text-text-secondary leading-relaxed">
-              Bundle every client, lead, deal, contract, content draft, scheduled
-              post and conversation transcript into a downloadable archive. Useful
-              before a tier change, ownership transfer, or migration.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={handleExport}
-            disabled={busy !== null}
-            className="btn-secondary text-xs disabled:opacity-50"
-          >
-            {busy === "export" ? "Working..." : "Request export"}
-          </button>
-        </div>
-      </section>
-
-      <section className="card">
-        <div className="flex items-start gap-4">
-          <div className="rounded-lg bg-surface-light p-2.5 text-text-secondary">
-            <ArrowLeftRight size={18} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-semibold text-text-primary">Transfer workspace ownership</h3>
-            <p className="mt-1 text-[13px] text-text-secondary leading-relaxed">
-              Move the workspace + active subscription onto a different verified
-              ShortStack user. Existing clients, integrations, and team members
-              keep their access; you become a regular team member afterwards.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={handleTransfer}
-            disabled={busy !== null}
-            className="btn-secondary text-xs disabled:opacity-50"
-          >
-            {busy === "transfer" ? "Working..." : "Start transfer"}
-          </button>
-        </div>
-      </section>
-
-      <section
-        className="card"
-        style={{
-          borderColor: "rgba(242, 96, 99, 0.30)",
-          background: "linear-gradient(180deg, color-mix(in srgb, #F26063 6%, transparent) 0%, transparent 60%)",
-        }}
-      >
-        <div className="flex items-start gap-4">
-          <div className="rounded-lg p-2.5 text-status-error" style={{ background: "rgba(242, 96, 99, 0.08)" }}>
-            <Trash2 size={18} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-semibold text-status-error">Delete account</h3>
-            <p className="mt-1 text-[13px] text-text-secondary leading-relaxed">
-              Permanently remove your workspace, every client account, pipeline,
-              integration, and conversation. Subscription cancels immediately,
-              with no refund for the current billing period.
-            </p>
-            <div className="mt-2 flex items-center gap-1.5 text-[11px] text-status-error">
-              <AlertTriangle size={11} />
-              <span>This action cannot be undone.</span>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={busy !== null}
-            className="text-xs px-3 py-2 rounded-lg text-white font-medium disabled:opacity-50"
-            style={{ background: "rgb(var(--status-error-rgb, 242 96 99))" }}
-          >
-            {busy === "delete" ? "Working..." : "Delete account"}
-          </button>
-        </div>
-      </section>
-    </div>
+    <MotionPage className="space-y-6 max-w-3xl"><PageHero
+              variant="default"
+              gradient="sunset"
+              eyebrow="Settings"
+              title="Danger Zone"
+              subtitle="Irreversible account actions. Each one will pause for a confirmation step before anything is sent."
+            /><section className="card">
+              <div className="flex items-start gap-4">
+                <div className="rounded-lg bg-surface-light p-2.5 text-text-secondary">
+                  <Download size={18} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-semibold text-text-primary">Export workspace data</h3>
+                  <p className="mt-1 text-[13px] text-text-secondary leading-relaxed">
+                    Bundle every client, lead, deal, contract, content draft, scheduled
+                    post and conversation transcript into a downloadable archive. Useful
+                    before a tier change, ownership transfer, or migration.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleExport}
+                  disabled={busy !== null}
+                  className="btn-secondary text-xs disabled:opacity-50"
+                >
+                  {busy === "export" ? "Working..." : "Request export"}
+                </button>
+              </div>
+            </section><section className="card">
+              <div className="flex items-start gap-4">
+                <div className="rounded-lg bg-surface-light p-2.5 text-text-secondary">
+                  <ArrowLeftRight size={18} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-semibold text-text-primary">Transfer workspace ownership</h3>
+                  <p className="mt-1 text-[13px] text-text-secondary leading-relaxed">
+                    Move the workspace + active subscription onto a different verified
+                    ShortStack user. Existing clients, integrations, and team members
+                    keep their access; you become a regular team member afterwards.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleTransfer}
+                  disabled={busy !== null}
+                  className="btn-secondary text-xs disabled:opacity-50"
+                >
+                  {busy === "transfer" ? "Working..." : "Start transfer"}
+                </button>
+              </div>
+            </section><section
+              className="card"
+              style={{
+                borderColor: "rgba(242, 96, 99, 0.30)",
+                background: "linear-gradient(180deg, color-mix(in srgb, #F26063 6%, transparent) 0%, transparent 60%)",
+              }}
+            >
+              <div className="flex items-start gap-4">
+                <div className="rounded-lg p-2.5 text-status-error" style={{ background: "rgba(242, 96, 99, 0.08)" }}>
+                  <Trash2 size={18} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-semibold text-status-error">Delete account</h3>
+                  <p className="mt-1 text-[13px] text-text-secondary leading-relaxed">
+                    Permanently remove your workspace, every client account, pipeline,
+                    integration, and conversation. Subscription cancels immediately,
+                    with no refund for the current billing period.
+                  </p>
+                  <div className="mt-2 flex items-center gap-1.5 text-[11px] text-status-error">
+                    <AlertTriangle size={11} />
+                    <span>This action cannot be undone.</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={busy !== null}
+                  className="text-xs px-3 py-2 rounded-lg text-white font-medium disabled:opacity-50"
+                  style={{ background: "rgb(var(--status-error-rgb, 242 96 99))" }}
+                >
+                  {busy === "delete" ? "Working..." : "Delete account"}
+                </button>
+              </div>
+            </section></MotionPage>
   );
 }

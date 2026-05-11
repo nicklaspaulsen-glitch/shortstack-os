@@ -10,6 +10,7 @@ import {
   DollarSign, Plus, Trash2, Download,
   Loader, CheckCircle, Clock, Search
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type CommissionStatus = "pending" | "approved" | "paid";
 
@@ -189,244 +190,232 @@ export default function CommissionTrackerPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        eyebrow="COMMISSIONS"
-        title="Commission Tracker"
-        subtitle="Track, approve, and pay sales commissions for your team."
-        icon={<DollarSign size={22} />}
-        gradient="gold"
-        actions={
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => downloadCSV(filtered)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm transition-colors border border-border"
+    <MotionPage className="space-y-6"><PageHero
+              eyebrow="COMMISSIONS"
+              title="Commission Tracker"
+              subtitle="Track, approve, and pay sales commissions for your team."
+              icon={<DollarSign size={22} />}
+              gradient="gold"
+              actions={
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => downloadCSV(filtered)}
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm transition-colors border border-border"
+                  >
+                    <Download size={13} /> Export CSV
+                  </button>
+                  <button
+                    onClick={() => { setForm(EMPTY_FORM); setShowCreate(true); }}
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm font-medium transition-colors border border-border"
+                  >
+                    <Plus size={13} /> Add
+                  </button>
+                </div>
+              }
+            />{/* Stat tiles */}<div className="grid grid-cols-3 gap-3">
+              {[
+                { label: "Total", value: fmtUSD(totals.total), color: "text-[#374151]" },
+                { label: "Paid", value: fmtUSD(totals.paid), color: "text-emerald-400" },
+                { label: "Pending", value: fmtUSD(totals.pending), color: "text-yellow-400" },
+              ].map((tile, i) => (
+                <motion.div
+                  key={tile.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06 }}
+                  className="glass rounded-xl overflow-hidden"
+                >
+                  <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+                  <div className="p-4">
+                    <p className="text-xs text-[#9CA3AF] uppercase tracking-wider mb-1">{tile.label}</p>
+                    <p className={`text-xl font-bold ${tile.color}`}>{tile.value}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>{/* Filters */}<motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.18 }}
+              className="flex flex-wrap items-center gap-3"
             >
-              <Download size={13} /> Export CSV
-            </button>
-            <button
-              onClick={() => { setForm(EMPTY_FORM); setShowCreate(true); }}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm font-medium transition-colors border border-border"
-            >
-              <Plus size={13} /> Add
-            </button>
-          </div>
-        }
-      />
-
-      {/* Stat tiles */}
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { label: "Total", value: fmtUSD(totals.total), color: "text-[#374151]" },
-          { label: "Paid", value: fmtUSD(totals.paid), color: "text-emerald-400" },
-          { label: "Pending", value: fmtUSD(totals.pending), color: "text-yellow-400" },
-        ].map((tile, i) => (
-          <motion.div
-            key={tile.label}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06 }}
-            className="glass rounded-xl overflow-hidden"
-          >
-            <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
-            <div className="p-4">
-              <p className="text-xs text-[#9CA3AF] uppercase tracking-wider mb-1">{tile.label}</p>
-              <p className={`text-xl font-bold ${tile.color}`}>{tile.value}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Filters */}
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.18 }}
-        className="flex flex-wrap items-center gap-3"
-      >
-        <div className="relative flex-1 min-w-[180px]">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search rep or deal…"
-            className="glass w-full rounded-lg pl-8 pr-3 py-2 text-[#374151] text-sm focus:outline-none focus:border-[#2563EB]"
-          />
-        </div>
-        <div className="flex gap-1">
-          {(["all", "pending", "approved", "paid"] as const).map(s => (
-            <button
-              key={s}
-              onClick={() => setFilterStatus(s)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
-                filterStatus === s
-                  ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
-                  : "bg-[rgba(0,0,0,0.04)] text-[#9CA3AF] hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
-              }`}
-            >
-              {s}
-            </button>
-          ))}
-        </div>
-      </motion.div>
-
-      {loading ? (
-        <div className="space-y-2">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="h-14 rounded-xl bg-[rgba(0,0,0,0.04)] animate-pulse" />
-          ))}
-        </div>
-      ) : filtered.length === 0 ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="glass rounded-xl p-12 text-center"
-        >
-          <DollarSign size={36} className="mx-auto mb-3 text-[#9CA3AF]" />
-          <p className="text-[#9CA3AF] text-sm">No commissions found.</p>
-        </motion.div>
-      ) : (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.12 }}
-          className="glass rounded-xl overflow-hidden"
-        >
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="border-b border-[rgba(0,0,0,0.08)] text-xs text-[#9CA3AF]">
-                <tr>
-                  <th className="text-left px-4 py-3">Rep</th>
-                  <th className="text-left px-4 py-3">Deal Ref</th>
-                  <th className="text-right px-4 py-3">Amount</th>
-                  <th className="text-right px-4 py-3">Rate</th>
-                  <th className="text-left px-4 py-3">Status</th>
-                  <th className="text-right px-4 py-3">Actions</th>
-                </tr>
-              </thead>
-              <motion.tbody className="divide-y divide-[rgba(0,0,0,0.04)]" variants={containerVariants} initial="hidden" animate="visible">
-                {filtered.map((c) => {
-                  const repName = (c.notes || "").split("|")[0] || "Unknown";
-                  const cfg = STATUS_CONFIG[c.status];
-                  return (
-                    <motion.tr
-                      key={c.id}
-                      variants={itemVariants}
-                      className="hover:bg-[rgba(0,0,0,0.03)] transition-colors"
-                    >
-                      <td className="px-4 py-3 font-medium text-[#374151]">{repName}</td>
-                      <td className="px-4 py-3 text-[#9CA3AF]">{c.deal_id || "—"}</td>
-                      <td className="px-4 py-3 text-right font-medium text-[#374151]">
-                        {fmtUSD(c.amount_cents)}
-                      </td>
-                      <td className="px-4 py-3 text-right text-[#6B7280]">
-                        {c.percentage}%
-                      </td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-medium ${cfg.color}`}
-                        >
-                          {cfg.icon}
-                          {cfg.label}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center justify-end gap-1">
-                          {c.status !== "paid" && (
-                            <button
-                              onClick={() => markPaid(c.id)}
-                              disabled={markingPaid === c.id}
-                              className="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs transition-colors disabled:opacity-50"
-                            >
-                              {markingPaid === c.id ? (
-                                <Loader size={11} className="animate-spin" />
-                              ) : (
-                                <CheckCircle size={11} />
-                              )}{" "}
-                              Pay
-                            </button>
-                          )}
-                          <button
-                            onClick={() => deleteCommission(c.id)}
-                            className="p-1.5 rounded-lg hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400 transition-colors"
+              <div className="relative flex-1 min-w-[180px]">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
+                <input
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search rep or deal…"
+                  className="glass w-full rounded-lg pl-8 pr-3 py-2 text-[#374151] text-sm focus:outline-none focus:border-[#2563EB]"
+                />
+              </div>
+              <div className="flex gap-1">
+                {(["all", "pending", "approved", "paid"] as const).map(s => (
+                  <button
+                    key={s}
+                    onClick={() => setFilterStatus(s)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
+                      filterStatus === s
+                        ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
+                        : "bg-[rgba(0,0,0,0.04)] text-[#9CA3AF] hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </motion.div>{loading ? (
+              <div className="space-y-2">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="h-14 rounded-xl bg-[rgba(0,0,0,0.04)] animate-pulse" />
+                ))}
+              </div>
+            ) : filtered.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="glass rounded-xl p-12 text-center"
+              >
+                <DollarSign size={36} className="mx-auto mb-3 text-[#9CA3AF]" />
+                <p className="text-[#9CA3AF] text-sm">No commissions found.</p>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.12 }}
+                className="glass rounded-xl overflow-hidden"
+              >
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="border-b border-[rgba(0,0,0,0.08)] text-xs text-[#9CA3AF]">
+                      <tr>
+                        <th className="text-left px-4 py-3">Rep</th>
+                        <th className="text-left px-4 py-3">Deal Ref</th>
+                        <th className="text-right px-4 py-3">Amount</th>
+                        <th className="text-right px-4 py-3">Rate</th>
+                        <th className="text-left px-4 py-3">Status</th>
+                        <th className="text-right px-4 py-3">Actions</th>
+                      </tr>
+                    </thead>
+                    <motion.tbody className="divide-y divide-[rgba(0,0,0,0.04)]" variants={containerVariants} initial="hidden" animate="visible">
+                      {filtered.map((c) => {
+                        const repName = (c.notes || "").split("|")[0] || "Unknown";
+                        const cfg = STATUS_CONFIG[c.status];
+                        return (
+                          <motion.tr
+                            key={c.id}
+                            variants={itemVariants}
+                            className="hover:bg-[rgba(0,0,0,0.03)] transition-colors"
                           >
-                            <Trash2 size={13} />
-                          </button>
-                        </div>
-                      </td>
-                    </motion.tr>
-                  );
-                })}
-              </motion.tbody>
-              <tfoot className="border-t border-[rgba(0,0,0,0.08)]">
-                <tr className="text-sm font-semibold">
-                  <td colSpan={2} className="px-4 py-3 text-[#6B7280]">
-                    Totals ({filtered.length})
-                  </td>
-                  <td className="px-4 py-3 text-right text-[#374151]">
-                    {fmtUSD(totals.total)}
-                  </td>
-                  <td />
-                  <td className="px-4 py-3">
-                    <span className="text-xs text-emerald-400 mr-2">
-                      {fmtUSD(totals.paid)} paid
-                    </span>
-                    <span className="text-xs text-yellow-400">
-                      {fmtUSD(totals.pending)} pending
-                    </span>
-                  </td>
-                  <td />
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </motion.div>
-      )}
-
-      <Modal
-        isOpen={showCreate}
-        onClose={() => setShowCreate(false)}
-        title="Add Commission"
-      >
-        <div className="space-y-3">
-          {(
-            [
-              { key: "rep_name" as keyof FormState, label: "Rep Name *", placeholder: "Jane Smith", type: "text" },
-              { key: "deal_ref" as keyof FormState, label: "Deal Reference", placeholder: "DEAL-001", type: "text" },
-              { key: "amount" as keyof FormState, label: "Amount ($) *", placeholder: "500.00", type: "number" },
-              { key: "rate" as keyof FormState, label: "Rate (%)", placeholder: "10", type: "number" },
-              { key: "notes" as keyof FormState, label: "Notes", placeholder: "Optional", type: "text" },
-            ]
-          ).map(({ key, label, placeholder, type }) => (
-            <div key={key}>
-              <label className="block text-xs text-[#9CA3AF] mb-1">{label}</label>
-              <input
-                type={type || "text"}
-                value={form[key]}
-                onChange={e => setF(key, e.target.value)}
-                placeholder={placeholder}
-                className="w-full glass rounded-lg px-3 py-2 text-[#374151] text-sm focus:outline-none focus:border-[#2563EB]"
-              />
-            </div>
-          ))}
-          <div className="flex justify-end gap-2 pt-2">
-            <button
-              onClick={() => setShowCreate(false)}
-              className="px-4 py-2 rounded-lg border border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] text-sm"
+                            <td className="px-4 py-3 font-medium text-[#374151]">{repName}</td>
+                            <td className="px-4 py-3 text-[#9CA3AF]">{c.deal_id || "—"}</td>
+                            <td className="px-4 py-3 text-right font-medium text-[#374151]">
+                              {fmtUSD(c.amount_cents)}
+                            </td>
+                            <td className="px-4 py-3 text-right text-[#6B7280]">
+                              {c.percentage}%
+                            </td>
+                            <td className="px-4 py-3">
+                              <span
+                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-medium ${cfg.color}`}
+                              >
+                                {cfg.icon}
+                                {cfg.label}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center justify-end gap-1">
+                                {c.status !== "paid" && (
+                                  <button
+                                    onClick={() => markPaid(c.id)}
+                                    disabled={markingPaid === c.id}
+                                    className="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs transition-colors disabled:opacity-50"
+                                  >
+                                    {markingPaid === c.id ? (
+                                      <Loader size={11} className="animate-spin" />
+                                    ) : (
+                                      <CheckCircle size={11} />
+                                    )}{" "}
+                                    Pay
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => deleteCommission(c.id)}
+                                  className="p-1.5 rounded-lg hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400 transition-colors"
+                                >
+                                  <Trash2 size={13} />
+                                </button>
+                              </div>
+                            </td>
+                          </motion.tr>
+                        );
+                      })}
+                    </motion.tbody>
+                    <tfoot className="border-t border-[rgba(0,0,0,0.08)]">
+                      <tr className="text-sm font-semibold">
+                        <td colSpan={2} className="px-4 py-3 text-[#6B7280]">
+                          Totals ({filtered.length})
+                        </td>
+                        <td className="px-4 py-3 text-right text-[#374151]">
+                          {fmtUSD(totals.total)}
+                        </td>
+                        <td />
+                        <td className="px-4 py-3">
+                          <span className="text-xs text-emerald-400 mr-2">
+                            {fmtUSD(totals.paid)} paid
+                          </span>
+                          <span className="text-xs text-yellow-400">
+                            {fmtUSD(totals.pending)} pending
+                          </span>
+                        </td>
+                        <td />
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </motion.div>
+            )}<Modal
+              isOpen={showCreate}
+              onClose={() => setShowCreate(false)}
+              title="Add Commission"
             >
-              Cancel
-            </button>
-            <button
-              onClick={createCommission}
-              disabled={saving}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium disabled:opacity-50"
-            >
-              {saving && <Loader size={13} className="animate-spin" />}
-              Add Commission
-            </button>
-          </div>
-        </div>
-      </Modal>
-    </div>
+              <div className="space-y-3">
+                {(
+                  [
+                    { key: "rep_name" as keyof FormState, label: "Rep Name *", placeholder: "Jane Smith", type: "text" },
+                    { key: "deal_ref" as keyof FormState, label: "Deal Reference", placeholder: "DEAL-001", type: "text" },
+                    { key: "amount" as keyof FormState, label: "Amount ($) *", placeholder: "500.00", type: "number" },
+                    { key: "rate" as keyof FormState, label: "Rate (%)", placeholder: "10", type: "number" },
+                    { key: "notes" as keyof FormState, label: "Notes", placeholder: "Optional", type: "text" },
+                  ]
+                ).map(({ key, label, placeholder, type }) => (
+                  <div key={key}>
+                    <label className="block text-xs text-[#9CA3AF] mb-1">{label}</label>
+                    <input
+                      type={type || "text"}
+                      value={form[key]}
+                      onChange={e => setF(key, e.target.value)}
+                      placeholder={placeholder}
+                      className="w-full glass rounded-lg px-3 py-2 text-[#374151] text-sm focus:outline-none focus:border-[#2563EB]"
+                    />
+                  </div>
+                ))}
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    onClick={() => setShowCreate(false)}
+                    className="px-4 py-2 rounded-lg border border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] text-sm"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={createCommission}
+                    disabled={saving}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium disabled:opacity-50"
+                  >
+                    {saving && <Loader size={13} className="animate-spin" />}
+                    Add Commission
+                  </button>
+                </div>
+              </div>
+            </Modal></MotionPage>
   );
 }

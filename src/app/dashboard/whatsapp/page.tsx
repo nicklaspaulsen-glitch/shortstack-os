@@ -10,6 +10,7 @@ import {
   Users, AlertCircle, Calendar, X, ChevronDown, Phone, Inbox,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const MAX_MSG_LEN = 1600;
 const WARN_LEN = 160;
@@ -214,9 +215,7 @@ export default function WhatsAppPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" />
-      </div>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" /></MotionPage>
     );
   }
 

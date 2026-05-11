@@ -9,6 +9,7 @@ import {
   ExternalLink, Sparkles, ShieldCheck, Info,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /**
  * Live-progress page for a Domain-as-Hub provisioning job.
@@ -131,9 +132,8 @@ export default function HubStatusPage() {
 
   if (!job) {
     return (
-      <div className="fade-in p-6 text-center text-muted text-sm">
-        <Loader className="inline animate-spin mr-2" size={14} /> Loading job status…
-      </div>
+      <MotionPage className="fade-in p-6 text-center text-muted text-sm"><Loader className="inline animate-spin mr-2" size={14} />Loading job status…
+              </MotionPage>
     );
   }
 

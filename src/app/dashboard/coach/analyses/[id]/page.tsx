@@ -26,6 +26,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface CoachInsight {
   category: string;
@@ -208,9 +209,8 @@ export default function CoachAnalysisDetail() {
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2 text-[#6B7280] text-sm">
-        <Loader2 className="h-4 w-4 animate-spin" /> Loading analysis…
-      </div>
+      <MotionPage className="flex items-center gap-2 text-[#6B7280] text-sm"><Loader2 className="h-4 w-4 animate-spin" />Loading analysis…
+              </MotionPage>
     );
   }
 

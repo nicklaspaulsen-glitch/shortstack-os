@@ -18,6 +18,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface RecordingEntry {
   step: number;
@@ -177,9 +178,8 @@ export default function BrowserTaskDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 text-sm text-gray-500">
-        <Loader2 size={18} className="mr-2 animate-spin" /> Loading task…
-      </div>
+      <MotionPage className="flex items-center justify-center py-20 text-sm text-gray-500"><Loader2 size={18} className="mr-2 animate-spin" />Loading task…
+              </MotionPage>
     );
   }
 

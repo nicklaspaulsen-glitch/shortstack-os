@@ -27,6 +27,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/ui/empty-state";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* ─────────────────────────────────────────────────────────────── */
 /* Types                                                            */
@@ -111,44 +112,37 @@ export default function ReviewsPage() {
   const [tab, setTab] = useState<"manager" | "requests">("manager");
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <PageHero
-        eyebrow="REVIEWS"
-        title="Reviews"
-        subtitle="Manage incoming reviews and auto-send review links after appointments."
-        icon={<Star size={20} />}
-        gradient="sunset"
-      />
-
-      {/* Tab bar */}
-      <div className="mx-auto max-w-5xl px-6 pt-5">
-        <div className="flex gap-1 border-b border-border/40 mb-6">
-          <button
-            onClick={() => setTab("manager")}
-            className={`px-4 py-2 text-sm font-medium transition border-b-2 -mb-px ${
-              tab === "manager"
-                ? "border-[#2563EB] text-[#2563EB]"
-                : "border-transparent text-muted hover:text-foreground"
-            }`}
-          >
-            Review Manager
-          </button>
-          <button
-            onClick={() => setTab("requests")}
-            className={`px-4 py-2 text-sm font-medium transition border-b-2 -mb-px flex items-center gap-1.5 ${
-              tab === "requests"
-                ? "border-[#2563EB] text-[#2563EB]"
-                : "border-transparent text-muted hover:text-foreground"
-            }`}
-          >
-            <Send size={13} />
-            Review Requests
-          </button>
-        </div>
-      </div>
-
-      {tab === "manager" ? <ReviewManager /> : <ReviewRequests />}
-    </div>
+    <MotionPage className="min-h-screen bg-background text-foreground"><PageHero
+              eyebrow="REVIEWS"
+              title="Reviews"
+              subtitle="Manage incoming reviews and auto-send review links after appointments."
+              icon={<Star size={20} />}
+              gradient="sunset"
+            />{/* Tab bar */}<div className="mx-auto max-w-5xl px-6 pt-5">
+              <div className="flex gap-1 border-b border-border/40 mb-6">
+                <button
+                  onClick={() => setTab("manager")}
+                  className={`px-4 py-2 text-sm font-medium transition border-b-2 -mb-px ${
+                    tab === "manager"
+                      ? "border-[#2563EB] text-[#2563EB]"
+                      : "border-transparent text-muted hover:text-foreground"
+                  }`}
+                >
+                  Review Manager
+                </button>
+                <button
+                  onClick={() => setTab("requests")}
+                  className={`px-4 py-2 text-sm font-medium transition border-b-2 -mb-px flex items-center gap-1.5 ${
+                    tab === "requests"
+                      ? "border-[#2563EB] text-[#2563EB]"
+                      : "border-transparent text-muted hover:text-foreground"
+                  }`}
+                >
+                  <Send size={13} />
+                  Review Requests
+                </button>
+              </div>
+            </div>{tab === "manager" ? <ReviewManager /> : <ReviewRequests />}</MotionPage>
   );
 }
 

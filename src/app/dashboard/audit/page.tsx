@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type AuditTab = "trail" | "security" | "retention" | "export";
 type ActionType = "login" | "create" | "update" | "delete" | "export" | "send" | "config";
@@ -211,447 +212,427 @@ export default function AuditPage() {
   ];
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Activity size={22} />}
-        title="Audit Log"
-        eyebrow="AUDIT LOG"
-        subtitle="Comprehensive log of all user actions in the system."
-        gradient="blue"
-        actions={
-          <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5">
-            <Download size={12} /> Export CSV
-          </button>
-        }
-      />
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-        {[
-          { label: "Total Actions", value: stats.total, color: "text-[#2563EB]" },
-          { label: "Success Rate", value: `${stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0}%`, color: "text-emerald-400" },
-          { label: "Failures", value: stats.failed, color: stats.failed > 0 ? "text-red-400" : "text-emerald-400" },
-          { label: "Sensitive", value: stats.sensitive, color: "text-[#2563EB]" },
-          { label: "Alerts", value: stats.unresolvedAlerts, color: stats.unresolvedAlerts > 0 ? "text-red-400" : "text-emerald-400" },
-        ].map((stat, i) => (
-          <PrismPanel key={stat.label} rainbow delay={i * 0.06} padding="p-3">
-            <div className="text-center">
-              <p className="text-[9px] text-muted uppercase">{stat.label}</p>
-              <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
-            </div>
-          </PrismPanel>
-        ))}
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit flex-wrap">
-        {TABS.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-              tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
-            }`}>
-            {t.icon} {t.label}
-            {t.badge !== undefined && t.badge > 0 && (
-              <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-red-500/15 text-red-400 font-bold">{t.badge}</span>
-            )}
-          </button>
-        ))}
-      </div>
-
-      {/* ═══ AUDIT TRAIL TAB ═══ */}
-      {tab === "trail" && (
-        <div className="space-y-3">
-          {/* Filters */}
-          <div className="flex items-center gap-3 flex-wrap">
-            <div className="relative flex-1 min-w-[200px] max-w-sm">
-              <Search size={11} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
-              <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Search actions, users, resources..." className="input w-full pl-7 text-xs py-1.5" />
-            </div>
-
-            {/* Action type filter */}
-            <div className="flex gap-1 bg-surface rounded-lg p-0.5">
-              <button onClick={() => setActionFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${actionFilter === "all" ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>All</button>
-              {ACTION_FILTERS.map(af => (
-                <button key={af} onClick={() => setActionFilter(af)}
-                  className={`px-2 py-1 rounded-md text-[9px] font-medium capitalize ${actionFilter === af ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>
-                  {ACTION_STYLES[af].label}
+    <MotionPage className="fade-in space-y-5"><PageHero
+              icon={<Activity size={22} />}
+              title="Audit Log"
+              eyebrow="AUDIT LOG"
+              subtitle="Comprehensive log of all user actions in the system."
+              gradient="blue"
+              actions={
+                <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5">
+                  <Download size={12} /> Export CSV
+                </button>
+              }
+            />{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+              {[
+                { label: "Total Actions", value: stats.total, color: "text-[#2563EB]" },
+                { label: "Success Rate", value: `${stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0}%`, color: "text-emerald-400" },
+                { label: "Failures", value: stats.failed, color: stats.failed > 0 ? "text-red-400" : "text-emerald-400" },
+                { label: "Sensitive", value: stats.sensitive, color: "text-[#2563EB]" },
+                { label: "Alerts", value: stats.unresolvedAlerts, color: stats.unresolvedAlerts > 0 ? "text-red-400" : "text-emerald-400" },
+              ].map((stat, i) => (
+                <PrismPanel key={stat.label} rainbow delay={i * 0.06} padding="p-3">
+                  <div className="text-center">
+                    <p className="text-[9px] text-muted uppercase">{stat.label}</p>
+                    <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
+                  </div>
+                </PrismPanel>
+              ))}
+            </div>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit flex-wrap">
+              {TABS.map(t => (
+                <button key={t.id} onClick={() => setTab(t.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
+                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
+                  }`}>
+                  {t.icon} {t.label}
+                  {t.badge !== undefined && t.badge > 0 && (
+                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-red-500/15 text-red-400 font-bold">{t.badge}</span>
+                  )}
                 </button>
               ))}
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 flex-wrap">
-            {/* User filter */}
-            <select value={userFilter} onChange={e => setUserFilter(e.target.value)} className="input text-xs py-1.5">
-              <option value="all">All Users</option>
-              {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
-            </select>
-
-            {/* Date filter */}
-            <div className="flex gap-1">
-              {([["today", "Today"], ["7d", "7 Days"], ["30d", "30 Days"], ["all", "All"]] as const).map(([val, label]) => (
-                <button key={val} onClick={() => setDateFilter(val)}
-                  className={`px-2 py-1 rounded text-[9px] ${dateFilter === val ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>{label}</button>
-              ))}
-            </div>
-
-            {/* Sensitive toggle */}
-            <button onClick={() => setShowSensitiveOnly(!showSensitiveOnly)}
-              className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${showSensitiveOnly ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB]" : "text-muted"}`}>
-              <Lock size={9} /> Sensitive Only
-            </button>
-
-            <span className="text-[9px] text-muted ml-auto">{filtered.length} entries</span>
-          </div>
-
-          {/* Audit Table */}
-          <PrismPanel padding="p-0" className="overflow-x-auto">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Timestamp</th>
-                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">User</th>
-                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Action</th>
-                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Resource</th>
-                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden lg:table-cell">Details</th>
-                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden md:table-cell">IP</th>
-                  <th className="text-center py-2.5 px-3 text-muted font-semibold text-[10px]">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.length === 0 && (
-                  <tr><td colSpan={7} className="text-center py-12">
-                    <Activity size={28} className="mx-auto mb-2 text-muted/30" />
-                    <p className="text-sm text-muted">{loading ? "Loading audit entries..." : "No audit entries yet."}</p>
-                  </td></tr>
-                )}
-                {filtered.map((entry, idx) => {
-                  const style = ACTION_STYLES[entry.action];
-                  return (
-                    <motion.tr key={entry.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }}
-                      className="border-b border-border/30 hover:bg-surface-light/50 transition-colors cursor-pointer"
-                      onClick={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}>
-                      <td className="py-2.5 px-3">
-                        <span className="text-[10px] font-mono text-muted">{entry.timestamp}</span>
-                      </td>
-                      <td className="py-2.5 px-3">
-                        <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-md bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[8px] font-bold text-[#2563EB] shrink-0">{entry.userAvatar}</div>
-                          <span className="text-[10px] font-medium truncate">{entry.user}</span>
-                          {entry.sensitive && <Lock size={8} className="text-[#2563EB] shrink-0" />}
-                        </div>
-                      </td>
-                      <td className="py-2.5 px-3">
-                        <span className={`flex items-center gap-1 text-[10px] font-medium ${style.color}`}>
-                          {style.icon} {style.label}
-                        </span>
-                      </td>
-                      <td className="py-2.5 px-3 text-[10px] font-medium">{entry.resource}</td>
-                      <td className="py-2.5 px-3 text-[10px] text-muted truncate max-w-[200px] hidden lg:table-cell">{entry.details}</td>
-                      <td className="py-2.5 px-3 text-[10px] font-mono text-muted hidden md:table-cell">{entry.ip}</td>
-                      <td className="py-2.5 px-3 text-center">
-                        <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium inline-flex items-center gap-1 ${
-                          entry.status === "success" ? "bg-emerald-500/10 text-emerald-400" :
-                          entry.status === "failed" ? "bg-red-500/10 text-red-400" :
-                          "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                        }`}>
-                          {entry.status === "success" ? <CheckCircle size={8} /> : entry.status === "failed" ? <AlertTriangle size={8} /> : <Clock size={8} />}
-                          {entry.status}
-                        </span>
-                      </td>
-                    </motion.tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </PrismPanel>
-
-          {/* Expanded Detail */}
-          {expandedEntry && (() => {
-            const e = entries.find(en => en.id === expandedEntry);
-            if (!e) return null;
-            const style = ACTION_STYLES[e.action];
-            return (
-              <PrismPanel padding="p-4" className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold flex items-center gap-2">
-                    <span className={style.color}>{style.icon}</span> Action Details
-                  </h3>
-                  <button
-                    onClick={() => setExpandedEntry(null)}
-                    aria-label="Close detail"
-                    className="text-muted hover:text-foreground"><X size={14} /></button>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                    <p className="text-[8px] text-muted uppercase">Timestamp</p>
-                    <p className="text-[10px] font-mono mt-0.5">{e.timestamp}</p>
+            </div>{/* ═══ AUDIT TRAIL TAB ═══ */}{tab === "trail" && (
+              <div className="space-y-3">
+                {/* Filters */}
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="relative flex-1 min-w-[200px] max-w-sm">
+                    <Search size={11} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+                    <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                      placeholder="Search actions, users, resources..." className="input w-full pl-7 text-xs py-1.5" />
                   </div>
-                  <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                    <p className="text-[8px] text-muted uppercase">User</p>
-                    <p className="text-[10px] font-medium mt-0.5">{e.user}</p>
-                  </div>
-                  <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                    <p className="text-[8px] text-muted uppercase">Action</p>
-                    <p className={`text-[10px] font-medium mt-0.5 ${style.color}`}>{style.label}</p>
-                  </div>
-                  <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                    <p className="text-[8px] text-muted uppercase">IP Address</p>
-                    <p className="text-[10px] font-mono mt-0.5">{e.ip}</p>
-                  </div>
-                </div>
-                <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                  <p className="text-[8px] text-muted uppercase mb-1">Full Details</p>
-                  <p className="text-[10px]">{e.details}</p>
-                </div>
-                <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                  <p className="text-[8px] text-muted uppercase mb-1">Resource</p>
-                  <p className="text-[10px] font-medium">{e.resource}</p>
-                </div>
-                {e.sensitive && (
-                  <div className="p-2.5 rounded-lg bg-[rgba(37,99,235,0.06)] border border-[rgba(37,99,235,0.15)] flex items-center gap-2">
-                    <Lock size={11} className="text-[#2563EB] shrink-0" />
-                    <p className="text-[10px] text-[#2563EB]">This action involved sensitive data or configuration changes.</p>
-                  </div>
-                )}
-              </PrismPanel>
-            );
-          })()}
-        </div>
-      )}
 
-      {/* ═══ SECURITY ALERTS TAB ═══ */}
-      {tab === "security" && (
-        <div className="space-y-4">
-          {/* Unresolved alerts */}
-          <PrismPanel padding="p-4">
-            <h2 className="section-header flex items-center gap-2"><Shield size={13} className="text-red-400" /> Unresolved Alerts</h2>
-            <div className="space-y-2">
-              {alerts.filter(a => !a.resolved).length === 0 && (
-                <div className="text-center py-8">
-                  <CheckCircle size={24} className="mx-auto mb-2 text-emerald-400" />
-                  <p className="text-xs text-muted">{loading ? "Loading alerts..." : "All alerts resolved. System secure."}</p>
-                </div>
-              )}
-              {alerts.filter(a => !a.resolved).map(alert => (
-                <div key={alert.id} className={`p-3 rounded-lg border ${SEVERITY_STYLES[alert.severity]}`}>
-                  <div className="flex items-start gap-3">
-                    <AlertCircle size={14} className="shrink-0 mt-0.5" />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-[9px] uppercase font-bold">{alert.severity}</span>
-                        <span className="text-[9px] opacity-60">{new Date(alert.created_at).toLocaleString()}</span>
-                      </div>
-                      <p className="text-[11px] font-medium">{alert.title}</p>
-                      {alert.description && (
-                        <p className="text-[10px] opacity-80 mt-0.5">{alert.description}</p>
-                      )}
-                      {alert.ip_address && (
-                        <p className="text-[9px] opacity-60 mt-0.5">IP: {alert.ip_address}</p>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => resolveAlert(alert.id)}
-                      className="text-[9px] px-2.5 py-1 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.10)] transition-colors font-medium shrink-0">
-                      Resolve
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </PrismPanel>
-
-          {/* Resolved alerts */}
-          <PrismPanel padding="p-4">
-            <h2 className="section-header flex items-center gap-2"><CheckCircle size={13} className="text-emerald-400" /> Resolved Alerts</h2>
-            <div className="space-y-2">
-              {alerts.filter(a => a.resolved).length === 0 && (
-                <p className="text-xs text-muted text-center py-6">No resolved alerts yet.</p>
-              )}
-              {alerts.filter(a => a.resolved).map(alert => (
-                <div key={alert.id} className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle size={12} className="text-emerald-400 shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[10px] font-medium">{alert.title}</p>
-                      <p className="text-[9px] text-muted">{new Date(alert.created_at).toLocaleString()}</p>
-                    </div>
-                    <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium ${SEVERITY_STYLES[alert.severity]}`}>{alert.severity}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </PrismPanel>
-
-          {/* Security Overview — computed from real entries */}
-          <PrismPanel padding="p-4">
-            <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-[#2563EB]" /> Security Overview</h2>
-            {(() => {
-              const sevenDaysAgo = Date.now() - 7 * 86400000;
-              const recent = entries.filter(e => new Date(e.timestamp).getTime() >= sevenDaysAgo);
-              const failedLogins = recent.filter(e => e.action === "login" && e.status === "failed").length;
-              const configChanges = recent.filter(e => e.action === "config").length;
-              const dataExports = recent.filter(e => e.action === "export").length;
-              const uniqueIps = new Set(recent.map(e => e.ip).filter(Boolean)).size;
-              const isEmpty = recent.length === 0;
-              if (isEmpty) {
-                return (
-                  <div className="py-8 text-center text-xs text-muted">
-                    <Shield size={20} className="mx-auto mb-2 text-muted/40" />
-                    No security events recorded yet. Stats will populate as your team uses the platform.
-                  </div>
-                );
-              }
-              return (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-                  {[
-                    { label: "Failed Logins (7d)", value: failedLogins, color: "text-red-400" },
-                    { label: "Config Changes (7d)", value: configChanges, color: "text-[#2563EB]" },
-                    { label: "Data Exports (7d)", value: dataExports, color: "text-[#2563EB]" },
-                    { label: "Unique IPs (7d)", value: uniqueIps, color: "text-[#2563EB]" },
-                  ].map((s, i) => (
-                    <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl p-3 text-center" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                      <p className="text-[9px] text-muted uppercase">{s.label}</p>
-                      <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
-                    </motion.div>
-                  ))}
-                </div>
-              );
-            })()}
-          </PrismPanel>
-        </div>
-      )}
-
-      {/* ═══ RETENTION TAB ═══ */}
-      {tab === "retention" && (
-        <div className="space-y-4">
-          <PrismPanel padding="p-4">
-            <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-[#2563EB]" /> Retention Policy</h2>
-            <div className="space-y-3">
-              <div>
-                <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Retention Period (days)</label>
-                <div className="flex items-center gap-3">
-                  <input type="number" value={retentionDays} onChange={e => setRetentionDays(Number(e.target.value))}
-                    className="input w-32 text-xs" min={30} max={365} />
-                  <div className="flex gap-1">
-                    {[30, 60, 90, 180, 365].map(d => (
-                      <button key={d} onClick={() => setRetentionDays(d)}
-                        className={`px-2 py-1 rounded text-[9px] ${retentionDays === d ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted hover:text-foreground"}`}>{d}d</button>
+                  {/* Action type filter */}
+                  <div className="flex gap-1 bg-surface rounded-lg p-0.5">
+                    <button onClick={() => setActionFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${actionFilter === "all" ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>All</button>
+                    {ACTION_FILTERS.map(af => (
+                      <button key={af} onClick={() => setActionFilter(af)}
+                        className={`px-2 py-1 rounded-md text-[9px] font-medium capitalize ${actionFilter === af ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>
+                        {ACTION_STYLES[af].label}
+                      </button>
                     ))}
                   </div>
                 </div>
-              </div>
-              <p className="text-[10px] text-muted">Audit logs older than {retentionDays} days will be automatically archived and removed from the active view.</p>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-                <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                  <p className="text-[9px] text-muted uppercase">Active Entries</p>
-                  <p className="text-lg font-bold text-[#2563EB] mt-0.5">{entries.length}</p>
-                </div>
-                <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                  <p className="text-[9px] text-muted uppercase">Storage Used</p>
-                  {/* Rough estimate: ~200 bytes/entry; exact size comes from backend once wired. */}
-                  <p className="text-lg font-bold text-[#2563EB] mt-0.5">
-                    {entries.length > 0 ? `${(entries.length * 0.2).toFixed(1)} KB` : "0 KB"}
-                  </p>
-                </div>
-                <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                  <p className="text-[9px] text-muted uppercase">Archived</p>
-                  <p className="text-lg font-bold text-muted mt-0.5">0</p>
-                </div>
-              </div>
-            </div>
-          </PrismPanel>
+                <div className="flex items-center gap-3 flex-wrap">
+                  {/* User filter */}
+                  <select value={userFilter} onChange={e => setUserFilter(e.target.value)} className="input text-xs py-1.5">
+                    <option value="all">All Users</option>
+                    {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
+                  </select>
 
-          <PrismPanel padding="p-4">
-            <h2 className="section-header flex items-center gap-2"><Database size={13} className="text-[#2563EB]" /> Data Lifecycle</h2>
-            <div className="space-y-2">
-              {[
-                { stage: "Active", desc: `0 - ${retentionDays} days`, status: "Current data, fully searchable", color: "text-emerald-400" },
-                { stage: "Archived", desc: `${retentionDays} - ${retentionDays * 2} days`, status: "Compressed storage, on-demand access", color: "text-[#2563EB]" },
-                { stage: "Deleted", desc: `After ${retentionDays * 2} days`, status: "Permanently removed", color: "text-red-400" },
-              ].map((item, i) => (
-                <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="rounded-xl flex items-center gap-3 p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                  <div className={`w-2 h-2 rounded-full ${item.color === "text-emerald-400" ? "bg-emerald-400" : item.color === "text-[#2563EB]" ? "bg-[#2563EB]" : "bg-red-400"}`} />
-                  <div className="flex-1">
-                    <p className={`text-[10px] font-semibold ${item.color}`}>{item.stage}</p>
-                    <p className="text-[9px] text-muted">{item.desc}</p>
+                  {/* Date filter */}
+                  <div className="flex gap-1">
+                    {([["today", "Today"], ["7d", "7 Days"], ["30d", "30 Days"], ["all", "All"]] as const).map(([val, label]) => (
+                      <button key={val} onClick={() => setDateFilter(val)}
+                        className={`px-2 py-1 rounded text-[9px] ${dateFilter === val ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>{label}</button>
+                    ))}
                   </div>
-                  <span className="text-[9px] text-muted">{item.status}</span>
-                </motion.div>
-              ))}
-            </div>
-          </PrismPanel>
-        </div>
-      )}
 
-      {/* ═══ EXPORT TAB ═══ */}
-      {tab === "export" && (
-        <PrismPanel padding="p-4">
-          <h2 className="section-header flex items-center gap-2"><Download size={13} className="text-[#2563EB]" /> Export Audit Report</h2>
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Start Date</label>
-                <input type="date" value={exportStartDate} onChange={e => setExportStartDate(e.target.value)}
-                  className="input w-full text-xs" />
+                  {/* Sensitive toggle */}
+                  <button onClick={() => setShowSensitiveOnly(!showSensitiveOnly)}
+                    className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${showSensitiveOnly ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB]" : "text-muted"}`}>
+                    <Lock size={9} /> Sensitive Only
+                  </button>
+
+                  <span className="text-[9px] text-muted ml-auto">{filtered.length} entries</span>
+                </div>
+
+                {/* Audit Table */}
+                <PrismPanel padding="p-0" className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Timestamp</th>
+                        <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">User</th>
+                        <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Action</th>
+                        <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Resource</th>
+                        <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden lg:table-cell">Details</th>
+                        <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden md:table-cell">IP</th>
+                        <th className="text-center py-2.5 px-3 text-muted font-semibold text-[10px]">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filtered.length === 0 && (
+                        <tr><td colSpan={7} className="text-center py-12">
+                          <Activity size={28} className="mx-auto mb-2 text-muted/30" />
+                          <p className="text-sm text-muted">{loading ? "Loading audit entries..." : "No audit entries yet."}</p>
+                        </td></tr>
+                      )}
+                      {filtered.map((entry, idx) => {
+                        const style = ACTION_STYLES[entry.action];
+                        return (
+                          <motion.tr key={entry.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }}
+                            className="border-b border-border/30 hover:bg-surface-light/50 transition-colors cursor-pointer"
+                            onClick={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}>
+                            <td className="py-2.5 px-3">
+                              <span className="text-[10px] font-mono text-muted">{entry.timestamp}</span>
+                            </td>
+                            <td className="py-2.5 px-3">
+                              <div className="flex items-center gap-2">
+                                <div className="w-6 h-6 rounded-md bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[8px] font-bold text-[#2563EB] shrink-0">{entry.userAvatar}</div>
+                                <span className="text-[10px] font-medium truncate">{entry.user}</span>
+                                {entry.sensitive && <Lock size={8} className="text-[#2563EB] shrink-0" />}
+                              </div>
+                            </td>
+                            <td className="py-2.5 px-3">
+                              <span className={`flex items-center gap-1 text-[10px] font-medium ${style.color}`}>
+                                {style.icon} {style.label}
+                              </span>
+                            </td>
+                            <td className="py-2.5 px-3 text-[10px] font-medium">{entry.resource}</td>
+                            <td className="py-2.5 px-3 text-[10px] text-muted truncate max-w-[200px] hidden lg:table-cell">{entry.details}</td>
+                            <td className="py-2.5 px-3 text-[10px] font-mono text-muted hidden md:table-cell">{entry.ip}</td>
+                            <td className="py-2.5 px-3 text-center">
+                              <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium inline-flex items-center gap-1 ${
+                                entry.status === "success" ? "bg-emerald-500/10 text-emerald-400" :
+                                entry.status === "failed" ? "bg-red-500/10 text-red-400" :
+                                "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                              }`}>
+                                {entry.status === "success" ? <CheckCircle size={8} /> : entry.status === "failed" ? <AlertTriangle size={8} /> : <Clock size={8} />}
+                                {entry.status}
+                              </span>
+                            </td>
+                          </motion.tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </PrismPanel>
+
+                {/* Expanded Detail */}
+                {expandedEntry && (() => {
+                  const e = entries.find(en => en.id === expandedEntry);
+                  if (!e) return null;
+                  const style = ACTION_STYLES[e.action];
+                  return (
+                    <PrismPanel padding="p-4" className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-xs font-bold flex items-center gap-2">
+                          <span className={style.color}>{style.icon}</span> Action Details
+                        </h3>
+                        <button
+                          onClick={() => setExpandedEntry(null)}
+                          aria-label="Close detail"
+                          className="text-muted hover:text-foreground"><X size={14} /></button>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                          <p className="text-[8px] text-muted uppercase">Timestamp</p>
+                          <p className="text-[10px] font-mono mt-0.5">{e.timestamp}</p>
+                        </div>
+                        <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                          <p className="text-[8px] text-muted uppercase">User</p>
+                          <p className="text-[10px] font-medium mt-0.5">{e.user}</p>
+                        </div>
+                        <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                          <p className="text-[8px] text-muted uppercase">Action</p>
+                          <p className={`text-[10px] font-medium mt-0.5 ${style.color}`}>{style.label}</p>
+                        </div>
+                        <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                          <p className="text-[8px] text-muted uppercase">IP Address</p>
+                          <p className="text-[10px] font-mono mt-0.5">{e.ip}</p>
+                        </div>
+                      </div>
+                      <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <p className="text-[8px] text-muted uppercase mb-1">Full Details</p>
+                        <p className="text-[10px]">{e.details}</p>
+                      </div>
+                      <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <p className="text-[8px] text-muted uppercase mb-1">Resource</p>
+                        <p className="text-[10px] font-medium">{e.resource}</p>
+                      </div>
+                      {e.sensitive && (
+                        <div className="p-2.5 rounded-lg bg-[rgba(37,99,235,0.06)] border border-[rgba(37,99,235,0.15)] flex items-center gap-2">
+                          <Lock size={11} className="text-[#2563EB] shrink-0" />
+                          <p className="text-[10px] text-[#2563EB]">This action involved sensitive data or configuration changes.</p>
+                        </div>
+                      )}
+                    </PrismPanel>
+                  );
+                })()}
               </div>
-              <div>
-                <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">End Date</label>
-                <input type="date" value={exportEndDate} onChange={e => setExportEndDate(e.target.value)}
-                  className="input w-full text-xs" />
+            )}{/* ═══ SECURITY ALERTS TAB ═══ */}{tab === "security" && (
+              <div className="space-y-4">
+                {/* Unresolved alerts */}
+                <PrismPanel padding="p-4">
+                  <h2 className="section-header flex items-center gap-2"><Shield size={13} className="text-red-400" /> Unresolved Alerts</h2>
+                  <div className="space-y-2">
+                    {alerts.filter(a => !a.resolved).length === 0 && (
+                      <div className="text-center py-8">
+                        <CheckCircle size={24} className="mx-auto mb-2 text-emerald-400" />
+                        <p className="text-xs text-muted">{loading ? "Loading alerts..." : "All alerts resolved. System secure."}</p>
+                      </div>
+                    )}
+                    {alerts.filter(a => !a.resolved).map(alert => (
+                      <div key={alert.id} className={`p-3 rounded-lg border ${SEVERITY_STYLES[alert.severity]}`}>
+                        <div className="flex items-start gap-3">
+                          <AlertCircle size={14} className="shrink-0 mt-0.5" />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-0.5">
+                              <span className="text-[9px] uppercase font-bold">{alert.severity}</span>
+                              <span className="text-[9px] opacity-60">{new Date(alert.created_at).toLocaleString()}</span>
+                            </div>
+                            <p className="text-[11px] font-medium">{alert.title}</p>
+                            {alert.description && (
+                              <p className="text-[10px] opacity-80 mt-0.5">{alert.description}</p>
+                            )}
+                            {alert.ip_address && (
+                              <p className="text-[9px] opacity-60 mt-0.5">IP: {alert.ip_address}</p>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => resolveAlert(alert.id)}
+                            className="text-[9px] px-2.5 py-1 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.10)] transition-colors font-medium shrink-0">
+                            Resolve
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </PrismPanel>
+
+                {/* Resolved alerts */}
+                <PrismPanel padding="p-4">
+                  <h2 className="section-header flex items-center gap-2"><CheckCircle size={13} className="text-emerald-400" /> Resolved Alerts</h2>
+                  <div className="space-y-2">
+                    {alerts.filter(a => a.resolved).length === 0 && (
+                      <p className="text-xs text-muted text-center py-6">No resolved alerts yet.</p>
+                    )}
+                    {alerts.filter(a => a.resolved).map(alert => (
+                      <div key={alert.id} className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <div className="flex items-center gap-3">
+                          <CheckCircle size={12} className="text-emerald-400 shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[10px] font-medium">{alert.title}</p>
+                            <p className="text-[9px] text-muted">{new Date(alert.created_at).toLocaleString()}</p>
+                          </div>
+                          <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium ${SEVERITY_STYLES[alert.severity]}`}>{alert.severity}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </PrismPanel>
+
+                {/* Security Overview — computed from real entries */}
+                <PrismPanel padding="p-4">
+                  <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-[#2563EB]" /> Security Overview</h2>
+                  {(() => {
+                    const sevenDaysAgo = Date.now() - 7 * 86400000;
+                    const recent = entries.filter(e => new Date(e.timestamp).getTime() >= sevenDaysAgo);
+                    const failedLogins = recent.filter(e => e.action === "login" && e.status === "failed").length;
+                    const configChanges = recent.filter(e => e.action === "config").length;
+                    const dataExports = recent.filter(e => e.action === "export").length;
+                    const uniqueIps = new Set(recent.map(e => e.ip).filter(Boolean)).size;
+                    const isEmpty = recent.length === 0;
+                    if (isEmpty) {
+                      return (
+                        <div className="py-8 text-center text-xs text-muted">
+                          <Shield size={20} className="mx-auto mb-2 text-muted/40" />
+                          No security events recorded yet. Stats will populate as your team uses the platform.
+                        </div>
+                      );
+                    }
+                    return (
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                        {[
+                          { label: "Failed Logins (7d)", value: failedLogins, color: "text-red-400" },
+                          { label: "Config Changes (7d)", value: configChanges, color: "text-[#2563EB]" },
+                          { label: "Data Exports (7d)", value: dataExports, color: "text-[#2563EB]" },
+                          { label: "Unique IPs (7d)", value: uniqueIps, color: "text-[#2563EB]" },
+                        ].map((s, i) => (
+                          <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl p-3 text-center" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                            <p className="text-[9px] text-muted uppercase">{s.label}</p>
+                            <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
+                          </motion.div>
+                        ))}
+                      </div>
+                    );
+                  })()}
+                </PrismPanel>
               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Format</label>
-                <select value={exportFormat} onChange={e => setExportFormat(e.target.value as typeof exportFormat)}
-                  className="input w-full text-xs">
-                  <option>CSV</option>
-                  <option>JSON</option>
-                  <option>PDF Report</option>
-                </select>
+            )}{/* ═══ RETENTION TAB ═══ */}{tab === "retention" && (
+              <div className="space-y-4">
+                <PrismPanel padding="p-4">
+                  <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-[#2563EB]" /> Retention Policy</h2>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Retention Period (days)</label>
+                      <div className="flex items-center gap-3">
+                        <input type="number" value={retentionDays} onChange={e => setRetentionDays(Number(e.target.value))}
+                          className="input w-32 text-xs" min={30} max={365} />
+                        <div className="flex gap-1">
+                          {[30, 60, 90, 180, 365].map(d => (
+                            <button key={d} onClick={() => setRetentionDays(d)}
+                              className={`px-2 py-1 rounded text-[9px] ${retentionDays === d ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted hover:text-foreground"}`}>{d}d</button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-muted">Audit logs older than {retentionDays} days will be automatically archived and removed from the active view.</p>
+
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+                      <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <p className="text-[9px] text-muted uppercase">Active Entries</p>
+                        <p className="text-lg font-bold text-[#2563EB] mt-0.5">{entries.length}</p>
+                      </div>
+                      <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <p className="text-[9px] text-muted uppercase">Storage Used</p>
+                        {/* Rough estimate: ~200 bytes/entry; exact size comes from backend once wired. */}
+                        <p className="text-lg font-bold text-[#2563EB] mt-0.5">
+                          {entries.length > 0 ? `${(entries.length * 0.2).toFixed(1)} KB` : "0 KB"}
+                        </p>
+                      </div>
+                      <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <p className="text-[9px] text-muted uppercase">Archived</p>
+                        <p className="text-lg font-bold text-muted mt-0.5">0</p>
+                      </div>
+                    </div>
+                  </div>
+                </PrismPanel>
+
+                <PrismPanel padding="p-4">
+                  <h2 className="section-header flex items-center gap-2"><Database size={13} className="text-[#2563EB]" /> Data Lifecycle</h2>
+                  <div className="space-y-2">
+                    {[
+                      { stage: "Active", desc: `0 - ${retentionDays} days`, status: "Current data, fully searchable", color: "text-emerald-400" },
+                      { stage: "Archived", desc: `${retentionDays} - ${retentionDays * 2} days`, status: "Compressed storage, on-demand access", color: "text-[#2563EB]" },
+                      { stage: "Deleted", desc: `After ${retentionDays * 2} days`, status: "Permanently removed", color: "text-red-400" },
+                    ].map((item, i) => (
+                      <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="rounded-xl flex items-center gap-3 p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <div className={`w-2 h-2 rounded-full ${item.color === "text-emerald-400" ? "bg-emerald-400" : item.color === "text-[#2563EB]" ? "bg-[#2563EB]" : "bg-red-400"}`} />
+                        <div className="flex-1">
+                          <p className={`text-[10px] font-semibold ${item.color}`}>{item.stage}</p>
+                          <p className="text-[9px] text-muted">{item.desc}</p>
+                        </div>
+                        <span className="text-[9px] text-muted">{item.status}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </PrismPanel>
               </div>
-              <div>
-                <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Filter by Action</label>
-                <select value={exportActionFilter} onChange={e => setExportActionFilter(e.target.value as ActionType | "all")}
-                  className="input w-full text-xs">
-                  <option value="all">All Actions</option>
-                  {ACTION_FILTERS.map(af => <option key={af} value={af}>{ACTION_STYLES[af].label}</option>)}
-                </select>
-              </div>
-            </div>
-            <div>
-              <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Filter by User</label>
-              <select value={exportUserFilter} onChange={e => setExportUserFilter(e.target.value)}
-                className="input w-full text-xs">
-                <option value="all">All Users</option>
-                {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
-              </select>
-            </div>
-            <div className="rounded-xl p-3 text-[10px] text-muted" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-              Estimated export size: <span className="font-bold text-[#2563EB]">{exportFiltered.length} entries</span> ({(exportFiltered.length * 0.2).toFixed(1)} KB)
-            </div>
-            <div className="flex gap-2">
-              <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5"><Download size={12} /> Export</button>
-              <button
-                onClick={async () => {
-                  const rows = exportFiltered.length > 0 ? exportFiltered : filtered;
-                  const csv = "Timestamp,User,Action,Resource,Details,IP,Status\n" +
-                    rows.map(e => `"${e.timestamp}","${e.user}","${e.action}","${e.resource}","${e.details}","${e.ip}","${e.status}"`).join("\n");
-                  try {
-                    await navigator.clipboard.writeText(csv);
-                  } catch (err) {
-                    console.error("[audit/export] Copy to clipboard failed:", err);
-                  }
-                }}
-                className="btn-secondary text-xs flex items-center gap-1.5"><Copy size={12} /> Copy to Clipboard</button>
-            </div>
-          </div>
-        </PrismPanel>
-      )}
-    </div>
+            )}{/* ═══ EXPORT TAB ═══ */}{tab === "export" && (
+              <PrismPanel padding="p-4">
+                <h2 className="section-header flex items-center gap-2"><Download size={13} className="text-[#2563EB]" /> Export Audit Report</h2>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Start Date</label>
+                      <input type="date" value={exportStartDate} onChange={e => setExportStartDate(e.target.value)}
+                        className="input w-full text-xs" />
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">End Date</label>
+                      <input type="date" value={exportEndDate} onChange={e => setExportEndDate(e.target.value)}
+                        className="input w-full text-xs" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Format</label>
+                      <select value={exportFormat} onChange={e => setExportFormat(e.target.value as typeof exportFormat)}
+                        className="input w-full text-xs">
+                        <option>CSV</option>
+                        <option>JSON</option>
+                        <option>PDF Report</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Filter by Action</label>
+                      <select value={exportActionFilter} onChange={e => setExportActionFilter(e.target.value as ActionType | "all")}
+                        className="input w-full text-xs">
+                        <option value="all">All Actions</option>
+                        {ACTION_FILTERS.map(af => <option key={af} value={af}>{ACTION_STYLES[af].label}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Filter by User</label>
+                    <select value={exportUserFilter} onChange={e => setExportUserFilter(e.target.value)}
+                      className="input w-full text-xs">
+                      <option value="all">All Users</option>
+                      {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
+                    </select>
+                  </div>
+                  <div className="rounded-xl p-3 text-[10px] text-muted" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                    Estimated export size: <span className="font-bold text-[#2563EB]">{exportFiltered.length} entries</span> ({(exportFiltered.length * 0.2).toFixed(1)} KB)
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5"><Download size={12} /> Export</button>
+                    <button
+                      onClick={async () => {
+                        const rows = exportFiltered.length > 0 ? exportFiltered : filtered;
+                        const csv = "Timestamp,User,Action,Resource,Details,IP,Status\n" +
+                          rows.map(e => `"${e.timestamp}","${e.user}","${e.action}","${e.resource}","${e.details}","${e.ip}","${e.status}"`).join("\n");
+                        try {
+                          await navigator.clipboard.writeText(csv);
+                        } catch (err) {
+                          console.error("[audit/export] Copy to clipboard failed:", err);
+                        }
+                      }}
+                      className="btn-secondary text-xs flex items-center gap-1.5"><Copy size={12} /> Copy to Clipboard</button>
+                  </div>
+                </div>
+              </PrismPanel>
+            )}</MotionPage>
   );
 }
 

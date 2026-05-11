@@ -10,6 +10,7 @@ import {
   ClipboardList, Download, Mail, FileText,
   Calendar, CheckCircle, Clock, AlertCircle
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface GeneratedReport {
   id: string;
@@ -119,28 +120,25 @@ export default function ClientReportsPage() {
 
   if (!tableExists) {
     return (
-      <div className="space-y-6">
-        <PageHero
-          title="Client Reports"
-          eyebrow="CLIENT REPORTS"
-          subtitle="View and resend generated PDF reports for each client."
-          icon={<ClipboardList size={22} />}
-          gradient="purple"
-        />
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-12 text-center">
-          <FileText size={40} className="mx-auto mb-4 text-[#9CA3AF]" />
-          <p className="text-[#6B7280] mb-2">No reports generated yet.</p>
-          <p className="text-[#9CA3AF] text-sm mb-6">
-            Generate your first report using the Report Generator.
-          </p>
-          <Link
-            href="/dashboard/report-generator"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors"
-          >
-            Go to Report Generator
-          </Link>
-        </motion.div>
-      </div>
+      <MotionPage className="space-y-6"><PageHero
+                  title="Client Reports"
+                  eyebrow="CLIENT REPORTS"
+                  subtitle="View and resend generated PDF reports for each client."
+                  icon={<ClipboardList size={22} />}
+                  gradient="purple"
+                /><motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-12 text-center">
+                  <FileText size={40} className="mx-auto mb-4 text-[#9CA3AF]" />
+                  <p className="text-[#6B7280] mb-2">No reports generated yet.</p>
+                  <p className="text-[#9CA3AF] text-sm mb-6">
+                    Generate your first report using the Report Generator.
+                  </p>
+                  <Link
+                    href="/dashboard/report-generator"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors"
+                  >
+                    Go to Report Generator
+                  </Link>
+                </motion.div></MotionPage>
     );
   }
 

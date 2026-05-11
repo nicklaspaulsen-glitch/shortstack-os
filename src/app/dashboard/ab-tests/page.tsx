@@ -24,6 +24,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type ParentType = "landing_page" | "funnel_step" | "email";
 type Status = "running" | "paused" | "completed";
@@ -148,164 +149,156 @@ export default function AbTestsPage() {
   }, [tests]);
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
-      <PageHero
-        title="A/B Tests"
-        eyebrow="A/B TESTS"
-        subtitle="Run head-to-head experiments on landing pages, funnel steps, and emails. Pick the winner with confidence."
-        icon={<FlaskConical size={22} />}
-        gradient="purple"
-        actions={
-          <button
-            onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-white text-zinc-900 hover:bg-zinc-100 transition-colors"
-          >
-            <Plus size={15} />
-            New Test
-          </button>
-        }
-      />
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        <SummaryTile label="Running" value={summary.running} icon={<Clock size={16} />} color="text-emerald-600" index={0} />
-        <SummaryTile label="Completed" value={summary.completed} icon={<Trophy size={16} />} color="text-[#2563EB]" index={1} />
-        <SummaryTile label="Total Lift" value={`+${summary.totalLift}%`} icon={<TrendingUp size={16} />} color="text-[#2563EB]" index={2} />
-      </div>
-
-      {loading ? (
-        <div className="grid grid-cols-1 gap-3">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-24 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] animate-pulse" />
-          ))}
-        </div>
-      ) : tests.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-4">
-          <div className="w-16 h-16  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center">
-            <FlaskConical size={28} className="text-[#2563EB]" />
-          </div>
-          <div className="text-center">
-            <p className="text-[#111827] font-semibold text-lg">No A/B tests yet</p>
-            <p className="text-[#6B7280] text-sm mt-1">
-              Run a test from any landing page or funnel step to start comparing variants.
-            </p>
-          </div>
-          <button
-            onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white text-sm font-semibold transition-colors"
-          >
-            <Plus size={15} />
-            Start Test
-          </button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-3">
-          {tests.map((test, i) => {
-            const sc = STATUS_CONFIG[test.status];
-            const winner = bestVariant(test);
-            const baseline = test.ab_variants[0];
-            const lift = winner && baseline && baseline.id !== winner.id
-              ? conversionRate(winner) - conversionRate(baseline)
-              : 0;
-            return (
-              <motion.div
-                key={test.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05, duration: 0.4 }}
-                whileHover={{ y: -4, scale: 1.01 }}
-                className="group relative bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-4 shadow-sm"
-              >
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="min-w-0">
-                    <Link href={`/dashboard/ab-tests/${test.id}`} className="text-[#111827] font-semibold text-base hover:underline">
-                      {test.name}
-                    </Link>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-[#6B7280]">
-                      <span>{PARENT_LABEL[test.parent_type]}</span>
-                      <span>·</span>
-                      <span>Started {new Date(test.started_at).toLocaleDateString()}</span>
-                      <span>·</span>
-                      <span>{test.ab_variants.length} variants</span>
-                    </div>
-                  </div>
-                  <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${sc.color} shrink-0`}>
-                    {sc.icon}
-                    {sc.label}
-                  </span>
+    <MotionPage className="p-6 space-y-6 max-w-7xl mx-auto"><PageHero
+              title="A/B Tests"
+              eyebrow="A/B TESTS"
+              subtitle="Run head-to-head experiments on landing pages, funnel steps, and emails. Pick the winner with confidence."
+              icon={<FlaskConical size={22} />}
+              gradient="purple"
+              actions={
+                <button
+                  onClick={() => setShowCreate(true)}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-white text-zinc-900 hover:bg-zinc-100 transition-colors"
+                >
+                  <Plus size={15} />
+                  New Test
+                </button>
+              }
+            /><div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <SummaryTile label="Running" value={summary.running} icon={<Clock size={16} />} color="text-emerald-600" index={0} />
+              <SummaryTile label="Completed" value={summary.completed} icon={<Trophy size={16} />} color="text-[#2563EB]" index={1} />
+              <SummaryTile label="Total Lift" value={`+${summary.totalLift}%`} icon={<TrendingUp size={16} />} color="text-[#2563EB]" index={2} />
+            </div>{loading ? (
+              <div className="grid grid-cols-1 gap-3">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-24 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] animate-pulse" />
+                ))}
+              </div>
+            ) : tests.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-24 gap-4">
+                <div className="w-16 h-16  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center">
+                  <FlaskConical size={28} className="text-[#2563EB]" />
                 </div>
-
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {test.ab_variants.map((v) => {
-                    const isWinner = v.id === test.winner_variant_id;
-                    return (
-                      <div
-                        key={v.id}
-                        className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs border ${
-                          isWinner
-                            ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
-                            : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#374151]"
-                        }`}
-                      >
-                        {isWinner && <Trophy size={11} />}
-                        <span className="font-semibold">{v.variant_key}</span>
-                        <span className="text-[#6B7280]">{v.views} views</span>
-                        <span className="text-emerald-400">{conversionRate(v)}% conv</span>
+                <div className="text-center">
+                  <p className="text-[#111827] font-semibold text-lg">No A/B tests yet</p>
+                  <p className="text-[#6B7280] text-sm mt-1">
+                    Run a test from any landing page or funnel step to start comparing variants.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowCreate(true)}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white text-sm font-semibold transition-colors"
+                >
+                  <Plus size={15} />
+                  Start Test
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-3">
+                {tests.map((test, i) => {
+                  const sc = STATUS_CONFIG[test.status];
+                  const winner = bestVariant(test);
+                  const baseline = test.ab_variants[0];
+                  const lift = winner && baseline && baseline.id !== winner.id
+                    ? conversionRate(winner) - conversionRate(baseline)
+                    : 0;
+                  return (
+                    <motion.div
+                      key={test.id}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.05, duration: 0.4 }}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                      className="group relative bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-4 shadow-sm"
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="min-w-0">
+                          <Link href={`/dashboard/ab-tests/${test.id}`} className="text-[#111827] font-semibold text-base hover:underline">
+                            {test.name}
+                          </Link>
+                          <div className="flex items-center gap-2 mt-1 text-xs text-[#6B7280]">
+                            <span>{PARENT_LABEL[test.parent_type]}</span>
+                            <span>·</span>
+                            <span>Started {new Date(test.started_at).toLocaleDateString()}</span>
+                            <span>·</span>
+                            <span>{test.ab_variants.length} variants</span>
+                          </div>
+                        </div>
+                        <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${sc.color} shrink-0`}>
+                          {sc.icon}
+                          {sc.label}
+                        </span>
                       </div>
-                    );
-                  })}
-                </div>
 
-                <div className="flex items-center justify-between">
-                  {lift > 0 ? (
-                    <span className="text-emerald-400 text-xs font-semibold flex items-center gap-1">
-                      <TrendingUp size={12} />+{lift}% lift
-                    </span>
-                  ) : (
-                    <span className="text-[#9CA3AF] text-xs">No lift yet</span>
-                  )}
-                  <div className="flex items-center gap-1">
-                    {test.status === "running" && (
-                      <button
-                        onClick={() => void handleStatusChange(test.id, "paused")}
-                        className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-[#2563EB] transition-colors"
-                        title="Pause"
-                      >
-                        <Pause size={13} />
-                      </button>
-                    )}
-                    {test.status === "paused" && (
-                      <button
-                        onClick={() => void handleStatusChange(test.id, "running")}
-                        className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-emerald-400 transition-colors"
-                        title="Resume"
-                      >
-                        <Clock size={13} />
-                      </button>
-                    )}
-                    <Link
-                      href={`/dashboard/ab-tests/${test.id}`}
-                      className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-[#374151] transition-colors"
-                      title="Open"
-                    >
-                      <ArrowRight size={13} />
-                    </Link>
-                    <button
-                      onClick={() => void handleDelete(test.id)}
-                      className="p-1.5 rounded-md hover:bg-red-500/10 text-[#9CA3AF] hover:text-red-400 transition-colors"
-                      title="Delete"
-                    >
-                      <Trash2 size={13} />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      )}
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {test.ab_variants.map((v) => {
+                          const isWinner = v.id === test.winner_variant_id;
+                          return (
+                            <div
+                              key={v.id}
+                              className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs border ${
+                                isWinner
+                                  ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                                  : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#374151]"
+                              }`}
+                            >
+                              {isWinner && <Trophy size={11} />}
+                              <span className="font-semibold">{v.variant_key}</span>
+                              <span className="text-[#6B7280]">{v.views} views</span>
+                              <span className="text-emerald-400">{conversionRate(v)}% conv</span>
+                            </div>
+                          );
+                        })}
+                      </div>
 
-      {showCreate && <CreateTestModal onClose={() => setShowCreate(false)} onCreated={() => void load()} />}
-    </div>
+                      <div className="flex items-center justify-between">
+                        {lift > 0 ? (
+                          <span className="text-emerald-400 text-xs font-semibold flex items-center gap-1">
+                            <TrendingUp size={12} />+{lift}% lift
+                          </span>
+                        ) : (
+                          <span className="text-[#9CA3AF] text-xs">No lift yet</span>
+                        )}
+                        <div className="flex items-center gap-1">
+                          {test.status === "running" && (
+                            <button
+                              onClick={() => void handleStatusChange(test.id, "paused")}
+                              className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-[#2563EB] transition-colors"
+                              title="Pause"
+                            >
+                              <Pause size={13} />
+                            </button>
+                          )}
+                          {test.status === "paused" && (
+                            <button
+                              onClick={() => void handleStatusChange(test.id, "running")}
+                              className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-emerald-400 transition-colors"
+                              title="Resume"
+                            >
+                              <Clock size={13} />
+                            </button>
+                          )}
+                          <Link
+                            href={`/dashboard/ab-tests/${test.id}`}
+                            className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-[#374151] transition-colors"
+                            title="Open"
+                          >
+                            <ArrowRight size={13} />
+                          </Link>
+                          <button
+                            onClick={() => void handleDelete(test.id)}
+                            className="p-1.5 rounded-md hover:bg-red-500/10 text-[#9CA3AF] hover:text-red-400 transition-colors"
+                            title="Delete"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}{showCreate && <CreateTestModal onClose={() => setShowCreate(false)} onCreated={() => void load()} />}</MotionPage>
   );
 }
 

@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type Mode = "off" | "shadow" | "autopilot";
 
@@ -201,257 +202,244 @@ export default function TrinityProposalsPage() {
   };
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Brain size={28} />}
-        title="Trinity Autonomous"
-        subtitle="Trinity proposes — and, in autopilot mode, acts on your behalf."
-        gradient="purple"
-        eyebrow="AI PROPOSALS"
-      />
-
-      {/* Mode tiles */}
-      <div className="grid gap-3 md:grid-cols-3">
-        {MODE_TILES.map((t) => {
-          const active = settings?.mode === t.mode;
-          return (
-            <button
-              key={t.mode}
-              onClick={() => updateSettings({ mode: t.mode })}
-              disabled={loadingSettings || savingSettings}
-              className={`card text-left transition ${
-                active
-                  ? "border-purple-300 bg-purple-50"
-                  : "hover:border-purple-200"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className={
-                    active ? "text-purple-600" : "text-muted"
-                  }
-                >
-                  {t.icon}
-                </span>
-                <h3 className="text-sm font-bold text-[#111827]">{t.label}</h3>
-                {active && (
-                  <span className="ml-auto rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-bold uppercase text-purple-700">
-                    Active
-                  </span>
-                )}
-              </div>
-              <p className="mt-2 text-xs text-muted">{t.desc}</p>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Enabled actions + veto window */}
-      <div className="card">
-        <h2 className="text-sm font-semibold text-[#111827]">Configure</h2>
-
-        <div className="mt-4 space-y-2">
-          <div className="text-xs text-muted">Enabled action types</div>
-          <div className="flex flex-wrap gap-2">
-            {actionTypes.map((a) => {
-              const enabled = settings?.enabled_actions.includes(a) ?? false;
-              return (
-                <button
-                  key={a}
-                  onClick={() => toggleEnabledAction(a)}
-                  disabled={savingSettings}
-                  className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                    enabled
-                      ? "bg-purple-100 text-purple-700 ring-1 ring-purple-300"
-                      : "bg-[rgba(0,0,0,0.04)] text-muted hover:bg-[rgba(0,0,0,0.06)]"
-                  }`}
-                >
-                  {ACTION_LABELS[a] ?? a}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="mt-5 grid gap-4 md:grid-cols-2">
-          <div>
-            <label
-              htmlFor="veto-window"
-              className="block text-xs text-muted mb-1"
-            >
-              Autopilot veto window (hours)
-            </label>
-            <input
-              id="veto-window"
-              type="range"
-              min={0}
-              max={24}
-              step={1}
-              value={settings?.veto_window_hours ?? 4}
-              onChange={(e) =>
-                setSettings(
-                  settings
-                    ? { ...settings, veto_window_hours: Number(e.target.value) }
-                    : settings,
-                )
-              }
-              onMouseUp={(e) =>
-                updateSettings({
-                  veto_window_hours: Number((e.target as HTMLInputElement).value),
-                })
-              }
-              className="w-full"
-            />
-            <div className="text-xs text-muted mt-1">
-              {settings?.veto_window_hours ?? 4}h before autopilot fires.
-            </div>
-          </div>
-          <div>
-            <label
-              htmlFor="brief-email"
-              className="block text-xs text-muted mb-1"
-            >
-              Morning brief email (optional)
-            </label>
-            <input
-              id="brief-email"
-              type="email"
-              value={settings?.daily_brief_email ?? ""}
-              onChange={(e) =>
-                setSettings(
-                  settings
-                    ? { ...settings, daily_brief_email: e.target.value || null }
-                    : settings,
-                )
-              }
-              onBlur={(e) =>
-                updateSettings({
-                  daily_brief_email: e.target.value || null,
-                })
-              }
-              placeholder="you@example.com"
-              className="w-full rounded-lg border border-border bg-white px-3 py-2 text-xs text-[#111827]"
-            />
-          </div>
-        </div>
-
-        {savingSettings && (
-          <div className="mt-3 flex items-center gap-2 text-xs text-muted">
-            <Loader2 size={12} className="animate-spin" /> Saving...
-          </div>
-        )}
-      </div>
-
-      {/* Tabs */}
-      <div className="flex items-center gap-1 rounded-lg border border-border bg-surface p-1">
-        <button
-          onClick={() => setTab("pending")}
-          className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
-            tab === "pending"
-              ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-              : "text-muted hover:text-[#111827]"
-          }`}
-        >
-          <Clock size={12} />
-          Pending
-        </button>
-        <button
-          onClick={() => setTab("history")}
-          className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
-            tab === "history"
-              ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-              : "text-muted hover:text-[#111827]"
-          }`}
-        >
-          <History size={12} />
-          History
-        </button>
-      </div>
-
-      {loadingProposals ? (
-        <div className="py-12 text-center text-sm text-muted">Loading...</div>
-      ) : proposals.length === 0 ? (
-        <div className="card flex flex-col items-center justify-center py-12 text-center">
-          <Brain size={36} className="mb-3 text-muted/30" />
-          <p className="text-sm font-medium text-[#111827]">
-            {tab === "pending" ? "No pending proposals" : "No history yet"}
-          </p>
-          <p className="mt-1 text-xs text-muted">
-            {tab === "pending"
-              ? "Trinity will post here when she has a recommendation."
-              : "Approved + vetoed proposals will appear here."}
-          </p>
-        </div>
-      ) : (
-        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-3">
-          {proposals.map((p) => {
-            const isPending = p.status === "proposed";
-            const acting = actingId === p.id;
-            return (
-              <motion.div key={p.id} variants={itemVariants} className="card">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
+    <MotionPage className="fade-in space-y-5"><PageHero
+              icon={<Brain size={28} />}
+              title="Trinity Autonomous"
+              subtitle="Trinity proposes — and, in autopilot mode, acts on your behalf."
+              gradient="purple"
+              eyebrow="AI PROPOSALS"
+            />{/* Mode tiles */}<div className="grid gap-3 md:grid-cols-3">
+              {MODE_TILES.map((t) => {
+                const active = settings?.mode === t.mode;
+                return (
+                  <button
+                    key={t.mode}
+                    onClick={() => updateSettings({ mode: t.mode })}
+                    disabled={loadingSettings || savingSettings}
+                    className={`card text-left transition ${
+                      active
+                        ? "border-purple-300 bg-purple-50"
+                        : "hover:border-purple-200"
+                    }`}
+                  >
                     <div className="flex items-center gap-2">
-                      <h3 className="text-sm font-semibold text-[#111827]">
-                        {ACTION_LABELS[p.action_type] ?? p.action_type}
-                      </h3>
                       <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                          STATUS_COLOR[p.status] ?? "bg-[rgba(0,0,0,0.06)] text-[#6B7280]"
+                        className={
+                          active ? "text-purple-600" : "text-muted"
+                        }
+                      >
+                        {t.icon}
+                      </span>
+                      <h3 className="text-sm font-bold text-[#111827]">{t.label}</h3>
+                      {active && (
+                        <span className="ml-auto rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-bold uppercase text-purple-700">
+                          Active
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-2 text-xs text-muted">{t.desc}</p>
+                  </button>
+                );
+              })}
+            </div>{/* Enabled actions + veto window */}<div className="card">
+              <h2 className="text-sm font-semibold text-[#111827]">Configure</h2>
+
+              <div className="mt-4 space-y-2">
+                <div className="text-xs text-muted">Enabled action types</div>
+                <div className="flex flex-wrap gap-2">
+                  {actionTypes.map((a) => {
+                    const enabled = settings?.enabled_actions.includes(a) ?? false;
+                    return (
+                      <button
+                        key={a}
+                        onClick={() => toggleEnabledAction(a)}
+                        disabled={savingSettings}
+                        className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                          enabled
+                            ? "bg-purple-100 text-purple-700 ring-1 ring-purple-300"
+                            : "bg-[rgba(0,0,0,0.04)] text-muted hover:bg-[rgba(0,0,0,0.06)]"
                         }`}
                       >
-                        {p.status}
-                      </span>
-                    </div>
-                    <p className="mt-1 text-xs text-muted">
-                      {new Date(p.created_at).toLocaleString()}
-                    </p>
-                  </div>
-                  {isPending && (
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleProposalAction(p.id, "approve")}
-                        disabled={acting}
-                        className="flex items-center gap-1 rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-50"
-                      >
-                        {acting ? (
-                          <Loader2 size={12} className="animate-spin" />
-                        ) : (
-                          <CheckCircle size={12} />
-                        )}
-                        Approve
+                        {ACTION_LABELS[a] ?? a}
                       </button>
-                      <button
-                        onClick={() => handleProposalAction(p.id, "veto")}
-                        disabled={acting}
-                        className="flex items-center gap-1 rounded-lg border border-red-500/20 px-3 py-1.5 text-xs font-bold text-red-400 hover:bg-red-500/10 disabled:opacity-50"
-                      >
-                        <XCircle size={12} />
-                        Veto
-                      </button>
-                    </div>
-                  )}
+                    );
+                  })}
                 </div>
-                {p.rationale && (
-                  <p className="mt-3 text-sm text-[#374151]">{p.rationale}</p>
-                )}
-                {p.veto_window_until && p.status === "proposed" && (
-                  <p className="mt-2 text-[10px] text-muted">
-                    Autopilot will execute after{" "}
-                    {new Date(p.veto_window_until).toLocaleString()} unless
-                    vetoed.
-                  </p>
-                )}
-                {p.result && (
-                  <pre className="mt-3 overflow-x-auto rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] p-3 text-[10px] leading-relaxed text-[#374151]">
-                    {JSON.stringify(p.result, null, 2)}
-                  </pre>
-                )}
+              </div>
+
+              <div className="mt-5 grid gap-4 md:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="veto-window"
+                    className="block text-xs text-muted mb-1"
+                  >
+                    Autopilot veto window (hours)
+                  </label>
+                  <input
+                    id="veto-window"
+                    type="range"
+                    min={0}
+                    max={24}
+                    step={1}
+                    value={settings?.veto_window_hours ?? 4}
+                    onChange={(e) =>
+                      setSettings(
+                        settings
+                          ? { ...settings, veto_window_hours: Number(e.target.value) }
+                          : settings,
+                      )
+                    }
+                    onMouseUp={(e) =>
+                      updateSettings({
+                        veto_window_hours: Number((e.target as HTMLInputElement).value),
+                      })
+                    }
+                    className="w-full"
+                  />
+                  <div className="text-xs text-muted mt-1">
+                    {settings?.veto_window_hours ?? 4}h before autopilot fires.
+                  </div>
+                </div>
+                <div>
+                  <label
+                    htmlFor="brief-email"
+                    className="block text-xs text-muted mb-1"
+                  >
+                    Morning brief email (optional)
+                  </label>
+                  <input
+                    id="brief-email"
+                    type="email"
+                    value={settings?.daily_brief_email ?? ""}
+                    onChange={(e) =>
+                      setSettings(
+                        settings
+                          ? { ...settings, daily_brief_email: e.target.value || null }
+                          : settings,
+                      )
+                    }
+                    onBlur={(e) =>
+                      updateSettings({
+                        daily_brief_email: e.target.value || null,
+                      })
+                    }
+                    placeholder="you@example.com"
+                    className="w-full rounded-lg border border-border bg-white px-3 py-2 text-xs text-[#111827]"
+                  />
+                </div>
+              </div>
+
+              {savingSettings && (
+                <div className="mt-3 flex items-center gap-2 text-xs text-muted">
+                  <Loader2 size={12} className="animate-spin" /> Saving...
+                </div>
+              )}
+            </div>{/* Tabs */}<div className="flex items-center gap-1 rounded-lg border border-border bg-surface p-1">
+              <button
+                onClick={() => setTab("pending")}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
+                  tab === "pending"
+                    ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                    : "text-muted hover:text-[#111827]"
+                }`}
+              >
+                <Clock size={12} />
+                Pending
+              </button>
+              <button
+                onClick={() => setTab("history")}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
+                  tab === "history"
+                    ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                    : "text-muted hover:text-[#111827]"
+                }`}
+              >
+                <History size={12} />
+                History
+              </button>
+            </div>{loadingProposals ? (
+              <div className="py-12 text-center text-sm text-muted">Loading...</div>
+            ) : proposals.length === 0 ? (
+              <div className="card flex flex-col items-center justify-center py-12 text-center">
+                <Brain size={36} className="mb-3 text-muted/30" />
+                <p className="text-sm font-medium text-[#111827]">
+                  {tab === "pending" ? "No pending proposals" : "No history yet"}
+                </p>
+                <p className="mt-1 text-xs text-muted">
+                  {tab === "pending"
+                    ? "Trinity will post here when she has a recommendation."
+                    : "Approved + vetoed proposals will appear here."}
+                </p>
+              </div>
+            ) : (
+              <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-3">
+                {proposals.map((p) => {
+                  const isPending = p.status === "proposed";
+                  const acting = actingId === p.id;
+                  return (
+                    <motion.div key={p.id} variants={itemVariants} className="card">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-sm font-semibold text-[#111827]">
+                              {ACTION_LABELS[p.action_type] ?? p.action_type}
+                            </h3>
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
+                                STATUS_COLOR[p.status] ?? "bg-[rgba(0,0,0,0.06)] text-[#6B7280]"
+                              }`}
+                            >
+                              {p.status}
+                            </span>
+                          </div>
+                          <p className="mt-1 text-xs text-muted">
+                            {new Date(p.created_at).toLocaleString()}
+                          </p>
+                        </div>
+                        {isPending && (
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleProposalAction(p.id, "approve")}
+                              disabled={acting}
+                              className="flex items-center gap-1 rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-50"
+                            >
+                              {acting ? (
+                                <Loader2 size={12} className="animate-spin" />
+                              ) : (
+                                <CheckCircle size={12} />
+                              )}
+                              Approve
+                            </button>
+                            <button
+                              onClick={() => handleProposalAction(p.id, "veto")}
+                              disabled={acting}
+                              className="flex items-center gap-1 rounded-lg border border-red-500/20 px-3 py-1.5 text-xs font-bold text-red-400 hover:bg-red-500/10 disabled:opacity-50"
+                            >
+                              <XCircle size={12} />
+                              Veto
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                      {p.rationale && (
+                        <p className="mt-3 text-sm text-[#374151]">{p.rationale}</p>
+                      )}
+                      {p.veto_window_until && p.status === "proposed" && (
+                        <p className="mt-2 text-[10px] text-muted">
+                          Autopilot will execute after{" "}
+                          {new Date(p.veto_window_until).toLocaleString()} unless
+                          vetoed.
+                        </p>
+                      )}
+                      {p.result && (
+                        <pre className="mt-3 overflow-x-auto rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] p-3 text-[10px] leading-relaxed text-[#374151]">
+                          {JSON.stringify(p.result, null, 2)}
+                        </pre>
+                      )}
+                    </motion.div>
+                  );
+                })}
               </motion.div>
-            );
-          })}
-        </motion.div>
-      )}
-    </div>
+            )}</MotionPage>
   );
 }

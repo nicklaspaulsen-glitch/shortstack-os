@@ -13,6 +13,7 @@ import EmptyState from "@/components/ui/empty-state";
 import { PresetEditExamplePanel } from "@/components/ui/preset-edit-example-panel";
 import toast from "react-hot-toast";
 import { TelegramIcon } from "@/components/ui/platform-icons";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -367,556 +368,533 @@ export default function TelegramPresetsPage() {
   // ─── Render ────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <PageHero
-        icon={<TelegramIcon size={28} />}
-        title="Telegram Presets"
-        eyebrow="TELEGRAM PRESETS"
-        subtitle="300 ready-to-send messages across 14 categories. Fork, edit, and send to any chat."
-        gradient="blue"
-        actions={
-          <>
-            <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full">
-              {stats.total} total
-            </span>
-            <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full">
-              {stats.mine} yours
-            </span>
-            <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
-              <CheckCircle2 size={11} /> {stats.healthy} healthy
-            </span>
-            <span className="text-xs text-white bg-emerald-500/30 border border-emerald-300/40 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
-              <Send size={11} /> {stats.totalSends} sends
-            </span>
-            {stats.totalErrors > 0 && (
-              <span className="text-xs text-white bg-red-500/30 border border-red-300/40 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
-                <AlertCircle size={11} /> {stats.totalErrors} errors
-              </span>
-            )}
-          </>
-        }
-      />
+    <MotionPage className="space-y-6 animate-fade-in"><PageHero
+              icon={<TelegramIcon size={28} />}
+              title="Telegram Presets"
+              eyebrow="TELEGRAM PRESETS"
+              subtitle="300 ready-to-send messages across 14 categories. Fork, edit, and send to any chat."
+              gradient="blue"
+              actions={
+                <>
+                  <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full">
+                    {stats.total} total
+                  </span>
+                  <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full">
+                    {stats.mine} yours
+                  </span>
+                  <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
+                    <CheckCircle2 size={11} /> {stats.healthy} healthy
+                  </span>
+                  <span className="text-xs text-white bg-emerald-500/30 border border-emerald-300/40 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
+                    <Send size={11} /> {stats.totalSends} sends
+                  </span>
+                  {stats.totalErrors > 0 && (
+                    <span className="text-xs text-white bg-red-500/30 border border-red-300/40 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
+                      <AlertCircle size={11} /> {stats.totalErrors} errors
+                    </span>
+                  )}
+                </>
+              }
+            />{/* Top controls: search + scope + new */}<div className="flex items-center gap-3 flex-wrap">
+              <div className="relative flex-1 min-w-[260px]">
+                <Search
+                  size={14}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+                />
+                <input
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search name, body, category..."
+                  className="w-full glass rounded-lg pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB]"
+                />
+              </div>
 
-      {/* Top controls: search + scope + new */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <div className="relative flex-1 min-w-[260px]">
-          <Search
-            size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-          />
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search name, body, category..."
-            className="w-full glass rounded-lg pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB]"
-          />
-        </div>
+              <div className="flex items-center gap-1 glass rounded-lg p-1">
+                {(["all", "global", "mine"] as const).map(s => (
+                  <button
+                    key={s}
+                    onClick={() => setScope(s)}
+                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                      scope === s
+                        ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
+                        : "text-muted hover:text-foreground"
+                    }`}
+                  >
+                    {s === "all" ? "All" : s === "global" ? "Library" : "Mine"}
+                  </button>
+                ))}
+              </div>
 
-        <div className="flex items-center gap-1 glass rounded-lg p-1">
-          {(["all", "global", "mine"] as const).map(s => (
-            <button
-              key={s}
-              onClick={() => setScope(s)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                scope === s
-                  ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
-                  : "text-muted hover:text-foreground"
-              }`}
-            >
-              {s === "all" ? "All" : s === "global" ? "Library" : "Mine"}
-            </button>
-          ))}
-        </div>
-
-        <button
-          onClick={openNew}
-          className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[rgba(37,99,235,0.90)] transition-all flex items-center gap-2"
-        >
-          <Plus size={14} /> New Preset
-        </button>
-      </div>
-
-      {/* Category tabs */}
-      <div className="flex gap-1 glass rounded-xl p-1 overflow-x-auto">
-        <button
-          onClick={() => setActiveCategory("all")}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-            activeCategory === "all"
-              ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
-              : "text-muted hover:text-foreground hover:bg-surface"
-          }`}
-        >
-          <Filter size={12} /> All
-          <span className="text-[10px] text-muted bg-surface px-1.5 py-0.5 rounded">
-            {counts.all ?? 0}
-          </span>
-        </button>
-        {categoryTabs.map(c => (
-          <button
-            key={c}
-            onClick={() => setActiveCategory(c)}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeCategory === c
-                ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
-                : "text-muted hover:text-foreground hover:bg-surface"
-            }`}
-          >
-            {CATEGORY_LABELS[c] ?? c}
-            <span className="text-[10px] text-muted bg-surface px-1.5 py-0.5 rounded">
-              {counts[c] ?? 0}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {/* List */}
-      {loading ? (
-        <div className="card flex items-center justify-center py-12">
-          <Loader size={18} className="animate-spin text-[#2563EB]" />
-        </div>
-      ) : filtered.length === 0 ? (
-        <div className="card">
-          <EmptyState
-            icon={<MessageSquare size={48} />}
-            title={search ? "No presets match your search" : "No presets in this view"}
-            description={
-              search
-                ? "Try clearing the search or switching category."
-                : "Create your first custom preset or switch scope to see the library."
-            }
-            action={
               <button
                 onClick={openNew}
-                className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[rgba(37,99,235,0.90)] flex items-center gap-2"
+                className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[rgba(37,99,235,0.90)] transition-all flex items-center gap-2"
               >
                 <Plus size={14} /> New Preset
               </button>
-            }
-          />
-        </div>
-      ) : (
-        <div className="space-y-2">
-          {filtered.map((p, idx) => {
-            const health = healthFor(p);
-            const cfg = HEALTH_CONFIG[health];
-            const isGlobal = p.user_id === null;
-            return (
-              <motion.div
-                key={p.id}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.04 }}
-                className="glass rounded-xl !p-4 flex items-start gap-4 flex-wrap md:flex-nowrap"
+            </div>{/* Category tabs */}<div className="flex gap-1 glass rounded-xl p-1 overflow-x-auto">
+              <button
+                onClick={() => setActiveCategory("all")}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                  activeCategory === "all"
+                    ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
+                    : "text-muted hover:text-foreground hover:bg-surface"
+                }`}
               >
-                {/* Health dot */}
-                <div className="relative flex-shrink-0 mt-1.5" title={cfg.label}>
-                  <div
-                    className={`absolute inset-0 rounded-full ${cfg.ring} animate-pulse`}
-                  />
-                  <div className={`relative w-3 h-3 rounded-full ${cfg.dot}`} />
-                </div>
+                <Filter size={12} /> All
+                <span className="text-[10px] text-muted bg-surface px-1.5 py-0.5 rounded">
+                  {counts.all ?? 0}
+                </span>
+              </button>
+              {categoryTabs.map(c => (
+                <button
+                  key={c}
+                  onClick={() => setActiveCategory(c)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                    activeCategory === c
+                      ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
+                      : "text-muted hover:text-foreground hover:bg-surface"
+                  }`}
+                >
+                  {CATEGORY_LABELS[c] ?? c}
+                  <span className="text-[10px] text-muted bg-surface px-1.5 py-0.5 rounded">
+                    {counts[c] ?? 0}
+                  </span>
+                </button>
+              ))}
+            </div>{/* List */}{loading ? (
+              <div className="card flex items-center justify-center py-12">
+                <Loader size={18} className="animate-spin text-[#2563EB]" />
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="card">
+                <EmptyState
+                  icon={<MessageSquare size={48} />}
+                  title={search ? "No presets match your search" : "No presets in this view"}
+                  description={
+                    search
+                      ? "Try clearing the search or switching category."
+                      : "Create your first custom preset or switch scope to see the library."
+                  }
+                  action={
+                    <button
+                      onClick={openNew}
+                      className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[rgba(37,99,235,0.90)] flex items-center gap-2"
+                    >
+                      <Plus size={14} /> New Preset
+                    </button>
+                  }
+                />
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {filtered.map((p, idx) => {
+                  const health = healthFor(p);
+                  const cfg = HEALTH_CONFIG[health];
+                  const isGlobal = p.user_id === null;
+                  return (
+                    <motion.div
+                      key={p.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.04 }}
+                      className="glass rounded-xl !p-4 flex items-start gap-4 flex-wrap md:flex-nowrap"
+                    >
+                      {/* Health dot */}
+                      <div className="relative flex-shrink-0 mt-1.5" title={cfg.label}>
+                        <div
+                          className={`absolute inset-0 rounded-full ${cfg.ring} animate-pulse`}
+                        />
+                        <div className={`relative w-3 h-3 rounded-full ${cfg.dot}`} />
+                      </div>
 
-                {/* Name + body */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-sm font-medium text-foreground truncate">
-                      {p.name}
-                    </p>
+                      {/* Name + body */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="text-sm font-medium text-foreground truncate">
+                            {p.name}
+                          </p>
+                          <span className="text-[10px] uppercase tracking-wider text-muted bg-surface-light border border-border rounded px-1.5 py-0.5">
+                            {CATEGORY_LABELS[p.category] ?? p.category}
+                          </span>
+                          {isGlobal && (
+                            <span
+                              className="text-[10px] uppercase tracking-wider text-[#2563EB] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded px-1.5 py-0.5 inline-flex items-center gap-1"
+                              title="Global default — read-only. Duplicate to edit."
+                            >
+                              <Lock size={9} /> Library
+                            </span>
+                          )}
+                          {!p.active && (
+                            <span className="text-[10px] uppercase tracking-wider text-muted bg-surface-light border border-border rounded px-1.5 py-0.5">
+                              Inactive
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted mt-1 line-clamp-2">
+                          {p.body}
+                        </p>
+                        <div className="flex items-center gap-3 mt-2 text-[11px] text-muted flex-wrap">
+                          <span>Last sent: {fmtTime(p.last_sent_at)}</span>
+                          {p.sent_count > 0 && (
+                            <span className="text-emerald-400 inline-flex items-center gap-1">
+                              <Send size={10} /> {p.sent_count}
+                            </span>
+                          )}
+                          {p.error_count > 0 && (
+                            <span className="text-red-400 inline-flex items-center gap-1">
+                              <AlertCircle size={10} /> {p.error_count}
+                            </span>
+                          )}
+                          {p.variables && p.variables.length > 0 && (
+                            <span className="inline-flex items-center gap-1">
+                              <Sparkles size={10} /> {p.variables.length} vars
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <button
+                          onClick={() => openSend(p)}
+                          title="Send"
+                          className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+                        >
+                          <Send size={14} />
+                        </button>
+                        <button
+                          onClick={() => setPreviewing(p)}
+                          title="Preview"
+                          className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)] transition-colors"
+                        >
+                          <Eye size={14} />
+                        </button>
+                        <button
+                          onClick={() => setEditExample(p)}
+                          title="Edit example"
+                          className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] transition-colors"
+                        >
+                          <ExternalLink size={14} />
+                        </button>
+                        <button
+                          onClick={() => openEdit(p)}
+                          title={isGlobal ? "Duplicate" : "Edit"}
+                          className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)] transition-colors"
+                        >
+                          <Edit3 size={14} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(p)}
+                          title={isGlobal ? "Library preset — read-only" : "Delete"}
+                          disabled={isGlobal}
+                          className={`p-2 rounded-lg border transition-colors ${
+                            isGlobal
+                              ? "bg-surface-light border-border text-muted/40 cursor-not-allowed"
+                              : "bg-surface-light border-border text-muted hover:text-red-400 hover:border-red-400/20"
+                          }`}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}{/* ═══════════ EDIT / CREATE MODAL ═══════════ */}{editing && (
+              <div
+                className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 overflow-y-auto"
+                onClick={() => setEditing(null)}
+              >
+                <div
+                  className="bg-surface border border-border rounded-xl p-6 w-full max-w-2xl shadow-2xl"
+                  onClick={e => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-semibold text-foreground">
+                      {editing.id ? "Edit preset" : "New preset"}
+                    </h2>
+                    <button
+                      onClick={() => setEditing(null)}
+                      className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-xs text-muted mb-1 block">Category</label>
+                        <select
+                          value={editing.category}
+                          onChange={e =>
+                            setEditing({ ...editing, category: e.target.value })
+                          }
+                          className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[rgba(37,99,235,0.40)]"
+                        >
+                          {CATEGORY_ORDER.map(c => (
+                            <option key={c} value={c}>
+                              {CATEGORY_LABELS[c]}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-xs text-muted mb-1 block">Name</label>
+                        <input
+                          value={editing.name}
+                          onChange={e => setEditing({ ...editing, name: e.target.value })}
+                          placeholder="e.g. Welcome kickoff"
+                          className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.40)]"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-muted mb-1 block">
+                        Body{" "}
+                        <span className="text-muted/70">
+                          — use {"{{variable}}"} for tokens
+                        </span>
+                      </label>
+                      <textarea
+                        value={editing.body}
+                        onChange={e => setEditing({ ...editing, body: e.target.value })}
+                        rows={6}
+                        placeholder="Hi {{first_name}}, your onboarding call is set for {{meeting_time}}."
+                        className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.40)] font-mono"
+                      />
+                      {extractVars(editing.body).length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {extractVars(editing.body).map(v => (
+                            <span
+                              key={v}
+                              className="text-[10px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
+                            >
+                              {`{{${v}}}`}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <label className="inline-flex items-center gap-2 text-sm text-foreground">
+                      <input
+                        type="checkbox"
+                        checked={editing.active}
+                        onChange={e =>
+                          setEditing({ ...editing, active: e.target.checked })
+                        }
+                        className="rounded border-border"
+                      />
+                      Active — can be sent
+                    </label>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 mt-6">
+                    <button
+                      onClick={() => setEditing(null)}
+                      className="px-4 py-2 bg-surface-light border border-border rounded-lg text-sm text-muted hover:text-foreground"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSave}
+                      disabled={saving}
+                      className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[rgba(37,99,235,0.90)] disabled:opacity-60 flex items-center gap-2"
+                    >
+                      {saving ? <Loader size={14} className="animate-spin" /> : <Save size={14} />}
+                      {editing.id ? "Save changes" : "Create preset"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}{/* ═══════════ PREVIEW MODAL ═══════════ */}{previewing && (
+              <div
+                className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"
+                onClick={() => setPreviewing(null)}
+              >
+                <div
+                  className="bg-surface border border-border rounded-xl p-6 w-full max-w-lg shadow-2xl"
+                  onClick={e => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-lg font-semibold text-foreground">{previewing.name}</h2>
+                    <button
+                      onClick={() => setPreviewing(null)}
+                      className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-2 mb-3 flex-wrap">
                     <span className="text-[10px] uppercase tracking-wider text-muted bg-surface-light border border-border rounded px-1.5 py-0.5">
-                      {CATEGORY_LABELS[p.category] ?? p.category}
+                      {CATEGORY_LABELS[previewing.category] ?? previewing.category}
                     </span>
-                    {isGlobal && (
-                      <span
-                        className="text-[10px] uppercase tracking-wider text-[#2563EB] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded px-1.5 py-0.5 inline-flex items-center gap-1"
-                        title="Global default — read-only. Duplicate to edit."
-                      >
+                    {previewing.user_id === null && (
+                      <span className="text-[10px] uppercase tracking-wider text-[#2563EB] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded px-1.5 py-0.5 inline-flex items-center gap-1">
                         <Lock size={9} /> Library
                       </span>
                     )}
-                    {!p.active && (
-                      <span className="text-[10px] uppercase tracking-wider text-muted bg-surface-light border border-border rounded px-1.5 py-0.5">
-                        Inactive
-                      </span>
-                    )}
                   </div>
-                  <p className="text-xs text-muted mt-1 line-clamp-2">
-                    {p.body}
-                  </p>
-                  <div className="flex items-center gap-3 mt-2 text-[11px] text-muted flex-wrap">
-                    <span>Last sent: {fmtTime(p.last_sent_at)}</span>
-                    {p.sent_count > 0 && (
-                      <span className="text-emerald-400 inline-flex items-center gap-1">
-                        <Send size={10} /> {p.sent_count}
-                      </span>
-                    )}
-                    {p.error_count > 0 && (
-                      <span className="text-red-400 inline-flex items-center gap-1">
-                        <AlertCircle size={10} /> {p.error_count}
-                      </span>
-                    )}
-                    {p.variables && p.variables.length > 0 && (
-                      <span className="inline-flex items-center gap-1">
-                        <Sparkles size={10} /> {p.variables.length} vars
-                      </span>
-                    )}
+                  <div className="rounded-lg border border-border bg-surface-light p-4 whitespace-pre-wrap text-sm text-foreground leading-relaxed">
+                    {previewing.body}
                   </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-1 flex-shrink-0">
-                  <button
-                    onClick={() => openSend(p)}
-                    title="Send"
-                    className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
-                  >
-                    <Send size={14} />
-                  </button>
-                  <button
-                    onClick={() => setPreviewing(p)}
-                    title="Preview"
-                    className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)] transition-colors"
-                  >
-                    <Eye size={14} />
-                  </button>
-                  <button
-                    onClick={() => setEditExample(p)}
-                    title="Edit example"
-                    className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] transition-colors"
-                  >
-                    <ExternalLink size={14} />
-                  </button>
-                  <button
-                    onClick={() => openEdit(p)}
-                    title={isGlobal ? "Duplicate" : "Edit"}
-                    className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)] transition-colors"
-                  >
-                    <Edit3 size={14} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(p)}
-                    title={isGlobal ? "Library preset — read-only" : "Delete"}
-                    disabled={isGlobal}
-                    className={`p-2 rounded-lg border transition-colors ${
-                      isGlobal
-                        ? "bg-surface-light border-border text-muted/40 cursor-not-allowed"
-                        : "bg-surface-light border-border text-muted hover:text-red-400 hover:border-red-400/20"
-                    }`}
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* ═══════════ EDIT / CREATE MODAL ═══════════ */}
-      {editing && (
-        <div
-          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 overflow-y-auto"
-          onClick={() => setEditing(null)}
-        >
-          <div
-            className="bg-surface border border-border rounded-xl p-6 w-full max-w-2xl shadow-2xl"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-foreground">
-                {editing.id ? "Edit preset" : "New preset"}
-              </h2>
-              <button
-                onClick={() => setEditing(null)}
-                className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs text-muted mb-1 block">Category</label>
-                  <select
-                    value={editing.category}
-                    onChange={e =>
-                      setEditing({ ...editing, category: e.target.value })
-                    }
-                    className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[rgba(37,99,235,0.40)]"
-                  >
-                    {CATEGORY_ORDER.map(c => (
-                      <option key={c} value={c}>
-                        {CATEGORY_LABELS[c]}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-xs text-muted mb-1 block">Name</label>
-                  <input
-                    value={editing.name}
-                    onChange={e => setEditing({ ...editing, name: e.target.value })}
-                    placeholder="e.g. Welcome kickoff"
-                    className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.40)]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs text-muted mb-1 block">
-                  Body{" "}
-                  <span className="text-muted/70">
-                    — use {"{{variable}}"} for tokens
-                  </span>
-                </label>
-                <textarea
-                  value={editing.body}
-                  onChange={e => setEditing({ ...editing, body: e.target.value })}
-                  rows={6}
-                  placeholder="Hi {{first_name}}, your onboarding call is set for {{meeting_time}}."
-                  className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.40)] font-mono"
-                />
-                {extractVars(editing.body).length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mt-2">
-                    {extractVars(editing.body).map(v => (
-                      <span
-                        key={v}
-                        className="text-[10px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
-                      >
-                        {`{{${v}}}`}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <label className="inline-flex items-center gap-2 text-sm text-foreground">
-                <input
-                  type="checkbox"
-                  checked={editing.active}
-                  onChange={e =>
-                    setEditing({ ...editing, active: e.target.checked })
-                  }
-                  className="rounded border-border"
-                />
-                Active — can be sent
-              </label>
-            </div>
-
-            <div className="flex items-center justify-end gap-2 mt-6">
-              <button
-                onClick={() => setEditing(null)}
-                className="px-4 py-2 bg-surface-light border border-border rounded-lg text-sm text-muted hover:text-foreground"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[rgba(37,99,235,0.90)] disabled:opacity-60 flex items-center gap-2"
-              >
-                {saving ? <Loader size={14} className="animate-spin" /> : <Save size={14} />}
-                {editing.id ? "Save changes" : "Create preset"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ═══════════ PREVIEW MODAL ═══════════ */}
-      {previewing && (
-        <div
-          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"
-          onClick={() => setPreviewing(null)}
-        >
-          <div
-            className="bg-surface border border-border rounded-xl p-6 w-full max-w-lg shadow-2xl"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-semibold text-foreground">{previewing.name}</h2>
-              <button
-                onClick={() => setPreviewing(null)}
-                className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground"
-              >
-                <X size={16} />
-              </button>
-            </div>
-            <div className="flex items-center gap-2 mb-3 flex-wrap">
-              <span className="text-[10px] uppercase tracking-wider text-muted bg-surface-light border border-border rounded px-1.5 py-0.5">
-                {CATEGORY_LABELS[previewing.category] ?? previewing.category}
-              </span>
-              {previewing.user_id === null && (
-                <span className="text-[10px] uppercase tracking-wider text-[#2563EB] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded px-1.5 py-0.5 inline-flex items-center gap-1">
-                  <Lock size={9} /> Library
-                </span>
-              )}
-            </div>
-            <div className="rounded-lg border border-border bg-surface-light p-4 whitespace-pre-wrap text-sm text-foreground leading-relaxed">
-              {previewing.body}
-            </div>
-            {previewing.variables && previewing.variables.length > 0 && (
-              <div className="mt-3">
-                <p className="text-xs text-muted mb-1.5">Variables</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {previewing.variables.map(v => (
-                    <span
-                      key={v}
-                      className="text-[10px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
-                    >
-                      {`{{${v}}}`}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            <div className="grid grid-cols-2 gap-3 mt-4 text-xs">
-              <div className="rounded-lg border border-border bg-surface-light p-3">
-                <p className="text-muted">Sends</p>
-                <p className="text-lg font-semibold text-foreground">
-                  {previewing.sent_count}
-                </p>
-              </div>
-              <div className="rounded-lg border border-border bg-surface-light p-3">
-                <p className="text-muted">Errors</p>
-                <p className="text-lg font-semibold text-foreground">
-                  {previewing.error_count}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center justify-end gap-2 mt-5">
-              <button
-                onClick={() => setPreviewing(null)}
-                className="px-4 py-2 bg-surface-light border border-border rounded-lg text-sm text-muted hover:text-foreground"
-              >
-                Close
-              </button>
-              <button
-                onClick={() => {
-                  const p = previewing;
-                  setPreviewing(null);
-                  openSend(p);
-                }}
-                className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[rgba(37,99,235,0.90)] flex items-center gap-2"
-              >
-                <Send size={14} /> Send
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ═══════════ EDIT EXAMPLE PANEL ═══════════ */}
-      {editExample && (
-        <PresetEditExamplePanel
-          kind="telegram"
-          preset={{
-            id: editExample.id,
-            name: editExample.name,
-            category: editExample.category,
-            body: editExample.body,
-            variables: editExample.variables || [],
-          }}
-          onClose={() => setEditExample(null)}
-        />
-      )}
-
-      {/* ═══════════ SEND MODAL ═══════════ */}
-      {sending && (
-        <div
-          className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 overflow-y-auto"
-          onClick={() => setSending(null)}
-        >
-          <div
-            className="bg-surface border border-border rounded-xl p-6 w-full max-w-xl shadow-2xl"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-semibold text-foreground">
-                Send: {sending.name}
-              </h2>
-              <button
-                onClick={() => setSending(null)}
-                className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs text-muted mb-1 block">
-                  Chat ID{" "}
-                  <span className="text-muted/70">
-                    {isPlatformAdmin
-                      ? "(leave blank to use TELEGRAM_CHAT_ID env)"
-                      : "(leave blank to use the workspace default chat)"}
-                  </span>
-                </label>
-                <input
-                  value={sendChatId}
-                  onChange={e => setSendChatId(e.target.value)}
-                  placeholder="e.g. 123456789 or @username"
-                  className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.40)] font-mono"
-                />
-              </div>
-
-              {Object.keys(sendVars).length > 0 && (
-                <div>
-                  <p className="text-xs text-muted mb-1.5">Variable values</p>
-                  <div className="space-y-2">
-                    {Object.keys(sendVars).map(v => (
-                      <div key={v} className="flex items-center gap-2">
-                        <span className="text-xs text-[#2563EB] font-mono bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded px-2 py-1 min-w-[120px] text-center">
-                          {`{{${v}}}`}
-                        </span>
-                        <input
-                          value={sendVars[v]}
-                          onChange={e =>
-                            setSendVars(prev => ({ ...prev, [v]: e.target.value }))
-                          }
-                          placeholder={v}
-                          className="flex-1 bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.40)]"
-                        />
+                  {previewing.variables && previewing.variables.length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-xs text-muted mb-1.5">Variables</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {previewing.variables.map(v => (
+                          <span
+                            key={v}
+                            className="text-[10px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
+                          >
+                            {`{{${v}}}`}
+                          </span>
+                        ))}
                       </div>
-                    ))}
+                    </div>
+                  )}
+                  <div className="grid grid-cols-2 gap-3 mt-4 text-xs">
+                    <div className="rounded-lg border border-border bg-surface-light p-3">
+                      <p className="text-muted">Sends</p>
+                      <p className="text-lg font-semibold text-foreground">
+                        {previewing.sent_count}
+                      </p>
+                    </div>
+                    <div className="rounded-lg border border-border bg-surface-light p-3">
+                      <p className="text-muted">Errors</p>
+                      <p className="text-lg font-semibold text-foreground">
+                        {previewing.error_count}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-end gap-2 mt-5">
+                    <button
+                      onClick={() => setPreviewing(null)}
+                      className="px-4 py-2 bg-surface-light border border-border rounded-lg text-sm text-muted hover:text-foreground"
+                    >
+                      Close
+                    </button>
+                    <button
+                      onClick={() => {
+                        const p = previewing;
+                        setPreviewing(null);
+                        openSend(p);
+                      }}
+                      className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[rgba(37,99,235,0.90)] flex items-center gap-2"
+                    >
+                      <Send size={14} /> Send
+                    </button>
                   </div>
                 </div>
-              )}
+              </div>
+            )}{/* ═══════════ EDIT EXAMPLE PANEL ═══════════ */}{editExample && (
+              <PresetEditExamplePanel
+                kind="telegram"
+                preset={{
+                  id: editExample.id,
+                  name: editExample.name,
+                  category: editExample.category,
+                  body: editExample.body,
+                  variables: editExample.variables || [],
+                }}
+                onClose={() => setEditExample(null)}
+              />
+            )}{/* ═══════════ SEND MODAL ═══════════ */}{sending && (
+              <div
+                className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 overflow-y-auto"
+                onClick={() => setSending(null)}
+              >
+                <div
+                  className="bg-surface border border-border rounded-xl p-6 w-full max-w-xl shadow-2xl"
+                  onClick={e => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-lg font-semibold text-foreground">
+                      Send: {sending.name}
+                    </h2>
+                    <button
+                      onClick={() => setSending(null)}
+                      className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
 
-              <div>
-                <p className="text-xs text-muted mb-1.5 flex items-center gap-1.5">
-                  <BarChart3 size={11} /> Preview
-                </p>
-                <div className="rounded-lg border border-border bg-surface-light p-4 whitespace-pre-wrap text-sm text-foreground leading-relaxed min-h-[80px]">
-                  {sendPreview}
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-xs text-muted mb-1 block">
+                        Chat ID{" "}
+                        <span className="text-muted/70">
+                          {isPlatformAdmin
+                            ? "(leave blank to use TELEGRAM_CHAT_ID env)"
+                            : "(leave blank to use the workspace default chat)"}
+                        </span>
+                      </label>
+                      <input
+                        value={sendChatId}
+                        onChange={e => setSendChatId(e.target.value)}
+                        placeholder="e.g. 123456789 or @username"
+                        className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.40)] font-mono"
+                      />
+                    </div>
+
+                    {Object.keys(sendVars).length > 0 && (
+                      <div>
+                        <p className="text-xs text-muted mb-1.5">Variable values</p>
+                        <div className="space-y-2">
+                          {Object.keys(sendVars).map(v => (
+                            <div key={v} className="flex items-center gap-2">
+                              <span className="text-xs text-[#2563EB] font-mono bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded px-2 py-1 min-w-[120px] text-center">
+                                {`{{${v}}}`}
+                              </span>
+                              <input
+                                value={sendVars[v]}
+                                onChange={e =>
+                                  setSendVars(prev => ({ ...prev, [v]: e.target.value }))
+                                }
+                                placeholder={v}
+                                className="flex-1 bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.40)]"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div>
+                      <p className="text-xs text-muted mb-1.5 flex items-center gap-1.5">
+                        <BarChart3 size={11} /> Preview
+                      </p>
+                      <div className="rounded-lg border border-border bg-surface-light p-4 whitespace-pre-wrap text-sm text-foreground leading-relaxed min-h-[80px]">
+                        {sendPreview}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 mt-5">
+                    <button
+                      onClick={() => setSending(null)}
+                      className="px-4 py-2 bg-surface-light border border-border rounded-lg text-sm text-muted hover:text-foreground"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSend}
+                      disabled={sendLoading}
+                      className="px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-semibold hover:bg-emerald-500/90 disabled:opacity-60 flex items-center gap-2"
+                    >
+                      {sendLoading ? (
+                        <Loader size={14} className="animate-spin" />
+                      ) : (
+                        <Send size={14} />
+                      )}
+                      Send now
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-2 mt-5">
-              <button
-                onClick={() => setSending(null)}
-                className="px-4 py-2 bg-surface-light border border-border rounded-lg text-sm text-muted hover:text-foreground"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSend}
-                disabled={sendLoading}
-                className="px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm font-semibold hover:bg-emerald-500/90 disabled:opacity-60 flex items-center gap-2"
-              >
-                {sendLoading ? (
-                  <Loader size={14} className="animate-spin" />
-                ) : (
-                  <Send size={14} />
-                )}
-                Send now
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            )}</MotionPage>
   );
 }

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface ClientOption {
   id: string;
@@ -227,253 +228,237 @@ export default function NewSmartInvoicePage() {
   }
 
   return (
-    <div className="fade-in space-y-5 max-w-4xl mx-auto">
-      <div className="flex items-center gap-3">
-        <Link
-          href="/dashboard/invoices"
-          className="text-muted hover:text-foreground"
-        >
-          <ArrowLeft size={16} />
-        </Link>
-        <div>
-          <h1 className="text-lg font-bold">New smart invoice</h1>
-          <p className="text-[10px] text-muted">
-            Describe the scope in plain English — Claude will draft line items
-            you can edit, then generate a Stripe payment link or send it straight away.
-          </p>
-        </div>
-      </div>
-
-      {/* Client + scope */}
-      <div className="card p-5 space-y-3">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div>
-            <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
-              Client
-            </label>
-            <select
-              value={clientId}
-              onChange={(e) => setClientId(e.target.value)}
-              className="input w-full text-xs"
-            >
-              <option value="">Select client...</option>
-              {clients.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.business_name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
-              Due in
-            </label>
-            <select
-              value={dueDays}
-              onChange={(e) => setDueDays(Number(e.target.value))}
-              className="input w-full text-xs"
-            >
-              <option value={7}>7 days</option>
-              <option value={14}>14 days</option>
-              <option value={30}>30 days</option>
-              <option value={60}>60 days</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1 flex items-center gap-1">
-            <Sparkles size={9} className="text-[#2563EB]" /> Scope (AI will draft line items from this)
-          </label>
-          <textarea
-            value={scope}
-            onChange={(e) => setScope(e.target.value)}
-            placeholder="e.g., 'Video editing for Acme — 3 reels + 1 long-form YouTube, plus 5 thumbnails for April deliverables.'"
-            rows={3}
-            className="input w-full text-xs resize-none"
-          />
-        </div>
-
-        <button
-          onClick={draftWithAI}
-          disabled={drafting || !clientId || !scope.trim()}
-          className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40"
-        >
-          {drafting ? (
-            <Loader2 size={12} className="animate-spin" />
-          ) : (
-            <Wand2 size={12} />
-          )}
-          {drafting ? "Drafting..." : "Draft with AI"}
-        </button>
-
-        {reasoning && (
-          <p className="text-[10px] text-muted italic border-l-2 border-[rgba(37,99,235,0.30)] pl-2">
-            {reasoning}
-          </p>
-        )}
-      </div>
-
-      {/* Line items */}
-      <div className="card p-5 space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold">Line items</h3>
-          <button
-            onClick={addItem}
-            className="text-[10px] text-[#2563EB] flex items-center gap-1 hover:underline"
-          >
-            <Plus size={10} /> Add line
-          </button>
-        </div>
-
-        {lineItems.length === 0 ? (
-          <p className="text-[11px] text-muted text-center py-4">
-            No line items yet. Use AI draft above or add them manually.
-          </p>
-        ) : (
-          <div className="space-y-1.5">
-            <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-1 px-2">
-              <span className="col-span-6">Description</span>
-              <span className="col-span-1 text-center">Qty</span>
-              <span className="col-span-2 text-center">Rate</span>
-              <span className="col-span-2 text-right">Amount</span>
-              <span className="col-span-1"></span>
-            </div>
-            {lineItems.map((item, i) => (
-              <div
-                key={i}
-                className="grid grid-cols-12 items-center gap-1 text-[11px] py-1 px-2 rounded bg-surface-light"
+    <MotionPage className="fade-in space-y-5 max-w-4xl mx-auto"><div className="flex items-center gap-3">
+              <Link
+                href="/dashboard/invoices"
+                className="text-muted hover:text-foreground"
               >
-                <input
-                  value={item.description}
-                  onChange={(e) => updateItem(i, { description: e.target.value })}
-                  placeholder="Description"
-                  className="col-span-6 input !py-1 text-[11px] bg-transparent border-0"
+                <ArrowLeft size={16} />
+              </Link>
+              <div>
+                <h1 className="text-lg font-bold">New smart invoice</h1>
+                <p className="text-[10px] text-muted">
+                  Describe the scope in plain English — Claude will draft line items
+                  you can edit, then generate a Stripe payment link or send it straight away.
+                </p>
+              </div>
+            </div>{/* Client + scope */}<div className="card p-5 space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                    Client
+                  </label>
+                  <select
+                    value={clientId}
+                    onChange={(e) => setClientId(e.target.value)}
+                    className="input w-full text-xs"
+                  >
+                    <option value="">Select client...</option>
+                    {clients.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.business_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                    Due in
+                  </label>
+                  <select
+                    value={dueDays}
+                    onChange={(e) => setDueDays(Number(e.target.value))}
+                    className="input w-full text-xs"
+                  >
+                    <option value={7}>7 days</option>
+                    <option value={14}>14 days</option>
+                    <option value={30}>30 days</option>
+                    <option value={60}>60 days</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1 flex items-center gap-1">
+                  <Sparkles size={9} className="text-[#2563EB]" /> Scope (AI will draft line items from this)
+                </label>
+                <textarea
+                  value={scope}
+                  onChange={(e) => setScope(e.target.value)}
+                  placeholder="e.g., 'Video editing for Acme — 3 reels + 1 long-form YouTube, plus 5 thumbnails for April deliverables.'"
+                  rows={3}
+                  className="input w-full text-xs resize-none"
                 />
-                <input
-                  type="number"
-                  min={1}
-                  value={item.qty}
-                  onChange={(e) => updateItem(i, { qty: Math.max(1, Number(e.target.value)) })}
-                  className="col-span-1 input !py-1 text-[11px] text-center bg-transparent border-0"
-                />
-                <input
-                  type="number"
-                  min={0}
-                  step={0.01}
-                  value={(item.unit_price_cents / 100).toFixed(2)}
-                  onChange={(e) =>
-                    updateItem(i, {
-                      unit_price_cents: Math.round(Number(e.target.value) * 100),
-                    })
-                  }
-                  className="col-span-2 input !py-1 text-[11px] text-center bg-transparent border-0"
-                />
-                <span className="col-span-2 text-right font-bold">
-                  ${centsToDollars(item.qty * item.unit_price_cents)}
-                </span>
+              </div>
+
+              <button
+                onClick={draftWithAI}
+                disabled={drafting || !clientId || !scope.trim()}
+                className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40"
+              >
+                {drafting ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <Wand2 size={12} />
+                )}
+                {drafting ? "Drafting..." : "Draft with AI"}
+              </button>
+
+              {reasoning && (
+                <p className="text-[10px] text-muted italic border-l-2 border-[rgba(37,99,235,0.30)] pl-2">
+                  {reasoning}
+                </p>
+              )}
+            </div>{/* Line items */}<div className="card p-5 space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold">Line items</h3>
                 <button
-                  onClick={() => removeItem(i)}
-                  className="col-span-1 text-right text-muted hover:text-rose-700"
+                  onClick={addItem}
+                  className="text-[10px] text-[#2563EB] flex items-center gap-1 hover:underline"
                 >
-                  <Trash2 size={11} />
+                  <Plus size={10} /> Add line
                 </button>
               </div>
-            ))}
-          </div>
-        )}
 
-        {/* Totals */}
-        <div className="pt-2 border-t border-border space-y-1">
-          <div className="flex justify-between text-[11px]">
-            <span className="text-muted">Subtotal</span>
-            <span>${centsToDollars(subtotal)}</span>
-          </div>
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="text-muted">Tax</span>
-            <div className="flex items-center gap-1">
-              <span className="text-muted">$</span>
-              <input
-                type="number"
-                min={0}
-                step={0.01}
-                value={(taxCents / 100).toFixed(2)}
-                onChange={(e) => setTaxCents(Math.round(Number(e.target.value) * 100))}
-                className="input !py-0.5 w-24 text-[11px] text-right"
+              {lineItems.length === 0 ? (
+                <p className="text-[11px] text-muted text-center py-4">
+                  No line items yet. Use AI draft above or add them manually.
+                </p>
+              ) : (
+                <div className="space-y-1.5">
+                  <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-1 px-2">
+                    <span className="col-span-6">Description</span>
+                    <span className="col-span-1 text-center">Qty</span>
+                    <span className="col-span-2 text-center">Rate</span>
+                    <span className="col-span-2 text-right">Amount</span>
+                    <span className="col-span-1"></span>
+                  </div>
+                  {lineItems.map((item, i) => (
+                    <div
+                      key={i}
+                      className="grid grid-cols-12 items-center gap-1 text-[11px] py-1 px-2 rounded bg-surface-light"
+                    >
+                      <input
+                        value={item.description}
+                        onChange={(e) => updateItem(i, { description: e.target.value })}
+                        placeholder="Description"
+                        className="col-span-6 input !py-1 text-[11px] bg-transparent border-0"
+                      />
+                      <input
+                        type="number"
+                        min={1}
+                        value={item.qty}
+                        onChange={(e) => updateItem(i, { qty: Math.max(1, Number(e.target.value)) })}
+                        className="col-span-1 input !py-1 text-[11px] text-center bg-transparent border-0"
+                      />
+                      <input
+                        type="number"
+                        min={0}
+                        step={0.01}
+                        value={(item.unit_price_cents / 100).toFixed(2)}
+                        onChange={(e) =>
+                          updateItem(i, {
+                            unit_price_cents: Math.round(Number(e.target.value) * 100),
+                          })
+                        }
+                        className="col-span-2 input !py-1 text-[11px] text-center bg-transparent border-0"
+                      />
+                      <span className="col-span-2 text-right font-bold">
+                        ${centsToDollars(item.qty * item.unit_price_cents)}
+                      </span>
+                      <button
+                        onClick={() => removeItem(i)}
+                        className="col-span-1 text-right text-muted hover:text-rose-700"
+                      >
+                        <Trash2 size={11} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Totals */}
+              <div className="pt-2 border-t border-border space-y-1">
+                <div className="flex justify-between text-[11px]">
+                  <span className="text-muted">Subtotal</span>
+                  <span>${centsToDollars(subtotal)}</span>
+                </div>
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="text-muted">Tax</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-muted">$</span>
+                    <input
+                      type="number"
+                      min={0}
+                      step={0.01}
+                      value={(taxCents / 100).toFixed(2)}
+                      onChange={(e) => setTaxCents(Math.round(Number(e.target.value) * 100))}
+                      className="input !py-0.5 w-24 text-[11px] text-right"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-between text-sm font-bold pt-1 border-t border-border">
+                  <span>Total</span>
+                  <span className="text-[#1D4ED8] font-bold">${centsToDollars(total)}</span>
+                </div>
+              </div>
+            </div>{/* Notes */}<div className="card p-5 space-y-2">
+              <label className="text-[9px] text-muted uppercase tracking-wider block">
+                Notes (shown in the email + payment link)
+              </label>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="e.g., 'Thanks for working with us this month. Payment terms: Net 14.'"
+                rows={2}
+                className="input w-full text-xs resize-none"
               />
-            </div>
-          </div>
-          <div className="flex justify-between text-sm font-bold pt-1 border-t border-border">
-            <span>Total</span>
-            <span className="text-[#1D4ED8] font-bold">${centsToDollars(total)}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Notes */}
-      <div className="card p-5 space-y-2">
-        <label className="text-[9px] text-muted uppercase tracking-wider block">
-          Notes (shown in the email + payment link)
-        </label>
-        <textarea
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          placeholder="e.g., 'Thanks for working with us this month. Payment terms: Net 14.'"
-          rows={2}
-          className="input w-full text-xs resize-none"
-        />
-      </div>
-
-      {paymentLink && (
-        <div className="card border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-4 flex items-center justify-between gap-3">
-          <div>
-            <p className="text-[11px] font-semibold">Stripe payment link ready</p>
-            <a
-              href={paymentLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[10px] text-[#2563EB] underline break-all"
-            >
-              {paymentLink}
-            </a>
-          </div>
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(paymentLink);
-              toast.success("Link copied");
-            }}
-            className="btn-secondary text-[10px]"
-          >
-            Copy
-          </button>
-        </div>
-      )}
-
-      {/* Actions */}
-      <div className="flex gap-2 flex-wrap justify-end">
-        <button
-          onClick={saveDraft}
-          disabled={saving || !clientId || lineItems.length === 0}
-          className="btn-secondary text-xs flex items-center gap-1.5 disabled:opacity-40"
-        >
-          {saving ? <Loader2 size={12} className="animate-spin" /> : null}
-          Save draft
-        </button>
-        <button
-          onClick={createPaymentLink}
-          disabled={!clientId || lineItems.length === 0}
-          className="btn-secondary text-xs flex items-center gap-1.5 disabled:opacity-40"
-        >
-          <CreditCard size={12} /> Create payment link
-        </button>
-        <button
-          onClick={sendInvoice}
-          disabled={!clientId || lineItems.length === 0}
-          className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40"
-        >
-          <Send size={12} /> Send to client
-        </button>
-      </div>
-    </div>
+            </div>{paymentLink && (
+              <div className="card border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-4 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[11px] font-semibold">Stripe payment link ready</p>
+                  <a
+                    href={paymentLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] text-[#2563EB] underline break-all"
+                  >
+                    {paymentLink}
+                  </a>
+                </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(paymentLink);
+                    toast.success("Link copied");
+                  }}
+                  className="btn-secondary text-[10px]"
+                >
+                  Copy
+                </button>
+              </div>
+            )}{/* Actions */}<div className="flex gap-2 flex-wrap justify-end">
+              <button
+                onClick={saveDraft}
+                disabled={saving || !clientId || lineItems.length === 0}
+                className="btn-secondary text-xs flex items-center gap-1.5 disabled:opacity-40"
+              >
+                {saving ? <Loader2 size={12} className="animate-spin" /> : null}
+                Save draft
+              </button>
+              <button
+                onClick={createPaymentLink}
+                disabled={!clientId || lineItems.length === 0}
+                className="btn-secondary text-xs flex items-center gap-1.5 disabled:opacity-40"
+              >
+                <CreditCard size={12} /> Create payment link
+              </button>
+              <button
+                onClick={sendInvoice}
+                disabled={!clientId || lineItems.length === 0}
+                className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40"
+              >
+                <Send size={12} /> Send to client
+              </button>
+            </div></MotionPage>
   );
 }

@@ -10,6 +10,7 @@ import {
   Trash2, Eye, BarChart3, Settings, X, Link2,
   CheckCircle2, Clock, Archive, Pencil, ArrowRight,
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* ═══════════════════════════════════════════════════════════ TYPES */
 
@@ -245,12 +246,9 @@ export default function FunnelCanvasPage() {
 
   if (loading) {
     return (
-      <div className="p-6 max-w-7xl mx-auto space-y-6">
-        <div className="h-32  bg-black/[0.04] animate-pulse" />
-        <div className="flex gap-4">
-          {[...Array(3)].map((_, i) => <div key={i} className="h-36 w-48 rounded-xl bg-black/[0.04] animate-pulse" />)}
-        </div>
-      </div>
+      <MotionPage className="p-6 max-w-7xl mx-auto space-y-6"><div className="h-32  bg-black/[0.04] animate-pulse" /><div className="flex gap-4">
+                  {[...Array(3)].map((_, i) => <div key={i} className="h-36 w-48 rounded-xl bg-black/[0.04] animate-pulse" />)}
+                </div></MotionPage>
     );
   }
 

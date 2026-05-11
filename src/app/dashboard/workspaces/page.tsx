@@ -7,6 +7,7 @@ import PageHero from "@/components/ui/page-hero";
 import { CardSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface Workspace {
   id: string;
@@ -98,114 +99,108 @@ export default function WorkspacesPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        title="Workspaces"
-        eyebrow="WORKSPACES"
-        subtitle="Isolated environments per brand, client, or business line."
-        icon={<LayoutGrid size={22} />}
-        gradient="gold"
-        actions={
-          <button onClick={() => setShowCreate((v) => !v)}
-            className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
-            <Plus size={16} /> New Workspace
-          </button>
-        }
-      />
-
-      {showCreate && (
-        <motion.div
-          className="glass rounded-xl p-5 space-y-4"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <p className="font-semibold text-[#111827] text-sm">New Workspace</p>
-          <div className="flex flex-wrap gap-3">
-            <input className="input flex-1 min-w-[180px] text-sm" placeholder="Workspace name"
-              value={form.name} onChange={(e) => handleNameChange(e.target.value)} autoFocus />
-            <input className="input w-44 text-sm" placeholder="slug (auto)"
-              value={form.slug} onChange={(e) => setForm({ ...form, slug: slugify(e.target.value) })} />
-          </div>
-          <input className="input w-full text-sm" placeholder="Description (optional)"
-            value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-          <div className="flex gap-2">
-            <button onClick={handleCreate} disabled={saving || !form.name.trim()}
-              className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
-              {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Create
-            </button>
-            <button onClick={() => setShowCreate(false)}
-              className="btn-ghost flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg">
-              <X size={13} /> Cancel
-            </button>
-          </div>
-        </motion.div>
-      )}
-
-      {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[0,1,2].map((i) => <CardSkeleton key={i} />)}
-        </div>
-      ) : workspaces.length === 0 ? (
-        <motion.div
-          className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          <LayoutGrid size={40} className="text-muted opacity-30" />
-          <p className="text-[#111827] font-semibold">No workspaces yet</p>
-          <p className="text-muted text-sm max-w-xs">Create your first workspace to start isolating data per brand or client.</p>
-          <button onClick={() => setShowCreate(true)}
-            className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
-            <Plus size={15} /> Create first workspace
-          </button>
-        </motion.div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {workspaces.map((w, i) => {
-            const isActive = activeId === w.id;
-            return (
+    <MotionPage className="space-y-6"><PageHero
+              title="Workspaces"
+              eyebrow="WORKSPACES"
+              subtitle="Isolated environments per brand, client, or business line."
+              icon={<LayoutGrid size={22} />}
+              gradient="gold"
+              actions={
+                <button onClick={() => setShowCreate((v) => !v)}
+                  className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
+                  <Plus size={16} /> New Workspace
+                </button>
+              }
+            />{showCreate && (
               <motion.div
-                key={w.id}
-                className={`glass rounded-xl p-5 flex flex-col gap-3 transition-all ${isActive ? "border border-[#2563EB]/40 bg-[#2563EB]/5" : ""}`}
+                className="glass rounded-xl p-5 space-y-4"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05, duration: 0.4 }}
-                whileHover={{ y: -4, scale: 1.01 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="text-[#111827] font-semibold truncate">{w.name}</p>
-                      {w.is_default && (
-                        <span className="text-[10px] bg-[#2563EB]/10 text-[#3B82F6] border border-[#2563EB]/20 px-1.5 py-0.5 rounded-full shrink-0">Default</span>
-                      )}
-                    </div>
-                    <p className="text-muted text-xs mt-0.5 font-mono">{w.slug}</p>
-                  </div>
-                  {isActive && <CheckCircle size={18} className="text-[#2563EB] shrink-0 mt-0.5" />}
+                <p className="font-semibold text-[#111827] text-sm">New Workspace</p>
+                <div className="flex flex-wrap gap-3">
+                  <input className="input flex-1 min-w-[180px] text-sm" placeholder="Workspace name"
+                    value={form.name} onChange={(e) => handleNameChange(e.target.value)} autoFocus />
+                  <input className="input w-44 text-sm" placeholder="slug (auto)"
+                    value={form.slug} onChange={(e) => setForm({ ...form, slug: slugify(e.target.value) })} />
                 </div>
-                {w.description && <p className="text-muted text-xs line-clamp-2">{w.description}</p>}
-                <div className="flex items-center gap-3 text-xs text-muted mt-auto">
-                  <span className="flex items-center gap-1"><Users size={12} /> {w._memberCount} member{w._memberCount !== 1 ? "s" : ""}</span>
-                  <span>·</span>
-                  <span>{new Date(w.created_at).toLocaleDateString()}</span>
-                </div>
-                {!isActive && (
-                  <button onClick={() => switchWorkspace(w.id)}
-                    className="btn-ghost text-sm py-1.5 rounded-lg w-full border border-[rgba(0,0,0,0.08)] hover:border-[#2563EB]/30 mt-1">
-                    Switch to this workspace
+                <input className="input w-full text-sm" placeholder="Description (optional)"
+                  value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+                <div className="flex gap-2">
+                  <button onClick={handleCreate} disabled={saving || !form.name.trim()}
+                    className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
+                    {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Create
                   </button>
-                )}
-                {isActive && (
-                  <div className="text-center text-xs text-[#3B82F6] py-1">Currently active</div>
-                )}
+                  <button onClick={() => setShowCreate(false)}
+                    className="btn-ghost flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg">
+                    <X size={13} /> Cancel
+                  </button>
+                </div>
               </motion.div>
-            );
-          })}
-        </div>
-      )}
-    </div>
+            )}{loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[0,1,2].map((i) => <CardSkeleton key={i} />)}
+              </div>
+            ) : workspaces.length === 0 ? (
+              <motion.div
+                className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <LayoutGrid size={40} className="text-muted opacity-30" />
+                <p className="text-[#111827] font-semibold">No workspaces yet</p>
+                <p className="text-muted text-sm max-w-xs">Create your first workspace to start isolating data per brand or client.</p>
+                <button onClick={() => setShowCreate(true)}
+                  className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
+                  <Plus size={15} /> Create first workspace
+                </button>
+              </motion.div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {workspaces.map((w, i) => {
+                  const isActive = activeId === w.id;
+                  return (
+                    <motion.div
+                      key={w.id}
+                      className={`glass rounded-xl p-5 flex flex-col gap-3 transition-all ${isActive ? "border border-[#2563EB]/40 bg-[#2563EB]/5" : ""}`}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.05, duration: 0.4 }}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="text-[#111827] font-semibold truncate">{w.name}</p>
+                            {w.is_default && (
+                              <span className="text-[10px] bg-[#2563EB]/10 text-[#3B82F6] border border-[#2563EB]/20 px-1.5 py-0.5 rounded-full shrink-0">Default</span>
+                            )}
+                          </div>
+                          <p className="text-muted text-xs mt-0.5 font-mono">{w.slug}</p>
+                        </div>
+                        {isActive && <CheckCircle size={18} className="text-[#2563EB] shrink-0 mt-0.5" />}
+                      </div>
+                      {w.description && <p className="text-muted text-xs line-clamp-2">{w.description}</p>}
+                      <div className="flex items-center gap-3 text-xs text-muted mt-auto">
+                        <span className="flex items-center gap-1"><Users size={12} /> {w._memberCount} member{w._memberCount !== 1 ? "s" : ""}</span>
+                        <span>·</span>
+                        <span>{new Date(w.created_at).toLocaleDateString()}</span>
+                      </div>
+                      {!isActive && (
+                        <button onClick={() => switchWorkspace(w.id)}
+                          className="btn-ghost text-sm py-1.5 rounded-lg w-full border border-[rgba(0,0,0,0.08)] hover:border-[#2563EB]/30 mt-1">
+                          Switch to this workspace
+                        </button>
+                      )}
+                      {isActive && (
+                        <div className="text-center text-xs text-[#3B82F6] py-1">Currently active</div>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}</MotionPage>
   );
 }

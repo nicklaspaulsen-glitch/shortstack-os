@@ -38,6 +38,7 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface OptimisationHint {
   severity: "low" | "medium" | "high";
@@ -142,9 +143,8 @@ export default function LlmCostsDashboard() {
 
   if (authLoading || state === "loading") {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] text-muted text-sm">
-        Loading LLM cost dashboard�
-      </div>
+      <MotionPage className="flex items-center justify-center min-h-[60vh] text-muted text-sm">Loading LLM cost dashboard�
+              </MotionPage>
     );
   }
 

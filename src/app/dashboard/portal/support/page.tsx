@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { MessageSquare, Send, Bot, Loader, Phone, Mail, Clock } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 export default function ClientSupportPage() {
   const { profile } = useAuth();
@@ -49,129 +50,125 @@ export default function ClientSupportPage() {
   }
 
   return (
-    <div className="fade-in space-y-5">
-      <div>
-        <h1 className="page-header mb-0 flex items-center gap-2"><MessageSquare size={18} className="text-blue-600" /> Support</h1>
-        <p className="text-xs text-gray-500 mt-0.5">Chat with your AI assistant or contact your account manager</p>
-      </div>
+    <MotionPage className="fade-in space-y-5"><div>
+              <h1 className="page-header mb-0 flex items-center gap-2"><MessageSquare size={18} className="text-blue-600" /> Support</h1>
+              <p className="text-xs text-gray-500 mt-0.5">Chat with your AI assistant or contact your account manager</p>
+            </div><div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* Chat */}
+              <div className="lg:col-span-2 card flex flex-col" style={{ minHeight: "500px" }}>
+                <div className="flex items-center gap-2 pb-3 border-b border-gray-200 mb-3">
+                  <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <Bot size={16} className="text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-gray-900">Trinity AI</p>
+                    <p className="text-[9px] text-green-700 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" /> Online
+                    </p>
+                  </div>
+                </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Chat */}
-        <div className="lg:col-span-2 card flex flex-col" style={{ minHeight: "500px" }}>
-          <div className="flex items-center gap-2 pb-3 border-b border-gray-200 mb-3">
-            <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
-              <Bot size={16} className="text-blue-600" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-gray-900">Trinity AI</p>
-              <p className="text-[9px] text-green-700 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" /> Online
-              </p>
-            </div>
-          </div>
+                <div className="flex-1 overflow-y-auto space-y-3 mb-3">
+                  {messages.length === 0 && (
+                    <div className="text-center py-12">
+                      <Bot size={28} className="mx-auto mb-3 text-blue-300" />
+                      <p className="text-xs text-gray-500 mb-3">How can I help you today?</p>
+                      <div className="flex flex-wrap justify-center gap-1.5">
+                        {[
+                          "What tasks are pending?",
+                          "When is my next content going live?",
+                          "How are my campaigns performing?",
+                          "I have a question about my invoice",
+                        ].map((s, i) => (
+                          <button key={i} onClick={() => setInput(s)}
+                            className="text-[10px] bg-gray-50 px-2.5 py-1.5 rounded-md text-gray-500 hover:text-gray-800 border border-gray-200 transition-all">
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
-          <div className="flex-1 overflow-y-auto space-y-3 mb-3">
-            {messages.length === 0 && (
-              <div className="text-center py-12">
-                <Bot size={28} className="mx-auto mb-3 text-blue-300" />
-                <p className="text-xs text-gray-500 mb-3">How can I help you today?</p>
-                <div className="flex flex-wrap justify-center gap-1.5">
-                  {[
-                    "What tasks are pending?",
-                    "When is my next content going live?",
-                    "How are my campaigns performing?",
-                    "I have a question about my invoice",
-                  ].map((s, i) => (
-                    <button key={i} onClick={() => setInput(s)}
-                      className="text-[10px] bg-gray-50 px-2.5 py-1.5 rounded-md text-gray-500 hover:text-gray-800 border border-gray-200 transition-all">
-                      {s}
-                    </button>
+                  {messages.map((msg, i) => (
+                    <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                      <div className={`max-w-[75%] rounded-lg px-3 py-2 ${
+                        msg.role === "user"
+                          ? "bg-blue-50 border border-blue-200"
+                          : "bg-gray-50 border border-gray-200"
+                      }`}>
+                        <p className="text-xs whitespace-pre-wrap">{msg.content}</p>
+                      </div>
+                    </div>
                   ))}
-                </div>
-              </div>
-            )}
 
-            {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[75%] rounded-lg px-3 py-2 ${
-                  msg.role === "user"
-                    ? "bg-blue-50 border border-blue-200"
-                    : "bg-gray-50 border border-gray-200"
-                }`}>
-                  <p className="text-xs whitespace-pre-wrap">{msg.content}</p>
+                  {loading && (
+                    <div className="flex justify-start">
+                      <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+                        <Loader size={12} className="animate-spin text-blue-600" />
+                      </div>
+                    </div>
+                  )}
+                  <div ref={chatEndRef} />
                 </div>
-              </div>
-            ))}
 
-            {loading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-                  <Loader size={12} className="animate-spin text-blue-600" />
-                </div>
+                <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="flex gap-2">
+                  <input
+                    type="text" value={input} onChange={(e) => setInput(e.target.value)}
+                    placeholder="Type your message..."
+                    aria-label="Support message"
+                    className="input flex-1 text-xs" disabled={loading}
+                  />
+                  <button type="submit" disabled={!input.trim() || loading} className="btn-primary px-3 disabled:opacity-30" aria-label="Send message">
+                    <Send size={13} />
+                  </button>
+                </form>
               </div>
-            )}
-            <div ref={chatEndRef} />
-          </div>
 
-          <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="flex gap-2">
-            <input
-              type="text" value={input} onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
-              aria-label="Support message"
-              className="input flex-1 text-xs" disabled={loading}
-            />
-            <button type="submit" disabled={!input.trim() || loading} className="btn-primary px-3 disabled:opacity-30" aria-label="Send message">
-              <Send size={13} />
-            </button>
-          </form>
-        </div>
+              {/* Contact info */}
+              <div className="space-y-3">
+                <div className="card">
+                  <h3 className="section-header">Contact Your Team</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
+                        <Mail size={14} className="text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-gray-900">Email</p>
+                        <p className="text-[10px] text-blue-600">support@shortstack.work</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
+                        <Phone size={14} className="text-green-700" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-gray-900">Phone</p>
+                        <p className="text-[10px] text-gray-500">Available on request</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 bg-yellow-50 rounded-lg flex items-center justify-center">
+                        <Clock size={14} className="text-yellow-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-gray-900">Response Time</p>
+                        <p className="text-[10px] text-gray-500">Within 24 hours</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-        {/* Contact info */}
-        <div className="space-y-3">
-          <div className="card">
-            <h3 className="section-header">Contact Your Team</h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
-                  <Mail size={14} className="text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-gray-900">Email</p>
-                  <p className="text-[10px] text-blue-600">support@shortstack.work</p>
+                <div className="card bg-blue-50 border-blue-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Bot size={14} className="text-blue-600" />
+                    <span className="text-xs font-semibold text-gray-900">AI Assistant</span>
+                  </div>
+                  <p className="text-[10px] text-gray-500">
+                    Your AI assistant can answer questions about your services, check task status, and provide updates on your content and campaigns — instantly.
+                  </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
-                  <Phone size={14} className="text-green-700" />
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-gray-900">Phone</p>
-                  <p className="text-[10px] text-gray-500">Available on request</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-yellow-50 rounded-lg flex items-center justify-center">
-                  <Clock size={14} className="text-yellow-600" />
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-gray-900">Response Time</p>
-                  <p className="text-[10px] text-gray-500">Within 24 hours</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="card bg-blue-50 border-blue-200">
-            <div className="flex items-center gap-2 mb-2">
-              <Bot size={14} className="text-blue-600" />
-              <span className="text-xs font-semibold text-gray-900">AI Assistant</span>
-            </div>
-            <p className="text-[10px] text-gray-500">
-              Your AI assistant can answer questions about your services, check task status, and provide updates on your content and campaigns — instantly.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+            </div></MotionPage>
   );
 }

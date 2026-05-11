@@ -27,6 +27,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/ui/empty-state";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface Proposal {
   id: string;
@@ -123,154 +124,150 @@ export default function ProposalsPage() {
   }, [proposals]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <PageHero
-        title="Proposals"
-        eyebrow="PROPOSAL STUDIO"
-        subtitle="Send branded proposals to prospects — track draft, sent, and signed status in one place."
-        icon={<FileCheck size={20} />}
-        gradient="purple"
-      />
+    <MotionPage className="min-h-screen bg-background text-foreground"><PageHero
+              title="Proposals"
+              eyebrow="PROPOSAL STUDIO"
+              subtitle="Send branded proposals to prospects — track draft, sent, and signed status in one place."
+              icon={<FileCheck size={20} />}
+              gradient="purple"
+            /><div className="mx-auto max-w-5xl space-y-5 px-6 pb-10 pt-5">
+              {/* Beta banner */}
+              <div className="rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-4 py-3 text-[12px] text-[#2563EB]">
+                <span className="font-semibold">Beta:</span> proposals are stored locally on this
+                device. E-sign and PandaDoc wiring land next sprint — existing drafts will migrate.
+              </div>
 
-      <div className="mx-auto max-w-5xl space-y-5 px-6 pb-10 pt-5">
-        {/* Beta banner */}
-        <div className="rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-4 py-3 text-[12px] text-[#2563EB]">
-          <span className="font-semibold">Beta:</span> proposals are stored locally on this
-          device. E-sign and PandaDoc wiring land next sprint — existing drafts will migrate.
-        </div>
+              {/* Stats row */}
+              <motion.div
+                className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+                variants={containerVariants}
+                initial="hidden"
+                animate="show"
+              >
+                {[
+                  {
+                    label: "Total value",
+                    value: `$${stats.total.toLocaleString()}`,
+                    sub: `${proposals.length} proposals`,
+                    valueClass: "",
+                  },
+                  {
+                    label: "Signed",
+                    value: String(stats.signed),
+                    sub: `$${stats.signedValue.toLocaleString()} closed`,
+                    valueClass: "text-emerald-300",
+                  },
+                  {
+                    label: "Win rate",
+                    value: proposals.length === 0 ? "—" : `${Math.round((stats.signed / proposals.length) * 100)}%`,
+                    sub: "signed / total",
+                    valueClass: "",
+                  },
+                ].map((stat, i) => (
+                  <motion.div
+                    key={i}
+                    variants={fadeUp}
+                    whileHover={{ y: -2 }}
+                    className="glass rounded-xl overflow-hidden relative p-4"
+                  >
+                    <div className={`absolute top-0 left-0 right-0 h-0.5 ${STAT_BARS[i]}`} />
+                    <p className="text-[10px] uppercase tracking-wider text-muted">{stat.label}</p>
+                    <p className={`mt-1 text-2xl font-bold ${stat.valueClass}`}>{stat.value}</p>
+                    <p className="mt-0.5 text-[11px] text-muted">{stat.sub}</p>
+                  </motion.div>
+                ))}
+              </motion.div>
 
-        {/* Stats row */}
-        <motion.div
-          className="grid grid-cols-1 gap-3 sm:grid-cols-3"
-          variants={containerVariants}
-          initial="hidden"
-          animate="show"
-        >
-          {[
-            {
-              label: "Total value",
-              value: `$${stats.total.toLocaleString()}`,
-              sub: `${proposals.length} proposals`,
-              valueClass: "",
-            },
-            {
-              label: "Signed",
-              value: String(stats.signed),
-              sub: `$${stats.signedValue.toLocaleString()} closed`,
-              valueClass: "text-emerald-300",
-            },
-            {
-              label: "Win rate",
-              value: proposals.length === 0 ? "—" : `${Math.round((stats.signed / proposals.length) * 100)}%`,
-              sub: "signed / total",
-              valueClass: "",
-            },
-          ].map((stat, i) => (
-            <motion.div
-              key={i}
-              variants={fadeUp}
-              whileHover={{ y: -2 }}
-              className="glass rounded-xl overflow-hidden relative p-4"
-            >
-              <div className={`absolute top-0 left-0 right-0 h-0.5 ${STAT_BARS[i]}`} />
-              <p className="text-[10px] uppercase tracking-wider text-muted">{stat.label}</p>
-              <p className={`mt-1 text-2xl font-bold ${stat.valueClass}`}>{stat.value}</p>
-              <p className="mt-0.5 text-[11px] text-muted">{stat.sub}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Toolbar */}
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted">
-            {loading
-              ? "Loading…"
-              : `${proposals.length} proposal${proposals.length === 1 ? "" : "s"}`}
-          </p>
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={() => setShowNew(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#3B82F6]"
-          >
-            <Plus size={14} /> New proposal
-          </motion.button>
-        </div>
-
-        {/* Create form */}
-        {showNew && (
-          <NewProposalForm
-            onClose={() => setShowNew(false)}
-            onCreated={(p) => {
-              persist([p, ...proposals]);
-              setShowNew(false);
-              toast.success("Proposal created");
-            }}
-          />
-        )}
-
-        {/* List */}
-        {loading ? (
-          <div className="flex items-center gap-2 text-sm text-muted">
-            <Loader size={14} className="animate-spin" /> Loading…
-          </div>
-        ) : proposals.length === 0 ? (
-          <div className="glass rounded-xl p-6">
-            <EmptyState
-              icon={<FileCheck size={36} />}
-              title="No proposals yet"
-              description="Draft your first proposal — track who signed, who ghosted, and close more deals."
-              action={
+              {/* Toolbar */}
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-muted">
+                  {loading
+                    ? "Loading…"
+                    : `${proposals.length} proposal${proposals.length === 1 ? "" : "s"}`}
+                </p>
                 <motion.button
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => setShowNew(true)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#3B82F6]"
                 >
-                  <Plus size={14} /> Create proposal
+                  <Plus size={14} /> New proposal
                 </motion.button>
-              }
-            />
-          </div>
-        ) : (
-          <motion.div
-            className="space-y-2"
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-          >
-            {proposals.map((p) => (
-              <ProposalCard
-                key={p.id}
-                proposal={p}
-                onDelete={() => remove(p.id)}
-                onMarkSent={() => markSent(p.id)}
-              />
-            ))}
-          </motion.div>
-        )}
+              </div>
 
-        {/* Help */}
-        <div className="mt-8 glass rounded-xl p-5 text-[12px] text-muted">
-          <p className="mb-2 font-semibold text-foreground">Coming soon</p>
-          <ul className="ml-4 list-disc space-y-1">
-            <li>Claude-drafted proposals from a short brief</li>
-            <li>PandaDoc e-sign with auto-save on sign</li>
-            <li>Workflow triggers on <code>proposal_signed</code> (onboarding, invoice, welcome)</li>
-            <li>
-              Related:{" "}
-              <Link href="/dashboard/deals" className="text-[#2563EB] underline">
-                Deals
-              </Link>
-              {" · "}
-              <Link href="/dashboard/clients" className="text-[#2563EB] underline">
-                Clients
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
+              {/* Create form */}
+              {showNew && (
+                <NewProposalForm
+                  onClose={() => setShowNew(false)}
+                  onCreated={(p) => {
+                    persist([p, ...proposals]);
+                    setShowNew(false);
+                    toast.success("Proposal created");
+                  }}
+                />
+              )}
+
+              {/* List */}
+              {loading ? (
+                <div className="flex items-center gap-2 text-sm text-muted">
+                  <Loader size={14} className="animate-spin" /> Loading…
+                </div>
+              ) : proposals.length === 0 ? (
+                <div className="glass rounded-xl p-6">
+                  <EmptyState
+                    icon={<FileCheck size={36} />}
+                    title="No proposals yet"
+                    description="Draft your first proposal — track who signed, who ghosted, and close more deals."
+                    action={
+                      <motion.button
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                        onClick={() => setShowNew(true)}
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white"
+                      >
+                        <Plus size={14} /> Create proposal
+                      </motion.button>
+                    }
+                  />
+                </div>
+              ) : (
+                <motion.div
+                  className="space-y-2"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="show"
+                >
+                  {proposals.map((p) => (
+                    <ProposalCard
+                      key={p.id}
+                      proposal={p}
+                      onDelete={() => remove(p.id)}
+                      onMarkSent={() => markSent(p.id)}
+                    />
+                  ))}
+                </motion.div>
+              )}
+
+              {/* Help */}
+              <div className="mt-8 glass rounded-xl p-5 text-[12px] text-muted">
+                <p className="mb-2 font-semibold text-foreground">Coming soon</p>
+                <ul className="ml-4 list-disc space-y-1">
+                  <li>Claude-drafted proposals from a short brief</li>
+                  <li>PandaDoc e-sign with auto-save on sign</li>
+                  <li>Workflow triggers on <code>proposal_signed</code> (onboarding, invoice, welcome)</li>
+                  <li>
+                    Related:{" "}
+                    <Link href="/dashboard/deals" className="text-[#2563EB] underline">
+                      Deals
+                    </Link>
+                    {" · "}
+                    <Link href="/dashboard/clients" className="text-[#2563EB] underline">
+                      Clients
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div></MotionPage>
   );
 }
 

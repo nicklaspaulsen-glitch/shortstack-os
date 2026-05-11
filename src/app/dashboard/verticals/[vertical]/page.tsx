@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface ModuleItem {
   key:
@@ -261,16 +262,13 @@ export default function VerticalDetailPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div>
-        <PageHero
-          title="Loading vertical…"
-          icon={<Briefcase size={28} />}
-          gradient="gold"
-        />
-        <div className="max-w-5xl mx-auto px-6 py-10">
-          <div className="rounded-xl bg-[rgba(0,0,0,0.04)] h-96 animate-pulse" />
-        </div>
-      </div>
+      <MotionPage><PageHero
+                  title="Loading vertical…"
+                  icon={<Briefcase size={28} />}
+                  gradient="gold"
+                /><div className="max-w-5xl mx-auto px-6 py-10">
+                  <div className="rounded-xl bg-[rgba(0,0,0,0.04)] h-96 animate-pulse" />
+                </div></MotionPage>
     );
   }
 

@@ -36,6 +36,7 @@ import OfficeEventFeed, {
   OnlineNow,
 } from "@/components/pixel-office/office-event-feed";
 import KumoScene from "@/components/agent-office/kumo-scene";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // 3D scene: dynamically imported so Three.js doesn't bloat the initial bundle.
 const AgentScene3D = dynamic(
@@ -188,10 +189,7 @@ export default function AgentOfficePage() {
 
   if (authLoading) {
     return (
-      <div className="fade-in space-y-5">
-        <div className="h-24 animate-pulse  bg-[rgba(0,0,0,0.05)]" />
-        <div className="h-[60vh] animate-pulse  bg-[rgba(0,0,0,0.05)]" />
-      </div>
+      <MotionPage className="fade-in space-y-5"><div className="h-24 animate-pulse  bg-[rgba(0,0,0,0.05)]" /><div className="h-[60vh] animate-pulse  bg-[rgba(0,0,0,0.05)]" /></MotionPage>
     );
   }
 

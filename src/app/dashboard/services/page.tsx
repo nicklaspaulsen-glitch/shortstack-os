@@ -7,6 +7,7 @@ import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface Service {
   id: string;
@@ -192,99 +193,93 @@ export default function ServicesPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        eyebrow="SERVICES"
-        title="Service Catalog"
-        subtitle="Define productized services once — attach them to proposals, invoices, and deals."
-        icon={<Package size={22} />}
-        gradient="gold"
-        actions={
-          <button onClick={() => setShowCreate((v) => !v)}
-            className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
-            <Plus size={16} /> Add Service
-          </button>
-        }
-      />
-
-      {showCreate && (
-        <div className="glass rounded-xl p-5">
-          <p className="font-semibold text-[#374151] text-sm mb-4">New Service</p>
-          <ServiceForm value={createForm} onChange={setCreateForm}
-            onSubmit={handleCreate} onCancel={() => setShowCreate(false)}
-            saving={saving} submitLabel="Create" />
-        </div>
-      )}
-
-      {loading ? <TableSkeleton rows={5} /> : services.length === 0 ? (
-        <div className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center">
-          <Package size={40} className="text-muted opacity-30" />
-          <p className="text-[#374151] font-semibold">No services yet</p>
-          <p className="text-muted text-sm max-w-xs">Build your productized service library to speed up proposals and invoices.</p>
-          <button onClick={() => setShowCreate(true)}
-            className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
-            <Plus size={15} /> Add first service
-          </button>
-        </div>
-      ) : (
-        <div className="glass rounded-xl overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
-                <th className="text-left px-4 py-3 font-medium">Service</th>
-                <th className="text-right px-4 py-3 font-medium hidden sm:table-cell">Price</th>
-                <th className="text-center px-4 py-3 font-medium hidden md:table-cell">Status</th>
-                <th className="px-4 py-3 w-24" />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[rgba(0,0,0,0.06)]">
-              {services.map((s, idx) =>
-                editId === s.id ? (
-                  <tr key={s.id} className="bg-[rgba(0,0,0,0.02)]">
-                    <td colSpan={4} className="px-4 py-4">
-                      <ServiceForm value={editForm} onChange={setEditForm}
-                        onSubmit={() => handleUpdate(s.id)} onCancel={() => setEditId(null)}
-                        saving={saving} submitLabel="Save" />
-                    </td>
-                  </tr>
-                ) : (
-                  <motion.tr key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className={`hover:bg-[rgba(0,0,0,0.02)] transition-colors group ${!s.is_active ? "opacity-50" : ""}`}>
-                    <td className="px-4 py-3">
-                      <p className="text-[#374151] font-medium">{s.name}</p>
-                      {s.description && <p className="text-muted text-xs mt-0.5 line-clamp-1">{s.description}</p>}
-                    </td>
-                    <td className="px-4 py-3 text-right text-[#374151] font-medium hidden sm:table-cell">
-                      {formatPrice(s.price_cents, s.billing_interval)}
-                    </td>
-                    <td className="px-4 py-3 text-center hidden md:table-cell">
-                      <button onClick={() => handleToggleActive(s)}
-                        className={`text-xs px-2 py-0.5 rounded-full border ${s.is_active ? "border-green-500/40 text-green-400 bg-green-500/10" : "border-[rgba(0,0,0,0.08)] text-muted"}`}>
-                        {s.is_active ? "Active" : "Inactive"}
-                      </button>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity justify-end">
-                        <button onClick={() => { setEditId(s.id); setEditForm(serviceToForm(s)); }}
-                          className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#374151]" title="Edit">
-                          <Pencil size={13} />
-                        </button>
-                        <button onClick={() => handleDuplicate(s)} disabled={duplicating === s.id}
-                          className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#374151]" title="Duplicate">
-                          {duplicating === s.id ? <Loader2 size={13} className="animate-spin" /> : <Copy size={13} />}
-                        </button>
-                        <button onClick={() => handleDelete(s.id)} disabled={deleting === s.id}
-                          className="p-1.5 rounded hover:bg-red-500/20 text-muted hover:text-red-400" title="Delete">
-                          {deleting === s.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
-                        </button>
-                      </div>
-                    </td>
-                  </motion.tr>
-                )
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+    <MotionPage className="space-y-6"><PageHero
+              eyebrow="SERVICES"
+              title="Service Catalog"
+              subtitle="Define productized services once — attach them to proposals, invoices, and deals."
+              icon={<Package size={22} />}
+              gradient="gold"
+              actions={
+                <button onClick={() => setShowCreate((v) => !v)}
+                  className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
+                  <Plus size={16} /> Add Service
+                </button>
+              }
+            />{showCreate && (
+              <div className="glass rounded-xl p-5">
+                <p className="font-semibold text-[#374151] text-sm mb-4">New Service</p>
+                <ServiceForm value={createForm} onChange={setCreateForm}
+                  onSubmit={handleCreate} onCancel={() => setShowCreate(false)}
+                  saving={saving} submitLabel="Create" />
+              </div>
+            )}{loading ? <TableSkeleton rows={5} /> : services.length === 0 ? (
+              <div className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center">
+                <Package size={40} className="text-muted opacity-30" />
+                <p className="text-[#374151] font-semibold">No services yet</p>
+                <p className="text-muted text-sm max-w-xs">Build your productized service library to speed up proposals and invoices.</p>
+                <button onClick={() => setShowCreate(true)}
+                  className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
+                  <Plus size={15} /> Add first service
+                </button>
+              </div>
+            ) : (
+              <div className="glass rounded-xl overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
+                      <th className="text-left px-4 py-3 font-medium">Service</th>
+                      <th className="text-right px-4 py-3 font-medium hidden sm:table-cell">Price</th>
+                      <th className="text-center px-4 py-3 font-medium hidden md:table-cell">Status</th>
+                      <th className="px-4 py-3 w-24" />
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[rgba(0,0,0,0.06)]">
+                    {services.map((s, idx) =>
+                      editId === s.id ? (
+                        <tr key={s.id} className="bg-[rgba(0,0,0,0.02)]">
+                          <td colSpan={4} className="px-4 py-4">
+                            <ServiceForm value={editForm} onChange={setEditForm}
+                              onSubmit={() => handleUpdate(s.id)} onCancel={() => setEditId(null)}
+                              saving={saving} submitLabel="Save" />
+                          </td>
+                        </tr>
+                      ) : (
+                        <motion.tr key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className={`hover:bg-[rgba(0,0,0,0.02)] transition-colors group ${!s.is_active ? "opacity-50" : ""}`}>
+                          <td className="px-4 py-3">
+                            <p className="text-[#374151] font-medium">{s.name}</p>
+                            {s.description && <p className="text-muted text-xs mt-0.5 line-clamp-1">{s.description}</p>}
+                          </td>
+                          <td className="px-4 py-3 text-right text-[#374151] font-medium hidden sm:table-cell">
+                            {formatPrice(s.price_cents, s.billing_interval)}
+                          </td>
+                          <td className="px-4 py-3 text-center hidden md:table-cell">
+                            <button onClick={() => handleToggleActive(s)}
+                              className={`text-xs px-2 py-0.5 rounded-full border ${s.is_active ? "border-green-500/40 text-green-400 bg-green-500/10" : "border-[rgba(0,0,0,0.08)] text-muted"}`}>
+                              {s.is_active ? "Active" : "Inactive"}
+                            </button>
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity justify-end">
+                              <button onClick={() => { setEditId(s.id); setEditForm(serviceToForm(s)); }}
+                                className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#374151]" title="Edit">
+                                <Pencil size={13} />
+                              </button>
+                              <button onClick={() => handleDuplicate(s)} disabled={duplicating === s.id}
+                                className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#374151]" title="Duplicate">
+                                {duplicating === s.id ? <Loader2 size={13} className="animate-spin" /> : <Copy size={13} />}
+                              </button>
+                              <button onClick={() => handleDelete(s.id)} disabled={deleting === s.id}
+                                className="p-1.5 rounded hover:bg-red-500/20 text-muted hover:text-red-400" title="Delete">
+                                {deleting === s.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                              </button>
+                            </div>
+                          </td>
+                        </motion.tr>
+                      )
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}</MotionPage>
   );
 }

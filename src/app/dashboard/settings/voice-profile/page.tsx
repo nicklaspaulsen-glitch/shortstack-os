@@ -14,6 +14,7 @@ import { Sparkles, Wand2, Type, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
 const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
@@ -116,45 +117,41 @@ export default function VoiceProfileSettingsPage() {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-5xl mx-auto">
-      <PageHero
-        title="Voice Profile"
-        eyebrow="VOICE PROFILE"
-        subtitle="Teach Trinity how YOU write. Every AI message is rewritten to sound like you - not like a template. Captured automatically from sent emails, SMS, DMs, and meeting transcripts."
-        icon={<Sparkles size={22} />}
-        gradient="purple"
-        actions={
-          <button
-            onClick={handleRecompute}
-            disabled={busy || loading}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-white text-zinc-900 hover:bg-zinc-100 disabled:opacity-50 transition-colors"
-          >
-            <RefreshCw size={15} className={busy ? "animate-spin" : ""} />
-            Recompute
-          </button>
-        }
-      />
-
-      {loading ? (
-        <div className="h-48 rounded-xl bg-black/4 animate-pulse" />
-      ) : (
-        <>
-          <StatusBanner data={data} />
-          {data?.profile && <StatsPanel profile={data.profile} />}
-          {data?.profile && <SignatureSection profile={data.profile} />}
-          {data?.profile?.prompt_snippet && (
-            <PromptSnippetPanel snippet={data.profile.prompt_snippet} />
-          )}
-          <BootstrapPanel
-            value={bootstrapText}
-            onChange={setBootstrapText}
-            onSubmit={handleBootstrap}
-            sampleCount={samples.length}
-            busy={busy}
-          />
-        </>
-      )}
-    </div>
+    <MotionPage className="p-6 space-y-6 max-w-5xl mx-auto"><PageHero
+              title="Voice Profile"
+              eyebrow="VOICE PROFILE"
+              subtitle="Teach Trinity how YOU write. Every AI message is rewritten to sound like you - not like a template. Captured automatically from sent emails, SMS, DMs, and meeting transcripts."
+              icon={<Sparkles size={22} />}
+              gradient="purple"
+              actions={
+                <button
+                  onClick={handleRecompute}
+                  disabled={busy || loading}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-white text-zinc-900 hover:bg-zinc-100 disabled:opacity-50 transition-colors"
+                >
+                  <RefreshCw size={15} className={busy ? "animate-spin" : ""} />
+                  Recompute
+                </button>
+              }
+            />{loading ? (
+              <div className="h-48 rounded-xl bg-black/4 animate-pulse" />
+            ) : (
+              <>
+                <StatusBanner data={data} />
+                {data?.profile && <StatsPanel profile={data.profile} />}
+                {data?.profile && <SignatureSection profile={data.profile} />}
+                {data?.profile?.prompt_snippet && (
+                  <PromptSnippetPanel snippet={data.profile.prompt_snippet} />
+                )}
+                <BootstrapPanel
+                  value={bootstrapText}
+                  onChange={setBootstrapText}
+                  onSubmit={handleBootstrap}
+                  sampleCount={samples.length}
+                  busy={busy}
+                />
+              </>
+            )}</MotionPage>
   );
 }
 

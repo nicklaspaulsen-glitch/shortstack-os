@@ -10,6 +10,7 @@ import {
   TrendingUp, Award, Target, Calendar, FileText, Plus,
   MessageSquare, Users2, Activity,
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // Text-card previews representing live sales artefacts — cold emails,
 // proposals, pipeline snapshots, booked demos — so it reads as a
@@ -35,58 +36,60 @@ export default function SalesHubPage() {
   useAuth();
 
   return (
-    <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-    <SectionHub
-      section="sales"
-      title="Sales"
-      eyebrow="Section · Revenue pipeline"
-      subtitle="Every tool you need to find leads, run outreach, close deals, and track MRR."
-      heroIcon={<DollarSign size={22} />}
-      heroGradient="green"
-      preview={{
-        items: SALES_HUB_PREVIEW,
-        variant: "text",
-        aspectRatio: "16:9",
-        opacity: 0.5,
-        caption: "Leads, outreach, deals, commissions — your revenue stack",
-      }}
-      quickActions={[
-        { label: "Add Lead", href: "/dashboard/leads", icon: Plus },
-        { label: "Find Leads", href: "/dashboard/scraper", icon: Search },
-        { label: "Send Outreach", href: "/dashboard/outreach-hub", icon: Send },
-        { label: "Create Proposal", href: "/dashboard/proposals", icon: FileText },
-      ]}
-      stats={[
-        { label: "Leads", key: "leads", icon: Users2, color: "text-[#2563EB]" },
-        { label: "Outreach (7d)", key: "outreach_week", icon: Send, color: "text-[#2563EB]" },
-        { label: "Active Deals", key: "active_deals", icon: Activity, color: "text-[#2563EB]" },
-        { label: "MRR", key: "mrr", icon: DollarSign, color: "text-emerald-400", format: "currency" },
-      ]}
-      tools={[
-        // ── Lead Generation ─────────────────────────────────────
-        { slug: "scraper", label: "Lead Finder", description: "Scrape prospects from the web into your pipeline.", href: "/dashboard/scraper", icon: Search, category: "Lead Generation" },
-        { slug: "outreach-hub", label: "Outreach Hub", description: "Multi-channel cold outreach across email, DM, SMS.", href: "/dashboard/outreach-hub", icon: Send, category: "Lead Generation" },
-        { slug: "sequences", label: "Sequences", description: "Drip campaigns with branching and delays.", href: "/dashboard/sequences", icon: ListOrdered, category: "Lead Generation" },
+    <MotionPage>
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+          <SectionHub
+            section="sales"
+            title="Sales"
+            eyebrow="Section · Revenue pipeline"
+            subtitle="Every tool you need to find leads, run outreach, close deals, and track MRR."
+            heroIcon={<DollarSign size={22} />}
+            heroGradient="green"
+            preview={{
+              items: SALES_HUB_PREVIEW,
+              variant: "text",
+              aspectRatio: "16:9",
+              opacity: 0.5,
+              caption: "Leads, outreach, deals, commissions — your revenue stack",
+            }}
+            quickActions={[
+              { label: "Add Lead", href: "/dashboard/leads", icon: Plus },
+              { label: "Find Leads", href: "/dashboard/scraper", icon: Search },
+              { label: "Send Outreach", href: "/dashboard/outreach-hub", icon: Send },
+              { label: "Create Proposal", href: "/dashboard/proposals", icon: FileText },
+            ]}
+            stats={[
+              { label: "Leads", key: "leads", icon: Users2, color: "text-[#2563EB]" },
+              { label: "Outreach (7d)", key: "outreach_week", icon: Send, color: "text-[#2563EB]" },
+              { label: "Active Deals", key: "active_deals", icon: Activity, color: "text-[#2563EB]" },
+              { label: "MRR", key: "mrr", icon: DollarSign, color: "text-emerald-400", format: "currency" },
+            ]}
+            tools={[
+              // ── Lead Generation ─────────────────────────────────────
+              { slug: "scraper", label: "Lead Finder", description: "Scrape prospects from the web into your pipeline.", href: "/dashboard/scraper", icon: Search, category: "Lead Generation" },
+              { slug: "outreach-hub", label: "Outreach Hub", description: "Multi-channel cold outreach across email, DM, SMS.", href: "/dashboard/outreach-hub", icon: Send, category: "Lead Generation" },
+              { slug: "sequences", label: "Sequences", description: "Drip campaigns with branching and delays.", href: "/dashboard/sequences", icon: ListOrdered, category: "Lead Generation" },
 
-        // ── Live Outreach (calls + DMs + replies) ───────────────
-        { slug: "eleven-agents", label: "AI Caller", description: "ElevenLabs voice agents call leads for you.", href: "/dashboard/eleven-agents", icon: Phone, category: "Live Outreach" },
-        { slug: "voice-receptionist", label: "Voice AI", description: "24/7 AI receptionist answering inbound calls.", href: "/dashboard/voice-receptionist", icon: Headphones, category: "Live Outreach" },
-        { slug: "dm-controller", label: "DM Controller", description: "Orchestrate outbound DMs across IG/FB/LinkedIn.", href: "/dashboard/dm-controller", icon: MessageSquare, category: "Live Outreach" },
-        { slug: "conversations", label: "Conversations", description: "Unified inbox for every reply across channels.", href: "/dashboard/conversations", icon: MessagesSquare, category: "Live Outreach" },
-        { slug: "outreach-logs", label: "Outreach Logs", description: "Raw log of every message sent and its status.", href: "/dashboard/outreach-logs", icon: ClipboardList, category: "Live Outreach" },
+              // ── Live Outreach (calls + DMs + replies) ───────────────
+              { slug: "eleven-agents", label: "AI Caller", description: "ElevenLabs voice agents call leads for you.", href: "/dashboard/eleven-agents", icon: Phone, category: "Live Outreach" },
+              { slug: "voice-receptionist", label: "Voice AI", description: "24/7 AI receptionist answering inbound calls.", href: "/dashboard/voice-receptionist", icon: Headphones, category: "Live Outreach" },
+              { slug: "dm-controller", label: "DM Controller", description: "Orchestrate outbound DMs across IG/FB/LinkedIn.", href: "/dashboard/dm-controller", icon: MessageSquare, category: "Live Outreach" },
+              { slug: "conversations", label: "Conversations", description: "Unified inbox for every reply across channels.", href: "/dashboard/conversations", icon: MessagesSquare, category: "Live Outreach" },
+              { slug: "outreach-logs", label: "Outreach Logs", description: "Raw log of every message sent and its status.", href: "/dashboard/outreach-logs", icon: ClipboardList, category: "Live Outreach" },
 
-        // ── Pipeline (deal management + close) ──────────────────
-        { slug: "crm", label: "CRM", description: "Contacts, stages, and pipeline health.", href: "/dashboard/crm", icon: Users, category: "Pipeline" },
-        { slug: "deals", label: "Deals", description: "Track deal value, stage, and win probability.", href: "/dashboard/deals", icon: CreditCard, category: "Pipeline" },
-        { slug: "proposals", label: "Proposals", description: "Branded proposals with e-signature and tracking.", href: "/dashboard/proposals", icon: FileCheck, category: "Pipeline" },
-        { slug: "forecast", label: "Forecast", description: "Pipeline forecasting with weighted stages.", href: "/dashboard/forecast", icon: TrendingUp, category: "Pipeline" },
+              // ── Pipeline (deal management + close) ──────────────────
+              { slug: "crm", label: "CRM", description: "Contacts, stages, and pipeline health.", href: "/dashboard/crm", icon: Users, category: "Pipeline" },
+              { slug: "deals", label: "Deals", description: "Track deal value, stage, and win probability.", href: "/dashboard/deals", icon: CreditCard, category: "Pipeline" },
+              { slug: "proposals", label: "Proposals", description: "Branded proposals with e-signature and tracking.", href: "/dashboard/proposals", icon: FileCheck, category: "Pipeline" },
+              { slug: "forecast", label: "Forecast", description: "Pipeline forecasting with weighted stages.", href: "/dashboard/forecast", icon: TrendingUp, category: "Pipeline" },
 
-        // ── Schedule + paid acquisition + payout ────────────────
-        { slug: "scheduling", label: "Scheduling", description: "Book calls with clients and prospects.", href: "/dashboard/scheduling", icon: Calendar, category: "Schedule & Ads" },
-        { slug: "ads-manager", label: "Ads Manager", description: "Plan, launch, and track paid ad campaigns.", href: "/dashboard/ads-manager", icon: Target, category: "Schedule & Ads" },
-        { slug: "commission-tracker", label: "Commissions", description: "Calculate and pay out sales commissions.", href: "/dashboard/commission-tracker", icon: Award, category: "Schedule & Ads" },
-      ]}
-    />
-    </motion.div>
+              // ── Schedule + paid acquisition + payout ────────────────
+              { slug: "scheduling", label: "Scheduling", description: "Book calls with clients and prospects.", href: "/dashboard/scheduling", icon: Calendar, category: "Schedule & Ads" },
+              { slug: "ads-manager", label: "Ads Manager", description: "Plan, launch, and track paid ad campaigns.", href: "/dashboard/ads-manager", icon: Target, category: "Schedule & Ads" },
+              { slug: "commission-tracker", label: "Commissions", description: "Calculate and pay out sales commissions.", href: "/dashboard/commission-tracker", icon: Award, category: "Schedule & Ads" },
+            ]}
+          />
+          </motion.div>
+          </MotionPage>
   );
 }

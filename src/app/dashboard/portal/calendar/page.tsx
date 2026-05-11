@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
@@ -156,9 +157,7 @@ export default function ContentCalendarPage() {
   const monthName = currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
   if (loading) return (
-    <div className="flex items-center justify-center py-20">
-      <Loader size={20} className="animate-spin text-[#2563EB]" />
-    </div>
+    <MotionPage className="flex items-center justify-center py-20"><Loader size={20} className="animate-spin text-[#2563EB]" /></MotionPage>
   );
 
   return (

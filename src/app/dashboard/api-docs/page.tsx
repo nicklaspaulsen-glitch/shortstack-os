@@ -9,6 +9,7 @@ import {
   Trash2, Eye, EyeOff, Activity, ToggleLeft, ToggleRight, RefreshCw
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* ── Types ── */
 interface Endpoint {
@@ -269,308 +270,286 @@ export default function ApiDocsPage() {
   const totalEndpoints = API_CATEGORIES.reduce((sum, cat) => sum + cat.endpoints.length, 0);
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        icon={<FileText size={28} />}
-        title="API Documentation"
-        eyebrow="API DOCS"
-        subtitle="Complete reference for the Trinity API."
-        gradient="gold"
-        actions={
-          <div className="flex items-center gap-2 text-[10px] text-white">
-            <span className="px-2 py-1 bg-black/5 rounded border border-border">v2.4.0</span>
-            <span>{totalEndpoints} endpoints</span>
-          </div>
-        }
-      />
-
-      {/* Stats Strip */}
-      <div className="grid grid-cols-5 gap-3">
-        {[
-          { label: "Endpoints", value: totalEndpoints, color: "text-[#2563EB]" },
-          { label: "Categories", value: API_CATEGORIES.length, color: "text-[#2563EB]" },
-          { label: "Auth Methods", value: "2", color: "text-green-400" },
-          { label: "SDKs", value: SDK_DOWNLOADS.length, color: "text-[#2563EB]" },
-          { label: "API Version", value: "v2.4", color: "text-cyan-400" },
-        ].map((s, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-3 text-center">
-              <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
-              <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Tab Navigation */}
-      <div className="flex gap-1 border-b border-border overflow-x-auto pb-px">
-        {TABS.map(t => (
-          <button key={t} onClick={() => setActiveTab(t)}
-            className={`px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${
-              activeTab === t ? "text-[#2563EB] border-b-2 border-[#2563EB]" : "text-muted hover:text-foreground"
-            }`}>
-            {t}
-          </button>
-        ))}
-      </div>
-
-      {/* ═══ EXPLORER TAB ═══ */}
-      {activeTab === "Explorer" && (
-        <div className="space-y-4">
-          <div className="glass rounded-xl p-4 space-y-3">
-            <div className="flex items-center gap-2 mb-1">
-              <Play size={14} className="text-[#2563EB]" />
-              <h2 className="text-sm font-semibold">Interactive API Explorer</h2>
-            </div>
-
-            {/* Method + Path */}
-            <div className="flex gap-2">
-              <select value={explorerMethod} onChange={e => setExplorerMethod(e.target.value as "GET" | "POST" | "PUT" | "DELETE")}
-                className="input text-xs py-2 w-28 font-mono font-bold">
-                {["GET", "POST", "PUT", "DELETE"].map(m => <option key={m}>{m}</option>)}
-              </select>
-              <input value={explorerPath} onChange={e => setExplorerPath(e.target.value)}
-                className="input flex-1 text-xs py-2 font-mono" placeholder="/api/clients" />
-              <button onClick={simulateRequest} disabled={explorerLoading}
-                className="px-4 py-2 bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-xs font-medium rounded-lg border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all disabled:opacity-50 flex items-center gap-1.5">
-                {explorerLoading ? <div className="w-3 h-3 border-2 border-[rgba(37,99,235,0.2)] border-t-[#2563EB] rounded-full animate-spin" /> : <Play size={12} />}
-                Send
-              </button>
-            </div>
-
-            {/* Headers */}
-            <div>
-              <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Headers</p>
-              <div className="space-y-1.5">
-                {explorerHeaders.map((h, i) => (
-                  <div key={i} className="flex gap-2">
-                    <input value={h.key} onChange={e => { const upd = [...explorerHeaders]; upd[i].key = e.target.value; setExplorerHeaders(upd); }}
-                      className="input text-[10px] py-1.5 w-40 font-mono" placeholder="Header name" />
-                    <input value={h.value} onChange={e => { const upd = [...explorerHeaders]; upd[i].value = e.target.value; setExplorerHeaders(upd); }}
-                      className="input text-[10px] py-1.5 flex-1 font-mono" placeholder="Value" />
+    <MotionPage className="fade-in space-y-5"><PageHero
+              icon={<FileText size={28} />}
+              title="API Documentation"
+              eyebrow="API DOCS"
+              subtitle="Complete reference for the Trinity API."
+              gradient="gold"
+              actions={
+                <div className="flex items-center gap-2 text-[10px] text-white">
+                  <span className="px-2 py-1 bg-black/5 rounded border border-border">v2.4.0</span>
+                  <span>{totalEndpoints} endpoints</span>
+                </div>
+              }
+            />{/* Stats Strip */}<div className="grid grid-cols-5 gap-3">
+              {[
+                { label: "Endpoints", value: totalEndpoints, color: "text-[#2563EB]" },
+                { label: "Categories", value: API_CATEGORIES.length, color: "text-[#2563EB]" },
+                { label: "Auth Methods", value: "2", color: "text-green-400" },
+                { label: "SDKs", value: SDK_DOWNLOADS.length, color: "text-[#2563EB]" },
+                { label: "API Version", value: "v2.4", color: "text-cyan-400" },
+              ].map((s, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                  <div className="p-3 text-center">
+                    <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
+                    <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>
                   </div>
-                ))}
-              </div>
-            </div>
+                </motion.div>
+              ))}
+            </div>{/* Tab Navigation */}<div className="flex gap-1 border-b border-border overflow-x-auto pb-px">
+              {TABS.map(t => (
+                <button key={t} onClick={() => setActiveTab(t)}
+                  className={`px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${
+                    activeTab === t ? "text-[#2563EB] border-b-2 border-[#2563EB]" : "text-muted hover:text-foreground"
+                  }`}>
+                  {t}
+                </button>
+              ))}
+            </div>{/* ═══ EXPLORER TAB ═══ */}{activeTab === "Explorer" && (
+              <div className="space-y-4">
+                <div className="glass rounded-xl p-4 space-y-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Play size={14} className="text-[#2563EB]" />
+                    <h2 className="text-sm font-semibold">Interactive API Explorer</h2>
+                  </div>
 
-            {/* Request Body */}
-            {(explorerMethod === "POST" || explorerMethod === "PUT") && (
-              <div>
-                <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Request Body (JSON)</p>
-                <textarea value={explorerBody} onChange={e => setExplorerBody(e.target.value)}
-                  className="input w-full text-[10px] py-2 font-mono h-24 resize-y" />
-              </div>
-            )}
-
-            {/* Response */}
-            {explorerResponse && (
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <p className="text-[9px] text-muted uppercase tracking-wider">Response</p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] px-2 py-0.5 bg-green-500/10 text-green-400 rounded border border-green-500/20">200 OK</span>
-                    <button onClick={() => copyText(explorerResponse, "response")} className="text-[9px] text-muted hover:text-[#2563EB] transition-colors flex items-center gap-1">
-                      <Copy size={9} /> Copy
+                  {/* Method + Path */}
+                  <div className="flex gap-2">
+                    <select value={explorerMethod} onChange={e => setExplorerMethod(e.target.value as "GET" | "POST" | "PUT" | "DELETE")}
+                      className="input text-xs py-2 w-28 font-mono font-bold">
+                      {["GET", "POST", "PUT", "DELETE"].map(m => <option key={m}>{m}</option>)}
+                    </select>
+                    <input value={explorerPath} onChange={e => setExplorerPath(e.target.value)}
+                      className="input flex-1 text-xs py-2 font-mono" placeholder="/api/clients" />
+                    <button onClick={simulateRequest} disabled={explorerLoading}
+                      className="px-4 py-2 bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-xs font-medium rounded-lg border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all disabled:opacity-50 flex items-center gap-1.5">
+                      {explorerLoading ? <div className="w-3 h-3 border-2 border-[rgba(37,99,235,0.2)] border-t-[#2563EB] rounded-full animate-spin" /> : <Play size={12} />}
+                      Send
                     </button>
                   </div>
-                </div>
-                <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-green-400 overflow-x-auto max-h-64 overflow-y-auto">
-                  {explorerResponse}
-                </pre>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
-      {/* ═══ ENDPOINTS TAB ═══ */}
-      {activeTab === "Endpoints" && (
-        <div className="space-y-3">
-          {/* Search */}
-          <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-            <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-              className="input w-full text-xs py-2.5 pl-9" placeholder="Search endpoints by path or description..." aria-label="Search API endpoints" />
-          </div>
-
-          {/* Method Legend */}
-          <div className="flex items-center gap-3">
-            {(["GET", "POST", "PUT", "DELETE"] as const).map(m => (
-              <div key={m} className="flex items-center gap-1.5">
-                <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border ${METHOD_STYLES[m]}`}>{m}</span>
-                <span className="text-[9px] text-muted">{m === "GET" ? "Read" : m === "POST" ? "Create" : m === "PUT" ? "Update" : "Delete"}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Categories */}
-          {filteredCategories.map(cat => {
-            const isOpen = expandedSections[cat.name] !== false;
-            return (
-              <motion.div key={cat.name} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 }} className="glass rounded-xl overflow-hidden p-0">
-                <button onClick={() => toggleSection(cat.name)}
-                  className="w-full flex items-center gap-2.5 p-3 hover:bg-[rgba(0,0,0,0.03)] transition-colors">
-                  {isOpen ? <ChevronDown size={13} className="text-muted" /> : <ChevronRight size={13} className="text-muted" />}
-                  {cat.icon}
-                  <span className="text-xs font-semibold">{cat.name}</span>
-                  <span className="text-[10px] text-muted ml-auto">{cat.endpoints.length} endpoint{cat.endpoints.length !== 1 ? "s" : ""}</span>
-                </button>
-                {isOpen && (
-                  <div className="border-t border-border">
-                    {cat.endpoints.map((ep, i) => {
-                      const epKey = `${cat.name}-${i}`;
-                      const isExpanded = expandedEndpoints[epKey];
-                      return (
-                        <div key={epKey} className="border-b border-border last:border-b-0">
-                          <button onClick={() => toggleEndpoint(epKey)}
-                            className="w-full flex items-center gap-2.5 px-4 py-2.5 hover:bg-[rgba(0,0,0,0.03)] transition-colors text-left">
-                            <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border shrink-0 ${METHOD_STYLES[ep.method]}`}>{ep.method}</span>
-                            <span className="text-xs font-mono text-foreground truncate">{ep.path}</span>
-                            {ep.auth && <Lock size={9} className="text-muted shrink-0" />}
-                            <span className="text-[10px] text-muted ml-auto shrink-0 hidden sm:block">{ep.description}</span>
-                            <Copy size={11} className="text-muted shrink-0 hover:text-[#2563EB] transition-colors"
-                              onClick={(e) => { e.stopPropagation(); copyText(ep.path, ep.path); }} />
-                          </button>
-                          {isExpanded && (
-                            <div className="px-4 pb-3 space-y-2">
-                              <p className="text-[10px] text-muted">{ep.description}</p>
-                              <div className="flex items-center gap-3 text-[9px]">
-                                {ep.auth && <span className="flex items-center gap-1 text-[#2563EB]"><Lock size={8} /> Requires auth</span>}
-                                {ep.rateLimit && <span className="flex items-center gap-1 text-muted"><Clock size={8} /> {ep.rateLimit}</span>}
-                              </div>
-                              {ep.body && (
-                                <div>
-                                  <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Request Body</p>
-                                  <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-green-400 overflow-x-auto">{ep.body}</pre>
-                                </div>
-                              )}
-                              {ep.response && (
-                                <div>
-                                  <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Response</p>
-                                  <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-[#2563EB] overflow-x-auto">{ep.response}</pre>
-                                </div>
-                              )}
-                            </div>
-                          )}
+                  {/* Headers */}
+                  <div>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Headers</p>
+                    <div className="space-y-1.5">
+                      {explorerHeaders.map((h, i) => (
+                        <div key={i} className="flex gap-2">
+                          <input value={h.key} onChange={e => { const upd = [...explorerHeaders]; upd[i].key = e.target.value; setExplorerHeaders(upd); }}
+                            className="input text-[10px] py-1.5 w-40 font-mono" placeholder="Header name" />
+                          <input value={h.value} onChange={e => { const upd = [...explorerHeaders]; upd[i].value = e.target.value; setExplorerHeaders(upd); }}
+                            className="input text-[10px] py-1.5 flex-1 font-mono" placeholder="Value" />
                         </div>
-                      );
-                    })}
+                      ))}
+                    </div>
                   </div>
-                )}
-              </motion.div>
-            );
-          })}
-        </div>
-      )}
 
-      {/* ═══ AUTH GUIDE TAB ═══ */}
-      {activeTab === "Auth Guide" && (
-        <div className="space-y-4">
-          <div className="glass rounded-xl p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Shield size={14} className="text-[#2563EB]" />
-              <h2 className="text-sm font-semibold">Authentication Guide</h2>
-            </div>
-            <div className="space-y-4">
-              <div className="p-3 rounded-lg border border-border">
-                <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Key size={12} className="text-[#2563EB]" /> API Key Authentication</h3>
-                <p className="text-[10px] text-muted mb-2">Include your API key in the Authorization header with every request.</p>
-                <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-green-400">Authorization: Bearer sk_live_your_api_key_here</pre>
-              </div>
-              <div className="p-3 rounded-lg border border-border">
-                <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Lock size={12} className="text-[#2563EB]" /> Session Cookie (Browser)</h3>
-                <p className="text-[10px] text-muted mb-2">For browser-based apps, use Supabase session cookies. The cookie is automatically set after login.</p>
-                <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-green-400">Cookie: sb-access-token=eyJhbG...; sb-refresh-token=...</pre>
-              </div>
-              <div className="p-3 rounded-lg border border-border bg-[rgba(37,99,235,0.04)]">
-                <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><AlertTriangle size={12} className="text-[#2563EB]" /> Security Best Practices</h3>
-                <ul className="space-y-1.5 text-[10px] text-muted">
-                  <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Never expose API keys in client-side code</li>
-                  <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Use environment variables for key storage</li>
-                  <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Rotate keys every 90 days</li>
-                  <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Use test keys for development</li>
-                  <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Enable IP whitelisting for production keys</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+                  {/* Request Body */}
+                  {(explorerMethod === "POST" || explorerMethod === "PUT") && (
+                    <div>
+                      <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Request Body (JSON)</p>
+                      <textarea value={explorerBody} onChange={e => setExplorerBody(e.target.value)}
+                        className="input w-full text-[10px] py-2 font-mono h-24 resize-y" />
+                    </div>
+                  )}
 
-      {/* ═══ RATE LIMITS TAB ═══ */}
-      {activeTab === "Rate Limits" && (
-        <div className="space-y-4">
-          <div className="glass rounded-xl p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Clock size={14} className="text-[#2563EB]" />
-              <h2 className="text-sm font-semibold">Rate Limiting</h2>
-            </div>
-            <p className="text-[10px] text-muted mb-4">All API endpoints are rate-limited. Limits are returned in response headers.</p>
+                  {/* Response */}
+                  {explorerResponse && (
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <p className="text-[9px] text-muted uppercase tracking-wider">Response</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] px-2 py-0.5 bg-green-500/10 text-green-400 rounded border border-green-500/20">200 OK</span>
+                          <button onClick={() => copyText(explorerResponse, "response")} className="text-[9px] text-muted hover:text-[#2563EB] transition-colors flex items-center gap-1">
+                            <Copy size={9} /> Copy
+                          </button>
+                        </div>
+                      </div>
+                      <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-green-400 overflow-x-auto max-h-64 overflow-y-auto">
+                        {explorerResponse}
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}{/* ═══ ENDPOINTS TAB ═══ */}{activeTab === "Endpoints" && (
+              <div className="space-y-3">
+                {/* Search */}
+                <div className="relative">
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                  <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                    className="input w-full text-xs py-2.5 pl-9" placeholder="Search endpoints by path or description..." aria-label="Search API endpoints" />
+                </div>
 
-            <div className="p-3 rounded-lg border border-border mb-4">
-              <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Response Headers</p>
-              <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-cyan-400">{`X-RateLimit-Limit: 60
+                {/* Method Legend */}
+                <div className="flex items-center gap-3">
+                  {(["GET", "POST", "PUT", "DELETE"] as const).map(m => (
+                    <div key={m} className="flex items-center gap-1.5">
+                      <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border ${METHOD_STYLES[m]}`}>{m}</span>
+                      <span className="text-[9px] text-muted">{m === "GET" ? "Read" : m === "POST" ? "Create" : m === "PUT" ? "Update" : "Delete"}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Categories */}
+                {filteredCategories.map(cat => {
+                  const isOpen = expandedSections[cat.name] !== false;
+                  return (
+                    <motion.div key={cat.name} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 }} className="glass rounded-xl overflow-hidden p-0">
+                      <button onClick={() => toggleSection(cat.name)}
+                        className="w-full flex items-center gap-2.5 p-3 hover:bg-[rgba(0,0,0,0.03)] transition-colors">
+                        {isOpen ? <ChevronDown size={13} className="text-muted" /> : <ChevronRight size={13} className="text-muted" />}
+                        {cat.icon}
+                        <span className="text-xs font-semibold">{cat.name}</span>
+                        <span className="text-[10px] text-muted ml-auto">{cat.endpoints.length} endpoint{cat.endpoints.length !== 1 ? "s" : ""}</span>
+                      </button>
+                      {isOpen && (
+                        <div className="border-t border-border">
+                          {cat.endpoints.map((ep, i) => {
+                            const epKey = `${cat.name}-${i}`;
+                            const isExpanded = expandedEndpoints[epKey];
+                            return (
+                              <div key={epKey} className="border-b border-border last:border-b-0">
+                                <button onClick={() => toggleEndpoint(epKey)}
+                                  className="w-full flex items-center gap-2.5 px-4 py-2.5 hover:bg-[rgba(0,0,0,0.03)] transition-colors text-left">
+                                  <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border shrink-0 ${METHOD_STYLES[ep.method]}`}>{ep.method}</span>
+                                  <span className="text-xs font-mono text-foreground truncate">{ep.path}</span>
+                                  {ep.auth && <Lock size={9} className="text-muted shrink-0" />}
+                                  <span className="text-[10px] text-muted ml-auto shrink-0 hidden sm:block">{ep.description}</span>
+                                  <Copy size={11} className="text-muted shrink-0 hover:text-[#2563EB] transition-colors"
+                                    onClick={(e) => { e.stopPropagation(); copyText(ep.path, ep.path); }} />
+                                </button>
+                                {isExpanded && (
+                                  <div className="px-4 pb-3 space-y-2">
+                                    <p className="text-[10px] text-muted">{ep.description}</p>
+                                    <div className="flex items-center gap-3 text-[9px]">
+                                      {ep.auth && <span className="flex items-center gap-1 text-[#2563EB]"><Lock size={8} /> Requires auth</span>}
+                                      {ep.rateLimit && <span className="flex items-center gap-1 text-muted"><Clock size={8} /> {ep.rateLimit}</span>}
+                                    </div>
+                                    {ep.body && (
+                                      <div>
+                                        <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Request Body</p>
+                                        <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-green-400 overflow-x-auto">{ep.body}</pre>
+                                      </div>
+                                    )}
+                                    {ep.response && (
+                                      <div>
+                                        <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Response</p>
+                                        <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-[#2563EB] overflow-x-auto">{ep.response}</pre>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}{/* ═══ AUTH GUIDE TAB ═══ */}{activeTab === "Auth Guide" && (
+              <div className="space-y-4">
+                <div className="glass rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Shield size={14} className="text-[#2563EB]" />
+                    <h2 className="text-sm font-semibold">Authentication Guide</h2>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="p-3 rounded-lg border border-border">
+                      <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Key size={12} className="text-[#2563EB]" /> API Key Authentication</h3>
+                      <p className="text-[10px] text-muted mb-2">Include your API key in the Authorization header with every request.</p>
+                      <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-green-400">Authorization: Bearer sk_live_your_api_key_here</pre>
+                    </div>
+                    <div className="p-3 rounded-lg border border-border">
+                      <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Lock size={12} className="text-[#2563EB]" /> Session Cookie (Browser)</h3>
+                      <p className="text-[10px] text-muted mb-2">For browser-based apps, use Supabase session cookies. The cookie is automatically set after login.</p>
+                      <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-green-400">Cookie: sb-access-token=eyJhbG...; sb-refresh-token=...</pre>
+                    </div>
+                    <div className="p-3 rounded-lg border border-border bg-[rgba(37,99,235,0.04)]">
+                      <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><AlertTriangle size={12} className="text-[#2563EB]" /> Security Best Practices</h3>
+                      <ul className="space-y-1.5 text-[10px] text-muted">
+                        <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Never expose API keys in client-side code</li>
+                        <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Use environment variables for key storage</li>
+                        <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Rotate keys every 90 days</li>
+                        <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Use test keys for development</li>
+                        <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Enable IP whitelisting for production keys</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}{/* ═══ RATE LIMITS TAB ═══ */}{activeTab === "Rate Limits" && (
+              <div className="space-y-4">
+                <div className="glass rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Clock size={14} className="text-[#2563EB]" />
+                    <h2 className="text-sm font-semibold">Rate Limiting</h2>
+                  </div>
+                  <p className="text-[10px] text-muted mb-4">All API endpoints are rate-limited. Limits are returned in response headers.</p>
+
+                  <div className="p-3 rounded-lg border border-border mb-4">
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Response Headers</p>
+                    <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-cyan-400">{`X-RateLimit-Limit: 60
 X-RateLimit-Remaining: 42
 X-RateLimit-Reset: 1712000000
 Retry-After: 30`}</pre>
-            </div>
+                  </div>
 
-            <div className="rounded-lg border border-border overflow-hidden">
-              <div className="grid grid-cols-4 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider">
-                <div>Tier</div>
-                <div>Requests/min</div>
-                <div>Burst</div>
-                <div>Daily Cap</div>
-              </div>
-              {[
-                { tier: "Free", rpm: "10", burst: "15", daily: "500" },
-                { tier: "Pro", rpm: "60", burst: "100", daily: "10,000" },
-                { tier: "Business", rpm: "300", burst: "500", daily: "100,000" },
-                { tier: "Enterprise", rpm: "Custom", burst: "Custom", daily: "Unlimited" },
-              ].map((r, i) => (
-                <div key={i} className="grid grid-cols-4 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[11px]">
-                  <div className="font-medium">{r.tier}</div>
-                  <div className="text-muted">{r.rpm}</div>
-                  <div className="text-muted">{r.burst}</div>
-                  <div className="text-muted">{r.daily}</div>
+                  <div className="rounded-lg border border-border overflow-hidden">
+                    <div className="grid grid-cols-4 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider">
+                      <div>Tier</div>
+                      <div>Requests/min</div>
+                      <div>Burst</div>
+                      <div>Daily Cap</div>
+                    </div>
+                    {[
+                      { tier: "Free", rpm: "10", burst: "15", daily: "500" },
+                      { tier: "Pro", rpm: "60", burst: "100", daily: "10,000" },
+                      { tier: "Business", rpm: "300", burst: "500", daily: "100,000" },
+                      { tier: "Enterprise", rpm: "Custom", burst: "Custom", daily: "Unlimited" },
+                    ].map((r, i) => (
+                      <div key={i} className="grid grid-cols-4 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[11px]">
+                        <div className="font-medium">{r.tier}</div>
+                        <div className="text-muted">{r.rpm}</div>
+                        <div className="text-muted">{r.burst}</div>
+                        <div className="text-muted">{r.daily}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ═══ CODE EXAMPLES TAB ═══ */}
-      {activeTab === "Code Examples" && (
-        <div className="space-y-4">
-          <div className="glass rounded-xl p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Terminal size={14} className="text-[#2563EB]" />
-                <h2 className="text-sm font-semibold">Code Examples</h2>
               </div>
-              <div className="flex gap-1">
-                {(["curl", "js", "python"] as const).map(lang => (
-                  <button key={lang} onClick={() => setCodeExampleLang(lang)}
-                    className={`text-[10px] px-3 py-1 rounded-lg border transition-all ${
-                      codeExampleLang === lang ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted"
-                    }`}>
-                    {lang === "curl" ? "cURL" : lang === "js" ? "JavaScript" : "Python"}
-                  </button>
-                ))}
-              </div>
-            </div>
+            )}{/* ═══ CODE EXAMPLES TAB ═══ */}{activeTab === "Code Examples" && (
+              <div className="space-y-4">
+                <div className="glass rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <Terminal size={14} className="text-[#2563EB]" />
+                      <h2 className="text-sm font-semibold">Code Examples</h2>
+                    </div>
+                    <div className="flex gap-1">
+                      {(["curl", "js", "python"] as const).map(lang => (
+                        <button key={lang} onClick={() => setCodeExampleLang(lang)}
+                          className={`text-[10px] px-3 py-1 rounded-lg border transition-all ${
+                            codeExampleLang === lang ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted"
+                          }`}>
+                          {lang === "curl" ? "cURL" : lang === "js" ? "JavaScript" : "Python"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-            <div className="space-y-4">
-              {/* List clients example */}
-              <div>
-                <p className="text-xs font-medium mb-1.5">List all clients</p>
-                <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-green-400 overflow-x-auto">
-                  {codeExampleLang === "curl" && `curl -X GET https://api.shortstack.io/api/clients \\
+                  <div className="space-y-4">
+                    {/* List clients example */}
+                    <div>
+                      <p className="text-xs font-medium mb-1.5">List all clients</p>
+                      <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-green-400 overflow-x-auto">
+                        {codeExampleLang === "curl" && `curl -X GET https://api.shortstack.io/api/clients \\
   -H "Authorization: Bearer sk_live_your_key" \\
   -H "Content-Type: application/json"`}
-                  {codeExampleLang === "js" && `const response = await fetch('https://api.shortstack.io/api/clients', {
+                        {codeExampleLang === "js" && `const response = await fetch('https://api.shortstack.io/api/clients', {
   method: 'GET',
   headers: {
     'Authorization': 'Bearer sk_live_your_key',
@@ -579,7 +558,7 @@ Retry-After: 30`}</pre>
 });
 const data = await response.json();
 console.log(data.clients);`}
-                  {codeExampleLang === "python" && `import requests
+                        {codeExampleLang === "python" && `import requests
 
 response = requests.get(
     'https://api.shortstack.io/api/clients',
@@ -590,18 +569,18 @@ response = requests.get(
 )
 data = response.json()
 print(data['clients'])`}
-                </pre>
-              </div>
+                      </pre>
+                    </div>
 
-              {/* Generate content example */}
-              <div>
-                <p className="text-xs font-medium mb-1.5">Generate content with AI</p>
-                <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-green-400 overflow-x-auto">
-                  {codeExampleLang === "curl" && `curl -X POST https://api.shortstack.io/api/content/generate \\
+                    {/* Generate content example */}
+                    <div>
+                      <p className="text-xs font-medium mb-1.5">Generate content with AI</p>
+                      <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-green-400 overflow-x-auto">
+                        {codeExampleLang === "curl" && `curl -X POST https://api.shortstack.io/api/content/generate \\
   -H "Authorization: Bearer sk_live_your_key" \\
   -H "Content-Type: application/json" \\
   -d '{"topic": "dental tips", "platform": "instagram", "tone": "friendly"}'`}
-                  {codeExampleLang === "js" && `const response = await fetch('https://api.shortstack.io/api/content/generate', {
+                        {codeExampleLang === "js" && `const response = await fetch('https://api.shortstack.io/api/content/generate', {
   method: 'POST',
   headers: {
     'Authorization': 'Bearer sk_live_your_key',
@@ -615,7 +594,7 @@ print(data['clients'])`}
 });
 const data = await response.json();
 console.log(data.content);`}
-                  {codeExampleLang === "python" && `import requests
+                        {codeExampleLang === "python" && `import requests
 
 response = requests.post(
     'https://api.shortstack.io/api/content/generate',
@@ -631,24 +610,21 @@ response = requests.post(
 )
 data = response.json()
 print(data['content'])`}
-                </pre>
+                      </pre>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
+            )}{/* ═══ ERRORS TAB ═══ */}{activeTab === "Errors" && (
+              <div className="space-y-4">
+                <div className="glass rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <AlertTriangle size={14} className="text-[#2563EB]" />
+                    <h2 className="text-sm font-semibold">Error Code Reference</h2>
+                  </div>
+                  <p className="text-[10px] text-muted mb-3">All errors return a JSON body with an error message and optional details.</p>
 
-      {/* ═══ ERRORS TAB ═══ */}
-      {activeTab === "Errors" && (
-        <div className="space-y-4">
-          <div className="glass rounded-xl p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <AlertTriangle size={14} className="text-[#2563EB]" />
-              <h2 className="text-sm font-semibold">Error Code Reference</h2>
-            </div>
-            <p className="text-[10px] text-muted mb-3">All errors return a JSON body with an error message and optional details.</p>
-
-            <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-red-400 mb-4">{`{
+                  <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-red-400 mb-4">{`{
   "error": "Validation failed",
   "code": 422,
   "details": {
@@ -657,62 +633,59 @@ print(data['content'])`}
   }
 }`}</pre>
 
-            <div className="rounded-lg border border-border overflow-hidden">
-              <div className="grid grid-cols-4 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider">
-                <div>Code</div>
-                <div>Name</div>
-                <div className="col-span-2">Description</div>
-              </div>
-              {ERROR_CODES.map((err, i) => (
-                <div key={i} className="grid grid-cols-4 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[11px]">
-                  <div className={`font-mono font-bold ${err.code >= 500 ? "text-red-400" : err.code >= 400 ? "text-[#2563EB]" : "text-green-400"}`}>{err.code}</div>
-                  <div className="font-medium">{err.name}</div>
-                  <div className="col-span-2 text-muted">{err.description}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ═══ WEBHOOKS TAB ═══ */}
-      {activeTab === "Webhooks" && (
-        <div className="space-y-4">
-          <div className="glass rounded-xl p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Zap size={14} className="text-[#2563EB]" />
-              <h2 className="text-sm font-semibold">Webhook Documentation</h2>
-            </div>
-            <p className="text-[10px] text-muted mb-4">Trinity sends webhook events to your configured URL when specific actions occur.</p>
-
-            <div className="mb-4">
-              <p className="text-xs font-medium mb-2">Available Events</p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                {[
-                  { event: "lead.created", desc: "New lead scraped" },
-                  { event: "lead.qualified", desc: "Lead passed scoring" },
-                  { event: "client.created", desc: "New client added" },
-                  { event: "client.updated", desc: "Client details changed" },
-                  { event: "outreach.sent", desc: "Email/DM sent" },
-                  { event: "outreach.replied", desc: "Lead replied" },
-                  { event: "content.generated", desc: "AI content created" },
-                  { event: "content.published", desc: "Content posted" },
-                  { event: "agent.error", desc: "Agent encountered error" },
-                  { event: "invoice.paid", desc: "Invoice payment received" },
-                  { event: "call.completed", desc: "AI call finished" },
-                  { event: "ticket.created", desc: "Support ticket opened" },
-                ].map((ev, i) => (
-                  <div key={i} className="flex items-center gap-2 p-2 rounded-lg border border-border text-[10px]">
-                    <code className="text-[#2563EB] font-mono">{ev.event}</code>
-                    <span className="text-muted">{ev.desc}</span>
+                  <div className="rounded-lg border border-border overflow-hidden">
+                    <div className="grid grid-cols-4 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider">
+                      <div>Code</div>
+                      <div>Name</div>
+                      <div className="col-span-2">Description</div>
+                    </div>
+                    {ERROR_CODES.map((err, i) => (
+                      <div key={i} className="grid grid-cols-4 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[11px]">
+                        <div className={`font-mono font-bold ${err.code >= 500 ? "text-red-400" : err.code >= 400 ? "text-[#2563EB]" : "text-green-400"}`}>{err.code}</div>
+                        <div className="font-medium">{err.name}</div>
+                        <div className="col-span-2 text-muted">{err.description}</div>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
+            )}{/* ═══ WEBHOOKS TAB ═══ */}{activeTab === "Webhooks" && (
+              <div className="space-y-4">
+                <div className="glass rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Zap size={14} className="text-[#2563EB]" />
+                    <h2 className="text-sm font-semibold">Webhook Documentation</h2>
+                  </div>
+                  <p className="text-[10px] text-muted mb-4">Trinity sends webhook events to your configured URL when specific actions occur.</p>
 
-            <div>
-              <p className="text-xs font-medium mb-2">Webhook Payload Format</p>
-              <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-green-400">{`{
+                  <div className="mb-4">
+                    <p className="text-xs font-medium mb-2">Available Events</p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {[
+                        { event: "lead.created", desc: "New lead scraped" },
+                        { event: "lead.qualified", desc: "Lead passed scoring" },
+                        { event: "client.created", desc: "New client added" },
+                        { event: "client.updated", desc: "Client details changed" },
+                        { event: "outreach.sent", desc: "Email/DM sent" },
+                        { event: "outreach.replied", desc: "Lead replied" },
+                        { event: "content.generated", desc: "AI content created" },
+                        { event: "content.published", desc: "Content posted" },
+                        { event: "agent.error", desc: "Agent encountered error" },
+                        { event: "invoice.paid", desc: "Invoice payment received" },
+                        { event: "call.completed", desc: "AI call finished" },
+                        { event: "ticket.created", desc: "Support ticket opened" },
+                      ].map((ev, i) => (
+                        <div key={i} className="flex items-center gap-2 p-2 rounded-lg border border-border text-[10px]">
+                          <code className="text-[#2563EB] font-mono">{ev.event}</code>
+                          <span className="text-muted">{ev.desc}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-xs font-medium mb-2">Webhook Payload Format</p>
+                    <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-green-400">{`{
   "event": "lead.created",
   "timestamp": "2026-04-14T10:30:00Z",
   "data": {
@@ -723,401 +696,391 @@ print(data['content'])`}
   },
   "webhook_id": "wh_xyz789"
 }`}</pre>
-            </div>
+                  </div>
 
-            <div className="mt-4 p-3 rounded-lg border border-border bg-[rgba(37,99,235,0.04)]">
-              <h3 className="text-xs font-semibold mb-1.5 flex items-center gap-1.5">
-                <Shield size={11} className="text-[#2563EB]" /> Signature Verification
-              </h3>
-              <p className="text-[10px] text-muted mb-2">Verify webhook authenticity using the X-Webhook-Signature header.</p>
-              <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-cyan-400">{`const crypto = require('crypto');
+                  <div className="mt-4 p-3 rounded-lg border border-border bg-[rgba(37,99,235,0.04)]">
+                    <h3 className="text-xs font-semibold mb-1.5 flex items-center gap-1.5">
+                      <Shield size={11} className="text-[#2563EB]" /> Signature Verification
+                    </h3>
+                    <p className="text-[10px] text-muted mb-2">Verify webhook authenticity using the X-Webhook-Signature header.</p>
+                    <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-cyan-400">{`const crypto = require('crypto');
 const signature = req.headers['x-webhook-signature'];
 const expected = crypto.createHmac('sha256', webhookSecret)
   .update(JSON.stringify(req.body))
   .digest('hex');
 const valid = signature === expected;`}</pre>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ═══ CHANGELOG TAB ═══ */}
-      {activeTab === "Changelog" && (
-        <div className="space-y-3">
-          {CHANGELOG.map((entry, i) => (
-            <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="glass rounded-xl p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-xs font-bold font-mono text-[#2563EB]">{entry.version}</span>
-                <span className="text-[10px] text-muted">{entry.date}</span>
-                {i === 0 && <span className="text-[8px] px-1.5 py-0.5 bg-green-500/10 text-green-400 rounded border border-green-500/20">Latest</span>}
-              </div>
-              <ul className="space-y-1">
-                {entry.changes.map((change, j) => (
-                  <li key={j} className="flex items-start gap-1.5 text-[10px] text-muted">
-                    <CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" />
-                    {change}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
-        </div>
-      )}
-
-      {/* ═══ SDKs TAB ═══ */}
-      {activeTab === "SDKs" && (
-        <div className="space-y-4">
-          <div className="glass rounded-xl p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Download size={14} className="text-[#2563EB]" />
-              <h2 className="text-sm font-semibold">SDK Downloads</h2>
-            </div>
-            <p className="text-[10px] text-muted mb-4">Official client libraries for popular languages. Install via package manager or download.</p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {SDK_DOWNLOADS.map((sdk, i) => (
-                <div key={i} className="p-3 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Code size={14} className="text-[#2563EB]" />
-                      <span className="text-xs font-semibold">{sdk.name}</span>
-                    </div>
-                    <span className="text-[9px] text-muted">{sdk.size}</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-muted">v{sdk.version}</span>
-                    <div className="flex gap-1.5">
-                      <button className="text-[9px] px-2 py-1 rounded border border-border text-muted hover:text-foreground transition-all">
-                        Install Guide
-                      </button>
-                      <button className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
-                        <Download size={9} /> Download
-                      </button>
-                    </div>
-                  </div>
-                  <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2 mt-2 text-[9px] font-mono text-cyan-400">
-                    {sdk.lang === "js" && "npm install @shortstack/sdk"}
-                    {sdk.lang === "py" && "pip install shortstack-sdk"}
-                    {sdk.lang === "go" && "go get github.com/shortstack/sdk-go"}
-                    {sdk.lang === "rb" && "gem install shortstack-sdk"}
-                  </pre>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+              </div>
+            )}{/* ═══ CHANGELOG TAB ═══ */}{activeTab === "Changelog" && (
+              <div className="space-y-3">
+                {CHANGELOG.map((entry, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="glass rounded-xl p-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-xs font-bold font-mono text-[#2563EB]">{entry.version}</span>
+                      <span className="text-[10px] text-muted">{entry.date}</span>
+                      {i === 0 && <span className="text-[8px] px-1.5 py-0.5 bg-green-500/10 text-green-400 rounded border border-green-500/20">Latest</span>}
+                    </div>
+                    <ul className="space-y-1">
+                      {entry.changes.map((change, j) => (
+                        <li key={j} className="flex items-start gap-1.5 text-[10px] text-muted">
+                          <CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" />
+                          {change}
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                ))}
+              </div>
+            )}{/* ═══ SDKs TAB ═══ */}{activeTab === "SDKs" && (
+              <div className="space-y-4">
+                <div className="glass rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Download size={14} className="text-[#2563EB]" />
+                    <h2 className="text-sm font-semibold">SDK Downloads</h2>
+                  </div>
+                  <p className="text-[10px] text-muted mb-4">Official client libraries for popular languages. Install via package manager or download.</p>
 
-      {/* ═══ API KEYS TAB ═══ */}
-      {activeTab === "API Keys" && (
-        <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {SDK_DOWNLOADS.map((sdk, i) => (
+                      <div key={i} className="p-3 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <Code size={14} className="text-[#2563EB]" />
+                            <span className="text-xs font-semibold">{sdk.name}</span>
+                          </div>
+                          <span className="text-[9px] text-muted">{sdk.size}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] text-muted">v{sdk.version}</span>
+                          <div className="flex gap-1.5">
+                            <button className="text-[9px] px-2 py-1 rounded border border-border text-muted hover:text-foreground transition-all">
+                              Install Guide
+                            </button>
+                            <button className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
+                              <Download size={9} /> Download
+                            </button>
+                          </div>
+                        </div>
+                        <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2 mt-2 text-[9px] font-mono text-cyan-400">
+                          {sdk.lang === "js" && "npm install @shortstack/sdk"}
+                          {sdk.lang === "py" && "pip install shortstack-sdk"}
+                          {sdk.lang === "go" && "go get github.com/shortstack/sdk-go"}
+                          {sdk.lang === "rb" && "gem install shortstack-sdk"}
+                        </pre>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}{/* ═══ API KEYS TAB ═══ */}{activeTab === "API Keys" && (
+              <div className="space-y-4">
 
-          {/* Just-created key banner */}
-          {justCreatedKey && (
-            <div className="glass rounded-xl p-4 border-green-500/30 bg-green-500/5">
-              <div className="flex items-start gap-3">
-                <CheckCircle size={16} className="text-green-400 mt-0.5 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-green-400 mb-1">API key created successfully</p>
-                  <p className="text-[10px] text-muted mb-2">Copy your key now -- you will not be able to see it again after closing this banner.</p>
-                  <div className="flex items-center gap-2 bg-[rgba(0,0,0,0.04)] rounded-lg px-3 py-2 font-mono text-[11px] text-foreground">
-                    <span className="truncate flex-1">{justCreatedKey}</span>
-                    <button onClick={() => copyText(justCreatedKey, "new-key")}
-                      className="text-muted hover:text-[#2563EB] transition-colors flex-shrink-0">
-                      {copiedKey === "new-key" ? <CheckCircle size={12} className="text-green-400" /> : <Copy size={12} />}
+                {/* Just-created key banner */}
+                {justCreatedKey && (
+                  <div className="glass rounded-xl p-4 border-green-500/30 bg-green-500/5">
+                    <div className="flex items-start gap-3">
+                      <CheckCircle size={16} className="text-green-400 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-green-400 mb-1">API key created successfully</p>
+                        <p className="text-[10px] text-muted mb-2">Copy your key now -- you will not be able to see it again after closing this banner.</p>
+                        <div className="flex items-center gap-2 bg-[rgba(0,0,0,0.04)] rounded-lg px-3 py-2 font-mono text-[11px] text-foreground">
+                          <span className="truncate flex-1">{justCreatedKey}</span>
+                          <button onClick={() => copyText(justCreatedKey, "new-key")}
+                            className="text-muted hover:text-[#2563EB] transition-colors flex-shrink-0">
+                            {copiedKey === "new-key" ? <CheckCircle size={12} className="text-green-400" /> : <Copy size={12} />}
+                          </button>
+                        </div>
+                      </div>
+                      <button onClick={() => setJustCreatedKey(null)} className="text-muted hover:text-foreground text-xs flex-shrink-0">x</button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Stats Row */}
+                <div className="grid grid-cols-4 gap-3">
+                  {[
+                    { label: "Total Keys", value: apiKeys.length, color: "text-[#2563EB]", icon: <Key size={13} className="text-[#2563EB]" /> },
+                    { label: "Active", value: apiKeys.filter(k => k.is_active).length, color: "text-green-400", icon: <CheckCircle size={13} className="text-green-400" /> },
+                    { label: "Revoked", value: apiKeys.filter(k => !k.is_active).length, color: "text-red-400", icon: <Shield size={13} className="text-red-400" /> },
+                    { label: "Full Access", value: apiKeys.filter(k => k.permissions === "full" && k.is_active).length, color: "text-orange-400", icon: <AlertTriangle size={13} className="text-orange-400" /> },
+                  ].map((s, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                      <div className="p-3">
+                        <div className="flex items-center gap-2 mb-1">
+                          {s.icon}
+                          <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
+                        </div>
+                        <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Key Management Card */}
+                <div className="glass rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <Key size={14} className="text-[#2563EB]" />
+                      <h2 className="text-sm font-semibold">Private API Keys</h2>
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-surface-light text-muted border border-border">{apiKeys.length} keys</span>
+                    </div>
+                    <button onClick={() => setShowNewKey(!showNewKey)}
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1.5">
+                      <Key size={10} />
+                      Generate New Key
                     </button>
                   </div>
-                </div>
-                <button onClick={() => setJustCreatedKey(null)} className="text-muted hover:text-foreground text-xs flex-shrink-0">x</button>
-              </div>
-            </div>
-          )}
 
-          {/* Stats Row */}
-          <div className="grid grid-cols-4 gap-3">
-            {[
-              { label: "Total Keys", value: apiKeys.length, color: "text-[#2563EB]", icon: <Key size={13} className="text-[#2563EB]" /> },
-              { label: "Active", value: apiKeys.filter(k => k.is_active).length, color: "text-green-400", icon: <CheckCircle size={13} className="text-green-400" /> },
-              { label: "Revoked", value: apiKeys.filter(k => !k.is_active).length, color: "text-red-400", icon: <Shield size={13} className="text-red-400" /> },
-              { label: "Full Access", value: apiKeys.filter(k => k.permissions === "full" && k.is_active).length, color: "text-orange-400", icon: <AlertTriangle size={13} className="text-orange-400" /> },
-            ].map((s, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                <div className="p-3">
-                  <div className="flex items-center gap-2 mb-1">
-                    {s.icon}
-                    <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
+                  {/* Create New Key Form */}
+                  {showNewKey && (
+                    <div className="p-4 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)] mb-4 space-y-3">
+                      <div className="flex items-center gap-2 text-xs font-medium text-[#2563EB]">
+                        <Key size={12} />
+                        New API Key
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Key Name</label>
+                          <input
+                            value={newKeyName}
+                            onChange={e => setNewKeyName(e.target.value)}
+                            onKeyDown={e => e.key === "Enter" && generateApiKey()}
+                            className="input w-full text-xs py-1.5"
+                            placeholder="e.g. Production, CI/CD, Analytics"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Permissions</label>
+                          <div className="flex gap-1.5">
+                            {(["read", "read-write", "full"] as const).map(perm => (
+                              <button
+                                key={perm}
+                                onClick={() => setNewKeyPermission(perm)}
+                                className={`flex-1 text-[10px] px-2 py-1.5 rounded-lg border transition-all ${
+                                  newKeyPermission === perm
+                                    ? PERMISSION_LABELS[perm].color + " border font-medium"
+                                    : "border-border text-muted hover:text-foreground hover:border-border"
+                                }`}
+                              >
+                                {PERMISSION_LABELS[perm].label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between pt-1">
+                        <div className="flex items-center gap-1.5 text-[10px] text-muted">
+                          <Activity size={10} />
+                          Rate limit: <span className="text-foreground font-medium">{RATE_LIMITS[newKeyPermission]}</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <button onClick={() => { setShowNewKey(false); setNewKeyName(""); setNewKeyPermission("read"); }}
+                            className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all">
+                            Cancel
+                          </button>
+                          <button onClick={generateApiKey}
+                            disabled={!newKeyName.trim()}
+                            className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#1D4ED8] transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                            Generate Key
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Keys Table */}
+                  <div className="rounded-lg border border-border overflow-hidden">
+                    <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider bg-surface-light/50">
+                      <div className="col-span-2">Name</div>
+                      <div className="col-span-3">Key</div>
+                      <div className="col-span-2">Permissions</div>
+                      <div>Rate Limit</div>
+                      <div>Created</div>
+                      <div>Last Used</div>
+                      <div className="col-span-2 text-right">Actions</div>
+                    </div>
+                    {apiKeys.length === 0 && (
+                      <div className="px-4 py-8 text-center text-muted text-xs">
+                        <Key size={20} className="mx-auto mb-2 opacity-30" />
+                        No API keys yet. Generate your first key above.
+                      </div>
+                    )}
+                    {apiKeys.map(k => (
+                      <div key={k.id} className={`grid grid-cols-12 gap-2 px-4 py-3 border-b border-border last:border-0 text-[11px] items-center ${!k.is_active ? "opacity-50" : ""}`}>
+                        {/* Name + Status */}
+                        <div className="col-span-2 font-medium">
+                          <div className="flex items-center gap-1.5">
+                            <span className="truncate">{k.name}</span>
+                          </div>
+                          <div className="flex items-center gap-1 mt-0.5">
+                            <span className={`text-[8px] px-1.5 py-0.5 rounded font-medium ${k.is_active ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"}`}>
+                              {k.is_active ? "Active" : "Revoked"}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Key (masked/revealed) */}
+                        <div className="col-span-3 font-mono text-[10px] flex items-center gap-1.5">
+                          <span className="text-muted truncate">
+                            {revealedKeys[k.id] ? k.key : maskKey(k.key)}
+                          </span>
+                          <button onClick={() => toggleRevealKey(k.id)} className="text-muted hover:text-foreground transition-colors flex-shrink-0" title={revealedKeys[k.id] ? "Hide" : "Reveal"}>
+                            {revealedKeys[k.id] ? <EyeOff size={10} /> : <Eye size={10} />}
+                          </button>
+                          <button onClick={() => copyText(k.key, k.id)} className="text-muted hover:text-[#2563EB] transition-colors flex-shrink-0" title="Copy key">
+                            {copiedKey === k.id ? <CheckCircle size={10} className="text-green-400" /> : <Copy size={10} />}
+                          </button>
+                        </div>
+
+                        {/* Permissions */}
+                        <div className="col-span-2">
+                          <span className={`text-[9px] px-2 py-0.5 rounded border font-medium ${PERMISSION_LABELS[k.permissions].color}`}>
+                            {PERMISSION_LABELS[k.permissions].label}
+                          </span>
+                        </div>
+
+                        {/* Rate Limit */}
+                        <div className="text-[10px] text-muted flex items-center gap-1">
+                          <Activity size={9} className="flex-shrink-0" />
+                          {RATE_LIMITS[k.permissions]}
+                        </div>
+
+                        {/* Created */}
+                        <div className="text-muted text-[10px]">{k.created_at}</div>
+
+                        {/* Last Used */}
+                        <div className="text-muted text-[10px] flex items-center gap-1">
+                          <Clock size={9} className="flex-shrink-0" />
+                          {timeAgo(k.last_used)}
+                        </div>
+
+                        {/* Actions */}
+                        <div className="col-span-2 flex items-center justify-end gap-1.5">
+                          {k.is_active ? (
+                            <>
+                              <button onClick={() => toggleKeyActive(k.id)}
+                                className="text-[9px] px-2 py-1 rounded border border-orange-500/20 text-orange-400 hover:bg-orange-500/10 transition-all flex items-center gap-1" title="Revoke key">
+                                <ToggleRight size={9} />
+                                Revoke
+                              </button>
+                              {confirmDeleteId === k.id ? (
+                                <div className="flex items-center gap-1">
+                                  <button onClick={() => deleteKey(k.id)}
+                                    className="text-[9px] px-2 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all font-medium">
+                                    Confirm
+                                  </button>
+                                  <button onClick={() => setConfirmDeleteId(null)}
+                                    className="text-[9px] px-1.5 py-1 rounded border border-border text-muted hover:text-foreground transition-all">
+                                    x
+                                  </button>
+                                </div>
+                              ) : (
+                                <button onClick={() => setConfirmDeleteId(k.id)}
+                                  className="text-[9px] px-2 py-1 rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all flex items-center gap-1" title="Delete key">
+                                  <Trash2 size={9} />
+                                </button>
+                              )}
+                            </>
+                          ) : (
+                            <>
+                              <button onClick={() => toggleKeyActive(k.id)}
+                                className="text-[9px] px-2 py-1 rounded border border-green-500/20 text-green-400 hover:bg-green-500/10 transition-all flex items-center gap-1" title="Reactivate key">
+                                <ToggleLeft size={9} />
+                                Activate
+                              </button>
+                              {confirmDeleteId === k.id ? (
+                                <div className="flex items-center gap-1">
+                                  <button onClick={() => deleteKey(k.id)}
+                                    className="text-[9px] px-2 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all font-medium">
+                                    Confirm
+                                  </button>
+                                  <button onClick={() => setConfirmDeleteId(null)}
+                                    className="text-[9px] px-1.5 py-1 rounded border border-border text-muted hover:text-foreground transition-all">
+                                    x
+                                  </button>
+                                </div>
+                              ) : (
+                                <button onClick={() => setConfirmDeleteId(k.id)}
+                                  className="text-[9px] px-2 py-1 rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all flex items-center gap-1" title="Delete key">
+                                  <Trash2 size={9} />
+                                </button>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
                 </div>
-              </motion.div>
-            ))}
-          </div>
 
-          {/* Key Management Card */}
-          <div className="glass rounded-xl p-4">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Key size={14} className="text-[#2563EB]" />
-                <h2 className="text-sm font-semibold">Private API Keys</h2>
-                <span className="text-[9px] px-1.5 py-0.5 rounded bg-surface-light text-muted border border-border">{apiKeys.length} keys</span>
-              </div>
-              <button onClick={() => setShowNewKey(!showNewKey)}
-                className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1.5">
-                <Key size={10} />
-                Generate New Key
-              </button>
-            </div>
-
-            {/* Create New Key Form */}
-            {showNewKey && (
-              <div className="p-4 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)] mb-4 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-medium text-[#2563EB]">
-                  <Key size={12} />
-                  New API Key
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Key Name</label>
-                    <input
-                      value={newKeyName}
-                      onChange={e => setNewKeyName(e.target.value)}
-                      onKeyDown={e => e.key === "Enter" && generateApiKey()}
-                      className="input w-full text-xs py-1.5"
-                      placeholder="e.g. Production, CI/CD, Analytics"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Permissions</label>
-                    <div className="flex gap-1.5">
-                      {(["read", "read-write", "full"] as const).map(perm => (
-                        <button
-                          key={perm}
-                          onClick={() => setNewKeyPermission(perm)}
-                          className={`flex-1 text-[10px] px-2 py-1.5 rounded-lg border transition-all ${
-                            newKeyPermission === perm
-                              ? PERMISSION_LABELS[perm].color + " border font-medium"
-                              : "border-border text-muted hover:text-foreground hover:border-border"
-                          }`}
-                        >
-                          {PERMISSION_LABELS[perm].label}
-                        </button>
+                {/* Security & Usage Info */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Security Best Practices */}
+                  <div className="glass rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Shield size={13} className="text-[#2563EB]" />
+                      <h3 className="text-xs font-semibold">Security Best Practices</h3>
+                    </div>
+                    <div className="space-y-2">
+                      {[
+                        { icon: <Lock size={10} />, text: "Never expose API keys in client-side code or public repos" },
+                        { icon: <RefreshCw size={10} />, text: "Rotate keys regularly -- revoke and regenerate every 90 days" },
+                        { icon: <Shield size={10} />, text: "Use minimum required permissions (prefer read-only)" },
+                        { icon: <Eye size={10} />, text: "Monitor last-used timestamps for suspicious activity" },
+                        { icon: <AlertTriangle size={10} />, text: "Revoke keys immediately if you suspect a compromise" },
+                      ].map((tip, i) => (
+                        <div key={i} className="flex items-start gap-2 text-[10px] text-muted">
+                          <span className="text-[#2563EB] mt-0.5 flex-shrink-0">{tip.icon}</span>
+                          <span>{tip.text}</span>
+                        </div>
                       ))}
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center justify-between pt-1">
-                  <div className="flex items-center gap-1.5 text-[10px] text-muted">
-                    <Activity size={10} />
-                    Rate limit: <span className="text-foreground font-medium">{RATE_LIMITS[newKeyPermission]}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => { setShowNewKey(false); setNewKeyName(""); setNewKeyPermission("read"); }}
-                      className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all">
-                      Cancel
-                    </button>
-                    <button onClick={generateApiKey}
-                      disabled={!newKeyName.trim()}
-                      className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#1D4ED8] transition-all disabled:opacity-40 disabled:cursor-not-allowed">
-                      Generate Key
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
 
-            {/* Keys Table */}
-            <div className="rounded-lg border border-border overflow-hidden">
-              <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider bg-surface-light/50">
-                <div className="col-span-2">Name</div>
-                <div className="col-span-3">Key</div>
-                <div className="col-span-2">Permissions</div>
-                <div>Rate Limit</div>
-                <div>Created</div>
-                <div>Last Used</div>
-                <div className="col-span-2 text-right">Actions</div>
-              </div>
-              {apiKeys.length === 0 && (
-                <div className="px-4 py-8 text-center text-muted text-xs">
-                  <Key size={20} className="mx-auto mb-2 opacity-30" />
-                  No API keys yet. Generate your first key above.
-                </div>
-              )}
-              {apiKeys.map(k => (
-                <div key={k.id} className={`grid grid-cols-12 gap-2 px-4 py-3 border-b border-border last:border-0 text-[11px] items-center ${!k.is_active ? "opacity-50" : ""}`}>
-                  {/* Name + Status */}
-                  <div className="col-span-2 font-medium">
-                    <div className="flex items-center gap-1.5">
-                      <span className="truncate">{k.name}</span>
+                  {/* Rate Limits by Permission */}
+                  <div className="glass rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Activity size={13} className="text-[#2563EB]" />
+                      <h3 className="text-xs font-semibold">Rate Limits by Permission Level</h3>
                     </div>
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <span className={`text-[8px] px-1.5 py-0.5 rounded font-medium ${k.is_active ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"}`}>
-                        {k.is_active ? "Active" : "Revoked"}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Key (masked/revealed) */}
-                  <div className="col-span-3 font-mono text-[10px] flex items-center gap-1.5">
-                    <span className="text-muted truncate">
-                      {revealedKeys[k.id] ? k.key : maskKey(k.key)}
-                    </span>
-                    <button onClick={() => toggleRevealKey(k.id)} className="text-muted hover:text-foreground transition-colors flex-shrink-0" title={revealedKeys[k.id] ? "Hide" : "Reveal"}>
-                      {revealedKeys[k.id] ? <EyeOff size={10} /> : <Eye size={10} />}
-                    </button>
-                    <button onClick={() => copyText(k.key, k.id)} className="text-muted hover:text-[#2563EB] transition-colors flex-shrink-0" title="Copy key">
-                      {copiedKey === k.id ? <CheckCircle size={10} className="text-green-400" /> : <Copy size={10} />}
-                    </button>
-                  </div>
-
-                  {/* Permissions */}
-                  <div className="col-span-2">
-                    <span className={`text-[9px] px-2 py-0.5 rounded border font-medium ${PERMISSION_LABELS[k.permissions].color}`}>
-                      {PERMISSION_LABELS[k.permissions].label}
-                    </span>
-                  </div>
-
-                  {/* Rate Limit */}
-                  <div className="text-[10px] text-muted flex items-center gap-1">
-                    <Activity size={9} className="flex-shrink-0" />
-                    {RATE_LIMITS[k.permissions]}
-                  </div>
-
-                  {/* Created */}
-                  <div className="text-muted text-[10px]">{k.created_at}</div>
-
-                  {/* Last Used */}
-                  <div className="text-muted text-[10px] flex items-center gap-1">
-                    <Clock size={9} className="flex-shrink-0" />
-                    {timeAgo(k.last_used)}
-                  </div>
-
-                  {/* Actions */}
-                  <div className="col-span-2 flex items-center justify-end gap-1.5">
-                    {k.is_active ? (
-                      <>
-                        <button onClick={() => toggleKeyActive(k.id)}
-                          className="text-[9px] px-2 py-1 rounded border border-orange-500/20 text-orange-400 hover:bg-orange-500/10 transition-all flex items-center gap-1" title="Revoke key">
-                          <ToggleRight size={9} />
-                          Revoke
-                        </button>
-                        {confirmDeleteId === k.id ? (
-                          <div className="flex items-center gap-1">
-                            <button onClick={() => deleteKey(k.id)}
-                              className="text-[9px] px-2 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all font-medium">
-                              Confirm
-                            </button>
-                            <button onClick={() => setConfirmDeleteId(null)}
-                              className="text-[9px] px-1.5 py-1 rounded border border-border text-muted hover:text-foreground transition-all">
-                              x
-                            </button>
+                    <div className="space-y-2">
+                      {(["read", "read-write", "full"] as const).map(perm => (
+                        <div key={perm} className="flex items-center justify-between p-2 rounded-lg bg-surface-light/50 border border-border">
+                          <div className="flex items-center gap-2">
+                            <span className={`text-[9px] px-2 py-0.5 rounded border font-medium ${PERMISSION_LABELS[perm].color}`}>
+                              {PERMISSION_LABELS[perm].label}
+                            </span>
+                            <span className="text-[10px] text-muted">{PERMISSION_LABELS[perm].desc}</span>
                           </div>
-                        ) : (
-                          <button onClick={() => setConfirmDeleteId(k.id)}
-                            className="text-[9px] px-2 py-1 rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all flex items-center gap-1" title="Delete key">
-                            <Trash2 size={9} />
-                          </button>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        <button onClick={() => toggleKeyActive(k.id)}
-                          className="text-[9px] px-2 py-1 rounded border border-green-500/20 text-green-400 hover:bg-green-500/10 transition-all flex items-center gap-1" title="Reactivate key">
-                          <ToggleLeft size={9} />
-                          Activate
-                        </button>
-                        {confirmDeleteId === k.id ? (
-                          <div className="flex items-center gap-1">
-                            <button onClick={() => deleteKey(k.id)}
-                              className="text-[9px] px-2 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all font-medium">
-                              Confirm
-                            </button>
-                            <button onClick={() => setConfirmDeleteId(null)}
-                              className="text-[9px] px-1.5 py-1 rounded border border-border text-muted hover:text-foreground transition-all">
-                              x
-                            </button>
-                          </div>
-                        ) : (
-                          <button onClick={() => setConfirmDeleteId(k.id)}
-                            className="text-[9px] px-2 py-1 rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all flex items-center gap-1" title="Delete key">
-                            <Trash2 size={9} />
-                          </button>
-                        )}
-                      </>
-                    )}
+                          <span className="text-[10px] font-mono text-foreground font-medium">{RATE_LIMITS[perm]}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-3 p-2 rounded-lg bg-[rgba(37,99,235,0.04)] border border-[rgba(37,99,235,0.15)]">
+                      <p className="text-[9px] text-[#2563EB] flex items-center gap-1.5">
+                        <AlertTriangle size={10} className="flex-shrink-0" />
+                        Exceeding rate limits returns HTTP 429. Implement exponential backoff in your integration.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Security & Usage Info */}
-          <div className="grid grid-cols-2 gap-4">
-            {/* Security Best Practices */}
-            <div className="glass rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Shield size={13} className="text-[#2563EB]" />
-                <h3 className="text-xs font-semibold">Security Best Practices</h3>
-              </div>
-              <div className="space-y-2">
-                {[
-                  { icon: <Lock size={10} />, text: "Never expose API keys in client-side code or public repos" },
-                  { icon: <RefreshCw size={10} />, text: "Rotate keys regularly -- revoke and regenerate every 90 days" },
-                  { icon: <Shield size={10} />, text: "Use minimum required permissions (prefer read-only)" },
-                  { icon: <Eye size={10} />, text: "Monitor last-used timestamps for suspicious activity" },
-                  { icon: <AlertTriangle size={10} />, text: "Revoke keys immediately if you suspect a compromise" },
-                ].map((tip, i) => (
-                  <div key={i} className="flex items-start gap-2 text-[10px] text-muted">
-                    <span className="text-[#2563EB] mt-0.5 flex-shrink-0">{tip.icon}</span>
-                    <span>{tip.text}</span>
+                {/* Quick Start Code */}
+                <div className="glass rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Terminal size={13} className="text-[#2563EB]" />
+                    <h3 className="text-xs font-semibold">Quick Start</h3>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Rate Limits by Permission */}
-            <div className="glass rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Activity size={13} className="text-[#2563EB]" />
-                <h3 className="text-xs font-semibold">Rate Limits by Permission Level</h3>
-              </div>
-              <div className="space-y-2">
-                {(["read", "read-write", "full"] as const).map(perm => (
-                  <div key={perm} className="flex items-center justify-between p-2 rounded-lg bg-surface-light/50 border border-border">
-                    <div className="flex items-center gap-2">
-                      <span className={`text-[9px] px-2 py-0.5 rounded border font-medium ${PERMISSION_LABELS[perm].color}`}>
-                        {PERMISSION_LABELS[perm].label}
-                      </span>
-                      <span className="text-[10px] text-muted">{PERMISSION_LABELS[perm].desc}</span>
-                    </div>
-                    <span className="text-[10px] font-mono text-foreground font-medium">{RATE_LIMITS[perm]}</span>
+                  <div className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 font-mono text-[10px] text-muted leading-relaxed overflow-x-auto">
+                    <div className="text-green-400/60"># Authenticate with your API key</div>
+                    <div><span className="text-cyan-400">curl</span> -X GET https://api.shortstack.os/v2/clients \</div>
+                    <div className="pl-4">-H <span className="text-[#2563EB]">&quot;Authorization: Bearer sk_live_your_key_here&quot;</span> \</div>
+                    <div className="pl-4">-H <span className="text-[#2563EB]">&quot;Content-Type: application/json&quot;</span></div>
                   </div>
-                ))}
+                </div>
               </div>
-              <div className="mt-3 p-2 rounded-lg bg-[rgba(37,99,235,0.04)] border border-[rgba(37,99,235,0.15)]">
-                <p className="text-[9px] text-[#2563EB] flex items-center gap-1.5">
-                  <AlertTriangle size={10} className="flex-shrink-0" />
-                  Exceeding rate limits returns HTTP 429. Implement exponential backoff in your integration.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Start Code */}
-          <div className="glass rounded-xl p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Terminal size={13} className="text-[#2563EB]" />
-              <h3 className="text-xs font-semibold">Quick Start</h3>
-            </div>
-            <div className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 font-mono text-[10px] text-muted leading-relaxed overflow-x-auto">
-              <div className="text-green-400/60"># Authenticate with your API key</div>
-              <div><span className="text-cyan-400">curl</span> -X GET https://api.shortstack.os/v2/clients \</div>
-              <div className="pl-4">-H <span className="text-[#2563EB]">&quot;Authorization: Bearer sk_live_your_key_here&quot;</span> \</div>
-              <div className="pl-4">-H <span className="text-[#2563EB]">&quot;Content-Type: application/json&quot;</span></div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            )}</MotionPage>
   );
 }

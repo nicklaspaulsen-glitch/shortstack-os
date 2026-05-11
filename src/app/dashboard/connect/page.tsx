@@ -9,6 +9,7 @@ import {
   ShieldCheck, Settings, Puzzle, Webhook, Key, Store, Plus,
   Users as UsersIcon,
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // Blueprint cards of integrations the agency can wire up. Teal/green
 // gradient in the hero so it reads as "plug into the world".
@@ -31,103 +32,105 @@ export default function ConnectHubPage() {
   useAuth();
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-    >
-    <SectionHub
-      section="connect"
-      title="Connect"
-      eyebrow="Section · Integrations"
-      subtitle="Plug ShortStack into the apps your agency already uses."
-      heroIcon={<Puzzle size={22} />}
-      heroGradient="ocean"
-      preview={{
-        items: CONNECT_HUB_PREVIEW,
-        variant: "text",
-        aspectRatio: "16:9",
-        opacity: 0.5,
-        caption: "Socials, chat bots, webhooks, marketplace — one hub",
-      }}
-      quickActions={[
-        { label: "New Integration", href: "/dashboard/integrations-hub", icon: Plus },
-        { label: "Install Extension", href: "/downloads/shortstack-extension.zip", icon: Puzzle },
-        { label: "Configure Webhook", href: "/dashboard/webhooks", icon: Webhook },
-        { label: "Browse Marketplace", href: "/dashboard/marketplace", icon: Store },
-      ]}
-      stats={[
-        { label: "Integrations", key: "active_integrations", icon: Link2, color: "text-emerald-400" },
-        { label: "Connected Accounts", key: "social_accounts", icon: UsersIcon, color: "text-blue-400" },
-        { label: "Webhooks Live", key: "webhooks_live", icon: Webhook, color: "text-[#2563EB]" },
-        { label: "API Keys", key: "api_keys", icon: Key, color: "text-[#2563EB]" },
-      ]}
-      tools={[
-        {
-          slug: "google-business",
-          label: "Google Biz",
-          description: "Manage your Google Business Profile from here.",
-          href: "/dashboard/google-business",
-          icon: Globe,
-        },
-        {
-          slug: "discord",
-          label: "Discord",
-          description: "Deploy the ShortStack bot to your Discord servers.",
-          href: "/dashboard/discord",
-          icon: MessageSquare,
-        },
-        {
-          slug: "notion-sync",
-          label: "Notion",
-          description: "Two-way sync with your Notion workspace.",
-          href: "/dashboard/notion-sync",
-          icon: FileText,
-        },
-        {
-          slug: "integrations",
-          label: "Socials",
-          description: "IG, TikTok, LinkedIn, Facebook — one click each.",
-          href: "/dashboard/integrations-hub",
-          icon: Link2,
-        },
-        {
-          slug: "competitive-monitor",
-          label: "Competitors",
-          description: "Track competitor ads, posts, and pricing.",
-          href: "/dashboard/competitive-monitor",
-          icon: Target,
-        },
-        {
-          slug: "telegram-bot",
-          label: "Telegram Bot",
-          description: "Run a 24/7 Telegram bot for each client.",
-          href: "/dashboard/telegram-bot",
-          icon: Bot,
-        },
-        {
-          slug: "notifications",
-          label: "Notifications",
-          description: "Route alerts to Slack, email, and more.",
-          href: "/dashboard/notifications",
-          icon: Bell,
-        },
-        {
-          slug: "system-status",
-          label: "System Status",
-          description: "Live health of every connected provider.",
-          href: "/dashboard/system-status",
-          icon: ShieldCheck,
-        },
-        {
-          slug: "settings",
-          label: "Settings",
-          description: "Global preferences, API keys, and more.",
-          href: "/dashboard/settings",
-          icon: Settings,
-        },
-      ]}
-    />
-    </motion.div>
+    <MotionPage>
+            <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+          <SectionHub
+            section="connect"
+            title="Connect"
+            eyebrow="Section · Integrations"
+            subtitle="Plug ShortStack into the apps your agency already uses."
+            heroIcon={<Puzzle size={22} />}
+            heroGradient="ocean"
+            preview={{
+              items: CONNECT_HUB_PREVIEW,
+              variant: "text",
+              aspectRatio: "16:9",
+              opacity: 0.5,
+              caption: "Socials, chat bots, webhooks, marketplace — one hub",
+            }}
+            quickActions={[
+              { label: "New Integration", href: "/dashboard/integrations-hub", icon: Plus },
+              { label: "Install Extension", href: "/downloads/shortstack-extension.zip", icon: Puzzle },
+              { label: "Configure Webhook", href: "/dashboard/webhooks", icon: Webhook },
+              { label: "Browse Marketplace", href: "/dashboard/marketplace", icon: Store },
+            ]}
+            stats={[
+              { label: "Integrations", key: "active_integrations", icon: Link2, color: "text-emerald-400" },
+              { label: "Connected Accounts", key: "social_accounts", icon: UsersIcon, color: "text-blue-400" },
+              { label: "Webhooks Live", key: "webhooks_live", icon: Webhook, color: "text-[#2563EB]" },
+              { label: "API Keys", key: "api_keys", icon: Key, color: "text-[#2563EB]" },
+            ]}
+            tools={[
+              {
+                slug: "google-business",
+                label: "Google Biz",
+                description: "Manage your Google Business Profile from here.",
+                href: "/dashboard/google-business",
+                icon: Globe,
+              },
+              {
+                slug: "discord",
+                label: "Discord",
+                description: "Deploy the ShortStack bot to your Discord servers.",
+                href: "/dashboard/discord",
+                icon: MessageSquare,
+              },
+              {
+                slug: "notion-sync",
+                label: "Notion",
+                description: "Two-way sync with your Notion workspace.",
+                href: "/dashboard/notion-sync",
+                icon: FileText,
+              },
+              {
+                slug: "integrations",
+                label: "Socials",
+                description: "IG, TikTok, LinkedIn, Facebook — one click each.",
+                href: "/dashboard/integrations-hub",
+                icon: Link2,
+              },
+              {
+                slug: "competitive-monitor",
+                label: "Competitors",
+                description: "Track competitor ads, posts, and pricing.",
+                href: "/dashboard/competitive-monitor",
+                icon: Target,
+              },
+              {
+                slug: "telegram-bot",
+                label: "Telegram Bot",
+                description: "Run a 24/7 Telegram bot for each client.",
+                href: "/dashboard/telegram-bot",
+                icon: Bot,
+              },
+              {
+                slug: "notifications",
+                label: "Notifications",
+                description: "Route alerts to Slack, email, and more.",
+                href: "/dashboard/notifications",
+                icon: Bell,
+              },
+              {
+                slug: "system-status",
+                label: "System Status",
+                description: "Live health of every connected provider.",
+                href: "/dashboard/system-status",
+                icon: ShieldCheck,
+              },
+              {
+                slug: "settings",
+                label: "Settings",
+                description: "Global preferences, API keys, and more.",
+                href: "/dashboard/settings",
+                icon: Settings,
+              },
+            ]}
+          />
+          </motion.div>
+          </MotionPage>
   );
 }

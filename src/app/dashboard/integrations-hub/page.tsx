@@ -43,6 +43,7 @@ import {
   connectIntegration,
 } from "@/lib/nango/browser";
 import { NANGO_INTEGRATIONS } from "@/lib/nango/shared";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // ------------------------------------------------------------------------
 // Extended local type � augments the card's IntegrationCardData with
@@ -615,151 +616,134 @@ export default function IntegrationsHubPage() {
   // -- Render -----------------------------------------------------------
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Plug size={28} />}
-        title="Integrations Hub"
-        subtitle="Connect your tools and let AI work across them. OAuth via Nango � Social via Zernio � API keys for the rest."
-        gradient="purple"
-        eyebrow="All your integrations"
-        actions={
-          <button
-            type="button"
-            onClick={() => {
-              setLoadingConnections(true);
-              void fetchConnections();
-              void fetchHealthStatuses();
-            }}
-            disabled={loadingConnections}
-            className="flex items-center gap-1.5 text-[10px] bg-black/5 border border-border text-foreground px-2.5 py-1 rounded-md hover:bg-black/10 transition-all disabled:opacity-50"
-          >
-            <RefreshCw
-              size={10}
-              className={loadingConnections ? "animate-spin" : ""}
-            />
-            <span className="font-medium">Refresh</span>
-          </button>
-        }
-      />
-
-      {/* Hero stat tiles */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {[
-          { label: "Connected", value: connectedCount, icon: <Plug size={14} />, bar: "from-indigo-500 to-violet-500" },
-          { label: "Available", value: availableCount, icon: <Sparkles size={14} />, bar: "from-sky-500 to-indigo-500" },
-          { label: "Powered by", value: "Nango + Zernio", icon: <Sparkles size={14} />, bar: "from-purple-500 to-indigo-500", premium: true },
-          { label: "Last sync", value: lastSyncLabel, icon: null, bar: "from-emerald-500 to-teal-500" },
-        ].map((tile, i) => (
-          <motion.div
-            key={tile.label}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08, duration: 0.4, ease: "easeOut" }}
-            whileHover={{ y: -2 }}
-            className="glass rounded-xl overflow-hidden"
-          >
-            <div className={`h-[3px] w-full bg-gradient-to-r ${tile.bar}`} />
-            <StatCard
-              label={tile.label}
-              value={tile.value}
-              icon={tile.icon ?? undefined}
-              premium={tile.premium}
-            />
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Category filter pills */}
-      <motion.div
-        className="flex items-center gap-2 flex-wrap glass rounded-lg px-3 py-2"
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35, duration: 0.35, ease: "easeOut" }}
-        role="tablist"
-        aria-label="Integration category filter"
-      >
-        {FILTER_CATEGORIES.map((cat) => {
-          const active = cat === activeFilter;
-          return (
-            <button
-              key={cat}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => setActiveFilter(cat)}
-              className={[
-                "px-3 py-1.5 text-[11px] font-semibold rounded-full border transition-all",
-                active
-                  ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
-                  : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] hover:border-[rgba(37,99,235,0.14)]",
-              ].join(" ")}
+    <MotionPage className="fade-in space-y-5"><PageHero
+              icon={<Plug size={28} />}
+              title="Integrations Hub"
+              subtitle="Connect your tools and let AI work across them. OAuth via Nango � Social via Zernio � API keys for the rest."
+              gradient="purple"
+              eyebrow="All your integrations"
+              actions={
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLoadingConnections(true);
+                    void fetchConnections();
+                    void fetchHealthStatuses();
+                  }}
+                  disabled={loadingConnections}
+                  className="flex items-center gap-1.5 text-[10px] bg-black/5 border border-border text-foreground px-2.5 py-1 rounded-md hover:bg-black/10 transition-all disabled:opacity-50"
+                >
+                  <RefreshCw
+                    size={10}
+                    className={loadingConnections ? "animate-spin" : ""}
+                  />
+                  <span className="font-medium">Refresh</span>
+                </button>
+              }
+            />{/* Hero stat tiles */}<div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              {[
+                { label: "Connected", value: connectedCount, icon: <Plug size={14} />, bar: "from-indigo-500 to-violet-500" },
+                { label: "Available", value: availableCount, icon: <Sparkles size={14} />, bar: "from-sky-500 to-indigo-500" },
+                { label: "Powered by", value: "Nango + Zernio", icon: <Sparkles size={14} />, bar: "from-purple-500 to-indigo-500", premium: true },
+                { label: "Last sync", value: lastSyncLabel, icon: null, bar: "from-emerald-500 to-teal-500" },
+              ].map((tile, i) => (
+                <motion.div
+                  key={tile.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.08, duration: 0.4, ease: "easeOut" }}
+                  whileHover={{ y: -2 }}
+                  className="glass rounded-xl overflow-hidden"
+                >
+                  <div className={`h-[3px] w-full bg-gradient-to-r ${tile.bar}`} />
+                  <StatCard
+                    label={tile.label}
+                    value={tile.value}
+                    icon={tile.icon ?? undefined}
+                    premium={tile.premium}
+                  />
+                </motion.div>
+              ))}
+            </div>{/* Category filter pills */}<motion.div
+              className="flex items-center gap-2 flex-wrap glass rounded-lg px-3 py-2"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.35, ease: "easeOut" }}
+              role="tablist"
+              aria-label="Integration category filter"
             >
-              {cat}
-            </button>
-          );
-        })}
-      </motion.div>
-
-      {/* Integration grid */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="section-header mb-0">
-            {activeFilter === "All"
-              ? "All integrations"
-              : `${activeFilter} integrations`}
-          </h2>
-          <span className="text-[10px] text-muted">
-            {filteredIntegrations.length} shown
-          </span>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {filteredIntegrations.map((integration, i) => {
-            const conn = connectionByIntegration.get(integration.id);
-            return (
-              <motion.div
-                key={integration.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.06, duration: 0.4, ease: "easeOut" }}
-                whileHover={{ y: -4, scale: 1.01 }}
-                className="glass rounded-xl"
-              >
-                <IntegrationCard
-                  integration={integration}
-                  status={statusFor(integration)}
-                  connectedAs={conn?.display_name ?? null}
-                  busy={busyIds.has(integration.id)}
-                  onConnect={handleConnectClick}
-                  onDisconnect={handleDisconnect}
-                />
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Nango connect confirmation modal */}
-      {modalIntegration && (
-        <ConnectModal
-          integrationName={modalIntegration.name}
-          integrationId={modalIntegration.id}
-          scopesDescription={modalIntegration.scopes ?? []}
-          logoUrl={modalIntegration.logo}
-          onConfirm={() => {
-            void handleAuthorize();
-          }}
-          onCancel={() => setModalIntegration(null)}
-        />
-      )}
-
-      {/* API-key / Zernio setup info panel */}
-      {apiKeyPanelIntegration && (
-        <ApiKeyPanel
-          integration={apiKeyPanelIntegration}
-          onClose={() => setApiKeyPanelIntegration(null)}
-        />
-      )}
-    </div>
+              {FILTER_CATEGORIES.map((cat) => {
+                const active = cat === activeFilter;
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    onClick={() => setActiveFilter(cat)}
+                    className={[
+                      "px-3 py-1.5 text-[11px] font-semibold rounded-full border transition-all",
+                      active
+                        ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                        : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] hover:border-[rgba(37,99,235,0.14)]",
+                    ].join(" ")}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </motion.div>{/* Integration grid */}<div>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="section-header mb-0">
+                  {activeFilter === "All"
+                    ? "All integrations"
+                    : `${activeFilter} integrations`}
+                </h2>
+                <span className="text-[10px] text-muted">
+                  {filteredIntegrations.length} shown
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {filteredIntegrations.map((integration, i) => {
+                  const conn = connectionByIntegration.get(integration.id);
+                  return (
+                    <motion.div
+                      key={integration.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.06, duration: 0.4, ease: "easeOut" }}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                      className="glass rounded-xl"
+                    >
+                      <IntegrationCard
+                        integration={integration}
+                        status={statusFor(integration)}
+                        connectedAs={conn?.display_name ?? null}
+                        busy={busyIds.has(integration.id)}
+                        onConnect={handleConnectClick}
+                        onDisconnect={handleDisconnect}
+                      />
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>{/* Nango connect confirmation modal */}{modalIntegration && (
+              <ConnectModal
+                integrationName={modalIntegration.name}
+                integrationId={modalIntegration.id}
+                scopesDescription={modalIntegration.scopes ?? []}
+                logoUrl={modalIntegration.logo}
+                onConfirm={() => {
+                  void handleAuthorize();
+                }}
+                onCancel={() => setModalIntegration(null)}
+              />
+            )}{/* API-key / Zernio setup info panel */}{apiKeyPanelIntegration && (
+              <ApiKeyPanel
+                integration={apiKeyPanelIntegration}
+                onClose={() => setApiKeyPanelIntegration(null)}
+              />
+            )}</MotionPage>
   );
 }
 

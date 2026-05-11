@@ -10,6 +10,7 @@ import {
   Loader2, ExternalLink, Unlink, AlertCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
@@ -104,9 +105,7 @@ export default function NotionSyncPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" />
-      </div>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" /></MotionPage>
     );
   }
 

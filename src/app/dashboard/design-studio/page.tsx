@@ -15,6 +15,7 @@ import { PenTool, Plus, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { SIZE_PRESETS } from "@/lib/design/types";
 import { PrismPanel } from "@/components/prism";
+import { MotionPage } from "@/components/motion/motion-page";
 
 export default function DesignStudioPage() {
   const searchParams = useSearchParams();
@@ -119,59 +120,56 @@ export default function DesignStudioPage() {
   // No design loaded � show picker
   if (!designId && !design) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#FAFAFB]">
-        <PageHero
-          eyebrow="DESIGN STUDIO"
-          title="Design Studio"
-          subtitle="Create on-brand visuals with AI� text, shapes, images, templates."
-          icon={<PenTool size={24} />}
-          gradient="purple"
-        />
-        <div className="flex-1 p-8">
-          <div className="max-w-3xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-[#0A0A0B]">New Design</h2>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {SIZE_PRESETS.map((preset, i) => (
-                <motion.button
-                  key={`${preset.width}x${preset.height}-${preset.label}`}
-                  onClick={() => createNewDesign(preset)}
-                  disabled={creating}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.4 }}
-                  whileHover={{ y: -4, scale: 1.02 }}
-                  className="rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-[#2563EB]/40 transition-colors group"
-                  style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
-                >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", width: "calc(100% + 32px)", marginLeft: -16, marginRight: -16, marginBottom: 8, flexShrink: 0 }} />
-                  <div
-                    className="border border-black/15 bg-black/5 rounded group-hover:border-[#2563EB]/50 transition-colors"
-                    style={{
-                      width: 48,
-                      height: Math.round(48 * (preset.height / preset.width)),
-                    }}
-                  />
-                  <div className="text-center">
-                    <p className="text-xs font-medium text-gray-700 group-hover:text-[#0A0A0B]">
-                      {preset.label}
-                    </p>
-                    <p className="text-[10px] text-gray-600">
-                      {preset.width}�{preset.height}
-                    </p>
-                  </div>
-                </motion.button>
-              ))}
-            </div>
+      <MotionPage className="min-h-screen flex flex-col bg-[#FAFAFB]"><PageHero
+                  eyebrow="DESIGN STUDIO"
+                  title="Design Studio"
+                  subtitle="Create on-brand visuals with AI� text, shapes, images, templates."
+                  icon={<PenTool size={24} />}
+                  gradient="purple"
+                /><div className="flex-1 p-8">
+                  <div className="max-w-3xl mx-auto">
+                    <div className="flex items-center justify-between mb-6">
+                      <h2 className="text-lg font-semibold text-[#0A0A0B]">New Design</h2>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {SIZE_PRESETS.map((preset, i) => (
+                        <motion.button
+                          key={`${preset.width}x${preset.height}-${preset.label}`}
+                          onClick={() => createNewDesign(preset)}
+                          disabled={creating}
+                          initial={{ opacity: 0, y: 16 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.06, duration: 0.4 }}
+                          whileHover={{ y: -4, scale: 1.02 }}
+                          className="rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-[#2563EB]/40 transition-colors group"
+                          style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                        >
+                          <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", width: "calc(100% + 32px)", marginLeft: -16, marginRight: -16, marginBottom: 8, flexShrink: 0 }} />
+                          <div
+                            className="border border-black/15 bg-black/5 rounded group-hover:border-[#2563EB]/50 transition-colors"
+                            style={{
+                              width: 48,
+                              height: Math.round(48 * (preset.height / preset.width)),
+                            }}
+                          />
+                          <div className="text-center">
+                            <p className="text-xs font-medium text-gray-700 group-hover:text-[#0A0A0B]">
+                              {preset.label}
+                            </p>
+                            <p className="text-[10px] text-gray-600">
+                              {preset.width}�{preset.height}
+                            </p>
+                          </div>
+                        </motion.button>
+                      ))}
+                    </div>
 
-            <div className="mt-10">
-              <h2 className="text-lg font-semibold text-[#0A0A0B] mb-4">Recent Designs</h2>
-              <RecentDesigns />
-            </div>
-          </div>
-        </div>
-      </div>
+                    <div className="mt-10">
+                      <h2 className="text-lg font-semibold text-[#0A0A0B] mb-4">Recent Designs</h2>
+                      <RecentDesigns />
+                    </div>
+                  </div>
+                </div></MotionPage>
     );
   }
 

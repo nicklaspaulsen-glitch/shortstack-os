@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { staggerContainer, fadeUpHero } from "@/lib/motion-variants";
 
 // Re-export canonical variants so existing consumers don't break.
@@ -13,13 +13,14 @@ export { fadeUp, scaleIn, slideInLeft, slideInRight, tabSwitch, routeTransition 
  * Use as the outermost element of a page to add a page-transition feel
  * without touching any of the page's data fetching or business logic.
  */
-export function MotionPage({ children, className }: { children: ReactNode; className?: string }) {
+export function MotionPage({ children, className, style }: { children: ReactNode; className?: string; style?: CSSProperties }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className={className}
+      style={style}
     >
       {children}
     </motion.div>

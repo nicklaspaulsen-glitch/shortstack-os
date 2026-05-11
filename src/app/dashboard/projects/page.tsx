@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // ── Types ──────────────────────────────────────────────────────
 type Status = "backlog" | "todo" | "in_progress" | "review" | "done";
@@ -475,540 +476,517 @@ export default function ProjectsPage() {
   const activeBoard = boards.find((b) => b.id === activeBoardId) ?? null;
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        eyebrow="PROJECTS"
-        icon={<Kanban size={28} />}
-        title="Projects"
-        subtitle="Kanban-style boards for every project. Drag tasks across columns, leave comments, ship work."
-        gradient="blue"
-        actions={
-          <button
-            onClick={() => setShowNewBoard(true)}
-            className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5"
-          >
-            <Plus size={12} /> New Board
-          </button>
-        }
-      />
-
-      {/* ── Loading skeleton ─────────────────────────────── */}
-      {loadingBoards && (
-        <div className="space-y-4">
-          <div className="flex gap-2">
-            <Skeleton className="h-9 w-28" />
-            <Skeleton className="h-9 w-28" />
-            <Skeleton className="h-9 w-28" />
-          </div>
-          <div className="flex gap-3">
-            {[0, 1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex-shrink-0 w-[260px] space-y-2">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-24 w-full rounded-lg" />
-                <Skeleton className="h-24 w-full rounded-lg" />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ── Empty state ──────────────────────────────────── */}
-      {!loadingBoards && boards.length === 0 && (
-        <div className="glass rounded-xl py-10">
-          <EmptyState
-            icon={<Kanban size={48} />}
-            title="Create your first board"
-            description="Boards hold your project's tasks across Backlog, To Do, In Progress, Review, and Done columns. Drag to move, click to edit."
-            action={
-              <button
-                onClick={() => setShowNewBoard(true)}
-                className="btn-primary text-xs flex items-center gap-1.5"
-              >
-                <Plus size={12} /> Create board
-              </button>
-            }
-          />
-        </div>
-      )}
-
-      {/* ── Board tabs ───────────────────────────────────── */}
-      {!loadingBoards && boards.length > 0 && (
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
-          {boards.map((b) => (
-            <div key={b.id} className="relative group flex-shrink-0">
-              <button
-                onClick={() => setActiveBoardId(b.id)}
-                className={`px-4 py-2 text-xs rounded-lg border flex items-center gap-2 transition-all whitespace-nowrap ${
-                  activeBoardId === b.id
-                    ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]"
-                    : "bg-surface text-muted border-border hover:text-foreground hover:border-[rgba(37,99,235,0.15)]"
-                }`}
-              >
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{ background: b.color || "#2563EB" }}
-                />
-                {b.name}
-              </button>
-              {activeBoardId === b.id && (
+    <MotionPage className="fade-in space-y-5"><PageHero
+              eyebrow="PROJECTS"
+              icon={<Kanban size={28} />}
+              title="Projects"
+              subtitle="Kanban-style boards for every project. Drag tasks across columns, leave comments, ship work."
+              gradient="blue"
+              actions={
                 <button
-                  onClick={() => handleDeleteBoard(b.id)}
-                  title="Delete board"
-                  className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-400/15 border border-red-400/30 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                  onClick={() => setShowNewBoard(true)}
+                  className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5"
                 >
-                  <X size={10} />
+                  <Plus size={12} /> New Board
                 </button>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* ── Kanban columns ───────────────────────────────── */}
-      {!loadingBoards && activeBoard && (
-        <>
-          {loadingTasks && (
-            <div className="flex items-center justify-center py-12 gap-2 text-muted">
-              <Loader2 size={16} className="animate-spin" /> Loading tasks...
-            </div>
-          )}
-
-          {!loadingTasks && (
-            <div className="flex gap-3 overflow-x-auto pb-4">
-              {COLUMNS.map((col) => {
-                const columnTasks = tasks
-                  .filter((t) => t.status === col.key)
-                  .sort((a, b) => a.position - b.position);
-                const isDragTarget = dragOverColumn === col.key;
-                return (
-                  <div
-                    key={col.key}
-                    className="flex-shrink-0 w-[280px]"
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                      setDragOverColumn(col.key);
-                    }}
-                    onDragLeave={() => setDragOverColumn(null)}
-                    onDrop={() => {
-                      if (draggedTaskId) moveTask(draggedTaskId, col.key);
-                      setDraggedTaskId(null);
-                      setDragOverColumn(null);
-                    }}
-                  >
-                    {/* Column header */}
-                    <div className="flex items-center justify-between mb-2 px-1">
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-2.5 h-2.5 rounded-full"
-                          style={{ background: col.color }}
-                        />
-                        <span className="text-[10px] font-bold uppercase tracking-wider">
-                          {col.label}
-                        </span>
-                        <span
-                          className="text-[10px] font-mono px-1.5 py-0.5 rounded"
-                          style={{
-                            background: `${col.color}18`,
-                            color: col.color,
-                          }}
-                        >
-                          {columnTasks.length}
-                        </span>
-                      </div>
+              }
+            />{/* ── Loading skeleton ─────────────────────────────── */}{loadingBoards && (
+              <div className="space-y-4">
+                <div className="flex gap-2">
+                  <Skeleton className="h-9 w-28" />
+                  <Skeleton className="h-9 w-28" />
+                  <Skeleton className="h-9 w-28" />
+                </div>
+                <div className="flex gap-3">
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <div key={i} className="flex-shrink-0 w-[260px] space-y-2">
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-24 w-full rounded-lg" />
+                      <Skeleton className="h-24 w-full rounded-lg" />
                     </div>
-
-                    {/* Tasks */}
-                    <div
-                      className={`space-y-2 min-h-[120px] rounded-lg p-1 transition-colors ${
-                        isDragTarget ? "bg-[rgba(37,99,235,0.05)] ring-1 ring-[rgba(37,99,235,0.18)]" : ""
+                  ))}
+                </div>
+              </div>
+            )}{/* ── Empty state ──────────────────────────────────── */}{!loadingBoards && boards.length === 0 && (
+              <div className="glass rounded-xl py-10">
+                <EmptyState
+                  icon={<Kanban size={48} />}
+                  title="Create your first board"
+                  description="Boards hold your project's tasks across Backlog, To Do, In Progress, Review, and Done columns. Drag to move, click to edit."
+                  action={
+                    <button
+                      onClick={() => setShowNewBoard(true)}
+                      className="btn-primary text-xs flex items-center gap-1.5"
+                    >
+                      <Plus size={12} /> Create board
+                    </button>
+                  }
+                />
+              </div>
+            )}{/* ── Board tabs ───────────────────────────────────── */}{!loadingBoards && boards.length > 0 && (
+              <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                {boards.map((b) => (
+                  <div key={b.id} className="relative group flex-shrink-0">
+                    <button
+                      onClick={() => setActiveBoardId(b.id)}
+                      className={`px-4 py-2 text-xs rounded-lg border flex items-center gap-2 transition-all whitespace-nowrap ${
+                        activeBoardId === b.id
+                          ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]"
+                          : "bg-surface text-muted border-border hover:text-foreground hover:border-[rgba(37,99,235,0.15)]"
                       }`}
                     >
-                      {columnTasks.map((task, taskIdx) => {
-                        const overdue = isOverdue(task.due_date);
-                        const pri = PRIORITY_META[task.priority];
-                        const assignee = getAssigneeInitial(task.assignee_profile_id);
-                        return (
-                          <motion.div
-                            key={task.id}
-                            initial={{ opacity: 0, x: -8 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: taskIdx * 0.04 }}
-                            draggable
-                            onDragStart={() => {
-                              setDraggedTaskId(task.id);
-                              justDraggedRef.current = true;
-                            }}
-                            onDragEnd={() => {
-                              setDraggedTaskId(null);
-                              // Clear the drag-just-ended flag shortly after
-                              // so a trailing click event (fired after drop
-                              // on some browsers) does not open the panel.
-                              setTimeout(() => {
-                                justDraggedRef.current = false;
-                              }, 50);
-                            }}
-                            onClick={() => {
-                              if (justDraggedRef.current) return;
-                              openTaskPanel(task);
-                            }}
-                            className="p-3 rounded-lg glass-md hover:border-[rgba(37,99,235,0.25)] transition-all cursor-grab active:cursor-grabbing"
-                          >
-                            <p className="text-[12px] font-semibold leading-snug mb-2 break-words">
-                              {task.title}
-                            </p>
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <span
-                                className="text-[9px] font-semibold px-1.5 py-0.5 rounded"
-                                style={{ background: pri.bg, color: pri.color }}
-                              >
-                                {pri.label}
-                              </span>
-                              {task.due_date && (
-                                <span
-                                  className={`text-[9px] px-1.5 py-0.5 rounded flex items-center gap-1 ${
-                                    overdue
-                                      ? "bg-red-400/15 text-red-400"
-                                      : "bg-surface text-muted"
-                                  }`}
-                                >
-                                  <Calendar size={8} /> {formatDue(task.due_date)}
-                                </span>
-                              )}
-                              {task.assignee_profile_id && (
-                                <span
-                                  className="ml-auto w-5 h-5 rounded-full bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] text-[9px] font-bold flex items-center justify-center"
-                                  title={assignee.name ? `Assigned to ${assignee.name}` : "Assignee"}
-                                >
-                                  {assignee.initial || <User size={10} />}
-                                </span>
-                              )}
-                            </div>
-                          </motion.div>
-                        );
-                      })}
-
-                      {columnTasks.length === 0 && !isDragTarget && (
-                        <div className="text-center py-6 border border-dashed border-border rounded-lg">
-                          <p className="text-[9px] text-muted">Drop tasks here</p>
-                        </div>
-                      )}
-
-                      {/* Inline add-task */}
-                      {addingTaskColumn === col.key ? (
-                        <div className="p-2 rounded-lg glass border-indigo-400/30">
-                          <input
-                            autoFocus
-                            value={newTaskTitle}
-                            onChange={(e) => setNewTaskTitle(e.target.value)}
-                            onBlur={() => submitInlineNewTask(col.key)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") submitInlineNewTask(col.key);
-                              if (e.key === "Escape") {
-                                setNewTaskTitle("");
-                                setAddingTaskColumn(null);
-                              }
-                            }}
-                            placeholder="Task title..."
-                            className="w-full text-[11px] bg-transparent outline-none text-foreground placeholder-muted"
-                          />
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            setAddingTaskColumn(col.key);
-                            setNewTaskTitle("");
-                          }}
-                          className="w-full mt-1 py-1.5 rounded-lg text-[10px] text-muted hover:text-[#2563EB] hover:bg-[rgba(37,99,235,0.05)] transition-colors flex items-center justify-center gap-1"
-                        >
-                          <Plus size={10} /> New task
-                        </button>
-                      )}
-                    </div>
+                      <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ background: b.color || "#2563EB" }}
+                      />
+                      {b.name}
+                    </button>
+                    {activeBoardId === b.id && (
+                      <button
+                        onClick={() => handleDeleteBoard(b.id)}
+                        title="Delete board"
+                        className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-400/15 border border-red-400/30 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                      >
+                        <X size={10} />
+                      </button>
+                    )}
                   </div>
-                );
-              })}
-            </div>
-          )}
-
-          <p className="text-[9px] text-muted">
-            Tip: Press <kbd className="px-1.5 py-0.5 rounded bg-surface-light border border-border">Cmd/Ctrl+Shift+K</kbd> to quickly add a task.
-          </p>
-        </>
-      )}
-
-      {/* ── New board modal ───────────────────────────────── */}
-      {showNewBoard && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-          onClick={() => setShowNewBoard(false)}
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 12, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.3 }}
-            className="glass rounded-xl w-full max-w-md space-y-3 p-5"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold">Create new board</h3>
-              <button onClick={() => setShowNewBoard(false)} className="text-muted hover:text-foreground">
-                <X size={14} />
-              </button>
-            </div>
-            <input
-              autoFocus
-              value={newBoardName}
-              onChange={(e) => setNewBoardName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleCreateBoard()}
-              placeholder="Board name (e.g. Q2 Marketing Launch)"
-              className="input w-full text-xs"
-            />
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setShowNewBoard(false)}
-                className="px-3 py-1.5 text-xs rounded-lg border border-border text-muted hover:text-foreground"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleCreateBoard}
-                disabled={creatingBoard || !newBoardName.trim()}
-                className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50"
-              >
-                {creatingBoard && <Loader2 size={12} className="animate-spin" />}
-                Create
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      {/* ── Quick task dialog (Cmd/Ctrl+K) ───────────────── */}
-      {quickTaskOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-4 pt-24"
-          onClick={() => setQuickTaskOpen(false)}
-        >
-          <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.25 }}
-            className="glass rounded-xl w-full max-w-lg space-y-3 p-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold flex items-center gap-2">
-                <Plus size={14} className="text-[#2563EB]" /> Quick task
-              </h3>
-              <kbd className="text-[9px] px-1.5 py-0.5 rounded bg-surface-light border border-border text-muted">
-                Esc
-              </kbd>
-            </div>
-            <input
-              ref={quickTaskRef}
-              value={quickTaskTitle}
-              onChange={(e) => setQuickTaskTitle(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && submitQuickTask()}
-              placeholder="What needs to get done?"
-              className="input w-full text-sm"
-            />
-            <div className="flex items-center gap-2">
-              <label className="text-[10px] text-muted">Column:</label>
-              <select
-                value={quickTaskStatus}
-                onChange={(e) => setQuickTaskStatus(e.target.value as Status)}
-                className="input text-xs"
-              >
-                {COLUMNS.map((c) => (
-                  <option key={c.key} value={c.key}>{c.label}</option>
                 ))}
-              </select>
-              <button
-                onClick={submitQuickTask}
-                disabled={submittingQuickTask || !quickTaskTitle.trim()}
-                className="btn-primary ml-auto text-xs disabled:opacity-50 flex items-center gap-1.5"
-              >
-                {submittingQuickTask && <Loader2 size={12} className="animate-spin" />}
-                Add task
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      {/* ── Task detail side panel ────────────────────────── */}
-      {selectedTask && (
-        <div
-          className="fixed inset-0 z-40 bg-black/60 flex justify-end"
-          onClick={() => setSelectedTask(null)}
-        >
-          <motion.div
-            initial={{ x: 40, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="w-full max-w-md h-full bg-surface border-l border-border overflow-y-auto shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="sticky top-0 bg-surface border-b border-border px-4 py-3 flex items-center justify-between z-10">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted">
-                Task details
-              </h3>
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => handleDeleteTask(selectedTask.id)}
-                  className="p-1.5 rounded-lg hover:bg-red-400/10 text-red-400 transition-colors"
-                  title="Delete task"
-                >
-                  <Trash2 size={12} />
-                </button>
-                <button
-                  onClick={() => setSelectedTask(null)}
-                  className="p-1.5 rounded-lg hover:bg-surface-light text-muted transition-colors"
-                >
-                  <X size={14} />
-                </button>
               </div>
-            </div>
-
-            <div className="p-4 space-y-4">
-              {/* Title */}
-              <div>
-                <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Title</label>
-                <input
-                  value={editingTask.title ?? ""}
-                  onChange={(e) =>
-                    setEditingTask((prev) => ({ ...prev, title: e.target.value }))
-                  }
-                  className="input w-full text-sm mt-1"
-                />
-              </div>
-
-              {/* Status + Priority */}
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Status</label>
-                  <select
-                    value={editingTask.status ?? "backlog"}
-                    onChange={(e) =>
-                      setEditingTask((prev) => ({ ...prev, status: e.target.value as Status }))
-                    }
-                    className="input w-full text-xs mt-1"
-                  >
-                    {COLUMNS.map((c) => (
-                      <option key={c.key} value={c.key}>{c.label}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Priority</label>
-                  <select
-                    value={editingTask.priority ?? "medium"}
-                    onChange={(e) =>
-                      setEditingTask((prev) => ({ ...prev, priority: e.target.value as Priority }))
-                    }
-                    className="input w-full text-xs mt-1"
-                  >
-                    {(Object.keys(PRIORITY_META) as Priority[]).map((p) => (
-                      <option key={p} value={p}>{PRIORITY_META[p].label}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Due date */}
-              <div>
-                <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Due date</label>
-                <input
-                  type="date"
-                  value={editingTask.due_date ?? ""}
-                  onChange={(e) =>
-                    setEditingTask((prev) => ({
-                      ...prev,
-                      due_date: e.target.value || null,
-                    }))
-                  }
-                  className="input w-full text-xs mt-1"
-                />
-              </div>
-
-              {/* Description */}
-              <div>
-                <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Description</label>
-                <textarea
-                  value={editingTask.description ?? ""}
-                  onChange={(e) =>
-                    setEditingTask((prev) => ({ ...prev, description: e.target.value }))
-                  }
-                  rows={4}
-                  placeholder="Add details..."
-                  className="input w-full text-xs mt-1 resize-none"
-                />
-              </div>
-
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setSelectedTask(null)}
-                  className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-border text-muted hover:text-foreground"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={saveTaskEdit}
-                  className="flex-1 btn-primary text-xs"
-                >
-                  Save
-                </button>
-              </div>
-
-              {/* Comments */}
-              <div className="pt-3 border-t border-border space-y-2">
-                <h4 className="text-[10px] font-semibold text-muted uppercase tracking-wider flex items-center gap-1.5">
-                  <MessageSquare size={10} /> Comments
-                </h4>
-                {loadingComments ? (
-                  <div className="flex items-center gap-2 text-muted text-[10px]">
-                    <Loader2 size={10} className="animate-spin" /> Loading...
-                  </div>
-                ) : taskComments.length === 0 ? (
-                  <p className="text-[10px] text-muted">No comments yet.</p>
-                ) : (
-                  <div className="space-y-2">
-                    {taskComments.map((c) => (
-                      <div key={c.id} className="glass-md rounded-lg p-2.5">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          <User size={10} className="text-muted" />
-                          <span className="text-[9px] text-muted">
-                            {new Date(c.created_at).toLocaleString(undefined, {
-                              month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
-                            })}
-                          </span>
-                        </div>
-                        <p className="text-[11px] whitespace-pre-wrap">{c.body}</p>
-                      </div>
-                    ))}
+            )}{/* ── Kanban columns ───────────────────────────────── */}{!loadingBoards && activeBoard && (
+              <>
+                {loadingTasks && (
+                  <div className="flex items-center justify-center py-12 gap-2 text-muted">
+                    <Loader2 size={16} className="animate-spin" /> Loading tasks...
                   </div>
                 )}
-                <div className="flex gap-2">
+
+                {!loadingTasks && (
+                  <div className="flex gap-3 overflow-x-auto pb-4">
+                    {COLUMNS.map((col) => {
+                      const columnTasks = tasks
+                        .filter((t) => t.status === col.key)
+                        .sort((a, b) => a.position - b.position);
+                      const isDragTarget = dragOverColumn === col.key;
+                      return (
+                        <div
+                          key={col.key}
+                          className="flex-shrink-0 w-[280px]"
+                          onDragOver={(e) => {
+                            e.preventDefault();
+                            setDragOverColumn(col.key);
+                          }}
+                          onDragLeave={() => setDragOverColumn(null)}
+                          onDrop={() => {
+                            if (draggedTaskId) moveTask(draggedTaskId, col.key);
+                            setDraggedTaskId(null);
+                            setDragOverColumn(null);
+                          }}
+                        >
+                          {/* Column header */}
+                          <div className="flex items-center justify-between mb-2 px-1">
+                            <div className="flex items-center gap-2">
+                              <div
+                                className="w-2.5 h-2.5 rounded-full"
+                                style={{ background: col.color }}
+                              />
+                              <span className="text-[10px] font-bold uppercase tracking-wider">
+                                {col.label}
+                              </span>
+                              <span
+                                className="text-[10px] font-mono px-1.5 py-0.5 rounded"
+                                style={{
+                                  background: `${col.color}18`,
+                                  color: col.color,
+                                }}
+                              >
+                                {columnTasks.length}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Tasks */}
+                          <div
+                            className={`space-y-2 min-h-[120px] rounded-lg p-1 transition-colors ${
+                              isDragTarget ? "bg-[rgba(37,99,235,0.05)] ring-1 ring-[rgba(37,99,235,0.18)]" : ""
+                            }`}
+                          >
+                            {columnTasks.map((task, taskIdx) => {
+                              const overdue = isOverdue(task.due_date);
+                              const pri = PRIORITY_META[task.priority];
+                              const assignee = getAssigneeInitial(task.assignee_profile_id);
+                              return (
+                                <motion.div
+                                  key={task.id}
+                                  initial={{ opacity: 0, x: -8 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: taskIdx * 0.04 }}
+                                  draggable
+                                  onDragStart={() => {
+                                    setDraggedTaskId(task.id);
+                                    justDraggedRef.current = true;
+                                  }}
+                                  onDragEnd={() => {
+                                    setDraggedTaskId(null);
+                                    // Clear the drag-just-ended flag shortly after
+                                    // so a trailing click event (fired after drop
+                                    // on some browsers) does not open the panel.
+                                    setTimeout(() => {
+                                      justDraggedRef.current = false;
+                                    }, 50);
+                                  }}
+                                  onClick={() => {
+                                    if (justDraggedRef.current) return;
+                                    openTaskPanel(task);
+                                  }}
+                                  className="p-3 rounded-lg glass-md hover:border-[rgba(37,99,235,0.25)] transition-all cursor-grab active:cursor-grabbing"
+                                >
+                                  <p className="text-[12px] font-semibold leading-snug mb-2 break-words">
+                                    {task.title}
+                                  </p>
+                                  <div className="flex items-center gap-1.5 flex-wrap">
+                                    <span
+                                      className="text-[9px] font-semibold px-1.5 py-0.5 rounded"
+                                      style={{ background: pri.bg, color: pri.color }}
+                                    >
+                                      {pri.label}
+                                    </span>
+                                    {task.due_date && (
+                                      <span
+                                        className={`text-[9px] px-1.5 py-0.5 rounded flex items-center gap-1 ${
+                                          overdue
+                                            ? "bg-red-400/15 text-red-400"
+                                            : "bg-surface text-muted"
+                                        }`}
+                                      >
+                                        <Calendar size={8} /> {formatDue(task.due_date)}
+                                      </span>
+                                    )}
+                                    {task.assignee_profile_id && (
+                                      <span
+                                        className="ml-auto w-5 h-5 rounded-full bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] text-[9px] font-bold flex items-center justify-center"
+                                        title={assignee.name ? `Assigned to ${assignee.name}` : "Assignee"}
+                                      >
+                                        {assignee.initial || <User size={10} />}
+                                      </span>
+                                    )}
+                                  </div>
+                                </motion.div>
+                              );
+                            })}
+
+                            {columnTasks.length === 0 && !isDragTarget && (
+                              <div className="text-center py-6 border border-dashed border-border rounded-lg">
+                                <p className="text-[9px] text-muted">Drop tasks here</p>
+                              </div>
+                            )}
+
+                            {/* Inline add-task */}
+                            {addingTaskColumn === col.key ? (
+                              <div className="p-2 rounded-lg glass border-indigo-400/30">
+                                <input
+                                  autoFocus
+                                  value={newTaskTitle}
+                                  onChange={(e) => setNewTaskTitle(e.target.value)}
+                                  onBlur={() => submitInlineNewTask(col.key)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") submitInlineNewTask(col.key);
+                                    if (e.key === "Escape") {
+                                      setNewTaskTitle("");
+                                      setAddingTaskColumn(null);
+                                    }
+                                  }}
+                                  placeholder="Task title..."
+                                  className="w-full text-[11px] bg-transparent outline-none text-foreground placeholder-muted"
+                                />
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  setAddingTaskColumn(col.key);
+                                  setNewTaskTitle("");
+                                }}
+                                className="w-full mt-1 py-1.5 rounded-lg text-[10px] text-muted hover:text-[#2563EB] hover:bg-[rgba(37,99,235,0.05)] transition-colors flex items-center justify-center gap-1"
+                              >
+                                <Plus size={10} /> New task
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                <p className="text-[9px] text-muted">
+                  Tip: Press <kbd className="px-1.5 py-0.5 rounded bg-surface-light border border-border">Cmd/Ctrl+Shift+K</kbd> to quickly add a task.
+                </p>
+              </>
+            )}{/* ── New board modal ───────────────────────────────── */}{showNewBoard && (
+              <div
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+                onClick={() => setShowNewBoard(false)}
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: 12, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="glass rounded-xl w-full max-w-md space-y-3 p-5"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold">Create new board</h3>
+                    <button onClick={() => setShowNewBoard(false)} className="text-muted hover:text-foreground">
+                      <X size={14} />
+                    </button>
+                  </div>
                   <input
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && submitComment()}
-                    placeholder="Write a comment..."
-                    className="input flex-1 text-xs"
+                    autoFocus
+                    value={newBoardName}
+                    onChange={(e) => setNewBoardName(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleCreateBoard()}
+                    placeholder="Board name (e.g. Q2 Marketing Launch)"
+                    className="input w-full text-xs"
                   />
-                  <button
-                    onClick={submitComment}
-                    disabled={submittingComment || !newComment.trim()}
-                    className="btn-primary text-xs disabled:opacity-50"
-                  >
-                    Post
-                  </button>
-                </div>
+                  <div className="flex justify-end gap-2">
+                    <button
+                      onClick={() => setShowNewBoard(false)}
+                      className="px-3 py-1.5 text-xs rounded-lg border border-border text-muted hover:text-foreground"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleCreateBoard}
+                      disabled={creatingBoard || !newBoardName.trim()}
+                      className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50"
+                    >
+                      {creatingBoard && <Loader2 size={12} className="animate-spin" />}
+                      Create
+                    </button>
+                  </div>
+                </motion.div>
               </div>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </div>
+            )}{/* ── Quick task dialog (Cmd/Ctrl+K) ───────────────── */}{quickTaskOpen && (
+              <div
+                className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-4 pt-24"
+                onClick={() => setQuickTaskOpen(false)}
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.25 }}
+                  className="glass rounded-xl w-full max-w-lg space-y-3 p-4"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold flex items-center gap-2">
+                      <Plus size={14} className="text-[#2563EB]" /> Quick task
+                    </h3>
+                    <kbd className="text-[9px] px-1.5 py-0.5 rounded bg-surface-light border border-border text-muted">
+                      Esc
+                    </kbd>
+                  </div>
+                  <input
+                    ref={quickTaskRef}
+                    value={quickTaskTitle}
+                    onChange={(e) => setQuickTaskTitle(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && submitQuickTask()}
+                    placeholder="What needs to get done?"
+                    className="input w-full text-sm"
+                  />
+                  <div className="flex items-center gap-2">
+                    <label className="text-[10px] text-muted">Column:</label>
+                    <select
+                      value={quickTaskStatus}
+                      onChange={(e) => setQuickTaskStatus(e.target.value as Status)}
+                      className="input text-xs"
+                    >
+                      {COLUMNS.map((c) => (
+                        <option key={c.key} value={c.key}>{c.label}</option>
+                      ))}
+                    </select>
+                    <button
+                      onClick={submitQuickTask}
+                      disabled={submittingQuickTask || !quickTaskTitle.trim()}
+                      className="btn-primary ml-auto text-xs disabled:opacity-50 flex items-center gap-1.5"
+                    >
+                      {submittingQuickTask && <Loader2 size={12} className="animate-spin" />}
+                      Add task
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}{/* ── Task detail side panel ────────────────────────── */}{selectedTask && (
+              <div
+                className="fixed inset-0 z-40 bg-black/60 flex justify-end"
+                onClick={() => setSelectedTask(null)}
+              >
+                <motion.div
+                  initial={{ x: 40, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-full max-w-md h-full bg-surface border-l border-border overflow-y-auto shadow-2xl"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="sticky top-0 bg-surface border-b border-border px-4 py-3 flex items-center justify-between z-10">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted">
+                      Task details
+                    </h3>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => handleDeleteTask(selectedTask.id)}
+                        className="p-1.5 rounded-lg hover:bg-red-400/10 text-red-400 transition-colors"
+                        title="Delete task"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                      <button
+                        onClick={() => setSelectedTask(null)}
+                        className="p-1.5 rounded-lg hover:bg-surface-light text-muted transition-colors"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="p-4 space-y-4">
+                    {/* Title */}
+                    <div>
+                      <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Title</label>
+                      <input
+                        value={editingTask.title ?? ""}
+                        onChange={(e) =>
+                          setEditingTask((prev) => ({ ...prev, title: e.target.value }))
+                        }
+                        className="input w-full text-sm mt-1"
+                      />
+                    </div>
+
+                    {/* Status + Priority */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Status</label>
+                        <select
+                          value={editingTask.status ?? "backlog"}
+                          onChange={(e) =>
+                            setEditingTask((prev) => ({ ...prev, status: e.target.value as Status }))
+                          }
+                          className="input w-full text-xs mt-1"
+                        >
+                          {COLUMNS.map((c) => (
+                            <option key={c.key} value={c.key}>{c.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Priority</label>
+                        <select
+                          value={editingTask.priority ?? "medium"}
+                          onChange={(e) =>
+                            setEditingTask((prev) => ({ ...prev, priority: e.target.value as Priority }))
+                          }
+                          className="input w-full text-xs mt-1"
+                        >
+                          {(Object.keys(PRIORITY_META) as Priority[]).map((p) => (
+                            <option key={p} value={p}>{PRIORITY_META[p].label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Due date */}
+                    <div>
+                      <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Due date</label>
+                      <input
+                        type="date"
+                        value={editingTask.due_date ?? ""}
+                        onChange={(e) =>
+                          setEditingTask((prev) => ({
+                            ...prev,
+                            due_date: e.target.value || null,
+                          }))
+                        }
+                        className="input w-full text-xs mt-1"
+                      />
+                    </div>
+
+                    {/* Description */}
+                    <div>
+                      <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Description</label>
+                      <textarea
+                        value={editingTask.description ?? ""}
+                        onChange={(e) =>
+                          setEditingTask((prev) => ({ ...prev, description: e.target.value }))
+                        }
+                        rows={4}
+                        placeholder="Add details..."
+                        className="input w-full text-xs mt-1 resize-none"
+                      />
+                    </div>
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setSelectedTask(null)}
+                        className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-border text-muted hover:text-foreground"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={saveTaskEdit}
+                        className="flex-1 btn-primary text-xs"
+                      >
+                        Save
+                      </button>
+                    </div>
+
+                    {/* Comments */}
+                    <div className="pt-3 border-t border-border space-y-2">
+                      <h4 className="text-[10px] font-semibold text-muted uppercase tracking-wider flex items-center gap-1.5">
+                        <MessageSquare size={10} /> Comments
+                      </h4>
+                      {loadingComments ? (
+                        <div className="flex items-center gap-2 text-muted text-[10px]">
+                          <Loader2 size={10} className="animate-spin" /> Loading...
+                        </div>
+                      ) : taskComments.length === 0 ? (
+                        <p className="text-[10px] text-muted">No comments yet.</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {taskComments.map((c) => (
+                            <div key={c.id} className="glass-md rounded-lg p-2.5">
+                              <div className="flex items-center gap-1.5 mb-1">
+                                <User size={10} className="text-muted" />
+                                <span className="text-[9px] text-muted">
+                                  {new Date(c.created_at).toLocaleString(undefined, {
+                                    month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
+                                  })}
+                                </span>
+                              </div>
+                              <p className="text-[11px] whitespace-pre-wrap">{c.body}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <div className="flex gap-2">
+                        <input
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          onKeyDown={(e) => e.key === "Enter" && submitComment()}
+                          placeholder="Write a comment..."
+                          className="input flex-1 text-xs"
+                        />
+                        <button
+                          onClick={submitComment}
+                          disabled={submittingComment || !newComment.trim()}
+                          className="btn-primary text-xs disabled:opacity-50"
+                        >
+                          Post
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            )}</MotionPage>
   );
 }

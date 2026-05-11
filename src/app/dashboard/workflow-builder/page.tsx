@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import PageHero from "@/components/ui/page-hero";
 import { NotionIcon, SlackIcon } from "@/components/ui/platform-icons";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* ================================================================== */
 /*  NODE DEFINITIONS                                                   */
@@ -505,9 +506,11 @@ function useHistory(initialNodes: Node[], initialEdges: Edge[]) {
 
 export default function WorkflowBuilderPage() {
   return (
-    <ReactFlowProvider>
-      <WorkflowBuilderInner />
-    </ReactFlowProvider>
+    <MotionPage>
+            <ReactFlowProvider>
+            <WorkflowBuilderInner />
+          </ReactFlowProvider>
+          </MotionPage>
   );
 }
 

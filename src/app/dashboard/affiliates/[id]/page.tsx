@@ -24,6 +24,7 @@ import {
 
 import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface AffiliateDetail {
   id: string;
@@ -166,9 +167,7 @@ export default function AffiliateDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-20 text-muted">
-        <Loader2 className="animate-spin" size={20} />
-      </div>
+      <MotionPage className="flex items-center justify-center p-20 text-muted"><Loader2 className="animate-spin" size={20} /></MotionPage>
     );
   }
 

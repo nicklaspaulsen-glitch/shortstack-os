@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Settings, Shield, MessageSquare, Bot, Eye, Bell, Save, Loader, AlertTriangle, Trash2, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface PrivacySettings {
   allow_dm_outreach: boolean;
@@ -83,9 +84,7 @@ export default function ClientSettingsPage() {
   };
 
   if (loading) return (
-    <div className="flex items-center justify-center py-20">
-      <Loader size={20} className="animate-spin text-[#2563EB]" />
-    </div>
+    <MotionPage className="flex items-center justify-center py-20"><Loader size={20} className="animate-spin text-[#2563EB]" /></MotionPage>
   );
 
   return (

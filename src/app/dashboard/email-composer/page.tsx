@@ -20,6 +20,7 @@ import { trackGeneration } from "@/lib/track-generation";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 import { PrismPanel } from "@/components/prism";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface SubjectVariant {
   subject: string;
@@ -750,19 +751,21 @@ export default function EmailComposerPage() {
           ]).map(k => {
             const sel = guidedKind === k.id;
             return (
-              <button
-                key={k.id}
-                type="button"
-                onClick={() => setGuidedKind(k.id)}
-                className={`text-left p-4 rounded-xl border transition-all ${
-                  sel
-                    ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
-                    : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
-                }`}
-              >
-                <p className="text-sm font-semibold">{k.label}</p>
-                <p className="text-[10px] text-muted mt-1">{k.desc}</p>
-              </button>
+              <MotionPage>
+                                <button
+                                key={k.id}
+                                type="button"
+                                onClick={() => setGuidedKind(k.id)}
+                                className={`text-left p-4 rounded-xl border transition-all ${
+                                  sel
+                                    ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                                    : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                                }`}
+                              >
+                                <p className="text-sm font-semibold">{k.label}</p>
+                                <p className="text-[10px] text-muted mt-1">{k.desc}</p>
+                              </button>
+                              </MotionPage>
             );
           })}
         </div>

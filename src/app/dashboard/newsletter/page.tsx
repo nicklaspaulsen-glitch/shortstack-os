@@ -19,6 +19,7 @@ const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #256
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // Example newsletter "template covers" shown in the landing-state marquee.
 // Mix of image covers (tall portrait-ish 4:5 to feel like email previews).
@@ -522,19 +523,21 @@ export default function NewsletterPage() {
               ]).map(l => {
                 const sel = guidedLength === l.id;
                 return (
-                  <button
-                    key={l.id}
-                    type="button"
-                    onClick={() => setGuidedLength(l.id)}
-                    className={`p-3 rounded-xl border text-center transition-all ${
-                      sel
-                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB] shadow-lg shadow-[rgba(37,99,235,0.1)]"
-                        : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
-                    }`}
-                  >
-                    <p className="text-sm font-semibold">{l.label}</p>
-                    <p className="text-[10px] text-muted mt-0.5">{l.desc}</p>
-                  </button>
+                  <MotionPage>
+                                        <button
+                                        key={l.id}
+                                        type="button"
+                                        onClick={() => setGuidedLength(l.id)}
+                                        className={`p-3 rounded-xl border text-center transition-all ${
+                                          sel
+                                            ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                                            : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                                        }`}
+                                      >
+                                        <p className="text-sm font-semibold">{l.label}</p>
+                                        <p className="text-[10px] text-muted mt-0.5">{l.desc}</p>
+                                      </button>
+                                      </MotionPage>
                 );
               })}
             </div>

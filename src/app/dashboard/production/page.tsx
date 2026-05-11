@@ -12,6 +12,7 @@ import {
 import EmptyState from "@/components/empty-state";
 import PageHero from "@/components/ui/page-hero";
 import { Kanban } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type ProductionTab = "pipeline" | "calendar" | "standup" | "approvals";
 type KanbanStatus = "backlog" | "in_progress" | "review" | "approved" | "delivered";
@@ -100,451 +101,424 @@ export default function ProductionPage() {
   ];
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        eyebrow="PRODUCTION"
-        icon={<Kanban size={28} />}
-        title="Content Production"
-        subtitle="Pipeline, assignments, reviews & approvals."
-        gradient="blue"
-        actions={
-          <button onClick={() => setShowSubmit(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
-            <Plus size={12} /> New Request
-          </button>
-        }
-      />
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-        {[
-          { value: items.length, label: "Total Items", color: "" },
-          { value: items.filter(i => i.status === "in_progress").length, label: "In Progress", color: "text-[#2563EB]" },
-          { value: inReview, label: "In Review", color: "text-[#2563EB]" },
-          { value: overdue, label: "Overdue", color: "text-red-400" },
-          { value: `${totalActual.toFixed(1)}h`, label: `of ${totalEstimated}h est.`, color: "text-emerald-400" },
-        ].map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.06, duration: 0.4 }}
-            className="glass rounded-xl p-3 text-center relative overflow-hidden"
-          >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
-            <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
-            <p className="text-[10px] text-muted">{stat.label}</p>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Filters */}
-      <div className="flex gap-2 flex-wrap">
-        <select value={filterClient} onChange={e => setFilterClient(e.target.value)} className="input text-xs">
-          {clients.map(c => <option key={c} value={c}>{c === "All" ? "All Clients" : c}</option>)}
-        </select>
-        <select value={filterPriority} onChange={e => setFilterPriority(e.target.value)} className="input text-xs">
-          <option value="All">All Priorities</option>
-          {(["urgent", "high", "medium", "low"] as const).map(p => (
-            <option key={p} value={p}>{PRIORITY_CONFIG[p].label}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
-        {TABS.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-              tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
-            }`}>
-            {t.icon} {t.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Pipeline (Kanban) */}
-      {tab === "pipeline" && items.length === 0 && (
-        <EmptyState
-          icon={<Film size={24} />}
-          title="No production items"
-          description="Create your first content task"
-          actionLabel="New Request"
-          onAction={() => setShowSubmit(true)}
-        />
-      )}
-      {tab === "pipeline" && items.length > 0 && (
-        <div className="grid grid-cols-5 gap-3 overflow-x-auto">
-          {(["backlog", "in_progress", "review", "approved", "delivered"] as KanbanStatus[]).map((status, colIdx) => (
-            <motion.div
-              key={status}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: colIdx * 0.06, duration: 0.4 }}
-              className="min-w-[200px]"
-            >
-              {/* Drop zone uses plain div for HTML5 drag */}
-              <div
-                onDragOver={e => e.preventDefault()}
-                onDrop={() => handleDrop(status)}
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <span className={`text-xs font-bold ${STATUS_CONFIG[status].color}`}>{STATUS_CONFIG[status].label}</span>
-                  <span className="text-[10px] text-muted">({filtered.filter(i => i.status === status).length})</span>
-                </div>
-                <div className="space-y-2">
-                  {filtered.filter(i => i.status === status).map((item, i) => (
-                    <motion.div
-                      key={item.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.04 }}
-                      whileHover={{ y: -4, scale: 1.01 }}
+    <MotionPage className="fade-in space-y-5"><PageHero
+              eyebrow="PRODUCTION"
+              icon={<Kanban size={28} />}
+              title="Content Production"
+              subtitle="Pipeline, assignments, reviews & approvals."
+              gradient="blue"
+              actions={
+                <button onClick={() => setShowSubmit(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+                  <Plus size={12} /> New Request
+                </button>
+              }
+            />{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+              {[
+                { value: items.length, label: "Total Items", color: "" },
+                { value: items.filter(i => i.status === "in_progress").length, label: "In Progress", color: "text-[#2563EB]" },
+                { value: inReview, label: "In Review", color: "text-[#2563EB]" },
+                { value: overdue, label: "Overdue", color: "text-red-400" },
+                { value: `${totalActual.toFixed(1)}h`, label: `of ${totalEstimated}h est.`, color: "text-emerald-400" },
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.06, duration: 0.4 }}
+                  className="glass rounded-xl p-3 text-center relative overflow-hidden"
+                >
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
+                  <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
+                  <p className="text-[10px] text-muted">{stat.label}</p>
+                </motion.div>
+              ))}
+            </div>{/* Filters */}<div className="flex gap-2 flex-wrap">
+              <select value={filterClient} onChange={e => setFilterClient(e.target.value)} className="input text-xs">
+                {clients.map(c => <option key={c} value={c}>{c === "All" ? "All Clients" : c}</option>)}
+              </select>
+              <select value={filterPriority} onChange={e => setFilterPriority(e.target.value)} className="input text-xs">
+                <option value="All">All Priorities</option>
+                {(["urgent", "high", "medium", "low"] as const).map(p => (
+                  <option key={p} value={p}>{PRIORITY_CONFIG[p].label}</option>
+                ))}
+              </select>
+            </div>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
+              {TABS.map(t => (
+                <button key={t.id} onClick={() => setTab(t.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
+                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
+                  }`}>
+                  {t.icon} {t.label}
+                </button>
+              ))}
+            </div>{/* Pipeline (Kanban) */}{tab === "pipeline" && items.length === 0 && (
+              <EmptyState
+                icon={<Film size={24} />}
+                title="No production items"
+                description="Create your first content task"
+                actionLabel="New Request"
+                onAction={() => setShowSubmit(true)}
+              />
+            )}{tab === "pipeline" && items.length > 0 && (
+              <div className="grid grid-cols-5 gap-3 overflow-x-auto">
+                {(["backlog", "in_progress", "review", "approved", "delivered"] as KanbanStatus[]).map((status, colIdx) => (
+                  <motion.div
+                    key={status}
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: colIdx * 0.06, duration: 0.4 }}
+                    className="min-w-[200px]"
+                  >
+                    {/* Drop zone uses plain div for HTML5 drag */}
+                    <div
+                      onDragOver={e => e.preventDefault()}
+                      onDrop={() => handleDrop(status)}
                     >
-                      {/* Inner div handles HTML5 drag — cannot go on motion.div */}
-                      <div draggable onDragStart={() => setDraggedItem(item.id)}
-                        className="glass rounded-xl p-3 cursor-move hover:border-[rgba(37,99,235,0.08)] transition-all">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${PRIORITY_CONFIG[item.priority].bg} ${PRIORITY_CONFIG[item.priority].color}`}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className={`text-xs font-bold ${STATUS_CONFIG[status].color}`}>{STATUS_CONFIG[status].label}</span>
+                        <span className="text-[10px] text-muted">({filtered.filter(i => i.status === status).length})</span>
+                      </div>
+                      <div className="space-y-2">
+                        {filtered.filter(i => i.status === status).map((item, i) => (
+                          <motion.div
+                            key={item.id}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.04 }}
+                            whileHover={{ y: -4, scale: 1.01 }}
+                          >
+                            {/* Inner div handles HTML5 drag — cannot go on motion.div */}
+                            <div draggable onDragStart={() => setDraggedItem(item.id)}
+                              className="glass rounded-xl p-3 cursor-move hover:border-[rgba(37,99,235,0.08)] transition-all">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${PRIORITY_CONFIG[item.priority].bg} ${PRIORITY_CONFIG[item.priority].color}`}>
+                                  {PRIORITY_CONFIG[item.priority].label}
+                                </span>
+                                <span className="text-[9px] text-muted">{item.type}</span>
+                              </div>
+                              <p className="text-xs font-semibold mb-0.5">{item.title}</p>
+                              <p className="text-[10px] text-muted mb-2">{item.client}</p>
+                              {/* Checklist progress */}
+                              <div className="mb-2">
+                                <div className="flex items-center justify-between text-[9px] text-muted mb-0.5">
+                                  <span>{item.checklist.filter(c => c.done).length}/{item.checklist.length} tasks</span>
+                                  <span>{item.actualHours}h / {item.estimatedHours}h</span>
+                                </div>
+                                <div className="h-1 rounded-full bg-surface-light overflow-hidden">
+                                  <div className="h-full rounded-full bg-[#2563EB]" style={{ width: `${(item.checklist.filter(c => c.done).length / item.checklist.length) * 100}%` }} />
+                                </div>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-1">
+                                  <div className="w-5 h-5 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[8px] font-bold text-[#2563EB]">{item.assignee[0]}</div>
+                                  <span className="text-[9px] text-muted">{item.assignee}</span>
+                                </div>
+                                <span className={`text-[9px] ${item.dueDate < new Date().toISOString().slice(0, 10) && item.status !== "delivered" ? "text-red-400" : "text-muted"}`}>
+                                  {item.dueDate.slice(5)}
+                                </span>
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}{/* Calendar Tab */}{tab === "calendar" && (
+              <div className="space-y-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="glass rounded-xl"
+                >
+                  <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-[#2563EB]" /> Production Calendar</h2>
+                  <div className="space-y-2">
+                    {Array.from(new Set(items.map(i => i.dueDate))).sort().map(date => {
+                      const dayItems = filtered.filter(i => i.dueDate === date);
+                      const isOverdue = date < new Date().toISOString().slice(0, 10);
+                      return (
+                        <div key={date} className="p-3 rounded-lg bg-surface-light border border-border">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Calendar size={12} className={isOverdue ? "text-red-400" : "text-[#2563EB]"} />
+                            <span className={`text-xs font-bold ${isOverdue ? "text-red-400" : ""}`}>
+                              {new Date(date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+                              {isOverdue && " (OVERDUE)"}
+                            </span>
+                          </div>
+                          <div className="space-y-1 ml-5">
+                            {dayItems.map(item => (
+                              <div key={item.id} className="flex items-center gap-2 text-[11px]">
+                                <span className={`${PRIORITY_CONFIG[item.priority].color}`}><Flag size={10} /></span>
+                                <span className="font-medium">{item.title}</span>
+                                <span className="text-muted">- {item.client}</span>
+                                <span className={`text-[9px] ml-auto ${STATUS_CONFIG[item.status].color}`}>{STATUS_CONFIG[item.status].label}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+                {/* Time Estimates vs Actuals */}
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.06 }}
+                  className="glass rounded-xl"
+                >
+                  <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-[#2563EB]" /> Time: Estimated vs Actual</h2>
+                  <div className="space-y-2">
+                    {items.filter(i => i.actualHours > 0).map(item => {
+                      const pctEst = (item.estimatedHours / Math.max(totalEstimated, 1)) * 100;
+                      const pctAct = (item.actualHours / Math.max(totalEstimated, 1)) * 100;
+                      const overBudget = item.actualHours > item.estimatedHours;
+                      return (
+                        <div key={item.id} className="p-2 rounded-lg bg-surface-light">
+                          <div className="flex items-center justify-between text-[10px] mb-1">
+                            <span className="font-medium">{item.title}</span>
+                            <span className={overBudget ? "text-red-400" : "text-emerald-400"}>
+                              {item.actualHours}h / {item.estimatedHours}h
+                            </span>
+                          </div>
+                          <div className="flex gap-1">
+                            <div className="flex-1 h-1.5 rounded-full bg-surface overflow-hidden">
+                              <div className="h-full rounded-full bg-[rgba(37,99,235,0.50)]" style={{ width: `${pctEst * 3}%` }} />
+                            </div>
+                            <div className="flex-1 h-1.5 rounded-full bg-surface overflow-hidden">
+                              <div className="h-full rounded-full" style={{ width: `${pctAct * 3}%`, background: overBudget ? "#ef4444" : "#2563EB" }} />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+                {/* Bottleneck Identifier */}
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.12 }}
+                  className="glass rounded-xl"
+                >
+                  <h2 className="section-header flex items-center gap-2"><AlertTriangle size={13} className="text-yellow-400" /> Bottleneck Analysis</h2>
+                  <div className="space-y-2">
+                    {bottlenecks.map(([status, count]) => (
+                      <div key={status} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                        <AlertTriangle size={14} className="text-yellow-400" />
+                        <div className="flex-1">
+                          <p className="text-xs font-semibold">{STATUS_CONFIG[status as KanbanStatus]?.label || status}</p>
+                          <p className="text-[10px] text-muted">{count} items stuck in this stage</p>
+                        </div>
+                        <span className={`text-sm font-bold ${count > 2 ? "text-red-400" : "text-yellow-400"}`}>{count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              </div>
+            )}{/* Standup Tab */}{tab === "standup" && (
+              <div className="space-y-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="glass rounded-xl"
+                >
+                  <h2 className="section-header flex items-center gap-2"><MessageSquare size={13} className="text-[#2563EB]" /> Daily Standup Summary</h2>
+                  <p className="text-[10px] text-muted mb-3">{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</p>
+                  <div className="space-y-3">
+                    {Array.from(new Set(items.map(i => i.assignee))).filter(Boolean).map(name => {
+                      const memberItems = items.filter(i => i.assignee === name);
+                      const inProg = memberItems.filter(i => i.status === "in_progress");
+                      const review = memberItems.filter(i => i.status === "review");
+                      return (
+                        <div key={name} className="p-3 rounded-lg bg-surface-light border border-border">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[10px] font-bold text-[#2563EB]">{name[0]}</div>
+                            <span className="text-xs font-bold">{name}</span>
+                            <span className="text-[9px] text-muted ml-auto">{memberItems.length} items</span>
+                          </div>
+                          {inProg.length > 0 && (
+                            <div className="mb-1">
+                              <p className="text-[9px] text-[#2563EB] font-semibold mb-0.5">Working On:</p>
+                              {inProg.map(i => (
+                                <p key={i.id} className="text-[10px] text-muted ml-3">- {i.title} ({i.client})</p>
+                              ))}
+                            </div>
+                          )}
+                          {review.length > 0 && (
+                            <div>
+                              <p className="text-[9px] text-[#2563EB] font-semibold mb-0.5">Awaiting Review:</p>
+                              {review.map(i => (
+                                <p key={i.id} className="text-[10px] text-muted ml-3">- {i.title} ({i.client})</p>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              </div>
+            )}{/* Approvals Tab */}{tab === "approvals" && (
+              <div className="space-y-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="glass rounded-xl"
+                >
+                  <h2 className="section-header flex items-center gap-2"><CheckCircle size={13} className="text-[#2563EB]" /> Review & Approval Queue</h2>
+                  <div className="space-y-2">
+                    {items.filter(i => i.status === "review").map(item => (
+                      <div key={item.id} className="p-4 rounded-lg bg-surface-light border border-border">
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <p className="text-xs font-bold">{item.title}</p>
+                            <p className="text-[10px] text-muted">{item.client} - by {item.assignee}</p>
+                          </div>
+                          <span className={`text-[9px] px-2 py-0.5 rounded-full ${PRIORITY_CONFIG[item.priority].bg} ${PRIORITY_CONFIG[item.priority].color}`}>
                             {PRIORITY_CONFIG[item.priority].label}
                           </span>
-                          <span className="text-[9px] text-muted">{item.type}</span>
                         </div>
-                        <p className="text-xs font-semibold mb-0.5">{item.title}</p>
-                        <p className="text-[10px] text-muted mb-2">{item.client}</p>
-                        {/* Checklist progress */}
-                        <div className="mb-2">
-                          <div className="flex items-center justify-between text-[9px] text-muted mb-0.5">
-                            <span>{item.checklist.filter(c => c.done).length}/{item.checklist.length} tasks</span>
-                            <span>{item.actualHours}h / {item.estimatedHours}h</span>
+                        {/* Asset Checklist */}
+                        <div className="mb-3">
+                          <p className="text-[9px] text-muted uppercase tracking-wider font-semibold mb-1">Asset Checklist</p>
+                          <div className="grid grid-cols-2 gap-1">
+                            {item.checklist.map((task, idx) => (
+                              <button key={idx} onClick={() => toggleChecklist(item.id, idx)}
+                                className="flex items-center gap-1.5 text-[10px] p-1 rounded hover:bg-[rgba(0,0,0,0.03)]">
+                                <CheckCircle size={10} className={task.done ? "text-emerald-400" : "text-muted/30"} />
+                                <span className={task.done ? "line-through text-muted" : ""}>{task.task}</span>
+                              </button>
+                            ))}
                           </div>
-                          <div className="h-1 rounded-full bg-surface-light overflow-hidden">
-                            <div className="h-full rounded-full bg-[#2563EB]" style={{ width: `${(item.checklist.filter(c => c.done).length / item.checklist.length) * 100}%` }} />
+                        </div>
+                        {item.reviewNotes && (
+                          <div className="p-2 rounded-lg bg-yellow-400/5 border border-yellow-400/10 mb-3">
+                            <p className="text-[9px] text-yellow-400 font-semibold mb-0.5">Review Notes:</p>
+                            <p className="text-[10px] text-muted">{item.reviewNotes}</p>
                           </div>
+                        )}
+                        <div className="flex gap-2">
+                          <button onClick={() => setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: "approved" } : i))}
+                            className="btn-primary text-[10px] flex items-center gap-1">
+                            <CheckCircle size={10} /> Approve
+                          </button>
+                          <button onClick={() => setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: "in_progress" } : i))}
+                            className="btn-secondary text-[10px] flex items-center gap-1">
+                            <ArrowRight size={10} /> Request Changes
+                          </button>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-1">
-                            <div className="w-5 h-5 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[8px] font-bold text-[#2563EB]">{item.assignee[0]}</div>
-                            <span className="text-[9px] text-muted">{item.assignee}</span>
-                          </div>
-                          <span className={`text-[9px] ${item.dueDate < new Date().toISOString().slice(0, 10) && item.status !== "delivered" ? "text-red-400" : "text-muted"}`}>
-                            {item.dueDate.slice(5)}
-                          </span>
-                        </div>
                       </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
-
-      {/* Calendar Tab */}
-      {tab === "calendar" && (
-        <div className="space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="glass rounded-xl"
-          >
-            <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-[#2563EB]" /> Production Calendar</h2>
-            <div className="space-y-2">
-              {Array.from(new Set(items.map(i => i.dueDate))).sort().map(date => {
-                const dayItems = filtered.filter(i => i.dueDate === date);
-                const isOverdue = date < new Date().toISOString().slice(0, 10);
-                return (
-                  <div key={date} className="p-3 rounded-lg bg-surface-light border border-border">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Calendar size={12} className={isOverdue ? "text-red-400" : "text-[#2563EB]"} />
-                      <span className={`text-xs font-bold ${isOverdue ? "text-red-400" : ""}`}>
-                        {new Date(date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
-                        {isOverdue && " (OVERDUE)"}
-                      </span>
-                    </div>
-                    <div className="space-y-1 ml-5">
-                      {dayItems.map(item => (
-                        <div key={item.id} className="flex items-center gap-2 text-[11px]">
-                          <span className={`${PRIORITY_CONFIG[item.priority].color}`}><Flag size={10} /></span>
-                          <span className="font-medium">{item.title}</span>
-                          <span className="text-muted">- {item.client}</span>
-                          <span className={`text-[9px] ml-auto ${STATUS_CONFIG[item.status].color}`}>{STATUS_CONFIG[item.status].label}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </motion.div>
-          {/* Time Estimates vs Actuals */}
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.06 }}
-            className="glass rounded-xl"
-          >
-            <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-[#2563EB]" /> Time: Estimated vs Actual</h2>
-            <div className="space-y-2">
-              {items.filter(i => i.actualHours > 0).map(item => {
-                const pctEst = (item.estimatedHours / Math.max(totalEstimated, 1)) * 100;
-                const pctAct = (item.actualHours / Math.max(totalEstimated, 1)) * 100;
-                const overBudget = item.actualHours > item.estimatedHours;
-                return (
-                  <div key={item.id} className="p-2 rounded-lg bg-surface-light">
-                    <div className="flex items-center justify-between text-[10px] mb-1">
-                      <span className="font-medium">{item.title}</span>
-                      <span className={overBudget ? "text-red-400" : "text-emerald-400"}>
-                        {item.actualHours}h / {item.estimatedHours}h
-                      </span>
-                    </div>
-                    <div className="flex gap-1">
-                      <div className="flex-1 h-1.5 rounded-full bg-surface overflow-hidden">
-                        <div className="h-full rounded-full bg-[rgba(37,99,235,0.50)]" style={{ width: `${pctEst * 3}%` }} />
-                      </div>
-                      <div className="flex-1 h-1.5 rounded-full bg-surface overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${pctAct * 3}%`, background: overBudget ? "#ef4444" : "#2563EB" }} />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </motion.div>
-          {/* Bottleneck Identifier */}
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.12 }}
-            className="glass rounded-xl"
-          >
-            <h2 className="section-header flex items-center gap-2"><AlertTriangle size={13} className="text-yellow-400" /> Bottleneck Analysis</h2>
-            <div className="space-y-2">
-              {bottlenecks.map(([status, count]) => (
-                <div key={status} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
-                  <AlertTriangle size={14} className="text-yellow-400" />
-                  <div className="flex-1">
-                    <p className="text-xs font-semibold">{STATUS_CONFIG[status as KanbanStatus]?.label || status}</p>
-                    <p className="text-[10px] text-muted">{count} items stuck in this stage</p>
-                  </div>
-                  <span className={`text-sm font-bold ${count > 2 ? "text-red-400" : "text-yellow-400"}`}>{count}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      {/* Standup Tab */}
-      {tab === "standup" && (
-        <div className="space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="glass rounded-xl"
-          >
-            <h2 className="section-header flex items-center gap-2"><MessageSquare size={13} className="text-[#2563EB]" /> Daily Standup Summary</h2>
-            <p className="text-[10px] text-muted mb-3">{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</p>
-            <div className="space-y-3">
-              {Array.from(new Set(items.map(i => i.assignee))).filter(Boolean).map(name => {
-                const memberItems = items.filter(i => i.assignee === name);
-                const inProg = memberItems.filter(i => i.status === "in_progress");
-                const review = memberItems.filter(i => i.status === "review");
-                return (
-                  <div key={name} className="p-3 rounded-lg bg-surface-light border border-border">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[10px] font-bold text-[#2563EB]">{name[0]}</div>
-                      <span className="text-xs font-bold">{name}</span>
-                      <span className="text-[9px] text-muted ml-auto">{memberItems.length} items</span>
-                    </div>
-                    {inProg.length > 0 && (
-                      <div className="mb-1">
-                        <p className="text-[9px] text-[#2563EB] font-semibold mb-0.5">Working On:</p>
-                        {inProg.map(i => (
-                          <p key={i.id} className="text-[10px] text-muted ml-3">- {i.title} ({i.client})</p>
-                        ))}
-                      </div>
-                    )}
-                    {review.length > 0 && (
-                      <div>
-                        <p className="text-[9px] text-[#2563EB] font-semibold mb-0.5">Awaiting Review:</p>
-                        {review.map(i => (
-                          <p key={i.id} className="text-[10px] text-muted ml-3">- {i.title} ({i.client})</p>
-                        ))}
+                    ))}
+                    {items.filter(i => i.status === "review").length === 0 && (
+                      <div className="text-center py-8">
+                        <CheckCircle size={24} className="mx-auto text-emerald-400/30 mb-2" />
+                        <p className="text-xs text-muted">No items pending review</p>
                       </div>
                     )}
                   </div>
-                );
-              })}
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      {/* Approvals Tab */}
-      {tab === "approvals" && (
-        <div className="space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="glass rounded-xl"
-          >
-            <h2 className="section-header flex items-center gap-2"><CheckCircle size={13} className="text-[#2563EB]" /> Review & Approval Queue</h2>
-            <div className="space-y-2">
-              {items.filter(i => i.status === "review").map(item => (
-                <div key={item.id} className="p-4 rounded-lg bg-surface-light border border-border">
-                  <div className="flex items-center justify-between mb-2">
-                    <div>
-                      <p className="text-xs font-bold">{item.title}</p>
-                      <p className="text-[10px] text-muted">{item.client} - by {item.assignee}</p>
-                    </div>
-                    <span className={`text-[9px] px-2 py-0.5 rounded-full ${PRIORITY_CONFIG[item.priority].bg} ${PRIORITY_CONFIG[item.priority].color}`}>
-                      {PRIORITY_CONFIG[item.priority].label}
-                    </span>
-                  </div>
-                  {/* Asset Checklist */}
-                  <div className="mb-3">
-                    <p className="text-[9px] text-muted uppercase tracking-wider font-semibold mb-1">Asset Checklist</p>
-                    <div className="grid grid-cols-2 gap-1">
-                      {item.checklist.map((task, idx) => (
-                        <button key={idx} onClick={() => toggleChecklist(item.id, idx)}
-                          className="flex items-center gap-1.5 text-[10px] p-1 rounded hover:bg-[rgba(0,0,0,0.03)]">
-                          <CheckCircle size={10} className={task.done ? "text-emerald-400" : "text-muted/30"} />
-                          <span className={task.done ? "line-through text-muted" : ""}>{task.task}</span>
+                </motion.div>
+                {/* Client Approval Portal */}
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.06 }}
+                  className="glass rounded-xl"
+                >
+                  <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-[#2563EB]" /> Client Approval Portal</h2>
+                  <p className="text-[10px] text-muted mb-3">Share approval links with clients for direct feedback</p>
+                  <div className="space-y-2">
+                    {items.filter(i => i.status === "approved" || i.status === "review").map(item => (
+                      <div key={item.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                        <Film size={14} className="text-[#2563EB] shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium truncate">{item.title}</p>
+                          <p className="text-[9px] text-muted">{item.client}</p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            const url = `${window.location.origin}/dashboard/portal/approvals/${item.id}`;
+                            navigator.clipboard.writeText(url)
+                              .then(() => toast.success("Approval link copied to clipboard"))
+                              .catch(() => toast.error("Couldn't copy link"));
+                          }}
+                          className="btn-secondary text-[9px] flex items-center gap-1">
+                          <Copy size={9} /> Copy Approval Link
                         </button>
-                      ))}
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              </div>
+            )}{/* New Request Modal */}{showSubmit && (
+              <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowSubmit(false)}>
+                <div className="glass  w-full max-w-md p-5 space-y-3" onClick={e => e.stopPropagation()}>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-[#2563EB]" /> New Production Request</h3>
+                    <button onClick={() => setShowSubmit(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                  </div>
+                  <div>
+                    <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Title</label>
+                    <input className="input w-full text-xs" placeholder="e.g., Instagram Reels x3" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Client</label>
+                      <select className="input w-full text-xs">
+                        {clients.filter(c => c !== "All").map(c => <option key={c}>{c}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Type</label>
+                      <select className="input w-full text-xs">
+                        <option>Short Form</option><option>Long Form</option><option>Ad Creative</option>
+                        <option>Blog</option><option>Email</option><option>Web</option><option>Podcast</option>
+                      </select>
                     </div>
                   </div>
-                  {item.reviewNotes && (
-                    <div className="p-2 rounded-lg bg-yellow-400/5 border border-yellow-400/10 mb-3">
-                      <p className="text-[9px] text-yellow-400 font-semibold mb-0.5">Review Notes:</p>
-                      <p className="text-[10px] text-muted">{item.reviewNotes}</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Priority</label>
+                      <select className="input w-full text-xs">
+                        <option value="low">Low</option><option value="medium">Medium</option>
+                        <option value="high">High</option><option value="urgent">Urgent</option>
+                      </select>
                     </div>
-                  )}
-                  <div className="flex gap-2">
-                    <button onClick={() => setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: "approved" } : i))}
-                      className="btn-primary text-[10px] flex items-center gap-1">
-                      <CheckCircle size={10} /> Approve
-                    </button>
-                    <button onClick={() => setItems(prev => prev.map(i => i.id === item.id ? { ...i, status: "in_progress" } : i))}
-                      className="btn-secondary text-[10px] flex items-center gap-1">
-                      <ArrowRight size={10} /> Request Changes
+                    <div>
+                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Due Date</label>
+                      <input type="date" className="input w-full text-xs" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Assign To</label>
+                    <select className="input w-full text-xs">
+                      <option>Unassigned</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Estimated Hours</label>
+                    <input type="number" className="input w-full text-xs" placeholder="e.g., 6" />
+                  </div>
+                  <div className="flex justify-end gap-2 pt-1">
+                    <button onClick={() => setShowSubmit(false)} className="btn-secondary text-xs">Cancel</button>
+                    <button
+                      onClick={() => {
+                        // Production board backend isn't wired yet — use /dashboard/projects
+                        // for real Kanban + tasks. Don't pretend the request was created.
+                        toast("Production board is coming soon. For now, create Kanban tasks in /dashboard/projects.", { icon: "💡", duration: 6000 });
+                        setShowSubmit(false);
+                      }}
+                      className="btn-primary text-xs flex items-center gap-1.5">
+                      <Plus size={12} /> Create
                     </button>
                   </div>
                 </div>
-              ))}
-              {items.filter(i => i.status === "review").length === 0 && (
-                <div className="text-center py-8">
-                  <CheckCircle size={24} className="mx-auto text-emerald-400/30 mb-2" />
-                  <p className="text-xs text-muted">No items pending review</p>
-                </div>
-              )}
-            </div>
-          </motion.div>
-          {/* Client Approval Portal */}
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.06 }}
-            className="glass rounded-xl"
-          >
-            <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-[#2563EB]" /> Client Approval Portal</h2>
-            <p className="text-[10px] text-muted mb-3">Share approval links with clients for direct feedback</p>
-            <div className="space-y-2">
-              {items.filter(i => i.status === "approved" || i.status === "review").map(item => (
-                <div key={item.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
-                  <Film size={14} className="text-[#2563EB] shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium truncate">{item.title}</p>
-                    <p className="text-[9px] text-muted">{item.client}</p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      const url = `${window.location.origin}/dashboard/portal/approvals/${item.id}`;
-                      navigator.clipboard.writeText(url)
-                        .then(() => toast.success("Approval link copied to clipboard"))
-                        .catch(() => toast.error("Couldn't copy link"));
-                    }}
-                    className="btn-secondary text-[9px] flex items-center gap-1">
-                    <Copy size={9} /> Copy Approval Link
-                  </button>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      {/* New Request Modal */}
-      {showSubmit && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowSubmit(false)}>
-          <div className="glass  w-full max-w-md p-5 space-y-3" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-[#2563EB]" /> New Production Request</h3>
-              <button onClick={() => setShowSubmit(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
-            </div>
-            <div>
-              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Title</label>
-              <input className="input w-full text-xs" placeholder="e.g., Instagram Reels x3" />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Client</label>
-                <select className="input w-full text-xs">
-                  {clients.filter(c => c !== "All").map(c => <option key={c}>{c}</option>)}
-                </select>
               </div>
-              <div>
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Type</label>
-                <select className="input w-full text-xs">
-                  <option>Short Form</option><option>Long Form</option><option>Ad Creative</option>
-                  <option>Blog</option><option>Email</option><option>Web</option><option>Podcast</option>
-                </select>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Priority</label>
-                <select className="input w-full text-xs">
-                  <option value="low">Low</option><option value="medium">Medium</option>
-                  <option value="high">High</option><option value="urgent">Urgent</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Due Date</label>
-                <input type="date" className="input w-full text-xs" />
-              </div>
-            </div>
-            <div>
-              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Assign To</label>
-              <select className="input w-full text-xs">
-                <option>Unassigned</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Estimated Hours</label>
-              <input type="number" className="input w-full text-xs" placeholder="e.g., 6" />
-            </div>
-            <div className="flex justify-end gap-2 pt-1">
-              <button onClick={() => setShowSubmit(false)} className="btn-secondary text-xs">Cancel</button>
-              <button
-                onClick={() => {
-                  // Production board backend isn't wired yet — use /dashboard/projects
-                  // for real Kanban + tasks. Don't pretend the request was created.
-                  toast("Production board is coming soon. For now, create Kanban tasks in /dashboard/projects.", { icon: "💡", duration: 6000 });
-                  setShowSubmit(false);
-                }}
-                className="btn-primary text-xs flex items-center gap-1.5">
-                <Plus size={12} /> Create
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            )}</MotionPage>
   );
 }
 

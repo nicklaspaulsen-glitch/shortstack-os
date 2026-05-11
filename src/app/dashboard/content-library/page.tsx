@@ -21,6 +21,7 @@ import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import SafeThumb from "@/components/safe-thumb";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // Sample content-piece tiles shown in the Content Library landing state.
 const CONTENT_LIBRARY_PREVIEW_FALLBACK: RollingPreviewItem[] = [
@@ -445,12 +446,10 @@ export default function ContentLibraryPage() {
 
   if (loading) {
     return (
-      <div className="fade-in flex items-center justify-center py-20">
-        <div className="text-center">
-          <Loader size={24} className="animate-spin text-[#2563EB] mx-auto mb-3" />
-          <p className="text-sm text-muted">Loading content library...</p>
-        </div>
-      </div>
+      <MotionPage className="fade-in flex items-center justify-center py-20"><div className="text-center">
+                  <Loader size={24} className="animate-spin text-[#2563EB] mx-auto mb-3" />
+                  <p className="text-sm text-muted">Loading content library...</p>
+                </div></MotionPage>
     );
   }
 

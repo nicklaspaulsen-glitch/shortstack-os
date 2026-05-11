@@ -9,6 +9,7 @@ import {
   ClipboardList, Sparkles, AlertCircle, CheckCircle2
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface DemoClient {
   id: string;
@@ -97,17 +98,15 @@ export default function DemoManagementPage() {
 
   if (profile?.role !== "admin") {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="glass rounded-xl p-6 text-center"
-        >
-          <AlertCircle className="w-8 h-8 text-red-500 mx-auto mb-2" />
-          <p className="text-xs text-[#6B7280]">Admin access required</p>
-        </motion.div>
-      </div>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="glass rounded-xl p-6 text-center"
+                >
+                  <AlertCircle className="w-8 h-8 text-red-500 mx-auto mb-2" />
+                  <p className="text-xs text-[#6B7280]">Admin access required</p>
+                </motion.div></MotionPage>
     );
   }
 

@@ -12,6 +12,7 @@ import { PageLoading } from "@/components/ui/loading";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { CreditCard, FileText, DollarSign } from "lucide-react";
 import CurrencyDisplay from "@/components/integrations/currency-display";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // Map ISO country code → likely local currency. Used to default the
 // "show alongside USD" display when geo-IP gives us a country but no
@@ -85,7 +86,9 @@ export default function ClientBillingPage() {
     }
   }
 
-  if (loading) return <PageLoading />;
+  if (loading) return <MotionPage>
+                          <PageLoading />
+                        </MotionPage>;
 
   const totalPaid = invoices.filter(i => i.status === "paid").reduce((s, i) => s + i.amount, 0);
   const pending = invoices.filter(i => i.status === "sent" || i.status === "overdue");

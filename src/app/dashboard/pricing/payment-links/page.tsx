@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import { Check, Copy, ExternalLink, LinkIcon, Lock, ArrowLeft } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface PaymentLink {
   tier: string;
@@ -84,9 +85,8 @@ export default function PaymentLinksPage() {
 
   if (loading || fetchState === "loading") {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] text-muted text-sm">
-        Loading...
-      </div>
+      <MotionPage className="flex items-center justify-center min-h-[60vh] text-muted text-sm">Loading...
+              </MotionPage>
     );
   }
 

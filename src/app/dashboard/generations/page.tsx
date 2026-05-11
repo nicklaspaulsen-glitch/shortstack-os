@@ -11,6 +11,7 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* ── Types ── */
 
@@ -120,185 +121,166 @@ export default function GenerationsPage() {
   const hasMore = page * limit < total;
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Sparkles size={28} />}
-        title="Generations"
-        eyebrow="GENERATIONS"
-        subtitle="Everything you've created, organized by category."
-        gradient="sunset"
-        actions={
-          <button
-            onClick={fetchGenerations}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-medium hover:bg-black/15 transition-all"
-          >
-            <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
-          </button>
-        }
-      />
-
-      {/* Stats Strip */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-        {[
-          { label: "Total Items",  value: total,            icon: <Layers size={14} />,      color: "text-[#2563EB]" },
-          { label: "This Week",    value: thisWeekCount,    icon: <TrendingUp size={14} />,  color: "text-emerald-400" },
-          { label: "Categories",   value: uniqueCategories, icon: <Calendar size={14} />,    color: "text-blue-400" },
-          { label: "Latest",       value: latest,           icon: <Clock size={14} />,       color: "text-purple-400" },
-        ].map((s, i) => (
-          <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <div className="py-2.5 px-3 flex items-center gap-3">
-              <div className={s.color}>{s.icon}</div>
-              <div>
-                <p className="text-lg font-bold leading-none">{s.value}</p>
-                <p className="text-[9px] text-muted">{s.label}</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Search */}
-      <div className="relative max-w-md">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-        <input
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search generations..."
-          aria-label="Search generations"
-          className="input text-xs pl-9 w-full"
-        />
-      </div>
-
-      {/* Category Filter Tabs */}
-      <div className="flex gap-1 overflow-x-auto pb-1">
-        {CATEGORIES.map(c => (
-          <button
-            key={c.key}
-            onClick={() => { setCategory(c.key); setPage(1); }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all ${
-              category === c.key
-                ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] font-medium"
-                : "bg-black/4 text-muted hover:text-foreground hover:bg-black/8 border border-transparent"
-            }`}
-          >
-            <span className={category === c.key ? "text-[#2563EB]" : c.color}>{c.icon}</span>
-            {c.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Generations List */}
-      <div className="space-y-2">
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader size={20} className="animate-spin text-[#2563EB]" />
-          </div>
-        ) : filtered.length === 0 ? (
-          /* Empty State */
-          <div className="glass rounded-xl text-center py-16">
-            <Sparkles size={32} className="mx-auto mb-3 text-muted/30" />
-            <p className="text-sm text-muted font-medium mb-1">No generations yet</p>
-            <p className="text-[10px] text-muted max-w-xs mx-auto">
-              Create content from any tool in Trinity and it will appear here automatically.
-            </p>
-          </div>
-        ) : (
-          filtered.map((gen, idx) => {
-            const cat = getCategoryConfig(gen.category);
-            return (
-              <motion.div
-                key={gen.id}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.04 }}
-                whileHover={{ y: -4, scale: 1.01 }}
-                className="glass rounded-xl !p-0 overflow-hidden hover:border-[rgba(37,99,235,0.2)] transition-all group"
-              >
-                <div className="flex items-start gap-3 px-4 py-3">
-                  {/* Category Icon */}
-                  <div className={`mt-0.5 shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${cat.bg}`}>
-                    <span className={cat.color}>{cat.icon}</span>
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium ${cat.bg} ${cat.color}`}>
-                        {cat.label}
-                      </span>
-                      <span className="text-[9px] text-muted">{gen.source_tool}</span>
+    <MotionPage className="fade-in space-y-5"><PageHero
+              icon={<Sparkles size={28} />}
+              title="Generations"
+              eyebrow="GENERATIONS"
+              subtitle="Everything you've created, organized by category."
+              gradient="sunset"
+              actions={
+                <button
+                  onClick={fetchGenerations}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-medium hover:bg-black/15 transition-all"
+                >
+                  <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
+                </button>
+              }
+            />{/* Stats Strip */}<div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+              {[
+                { label: "Total Items",  value: total,            icon: <Layers size={14} />,      color: "text-[#2563EB]" },
+                { label: "This Week",    value: thisWeekCount,    icon: <TrendingUp size={14} />,  color: "text-emerald-400" },
+                { label: "Categories",   value: uniqueCategories, icon: <Calendar size={14} />,    color: "text-blue-400" },
+                { label: "Latest",       value: latest,           icon: <Clock size={14} />,       color: "text-purple-400" },
+              ].map((s, i) => (
+                <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                  <div className="py-2.5 px-3 flex items-center gap-3">
+                    <div className={s.color}>{s.icon}</div>
+                    <div>
+                      <p className="text-lg font-bold leading-none">{s.value}</p>
+                      <p className="text-[9px] text-muted">{s.label}</p>
                     </div>
-                    <p className="text-xs font-semibold truncate">{gen.title}</p>
-                    {gen.content_preview && (
-                      <p className="text-[10px] text-muted mt-0.5 line-clamp-2 leading-relaxed">
-                        {gen.content_preview}
-                      </p>
-                    )}
-                    <p className="text-[9px] text-muted mt-1">{timeAgo(gen.created_at)}</p>
                   </div>
-
-                  {/* Actions — preview/re-gen require per-tool routes that
-                      don't exist yet, so only ship the working Copy + Hide
-                      actions for launch. */}
-                  <div className="shrink-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
-                    <button
-                      onClick={() => copyContent(gen)}
-                      className="p-1.5 rounded-lg hover:bg-black/6 text-muted hover:text-foreground transition-all"
-                      title="Copy content"
-                    >
-                      <Copy size={13} />
-                    </button>
-                    <button
-                      onClick={() => deleteGeneration(gen.id)}
-                      className="p-1.5 rounded-lg hover:bg-red-500/10 text-muted hover:text-red-400 transition-all"
-                      title="Hide from list (local only)"
-                    >
-                      <Trash2 size={13} />
-                    </button>
-                  </div>
+                </motion.div>
+              ))}
+            </div>{/* Search */}<div className="relative max-w-md">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search generations..."
+                aria-label="Search generations"
+                className="input text-xs pl-9 w-full"
+              />
+            </div>{/* Category Filter Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
+              {CATEGORIES.map(c => (
+                <button
+                  key={c.key}
+                  onClick={() => { setCategory(c.key); setPage(1); }}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all ${
+                    category === c.key
+                      ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] font-medium"
+                      : "bg-black/4 text-muted hover:text-foreground hover:bg-black/8 border border-transparent"
+                  }`}
+                >
+                  <span className={category === c.key ? "text-[#2563EB]" : c.color}>{c.icon}</span>
+                  {c.label}
+                </button>
+              ))}
+            </div>{/* Generations List */}<div className="space-y-2">
+              {loading ? (
+                <div className="flex items-center justify-center py-20">
+                  <Loader size={20} className="animate-spin text-[#2563EB]" />
                 </div>
-              </motion.div>
-            );
-          })
-        )}
-      </div>
+              ) : filtered.length === 0 ? (
+                /* Empty State */
+                <div className="glass rounded-xl text-center py-16">
+                  <Sparkles size={32} className="mx-auto mb-3 text-muted/30" />
+                  <p className="text-sm text-muted font-medium mb-1">No generations yet</p>
+                  <p className="text-[10px] text-muted max-w-xs mx-auto">
+                    Create content from any tool in Trinity and it will appear here automatically.
+                  </p>
+                </div>
+              ) : (
+                filtered.map((gen, idx) => {
+                  const cat = getCategoryConfig(gen.category);
+                  return (
+                    <motion.div
+                      key={gen.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.04 }}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                      className="glass rounded-xl !p-0 overflow-hidden hover:border-[rgba(37,99,235,0.2)] transition-all group"
+                    >
+                      <div className="flex items-start gap-3 px-4 py-3">
+                        {/* Category Icon */}
+                        <div className={`mt-0.5 shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${cat.bg}`}>
+                          <span className={cat.color}>{cat.icon}</span>
+                        </div>
 
-      {/* Pagination */}
-      {!loading && filtered.length > 0 && (
-        <div className="flex items-center justify-between">
-          <p className="text-[10px] text-muted">
-            Showing {(page - 1) * limit + 1}–{Math.min(page * limit, total)} of {total}
-          </p>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setPage(p => Math.max(1, p - 1))}
-              disabled={page <= 1}
-              className="px-3 py-1 rounded-lg bg-black/4 hover:bg-black/8 text-xs text-muted hover:text-foreground disabled:opacity-30 transition-all"
-            >
-              Previous
-            </button>
-            <button
-              onClick={() => setPage(p => p + 1)}
-              disabled={!hasMore}
-              className="px-3 py-1 rounded-lg bg-black/4 hover:bg-black/8 text-xs text-muted hover:text-foreground disabled:opacity-30 transition-all"
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      )}
+                        {/* Content */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium ${cat.bg} ${cat.color}`}>
+                              {cat.label}
+                            </span>
+                            <span className="text-[9px] text-muted">{gen.source_tool}</span>
+                          </div>
+                          <p className="text-xs font-semibold truncate">{gen.title}</p>
+                          {gen.content_preview && (
+                            <p className="text-[10px] text-muted mt-0.5 line-clamp-2 leading-relaxed">
+                              {gen.content_preview}
+                            </p>
+                          )}
+                          <p className="text-[9px] text-muted mt-1">{timeAgo(gen.created_at)}</p>
+                        </div>
 
-      <PageAI
-        pageName="Generations"
-        context={`Generations inbox with ${total} total items across ${uniqueCategories} categories. Currently viewing: ${category === "all" ? "all categories" : getCategoryConfig(category).label}. This week: ${thisWeekCount} items.`}
-        suggestions={[
-          "Summarize what I generated this week",
-          "Which tool do I use the most?",
-          "Help me organize my generations",
-          "What content should I create next?",
-        ]}
-      />
-    </div>
+                        {/* Actions — preview/re-gen require per-tool routes that
+                            don't exist yet, so only ship the working Copy + Hide
+                            actions for launch. */}
+                        <div className="shrink-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
+                          <button
+                            onClick={() => copyContent(gen)}
+                            className="p-1.5 rounded-lg hover:bg-black/6 text-muted hover:text-foreground transition-all"
+                            title="Copy content"
+                          >
+                            <Copy size={13} />
+                          </button>
+                          <button
+                            onClick={() => deleteGeneration(gen.id)}
+                            className="p-1.5 rounded-lg hover:bg-red-500/10 text-muted hover:text-red-400 transition-all"
+                            title="Hide from list (local only)"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })
+              )}
+            </div>{/* Pagination */}{!loading && filtered.length > 0 && (
+              <div className="flex items-center justify-between">
+                <p className="text-[10px] text-muted">
+                  Showing {(page - 1) * limit + 1}–{Math.min(page * limit, total)} of {total}
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    disabled={page <= 1}
+                    className="px-3 py-1 rounded-lg bg-black/4 hover:bg-black/8 text-xs text-muted hover:text-foreground disabled:opacity-30 transition-all"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={() => setPage(p => p + 1)}
+                    disabled={!hasMore}
+                    className="px-3 py-1 rounded-lg bg-black/4 hover:bg-black/8 text-xs text-muted hover:text-foreground disabled:opacity-30 transition-all"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}<PageAI
+              pageName="Generations"
+              context={`Generations inbox with ${total} total items across ${uniqueCategories} categories. Currently viewing: ${category === "all" ? "all categories" : getCategoryConfig(category).label}. This week: ${thisWeekCount} items.`}
+              suggestions={[
+                "Summarize what I generated this week",
+                "Which tool do I use the most?",
+                "Help me organize my generations",
+                "What content should I create next?",
+              ]}
+            /></MotionPage>
   );
 }

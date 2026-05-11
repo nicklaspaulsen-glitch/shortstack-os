@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface Client {
   id: string;
@@ -379,396 +380,385 @@ export default function ReportsPage() {
   const uniqueClients = new Set(reports.map(r => r.client_id)).size;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6 fade-in">
-      {/* Hero Header */}
-      <PageHero
-        eyebrow="INTEL REPORTS"
-        icon={<FileText size={22} />}
-        title="AI Client Reports"
-        subtitle="Generate AI-powered performance reports for your clients."
-        gradient="purple"
-        actions={
-          <button onClick={fetchData}
-            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all">
-            <RefreshCw size={12} /> Refresh
-          </button>
-        }
-      />
-
-      {/* Stats */}
-      <div className="grid grid-cols-4 gap-3">
-        {[
-          { label: "Total Reports", value: totalReports, icon: FileText, color: "text-info" },
-          { label: "Weekly Reports", value: weeklyReports, icon: Calendar, color: "text-[#2563EB]" },
-          { label: "Monthly Reports", value: monthlyReports, icon: BarChart3, color: "text-[#2563EB]" },
-          { label: "Clients Covered", value: uniqueClients, icon: Users, color: "text-success" },
-        ].map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            className="glass rounded-xl p-4 relative overflow-hidden"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: index * 0.06 }}
-            whileHover={{ y: -2 }}
-          >
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-            <div className="flex items-center justify-between mb-2">
-              <stat.icon size={14} className={stat.color} />
-            </div>
-            <p className="text-xl font-bold text-foreground">{stat.value}</p>
-            <p className="text-[10px] text-muted">{stat.label}</p>
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-3 gap-6">
-        {/* Generate Report Panel */}
-        <div className="col-span-1 space-y-4">
-          <motion.div
-            className="glass rounded-xl p-5"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: 0.24 }}
-            whileHover={{ y: -2 }}
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles size={14} className="text-[#2563EB]" />
-              <h2 className="text-sm font-semibold text-foreground">Generate Report</h2>
-            </div>
-
-            {/* Client selector */}
-            <div className="space-y-3">
-              <div>
-                <label className="text-[10px] text-muted uppercase tracking-wider font-medium">Client</label>
-                <select
-                  value={selectedClient}
-                  onChange={e => setSelectedClient(e.target.value)}
-                  className="input mt-1 text-xs"
-                >
-                  <option value="">Select a client...</option>
-                  {clients.map(c => (
-                    <option key={c.id} value={c.id}>{c.business_name}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Report type */}
-              <div>
-                <label className="text-[10px] text-muted uppercase tracking-wider font-medium">Report Type</label>
-                <div className="flex gap-2 mt-1">
-                  {(["weekly", "monthly"] as const).map(type => (
-                    <button
-                      key={type}
-                      onClick={() => setReportType(type)}
-                      className={`flex-1 py-2 px-3 rounded-xl text-xs font-medium border transition-all ${
-                        reportType === type
-                          ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
-                          : "bg-surface-light border-border/30 text-muted hover:text-foreground"
-                      }`}
-                    >
-                      {type === "weekly" ? "Weekly" : "Monthly"}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <button
-                  onClick={generateReport}
-                  disabled={!selectedClient || generating}
-                  className="btn-primary w-full text-xs flex items-center justify-center gap-2"
-                >
-                  {generating ? (
-                    <><Loader size={12} className="animate-spin" /> Generating...</>
-                  ) : (
-                    <><Sparkles size={12} /> Generate Report</>
-                  )}
+    <MotionPage className="p-6 max-w-7xl mx-auto space-y-6 fade-in">{/* Hero Header */}<PageHero
+              eyebrow="INTEL REPORTS"
+              icon={<FileText size={22} />}
+              title="AI Client Reports"
+              subtitle="Generate AI-powered performance reports for your clients."
+              gradient="purple"
+              actions={
+                <button onClick={fetchData}
+                  className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all">
+                  <RefreshCw size={12} /> Refresh
                 </button>
-              </motion.div>
-            </div>
-
-            {/* Selected client preview */}
-            {selectedClient && (() => {
-              const client = clients.find(c => c.id === selectedClient);
-              if (!client) return null;
-              return (
-                <div className="mt-4 p-3 rounded-xl bg-surface-light border border-border/30">
-                  <p className="text-xs font-medium text-foreground">{client.business_name}</p>
-                  <div className="flex items-center gap-3 mt-1.5 text-[10px] text-muted">
-                    <span>MRR: ${client.mrr.toLocaleString()}</span>
-                    <span>Health: {client.health_score}%</span>
+              }
+            />{/* Stats */}<div className="grid grid-cols-4 gap-3">
+              {[
+                { label: "Total Reports", value: totalReports, icon: FileText, color: "text-info" },
+                { label: "Weekly Reports", value: weeklyReports, icon: Calendar, color: "text-[#2563EB]" },
+                { label: "Monthly Reports", value: monthlyReports, icon: BarChart3, color: "text-[#2563EB]" },
+                { label: "Clients Covered", value: uniqueClients, icon: Users, color: "text-success" },
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  className="glass rounded-xl p-4 relative overflow-hidden"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: index * 0.06 }}
+                  whileHover={{ y: -2 }}
+                >
+                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+                  <div className="flex items-center justify-between mb-2">
+                    <stat.icon size={14} className={stat.color} />
                   </div>
-                </div>
-              );
-            })()}
-          </motion.div>
-
-          {/* Quick Generate for All */}
-          <motion.div
-            className="glass rounded-xl p-5"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: 0.30 }}
-            whileHover={{ y: -2 }}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <Users size={14} className="text-[#2563EB]" />
-              <h2 className="text-sm font-semibold text-foreground">Batch Reports</h2>
-            </div>
-            <p className="text-[10px] text-muted mb-3">
-              Weekly reports are auto-generated every Friday at 3 PM via cron job. You can also generate individual reports on-demand above.
-            </p>
-            <div className="flex items-center gap-2 text-[10px] text-success">
-              <Clock size={10} />
-              <span>Next auto-run: Friday 3:00 PM</span>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Report Output & History */}
-        <div className="col-span-2 space-y-4">
-          {/* Current Generated Report */}
-          {currentReport && (
-            <motion.div
-              className="glass-indigo rounded-xl p-5"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.22 }}
-              whileHover={{ y: -2 }}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Sparkles size={14} className="text-[#2563EB]" />
-                  <h2 className="text-sm font-semibold text-foreground">
-                    {currentReport.type === "monthly" ? "Monthly" : "Weekly"} Report � {currentReport.client}
-                  </h2>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button onClick={copyReport} className="btn-secondary text-[10px] flex items-center gap-1">
-                    {copied ? <Check size={10} /> : <Copy size={10} />}
-                    {copied ? "Copied" : "Copy"}
-                  </button>
-
-                  {/* Export dropdown */}
-                  <div className="relative" ref={exportRef}>
-                    <button
-                      onClick={() => setExportOpen(!exportOpen)}
-                      className="btn-secondary text-[10px] flex items-center gap-1"
-                    >
-                      <Share2 size={10} />
-                      Export Report
-                      <ChevronDown size={10} className={`transition-transform ${exportOpen ? "rotate-180" : ""}`} />
-                    </button>
-
-                    {exportOpen && (
-                      <div className="absolute right-0 top-full mt-1 w-52 bg-surface border border-border/50 rounded-xl shadow-elevated z-50 py-1 fade-in">
-                        <button
-                          onClick={downloadReportHTML}
-                          className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-foreground hover:bg-surface-light transition-colors"
-                        >
-                          <Download size={13} className="text-[#2563EB]" />
-                          <div>
-                            <p className="font-medium">Download as HTML</p>
-                            <p className="text-[10px] text-muted mt-0.5">Print-ready with styling</p>
-                          </div>
-                        </button>
-                        <button
-                          onClick={copyReportMarkdown}
-                          className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-foreground hover:bg-surface-light transition-colors"
-                        >
-                          <ClipboardCopy size={13} className="text-[#2563EB]" />
-                          <div>
-                            <p className="font-medium">Copy to Clipboard</p>
-                            <p className="text-[10px] text-muted mt-0.5">Formatted Markdown</p>
-                          </div>
-                        </button>
-                        <div className="border-t border-border/30 my-1" />
-                        <button
-                          onClick={handleEmailReport}
-                          className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-foreground hover:bg-surface-light transition-colors"
-                        >
-                          <Mail size={13} className="text-[#2563EB]" />
-                          <div>
-                            <p className="font-medium">Email Report</p>
-                            <p className="text-[10px] text-muted mt-0.5">Send to an email address</p>
-                          </div>
-                        </button>
-                      </div>
-                    )}
+                  <p className="text-xl font-bold text-foreground">{stat.value}</p>
+                  <p className="text-[10px] text-muted">{stat.label}</p>
+                </motion.div>
+              ))}
+            </div><div className="grid grid-cols-3 gap-6">
+              {/* Generate Report Panel */}
+              <div className="col-span-1 space-y-4">
+                <motion.div
+                  className="glass rounded-xl p-5"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: 0.24 }}
+                  whileHover={{ y: -2 }}
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <Sparkles size={14} className="text-[#2563EB]" />
+                    <h2 className="text-sm font-semibold text-foreground">Generate Report</h2>
                   </div>
-                </div>
-              </div>
 
-              {/* Metrics bar */}
-              {currentReport.metrics && (
-                <div className="flex items-center gap-4 mb-4 p-3 bg-surface-light rounded-xl text-[10px]">
-                  <div>
-                    <span className="text-muted">Leads</span>
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <span className="font-bold text-foreground">{currentReport.metrics.leads}</span>
-                      {currentReport.metrics.leads_trend !== "N/A" && (
-                        <span className={`flex items-center ${parseInt(currentReport.metrics.leads_trend) >= 0 ? "text-success" : "text-danger"}`}>
-                          {parseInt(currentReport.metrics.leads_trend) >= 0 ? <TrendingUp size={8} /> : <TrendingDown size={8} />}
-                          {currentReport.metrics.leads_trend}%
-                        </span>
-                      )}
+                  {/* Client selector */}
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-[10px] text-muted uppercase tracking-wider font-medium">Client</label>
+                      <select
+                        value={selectedClient}
+                        onChange={e => setSelectedClient(e.target.value)}
+                        className="input mt-1 text-xs"
+                      >
+                        <option value="">Select a client...</option>
+                        {clients.map(c => (
+                          <option key={c.id} value={c.id}>{c.business_name}</option>
+                        ))}
+                      </select>
                     </div>
-                  </div>
-                  <div className="w-px h-6 bg-border" />
-                  <div>
-                    <span className="text-muted">Outreach</span>
-                    <p className="font-bold text-foreground mt-0.5">{currentReport.metrics.outreach}</p>
-                  </div>
-                  <div className="w-px h-6 bg-border" />
-                  <div>
-                    <span className="text-muted">Replies</span>
-                    <p className="font-bold text-foreground mt-0.5">{currentReport.metrics.replies}</p>
-                  </div>
-                  <div className="w-px h-6 bg-border" />
-                  <div>
-                    <span className="text-muted">Deals</span>
-                    <p className="font-bold text-foreground mt-0.5">{currentReport.metrics.deals_won} (${currentReport.metrics.deals_revenue.toLocaleString()})</p>
-                  </div>
-                  <div className="w-px h-6 bg-border" />
-                  <div>
-                    <span className="text-muted">Health</span>
-                    <p className={`font-bold mt-0.5 ${currentReport.metrics.health_score >= 70 ? "text-success" : currentReport.metrics.health_score >= 40 ? "text-warning" : "text-danger"}`}>
-                      {currentReport.metrics.health_score}%
-                    </p>
-                  </div>
-                </div>
-              )}
 
-              {/* Report text */}
-              <div className="prose prose-sm max-w-none">
-                <pre className="whitespace-pre-wrap text-xs text-foreground leading-relaxed font-sans bg-surface-light rounded-xl p-4 border border-border/30 max-h-[500px] overflow-y-auto">
-                  {currentReport.report}
-                </pre>
+                    {/* Report type */}
+                    <div>
+                      <label className="text-[10px] text-muted uppercase tracking-wider font-medium">Report Type</label>
+                      <div className="flex gap-2 mt-1">
+                        {(["weekly", "monthly"] as const).map(type => (
+                          <button
+                            key={type}
+                            onClick={() => setReportType(type)}
+                            className={`flex-1 py-2 px-3 rounded-xl text-xs font-medium border transition-all ${
+                              reportType === type
+                                ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                                : "bg-surface-light border-border/30 text-muted hover:text-foreground"
+                            }`}
+                          >
+                            {type === "weekly" ? "Weekly" : "Monthly"}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <button
+                        onClick={generateReport}
+                        disabled={!selectedClient || generating}
+                        className="btn-primary w-full text-xs flex items-center justify-center gap-2"
+                      >
+                        {generating ? (
+                          <><Loader size={12} className="animate-spin" /> Generating...</>
+                        ) : (
+                          <><Sparkles size={12} /> Generate Report</>
+                        )}
+                      </button>
+                    </motion.div>
+                  </div>
+
+                  {/* Selected client preview */}
+                  {selectedClient && (() => {
+                    const client = clients.find(c => c.id === selectedClient);
+                    if (!client) return null;
+                    return (
+                      <div className="mt-4 p-3 rounded-xl bg-surface-light border border-border/30">
+                        <p className="text-xs font-medium text-foreground">{client.business_name}</p>
+                        <div className="flex items-center gap-3 mt-1.5 text-[10px] text-muted">
+                          <span>MRR: ${client.mrr.toLocaleString()}</span>
+                          <span>Health: {client.health_score}%</span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </motion.div>
+
+                {/* Quick Generate for All */}
+                <motion.div
+                  className="glass rounded-xl p-5"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: 0.30 }}
+                  whileHover={{ y: -2 }}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <Users size={14} className="text-[#2563EB]" />
+                    <h2 className="text-sm font-semibold text-foreground">Batch Reports</h2>
+                  </div>
+                  <p className="text-[10px] text-muted mb-3">
+                    Weekly reports are auto-generated every Friday at 3 PM via cron job. You can also generate individual reports on-demand above.
+                  </p>
+                  <div className="flex items-center gap-2 text-[10px] text-success">
+                    <Clock size={10} />
+                    <span>Next auto-run: Friday 3:00 PM</span>
+                  </div>
+                </motion.div>
               </div>
-            </motion.div>
-          )}
 
-          {/* Report History */}
-          <motion.div
-            className="glass rounded-xl p-5"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: 0.12 }}
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <Clock size={14} className="text-muted" />
-              <h2 className="text-sm font-semibold text-foreground">Report History</h2>
-              <span className="text-[9px] text-muted bg-surface-light px-2 py-0.5 rounded-full">{reports.length}</span>
-            </div>
-
-            {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader size={16} className="animate-spin text-muted" />
-              </div>
-            ) : reports.length === 0 ? (
-              <EmptyState
-                type="no-analytics"
-                title="No reports generated yet"
-                description="Select a client and generate your first AI-powered report."
-              />
-            ) : (
-              <div className="space-y-2">
-                {reports.map((report, index) => (
+              {/* Report Output & History */}
+              <div className="col-span-2 space-y-4">
+                {/* Current Generated Report */}
+                {currentReport && (
                   <motion.div
-                    key={report.id}
-                    className="border border-border/30 rounded-xl overflow-hidden"
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                    className="glass-indigo rounded-xl p-5"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22 }}
+                    whileHover={{ y: -2 }}
                   >
-                    <button
-                      onClick={() => setExpandedReport(expandedReport === report.id ? null : report.id)}
-                      className="w-full flex items-center justify-between px-4 py-3 hover:bg-surface-light transition-colors"
-                      aria-expanded={expandedReport === report.id}
-                      aria-controls={`report-${report.id}-content`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className={`w-1.5 h-1.5 rounded-full ${report.result?.type === "monthly_report" ? "bg-info" : "bg-[#2563EB]"}`} />
-                        <div className="text-left">
-                          <p className="text-xs font-medium text-foreground">{getClientName(report.client_id)}</p>
-                          <p className="text-[10px] text-muted">
-                            {report.result?.type === "monthly_report" ? "Monthly" : "Weekly"} Report � {new Date(report.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Sparkles size={14} className="text-[#2563EB]" />
+                        <h2 className="text-sm font-semibold text-foreground">
+                          {currentReport.type === "monthly" ? "Monthly" : "Weekly"} Report � {currentReport.client}
+                        </h2>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button onClick={copyReport} className="btn-secondary text-[10px] flex items-center gap-1">
+                          {copied ? <Check size={10} /> : <Copy size={10} />}
+                          {copied ? "Copied" : "Copy"}
+                        </button>
+
+                        {/* Export dropdown */}
+                        <div className="relative" ref={exportRef}>
+                          <button
+                            onClick={() => setExportOpen(!exportOpen)}
+                            className="btn-secondary text-[10px] flex items-center gap-1"
+                          >
+                            <Share2 size={10} />
+                            Export Report
+                            <ChevronDown size={10} className={`transition-transform ${exportOpen ? "rotate-180" : ""}`} />
+                          </button>
+
+                          {exportOpen && (
+                            <div className="absolute right-0 top-full mt-1 w-52 bg-surface border border-border/50 rounded-xl shadow-elevated z-50 py-1 fade-in">
+                              <button
+                                onClick={downloadReportHTML}
+                                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-foreground hover:bg-surface-light transition-colors"
+                              >
+                                <Download size={13} className="text-[#2563EB]" />
+                                <div>
+                                  <p className="font-medium">Download as HTML</p>
+                                  <p className="text-[10px] text-muted mt-0.5">Print-ready with styling</p>
+                                </div>
+                              </button>
+                              <button
+                                onClick={copyReportMarkdown}
+                                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-foreground hover:bg-surface-light transition-colors"
+                              >
+                                <ClipboardCopy size={13} className="text-[#2563EB]" />
+                                <div>
+                                  <p className="font-medium">Copy to Clipboard</p>
+                                  <p className="text-[10px] text-muted mt-0.5">Formatted Markdown</p>
+                                </div>
+                              </button>
+                              <div className="border-t border-border/30 my-1" />
+                              <button
+                                onClick={handleEmailReport}
+                                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-foreground hover:bg-surface-light transition-colors"
+                              >
+                                <Mail size={13} className="text-[#2563EB]" />
+                                <div>
+                                  <p className="font-medium">Email Report</p>
+                                  <p className="text-[10px] text-muted mt-0.5">Send to an email address</p>
+                                </div>
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Metrics bar */}
+                    {currentReport.metrics && (
+                      <div className="flex items-center gap-4 mb-4 p-3 bg-surface-light rounded-xl text-[10px]">
+                        <div>
+                          <span className="text-muted">Leads</span>
+                          <div className="flex items-center gap-1 mt-0.5">
+                            <span className="font-bold text-foreground">{currentReport.metrics.leads}</span>
+                            {currentReport.metrics.leads_trend !== "N/A" && (
+                              <span className={`flex items-center ${parseInt(currentReport.metrics.leads_trend) >= 0 ? "text-success" : "text-danger"}`}>
+                                {parseInt(currentReport.metrics.leads_trend) >= 0 ? <TrendingUp size={8} /> : <TrendingDown size={8} />}
+                                {currentReport.metrics.leads_trend}%
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="w-px h-6 bg-border" />
+                        <div>
+                          <span className="text-muted">Outreach</span>
+                          <p className="font-bold text-foreground mt-0.5">{currentReport.metrics.outreach}</p>
+                        </div>
+                        <div className="w-px h-6 bg-border" />
+                        <div>
+                          <span className="text-muted">Replies</span>
+                          <p className="font-bold text-foreground mt-0.5">{currentReport.metrics.replies}</p>
+                        </div>
+                        <div className="w-px h-6 bg-border" />
+                        <div>
+                          <span className="text-muted">Deals</span>
+                          <p className="font-bold text-foreground mt-0.5">{currentReport.metrics.deals_won} (${currentReport.metrics.deals_revenue.toLocaleString()})</p>
+                        </div>
+                        <div className="w-px h-6 bg-border" />
+                        <div>
+                          <span className="text-muted">Health</span>
+                          <p className={`font-bold mt-0.5 ${currentReport.metrics.health_score >= 70 ? "text-success" : currentReport.metrics.health_score >= 40 ? "text-warning" : "text-danger"}`}>
+                            {currentReport.metrics.health_score}%
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        {report.result?.metrics && (
-                          <span className="text-[9px] text-muted bg-surface-light px-2 py-0.5 rounded-full">
-                            {report.result.metrics.leads} leads
-                          </span>
-                        )}
-                        {expandedReport === report.id ? <ChevronUp size={12} className="text-muted" /> : <ChevronDown size={12} className="text-muted" />}
-                      </div>
-                    </button>
-
-                    {expandedReport === report.id && report.result?.report && (
-                      <div id={`report-${report.id}-content`} className="px-4 pb-4 border-t border-border/20">
-                        <pre className="whitespace-pre-wrap text-[11px] text-foreground leading-relaxed font-sans mt-3 bg-surface-light rounded-xl p-3 max-h-[300px] overflow-y-auto">
-                          {report.result.report}
-                        </pre>
-                        <div className="flex items-center gap-2 mt-2">
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText(report.result.report);
-                            }}
-                            className="text-[10px] text-muted hover:text-foreground flex items-center gap-1 transition-colors"
-                          >
-                            <Copy size={10} /> Copy
-                          </button>
-                        </div>
-                      </div>
                     )}
-                  </motion.div>
-                ))}
-              </div>
-            )}
-          </motion.div>
-        </div>
-      </div>
 
-      {/* Email report modal */}
-      {emailFormOpen && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center fade-in">
-          <div className="bg-surface border border-border/50  p-6 w-full max-w-sm shadow-elevated">
-            <div className="flex items-center gap-2 mb-4">
-              <Mail size={16} className="text-[#2563EB]" />
-              <h3 className="text-sm font-semibold text-foreground">Email Report</h3>
-            </div>
-            <form onSubmit={submitEmailReport} className="space-y-3">
-              <div>
-                <label className="text-[10px] text-muted uppercase tracking-wider font-medium">Recipient Email</label>
-                <input
-                  type="email"
-                  required
-                  value={emailAddress}
-                  onChange={e => setEmailAddress(e.target.value)}
-                  placeholder="client@example.com"
-                  className="input mt-1 text-xs w-full"
-                  autoFocus
-                />
-              </div>
-              <div className="flex items-center gap-2 pt-1">
-                <button type="submit" className="btn-primary text-xs flex-1">
-                  Send Report
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setEmailFormOpen(false); setEmailAddress(""); }}
-                  className="btn-secondary text-xs flex-1"
+                    {/* Report text */}
+                    <div className="prose prose-sm max-w-none">
+                      <pre className="whitespace-pre-wrap text-xs text-foreground leading-relaxed font-sans bg-surface-light rounded-xl p-4 border border-border/30 max-h-[500px] overflow-y-auto">
+                        {currentReport.report}
+                      </pre>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Report History */}
+                <motion.div
+                  className="glass rounded-xl p-5"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: 0.12 }}
                 >
-                  Cancel
-                </button>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Clock size={14} className="text-muted" />
+                    <h2 className="text-sm font-semibold text-foreground">Report History</h2>
+                    <span className="text-[9px] text-muted bg-surface-light px-2 py-0.5 rounded-full">{reports.length}</span>
+                  </div>
+
+                  {loading ? (
+                    <div className="flex items-center justify-center py-12">
+                      <Loader size={16} className="animate-spin text-muted" />
+                    </div>
+                  ) : reports.length === 0 ? (
+                    <EmptyState
+                      type="no-analytics"
+                      title="No reports generated yet"
+                      description="Select a client and generate your first AI-powered report."
+                    />
+                  ) : (
+                    <div className="space-y-2">
+                      {reports.map((report, index) => (
+                        <motion.div
+                          key={report.id}
+                          className="border border-border/30 rounded-xl overflow-hidden"
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.18, delay: index * 0.04 }}
+                          whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                        >
+                          <button
+                            onClick={() => setExpandedReport(expandedReport === report.id ? null : report.id)}
+                            className="w-full flex items-center justify-between px-4 py-3 hover:bg-surface-light transition-colors"
+                            aria-expanded={expandedReport === report.id}
+                            aria-controls={`report-${report.id}-content`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={`w-1.5 h-1.5 rounded-full ${report.result?.type === "monthly_report" ? "bg-info" : "bg-[#2563EB]"}`} />
+                              <div className="text-left">
+                                <p className="text-xs font-medium text-foreground">{getClientName(report.client_id)}</p>
+                                <p className="text-[10px] text-muted">
+                                  {report.result?.type === "monthly_report" ? "Monthly" : "Weekly"} Report � {new Date(report.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {report.result?.metrics && (
+                                <span className="text-[9px] text-muted bg-surface-light px-2 py-0.5 rounded-full">
+                                  {report.result.metrics.leads} leads
+                                </span>
+                              )}
+                              {expandedReport === report.id ? <ChevronUp size={12} className="text-muted" /> : <ChevronDown size={12} className="text-muted" />}
+                            </div>
+                          </button>
+
+                          {expandedReport === report.id && report.result?.report && (
+                            <div id={`report-${report.id}-content`} className="px-4 pb-4 border-t border-border/20">
+                              <pre className="whitespace-pre-wrap text-[11px] text-foreground leading-relaxed font-sans mt-3 bg-surface-light rounded-xl p-3 max-h-[300px] overflow-y-auto">
+                                {report.result.report}
+                              </pre>
+                              <div className="flex items-center gap-2 mt-2">
+                                <button
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(report.result.report);
+                                  }}
+                                  className="text-[10px] text-muted hover:text-foreground flex items-center gap-1 transition-colors"
+                                >
+                                  <Copy size={10} /> Copy
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
+            </div>{/* Email report modal */}{emailFormOpen && (
+              <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center fade-in">
+                <div className="bg-surface border border-border/50  p-6 w-full max-w-sm shadow-elevated">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Mail size={16} className="text-[#2563EB]" />
+                    <h3 className="text-sm font-semibold text-foreground">Email Report</h3>
+                  </div>
+                  <form onSubmit={submitEmailReport} className="space-y-3">
+                    <div>
+                      <label className="text-[10px] text-muted uppercase tracking-wider font-medium">Recipient Email</label>
+                      <input
+                        type="email"
+                        required
+                        value={emailAddress}
+                        onChange={e => setEmailAddress(e.target.value)}
+                        placeholder="client@example.com"
+                        className="input mt-1 text-xs w-full"
+                        autoFocus
+                      />
+                    </div>
+                    <div className="flex items-center gap-2 pt-1">
+                      <button type="submit" className="btn-primary text-xs flex-1">
+                        Send Report
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setEmailFormOpen(false); setEmailAddress(""); }}
+                        className="btn-secondary text-xs flex-1"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}</MotionPage>
   );
 }

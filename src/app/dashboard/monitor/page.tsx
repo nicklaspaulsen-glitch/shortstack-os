@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import { Activity, CheckCircle, AlertTriangle, XCircle, Clock, RefreshCw, Wifi } from "lucide-react";
 import { motion } from "framer-motion";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface ServiceHealth {
   id: string;
@@ -123,123 +124,112 @@ export default function MonitorPage() {
   }[overall];
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        title="System Monitor"
-        eyebrow="MONITOR"
-        subtitle="Live status board — auto-refreshes every 30 seconds."
-        icon={<Activity className="w-6 h-6" />}
-        gradient="gold"
-        actions={
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-[#9CA3AF] tabular-nums">Next refresh in {countdown}s</span>
-            <button
-              onClick={load}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-[#374151] text-sm transition-colors border border-[rgba(0,0,0,0.08)]"
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-              Refresh now
-            </button>
-          </div>
-        }
-      />
-
-      {/* Overall status banner */}
-      <motion.div
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-        className={`flex items-center gap-3 px-5 py-4 rounded-xl border ${overallCls}`}
-      >
-        <Wifi className="w-5 h-5" />
-        <span className="font-semibold">{overallLabel}</span>
-        <span className="ml-auto text-xs opacity-70">Last updated {lastRefresh.toLocaleTimeString()}</span>
-      </motion.div>
-
-      {/* Summary counts */}
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { label: "Healthy", count: annotated.filter(s => s.computedStatus === "healthy").length, cls: "text-emerald-400", bar: "from-emerald-500 to-emerald-400" },
-          { label: "Degraded", count: annotated.filter(s => s.computedStatus === "degraded").length, cls: "text-[#2563EB]", bar: "from-[#2563EB] to-[#3B82F6]" },
-          { label: "Down", count: annotated.filter(s => s.computedStatus === "down").length, cls: "text-red-400", bar: "from-red-500 to-red-400" },
-        ].map(({ label, count, cls, bar }, i) => (
-          <motion.div
-            key={label}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: i * 0.07 }}
-            whileHover={{ y: -2 }}
-            className="glass rounded-xl p-4 text-center relative overflow-hidden"
-          >
-            <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${bar}`} />
-            <div className={`text-2xl font-bold ${cls}`}>{count}</div>
-            <div className="text-xs text-muted mt-0.5">{label}</div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Per-category boards */}
-      {loading ? (
-        <div className="space-y-4">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="glass rounded-xl p-5 animate-pulse">
-              <div className="h-4 bg-[rgba(0,0,0,0.06)] rounded w-1/4 mb-4" />
-              <div className="space-y-2">
-                {Array.from({ length: 3 }).map((_, j) => <div key={j} className="h-10 bg-[rgba(0,0,0,0.04)] rounded" />)}
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : annotated.length === 0 ? (
-        <div className="glass rounded-xl p-10 text-center text-muted">
-          <Activity className="w-10 h-10 mx-auto mb-3 opacity-30" />
-          <p>No services found. Health checks will appear here once running.</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b)).map(([category, svcs], ci) => (
-            <motion.div
-              key={category}
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.35, delay: ci * 0.06 }}
-              className="glass rounded-xl overflow-hidden"
-            >
-              <div className="px-5 py-3 border-b border-[rgba(0,0,0,0.06)] flex items-center justify-between">
-                <span className="text-sm font-semibold text-[#111827]">{category}</span>
-                <span className="text-xs text-muted">{svcs.length} service{svcs.length !== 1 ? "s" : ""}</span>
-              </div>
-              <div className="divide-y divide-[rgba(0,0,0,0.06)]">
-                {svcs.map((svc, si) => (
-                  <motion.div
-                    key={svc.id}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.25, delay: ci * 0.06 + si * 0.04 }}
-                    className="px-5 py-3.5 flex items-center gap-3 flex-wrap hover:bg-[rgba(37,99,235,0.04)] transition-colors"
+    <MotionPage className="space-y-6"><PageHero
+              title="System Monitor"
+              eyebrow="MONITOR"
+              subtitle="Live status board — auto-refreshes every 30 seconds."
+              icon={<Activity className="w-6 h-6" />}
+              gradient="gold"
+              actions={
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-[#9CA3AF] tabular-nums">Next refresh in {countdown}s</span>
+                  <button
+                    onClick={load}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-[#374151] text-sm transition-colors border border-[rgba(0,0,0,0.08)]"
                   >
-                    <StatusDot status={svc.computedStatus} />
-                    <StatusIcon status={svc.computedStatus} />
-                    <span className="flex-1 text-sm text-[#374151]">{svc.integration_name}</span>
-                    <div className="flex items-center gap-4 text-xs text-muted">
-                      {svc.response_time_ms != null && <span>{svc.response_time_ms}ms</span>}
-                      {svc.uptime_percentage != null && (
-                        <span className="text-[#6B7280]">{Number(svc.uptime_percentage).toFixed(1)}% uptime</span>
-                      )}
-                      <span>Checked {timeAgo(svc.last_check_at)}</span>
+                    <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+                    Refresh now
+                  </button>
+                </div>
+              }
+            />{/* Overall status banner */}<motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+              className={`flex items-center gap-3 px-5 py-4 rounded-xl border ${overallCls}`}
+            >
+              <Wifi className="w-5 h-5" />
+              <span className="font-semibold">{overallLabel}</span>
+              <span className="ml-auto text-xs opacity-70">Last updated {lastRefresh.toLocaleTimeString()}</span>
+            </motion.div>{/* Summary counts */}<div className="grid grid-cols-3 gap-3">
+              {[
+                { label: "Healthy", count: annotated.filter(s => s.computedStatus === "healthy").length, cls: "text-emerald-400", bar: "from-emerald-500 to-emerald-400" },
+                { label: "Degraded", count: annotated.filter(s => s.computedStatus === "degraded").length, cls: "text-[#2563EB]", bar: "from-[#2563EB] to-[#3B82F6]" },
+                { label: "Down", count: annotated.filter(s => s.computedStatus === "down").length, cls: "text-red-400", bar: "from-red-500 to-red-400" },
+              ].map(({ label, count, cls, bar }, i) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: i * 0.07 }}
+                  whileHover={{ y: -2 }}
+                  className="glass rounded-xl p-4 text-center relative overflow-hidden"
+                >
+                  <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${bar}`} />
+                  <div className={`text-2xl font-bold ${cls}`}>{count}</div>
+                  <div className="text-xs text-muted mt-0.5">{label}</div>
+                </motion.div>
+              ))}
+            </div>{/* Per-category boards */}{loading ? (
+              <div className="space-y-4">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="glass rounded-xl p-5 animate-pulse">
+                    <div className="h-4 bg-[rgba(0,0,0,0.06)] rounded w-1/4 mb-4" />
+                    <div className="space-y-2">
+                      {Array.from({ length: 3 }).map((_, j) => <div key={j} className="h-10 bg-[rgba(0,0,0,0.04)] rounded" />)}
                     </div>
-                    {svc.error_message && (
-                      <span className="text-xs text-red-400/70 max-w-[200px] truncate" title={svc.error_message}>
-                        {svc.error_message}
-                      </span>
-                    )}
+                  </div>
+                ))}
+              </div>
+            ) : annotated.length === 0 ? (
+              <div className="glass rounded-xl p-10 text-center text-muted">
+                <Activity className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                <p>No services found. Health checks will appear here once running.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b)).map(([category, svcs], ci) => (
+                  <motion.div
+                    key={category}
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.35, delay: ci * 0.06 }}
+                    className="glass rounded-xl overflow-hidden"
+                  >
+                    <div className="px-5 py-3 border-b border-[rgba(0,0,0,0.06)] flex items-center justify-between">
+                      <span className="text-sm font-semibold text-[#111827]">{category}</span>
+                      <span className="text-xs text-muted">{svcs.length} service{svcs.length !== 1 ? "s" : ""}</span>
+                    </div>
+                    <div className="divide-y divide-[rgba(0,0,0,0.06)]">
+                      {svcs.map((svc, si) => (
+                        <motion.div
+                          key={svc.id}
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.25, delay: ci * 0.06 + si * 0.04 }}
+                          className="px-5 py-3.5 flex items-center gap-3 flex-wrap hover:bg-[rgba(37,99,235,0.04)] transition-colors"
+                        >
+                          <StatusDot status={svc.computedStatus} />
+                          <StatusIcon status={svc.computedStatus} />
+                          <span className="flex-1 text-sm text-[#374151]">{svc.integration_name}</span>
+                          <div className="flex items-center gap-4 text-xs text-muted">
+                            {svc.response_time_ms != null && <span>{svc.response_time_ms}ms</span>}
+                            {svc.uptime_percentage != null && (
+                              <span className="text-[#6B7280]">{Number(svc.uptime_percentage).toFixed(1)}% uptime</span>
+                            )}
+                            <span>Checked {timeAgo(svc.last_check_at)}</span>
+                          </div>
+                          {svc.error_message && (
+                            <span className="text-xs text-red-400/70 max-w-[200px] truncate" title={svc.error_message}>
+                              {svc.error_message}
+                            </span>
+                          )}
+                        </motion.div>
+                      ))}
+                    </div>
                   </motion.div>
                 ))}
               </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
-    </div>
+            )}</MotionPage>
   );
 }

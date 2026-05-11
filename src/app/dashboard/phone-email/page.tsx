@@ -11,6 +11,7 @@ import {
 import PageAI from "@/components/page-ai";
 import PageHero from "@/components/ui/page-hero";
 import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /** Pick a brand icon based on a provider name. Falls back to a generic Server icon. */
 function ProviderIcon({ provider, size = 10 }: { provider: string; size?: number }) {
@@ -485,782 +486,766 @@ export default function PhoneEmailPage() {
   const clientsWithoutPhone = clients.filter(c => !c.twilio_phone_number);
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Phone size={28} />}
-        title="Sender Management"
-        eyebrow="PHONE & EMAIL"
-        subtitle="Phone & email sender pool with smart rotation."
-        gradient="gold"
-      />
-
-      {/* ════════════════════ ROTATION STATS CARD ════════════════════ */}
-      <div className="glass rounded-xl p-4 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Activity size={14} className="text-[#2563EB]" />
-            <span className="text-xs font-semibold">Smart Rotation</span>
-            <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium border ${
-              computedStats.rotationActive
-                ? "bg-green-500/10 text-green-400 border-green-500/20"
-                : "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"
-            }`}>
-              {computedStats.rotationActive ? "Active" : "Inactive"}
-            </span>
-          </div>
-          <button onClick={() => { loadAll(); fetchRotationStats(); }}
-            className="text-[10px] px-2 py-1 rounded-lg text-muted hover:text-foreground border border-border hover:border-[rgba(37,99,235,0.2)] transition-all flex items-center gap-1">
-            <RefreshCw size={10} /> Refresh
-          </button>
-        </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {/* Total pool capacity */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <BarChart3 size={11} className="text-[#2563EB]" />
-                <span className="text-[9px] text-muted uppercase tracking-wider">Total Capacity</span>
+    <MotionPage className="fade-in space-y-5"><PageHero
+              icon={<Phone size={28} />}
+              title="Sender Management"
+              eyebrow="PHONE & EMAIL"
+              subtitle="Phone & email sender pool with smart rotation."
+              gradient="gold"
+            />{/* ════════════════════ ROTATION STATS CARD ════════════════════ */}<div className="glass rounded-xl p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Activity size={14} className="text-[#2563EB]" />
+                  <span className="text-xs font-semibold">Smart Rotation</span>
+                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium border ${
+                    computedStats.rotationActive
+                      ? "bg-green-500/10 text-green-400 border-green-500/20"
+                      : "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"
+                  }`}>
+                    {computedStats.rotationActive ? "Active" : "Inactive"}
+                  </span>
+                </div>
+                <button onClick={() => { loadAll(); fetchRotationStats(); }}
+                  className="text-[10px] px-2 py-1 rounded-lg text-muted hover:text-foreground border border-border hover:border-[rgba(37,99,235,0.2)] transition-all flex items-center gap-1">
+                  <RefreshCw size={10} /> Refresh
+                </button>
               </div>
-              <p className="text-lg font-bold text-[#2563EB]">{totalCapacity.toLocaleString()}</p>
-              <p className="text-[9px] text-muted">msgs/day across all senders</p>
-            </div>
-          </motion.div>
 
-          {/* Used today */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <TrendingUp size={11} className="text-cyan-400" />
-                <span className="text-[9px] text-muted uppercase tracking-wider">Used Today</span>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                {/* Total pool capacity */}
+                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                  <div className="p-3">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <BarChart3 size={11} className="text-[#2563EB]" />
+                      <span className="text-[9px] text-muted uppercase tracking-wider">Total Capacity</span>
+                    </div>
+                    <p className="text-lg font-bold text-[#2563EB]">{totalCapacity.toLocaleString()}</p>
+                    <p className="text-[9px] text-muted">msgs/day across all senders</p>
+                  </div>
+                </motion.div>
+
+                {/* Used today */}
+                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                  <div className="p-3">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <TrendingUp size={11} className="text-cyan-400" />
+                      <span className="text-[9px] text-muted uppercase tracking-wider">Used Today</span>
+                    </div>
+                    <p className="text-lg font-bold text-cyan-400">{totalUsed.toLocaleString()}</p>
+                    <div className="mt-1 h-1.5 bg-border rounded-full overflow-hidden">
+                      <div className={`h-full rounded-full transition-all ${pctBarColor(totalUsed, totalCapacity)}`}
+                        style={{ width: `${pct(totalUsed, totalCapacity)}%` }} />
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Phone senders */}
+                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                  <div className="p-3">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <Phone size={11} className="text-[#2563EB]" />
+                      <span className="text-[9px] text-muted uppercase tracking-wider">Phone Senders</span>
+                    </div>
+                    <p className="text-lg font-bold text-[#2563EB]">{computedStats.phones.active}</p>
+                    <p className="text-[9px] text-muted">
+                      {computedStats.phones.usedToday.toLocaleString()} / {computedStats.phones.totalCapacity.toLocaleString()} used
+                    </p>
+                  </div>
+                </motion.div>
+
+                {/* Email senders */}
+                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 3 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                  <div className="p-3">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <Mail size={11} className="text-[#2563EB]" />
+                      <span className="text-[9px] text-muted uppercase tracking-wider">Email Senders</span>
+                    </div>
+                    <p className="text-lg font-bold text-[#2563EB]">{computedStats.emails.active}</p>
+                    <p className="text-[9px] text-muted">
+                      {computedStats.emails.usedToday.toLocaleString()} / {computedStats.emails.totalCapacity.toLocaleString()} used
+                    </p>
+                  </div>
+                </motion.div>
               </div>
-              <p className="text-lg font-bold text-cyan-400">{totalUsed.toLocaleString()}</p>
-              <div className="mt-1 h-1.5 bg-border rounded-full overflow-hidden">
-                <div className={`h-full rounded-full transition-all ${pctBarColor(totalUsed, totalCapacity)}`}
-                  style={{ width: `${pct(totalUsed, totalCapacity)}%` }} />
+
+              {/* Remaining capacity bar */}
+              <div className="flex items-center gap-3 text-[10px]">
+                <Zap size={11} className="text-[#2563EB] shrink-0" />
+                <span className="text-muted shrink-0">Remaining today:</span>
+                <div className="flex-1 h-2 bg-border rounded-full overflow-hidden">
+                  <div className="h-full bg-green-500/70 rounded-full transition-all"
+                    style={{ width: `${pct(totalRemaining, totalCapacity)}%` }} />
+                </div>
+                <span className="font-semibold text-green-400 shrink-0">{totalRemaining.toLocaleString()}</span>
               </div>
-            </div>
-          </motion.div>
+            </div>{/* Tab Navigation */}<div className="flex gap-1 border-b border-border pb-px">
+              {([
+                { key: "phone" as MainTab, label: "Phone Numbers", icon: Phone },
+                { key: "email" as MainTab, label: "Email Addresses", icon: Mail },
+              ]).map(t => (
+                <button key={t.key} onClick={() => setActiveTab(t.key)}
+                  className={`flex items-center gap-1.5 px-4 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${
+                    activeTab === t.key ? "text-[#2563EB] border-b-2 border-[#2563EB]" : "text-muted hover:text-foreground"
+                  }`}>
+                  <t.icon size={13} />
+                  {t.label}
+                </button>
+              ))}
+            </div>{/* ════════════════════ PHONE NUMBERS TAB ════════════════════ */}{activeTab === "phone" && (
+              <div className="space-y-4">
+                {/* Section Header */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-sm font-semibold">Phone Numbers</h2>
+                    <p className="text-[10px] text-muted">Pool &amp; client-assigned numbers for calls and SMS outreach</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => { setShowManualPhoneModal(true); setManualPhone(""); setManualLabel(""); setManualType("local"); }}
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-background text-foreground border border-border hover:border-[rgba(37,99,235,0.2)] transition-all flex items-center gap-1">
+                      <Plus size={12} /> Add Existing Number
+                    </button>
+                    <button onClick={() => { setShowBuyModal(true); setSearchResults([]); setSearchError(""); setPurchaseError(""); setSelectedClientId(""); setPurchaseTarget("pool"); }}
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
+                      <Plus size={12} /> Buy New Number
+                    </button>
+                  </div>
+                </div>
 
-          {/* Phone senders */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Phone size={11} className="text-[#2563EB]" />
-                <span className="text-[9px] text-muted uppercase tracking-wider">Phone Senders</span>
-              </div>
-              <p className="text-lg font-bold text-[#2563EB]">{computedStats.phones.active}</p>
-              <p className="text-[9px] text-muted">
-                {computedStats.phones.usedToday.toLocaleString()} / {computedStats.phones.totalCapacity.toLocaleString()} used
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Email senders */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 3 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-3">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Mail size={11} className="text-[#2563EB]" />
-                <span className="text-[9px] text-muted uppercase tracking-wider">Email Senders</span>
-              </div>
-              <p className="text-lg font-bold text-[#2563EB]">{computedStats.emails.active}</p>
-              <p className="text-[9px] text-muted">
-                {computedStats.emails.usedToday.toLocaleString()} / {computedStats.emails.totalCapacity.toLocaleString()} used
-              </p>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Remaining capacity bar */}
-        <div className="flex items-center gap-3 text-[10px]">
-          <Zap size={11} className="text-[#2563EB] shrink-0" />
-          <span className="text-muted shrink-0">Remaining today:</span>
-          <div className="flex-1 h-2 bg-border rounded-full overflow-hidden">
-            <div className="h-full bg-green-500/70 rounded-full transition-all"
-              style={{ width: `${pct(totalRemaining, totalCapacity)}%` }} />
-          </div>
-          <span className="font-semibold text-green-400 shrink-0">{totalRemaining.toLocaleString()}</span>
-        </div>
-      </div>
-
-      {/* Tab Navigation */}
-      <div className="flex gap-1 border-b border-border pb-px">
-        {([
-          { key: "phone" as MainTab, label: "Phone Numbers", icon: Phone },
-          { key: "email" as MainTab, label: "Email Addresses", icon: Mail },
-        ]).map(t => (
-          <button key={t.key} onClick={() => setActiveTab(t.key)}
-            className={`flex items-center gap-1.5 px-4 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${
-              activeTab === t.key ? "text-[#2563EB] border-b-2 border-[#2563EB]" : "text-muted hover:text-foreground"
-            }`}>
-            <t.icon size={13} />
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {/* ════════════════════ PHONE NUMBERS TAB ════════════════════ */}
-      {activeTab === "phone" && (
-        <div className="space-y-4">
-          {/* Section Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-sm font-semibold">Phone Numbers</h2>
-              <p className="text-[10px] text-muted">Pool &amp; client-assigned numbers for calls and SMS outreach</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <button onClick={() => { setShowManualPhoneModal(true); setManualPhone(""); setManualLabel(""); setManualType("local"); }}
-                className="text-[10px] px-3 py-1.5 rounded-lg bg-background text-foreground border border-border hover:border-[rgba(37,99,235,0.2)] transition-all flex items-center gap-1">
-                <Plus size={12} /> Add Existing Number
-              </button>
-              <button onClick={() => { setShowBuyModal(true); setSearchResults([]); setSearchError(""); setPurchaseError(""); setSelectedClientId(""); setPurchaseTarget("pool"); }}
-                className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
-                <Plus size={12} /> Buy New Number
-              </button>
-            </div>
-          </div>
-
-          {/* Active Numbers Table */}
-          <div className="glass rounded-xl overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-[11px]">
-                <thead>
-                  <tr className="border-b border-border text-muted text-left">
-                    <th className="p-3 font-medium">Phone Number</th>
-                    <th className="p-3 font-medium">Assigned To</th>
-                    <th className="p-3 font-medium">Type</th>
-                    <th className="p-3 font-medium">Status</th>
-                    <th className="p-3 font-medium">Warmup</th>
-                    <th className="p-3 font-medium">Daily Limit</th>
-                    <th className="p-3 font-medium">Sent Today</th>
-                    <th className="p-3 font-medium">Capabilities</th>
-                    <th className="p-3 font-medium text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan={9} className="p-8 text-center">
-                        <div className="flex items-center justify-center gap-2 text-muted text-xs">
-                          <RefreshCw size={14} className="animate-spin" />
-                          Loading phone numbers...
-                        </div>
-                      </td>
-                    </tr>
-                  ) : (
-                    <>
-                      {poolPhones.map(p => (
-                        <tr key={p.id} className="border-b border-border/50 hover:bg-card/50 transition-colors">
-                          <td className="p-3">
-                            <div>
-                              <span className="font-mono font-medium text-foreground">{p.number}</span>
-                              {p.label && <span className="block text-[9px] text-muted mt-0.5">{p.label}</span>}
-                            </div>
-                          </td>
-                          <td className="p-3">
-                            {p.assignedTo ? (
-                              <span className="flex items-center gap-1 text-foreground">
-                                <Users size={10} className="text-muted" /> {p.assignedTo}
-                              </span>
-                            ) : (
-                              <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                                Pool
-                              </span>
-                            )}
-                          </td>
-                          <td className="p-3">
-                            <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] capitalize">
-                              {p.type}
-                            </span>
-                          </td>
-                          <td className="p-3">
-                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium ${
-                              p.status === "active"
-                                ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                                : p.status === "warming"
-                                ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
-                                : "bg-red-500/10 text-red-400 border border-red-500/20"
-                            }`}>
-                              {p.status}
-                            </span>
-                          </td>
-                          <td className="p-3">
-                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium border ${WARMUP_BADGE[p.warmupStage].class}`}>
-                              {WARMUP_BADGE[p.warmupStage].label}
-                            </span>
-                          </td>
-                          <td className="p-3 text-muted">{p.dailyLimit.toLocaleString()}</td>
-                          <td className="p-3">
-                            <div className="flex items-center gap-2">
-                              <span className="text-foreground">{p.sentToday.toLocaleString()}</span>
-                              <div className="flex-1 max-w-[50px] h-1.5 bg-border rounded-full overflow-hidden">
-                                <div className={`h-full rounded-full transition-all ${pctBarColor(p.sentToday, p.dailyLimit)}`}
-                                  style={{ width: `${pct(p.sentToday, p.dailyLimit)}%` }} />
+                {/* Active Numbers Table */}
+                <div className="glass rounded-xl overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[11px]">
+                      <thead>
+                        <tr className="border-b border-border text-muted text-left">
+                          <th className="p-3 font-medium">Phone Number</th>
+                          <th className="p-3 font-medium">Assigned To</th>
+                          <th className="p-3 font-medium">Type</th>
+                          <th className="p-3 font-medium">Status</th>
+                          <th className="p-3 font-medium">Warmup</th>
+                          <th className="p-3 font-medium">Daily Limit</th>
+                          <th className="p-3 font-medium">Sent Today</th>
+                          <th className="p-3 font-medium">Capabilities</th>
+                          <th className="p-3 font-medium text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {loading ? (
+                          <tr>
+                            <td colSpan={9} className="p-8 text-center">
+                              <div className="flex items-center justify-center gap-2 text-muted text-xs">
+                                <RefreshCw size={14} className="animate-spin" />
+                                Loading phone numbers...
                               </div>
-                            </div>
-                          </td>
-                          <td className="p-3">
-                            <div className="flex gap-1">
-                              {p.capabilities.map(c => (
-                                <span key={c} className={`px-1.5 py-0.5 rounded text-[8px] font-medium border ${capBadgeColor(c)}`}>
-                                  {c}
-                                </span>
+                            </td>
+                          </tr>
+                        ) : (
+                          <>
+                            {poolPhones.map(p => (
+                              <tr key={p.id} className="border-b border-border/50 hover:bg-card/50 transition-colors">
+                                <td className="p-3">
+                                  <div>
+                                    <span className="font-mono font-medium text-foreground">{p.number}</span>
+                                    {p.label && <span className="block text-[9px] text-muted mt-0.5">{p.label}</span>}
+                                  </div>
+                                </td>
+                                <td className="p-3">
+                                  {p.assignedTo ? (
+                                    <span className="flex items-center gap-1 text-foreground">
+                                      <Users size={10} className="text-muted" /> {p.assignedTo}
+                                    </span>
+                                  ) : (
+                                    <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                                      Pool
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="p-3">
+                                  <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] capitalize">
+                                    {p.type}
+                                  </span>
+                                </td>
+                                <td className="p-3">
+                                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium ${
+                                    p.status === "active"
+                                      ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                                      : p.status === "warming"
+                                      ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                                      : "bg-red-500/10 text-red-400 border border-red-500/20"
+                                  }`}>
+                                    {p.status}
+                                  </span>
+                                </td>
+                                <td className="p-3">
+                                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium border ${WARMUP_BADGE[p.warmupStage].class}`}>
+                                    {WARMUP_BADGE[p.warmupStage].label}
+                                  </span>
+                                </td>
+                                <td className="p-3 text-muted">{p.dailyLimit.toLocaleString()}</td>
+                                <td className="p-3">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-foreground">{p.sentToday.toLocaleString()}</span>
+                                    <div className="flex-1 max-w-[50px] h-1.5 bg-border rounded-full overflow-hidden">
+                                      <div className={`h-full rounded-full transition-all ${pctBarColor(p.sentToday, p.dailyLimit)}`}
+                                        style={{ width: `${pct(p.sentToday, p.dailyLimit)}%` }} />
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="p-3">
+                                  <div className="flex gap-1">
+                                    {p.capabilities.map(c => (
+                                      <span key={c} className={`px-1.5 py-0.5 rounded text-[8px] font-medium border ${capBadgeColor(c)}`}>
+                                        {c}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </td>
+                                <td className="p-3 text-right">
+                                  <div className="flex items-center justify-end gap-1.5">
+                                    <a href="/dashboard/voice-receptionist"
+                                      className="px-2 py-1 rounded text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center gap-1">
+                                      <Settings size={10} /> Configure
+                                    </a>
+                                    <button onClick={() => releaseNumber(p)}
+                                      className="px-2 py-1 rounded text-[9px] bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all flex items-center gap-1">
+                                      <Trash2 size={10} /> Release
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                            {poolPhones.length === 0 && (
+                              <tr>
+                                <td colSpan={9} className="p-8 text-center text-muted text-xs">
+                                  No phone numbers yet. Click &quot;Buy New Number&quot; or &quot;Add Existing Number&quot; to get started.
+                                </td>
+                              </tr>
+                            )}
+                          </>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* ── Buy Number Modal ── */}
+                {showBuyModal && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                    <div className="glass rounded-xl w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold flex items-center gap-2">
+                          <Phone size={14} className="text-[#2563EB]" /> Buy New Phone Number
+                        </h3>
+                        <button onClick={() => setShowBuyModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                      </div>
+
+                      {/* Country Selector */}
+                      <div>
+                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Country</label>
+                        <div className="grid grid-cols-4 gap-2">
+                          {COUNTRIES.map(c => (
+                            <button key={c.code} onClick={() => setBuyCountry(c.code)}
+                              className={`p-2 rounded-lg text-[10px] font-medium border transition-all text-center ${
+                                buyCountry === c.code
+                                  ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                                  : "border-border text-muted hover:text-foreground"
+                              }`}>
+                              <span className="block text-sm mb-0.5">{c.flag}</span>
+                              {c.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Area Code */}
+                      <div>
+                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Area Code (optional)</label>
+                        <div className="relative">
+                          <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                          <input value={buyAreaCode} onChange={e => setBuyAreaCode(e.target.value)}
+                            placeholder="e.g. 415, 212, 310..."
+                            className="w-full pl-8 pr-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
+                        </div>
+                      </div>
+
+                      {/* Number Type */}
+                      <div>
+                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Number Type</label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {NUMBER_TYPES.map(t => (
+                            <button key={t.value} onClick={() => setBuyType(t.value)}
+                              className={`p-3 rounded-lg border text-center transition-all ${
+                                buyType === t.value
+                                  ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                                  : "border-border text-muted hover:text-foreground"
+                              }`}>
+                              <span className="block text-[11px] font-medium">{t.label}</span>
+                              <span className="block text-[9px] mt-0.5 opacity-70">${t.cost.toFixed(2)}/mo</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Assignment Target: Pool vs Client */}
+                      <div>
+                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Assign To</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <button onClick={() => setPurchaseTarget("pool")}
+                            className={`p-3 rounded-lg border text-left transition-all ${
+                              purchaseTarget === "pool"
+                                ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
+                                : "border-border hover:border-border"
+                            }`}>
+                            <span className={`block text-[11px] font-medium ${purchaseTarget === "pool" ? "text-[#2563EB]" : "text-foreground"}`}>
+                              Add to Pool
+                            </span>
+                            <span className="block text-[9px] text-muted mt-0.5">Smart rotation across campaigns</span>
+                          </button>
+                          <button onClick={() => setPurchaseTarget("client")}
+                            className={`p-3 rounded-lg border text-left transition-all ${
+                              purchaseTarget === "client"
+                                ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
+                                : "border-border hover:border-border"
+                            }`}>
+                            <span className={`block text-[11px] font-medium ${purchaseTarget === "client" ? "text-[#2563EB]" : "text-foreground"}`}>
+                              Assign to Client
+                            </span>
+                            <span className="block text-[9px] text-muted mt-0.5">Dedicated number for one client</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Client Assignment (only when target=client) */}
+                      {purchaseTarget === "client" && (
+                        <div>
+                          <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Select Client</label>
+                          {clientsWithoutPhone.length === 0 ? (
+                            <p className="text-[10px] text-yellow-400 p-2 bg-yellow-500/5 rounded-lg border border-yellow-500/20">
+                              No clients without a phone number. Add clients first or release existing numbers.
+                            </p>
+                          ) : (
+                            <select value={selectedClientId} onChange={e => setSelectedClientId(e.target.value)}
+                              className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all">
+                              <option value="">Select a client...</option>
+                              {clientsWithoutPhone.map(c => (
+                                <option key={c.id} value={c.id}>{c.business_name}</option>
                               ))}
-                            </div>
-                          </td>
-                          <td className="p-3 text-right">
-                            <div className="flex items-center justify-end gap-1.5">
-                              <a href="/dashboard/voice-receptionist"
-                                className="px-2 py-1 rounded text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center gap-1">
-                                <Settings size={10} /> Configure
-                              </a>
-                              <button onClick={() => releaseNumber(p)}
-                                className="px-2 py-1 rounded text-[9px] bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all flex items-center gap-1">
-                                <Trash2 size={10} /> Release
+                            </select>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Search Button */}
+                      <button onClick={searchNumbers} disabled={searching}
+                        className="w-full py-2.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                        {searching ? <RefreshCw size={12} className="animate-spin" /> : <Search size={12} />}
+                        {searching ? "Searching..." : "Search Available Numbers"}
+                      </button>
+
+                      {/* Error Display */}
+                      {searchError && (
+                        <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[11px]">
+                          <AlertCircle size={14} /> {searchError}
+                        </div>
+                      )}
+
+                      {purchaseError && (
+                        <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[11px]">
+                          <AlertCircle size={14} /> {purchaseError}
+                        </div>
+                      )}
+
+                      {/* Search Results */}
+                      {searchResults.length > 0 && (
+                        <div className="space-y-2">
+                          <p className="text-[10px] text-muted">{searchResults.length} numbers found</p>
+                          {searchResults.map((num, i) => (
+                            <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
+                              <div>
+                                <p className="text-xs font-mono font-medium">{num.number}</p>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <span className="text-[9px] text-muted capitalize">{num.type}</span>
+                                  <span className="text-[9px] text-muted">${num.monthlyCost.toFixed(2)}/mo</span>
+                                  {num.locality && <span className="text-[9px] text-muted">{num.locality}, {num.region}</span>}
+                                  <div className="flex gap-1">
+                                    {num.capabilities.map(c => (
+                                      <span key={c} className={`px-1 py-0 rounded text-[7px] font-medium border ${capBadgeColor(c)}`}>{c}</span>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                              <button onClick={() => purchaseNumber(num)}
+                                disabled={purchasing || (purchaseTarget === "client" && !selectedClientId)}
+                                className="px-3 py-1.5 rounded-lg bg-green-500/10 text-green-400 text-[10px] font-medium border border-green-500/20 hover:bg-green-500/20 transition-all disabled:opacity-50">
+                                {purchasing ? "Purchasing..." : purchaseTarget === "pool" ? "Add to Pool" : "Purchase"}
                               </button>
                             </div>
-                          </td>
-                        </tr>
-                      ))}
-                      {poolPhones.length === 0 && (
-                        <tr>
-                          <td colSpan={9} className="p-8 text-center text-muted text-xs">
-                            No phone numbers yet. Click &quot;Buy New Number&quot; or &quot;Add Existing Number&quot; to get started.
-                          </td>
-                        </tr>
+                          ))}
+                        </div>
                       )}
-                    </>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* ── Buy Number Modal ── */}
-          {showBuyModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-              <div className="glass rounded-xl w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <Phone size={14} className="text-[#2563EB]" /> Buy New Phone Number
-                  </h3>
-                  <button onClick={() => setShowBuyModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
-                </div>
-
-                {/* Country Selector */}
-                <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Country</label>
-                  <div className="grid grid-cols-4 gap-2">
-                    {COUNTRIES.map(c => (
-                      <button key={c.code} onClick={() => setBuyCountry(c.code)}
-                        className={`p-2 rounded-lg text-[10px] font-medium border transition-all text-center ${
-                          buyCountry === c.code
-                            ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                            : "border-border text-muted hover:text-foreground"
-                        }`}>
-                        <span className="block text-sm mb-0.5">{c.flag}</span>
-                        {c.name}
-                      </button>
-                    ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
-                {/* Area Code */}
-                <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Area Code (optional)</label>
-                  <div className="relative">
-                    <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                    <input value={buyAreaCode} onChange={e => setBuyAreaCode(e.target.value)}
-                      placeholder="e.g. 415, 212, 310..."
-                      className="w-full pl-8 pr-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
-                  </div>
-                </div>
+                {/* ── Manual Add Phone Modal ── */}
+                {showManualPhoneModal && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                    <div className="glass rounded-xl w-full max-w-md p-5 space-y-4 mx-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold flex items-center gap-2">
+                          <Phone size={14} className="text-[#2563EB]" /> Add Existing Number
+                        </h3>
+                        <button onClick={() => setShowManualPhoneModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                      </div>
 
-                {/* Number Type */}
-                <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Number Type</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {NUMBER_TYPES.map(t => (
-                      <button key={t.value} onClick={() => setBuyType(t.value)}
-                        className={`p-3 rounded-lg border text-center transition-all ${
-                          buyType === t.value
-                            ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                            : "border-border text-muted hover:text-foreground"
-                        }`}>
-                        <span className="block text-[11px] font-medium">{t.label}</span>
-                        <span className="block text-[9px] mt-0.5 opacity-70">${t.cost.toFixed(2)}/mo</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Assignment Target: Pool vs Client */}
-                <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Assign To</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button onClick={() => setPurchaseTarget("pool")}
-                      className={`p-3 rounded-lg border text-left transition-all ${
-                        purchaseTarget === "pool"
-                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
-                          : "border-border hover:border-border"
-                      }`}>
-                      <span className={`block text-[11px] font-medium ${purchaseTarget === "pool" ? "text-[#2563EB]" : "text-foreground"}`}>
-                        Add to Pool
-                      </span>
-                      <span className="block text-[9px] text-muted mt-0.5">Smart rotation across campaigns</span>
-                    </button>
-                    <button onClick={() => setPurchaseTarget("client")}
-                      className={`p-3 rounded-lg border text-left transition-all ${
-                        purchaseTarget === "client"
-                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
-                          : "border-border hover:border-border"
-                      }`}>
-                      <span className={`block text-[11px] font-medium ${purchaseTarget === "client" ? "text-[#2563EB]" : "text-foreground"}`}>
-                        Assign to Client
-                      </span>
-                      <span className="block text-[9px] text-muted mt-0.5">Dedicated number for one client</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Client Assignment (only when target=client) */}
-                {purchaseTarget === "client" && (
-                  <div>
-                    <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Select Client</label>
-                    {clientsWithoutPhone.length === 0 ? (
-                      <p className="text-[10px] text-yellow-400 p-2 bg-yellow-500/5 rounded-lg border border-yellow-500/20">
-                        No clients without a phone number. Add clients first or release existing numbers.
+                      <p className="text-[10px] text-muted">
+                        Add a phone number already provisioned elsewhere (e.g., brought from another service) to the rotation pool.
                       </p>
-                    ) : (
-                      <select value={selectedClientId} onChange={e => setSelectedClientId(e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all">
-                        <option value="">Select a client...</option>
-                        {clientsWithoutPhone.map(c => (
-                          <option key={c.id} value={c.id}>{c.business_name}</option>
-                        ))}
-                      </select>
-                    )}
+
+                      <div>
+                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Phone Number</label>
+                        <input value={manualPhone} onChange={e => setManualPhone(e.target.value)}
+                          placeholder="+1 (555) 123-4567"
+                          className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Label (optional)</label>
+                        <input value={manualLabel} onChange={e => setManualLabel(e.target.value)}
+                          placeholder="e.g. Outreach Line 1, Sales Pool..."
+                          className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Number Type</label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {NUMBER_TYPES.map(t => (
+                            <button key={t.value} onClick={() => setManualType(t.value)}
+                              className={`p-2 rounded-lg border text-center transition-all text-[10px] font-medium ${
+                                manualType === t.value
+                                  ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                                  : "border-border text-muted hover:text-foreground"
+                              }`}>
+                              {t.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <button onClick={addManualPhone} disabled={!manualPhone.trim() || manualAdding}
+                        className="w-full py-2.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                        {manualAdding ? <RefreshCw size={12} className="animate-spin" /> : <Plus size={12} />}
+                        {manualAdding ? "Adding..." : "Add to Pool"}
+                      </button>
+                    </div>
                   </div>
                 )}
-
-                {/* Search Button */}
-                <button onClick={searchNumbers} disabled={searching}
-                  className="w-full py-2.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                  {searching ? <RefreshCw size={12} className="animate-spin" /> : <Search size={12} />}
-                  {searching ? "Searching..." : "Search Available Numbers"}
-                </button>
-
-                {/* Error Display */}
-                {searchError && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[11px]">
-                    <AlertCircle size={14} /> {searchError}
+              </div>
+            )}{/* ════════════════════ EMAIL ADDRESSES TAB ════════════════════ */}{activeTab === "email" && (
+              <div className="space-y-4">
+                {/* Section Header */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-sm font-semibold">Email Sending</h2>
+                    <p className="text-[10px] text-muted">Configure email addresses for outreach and campaigns</p>
                   </div>
-                )}
+                  <button onClick={() => setShowEmailModal(true)}
+                    className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
+                    <Plus size={12} /> Add Email Address
+                  </button>
+                </div>
 
-                {purchaseError && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[11px]">
-                    <AlertCircle size={14} /> {purchaseError}
+                {/* Email Addresses Table */}
+                <div className="glass rounded-xl overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[11px]">
+                      <thead>
+                        <tr className="border-b border-border text-muted text-left">
+                          <th className="p-3 font-medium">Email</th>
+                          <th className="p-3 font-medium">Display Name</th>
+                          <th className="p-3 font-medium">Status</th>
+                          <th className="p-3 font-medium">Warmup</th>
+                          <th className="p-3 font-medium">Provider</th>
+                          <th className="p-3 font-medium">Daily Limit</th>
+                          <th className="p-3 font-medium">Sent Today</th>
+                          <th className="p-3 font-medium text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {loading ? (
+                          <tr>
+                            <td colSpan={8} className="p-8 text-center">
+                              <div className="flex items-center justify-center gap-2 text-muted text-xs">
+                                <RefreshCw size={14} className="animate-spin" />
+                                Loading email senders...
+                              </div>
+                            </td>
+                          </tr>
+                        ) : (
+                          <>
+                            {poolEmails.map(e => (
+                              <tr key={e.id} className="border-b border-border/50 hover:bg-card/50 transition-colors">
+                                <td className="p-3 font-mono font-medium text-foreground">{e.email}</td>
+                                <td className="p-3 text-muted">{e.displayName}</td>
+                                <td className="p-3">
+                                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium ${
+                                    e.status === "verified"
+                                      ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                                      : e.status === "warming"
+                                      ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                                      : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                                  }`}>
+                                    {e.status === "verified" ? "Verified" : e.status === "warming" ? "Warming" : "Pending"}
+                                  </span>
+                                </td>
+                                <td className="p-3">
+                                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium border ${WARMUP_BADGE[e.warmupStage].class}`}>
+                                    {WARMUP_BADGE[e.warmupStage].label}
+                                  </span>
+                                </td>
+                                <td className="p-3">
+                                  <span className="flex items-center gap-1 text-muted">
+                                    <ProviderIcon provider={e.provider} size={10} /> {e.provider}
+                                  </span>
+                                </td>
+                                <td className="p-3 text-muted">{e.dailyLimit.toLocaleString()}</td>
+                                <td className="p-3">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-foreground">{e.sentToday.toLocaleString()}</span>
+                                    <div className="flex-1 max-w-[60px] h-1.5 bg-border rounded-full overflow-hidden">
+                                      <div className={`h-full rounded-full transition-all ${pctBarColor(e.sentToday, e.dailyLimit)}`}
+                                        style={{ width: `${pct(e.sentToday, e.dailyLimit)}%` }} />
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="p-3 text-right">
+                                  <div className="flex items-center justify-end gap-1.5">
+                                    <button className="px-2 py-1 rounded text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center gap-1">
+                                      <Send size={10} /> Send Test
+                                    </button>
+                                    <button onClick={() => removeEmail(e)}
+                                      className="px-2 py-1 rounded text-[9px] bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all flex items-center gap-1">
+                                      <Trash2 size={10} /> Remove
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                            {poolEmails.length === 0 && (
+                              <tr>
+                                <td colSpan={8} className="p-8 text-center text-muted text-xs">
+                                  No email addresses configured. Click &quot;Add Email Address&quot; to get started.
+                                </td>
+                              </tr>
+                            )}
+                          </>
+                        )}
+                      </tbody>
+                    </table>
                   </div>
-                )}
+                </div>
 
-                {/* Search Results */}
-                {searchResults.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-[10px] text-muted">{searchResults.length} numbers found</p>
-                    {searchResults.map((num, i) => (
-                      <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
-                        <div>
-                          <p className="text-xs font-mono font-medium">{num.number}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[9px] text-muted capitalize">{num.type}</span>
-                            <span className="text-[9px] text-muted">${num.monthlyCost.toFixed(2)}/mo</span>
-                            {num.locality && <span className="text-[9px] text-muted">{num.locality}, {num.region}</span>}
-                            <div className="flex gap-1">
-                              {num.capabilities.map(c => (
-                                <span key={c} className={`px-1 py-0 rounded text-[7px] font-medium border ${capBadgeColor(c)}`}>{c}</span>
-                              ))}
+                {/* Domain Verification Section */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-sm font-semibold flex items-center gap-2">
+                      <Shield size={14} className="text-[#2563EB]" /> Domain Verification
+                    </h2>
+                    <button onClick={() => setShowDomainModal(true)}
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
+                      <Plus size={12} /> Add Domain
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-muted">Verify your sending domains to improve deliverability and avoid spam filters</p>
+
+                  {domains.map(d => (
+                    <div key={d.id} className="glass rounded-xl p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Globe size={14} className="text-[#2563EB]" />
+                          <span className="text-xs font-semibold">{d.domain}</span>
+                          <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium ${
+                            d.verified
+                              ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                              : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                          }`}>
+                            {d.verified ? "Verified" : "Pending Verification"}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] text-muted">Added {d.addedDate}</span>
+                          <button onClick={() => removeDomain(d.id)}
+                            className="text-muted hover:text-red-400 transition-colors">
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* DNS Records */}
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { label: "SPF", ok: d.spf, record: `v=spf1 include:shortstack.io ~all` },
+                          { label: "DKIM", ok: d.dkim, record: `shortstack._domainkey.${d.domain}` },
+                          { label: "DMARC", ok: d.dmarc, record: `v=DMARC1; p=quarantine; rua=mailto:dmarc@${d.domain}` },
+                        ].map(rec => (
+                          <div key={rec.label} className={`p-2.5 rounded-lg border transition-all ${
+                            rec.ok ? "border-green-500/20 bg-green-500/5" : "border-yellow-500/20 bg-yellow-500/5"
+                          }`}>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[10px] font-semibold">{rec.label}</span>
+                              {rec.ok
+                                ? <Check size={11} className="text-green-400" />
+                                : <AlertCircle size={11} className="text-yellow-400" />
+                              }
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <code className="text-[8px] text-muted bg-background px-1.5 py-0.5 rounded flex-1 truncate">{rec.record}</code>
+                              <button className="text-muted hover:text-foreground shrink-0" onClick={() => navigator.clipboard.writeText(rec.record)}>
+                                <Copy size={9} />
+                              </button>
                             </div>
                           </div>
-                        </div>
-                        <button onClick={() => purchaseNumber(num)}
-                          disabled={purchasing || (purchaseTarget === "client" && !selectedClientId)}
-                          className="px-3 py-1.5 rounded-lg bg-green-500/10 text-green-400 text-[10px] font-medium border border-green-500/20 hover:bg-green-500/20 transition-all disabled:opacity-50">
-                          {purchasing ? "Purchasing..." : purchaseTarget === "pool" ? "Add to Pool" : "Purchase"}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* ── Manual Add Phone Modal ── */}
-          {showManualPhoneModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-              <div className="glass rounded-xl w-full max-w-md p-5 space-y-4 mx-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <Phone size={14} className="text-[#2563EB]" /> Add Existing Number
-                  </h3>
-                  <button onClick={() => setShowManualPhoneModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
-                </div>
-
-                <p className="text-[10px] text-muted">
-                  Add a phone number already provisioned elsewhere (e.g., brought from another service) to the rotation pool.
-                </p>
-
-                <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Phone Number</label>
-                  <input value={manualPhone} onChange={e => setManualPhone(e.target.value)}
-                    placeholder="+1 (555) 123-4567"
-                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
-                </div>
-
-                <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Label (optional)</label>
-                  <input value={manualLabel} onChange={e => setManualLabel(e.target.value)}
-                    placeholder="e.g. Outreach Line 1, Sales Pool..."
-                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
-                </div>
-
-                <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Number Type</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {NUMBER_TYPES.map(t => (
-                      <button key={t.value} onClick={() => setManualType(t.value)}
-                        className={`p-2 rounded-lg border text-center transition-all text-[10px] font-medium ${
-                          manualType === t.value
-                            ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                            : "border-border text-muted hover:text-foreground"
-                        }`}>
-                        {t.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <button onClick={addManualPhone} disabled={!manualPhone.trim() || manualAdding}
-                  className="w-full py-2.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                  {manualAdding ? <RefreshCw size={12} className="animate-spin" /> : <Plus size={12} />}
-                  {manualAdding ? "Adding..." : "Add to Pool"}
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ════════════════════ EMAIL ADDRESSES TAB ════════════════════ */}
-      {activeTab === "email" && (
-        <div className="space-y-4">
-          {/* Section Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-sm font-semibold">Email Sending</h2>
-              <p className="text-[10px] text-muted">Configure email addresses for outreach and campaigns</p>
-            </div>
-            <button onClick={() => setShowEmailModal(true)}
-              className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
-              <Plus size={12} /> Add Email Address
-            </button>
-          </div>
-
-          {/* Email Addresses Table */}
-          <div className="glass rounded-xl overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-[11px]">
-                <thead>
-                  <tr className="border-b border-border text-muted text-left">
-                    <th className="p-3 font-medium">Email</th>
-                    <th className="p-3 font-medium">Display Name</th>
-                    <th className="p-3 font-medium">Status</th>
-                    <th className="p-3 font-medium">Warmup</th>
-                    <th className="p-3 font-medium">Provider</th>
-                    <th className="p-3 font-medium">Daily Limit</th>
-                    <th className="p-3 font-medium">Sent Today</th>
-                    <th className="p-3 font-medium text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan={8} className="p-8 text-center">
-                        <div className="flex items-center justify-center gap-2 text-muted text-xs">
-                          <RefreshCw size={14} className="animate-spin" />
-                          Loading email senders...
-                        </div>
-                      </td>
-                    </tr>
-                  ) : (
-                    <>
-                      {poolEmails.map(e => (
-                        <tr key={e.id} className="border-b border-border/50 hover:bg-card/50 transition-colors">
-                          <td className="p-3 font-mono font-medium text-foreground">{e.email}</td>
-                          <td className="p-3 text-muted">{e.displayName}</td>
-                          <td className="p-3">
-                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium ${
-                              e.status === "verified"
-                                ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                                : e.status === "warming"
-                                ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
-                                : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
-                            }`}>
-                              {e.status === "verified" ? "Verified" : e.status === "warming" ? "Warming" : "Pending"}
-                            </span>
-                          </td>
-                          <td className="p-3">
-                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium border ${WARMUP_BADGE[e.warmupStage].class}`}>
-                              {WARMUP_BADGE[e.warmupStage].label}
-                            </span>
-                          </td>
-                          <td className="p-3">
-                            <span className="flex items-center gap-1 text-muted">
-                              <ProviderIcon provider={e.provider} size={10} /> {e.provider}
-                            </span>
-                          </td>
-                          <td className="p-3 text-muted">{e.dailyLimit.toLocaleString()}</td>
-                          <td className="p-3">
-                            <div className="flex items-center gap-2">
-                              <span className="text-foreground">{e.sentToday.toLocaleString()}</span>
-                              <div className="flex-1 max-w-[60px] h-1.5 bg-border rounded-full overflow-hidden">
-                                <div className={`h-full rounded-full transition-all ${pctBarColor(e.sentToday, e.dailyLimit)}`}
-                                  style={{ width: `${pct(e.sentToday, e.dailyLimit)}%` }} />
-                              </div>
-                            </div>
-                          </td>
-                          <td className="p-3 text-right">
-                            <div className="flex items-center justify-end gap-1.5">
-                              <button className="px-2 py-1 rounded text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center gap-1">
-                                <Send size={10} /> Send Test
-                              </button>
-                              <button onClick={() => removeEmail(e)}
-                                className="px-2 py-1 rounded text-[9px] bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all flex items-center gap-1">
-                                <Trash2 size={10} /> Remove
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                      {poolEmails.length === 0 && (
-                        <tr>
-                          <td colSpan={8} className="p-8 text-center text-muted text-xs">
-                            No email addresses configured. Click &quot;Add Email Address&quot; to get started.
-                          </td>
-                        </tr>
-                      )}
-                    </>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Domain Verification Section */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold flex items-center gap-2">
-                <Shield size={14} className="text-[#2563EB]" /> Domain Verification
-              </h2>
-              <button onClick={() => setShowDomainModal(true)}
-                className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
-                <Plus size={12} /> Add Domain
-              </button>
-            </div>
-            <p className="text-[10px] text-muted">Verify your sending domains to improve deliverability and avoid spam filters</p>
-
-            {domains.map(d => (
-              <div key={d.id} className="glass rounded-xl p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Globe size={14} className="text-[#2563EB]" />
-                    <span className="text-xs font-semibold">{d.domain}</span>
-                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium ${
-                      d.verified
-                        ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                        : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
-                    }`}>
-                      {d.verified ? "Verified" : "Pending Verification"}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] text-muted">Added {d.addedDate}</span>
-                    <button onClick={() => removeDomain(d.id)}
-                      className="text-muted hover:text-red-400 transition-colors">
-                      <Trash2 size={12} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* DNS Records */}
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { label: "SPF", ok: d.spf, record: `v=spf1 include:shortstack.io ~all` },
-                    { label: "DKIM", ok: d.dkim, record: `shortstack._domainkey.${d.domain}` },
-                    { label: "DMARC", ok: d.dmarc, record: `v=DMARC1; p=quarantine; rua=mailto:dmarc@${d.domain}` },
-                  ].map(rec => (
-                    <div key={rec.label} className={`p-2.5 rounded-lg border transition-all ${
-                      rec.ok ? "border-green-500/20 bg-green-500/5" : "border-yellow-500/20 bg-yellow-500/5"
-                    }`}>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-[10px] font-semibold">{rec.label}</span>
-                        {rec.ok
-                          ? <Check size={11} className="text-green-400" />
-                          : <AlertCircle size={11} className="text-yellow-400" />
-                        }
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <code className="text-[8px] text-muted bg-background px-1.5 py-0.5 rounded flex-1 truncate">{rec.record}</code>
-                        <button className="text-muted hover:text-foreground shrink-0" onClick={() => navigator.clipboard.writeText(rec.record)}>
-                          <Copy size={9} />
-                        </button>
+                        ))}
                       </div>
                     </div>
                   ))}
-                </div>
-              </div>
-            ))}
 
-            {domains.length === 0 && (
-              <div className="glass rounded-xl p-6 text-center text-muted text-xs">
-                No domains added. Add a domain to configure SPF, DKIM, and DMARC records.
-              </div>
-            )}
-          </div>
-
-          {/* ── Add Email Modal ── */}
-          {showEmailModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-              <div className="glass rounded-xl w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <Mail size={14} className="text-[#2563EB]" /> Add Email Address
-                  </h3>
-                  <button onClick={() => setShowEmailModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                  {domains.length === 0 && (
+                    <div className="glass rounded-xl p-6 text-center text-muted text-xs">
+                      No domains added. Add a domain to configure SPF, DKIM, and DMARC records.
+                    </div>
+                  )}
                 </div>
 
-                {/* Email Input */}
-                <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Email Address</label>
-                  <input value={newEmail} onChange={e => setNewEmail(e.target.value)}
-                    placeholder="outreach@yourdomain.com"
-                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
-                </div>
+                {/* ── Add Email Modal ── */}
+                {showEmailModal && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                    <div className="glass rounded-xl w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold flex items-center gap-2">
+                          <Mail size={14} className="text-[#2563EB]" /> Add Email Address
+                        </h3>
+                        <button onClick={() => setShowEmailModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                      </div>
 
-                {/* Display Name */}
-                <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Display Name</label>
-                  <input value={newDisplayName} onChange={e => setNewDisplayName(e.target.value)}
-                    placeholder="Your Company Name"
-                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
-                </div>
-
-                {/* SMTP Option */}
-                <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">SMTP Provider</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button onClick={() => setSmtpOption("shortstack")}
-                      className={`p-3 rounded-lg border text-left transition-all ${
-                        smtpOption === "shortstack"
-                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
-                          : "border-border hover:border-border"
-                      }`}>
-                      <span className={`block text-[11px] font-medium ${smtpOption === "shortstack" ? "text-[#2563EB]" : "text-foreground"}`}>
-                        ShortStack SMTP
-                      </span>
-                      <span className="block text-[9px] text-muted mt-0.5">Included in plan - 500/day</span>
-                    </button>
-                    <button onClick={() => setSmtpOption("custom")}
-                      className={`p-3 rounded-lg border text-left transition-all ${
-                        smtpOption === "custom"
-                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
-                          : "border-border hover:border-border"
-                      }`}>
-                      <span className={`block text-[11px] font-medium ${smtpOption === "custom" ? "text-[#2563EB]" : "text-foreground"}`}>
-                        Custom SMTP
-                      </span>
-                      <span className="block text-[9px] text-muted mt-0.5">Your own server - higher limits</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Custom SMTP Fields */}
-                {smtpOption === "custom" && (
-                  <div className="space-y-3 p-3 rounded-lg border border-border bg-background/50">
-                    <div className="grid grid-cols-2 gap-3">
+                      {/* Email Input */}
                       <div>
-                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">SMTP Host</label>
-                        <input value={customSmtp.host} onChange={e => setCustomSmtp(p => ({ ...p, host: e.target.value }))}
-                          placeholder="smtp.gmail.com"
+                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Email Address</label>
+                        <input value={newEmail} onChange={e => setNewEmail(e.target.value)}
+                          placeholder="outreach@yourdomain.com"
                           className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
                       </div>
+
+                      {/* Display Name */}
                       <div>
-                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Port</label>
-                        <input value={customSmtp.port} onChange={e => setCustomSmtp(p => ({ ...p, port: e.target.value }))}
-                          placeholder="587"
+                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Display Name</label>
+                        <input value={newDisplayName} onChange={e => setNewDisplayName(e.target.value)}
+                          placeholder="Your Company Name"
                           className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
                       </div>
-                    </div>
-                    <div>
-                      <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Username</label>
-                      <input value={customSmtp.user} onChange={e => setCustomSmtp(p => ({ ...p, user: e.target.value }))}
-                        placeholder="your-email@gmail.com"
-                        className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
-                    </div>
-                    <div>
-                      <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Password</label>
-                      <input type="password" value={customSmtp.pass} onChange={e => setCustomSmtp(p => ({ ...p, pass: e.target.value }))}
-                        placeholder="App password or SMTP password"
-                        className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
+
+                      {/* SMTP Option */}
+                      <div>
+                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">SMTP Provider</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <button onClick={() => setSmtpOption("shortstack")}
+                            className={`p-3 rounded-lg border text-left transition-all ${
+                              smtpOption === "shortstack"
+                                ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
+                                : "border-border hover:border-border"
+                            }`}>
+                            <span className={`block text-[11px] font-medium ${smtpOption === "shortstack" ? "text-[#2563EB]" : "text-foreground"}`}>
+                              ShortStack SMTP
+                            </span>
+                            <span className="block text-[9px] text-muted mt-0.5">Included in plan - 500/day</span>
+                          </button>
+                          <button onClick={() => setSmtpOption("custom")}
+                            className={`p-3 rounded-lg border text-left transition-all ${
+                              smtpOption === "custom"
+                                ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
+                                : "border-border hover:border-border"
+                            }`}>
+                            <span className={`block text-[11px] font-medium ${smtpOption === "custom" ? "text-[#2563EB]" : "text-foreground"}`}>
+                              Custom SMTP
+                            </span>
+                            <span className="block text-[9px] text-muted mt-0.5">Your own server - higher limits</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Custom SMTP Fields */}
+                      {smtpOption === "custom" && (
+                        <div className="space-y-3 p-3 rounded-lg border border-border bg-background/50">
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">SMTP Host</label>
+                              <input value={customSmtp.host} onChange={e => setCustomSmtp(p => ({ ...p, host: e.target.value }))}
+                                placeholder="smtp.gmail.com"
+                                className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
+                            </div>
+                            <div>
+                              <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Port</label>
+                              <input value={customSmtp.port} onChange={e => setCustomSmtp(p => ({ ...p, port: e.target.value }))}
+                                placeholder="587"
+                                className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
+                            </div>
+                          </div>
+                          <div>
+                            <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Username</label>
+                            <input value={customSmtp.user} onChange={e => setCustomSmtp(p => ({ ...p, user: e.target.value }))}
+                              placeholder="your-email@gmail.com"
+                              className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
+                          </div>
+                          <div>
+                            <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Password</label>
+                            <input type="password" value={customSmtp.pass} onChange={e => setCustomSmtp(p => ({ ...p, pass: e.target.value }))}
+                              placeholder="App password or SMTP password"
+                              className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Add Button */}
+                      <button onClick={addEmail} disabled={!newEmail.trim() || emailAdding}
+                        className="w-full py-2.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                        {emailAdding ? <RefreshCw size={12} className="animate-spin" /> : <Check size={12} />}
+                        {emailAdding ? "Adding..." : "Verify & Add"}
+                      </button>
                     </div>
                   </div>
                 )}
 
-                {/* Add Button */}
-                <button onClick={addEmail} disabled={!newEmail.trim() || emailAdding}
-                  className="w-full py-2.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                  {emailAdding ? <RefreshCw size={12} className="animate-spin" /> : <Check size={12} />}
-                  {emailAdding ? "Adding..." : "Verify & Add"}
-                </button>
+                {/* Add Domain Modal */}
+                {showDomainModal && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                    <div className="glass rounded-xl w-full max-w-md p-5 space-y-4 mx-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold flex items-center gap-2">
+                          <Globe size={14} className="text-[#2563EB]" /> Add Domain
+                        </h3>
+                        <button onClick={() => setShowDomainModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Domain Name</label>
+                        <input value={newDomain} onChange={e => setNewDomain(e.target.value)}
+                          placeholder="yourdomain.com"
+                          className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
+                      </div>
+                      <p className="text-[9px] text-muted">
+                        After adding, you will need to configure SPF, DKIM, and DMARC DNS records with your domain registrar.
+                      </p>
+                      <button onClick={addDomain} disabled={!newDomain.trim()}
+                        className="w-full py-2.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                        <Plus size={12} /> Add Domain
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          )}
-
-          {/* Add Domain Modal */}
-          {showDomainModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-              <div className="glass rounded-xl w-full max-w-md p-5 space-y-4 mx-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <Globe size={14} className="text-[#2563EB]" /> Add Domain
-                  </h3>
-                  <button onClick={() => setShowDomainModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
-                </div>
-                <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Domain Name</label>
-                  <input value={newDomain} onChange={e => setNewDomain(e.target.value)}
-                    placeholder="yourdomain.com"
-                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-[rgba(37,99,235,0.40)] focus:outline-none transition-all" />
-                </div>
-                <p className="text-[9px] text-muted">
-                  After adding, you will need to configure SPF, DKIM, and DMARC DNS records with your domain registrar.
-                </p>
-                <button onClick={addDomain} disabled={!newDomain.trim()}
-                  className="w-full py-2.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                  <Plus size={12} /> Add Domain
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      <PageAI pageName="Sender Management" context="phone numbers, Twilio, SMS, voice calls, email sending, SMTP configuration, domain verification, SPF, DKIM, DMARC, outreach, campaigns, sender rotation, warmup, daily limits, pool management"
-        suggestions={["Buy a local phone number", "Add an existing number to the pool", "Set up email sending", "How does smart rotation work?"]} />
-    </div>
+            )}<PageAI pageName="Sender Management" context="phone numbers, Twilio, SMS, voice calls, email sending, SMTP configuration, domain verification, SPF, DKIM, DMARC, outreach, campaigns, sender rotation, warmup, daily limits, pool management"
+              suggestions={["Buy a local phone number", "Add an existing number to the pool", "Set up email sending", "How does smart rotation work?"]} /></MotionPage>
   );
 }

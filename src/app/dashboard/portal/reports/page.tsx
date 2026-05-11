@@ -9,6 +9,7 @@ import { formatRelativeTime } from "@/lib/utils";
 import {
   BarChart3, TrendingUp, Film, Zap, Calendar
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 export default function ClientReportsPage() {
   const { profile } = useAuth();
@@ -60,7 +61,9 @@ export default function ClientReportsPage() {
     }
   }
 
-  if (loading) return <PageLoading />;
+  if (loading) return <MotionPage>
+                          <PageLoading />
+                        </MotionPage>;
 
   const completionRate = stats.totalTasks > 0 ? Math.round((stats.tasksCompleted / stats.totalTasks) * 100) : 0;
 

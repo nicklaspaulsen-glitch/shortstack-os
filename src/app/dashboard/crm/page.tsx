@@ -25,6 +25,7 @@ import PageAI from "@/components/page-ai";
 import { InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon } from "@/components/ui/platform-icons";
 import ErrorBoundary from "@/components/error-boundary";
 import { PrismPanel } from "@/components/prism";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* -------------------------------------------------------------------
    TYPES
@@ -888,1118 +889,1116 @@ export default function CRMPage() {
      ------------------------------------------------------------------- */
 
   return (
-    <div className="fade-in space-y-3">
-      <ErrorBoundary section="CRM">
-      <PageHero
-        eyebrow="RELATIONSHIP ENGINE"
-        icon={<Users size={22} />}
-        title="CRM"
-        subtitle="Your full contact database � track leads, log activity, score prospects, and close deals with AI-powered enrichment and bulk actions."
-        gradient="blue"
-      />
-      {/* -- Stats Dashboard -- */}
-      <div className="card p-0 overflow-hidden">
-        <button onClick={() => setStatsCollapsed(!statsCollapsed)}
-          className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-surface-light/50 transition-colors">
-          <div className="flex items-center gap-2">
-            <BarChart3 size={14} className="text-[#2563EB]" />
-            <span className="text-xs font-bold">CRM Dashboard</span>
-            <span className="text-[9px] text-muted">{stats.total} total leads</span>
-          </div>
-          {statsCollapsed ? <ChevronDown size={14} className="text-muted" /> : <ChevronUp size={14} className="text-muted" />}
-        </button>
-        {!statsCollapsed && (
-          <div className="px-4 pb-4 pt-1">
-            <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-2">
-              {[
-                { label: "Total Leads", value: stats.total, icon: Users, color: "text-foreground" },
-                { label: "Avg Score", value: stats.avgScore, icon: Target, color: "text-[#2563EB]", suffix: "/100" },
-                { label: "Reply Rate", value: `${stats.replyRate}%`, icon: MessageCircle, color: "text-emerald-400" },
-                { label: "Conv. Rate", value: `${stats.convRate}%`, icon: TrendingUp, color: "text-purple-400" },
-                { label: "Outreach Sent", value: stats.totalOutreach, icon: Send, color: "text-blue-400" },
-                { label: "With Email", value: stats.withEmail, icon: Mail, color: "text-amber-400" },
-                { label: "With Phone", value: stats.withPhone, icon: Phone, color: "text-emerald-400" },
-                { label: "Stale Leads", value: stats.stale, icon: AlertTriangle, color: stats.stale > 0 ? "text-red-400" : "text-muted" },
-              ].map((s, i) => (
-                <PrismPanel key={i} rainbow padding="px-3 py-2" delay={i * 0.06}>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <s.icon size={10} className={s.color} />
-                    <span className="text-[8px] text-muted uppercase tracking-wider">{s.label}</span>
-                  </div>
-                  <p className={`text-sm font-bold ${s.color}`}>{s.value}<span className="text-[8px] text-muted font-normal">{s.suffix || ""}</span></p>
-                </PrismPanel>
-              ))}
-            </div>
-            {/* Pipeline funnel */}
-            <div className="mt-3 flex items-center gap-1">
-              {STATUS_TABS.filter(t => t.key !== "all").map((t, i) => {
-                const count = statusCounts[t.key] || 0;
-                const pct = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
-                const colors: Record<string, string> = { new: "#1D4ED8", contacted: "#f59e0b", replied: "#1D4ED8", booked: "#a855f7", converted: "#1D4ED8" };
-                return (
-                  <div key={t.key} className="flex-1 group cursor-pointer" onClick={() => setActiveTab(t.key as CRMStatus)}>
-                    <div className="h-2 rounded-full transition-all group-hover:h-3" style={{ background: colors[t.key], opacity: count > 0 ? 1 : 0.2 }} />
-                    <div className="flex items-center justify-between mt-1">
-                      <span className="text-[8px] text-muted">{t.label}</span>
-                      <span className="text-[8px] font-mono" style={{ color: colors[t.key] }}>{count} <span className="text-muted">({pct}%)</span></span>
-                    </div>
-                    {i < 4 && <ArrowRight size={8} className="text-muted/30 mx-auto mt-0.5 hidden xl:block" />}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* -- Header Row (sticky toolbar) -- */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex items-center justify-between flex-wrap gap-2 py-2 -mx-1 px-1">
-        <div className="flex items-center gap-2 flex-wrap">
-          {hasActiveFilters && (
-            <span className="text-[8px] px-2 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] flex items-center gap-1">
-              <Filter size={8} /> Filtered
-              <button onClick={() => setFilters(DEFAULT_FILTERS)} className="hover:text-red-400" aria-label="Clear filters"><X size={8} /></button>
-            </span>
-          )}
-        </div>
-        <div className="flex items-center gap-1.5 flex-wrap">
-          {/* View mode */}
-          <div className="flex rounded-lg overflow-hidden border border-border">
-            {([
-              { key: "table" as ViewMode, icon: LayoutList, label: "Table" },
-              { key: "card" as ViewMode, icon: LayoutGrid, label: "Cards" },
-              { key: "pipeline" as ViewMode, icon: Layers, label: "Pipeline" },
-            ]).map(v => (
-              <button key={v.key} onClick={() => setViewMode(v.key)}
-                className={`text-[9px] px-2 py-1.5 flex items-center gap-1 transition-all ${viewMode === v.key ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted hover:text-foreground"}`}>
-                <v.icon size={11} /> {v.label}
+    <MotionPage className="fade-in space-y-3"><ErrorBoundary section="CRM">
+            <PageHero
+              eyebrow="RELATIONSHIP ENGINE"
+              icon={<Users size={22} />}
+              title="CRM"
+              subtitle="Your full contact database � track leads, log activity, score prospects, and close deals with AI-powered enrichment and bulk actions."
+              gradient="blue"
+            />
+            {/* -- Stats Dashboard -- */}
+            <div className="card p-0 overflow-hidden">
+              <button onClick={() => setStatsCollapsed(!statsCollapsed)}
+                className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-surface-light/50 transition-colors">
+                <div className="flex items-center gap-2">
+                  <BarChart3 size={14} className="text-[#2563EB]" />
+                  <span className="text-xs font-bold">CRM Dashboard</span>
+                  <span className="text-[9px] text-muted">{stats.total} total leads</span>
+                </div>
+                {statsCollapsed ? <ChevronDown size={14} className="text-muted" /> : <ChevronUp size={14} className="text-muted" />}
               </button>
-            ))}
-          </div>
-          {/* Density */}
-          <div className="flex rounded-lg overflow-hidden border border-border">
-            {([
-              { key: "dense" as Density, icon: AlignJustify, tip: "Dense" },
-              { key: "compact" as Density, icon: Grid3X3, tip: "Compact" },
-              { key: "comfortable" as Density, icon: Columns3, tip: "Comfortable" },
-            ]).map(d => (
-              <button key={d.key} onClick={() => setDensity(d.key)} title={d.tip}
-                className={`p-1.5 transition-all ${density === d.key ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted hover:text-foreground"}`}>
-                <d.icon size={11} />
-              </button>
-            ))}
-          </div>
-          {/* Action buttons */}
-          <button onClick={() => setShowFilters(!showFilters)}
-            className={`btn-ghost text-[9px] flex items-center gap-1 ${showFilters ? "text-[#2563EB]" : ""}`}>
-            <Filter size={11} /> Filters {hasActiveFilters && <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />}
-          </button>
-          <button onClick={() => setShowAutomation(true)} className="btn-ghost text-[9px] flex items-center gap-1">
-            <Bot size={11} /> Automation
-          </button>
-          {viewMode === "table" && (
-            <button onClick={() => setShowColumnConfig(!showColumnConfig)} className="btn-ghost text-[9px] flex items-center gap-1">
-              <Settings2 size={11} /> Columns
-            </button>
-          )}
-          <button onClick={exportCSV} className="btn-ghost text-[9px] flex items-center gap-1"><Download size={11} /> Export</button>
-          <label className="btn-ghost text-[9px] flex items-center gap-1 cursor-pointer">
-            <Upload size={11} /> Import
-            <input type="file" accept=".csv" className="hidden" onChange={async (e) => {
-              const file = e.target.files?.[0]; if (!file) return;
-              const text = await file.text();
-              const lines = text.split("\n").filter(l => l.trim());
-              if (lines.length < 2) { toast.error("Empty CSV"); return; }
-              const headers = lines[0].split(",").map(h => h.trim().toLowerCase().replace(/["']/g, ""));
-              const csvLeads = lines.slice(1).map(line => {
-                const vals = line.split(",").map(v => v.trim().replace(/["']/g, ""));
-                const obj: Record<string, string> = {};
-                headers.forEach((h, i) => { obj[h] = vals[i] || ""; });
-                return obj;
-              });
-              const tid = "csv-import";
-              toast.loading(`Importing ${csvLeads.length} leads...`, { id: tid });
-              try {
-                const res = await fetch("/api/leads/import", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ leads: csvLeads }) });
-                const data = await res.json();
-                if (data.success) { toast.success(`Imported ${data.imported} leads`, { id: tid }); fetchLeads(); }
-                else toast.error(data.error || "Import failed", { id: tid });
-              } catch (err) {
-                console.error("[CRM] CSV import error:", err);
-                toast.error("Import error", { id: tid });
-              }
-              e.target.value = "";
-            }} />
-          </label>
-          <button onClick={() => setShowBuyCredits(true)} className="flex items-center gap-1 px-2 py-1.5 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)] hover:bg-[rgba(37,99,235,0.08)] transition-all">
-            <Coins size={11} className="text-[#2563EB]" />
-            <span className="text-[9px] font-medium text-[#2563EB]">{emailCredits}</span>
-          </button>
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <button onClick={() => fetchLeads()} className="btn-ghost text-[9px] flex items-center gap-1"><RefreshCw size={11} /> Refresh</button>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* -- Saved Segments -- */}
-      {savedSegments.length > 0 && (
-        <div className="flex items-center gap-1.5 overflow-x-auto">
-          <Bookmark size={10} className="text-muted shrink-0" />
-          {savedSegments.map(seg => (
-            <button key={seg.id} onClick={() => loadSegment(seg)}
-              className="text-[8px] px-2 py-1 rounded-full border border-border bg-surface-light hover:border-[rgba(37,99,235,0.2)] hover:text-[#2563EB] transition-all whitespace-nowrap flex items-center gap-1">
-              {seg.name}
-              <span role="button" onClick={(e) => { e.stopPropagation(); deleteSegment(seg.id); }}
-                className="hover:text-red-400 cursor-pointer"><X size={7} /></span>
-            </button>
-          ))}
-          <button onClick={() => setShowSegmentSave(true)} className="text-[8px] px-2 py-1 rounded-full border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] transition-all flex items-center gap-1">
-            <Plus size={8} /> Save Current
-          </button>
-        </div>
-      )}
-
-      {/* -- Column Config Dropdown -- */}
-      {showColumnConfig && (
-        <div className="card p-3 flex flex-wrap gap-2">
-          <span className="text-[9px] text-muted font-medium w-full">Toggle Columns:</span>
-          {columns.filter(c => c.key !== "select" && c.key !== "expand").map(col => (
-            <button key={col.key} onClick={() => setColumns(prev => prev.map(c => c.key === col.key ? { ...c, visible: !c.visible } : c))}
-              className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${col.visible ? "border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted"}`}>
-              {col.visible ? <Eye size={9} /> : <EyeOff size={9} />} {col.label}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* -- Advanced Filters Panel -- */}
-      {showFilters && (
-        <div className="card p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold flex items-center gap-2"><Filter size={12} className="text-[#2563EB]" /> Advanced Filters</span>
-            <div className="flex items-center gap-2">
-              <button onClick={() => setFilters(DEFAULT_FILTERS)} className="text-[9px] text-muted hover:text-foreground">Reset All</button>
-              <button onClick={() => setShowFilters(false)} className="text-muted hover:text-foreground" aria-label="Close filters"><X size={14} /></button>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {/* Industry filter */}
-            <div>
-              <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Industry</label>
-              <div className="space-y-0.5 max-h-28 overflow-y-auto">
-                {uniqueIndustries.slice(0, 15).map(ind => (
-                  <label key={ind} className="flex items-center gap-1.5 text-[10px] cursor-pointer hover:text-[#2563EB] transition-colors">
-                    <input type="checkbox" checked={filters.industries.includes(ind)}
-                      onChange={() => setFilters(prev => ({
-                        ...prev,
-                        industries: prev.industries.includes(ind) ? prev.industries.filter(i => i !== ind) : [...prev.industries, ind]
-                      }))}
-                      className="rounded border-border text-[#2563EB] w-3 h-3" />
-                    {ind}
-                  </label>
-                ))}
-              </div>
-            </div>
-            {/* Location filter */}
-            <div>
-              <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Location</label>
-              <div className="space-y-0.5 max-h-28 overflow-y-auto">
-                {uniqueCities.slice(0, 15).map(city => (
-                  <label key={city} className="flex items-center gap-1.5 text-[10px] cursor-pointer hover:text-[#2563EB] transition-colors">
-                    <input type="checkbox" checked={filters.cities.includes(city)}
-                      onChange={() => setFilters(prev => ({
-                        ...prev,
-                        cities: prev.cities.includes(city) ? prev.cities.filter(c => c !== city) : [...prev.cities, city]
-                      }))}
-                      className="rounded border-border text-[#2563EB] w-3 h-3" />
-                    {city}
-                  </label>
-                ))}
-              </div>
-            </div>
-            {/* Contact info filters */}
-            <div className="space-y-2">
-              <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block">Contact Info</label>
-              {[
-                { key: "hasPhone" as const, label: "Has Phone", icon: Phone },
-                { key: "hasEmail" as const, label: "Has Email", icon: Mail },
-                { key: "hasSocial" as const, label: "Has Social", icon: Camera },
-              ].map(f => (
-                <div key={f.key} className="flex items-center gap-2">
-                  <f.icon size={10} className="text-muted" />
-                  <span className="text-[10px] flex-1">{f.label}</span>
-                  <div className="flex rounded-lg overflow-hidden border border-border text-[8px]">
+              {!statsCollapsed && (
+                <div className="px-4 pb-4 pt-1">
+                  <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-2">
                     {[
-                      { val: null, label: "Any" },
-                      { val: true, label: "Yes" },
-                      { val: false, label: "No" },
-                    ].map(o => (
-                      <button key={String(o.val)} onClick={() => setFilters(prev => ({ ...prev, [f.key]: o.val }))}
-                        className={`px-1.5 py-0.5 ${filters[f.key] === o.val ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>
-                        {o.label}
-                      </button>
+                      { label: "Total Leads", value: stats.total, icon: Users, color: "text-foreground" },
+                      { label: "Avg Score", value: stats.avgScore, icon: Target, color: "text-[#2563EB]", suffix: "/100" },
+                      { label: "Reply Rate", value: `${stats.replyRate}%`, icon: MessageCircle, color: "text-emerald-400" },
+                      { label: "Conv. Rate", value: `${stats.convRate}%`, icon: TrendingUp, color: "text-purple-400" },
+                      { label: "Outreach Sent", value: stats.totalOutreach, icon: Send, color: "text-blue-400" },
+                      { label: "With Email", value: stats.withEmail, icon: Mail, color: "text-amber-400" },
+                      { label: "With Phone", value: stats.withPhone, icon: Phone, color: "text-emerald-400" },
+                      { label: "Stale Leads", value: stats.stale, icon: AlertTriangle, color: stats.stale > 0 ? "text-red-400" : "text-muted" },
+                    ].map((s, i) => (
+                      <PrismPanel key={i} rainbow padding="px-3 py-2" delay={i * 0.06}>
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <s.icon size={10} className={s.color} />
+                          <span className="text-[8px] text-muted uppercase tracking-wider">{s.label}</span>
+                        </div>
+                        <p className={`text-sm font-bold ${s.color}`}>{s.value}<span className="text-[8px] text-muted font-normal">{s.suffix || ""}</span></p>
+                      </PrismPanel>
                     ))}
                   </div>
+                  {/* Pipeline funnel */}
+                  <div className="mt-3 flex items-center gap-1">
+                    {STATUS_TABS.filter(t => t.key !== "all").map((t, i) => {
+                      const count = statusCounts[t.key] || 0;
+                      const pct = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
+                      const colors: Record<string, string> = { new: "#1D4ED8", contacted: "#f59e0b", replied: "#1D4ED8", booked: "#a855f7", converted: "#1D4ED8" };
+                      return (
+                        <div key={t.key} className="flex-1 group cursor-pointer" onClick={() => setActiveTab(t.key as CRMStatus)}>
+                          <div className="h-2 rounded-full transition-all group-hover:h-3" style={{ background: colors[t.key], opacity: count > 0 ? 1 : 0.2 }} />
+                          <div className="flex items-center justify-between mt-1">
+                            <span className="text-[8px] text-muted">{t.label}</span>
+                            <span className="text-[8px] font-mono" style={{ color: colors[t.key] }}>{count} <span className="text-muted">({pct}%)</span></span>
+                          </div>
+                          {i < 4 && <ArrowRight size={8} className="text-muted/30 mx-auto mt-0.5 hidden xl:block" />}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              ))}
-              <div className="pt-1">
-                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Staleness</label>
-                <div className="flex rounded-lg overflow-hidden border border-border text-[8px]">
-                  {[
-                    { val: null, label: "Any" },
-                    { val: true, label: "Stale Only" },
-                    { val: false, label: "Active Only" },
-                  ].map(o => (
-                    <button key={String(o.val)} onClick={() => setFilters(prev => ({ ...prev, isStale: o.val }))}
-                      className={`px-2 py-1 ${filters.isStale === o.val ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>
-                      {o.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              )}
             </div>
-            {/* Score & Rating ranges */}
-            <div className="space-y-2">
-              <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Rating ({filters.ratingMin}�{filters.ratingMax})</label>
-                <div className="flex items-center gap-2">
-                  <input type="range" min={0} max={5} step={0.5} value={filters.ratingMin}
-                    onChange={e => setFilters(prev => ({ ...prev, ratingMin: parseFloat(e.target.value) }))}
-                    className="flex-1 h-1 accent-[#2563EB]" aria-label="Minimum rating" />
-                  <input type="range" min={0} max={5} step={0.5} value={filters.ratingMax}
-                    onChange={e => setFilters(prev => ({ ...prev, ratingMax: parseFloat(e.target.value) }))}
-                    className="flex-1 h-1 accent-[#2563EB]" aria-label="Maximum rating" />
-                </div>
-              </div>
-              <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Lead Score ({filters.scoreMin}�{filters.scoreMax})</label>
-                <div className="flex items-center gap-2">
-                  <input type="range" min={0} max={100} step={5} value={filters.scoreMin}
-                    onChange={e => setFilters(prev => ({ ...prev, scoreMin: parseInt(e.target.value) }))}
-                    className="flex-1 h-1 accent-[#2563EB]" aria-label="Minimum lead score" />
-                  <input type="range" min={0} max={100} step={5} value={filters.scoreMax}
-                    onChange={e => setFilters(prev => ({ ...prev, scoreMax: parseInt(e.target.value) }))}
-                    className="flex-1 h-1 accent-[#2563EB]" aria-label="Maximum lead score" />
-                </div>
-              </div>
-              <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Date Range</label>
-                <div className="flex items-center gap-1">
-                  <input type="date" value={filters.dateFrom} onChange={e => setFilters(prev => ({ ...prev, dateFrom: e.target.value }))}
-                    className="input text-[9px] px-1.5 py-1 flex-1" aria-label="Filter from date" />
-                  <span className="text-[8px] text-muted">to</span>
-                  <input type="date" value={filters.dateTo} onChange={e => setFilters(prev => ({ ...prev, dateTo: e.target.value }))}
-                    className="input text-[9px] px-1.5 py-1 flex-1" aria-label="Filter to date" />
-                </div>
-              </div>
-              {/* Tags filter */}
-              <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Tags</label>
-                <div className="flex flex-wrap gap-1">
-                  {AVAILABLE_TAGS.map(tag => (
-                    <button key={tag.id} onClick={() => setFilters(prev => ({
-                      ...prev, tags: prev.tags.includes(tag.id) ? prev.tags.filter(t => t !== tag.id) : [...prev.tags, tag.id]
-                    }))}
-                      className={`text-[8px] px-1.5 py-0.5 rounded-full border transition-all ${filters.tags.includes(tag.id) ? getTagStyle(tag.color) : "border-border text-muted"}`}>
-                      {tag.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* -- Search + Sort -- */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <div className="relative flex-1 min-w-[200px]">
-          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-          <input value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="Search name, industry, city, email, phone..."
-            className="input glass w-full text-[10px] pl-8 py-1.5"
-            aria-label="Search leads" />
-          {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2" aria-label="Clear search"><X size={11} className="text-muted hover:text-foreground" /></button>}
-        </div>
-        <div className="relative">
-          <button onClick={() => setShowSortMenu(!showSortMenu)} className="btn-ghost text-[9px] flex items-center gap-1 py-1.5">
-            <ArrowUpDown size={11} /> {sortBy === "newest" ? "Newest" : sortBy === "oldest" ? "Oldest" : sortBy === "rating" ? "Rating" : sortBy === "reviews" ? "Reviews" : sortBy === "score" ? "Score" : sortBy === "name_az" ? "A?Z" : sortBy === "name_za" ? "Z?A" : "Last Contacted"}
-            <ChevronDown size={9} />
-          </button>
-          {showSortMenu && (
-            <div className="absolute right-0 top-full mt-1 bg-surface border border-border rounded-xl shadow-xl z-50 py-1 min-w-[150px]">
-              {(["newest", "oldest", "score", "rating", "reviews", "last_contacted", "name_az", "name_za"] as SortKey[]).map(s => (
-                <button key={s} onClick={() => { setSortBy(s); setShowSortMenu(false); }}
-                  className={`block w-full text-left text-[10px] px-3 py-1.5 hover:bg-surface-light transition-colors ${sortBy === s ? "text-[#2563EB]" : "text-muted"}`}>
-                  {s === "newest" ? "Newest First" : s === "oldest" ? "Oldest First" : s === "score" ? "Highest Score" : s === "rating" ? "Highest Rating" : s === "reviews" ? "Most Reviews" : s === "last_contacted" ? "Last Contacted" : s === "name_az" ? "Name A?Z" : "Name Z?A"}
+            {/* -- Header Row (sticky toolbar) -- */}
+            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex items-center justify-between flex-wrap gap-2 py-2 -mx-1 px-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                {hasActiveFilters && (
+                  <span className="text-[8px] px-2 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] flex items-center gap-1">
+                    <Filter size={8} /> Filtered
+                    <button onClick={() => setFilters(DEFAULT_FILTERS)} className="hover:text-red-400" aria-label="Clear filters"><X size={8} /></button>
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {/* View mode */}
+                <div className="flex rounded-lg overflow-hidden border border-border">
+                  {([
+                    { key: "table" as ViewMode, icon: LayoutList, label: "Table" },
+                    { key: "card" as ViewMode, icon: LayoutGrid, label: "Cards" },
+                    { key: "pipeline" as ViewMode, icon: Layers, label: "Pipeline" },
+                  ]).map(v => (
+                    <button key={v.key} onClick={() => setViewMode(v.key)}
+                      className={`text-[9px] px-2 py-1.5 flex items-center gap-1 transition-all ${viewMode === v.key ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted hover:text-foreground"}`}>
+                      <v.icon size={11} /> {v.label}
+                    </button>
+                  ))}
+                </div>
+                {/* Density */}
+                <div className="flex rounded-lg overflow-hidden border border-border">
+                  {([
+                    { key: "dense" as Density, icon: AlignJustify, tip: "Dense" },
+                    { key: "compact" as Density, icon: Grid3X3, tip: "Compact" },
+                    { key: "comfortable" as Density, icon: Columns3, tip: "Comfortable" },
+                  ]).map(d => (
+                    <button key={d.key} onClick={() => setDensity(d.key)} title={d.tip}
+                      className={`p-1.5 transition-all ${density === d.key ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted hover:text-foreground"}`}>
+                      <d.icon size={11} />
+                    </button>
+                  ))}
+                </div>
+                {/* Action buttons */}
+                <button onClick={() => setShowFilters(!showFilters)}
+                  className={`btn-ghost text-[9px] flex items-center gap-1 ${showFilters ? "text-[#2563EB]" : ""}`}>
+                  <Filter size={11} /> Filters {hasActiveFilters && <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />}
                 </button>
-              ))}
+                <button onClick={() => setShowAutomation(true)} className="btn-ghost text-[9px] flex items-center gap-1">
+                  <Bot size={11} /> Automation
+                </button>
+                {viewMode === "table" && (
+                  <button onClick={() => setShowColumnConfig(!showColumnConfig)} className="btn-ghost text-[9px] flex items-center gap-1">
+                    <Settings2 size={11} /> Columns
+                  </button>
+                )}
+                <button onClick={exportCSV} className="btn-ghost text-[9px] flex items-center gap-1"><Download size={11} /> Export</button>
+                <label className="btn-ghost text-[9px] flex items-center gap-1 cursor-pointer">
+                  <Upload size={11} /> Import
+                  <input type="file" accept=".csv" className="hidden" onChange={async (e) => {
+                    const file = e.target.files?.[0]; if (!file) return;
+                    const text = await file.text();
+                    const lines = text.split("\n").filter(l => l.trim());
+                    if (lines.length < 2) { toast.error("Empty CSV"); return; }
+                    const headers = lines[0].split(",").map(h => h.trim().toLowerCase().replace(/["']/g, ""));
+                    const csvLeads = lines.slice(1).map(line => {
+                      const vals = line.split(",").map(v => v.trim().replace(/["']/g, ""));
+                      const obj: Record<string, string> = {};
+                      headers.forEach((h, i) => { obj[h] = vals[i] || ""; });
+                      return obj;
+                    });
+                    const tid = "csv-import";
+                    toast.loading(`Importing ${csvLeads.length} leads...`, { id: tid });
+                    try {
+                      const res = await fetch("/api/leads/import", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ leads: csvLeads }) });
+                      const data = await res.json();
+                      if (data.success) { toast.success(`Imported ${data.imported} leads`, { id: tid }); fetchLeads(); }
+                      else toast.error(data.error || "Import failed", { id: tid });
+                    } catch (err) {
+                      console.error("[CRM] CSV import error:", err);
+                      toast.error("Import error", { id: tid });
+                    }
+                    e.target.value = "";
+                  }} />
+                </label>
+                <button onClick={() => setShowBuyCredits(true)} className="flex items-center gap-1 px-2 py-1.5 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)] hover:bg-[rgba(37,99,235,0.08)] transition-all">
+                  <Coins size={11} className="text-[#2563EB]" />
+                  <span className="text-[9px] font-medium text-[#2563EB]">{emailCredits}</span>
+                </button>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <button onClick={() => fetchLeads()} className="btn-ghost text-[9px] flex items-center gap-1"><RefreshCw size={11} /> Refresh</button>
+                </motion.div>
+              </div>
             </div>
-          )}
-        </div>
-        <span className="text-[9px] text-muted">{filtered.length} results</span>
-      </div>
 
-      {/* -- Status Tabs -- */}
-      <div className="tab-group w-fit">
-        {STATUS_TABS.map(t => (
-          <button key={t.key} onClick={() => setActiveTab(t.key)}
-            className={`${activeTab === t.key ? "tab-item-active" : "tab-item-inactive"} flex items-center gap-1`}>
-            {t.label}
-            <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${activeTab === t.key ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-surface-light text-muted"}`}>
-              {statusCounts[t.key] || 0}
-            </span>
-          </button>
-        ))}
-      </div>
+            {/* -- Saved Segments -- */}
+            {savedSegments.length > 0 && (
+              <div className="flex items-center gap-1.5 overflow-x-auto">
+                <Bookmark size={10} className="text-muted shrink-0" />
+                {savedSegments.map(seg => (
+                  <button key={seg.id} onClick={() => loadSegment(seg)}
+                    className="text-[8px] px-2 py-1 rounded-full border border-border bg-surface-light hover:border-[rgba(37,99,235,0.2)] hover:text-[#2563EB] transition-all whitespace-nowrap flex items-center gap-1">
+                    {seg.name}
+                    <span role="button" onClick={(e) => { e.stopPropagation(); deleteSegment(seg.id); }}
+                      className="hover:text-red-400 cursor-pointer"><X size={7} /></span>
+                  </button>
+                ))}
+                <button onClick={() => setShowSegmentSave(true)} className="text-[8px] px-2 py-1 rounded-full border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] transition-all flex items-center gap-1">
+                  <Plus size={8} /> Save Current
+                </button>
+              </div>
+            )}
 
-      {/* -- Bulk Actions Bar -- */}
-      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${selectedIds.size > 0 ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.12)]" : "bg-surface-light/20 border-transparent"}`}>
-        {selectedIds.size > 0 ? (
-          <>
-            <span className="text-[9px] text-[#2563EB] font-medium shrink-0">{selectedIds.size} selected</span>
-            <div className="flex items-center gap-1 flex-wrap">
-              <button onClick={() => bulkAction("email")} className="text-[8px] px-2 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1"><Mail size={9} /> Email All</button>
-              <button onClick={() => bulkAction("sms")} className="text-[8px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center gap-1"><MessageSquare size={9} /> SMS All</button>
-              <button onClick={() => bulkAction("call")} className="text-[8px] px-2 py-1 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all flex items-center gap-1"><PhoneCall size={9} /> Call All</button>
+            {/* -- Column Config Dropdown -- */}
+            {showColumnConfig && (
+              <div className="card p-3 flex flex-wrap gap-2">
+                <span className="text-[9px] text-muted font-medium w-full">Toggle Columns:</span>
+                {columns.filter(c => c.key !== "select" && c.key !== "expand").map(col => (
+                  <button key={col.key} onClick={() => setColumns(prev => prev.map(c => c.key === col.key ? { ...c, visible: !c.visible } : c))}
+                    className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${col.visible ? "border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted"}`}>
+                    {col.visible ? <Eye size={9} /> : <EyeOff size={9} />} {col.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* -- Advanced Filters Panel -- */}
+            {showFilters && (
+              <div className="card p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold flex items-center gap-2"><Filter size={12} className="text-[#2563EB]" /> Advanced Filters</span>
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => setFilters(DEFAULT_FILTERS)} className="text-[9px] text-muted hover:text-foreground">Reset All</button>
+                    <button onClick={() => setShowFilters(false)} className="text-muted hover:text-foreground" aria-label="Close filters"><X size={14} /></button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {/* Industry filter */}
+                  <div>
+                    <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Industry</label>
+                    <div className="space-y-0.5 max-h-28 overflow-y-auto">
+                      {uniqueIndustries.slice(0, 15).map(ind => (
+                        <label key={ind} className="flex items-center gap-1.5 text-[10px] cursor-pointer hover:text-[#2563EB] transition-colors">
+                          <input type="checkbox" checked={filters.industries.includes(ind)}
+                            onChange={() => setFilters(prev => ({
+                              ...prev,
+                              industries: prev.industries.includes(ind) ? prev.industries.filter(i => i !== ind) : [...prev.industries, ind]
+                            }))}
+                            className="rounded border-border text-[#2563EB] w-3 h-3" />
+                          {ind}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Location filter */}
+                  <div>
+                    <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Location</label>
+                    <div className="space-y-0.5 max-h-28 overflow-y-auto">
+                      {uniqueCities.slice(0, 15).map(city => (
+                        <label key={city} className="flex items-center gap-1.5 text-[10px] cursor-pointer hover:text-[#2563EB] transition-colors">
+                          <input type="checkbox" checked={filters.cities.includes(city)}
+                            onChange={() => setFilters(prev => ({
+                              ...prev,
+                              cities: prev.cities.includes(city) ? prev.cities.filter(c => c !== city) : [...prev.cities, city]
+                            }))}
+                            className="rounded border-border text-[#2563EB] w-3 h-3" />
+                          {city}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Contact info filters */}
+                  <div className="space-y-2">
+                    <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block">Contact Info</label>
+                    {[
+                      { key: "hasPhone" as const, label: "Has Phone", icon: Phone },
+                      { key: "hasEmail" as const, label: "Has Email", icon: Mail },
+                      { key: "hasSocial" as const, label: "Has Social", icon: Camera },
+                    ].map(f => (
+                      <div key={f.key} className="flex items-center gap-2">
+                        <f.icon size={10} className="text-muted" />
+                        <span className="text-[10px] flex-1">{f.label}</span>
+                        <div className="flex rounded-lg overflow-hidden border border-border text-[8px]">
+                          {[
+                            { val: null, label: "Any" },
+                            { val: true, label: "Yes" },
+                            { val: false, label: "No" },
+                          ].map(o => (
+                            <button key={String(o.val)} onClick={() => setFilters(prev => ({ ...prev, [f.key]: o.val }))}
+                              className={`px-1.5 py-0.5 ${filters[f.key] === o.val ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>
+                              {o.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                    <div className="pt-1">
+                      <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Staleness</label>
+                      <div className="flex rounded-lg overflow-hidden border border-border text-[8px]">
+                        {[
+                          { val: null, label: "Any" },
+                          { val: true, label: "Stale Only" },
+                          { val: false, label: "Active Only" },
+                        ].map(o => (
+                          <button key={String(o.val)} onClick={() => setFilters(prev => ({ ...prev, isStale: o.val }))}
+                            className={`px-2 py-1 ${filters.isStale === o.val ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>
+                            {o.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  {/* Score & Rating ranges */}
+                  <div className="space-y-2">
+                    <div>
+                      <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Rating ({filters.ratingMin}�{filters.ratingMax})</label>
+                      <div className="flex items-center gap-2">
+                        <input type="range" min={0} max={5} step={0.5} value={filters.ratingMin}
+                          onChange={e => setFilters(prev => ({ ...prev, ratingMin: parseFloat(e.target.value) }))}
+                          className="flex-1 h-1 accent-[#2563EB]" aria-label="Minimum rating" />
+                        <input type="range" min={0} max={5} step={0.5} value={filters.ratingMax}
+                          onChange={e => setFilters(prev => ({ ...prev, ratingMax: parseFloat(e.target.value) }))}
+                          className="flex-1 h-1 accent-[#2563EB]" aria-label="Maximum rating" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Lead Score ({filters.scoreMin}�{filters.scoreMax})</label>
+                      <div className="flex items-center gap-2">
+                        <input type="range" min={0} max={100} step={5} value={filters.scoreMin}
+                          onChange={e => setFilters(prev => ({ ...prev, scoreMin: parseInt(e.target.value) }))}
+                          className="flex-1 h-1 accent-[#2563EB]" aria-label="Minimum lead score" />
+                        <input type="range" min={0} max={100} step={5} value={filters.scoreMax}
+                          onChange={e => setFilters(prev => ({ ...prev, scoreMax: parseInt(e.target.value) }))}
+                          className="flex-1 h-1 accent-[#2563EB]" aria-label="Maximum lead score" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Date Range</label>
+                      <div className="flex items-center gap-1">
+                        <input type="date" value={filters.dateFrom} onChange={e => setFilters(prev => ({ ...prev, dateFrom: e.target.value }))}
+                          className="input text-[9px] px-1.5 py-1 flex-1" aria-label="Filter from date" />
+                        <span className="text-[8px] text-muted">to</span>
+                        <input type="date" value={filters.dateTo} onChange={e => setFilters(prev => ({ ...prev, dateTo: e.target.value }))}
+                          className="input text-[9px] px-1.5 py-1 flex-1" aria-label="Filter to date" />
+                      </div>
+                    </div>
+                    {/* Tags filter */}
+                    <div>
+                      <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Tags</label>
+                      <div className="flex flex-wrap gap-1">
+                        {AVAILABLE_TAGS.map(tag => (
+                          <button key={tag.id} onClick={() => setFilters(prev => ({
+                            ...prev, tags: prev.tags.includes(tag.id) ? prev.tags.filter(t => t !== tag.id) : [...prev.tags, tag.id]
+                          }))}
+                            className={`text-[8px] px-1.5 py-0.5 rounded-full border transition-all ${filters.tags.includes(tag.id) ? getTagStyle(tag.color) : "border-border text-muted"}`}>
+                            {tag.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* -- Search + Sort -- */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="relative flex-1 min-w-[200px]">
+                <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                <input value={search} onChange={e => setSearch(e.target.value)}
+                  placeholder="Search name, industry, city, email, phone..."
+                  className="input glass w-full text-[10px] pl-8 py-1.5"
+                  aria-label="Search leads" />
+                {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2" aria-label="Clear search"><X size={11} className="text-muted hover:text-foreground" /></button>}
+              </div>
               <div className="relative">
-                <button onClick={() => setShowBulkStatusMenu(!showBulkStatusMenu)} className="text-[8px] px-2 py-1 rounded-lg bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 transition-all flex items-center gap-1">
-                  <Tag size={9} /> Mark As <ChevronDown size={7} />
+                <button onClick={() => setShowSortMenu(!showSortMenu)} className="btn-ghost text-[9px] flex items-center gap-1 py-1.5">
+                  <ArrowUpDown size={11} /> {sortBy === "newest" ? "Newest" : sortBy === "oldest" ? "Oldest" : sortBy === "rating" ? "Rating" : sortBy === "reviews" ? "Reviews" : sortBy === "score" ? "Score" : sortBy === "name_az" ? "A?Z" : sortBy === "name_za" ? "Z?A" : "Last Contacted"}
+                  <ChevronDown size={9} />
                 </button>
-                {showBulkStatusMenu && (
-                  <div className="absolute left-0 top-full mt-1 bg-surface border border-border rounded-xl shadow-xl z-50 py-1 min-w-[120px]">
-                    {["new", "contacted", "replied", "booked", "converted", "not_interested"].map(s => (
-                      <button key={s} onClick={() => bulkUpdateStatus(s)}
-                        className="block w-full text-left text-[9px] px-3 py-1.5 hover:bg-surface-light transition-colors text-muted hover:text-foreground capitalize">
-                        {s.replace("_", " ")}
+                {showSortMenu && (
+                  <div className="absolute right-0 top-full mt-1 bg-surface border border-border rounded-xl shadow-xl z-50 py-1 min-w-[150px]">
+                    {(["newest", "oldest", "score", "rating", "reviews", "last_contacted", "name_az", "name_za"] as SortKey[]).map(s => (
+                      <button key={s} onClick={() => { setSortBy(s); setShowSortMenu(false); }}
+                        className={`block w-full text-left text-[10px] px-3 py-1.5 hover:bg-surface-light transition-colors ${sortBy === s ? "text-[#2563EB]" : "text-muted"}`}>
+                        {s === "newest" ? "Newest First" : s === "oldest" ? "Oldest First" : s === "score" ? "Highest Score" : s === "rating" ? "Highest Rating" : s === "reviews" ? "Most Reviews" : s === "last_contacted" ? "Last Contacted" : s === "name_az" ? "Name A?Z" : "Name Z?A"}
                       </button>
                     ))}
                   </div>
                 )}
               </div>
-              <button onClick={bulkDelete} className="text-[8px] px-2 py-1 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all flex items-center gap-1"><Trash2 size={9} /> Delete</button>
+              <span className="text-[9px] text-muted">{filtered.length} results</span>
             </div>
-            <button onClick={() => { setSelectedIds(new Set()); setShowBulkStatusMenu(false); }} className="text-[8px] text-muted hover:text-foreground ml-auto" aria-label="Clear selection"><X size={10} /></button>
-          </>
-        ) : (
-          <span className="text-[9px] text-muted flex items-center gap-1"><Zap size={9} /> Select leads for bulk actions</span>
-        )}
-      </div>
 
-      {/* -- Main Content (with optional Detail Sidebar) -- */}
-      <div className={`flex gap-3 ${detailLeadId ? "" : ""}`}>
-        <div className={`flex-1 min-w-0 ${detailLeadId ? "max-w-[calc(100%-360px)]" : ""}`}>
+            {/* -- Status Tabs -- */}
+            <div className="tab-group w-fit">
+              {STATUS_TABS.map(t => (
+                <button key={t.key} onClick={() => setActiveTab(t.key)}
+                  className={`${activeTab === t.key ? "tab-item-active" : "tab-item-inactive"} flex items-center gap-1`}>
+                  {t.label}
+                  <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${activeTab === t.key ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-surface-light text-muted"}`}>
+                    {statusCounts[t.key] || 0}
+                  </span>
+                </button>
+              ))}
+            </div>
 
-          {/* -- TABLE VIEW -- */}
-          {viewMode === "table" && (
-            <div className=" p-0 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
-              <div className="overflow-x-auto">
-                <table className={`w-full ${dText}`}>
-                  <thead>
-                    <tr className="border-b border-border bg-surface-light">
-                      {columns.filter(c => c.visible).map(col => {
-                        if (col.key === "select") return (
-                          <th key={col.key} className={`text-left px-2 ${dPy} ${col.width || ""}`}>
-                            <button onClick={toggleSelectAll}>
-                              {selectedIds.size === filtered.length && filtered.length > 0
-                                ? <CheckSquare size={12} className="text-[#2563EB]" />
-                                : <Square size={12} className="text-muted/40" />}
+            {/* -- Bulk Actions Bar -- */}
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${selectedIds.size > 0 ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.12)]" : "bg-surface-light/20 border-transparent"}`}>
+              {selectedIds.size > 0 ? (
+                <>
+                  <span className="text-[9px] text-[#2563EB] font-medium shrink-0">{selectedIds.size} selected</span>
+                  <div className="flex items-center gap-1 flex-wrap">
+                    <button onClick={() => bulkAction("email")} className="text-[8px] px-2 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1"><Mail size={9} /> Email All</button>
+                    <button onClick={() => bulkAction("sms")} className="text-[8px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center gap-1"><MessageSquare size={9} /> SMS All</button>
+                    <button onClick={() => bulkAction("call")} className="text-[8px] px-2 py-1 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all flex items-center gap-1"><PhoneCall size={9} /> Call All</button>
+                    <div className="relative">
+                      <button onClick={() => setShowBulkStatusMenu(!showBulkStatusMenu)} className="text-[8px] px-2 py-1 rounded-lg bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 transition-all flex items-center gap-1">
+                        <Tag size={9} /> Mark As <ChevronDown size={7} />
+                      </button>
+                      {showBulkStatusMenu && (
+                        <div className="absolute left-0 top-full mt-1 bg-surface border border-border rounded-xl shadow-xl z-50 py-1 min-w-[120px]">
+                          {["new", "contacted", "replied", "booked", "converted", "not_interested"].map(s => (
+                            <button key={s} onClick={() => bulkUpdateStatus(s)}
+                              className="block w-full text-left text-[9px] px-3 py-1.5 hover:bg-surface-light transition-colors text-muted hover:text-foreground capitalize">
+                              {s.replace("_", " ")}
                             </button>
-                          </th>
-                        );
-                        if (col.key === "expand") return <th key={col.key} className={`${col.width || ""}`} />;
-                        return (
-                          <th key={col.key} className={`text-left px-2 ${dPy} text-[8px] text-muted uppercase tracking-wider font-semibold`}>
-                            {col.label}
-                          </th>
-                        );
-                      })}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {paginated.length === 0 && (
-                      <tr><td colSpan={columns.filter(c => c.visible).length} className="text-center py-12 text-muted text-xs">No leads found</td></tr>
-                    )}
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <button onClick={bulkDelete} className="text-[8px] px-2 py-1 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all flex items-center gap-1"><Trash2 size={9} /> Delete</button>
+                  </div>
+                  <button onClick={() => { setSelectedIds(new Set()); setShowBulkStatusMenu(false); }} className="text-[8px] text-muted hover:text-foreground ml-auto" aria-label="Clear selection"><X size={10} /></button>
+                </>
+              ) : (
+                <span className="text-[9px] text-muted flex items-center gap-1"><Zap size={9} /> Select leads for bulk actions</span>
+              )}
+            </div>
+
+            {/* -- Main Content (with optional Detail Sidebar) -- */}
+            <div className={`flex gap-3 ${detailLeadId ? "" : ""}`}>
+              <div className={`flex-1 min-w-0 ${detailLeadId ? "max-w-[calc(100%-360px)]" : ""}`}>
+
+                {/* -- TABLE VIEW -- */}
+                {viewMode === "table" && (
+                  <div className=" p-0 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
+                    <div className="overflow-x-auto">
+                      <table className={`w-full ${dText}`}>
+                        <thead>
+                          <tr className="border-b border-border bg-surface-light">
+                            {columns.filter(c => c.visible).map(col => {
+                              if (col.key === "select") return (
+                                <th key={col.key} className={`text-left px-2 ${dPy} ${col.width || ""}`}>
+                                  <button onClick={toggleSelectAll}>
+                                    {selectedIds.size === filtered.length && filtered.length > 0
+                                      ? <CheckSquare size={12} className="text-[#2563EB]" />
+                                      : <Square size={12} className="text-muted/40" />}
+                                  </button>
+                                </th>
+                              );
+                              if (col.key === "expand") return <th key={col.key} className={`${col.width || ""}`} />;
+                              return (
+                                <th key={col.key} className={`text-left px-2 ${dPy} text-[8px] text-muted uppercase tracking-wider font-semibold`}>
+                                  {col.label}
+                                </th>
+                              );
+                            })}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {paginated.length === 0 && (
+                            <tr><td colSpan={columns.filter(c => c.visible).length} className="text-center py-12 text-muted text-xs">No leads found</td></tr>
+                          )}
+                          {paginated.map((lead, index) => {
+                            const score = getLeadScore(lead);
+                            const scoreInfo = getScoreInfo(score);
+                            const stale = isLeadStale(lead);
+                            const expiry = getDaysUntilExpiry(lead);
+                            const tags = leadTags[lead.id] || [];
+                            const isExpanded = expandedId === lead.id;
+                            const selected = selectedIds.has(lead.id);
+
+                            return (
+                              <React.Fragment key={lead.id}>
+                                <motion.tr
+                                  className={`border-b border-border/50 cursor-pointer ${isExpanded ? "bg-surface-light/20" : ""} ${selected ? "bg-[rgba(37,99,235,0.05)]" : ""}`}
+                                  initial={{ opacity: 0, x: -8 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ duration: 0.18, delay: index * 0.04 }}
+                                  whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                                  onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
+                                  {columns.filter(c => c.visible).map(col => {
+                                    if (col.key === "select") return (
+                                      <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
+                                        <button onClick={() => toggleSelect(lead.id)}>
+                                          {selected ? <CheckSquare size={12} className="text-[#2563EB]" /> : <Square size={12} className="text-muted/40" />}
+                                        </button>
+                                      </td>
+                                    );
+                                    if (col.key === "name") return (
+                                      <td key={col.key} className={`px-2 ${dPy}`}>
+                                        <p className="font-medium truncate max-w-[180px]">{lead.business_name}</p>
+                                        {density !== "dense" && lead.owner_name && <p className="text-[8px] text-muted truncate">{lead.owner_name}</p>}
+                                      </td>
+                                    );
+                                    if (col.key === "contact") return (
+                                      <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
+                                        <div className={`flex items-center ${dGap}`}>
+                                          {lead.email && <span title={lead.email} className="text-muted hover:text-[#2563EB] cursor-pointer"><Mail size={11} /></span>}
+                                          {lead.phone && <span title={lead.phone} className="text-muted hover:text-emerald-400 cursor-pointer"><Phone size={11} /></span>}
+                                          {lead.website && <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-foreground"><Globe size={11} /></a>}
+                                        </div>
+                                      </td>
+                                    );
+                                    if (col.key === "industry") return (
+                                      <td key={col.key} className={`px-2 ${dPy} text-muted`}>
+                                        <span className="truncate max-w-[100px] block">{lead.industry || "�"}</span>
+                                      </td>
+                                    );
+                                    if (col.key === "location") return (
+                                      <td key={col.key} className={`px-2 ${dPy} text-muted`}>
+                                        <span className="truncate max-w-[100px] block">{lead.city ? `${lead.city}${lead.state ? `, ${lead.state}` : ""}` : "�"}</span>
+                                      </td>
+                                    );
+                                    if (col.key === "rating") return (
+                                      <td key={col.key} className={`px-2 ${dPy}`}>
+                                        {lead.google_rating ? (
+                                          <span className="flex items-center gap-0.5 text-amber-400">
+                                            <Star size={9} className="fill-amber-400" /> {lead.google_rating}
+                                            {density !== "dense" && <span className="text-muted text-[8px]">({lead.review_count})</span>}
+                                          </span>
+                                        ) : <span className="text-muted">�</span>}
+                                      </td>
+                                    );
+                                    if (col.key === "score") return (
+                                      <td key={col.key} className={`px-2 ${dPy}`}>
+                                        <div className="flex items-center gap-1.5">
+                                          <div className="w-10 h-1.5 rounded-full bg-surface-light overflow-hidden">
+                                            <div className="h-full rounded-full" style={{ width: `${score}%`, background: scoreInfo.color }} />
+                                          </div>
+                                          <span className="text-[8px] font-bold" style={{ color: scoreInfo.color }}>{score}</span>
+                                        </div>
+                                      </td>
+                                    );
+                                    if (col.key === "tags") return (
+                                      <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
+                                        <div className="flex items-center gap-0.5 flex-wrap">
+                                          {tags.slice(0, 2).map(tagId => {
+                                            const tag = AVAILABLE_TAGS.find(t => t.id === tagId);
+                                            if (!tag) return null;
+                                            return <span key={tagId} className={`text-[7px] px-1 py-0.5 rounded-full border ${getTagStyle(tag.color)}`}>{tag.label}</span>;
+                                          })}
+                                          {tags.length > 2 && <span className="text-[7px] text-muted">+{tags.length - 2}</span>}
+                                        </div>
+                                      </td>
+                                    );
+                                    if (col.key === "status") return (
+                                      <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
+                                        <div className="flex items-center gap-1 relative">
+                                          <button onClick={() => setInlineStatusId(inlineStatusId === lead.id ? null : lead.id)}
+                                            className={`text-[8px] px-2 py-0.5 rounded-full border ${STATUS_COLORS[lead.status] || STATUS_COLORS.new} hover:opacity-80 transition-all`}>
+                                            {lead.status}
+                                          </button>
+                                          {stale && <AlertTriangle size={9} className="text-red-400" />}
+                                          {!stale && expiry !== null && expiry <= 5 && <span className="text-[7px] text-amber-400">{expiry}d</span>}
+                                          {inlineStatusId === lead.id && (
+                                            <div className="absolute left-0 top-full mt-1 bg-surface border border-border rounded-lg shadow-xl z-50 py-1 min-w-[110px]">
+                                              {["new", "contacted", "replied", "booked", "converted", "not_interested"].map(s => (
+                                                <button key={s} onClick={() => updateLeadStatus(lead.id, s)}
+                                                  className={`block w-full text-left text-[9px] px-3 py-1 hover:bg-surface-light transition-colors capitalize ${lead.status === s ? "text-[#2563EB]" : "text-muted"}`}>
+                                                  {s.replace("_", " ")}
+                                                </button>
+                                              ))}
+                                            </div>
+                                          )}
+                                        </div>
+                                      </td>
+                                    );
+                                    if (col.key === "last_contact") return (
+                                      <td key={col.key} className={`px-2 ${dPy}`}>
+                                        <span className="text-[9px] text-muted flex items-center gap-1">
+                                          <Clock size={8} />
+                                          {lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "Never"}
+                                        </span>
+                                      </td>
+                                    );
+                                    if (col.key === "actions") return (
+                                      <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
+                                        <div className="flex items-center gap-0.5">
+                                          <button onClick={() => sendAction(lead, "email")} disabled={!lead.email || actionLoading === `${lead.id}-email`}
+                                            className="text-[8px] p-1 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] disabled:opacity-30 transition-all" title="Email">
+                                            <Mail size={10} />
+                                          </button>
+                                          <button onClick={() => sendAction(lead, "sms")} disabled={!lead.phone || actionLoading === `${lead.id}-sms`}
+                                            className="text-[8px] p-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30 transition-all" title="SMS">
+                                            <MessageSquare size={10} />
+                                          </button>
+                                          <button onClick={() => sendAction(lead, "call")} disabled={!lead.phone || actionLoading === `${lead.id}-call`}
+                                            className="text-[8px] p-1 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-30 transition-all" title="Call">
+                                            <Phone size={10} />
+                                          </button>
+                                        </div>
+                                      </td>
+                                    );
+                                    if (col.key === "expand") return (
+                                      <td key={col.key} className={`px-1 ${dPy}`}>
+                                        <button onClick={(e) => { e.stopPropagation(); setExpandedId(isExpanded ? null : lead.id); }}
+                                          className="p-1 hover:bg-surface-light rounded transition-colors">
+                                          {isExpanded ? <ChevronUp size={11} className="text-muted" /> : <ChevronDown size={11} className="text-muted" />}
+                                        </button>
+                                      </td>
+                                    );
+                                    return null;
+                                  })}
+                                </motion.tr>
+                                {isExpanded && (
+                                  <motion.tr
+                                    className="bg-surface-light/10"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.15 }}
+                                  >
+                                    <td colSpan={columns.filter(c => c.visible).length} className="px-4 py-3">
+                                      <div className="flex items-center gap-2 mb-2">
+                                        <Send size={10} className="text-[#2563EB]" />
+                                        <span className="text-[9px] font-semibold text-[#2563EB]">Outreach History</span>
+                                        <span className="text-[8px] text-muted">({lead.outreach_log.length} messages)</span>
+                                      </div>
+                                      {lead.outreach_log.length === 0 ? (
+                                        <p className="text-[9px] text-muted">No outreach yet</p>
+                                      ) : (
+                                        <div className="space-y-1 max-h-36 overflow-y-auto">
+                                          {lead.outreach_log.map(e => (
+                                            <div key={e.id} className="flex items-start gap-2 text-[9px] py-1 px-2 rounded-lg bg-surface-light">
+                                              <div className="flex items-center gap-1 shrink-0 pt-0.5">
+                                                {e.platform === "email" ? <Mail size={10} className="text-[#2563EB]" /> :
+                                                 e.platform === "call" ? <Phone size={10} className="text-green-400" /> :
+                                                 <MessageSquare size={10} className="text-blue-400" />}
+                                                <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-muted"}`}>{e.status}</span>
+                                              </div>
+                                              <p className="flex-1 text-muted truncate">{e.message_text}</p>
+                                              {e.reply_text && <p className="text-emerald-400 text-[8px] truncate max-w-[200px]">? {e.reply_text}</p>}
+                                              <span className="text-[7px] text-muted shrink-0">{formatShortDate(e.sent_at)}</span>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </td>
+                                  </motion.tr>
+                                )}
+                              </React.Fragment>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* -- CARD VIEW -- */}
+                {viewMode === "card" && (
+                  <div className={`grid gap-2 ${density === "dense" ? "grid-cols-1 md:grid-cols-3 xl:grid-cols-4" : density === "compact" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"}`}>
+                    {paginated.length === 0 && <div className="col-span-full text-center py-12 text-muted text-xs">No leads found</div>}
                     {paginated.map((lead, index) => {
                       const score = getLeadScore(lead);
                       const scoreInfo = getScoreInfo(score);
                       const stale = isLeadStale(lead);
-                      const expiry = getDaysUntilExpiry(lead);
                       const tags = leadTags[lead.id] || [];
-                      const isExpanded = expandedId === lead.id;
-                      const selected = selectedIds.has(lead.id);
-
                       return (
-                        <React.Fragment key={lead.id}>
-                          <motion.tr
-                            className={`border-b border-border/50 cursor-pointer ${isExpanded ? "bg-surface-light/20" : ""} ${selected ? "bg-[rgba(37,99,235,0.05)]" : ""}`}
-                            initial={{ opacity: 0, x: -8 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.18, delay: index * 0.04 }}
-                            whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                            onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
-                            {columns.filter(c => c.visible).map(col => {
-                              if (col.key === "select") return (
-                                <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
-                                  <button onClick={() => toggleSelect(lead.id)}>
-                                    {selected ? <CheckSquare size={12} className="text-[#2563EB]" /> : <Square size={12} className="text-muted/40" />}
-                                  </button>
-                                </td>
-                              );
-                              if (col.key === "name") return (
-                                <td key={col.key} className={`px-2 ${dPy}`}>
-                                  <p className="font-medium truncate max-w-[180px]">{lead.business_name}</p>
-                                  {density !== "dense" && lead.owner_name && <p className="text-[8px] text-muted truncate">{lead.owner_name}</p>}
-                                </td>
-                              );
-                              if (col.key === "contact") return (
-                                <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
-                                  <div className={`flex items-center ${dGap}`}>
-                                    {lead.email && <span title={lead.email} className="text-muted hover:text-[#2563EB] cursor-pointer"><Mail size={11} /></span>}
-                                    {lead.phone && <span title={lead.phone} className="text-muted hover:text-emerald-400 cursor-pointer"><Phone size={11} /></span>}
-                                    {lead.website && <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-foreground"><Globe size={11} /></a>}
-                                  </div>
-                                </td>
-                              );
-                              if (col.key === "industry") return (
-                                <td key={col.key} className={`px-2 ${dPy} text-muted`}>
-                                  <span className="truncate max-w-[100px] block">{lead.industry || "�"}</span>
-                                </td>
-                              );
-                              if (col.key === "location") return (
-                                <td key={col.key} className={`px-2 ${dPy} text-muted`}>
-                                  <span className="truncate max-w-[100px] block">{lead.city ? `${lead.city}${lead.state ? `, ${lead.state}` : ""}` : "�"}</span>
-                                </td>
-                              );
-                              if (col.key === "rating") return (
-                                <td key={col.key} className={`px-2 ${dPy}`}>
-                                  {lead.google_rating ? (
-                                    <span className="flex items-center gap-0.5 text-amber-400">
-                                      <Star size={9} className="fill-amber-400" /> {lead.google_rating}
-                                      {density !== "dense" && <span className="text-muted text-[8px]">({lead.review_count})</span>}
-                                    </span>
-                                  ) : <span className="text-muted">�</span>}
-                                </td>
-                              );
-                              if (col.key === "score") return (
-                                <td key={col.key} className={`px-2 ${dPy}`}>
-                                  <div className="flex items-center gap-1.5">
-                                    <div className="w-10 h-1.5 rounded-full bg-surface-light overflow-hidden">
-                                      <div className="h-full rounded-full" style={{ width: `${score}%`, background: scoreInfo.color }} />
-                                    </div>
-                                    <span className="text-[8px] font-bold" style={{ color: scoreInfo.color }}>{score}</span>
-                                  </div>
-                                </td>
-                              );
-                              if (col.key === "tags") return (
-                                <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
-                                  <div className="flex items-center gap-0.5 flex-wrap">
-                                    {tags.slice(0, 2).map(tagId => {
-                                      const tag = AVAILABLE_TAGS.find(t => t.id === tagId);
-                                      if (!tag) return null;
-                                      return <span key={tagId} className={`text-[7px] px-1 py-0.5 rounded-full border ${getTagStyle(tag.color)}`}>{tag.label}</span>;
-                                    })}
-                                    {tags.length > 2 && <span className="text-[7px] text-muted">+{tags.length - 2}</span>}
-                                  </div>
-                                </td>
-                              );
-                              if (col.key === "status") return (
-                                <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
-                                  <div className="flex items-center gap-1 relative">
-                                    <button onClick={() => setInlineStatusId(inlineStatusId === lead.id ? null : lead.id)}
-                                      className={`text-[8px] px-2 py-0.5 rounded-full border ${STATUS_COLORS[lead.status] || STATUS_COLORS.new} hover:opacity-80 transition-all`}>
-                                      {lead.status}
-                                    </button>
-                                    {stale && <AlertTriangle size={9} className="text-red-400" />}
-                                    {!stale && expiry !== null && expiry <= 5 && <span className="text-[7px] text-amber-400">{expiry}d</span>}
-                                    {inlineStatusId === lead.id && (
-                                      <div className="absolute left-0 top-full mt-1 bg-surface border border-border rounded-lg shadow-xl z-50 py-1 min-w-[110px]">
-                                        {["new", "contacted", "replied", "booked", "converted", "not_interested"].map(s => (
-                                          <button key={s} onClick={() => updateLeadStatus(lead.id, s)}
-                                            className={`block w-full text-left text-[9px] px-3 py-1 hover:bg-surface-light transition-colors capitalize ${lead.status === s ? "text-[#2563EB]" : "text-muted"}`}>
-                                            {s.replace("_", " ")}
-                                          </button>
-                                        ))}
-                                      </div>
-                                    )}
-                                  </div>
-                                </td>
-                              );
-                              if (col.key === "last_contact") return (
-                                <td key={col.key} className={`px-2 ${dPy}`}>
-                                  <span className="text-[9px] text-muted flex items-center gap-1">
-                                    <Clock size={8} />
-                                    {lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "Never"}
-                                  </span>
-                                </td>
-                              );
-                              if (col.key === "actions") return (
-                                <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
-                                  <div className="flex items-center gap-0.5">
-                                    <button onClick={() => sendAction(lead, "email")} disabled={!lead.email || actionLoading === `${lead.id}-email`}
-                                      className="text-[8px] p-1 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] disabled:opacity-30 transition-all" title="Email">
-                                      <Mail size={10} />
-                                    </button>
-                                    <button onClick={() => sendAction(lead, "sms")} disabled={!lead.phone || actionLoading === `${lead.id}-sms`}
-                                      className="text-[8px] p-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30 transition-all" title="SMS">
-                                      <MessageSquare size={10} />
-                                    </button>
-                                    <button onClick={() => sendAction(lead, "call")} disabled={!lead.phone || actionLoading === `${lead.id}-call`}
-                                      className="text-[8px] p-1 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-30 transition-all" title="Call">
-                                      <Phone size={10} />
-                                    </button>
-                                  </div>
-                                </td>
-                              );
-                              if (col.key === "expand") return (
-                                <td key={col.key} className={`px-1 ${dPy}`}>
-                                  <button onClick={(e) => { e.stopPropagation(); setExpandedId(isExpanded ? null : lead.id); }}
-                                    className="p-1 hover:bg-surface-light rounded transition-colors">
-                                    {isExpanded ? <ChevronUp size={11} className="text-muted" /> : <ChevronDown size={11} className="text-muted" />}
-                                  </button>
-                                </td>
-                              );
-                              return null;
-                            })}
-                          </motion.tr>
-                          {isExpanded && (
-                            <motion.tr
-                              className="bg-surface-light/10"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ duration: 0.15 }}
-                            >
-                              <td colSpan={columns.filter(c => c.visible).length} className="px-4 py-3">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <Send size={10} className="text-[#2563EB]" />
-                                  <span className="text-[9px] font-semibold text-[#2563EB]">Outreach History</span>
-                                  <span className="text-[8px] text-muted">({lead.outreach_log.length} messages)</span>
+                        <motion.div
+                          key={lead.id}
+                          className={`rounded-xl border border-[rgba(0,0,0,0.08)] ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : ""}`}
+                          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.18, delay: index * 0.04 }}
+                          whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                          onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              <button onClick={e => { e.stopPropagation(); toggleSelect(lead.id); }}>
+                                {selectedIds.has(lead.id) ? <CheckSquare size={12} className="text-[#2563EB]" /> : <Square size={12} className="text-muted/40" />}
+                              </button>
+                              <div className="min-w-0">
+                                <h3 className={`font-semibold truncate ${density === "dense" ? "text-[10px]" : "text-xs"}`}>{lead.business_name}</h3>
+                                <div className="flex items-center gap-1.5 text-[8px] text-muted">
+                                  {lead.industry && <span>{lead.industry}</span>}
+                                  {lead.city && <span>� {lead.city}</span>}
                                 </div>
-                                {lead.outreach_log.length === 0 ? (
-                                  <p className="text-[9px] text-muted">No outreach yet</p>
-                                ) : (
-                                  <div className="space-y-1 max-h-36 overflow-y-auto">
-                                    {lead.outreach_log.map(e => (
-                                      <div key={e.id} className="flex items-start gap-2 text-[9px] py-1 px-2 rounded-lg bg-surface-light">
-                                        <div className="flex items-center gap-1 shrink-0 pt-0.5">
-                                          {e.platform === "email" ? <Mail size={10} className="text-[#2563EB]" /> :
-                                           e.platform === "call" ? <Phone size={10} className="text-green-400" /> :
-                                           <MessageSquare size={10} className="text-blue-400" />}
-                                          <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-muted"}`}>{e.status}</span>
-                                        </div>
-                                        <p className="flex-1 text-muted truncate">{e.message_text}</p>
-                                        {e.reply_text && <p className="text-emerald-400 text-[8px] truncate max-w-[200px]">? {e.reply_text}</p>}
-                                        <span className="text-[7px] text-muted shrink-0">{formatShortDate(e.sent_at)}</span>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-                              </td>
-                            </motion.tr>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-1 shrink-0">
+                              <span className={`text-[7px] px-1.5 py-0.5 rounded font-bold ${scoreInfo.bg}`}>{scoreInfo.label}</span>
+                              {stale && <AlertTriangle size={9} className="text-red-400" />}
+                            </div>
+                          </div>
+                          {/* Score bar */}
+                          <div className="flex items-center gap-2">
+                            <div className="flex-1 h-1 rounded-full bg-surface-light">
+                              <div className="h-full rounded-full transition-all" style={{ width: `${score}%`, background: scoreInfo.color }} />
+                            </div>
+                            <span className="text-[8px] font-mono" style={{ color: scoreInfo.color }}>{score}</span>
+                          </div>
+                          {/* Contact + social */}
+                          <div className="flex items-center gap-2 text-[9px] text-muted">
+                            {lead.email && <Mail size={9} />}
+                            {lead.phone && <Phone size={9} />}
+                            {lead.instagram_url && <InstagramIcon size={10} />}
+                            {lead.facebook_url && <FacebookIcon size={10} />}
+                            {lead.linkedin_url && <LinkedInIcon size={10} />}
+                            {lead.google_rating && <span className="flex items-center gap-0.5 text-amber-400"><Star size={8} className="fill-amber-400" /> {lead.google_rating}</span>}
+                            <span className="ml-auto text-[8px]">{lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "No outreach"}</span>
+                          </div>
+                          {/* Tags */}
+                          {tags.length > 0 && (
+                            <div className="flex items-center gap-0.5 flex-wrap">
+                              {tags.map(tagId => {
+                                const tag = AVAILABLE_TAGS.find(t => t.id === tagId);
+                                if (!tag) return null;
+                                return <span key={tagId} className={`text-[7px] px-1 py-0.5 rounded-full border ${getTagStyle(tag.color)}`}>{tag.label}</span>;
+                              })}
+                            </div>
                           )}
-                        </React.Fragment>
+                          {/* Status + actions */}
+                          <div className="flex items-center justify-between pt-1 border-t border-border/50">
+                            <span className={`text-[8px] px-2 py-0.5 rounded-full border ${STATUS_COLORS[lead.status] || STATUS_COLORS.new}`}>{lead.status}</span>
+                            <div className="flex items-center gap-0.5" onClick={e => e.stopPropagation()}>
+                              <button onClick={() => sendAction(lead, "email")} disabled={!lead.email} className="p-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] disabled:opacity-30" aria-label="Send email"><Mail size={9} /></button>
+                              <button onClick={() => sendAction(lead, "sms")} disabled={!lead.phone} className="p-1 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30" aria-label="Send SMS"><MessageSquare size={9} /></button>
+                              <button onClick={() => sendAction(lead, "call")} disabled={!lead.phone} className="p-1 rounded bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-30" aria-label="Call lead"><Phone size={9} /></button>
+                            </div>
+                          </div>
+                        </motion.div>
                       );
                     })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+                  </div>
+                )}
 
-          {/* -- CARD VIEW -- */}
-          {viewMode === "card" && (
-            <div className={`grid gap-2 ${density === "dense" ? "grid-cols-1 md:grid-cols-3 xl:grid-cols-4" : density === "compact" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"}`}>
-              {paginated.length === 0 && <div className="col-span-full text-center py-12 text-muted text-xs">No leads found</div>}
-              {paginated.map((lead, index) => {
-                const score = getLeadScore(lead);
-                const scoreInfo = getScoreInfo(score);
-                const stale = isLeadStale(lead);
-                const tags = leadTags[lead.id] || [];
-                return (
-                  <motion.div
-                    key={lead.id}
-                    className={`rounded-xl border border-[rgba(0,0,0,0.08)] ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : ""}`}
-                    style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                    onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <button onClick={e => { e.stopPropagation(); toggleSelect(lead.id); }}>
-                          {selectedIds.has(lead.id) ? <CheckSquare size={12} className="text-[#2563EB]" /> : <Square size={12} className="text-muted/40" />}
-                        </button>
-                        <div className="min-w-0">
-                          <h3 className={`font-semibold truncate ${density === "dense" ? "text-[10px]" : "text-xs"}`}>{lead.business_name}</h3>
-                          <div className="flex items-center gap-1.5 text-[8px] text-muted">
-                            {lead.industry && <span>{lead.industry}</span>}
-                            {lead.city && <span>� {lead.city}</span>}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1 shrink-0">
-                        <span className={`text-[7px] px-1.5 py-0.5 rounded font-bold ${scoreInfo.bg}`}>{scoreInfo.label}</span>
-                        {stale && <AlertTriangle size={9} className="text-red-400" />}
-                      </div>
-                    </div>
-                    {/* Score bar */}
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 h-1 rounded-full bg-surface-light">
-                        <div className="h-full rounded-full transition-all" style={{ width: `${score}%`, background: scoreInfo.color }} />
-                      </div>
-                      <span className="text-[8px] font-mono" style={{ color: scoreInfo.color }}>{score}</span>
-                    </div>
-                    {/* Contact + social */}
-                    <div className="flex items-center gap-2 text-[9px] text-muted">
-                      {lead.email && <Mail size={9} />}
-                      {lead.phone && <Phone size={9} />}
-                      {lead.instagram_url && <InstagramIcon size={10} />}
-                      {lead.facebook_url && <FacebookIcon size={10} />}
-                      {lead.linkedin_url && <LinkedInIcon size={10} />}
-                      {lead.google_rating && <span className="flex items-center gap-0.5 text-amber-400"><Star size={8} className="fill-amber-400" /> {lead.google_rating}</span>}
-                      <span className="ml-auto text-[8px]">{lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "No outreach"}</span>
-                    </div>
-                    {/* Tags */}
-                    {tags.length > 0 && (
-                      <div className="flex items-center gap-0.5 flex-wrap">
-                        {tags.map(tagId => {
-                          const tag = AVAILABLE_TAGS.find(t => t.id === tagId);
-                          if (!tag) return null;
-                          return <span key={tagId} className={`text-[7px] px-1 py-0.5 rounded-full border ${getTagStyle(tag.color)}`}>{tag.label}</span>;
-                        })}
-                      </div>
-                    )}
-                    {/* Status + actions */}
-                    <div className="flex items-center justify-between pt-1 border-t border-border/50">
-                      <span className={`text-[8px] px-2 py-0.5 rounded-full border ${STATUS_COLORS[lead.status] || STATUS_COLORS.new}`}>{lead.status}</span>
-                      <div className="flex items-center gap-0.5" onClick={e => e.stopPropagation()}>
-                        <button onClick={() => sendAction(lead, "email")} disabled={!lead.email} className="p-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] disabled:opacity-30" aria-label="Send email"><Mail size={9} /></button>
-                        <button onClick={() => sendAction(lead, "sms")} disabled={!lead.phone} className="p-1 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30" aria-label="Send SMS"><MessageSquare size={9} /></button>
-                        <button onClick={() => sendAction(lead, "call")} disabled={!lead.phone} className="p-1 rounded bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-30" aria-label="Call lead"><Phone size={9} /></button>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* -- PIPELINE VIEW -- */}
-          {viewMode === "pipeline" && (
-            <div className="flex gap-2 overflow-x-auto pb-4" style={{ minHeight: "500px" }}>
-              {STATUS_TABS.filter(t => t.key !== "all").map(stage => {
-                const stageLeads = searchFiltered.filter(l => mapToCRMStatus(l.status) === stage.key);
-                const colors: Record<string, string> = { new: "#1D4ED8", contacted: "#f59e0b", replied: "#1D4ED8", booked: "#a855f7", converted: "#1D4ED8" };
-                const color = colors[stage.key] || "#6b7280";
-                return (
-                  <div key={stage.key} className="flex-shrink-0 w-[260px]">
-                    <div className="flex items-center justify-between mb-2 px-1">
-                      <div className="flex items-center gap-1.5">
-                        <div className="w-2 h-2 rounded-full" style={{ background: color }} />
-                        <span className="text-[10px] font-bold uppercase tracking-wider">{stage.label}</span>
-                        <span className="text-[9px] px-1.5 py-0.5 rounded-md font-mono" style={{ background: `${color}15`, color }}>{stageLeads.length}</span>
-                      </div>
-                    </div>
-                    <div className="space-y-1.5 max-h-[600px] overflow-y-auto pr-1">
-                      {stageLeads.length === 0 && (
-                        <div className="text-center py-8 border border-dashed rounded-lg" style={{ borderColor: `${color}20` }}>
-                          <p className="text-[9px] text-muted">No leads</p>
-                        </div>
-                      )}
-                      {stageLeads.map((lead, index) => {
-                        const score = getLeadScore(lead);
-                        const scoreInfo = getScoreInfo(score);
-                        const tags = leadTags[lead.id] || [];
-                        return (
-                          <motion.div
-                            key={lead.id}
-                            className="rounded-lg p-2.5 space-y-1.5 cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
-                            initial={{ opacity: 0, x: -8 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.18, delay: index * 0.04 }}
-                            whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                            onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
-                            <div className="flex items-start justify-between">
-                              <div className="min-w-0">
-                                <h4 className="text-[10px] font-bold truncate">{lead.business_name}</h4>
-                                <p className="text-[8px] text-muted truncate">{lead.industry || "Business"} {lead.city ? `� ${lead.city}` : ""}</p>
-                              </div>
-                              <span className="text-[7px] px-1.5 py-0.5 rounded font-bold shrink-0" style={{ background: `${scoreInfo.color}15`, color: scoreInfo.color }}>{scoreInfo.label}</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-[8px] text-muted">
-                              {lead.email && <Mail size={8} />} {lead.phone && <Phone size={8} />}
-                              {lead.google_rating && <span className="flex items-center gap-0.5 text-amber-400"><Star size={7} className="fill-amber-400" /> {lead.google_rating}</span>}
-                            </div>
+                {/* -- PIPELINE VIEW -- */}
+                {viewMode === "pipeline" && (
+                  <div className="flex gap-2 overflow-x-auto pb-4" style={{ minHeight: "500px" }}>
+                    {STATUS_TABS.filter(t => t.key !== "all").map(stage => {
+                      const stageLeads = searchFiltered.filter(l => mapToCRMStatus(l.status) === stage.key);
+                      const colors: Record<string, string> = { new: "#1D4ED8", contacted: "#f59e0b", replied: "#1D4ED8", booked: "#a855f7", converted: "#1D4ED8" };
+                      const color = colors[stage.key] || "#6b7280";
+                      return (
+                        <div key={stage.key} className="flex-shrink-0 w-[260px]">
+                          <div className="flex items-center justify-between mb-2 px-1">
                             <div className="flex items-center gap-1.5">
-                              <div className="flex-1 h-1 rounded-full bg-border"><div className="h-1 rounded-full" style={{ width: `${score}%`, background: scoreInfo.color }} /></div>
-                              <span className="text-[7px] font-mono" style={{ color: scoreInfo.color }}>{score}</span>
+                              <div className="w-2 h-2 rounded-full" style={{ background: color }} />
+                              <span className="text-[10px] font-bold uppercase tracking-wider">{stage.label}</span>
+                              <span className="text-[9px] px-1.5 py-0.5 rounded-md font-mono" style={{ background: `${color}15`, color }}>{stageLeads.length}</span>
                             </div>
-                            {tags.length > 0 && (
-                              <div className="flex gap-0.5 flex-wrap">
-                                {tags.slice(0, 2).map(tagId => {
-                                  const tag = AVAILABLE_TAGS.find(t => t.id === tagId);
-                                  return tag ? <span key={tagId} className={`text-[6px] px-1 py-0.5 rounded-full border ${getTagStyle(tag.color)}`}>{tag.label}</span> : null;
-                                })}
+                          </div>
+                          <div className="space-y-1.5 max-h-[600px] overflow-y-auto pr-1">
+                            {stageLeads.length === 0 && (
+                              <div className="text-center py-8 border border-dashed rounded-lg" style={{ borderColor: `${color}20` }}>
+                                <p className="text-[9px] text-muted">No leads</p>
                               </div>
                             )}
-                            <div className="flex items-center justify-between text-[7px] text-muted">
-                              <span>{lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "No outreach"}</span>
-                              <span>{lead.outreach_log.length} msgs</span>
-                            </div>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* -- Pagination -- */}
-          {totalPages > 1 && viewMode !== "pipeline" && (
-            <div className="flex items-center justify-between px-1 mt-2">
-              <span className="text-[9px] text-muted">
-                {page * PAGE_SIZE + 1}�{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
-              </span>
-              <div className="flex items-center gap-1">
-                <button onClick={() => setPage(0)} disabled={page === 0} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">First</button>
-                <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Prev</button>
-                <span className="text-[9px] text-muted px-2">{page + 1}/{totalPages}</span>
-                <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page >= totalPages - 1} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Next</button>
-                <button onClick={() => setPage(totalPages - 1)} disabled={page >= totalPages - 1} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Last</button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* -- DETAIL SIDEBAR -- */}
-        {detailLead && (
-          <div ref={detailPanelRef} className="w-[350px] shrink-0  p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
-            <div className="px-4 py-3 border-b border-border bg-surface-light/50 flex items-center justify-between">
-              <h3 className="text-xs font-bold truncate">{detailLead.business_name}</h3>
-              <button onClick={() => setDetailLeadId(null)} className="text-muted hover:text-foreground" aria-label="Close detail panel"><X size={14} /></button>
-            </div>
-            <div className="p-4 space-y-4">
-              {/* Score */}
-              {(() => { const s = getLeadScore(detailLead); const si = getScoreInfo(s); return (
-                <div className="flex items-center gap-3">
-                  <div className="relative w-14 h-14">
-                    <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                      <circle cx="18" cy="18" r="15.5" fill="none" stroke="currentColor" strokeWidth="3" className="text-surface-light" />
-                      <circle cx="18" cy="18" r="15.5" fill="none" stroke={si.color} strokeWidth="3"
-                        strokeDasharray={`${s * 0.975} 100`} strokeLinecap="round" />
-                    </svg>
-                    <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold" style={{ color: si.color }}>{s}</span>
-                  </div>
-                  <div>
-                    <span className="text-[9px] font-bold" style={{ color: si.color }}>{si.label} LEAD</span>
-                    <p className="text-[8px] text-muted">Score based on data completeness & engagement</p>
-                  </div>
-                </div>
-              ); })()}
-              {/* Contact info */}
-              <div className="space-y-1.5">
-                <span className="text-[8px] text-muted uppercase tracking-wider font-semibold">Contact</span>
-                {detailLead.owner_name && <p className="text-[10px] flex items-center gap-1.5"><Users size={10} className="text-muted" /> {detailLead.owner_name}</p>}
-                {detailLead.email && <p className="text-[10px] flex items-center gap-1.5"><Mail size={10} className="text-muted" /> {detailLead.email}</p>}
-                {detailLead.phone && <p className="text-[10px] flex items-center gap-1.5"><Phone size={10} className="text-muted" /> {detailLead.phone}</p>}
-                {detailLead.website && <a href={detailLead.website} target="_blank" rel="noopener noreferrer" className="text-[10px] flex items-center gap-1.5 text-[#2563EB] hover:underline"><Globe size={10} /> {detailLead.website}</a>}
-                <div className="flex items-center gap-2 pt-1">
-                  {detailLead.instagram_url && <a href={detailLead.instagram_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><InstagramIcon size={16} /></a>}
-                  {detailLead.facebook_url && <a href={detailLead.facebook_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><FacebookIcon size={16} /></a>}
-                  {detailLead.linkedin_url && <a href={detailLead.linkedin_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><LinkedInIcon size={16} /></a>}
-                  {detailLead.tiktok_url && <a href={detailLead.tiktok_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><TikTokIcon size={16} /></a>}
-                </div>
-              </div>
-              {/* Quick actions */}
-              <div className="flex items-center gap-1">
-                <button onClick={() => sendAction(detailLead, "email")} disabled={!detailLead.email}
-                  className="flex-1 text-[9px] py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] disabled:opacity-30 flex items-center justify-center gap-1"><Mail size={10} /> Email</button>
-                <button onClick={() => sendAction(detailLead, "sms")} disabled={!detailLead.phone}
-                  className="flex-1 text-[9px] py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30 flex items-center justify-center gap-1"><MessageSquare size={10} /> SMS</button>
-                <button onClick={() => sendAction(detailLead, "call")} disabled={!detailLead.phone}
-                  className="flex-1 text-[9px] py-1.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-30 flex items-center justify-center gap-1"><Phone size={10} /> Call</button>
-              </div>
-              {/* Tags */}
-              <div>
-                <span className="text-[8px] text-muted uppercase tracking-wider font-semibold block mb-1">Tags</span>
-                <div className="flex flex-wrap gap-1">
-                  {(leadTags[detailLead.id] || []).map(tagId => {
-                    const tag = AVAILABLE_TAGS.find(t => t.id === tagId);
-                    if (!tag) return null;
-                    return (
-                      <span key={tagId} className={`text-[8px] px-1.5 py-0.5 rounded-full border ${getTagStyle(tag.color)} flex items-center gap-0.5`}>
-                        {tag.label}
-                        <button onClick={() => removeTag(detailLead.id, tagId)} className="hover:text-red-400" aria-label="Remove tag"><X size={7} /></button>
-                      </span>
-                    );
-                  })}
-                  {AVAILABLE_TAGS.filter(t => !(leadTags[detailLead.id] || []).includes(t.id)).slice(0, 4).map(tag => (
-                    <button key={tag.id} onClick={() => addTag(detailLead.id, tag.id)}
-                      className="text-[8px] px-1.5 py-0.5 rounded-full border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] transition-all">
-                      + {tag.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              {/* Notes */}
-              <div>
-                <span className="text-[8px] text-muted uppercase tracking-wider font-semibold block mb-1">Notes</span>
-                <div className="flex gap-1 mb-2">
-                  <input value={noteInput} onChange={e => setNoteInput(e.target.value)} placeholder="Add a note..."
-                    className="input text-[9px] px-2 py-1 flex-1" onKeyDown={e => { if (e.key === "Enter") addNote(detailLead.id); }} />
-                  <button onClick={() => addNote(detailLead.id)} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]"><Plus size={10} /></button>
-                </div>
-                <div className="space-y-1 max-h-24 overflow-y-auto">
-                  {(leadNotes[detailLead.id] || []).map(note => (
-                    <div key={note.id} className="text-[9px] p-1.5 rounded bg-surface-light">
-                      <p>{note.text}</p>
-                      <span className="text-[7px] text-muted">{formatShortDate(note.created)}</span>
-                    </div>
-                  ))}
-                  {(leadNotes[detailLead.id] || []).length === 0 && <p className="text-[8px] text-muted">No notes yet</p>}
-                </div>
-              </div>
-              {/* Follow-up scheduler */}
-              <div>
-                <span className="text-[8px] text-muted uppercase tracking-wider font-semibold block mb-1">Schedule Follow-up</span>
-                <div className="flex gap-1">
-                  <input type="datetime-local" id="followup-date" className="input text-[9px] px-2 py-1 flex-1" />
-                  <button onClick={() => {
-                    const el = document.getElementById("followup-date") as HTMLInputElement;
-                    if (el?.value) { addFollowUp(detailLead.id, el.value, "Follow up"); el.value = ""; }
-                  }} className="text-[9px] px-2 py-1 rounded-lg bg-purple-500/10 text-purple-400 hover:bg-purple-500/20">
-                    <CalendarClock size={10} />
-                  </button>
-                </div>
-                {followUps.filter(f => f.leadId === detailLead.id).length > 0 && (
-                  <div className="mt-1 space-y-0.5">
-                    {followUps.filter(f => f.leadId === detailLead.id).map((f, i) => (
-                      <div key={i} className="text-[8px] text-muted flex items-center gap-1">
-                        <Bell size={8} className="text-purple-400" /> {new Date(f.date).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {/* Outreach timeline */}
-              <div>
-                <span className="text-[8px] text-muted uppercase tracking-wider font-semibold block mb-1">Outreach Timeline</span>
-                {detailLead.outreach_log.length === 0 ? (
-                  <p className="text-[8px] text-muted">No outreach yet</p>
-                ) : (
-                  <div className="space-y-1 max-h-48 overflow-y-auto">
-                    {detailLead.outreach_log.map(e => (
-                      <div key={e.id} className="flex items-start gap-2 text-[9px] py-1.5 px-2 rounded-lg bg-surface-light">
-                        {e.platform === "email" ? <Mail size={10} className="text-[#2563EB] shrink-0 mt-0.5" /> :
-                         e.platform === "call" ? <Phone size={10} className="text-green-400 shrink-0 mt-0.5" /> :
-                         <MessageSquare size={10} className="text-blue-400 shrink-0 mt-0.5" />}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1">
-                            <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-muted"}`}>{e.status}</span>
-                            <span className="text-[7px] text-muted">{formatShortDate(e.sent_at)}</span>
+                            {stageLeads.map((lead, index) => {
+                              const score = getLeadScore(lead);
+                              const scoreInfo = getScoreInfo(score);
+                              const tags = leadTags[lead.id] || [];
+                              return (
+                                <motion.div
+                                  key={lead.id}
+                                  className="rounded-lg p-2.5 space-y-1.5 cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                                  initial={{ opacity: 0, x: -8 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ duration: 0.18, delay: index * 0.04 }}
+                                  whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                                  onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
+                                  <div className="flex items-start justify-between">
+                                    <div className="min-w-0">
+                                      <h4 className="text-[10px] font-bold truncate">{lead.business_name}</h4>
+                                      <p className="text-[8px] text-muted truncate">{lead.industry || "Business"} {lead.city ? `� ${lead.city}` : ""}</p>
+                                    </div>
+                                    <span className="text-[7px] px-1.5 py-0.5 rounded font-bold shrink-0" style={{ background: `${scoreInfo.color}15`, color: scoreInfo.color }}>{scoreInfo.label}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 text-[8px] text-muted">
+                                    {lead.email && <Mail size={8} />} {lead.phone && <Phone size={8} />}
+                                    {lead.google_rating && <span className="flex items-center gap-0.5 text-amber-400"><Star size={7} className="fill-amber-400" /> {lead.google_rating}</span>}
+                                  </div>
+                                  <div className="flex items-center gap-1.5">
+                                    <div className="flex-1 h-1 rounded-full bg-border"><div className="h-1 rounded-full" style={{ width: `${score}%`, background: scoreInfo.color }} /></div>
+                                    <span className="text-[7px] font-mono" style={{ color: scoreInfo.color }}>{score}</span>
+                                  </div>
+                                  {tags.length > 0 && (
+                                    <div className="flex gap-0.5 flex-wrap">
+                                      {tags.slice(0, 2).map(tagId => {
+                                        const tag = AVAILABLE_TAGS.find(t => t.id === tagId);
+                                        return tag ? <span key={tagId} className={`text-[6px] px-1 py-0.5 rounded-full border ${getTagStyle(tag.color)}`}>{tag.label}</span> : null;
+                                      })}
+                                    </div>
+                                  )}
+                                  <div className="flex items-center justify-between text-[7px] text-muted">
+                                    <span>{lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "No outreach"}</span>
+                                    <span>{lead.outreach_log.length} msgs</span>
+                                  </div>
+                                </motion.div>
+                              );
+                            })}
                           </div>
-                          <p className="text-muted truncate">{e.message_text}</p>
-                          {e.reply_text && <p className="text-emerald-400 text-[8px] mt-0.5">? {e.reply_text}</p>}
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* -- Pagination -- */}
+                {totalPages > 1 && viewMode !== "pipeline" && (
+                  <div className="flex items-center justify-between px-1 mt-2">
+                    <span className="text-[9px] text-muted">
+                      {page * PAGE_SIZE + 1}�{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => setPage(0)} disabled={page === 0} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">First</button>
+                      <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Prev</button>
+                      <span className="text-[9px] text-muted px-2">{page + 1}/{totalPages}</span>
+                      <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page >= totalPages - 1} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Next</button>
+                      <button onClick={() => setPage(totalPages - 1)} disabled={page >= totalPages - 1} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Last</button>
+                    </div>
                   </div>
                 )}
               </div>
-            </div>
-          </div>
-        )}
-      </div>
 
-      {/* -- AUTOMATION MODAL -- */}
-      {showAutomation && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowAutomation(false)}>
-          <div className="bg-surface border border-border  shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-              <div>
-                <h3 className="text-sm font-bold flex items-center gap-2"><Bot size={16} className="text-[#2563EB]" /> Automation Rules</h3>
-                <p className="text-[10px] text-muted mt-0.5">Auto-fire SMS, emails, and calls based on lead events</p>
-              </div>
-              <button onClick={() => setShowAutomation(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
-            </div>
-            <div className="p-5 overflow-y-auto max-h-[60vh] space-y-3">
-              {automations.length === 0 && (
-                <p className="text-xs text-muted text-center py-8">No automations yet. Click &ldquo;+ New Rule&rdquo; to add one.</p>
-              )}
-              {automations.map(rule => {
-                const triggerLabels: Record<string, string> = {
-                  new_lead: "When new lead arrives", no_reply_2d: "No reply after 2 days",
-                  no_reply_5d: "No reply after 5 days", after_reply: "When lead replies",
-                  after_booking: "When lead books",
-                };
-                const actionLabels: Record<string, { label: string; icon: typeof Mail; color: string }> = {
-                  send_sms: { label: "Send SMS", icon: MessageSquare, color: "text-emerald-400" },
-                  send_email: { label: "Send Email", icon: Mail, color: "text-[#2563EB]" },
-                  ai_call: { label: "AI Cold Call", icon: PhoneCall, color: "text-blue-400" },
-                  update_status: { label: "Update Status", icon: Tag, color: "text-purple-400" },
-                  add_tag: { label: "Add Tag", icon: Hash, color: "text-pink-400" },
-                  notify: { label: "Notify Team", icon: Bell, color: "text-amber-400" },
-                };
-                const action = actionLabels[rule.action];
-                const ActionIcon = action.icon;
-                const isEditing = editingAutomationId === rule.id;
-                return (
-                  <div key={rule.id} className={`rounded-xl border p-4 transition-all ${rule.enabled ? "border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)]" : "border-border bg-surface-light/50 opacity-60"}`}>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2 flex-1 min-w-0">
-                        <ActionIcon size={14} className={action.color} />
-                        {isEditing ? (
-                          <input value={rule.name}
-                            onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, name: e.target.value } : r))}
-                            className="input text-xs px-2 py-1 flex-1" autoFocus />
-                        ) : (
-                          <span className="text-xs font-semibold truncate">{rule.name}</span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <button onClick={() => setEditingAutomationId(isEditing ? null : rule.id)}
-                          className="text-[9px] text-muted hover:text-[#2563EB]">
-                          {isEditing ? "Done" : "Edit"}
-                        </button>
-                        <button onClick={() => deleteAutomation(rule.id)}
-                          className="text-[9px] text-muted hover:text-red-400">
-                          <Trash2 size={11} />
-                        </button>
-                        <button onClick={() => toggleAutomation(rule.id)}
-                          className={`w-8 h-4 rounded-full transition-all relative ${rule.enabled ? "bg-[#2563EB]" : "bg-surface-light"}`}>
-                          <div className="absolute w-3 h-3 rounded-full bg-white top-0.5 transition-all"
-                            style={{ left: rule.enabled ? "18px" : "2px" }} />
-                        </button>
-                      </div>
-                    </div>
-                    {isEditing ? (
-                      <div className="space-y-2 mt-2">
-                        <div className="grid grid-cols-2 gap-2">
-                          <div>
-                            <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Trigger</label>
-                            <select value={rule.trigger}
-                              onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, trigger: e.target.value as AutomationTrigger } : r))}
-                              className="input text-[10px] w-full py-1">
-                              {Object.entries(triggerLabels).map(([v, lbl]) => <option key={v} value={v}>{lbl}</option>)}
-                            </select>
-                          </div>
-                          <div>
-                            <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Action</label>
-                            <select value={rule.action}
-                              onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, action: e.target.value as AutomationAction } : r))}
-                              className="input text-[10px] w-full py-1">
-                              {Object.entries(actionLabels).map(([v, o]) => <option key={v} value={v}>{o.label}</option>)}
-                            </select>
-                          </div>
+              {/* -- DETAIL SIDEBAR -- */}
+              {detailLead && (
+                <div ref={detailPanelRef} className="w-[350px] shrink-0  p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
+                  <div className="px-4 py-3 border-b border-border bg-surface-light/50 flex items-center justify-between">
+                    <h3 className="text-xs font-bold truncate">{detailLead.business_name}</h3>
+                    <button onClick={() => setDetailLeadId(null)} className="text-muted hover:text-foreground" aria-label="Close detail panel"><X size={14} /></button>
+                  </div>
+                  <div className="p-4 space-y-4">
+                    {/* Score */}
+                    {(() => { const s = getLeadScore(detailLead); const si = getScoreInfo(s); return (
+                      <div className="flex items-center gap-3">
+                        <div className="relative w-14 h-14">
+                          <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
+                            <circle cx="18" cy="18" r="15.5" fill="none" stroke="currentColor" strokeWidth="3" className="text-surface-light" />
+                            <circle cx="18" cy="18" r="15.5" fill="none" stroke={si.color} strokeWidth="3"
+                              strokeDasharray={`${s * 0.975} 100`} strokeLinecap="round" />
+                          </svg>
+                          <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold" style={{ color: si.color }}>{s}</span>
                         </div>
                         <div>
-                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Message (optional)</label>
-                          <textarea value={rule.message ?? ""}
-                            onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, message: e.target.value } : r))}
-                            placeholder="Use {{name}}, {{business}} as placeholders"
-                            className="input text-[10px] w-full py-1 min-h-[60px]" />
+                          <span className="text-[9px] font-bold" style={{ color: si.color }}>{si.label} LEAD</span>
+                          <p className="text-[8px] text-muted">Score based on data completeness & engagement</p>
                         </div>
                       </div>
-                    ) : (
-                      <>
-                        <div className="flex items-center gap-2 text-[10px] text-muted">
-                          <span className="flex items-center gap-1"><Timer size={10} /> {triggerLabels[rule.trigger]}</span>
-                          <ArrowRight size={10} />
-                          <span className={`flex items-center gap-1 ${action.color}`}>{action.label}</span>
+                    ); })()}
+                    {/* Contact info */}
+                    <div className="space-y-1.5">
+                      <span className="text-[8px] text-muted uppercase tracking-wider font-semibold">Contact</span>
+                      {detailLead.owner_name && <p className="text-[10px] flex items-center gap-1.5"><Users size={10} className="text-muted" /> {detailLead.owner_name}</p>}
+                      {detailLead.email && <p className="text-[10px] flex items-center gap-1.5"><Mail size={10} className="text-muted" /> {detailLead.email}</p>}
+                      {detailLead.phone && <p className="text-[10px] flex items-center gap-1.5"><Phone size={10} className="text-muted" /> {detailLead.phone}</p>}
+                      {detailLead.website && <a href={detailLead.website} target="_blank" rel="noopener noreferrer" className="text-[10px] flex items-center gap-1.5 text-[#2563EB] hover:underline"><Globe size={10} /> {detailLead.website}</a>}
+                      <div className="flex items-center gap-2 pt-1">
+                        {detailLead.instagram_url && <a href={detailLead.instagram_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><InstagramIcon size={16} /></a>}
+                        {detailLead.facebook_url && <a href={detailLead.facebook_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><FacebookIcon size={16} /></a>}
+                        {detailLead.linkedin_url && <a href={detailLead.linkedin_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><LinkedInIcon size={16} /></a>}
+                        {detailLead.tiktok_url && <a href={detailLead.tiktok_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><TikTokIcon size={16} /></a>}
+                      </div>
+                    </div>
+                    {/* Quick actions */}
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => sendAction(detailLead, "email")} disabled={!detailLead.email}
+                        className="flex-1 text-[9px] py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] disabled:opacity-30 flex items-center justify-center gap-1"><Mail size={10} /> Email</button>
+                      <button onClick={() => sendAction(detailLead, "sms")} disabled={!detailLead.phone}
+                        className="flex-1 text-[9px] py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30 flex items-center justify-center gap-1"><MessageSquare size={10} /> SMS</button>
+                      <button onClick={() => sendAction(detailLead, "call")} disabled={!detailLead.phone}
+                        className="flex-1 text-[9px] py-1.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-30 flex items-center justify-center gap-1"><Phone size={10} /> Call</button>
+                    </div>
+                    {/* Tags */}
+                    <div>
+                      <span className="text-[8px] text-muted uppercase tracking-wider font-semibold block mb-1">Tags</span>
+                      <div className="flex flex-wrap gap-1">
+                        {(leadTags[detailLead.id] || []).map(tagId => {
+                          const tag = AVAILABLE_TAGS.find(t => t.id === tagId);
+                          if (!tag) return null;
+                          return (
+                            <span key={tagId} className={`text-[8px] px-1.5 py-0.5 rounded-full border ${getTagStyle(tag.color)} flex items-center gap-0.5`}>
+                              {tag.label}
+                              <button onClick={() => removeTag(detailLead.id, tagId)} className="hover:text-red-400" aria-label="Remove tag"><X size={7} /></button>
+                            </span>
+                          );
+                        })}
+                        {AVAILABLE_TAGS.filter(t => !(leadTags[detailLead.id] || []).includes(t.id)).slice(0, 4).map(tag => (
+                          <button key={tag.id} onClick={() => addTag(detailLead.id, tag.id)}
+                            className="text-[8px] px-1.5 py-0.5 rounded-full border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] transition-all">
+                            + {tag.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Notes */}
+                    <div>
+                      <span className="text-[8px] text-muted uppercase tracking-wider font-semibold block mb-1">Notes</span>
+                      <div className="flex gap-1 mb-2">
+                        <input value={noteInput} onChange={e => setNoteInput(e.target.value)} placeholder="Add a note..."
+                          className="input text-[9px] px-2 py-1 flex-1" onKeyDown={e => { if (e.key === "Enter") addNote(detailLead.id); }} />
+                        <button onClick={() => addNote(detailLead.id)} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]"><Plus size={10} /></button>
+                      </div>
+                      <div className="space-y-1 max-h-24 overflow-y-auto">
+                        {(leadNotes[detailLead.id] || []).map(note => (
+                          <div key={note.id} className="text-[9px] p-1.5 rounded bg-surface-light">
+                            <p>{note.text}</p>
+                            <span className="text-[7px] text-muted">{formatShortDate(note.created)}</span>
+                          </div>
+                        ))}
+                        {(leadNotes[detailLead.id] || []).length === 0 && <p className="text-[8px] text-muted">No notes yet</p>}
+                      </div>
+                    </div>
+                    {/* Follow-up scheduler */}
+                    <div>
+                      <span className="text-[8px] text-muted uppercase tracking-wider font-semibold block mb-1">Schedule Follow-up</span>
+                      <div className="flex gap-1">
+                        <input type="datetime-local" id="followup-date" className="input text-[9px] px-2 py-1 flex-1" />
+                        <button onClick={() => {
+                          const el = document.getElementById("followup-date") as HTMLInputElement;
+                          if (el?.value) { addFollowUp(detailLead.id, el.value, "Follow up"); el.value = ""; }
+                        }} className="text-[9px] px-2 py-1 rounded-lg bg-purple-500/10 text-purple-400 hover:bg-purple-500/20">
+                          <CalendarClock size={10} />
+                        </button>
+                      </div>
+                      {followUps.filter(f => f.leadId === detailLead.id).length > 0 && (
+                        <div className="mt-1 space-y-0.5">
+                          {followUps.filter(f => f.leadId === detailLead.id).map((f, i) => (
+                            <div key={i} className="text-[8px] text-muted flex items-center gap-1">
+                              <Bell size={8} className="text-purple-400" /> {new Date(f.date).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+                            </div>
+                          ))}
                         </div>
-                        {rule.message && (
-                          <p className="text-[9px] text-muted mt-2 p-2 rounded-lg bg-surface-light/50 border border-border/50 italic">
-                            &ldquo;{rule.message}&rdquo;
-                          </p>
-                        )}
-                      </>
+                      )}
+                    </div>
+                    {/* Outreach timeline */}
+                    <div>
+                      <span className="text-[8px] text-muted uppercase tracking-wider font-semibold block mb-1">Outreach Timeline</span>
+                      {detailLead.outreach_log.length === 0 ? (
+                        <p className="text-[8px] text-muted">No outreach yet</p>
+                      ) : (
+                        <div className="space-y-1 max-h-48 overflow-y-auto">
+                          {detailLead.outreach_log.map(e => (
+                            <div key={e.id} className="flex items-start gap-2 text-[9px] py-1.5 px-2 rounded-lg bg-surface-light">
+                              {e.platform === "email" ? <Mail size={10} className="text-[#2563EB] shrink-0 mt-0.5" /> :
+                               e.platform === "call" ? <Phone size={10} className="text-green-400 shrink-0 mt-0.5" /> :
+                               <MessageSquare size={10} className="text-blue-400 shrink-0 mt-0.5" />}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-1">
+                                  <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-muted"}`}>{e.status}</span>
+                                  <span className="text-[7px] text-muted">{formatShortDate(e.sent_at)}</span>
+                                </div>
+                                <p className="text-muted truncate">{e.message_text}</p>
+                                {e.reply_text && <p className="text-emerald-400 text-[8px] mt-0.5">? {e.reply_text}</p>}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* -- AUTOMATION MODAL -- */}
+            {showAutomation && (
+              <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowAutomation(false)}>
+                <div className="bg-surface border border-border  shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden" onClick={e => e.stopPropagation()}>
+                  <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+                    <div>
+                      <h3 className="text-sm font-bold flex items-center gap-2"><Bot size={16} className="text-[#2563EB]" /> Automation Rules</h3>
+                      <p className="text-[10px] text-muted mt-0.5">Auto-fire SMS, emails, and calls based on lead events</p>
+                    </div>
+                    <button onClick={() => setShowAutomation(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                  </div>
+                  <div className="p-5 overflow-y-auto max-h-[60vh] space-y-3">
+                    {automations.length === 0 && (
+                      <p className="text-xs text-muted text-center py-8">No automations yet. Click &ldquo;+ New Rule&rdquo; to add one.</p>
                     )}
+                    {automations.map(rule => {
+                      const triggerLabels: Record<string, string> = {
+                        new_lead: "When new lead arrives", no_reply_2d: "No reply after 2 days",
+                        no_reply_5d: "No reply after 5 days", after_reply: "When lead replies",
+                        after_booking: "When lead books",
+                      };
+                      const actionLabels: Record<string, { label: string; icon: typeof Mail; color: string }> = {
+                        send_sms: { label: "Send SMS", icon: MessageSquare, color: "text-emerald-400" },
+                        send_email: { label: "Send Email", icon: Mail, color: "text-[#2563EB]" },
+                        ai_call: { label: "AI Cold Call", icon: PhoneCall, color: "text-blue-400" },
+                        update_status: { label: "Update Status", icon: Tag, color: "text-purple-400" },
+                        add_tag: { label: "Add Tag", icon: Hash, color: "text-pink-400" },
+                        notify: { label: "Notify Team", icon: Bell, color: "text-amber-400" },
+                      };
+                      const action = actionLabels[rule.action];
+                      const ActionIcon = action.icon;
+                      const isEditing = editingAutomationId === rule.id;
+                      return (
+                        <div key={rule.id} className={`rounded-xl border p-4 transition-all ${rule.enabled ? "border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)]" : "border-border bg-surface-light/50 opacity-60"}`}>
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                              <ActionIcon size={14} className={action.color} />
+                              {isEditing ? (
+                                <input value={rule.name}
+                                  onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, name: e.target.value } : r))}
+                                  className="input text-xs px-2 py-1 flex-1" autoFocus />
+                              ) : (
+                                <span className="text-xs font-semibold truncate">{rule.name}</span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <button onClick={() => setEditingAutomationId(isEditing ? null : rule.id)}
+                                className="text-[9px] text-muted hover:text-[#2563EB]">
+                                {isEditing ? "Done" : "Edit"}
+                              </button>
+                              <button onClick={() => deleteAutomation(rule.id)}
+                                className="text-[9px] text-muted hover:text-red-400">
+                                <Trash2 size={11} />
+                              </button>
+                              <button onClick={() => toggleAutomation(rule.id)}
+                                className={`w-8 h-4 rounded-full transition-all relative ${rule.enabled ? "bg-[#2563EB]" : "bg-surface-light"}`}>
+                                <div className="absolute w-3 h-3 rounded-full bg-white top-0.5 transition-all"
+                                  style={{ left: rule.enabled ? "18px" : "2px" }} />
+                              </button>
+                            </div>
+                          </div>
+                          {isEditing ? (
+                            <div className="space-y-2 mt-2">
+                              <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Trigger</label>
+                                  <select value={rule.trigger}
+                                    onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, trigger: e.target.value as AutomationTrigger } : r))}
+                                    className="input text-[10px] w-full py-1">
+                                    {Object.entries(triggerLabels).map(([v, lbl]) => <option key={v} value={v}>{lbl}</option>)}
+                                  </select>
+                                </div>
+                                <div>
+                                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Action</label>
+                                  <select value={rule.action}
+                                    onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, action: e.target.value as AutomationAction } : r))}
+                                    className="input text-[10px] w-full py-1">
+                                    {Object.entries(actionLabels).map(([v, o]) => <option key={v} value={v}>{o.label}</option>)}
+                                  </select>
+                                </div>
+                              </div>
+                              <div>
+                                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Message (optional)</label>
+                                <textarea value={rule.message ?? ""}
+                                  onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, message: e.target.value } : r))}
+                                  placeholder="Use {{name}}, {{business}} as placeholders"
+                                  className="input text-[10px] w-full py-1 min-h-[60px]" />
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <div className="flex items-center gap-2 text-[10px] text-muted">
+                                <span className="flex items-center gap-1"><Timer size={10} /> {triggerLabels[rule.trigger]}</span>
+                                <ArrowRight size={10} />
+                                <span className={`flex items-center gap-1 ${action.color}`}>{action.label}</span>
+                              </div>
+                              {rule.message && (
+                                <p className="text-[9px] text-muted mt-2 p-2 rounded-lg bg-surface-light/50 border border-border/50 italic">
+                                  &ldquo;{rule.message}&rdquo;
+                                </p>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
+                    <button onClick={addAutomation}
+                      className="w-full text-[10px] py-2 rounded-xl border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] transition-all flex items-center justify-center gap-1">
+                      <Plus size={11} /> New Rule
+                    </button>
                   </div>
-                );
-              })}
-              <button onClick={addAutomation}
-                className="w-full text-[10px] py-2 rounded-xl border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] transition-all flex items-center justify-center gap-1">
-                <Plus size={11} /> New Rule
-              </button>
-            </div>
-            <div className="px-5 py-3 border-t border-border bg-surface-light/30 flex items-center justify-between">
-              <span className="text-[9px] text-muted">{automations.filter(r => r.enabled).length}/{automations.length} rules active</span>
-              <div className="flex items-center gap-2">
-                <button onClick={() => { setShowAutomation(false); setEditingAutomationId(null); }}
-                  className="text-[10px] px-4 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all">
-                  Cancel
-                </button>
-                <button onClick={async () => { await persistAutomations(); setEditingAutomationId(null); setShowAutomation(false); }}
-                  className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#2563EB]-light transition-all">
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* -- BUY CREDITS MODAL -- */}
-      {showBuyCredits && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowBuyCredits(false)}>
-          <div className="bg-surface border border-border  shadow-2xl p-6 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-sm font-bold flex items-center gap-2"><Coins size={16} className="text-[#2563EB]" /> Buy Email Credits</h3>
-                <p className="text-[10px] text-muted mt-0.5">Balance: {emailCredits} credits</p>
-              </div>
-              <button onClick={() => setShowBuyCredits(false)}><X size={16} className="text-muted hover:text-foreground" /></button>
-            </div>
-            <div className="grid gap-3">
-              {[
-                { amount: 500, price: "$29", per: "$0.058" },
-                { amount: 2000, price: "$79", per: "$0.040", popular: true },
-                { amount: 10000, price: "$199", per: "$0.020" },
-              ].map(tier => (
-                <button key={tier.amount} onClick={() => { setEmailCredits(p => p + tier.amount); setShowBuyCredits(false); toast.success(`Added ${tier.amount} credits`); }}
-                  className={`relative flex items-center justify-between p-4 rounded-xl border transition-all hover:scale-[1.02] ${tier.popular ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border bg-surface-light hover:border-[rgba(37,99,235,0.2)]"}`}>
-                  {tier.popular && <span className="absolute -top-2 left-4 text-[8px] px-2 py-0.5 rounded-full bg-[#2563EB] text-white font-bold">BEST VALUE</span>}
-                  <div className="text-left">
-                    <span className="text-sm font-bold">{tier.amount.toLocaleString()}</span> <span className="text-[10px] text-muted">credits</span>
-                    <p className="text-[9px] text-muted">{tier.per}/email</p>
+                  <div className="px-5 py-3 border-t border-border bg-surface-light/30 flex items-center justify-between">
+                    <span className="text-[9px] text-muted">{automations.filter(r => r.enabled).length}/{automations.length} rules active</span>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => { setShowAutomation(false); setEditingAutomationId(null); }}
+                        className="text-[10px] px-4 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all">
+                        Cancel
+                      </button>
+                      <button onClick={async () => { await persistAutomations(); setEditingAutomationId(null); setShowAutomation(false); }}
+                        className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#2563EB]-light transition-all">
+                        Save Changes
+                      </button>
+                    </div>
                   </div>
-                  <span className="text-lg font-bold text-[#2563EB]">{tier.price}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+                </div>
+              </div>
+            )}
 
-      {/* -- SAVE SEGMENT MODAL -- */}
-      {showSegmentSave && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowSegmentSave(false)}>
-          <div className="bg-surface border border-border  shadow-2xl p-6 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
-            <h3 className="text-sm font-bold mb-3 flex items-center gap-2"><Bookmark size={14} className="text-[#2563EB]" /> Save Segment</h3>
-            <input value={newSegmentName} onChange={e => setNewSegmentName(e.target.value)} placeholder="Segment name..."
-              className="input w-full text-xs px-3 py-2 mb-3" onKeyDown={e => { if (e.key === "Enter") saveSegment(); }} />
-            <div className="flex justify-end gap-2">
-              <button onClick={() => setShowSegmentSave(false)} className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted">Cancel</button>
-              <button onClick={saveSegment} className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium">Save</button>
-            </div>
-          </div>
-        </div>
-      )}
+            {/* -- BUY CREDITS MODAL -- */}
+            {showBuyCredits && (
+              <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowBuyCredits(false)}>
+                <div className="bg-surface border border-border  shadow-2xl p-6 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="text-sm font-bold flex items-center gap-2"><Coins size={16} className="text-[#2563EB]" /> Buy Email Credits</h3>
+                      <p className="text-[10px] text-muted mt-0.5">Balance: {emailCredits} credits</p>
+                    </div>
+                    <button onClick={() => setShowBuyCredits(false)}><X size={16} className="text-muted hover:text-foreground" /></button>
+                  </div>
+                  <div className="grid gap-3">
+                    {[
+                      { amount: 500, price: "$29", per: "$0.058" },
+                      { amount: 2000, price: "$79", per: "$0.040", popular: true },
+                      { amount: 10000, price: "$199", per: "$0.020" },
+                    ].map(tier => (
+                      <button key={tier.amount} onClick={() => { setEmailCredits(p => p + tier.amount); setShowBuyCredits(false); toast.success(`Added ${tier.amount} credits`); }}
+                        className={`relative flex items-center justify-between p-4 rounded-xl border transition-all hover:scale-[1.02] ${tier.popular ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border bg-surface-light hover:border-[rgba(37,99,235,0.2)]"}`}>
+                        {tier.popular && <span className="absolute -top-2 left-4 text-[8px] px-2 py-0.5 rounded-full bg-[#2563EB] text-white font-bold">BEST VALUE</span>}
+                        <div className="text-left">
+                          <span className="text-sm font-bold">{tier.amount.toLocaleString()}</span> <span className="text-[10px] text-muted">credits</span>
+                          <p className="text-[9px] text-muted">{tier.per}/email</p>
+                        </div>
+                        <span className="text-lg font-bold text-[#2563EB]">{tier.price}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
 
-      <PageAI pageName="CRM"
-        context={`${leads.length} total leads. ${stats.stale} stale. Avg score: ${stats.avgScore}. Reply rate: ${stats.replyRate}%. Conv rate: ${stats.convRate}%.`}
-        suggestions={[
-          "Draft follow-up emails for leads who haven't replied",
-          "Which leads should I prioritize today?",
-          "Write a cold DM for a dental practice",
-          "Analyze my conversion rate and suggest improvements",
-        ]}
-      />
-      </ErrorBoundary>
-    </div>
+            {/* -- SAVE SEGMENT MODAL -- */}
+            {showSegmentSave && (
+              <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowSegmentSave(false)}>
+                <div className="bg-surface border border-border  shadow-2xl p-6 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
+                  <h3 className="text-sm font-bold mb-3 flex items-center gap-2"><Bookmark size={14} className="text-[#2563EB]" /> Save Segment</h3>
+                  <input value={newSegmentName} onChange={e => setNewSegmentName(e.target.value)} placeholder="Segment name..."
+                    className="input w-full text-xs px-3 py-2 mb-3" onKeyDown={e => { if (e.key === "Enter") saveSegment(); }} />
+                  <div className="flex justify-end gap-2">
+                    <button onClick={() => setShowSegmentSave(false)} className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted">Cancel</button>
+                    <button onClick={saveSegment} className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium">Save</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <PageAI pageName="CRM"
+              context={`${leads.length} total leads. ${stats.stale} stale. Avg score: ${stats.avgScore}. Reply rate: ${stats.replyRate}%. Conv rate: ${stats.convRate}%.`}
+              suggestions={[
+                "Draft follow-up emails for leads who haven't replied",
+                "Which leads should I prioritize today?",
+                "Write a cold DM for a dental practice",
+                "Analyze my conversion rate and suggest improvements",
+              ]}
+            />
+            </ErrorBoundary></MotionPage>
   );
 }
 

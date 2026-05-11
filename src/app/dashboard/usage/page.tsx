@@ -28,6 +28,7 @@ import {
   Calendar,
   Activity,
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -228,386 +229,366 @@ export default function UsagePage() {
   // ── Render ──────────────────────────────────────────────────────────────
 
   return (
-    <div className="fade-in p-6 max-w-5xl mx-auto space-y-5">
-      <PageHero
-        eyebrow="USAGE & LIMITS"
-        icon={<Zap size={28} />}
-        title="Token Usage"
-        subtitle="Monitor AI consumption & manage balance."
-        gradient="purple"
-        actions={
-          <>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-black/10 text-foreground text-xs font-medium">
-              <Shield size={12} />
-              {planConfig.badge_label} Plan
-            </div>
-            <button
-              onClick={fetchData}
-              disabled={loading}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-black/5 text-foreground text-xs hover:bg-black/10 transition-all"
-            >
-              <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
-              Refresh
-            </button>
-          </>
-        }
-      />
-
-      {/* ── Stats Strip ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {[
-          { icon: <Activity size={10} />, label: "Tokens Used", value: loading ? null : fmt(used), sub: "this month" },
-          { icon: <Zap size={10} />, label: "Remaining", value: loading ? null : (isUnlimited ? "∞" : fmt(remaining)), sub: isUnlimited ? "unlimited" : `of ${fmtShort(effectiveLimit)}`, valueClass: isUnlimited ? "text-[#2563EB]" : remaining < effectiveLimit * 0.1 ? "text-red-400" : "text-foreground" },
-          { icon: <Clock size={10} />, label: "Resets In", value: loading ? null : String(tokenData.days_remaining), sub: "days" },
-          { icon: <TrendingUp size={10} />, label: "Daily Avg", value: loading ? null : fmtShort(tokenData.daily_average), sub: "tokens / day" },
-        ].map((stat, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-3 flex flex-col gap-1">
-              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted font-medium">
-                {stat.icon}
-                {stat.label}
-              </div>
-              {stat.value === null ? (
-                <div className="h-6 w-20 bg-surface-light animate-pulse rounded" />
-              ) : (
-                <div className={`text-2xl font-bold ${stat.valueClass ?? "text-foreground"}`}>
-                  {stat.value}
-                </div>
-              )}
-              <div className="text-[10px] text-muted">{stat.sub}</div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* ── Progress Bar ── */}
-      {!isUnlimited && (
-        <div className="glass rounded-xl p-5 space-y-3">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-muted">Monthly usage</span>
-            <span className="font-medium text-foreground">
-              {pct.toFixed(1)}% used
-            </span>
-          </div>
-
-          {/* Track */}
-          <div className="relative h-4 rounded-full bg-surface-light overflow-hidden">
-            {loading ? (
-              <div className="h-full w-1/3 bg-surface animate-pulse rounded-full" />
-            ) : (
-              <div
-                className={`h-full rounded-full transition-all duration-700 ${getProgressColor(
-                  pct
-                )} ${getProgressGlow(pct)}`}
-                style={{ width: `${pct}%` }}
-              />
-            )}
-          </div>
-
-          <div className="flex items-center justify-between text-[11px] text-muted">
-            <span>
-              {fmt(used)} used of {fmt(effectiveLimit)}{" "}
-              {tokenData.bonus_tokens > 0 && (
-                <span className="text-[#2563EB]">
-                  (+{fmtShort(tokenData.bonus_tokens)} bonus)
-                </span>
-              )}
-            </span>
-            <span
-              className={`font-medium ${
-                pct >= 90
-                  ? "text-red-400"
-                  : pct >= 75
-                  ? "text-orange-400"
-                  : "text-muted"
-              }`}
-            >
-              {pct >= 90
-                ? "Critical — buy more or upgrade"
-                : pct >= 75
-                ? "Running low"
-                : `${planConfig.badge_label} plan limit`}
-            </span>
-          </div>
-        </div>
-      )}
-
-      {/* ── Usage by Category + Daily Chart (side by side on larger screens) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Usage by Category */}
-        <div className="glass rounded-xl p-5 space-y-4">
-          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <BarChart3 size={14} className="text-[#2563EB]" />
-            Usage by Category
-          </div>
-
-          {loading ? (
-            <div className="space-y-3">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="space-y-1.5">
-                  <div className="h-3 w-28 bg-surface-light animate-pulse rounded" />
-                  <div className="h-2 rounded-full bg-surface-light animate-pulse" style={{ width: `${60 - i * 10}%` }} />
-                </div>
-              ))}
-            </div>
-          ) : Object.keys(tokenData.by_category).length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 gap-2 text-muted">
-              <Sparkles size={24} className="opacity-30" />
-              <p className="text-xs">No AI activity recorded this month</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {Object.entries(tokenData.by_category)
-                .sort(([, a], [, b]) => b - a)
-                .map(([cat, tokens]) => {
-                  const barPct = maxCategory > 0 ? (tokens / maxCategory) * 100 : 0;
-                  return (
-                    <div key={cat} className="space-y-1">
-                      <div className="flex items-center justify-between text-[11px]">
-                        <div className="flex items-center gap-1.5 text-muted">
-                          <span className="text-foreground opacity-60">
-                            {CATEGORY_ICONS[cat] ?? <BarChart3 size={13} />}
-                          </span>
-                          {cat}
-                        </div>
-                        <span className="font-medium text-foreground tabular-nums">
-                          {fmt(tokens)}
-                        </span>
-                      </div>
-                      <div className="h-1.5 rounded-full bg-surface-light overflow-hidden">
-                        <div
-                          className={`h-full rounded-full transition-all duration-500 ${
-                            CATEGORY_COLORS[cat] ?? "bg-slate-400"
-                          }`}
-                          style={{ width: `${barPct}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-          )}
-        </div>
-
-        {/* Daily Usage Chart */}
-        <div className="glass rounded-xl p-5 space-y-4">
-          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <Calendar size={14} className="text-[#2563EB]" />
-            Daily Usage (Last 30 Days)
-          </div>
-
-          {loading ? (
-            <div className="flex items-end gap-0.5 h-24">
-              {[...Array(30)].map((_, i) => (
-                <div
-                  key={i}
-                  className="flex-1 bg-surface-light animate-pulse rounded-t"
-                  style={{ height: `${20 + Math.random() * 60}%` }}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="flex items-end gap-0.5 h-28" title="Daily token usage">
-              {tokenData.daily_usage.map((d) => {
-                const h = maxDaily > 0 ? (d.tokens / maxDaily) * 100 : 0;
-                const label = d.date.substring(5); // MM-DD
-                return (
-                  <div
-                    key={d.date}
-                    className="flex-1 flex flex-col items-center justify-end h-full group relative"
+    <MotionPage className="fade-in p-6 max-w-5xl mx-auto space-y-5"><PageHero
+              eyebrow="USAGE & LIMITS"
+              icon={<Zap size={28} />}
+              title="Token Usage"
+              subtitle="Monitor AI consumption & manage balance."
+              gradient="purple"
+              actions={
+                <>
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-black/10 text-foreground text-xs font-medium">
+                    <Shield size={12} />
+                    {planConfig.badge_label} Plan
+                  </div>
+                  <button
+                    onClick={fetchData}
+                    disabled={loading}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-black/5 text-foreground text-xs hover:bg-black/10 transition-all"
                   >
-                    <div
-                      className="w-full rounded-t transition-all duration-300 bg-[rgba(37,99,235,0.6)] group-hover:bg-[#2563EB]"
-                      style={{ height: `${Math.max(h, d.tokens > 0 ? 4 : 0)}%` }}
-                    />
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 hidden group-hover:block z-10 pointer-events-none">
-                      <div className="bg-surface border border-border rounded-lg px-2 py-1 text-[10px] whitespace-nowrap shadow-elevated">
-                        <div className="font-medium text-foreground">{fmt(d.tokens)}</div>
-                        <div className="text-muted">{label}</div>
-                      </div>
+                    <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
+                    Refresh
+                  </button>
+                </>
+              }
+            />{/* ── Stats Strip ── */}<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[
+                { icon: <Activity size={10} />, label: "Tokens Used", value: loading ? null : fmt(used), sub: "this month" },
+                { icon: <Zap size={10} />, label: "Remaining", value: loading ? null : (isUnlimited ? "∞" : fmt(remaining)), sub: isUnlimited ? "unlimited" : `of ${fmtShort(effectiveLimit)}`, valueClass: isUnlimited ? "text-[#2563EB]" : remaining < effectiveLimit * 0.1 ? "text-red-400" : "text-foreground" },
+                { icon: <Clock size={10} />, label: "Resets In", value: loading ? null : String(tokenData.days_remaining), sub: "days" },
+                { icon: <TrendingUp size={10} />, label: "Daily Avg", value: loading ? null : fmtShort(tokenData.daily_average), sub: "tokens / day" },
+              ].map((stat, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                  <div className="p-3 flex flex-col gap-1">
+                    <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted font-medium">
+                      {stat.icon}
+                      {stat.label}
                     </div>
+                    {stat.value === null ? (
+                      <div className="h-6 w-20 bg-surface-light animate-pulse rounded" />
+                    ) : (
+                      <div className={`text-2xl font-bold ${stat.valueClass ?? "text-foreground"}`}>
+                        {stat.value}
+                      </div>
+                    )}
+                    <div className="text-[10px] text-muted">{stat.sub}</div>
                   </div>
-                );
-              })}
-            </div>
-          )}
+                </motion.div>
+              ))}
+            </div>{/* ── Progress Bar ── */}{!isUnlimited && (
+              <div className="glass rounded-xl p-5 space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted">Monthly usage</span>
+                  <span className="font-medium text-foreground">
+                    {pct.toFixed(1)}% used
+                  </span>
+                </div>
 
-          {/* X-axis labels: show start, mid, end */}
-          {!loading && tokenData.daily_usage.length > 0 && (
-            <div className="flex justify-between text-[9px] text-muted mt-1">
-              <span>{tokenData.daily_usage[0]?.date.substring(5)}</span>
-              <span>{tokenData.daily_usage[14]?.date.substring(5)}</span>
-              <span>{tokenData.daily_usage[29]?.date.substring(5)}</span>
-            </div>
-          )}
-        </div>
-      </div>
+                {/* Track */}
+                <div className="relative h-4 rounded-full bg-surface-light overflow-hidden">
+                  {loading ? (
+                    <div className="h-full w-1/3 bg-surface animate-pulse rounded-full" />
+                  ) : (
+                    <div
+                      className={`h-full rounded-full transition-all duration-700 ${getProgressColor(
+                        pct
+                      )} ${getProgressGlow(pct)}`}
+                      style={{ width: `${pct}%` }}
+                    />
+                  )}
+                </div>
 
-      {/* ── Buy More Tokens ── */}
-      {isUnlimited ? (
-        <div className="glass rounded-xl p-5 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#2563EB] shrink-0">
-            <Zap size={18} />
-          </div>
-          <div>
-            <div className="text-sm font-medium text-foreground">You have unlimited tokens</div>
-            <div className="text-xs text-muted mt-0.5">
-              Your {planConfig.badge_label} plan includes unlimited AI token usage — no limits, no worries.
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="glass rounded-xl p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-              <Package size={14} className="text-[#2563EB]" />
-              Buy More Tokens
-            </div>
-            <Link
-              href="/dashboard/pricing"
-              className="flex items-center gap-1 text-xs text-[#2563EB] hover:underline"
-            >
-              Or upgrade your plan <ChevronRight size={12} />
-            </Link>
-          </div>
-
-          <p className="text-xs text-muted">
-            Need more tokens before your plan resets? Purchase a one-time pack
-            and it will be added immediately to your balance.
-          </p>
-
-          {/* Pack cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {TOKEN_PACKS.map((pack) => (
-              <button
-                key={pack.id}
-                onClick={() =>
-                  setSelectedPack(selectedPack === pack.id ? null : pack.id)
-                }
-                className={`relative flex flex-col items-center gap-1.5 p-4 rounded-xl border text-center transition-all ${
-                  selectedPack === pack.id
-                    ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                    : "border-border bg-surface-light text-foreground hover:border-[rgba(37,99,235,0.4)]"
-                }`}
-              >
-                {pack.popular && (
-                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-[#2563EB] text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                    Popular
-                  </div>
-                )}
-                <div className="text-lg font-bold">{pack.label}</div>
-                <div className="text-[10px] text-muted">tokens</div>
-                <div className="text-sm font-semibold">${pack.price}</div>
-              </button>
-            ))}
-          </div>
-
-          {/* Buy button / success */}
-          {buySuccess ? (
-            <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm">
-              <Zap size={14} />
-              {buySuccess}
-            </div>
-          ) : (
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleBuy}
-                disabled={!selectedPack || buying}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  selectedPack && !buying
-                    ? "bg-[#2563EB] text-white hover:bg-[#1D4ED8]"
-                    : "bg-surface-light text-muted cursor-not-allowed"
-                }`}
-              >
-                {buying ? (
-                  <Loader2 size={14} className="animate-spin" />
-                ) : (
-                  <Plus size={14} />
-                )}
-                {buying ? "Processing..." : selectedPack ? "Buy Now" : "Select a Pack"}
-              </button>
-              {selectedPack && !buying && (
-                <span className="text-xs text-muted">
-                  {TOKEN_PACKS.find((p) => p.id === selectedPack)?.tokens.toLocaleString()} tokens for ${TOKEN_PACKS.find((p) => p.id === selectedPack)?.price}
-                </span>
-              )}
-            </div>
-          )}
-
-          <p className="text-[10px] text-muted">
-            Token packs are added to your account instantly. Bonus tokens carry
-            over and are used before your plan&apos;s monthly allocation.
-          </p>
-        </div>
-      )}
-
-      {/* ── Recent Activity ── */}
-      <div className="glass rounded-xl p-5 space-y-4">
-        <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-          <Activity size={14} className="text-[#2563EB]" />
-          Recent AI Activity
-        </div>
-
-        {loading ? (
-          <div className="space-y-2">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-10 bg-surface-light animate-pulse rounded-xl" />
-            ))}
-          </div>
-        ) : tokenData.recent_activity.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted">
-            <Sparkles size={24} className="opacity-30" />
-            <p className="text-xs">No AI activity recorded this month</p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto -mx-1">
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="text-left text-[10px] uppercase tracking-wider text-muted border-b border-border">
-                  <th className="pb-2 font-medium pl-1">Time</th>
-                  <th className="pb-2 font-medium">Type</th>
-                  <th className="pb-2 font-medium hidden sm:table-cell">Description</th>
-                  <th className="pb-2 font-medium text-right pr-1">Tokens</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/40">
-                {tokenData.recent_activity.map((item, idx) => (
-                  <motion.tr key={item.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="hover:bg-surface-light/50 transition-colors">
-                    <td className="py-2.5 pl-1 text-muted whitespace-nowrap">
-                      {formatRelative(item.created_at)}
-                    </td>
-                    <td className="py-2.5">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-light border border-border text-[10px] font-medium text-foreground whitespace-nowrap">
-                        {formatActionType(item.action_type)}
+                <div className="flex items-center justify-between text-[11px] text-muted">
+                  <span>
+                    {fmt(used)} used of {fmt(effectiveLimit)}{" "}
+                    {tokenData.bonus_tokens > 0 && (
+                      <span className="text-[#2563EB]">
+                        (+{fmtShort(tokenData.bonus_tokens)} bonus)
                       </span>
-                    </td>
-                    <td className="py-2.5 text-muted hidden sm:table-cell max-w-[200px] truncate">
-                      {item.description || "—"}
-                    </td>
-                    <td className="py-2.5 pr-1 text-right font-medium tabular-nums text-[#2563EB] whitespace-nowrap">
-                      {fmt(item.tokens_used)}
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                    )}
+                  </span>
+                  <span
+                    className={`font-medium ${
+                      pct >= 90
+                        ? "text-red-400"
+                        : pct >= 75
+                        ? "text-orange-400"
+                        : "text-muted"
+                    }`}
+                  >
+                    {pct >= 90
+                      ? "Critical — buy more or upgrade"
+                      : pct >= 75
+                      ? "Running low"
+                      : `${planConfig.badge_label} plan limit`}
+                  </span>
+                </div>
+              </div>
+            )}{/* ── Usage by Category + Daily Chart (side by side on larger screens) ── */}<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Usage by Category */}
+              <div className="glass rounded-xl p-5 space-y-4">
+                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                  <BarChart3 size={14} className="text-[#2563EB]" />
+                  Usage by Category
+                </div>
 
-      {/* ── PageAI ── */}
-      <PageAI
-        pageName="Token Usage"
-        context={`The user is on the Token Usage page. They have used ${fmt(used)} tokens this month on the ${planTier} plan. Their limit is ${isUnlimited ? "unlimited" : fmt(effectiveLimit)}. They have ${tokenData.days_remaining} days until the reset. Daily average is ${fmt(tokenData.daily_average)} tokens.`}
-        suggestions={[
-          "How can I reduce my token usage?",
-          "Which features use the most tokens?",
-          "What happens when I run out of tokens?",
-          "How do token packs work?",
-        ]}
-      />
-    </div>
+                {loading ? (
+                  <div className="space-y-3">
+                    {[...Array(5)].map((_, i) => (
+                      <div key={i} className="space-y-1.5">
+                        <div className="h-3 w-28 bg-surface-light animate-pulse rounded" />
+                        <div className="h-2 rounded-full bg-surface-light animate-pulse" style={{ width: `${60 - i * 10}%` }} />
+                      </div>
+                    ))}
+                  </div>
+                ) : Object.keys(tokenData.by_category).length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-8 gap-2 text-muted">
+                    <Sparkles size={24} className="opacity-30" />
+                    <p className="text-xs">No AI activity recorded this month</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {Object.entries(tokenData.by_category)
+                      .sort(([, a], [, b]) => b - a)
+                      .map(([cat, tokens]) => {
+                        const barPct = maxCategory > 0 ? (tokens / maxCategory) * 100 : 0;
+                        return (
+                          <div key={cat} className="space-y-1">
+                            <div className="flex items-center justify-between text-[11px]">
+                              <div className="flex items-center gap-1.5 text-muted">
+                                <span className="text-foreground opacity-60">
+                                  {CATEGORY_ICONS[cat] ?? <BarChart3 size={13} />}
+                                </span>
+                                {cat}
+                              </div>
+                              <span className="font-medium text-foreground tabular-nums">
+                                {fmt(tokens)}
+                              </span>
+                            </div>
+                            <div className="h-1.5 rounded-full bg-surface-light overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all duration-500 ${
+                                  CATEGORY_COLORS[cat] ?? "bg-slate-400"
+                                }`}
+                                style={{ width: `${barPct}%` }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                )}
+              </div>
+
+              {/* Daily Usage Chart */}
+              <div className="glass rounded-xl p-5 space-y-4">
+                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                  <Calendar size={14} className="text-[#2563EB]" />
+                  Daily Usage (Last 30 Days)
+                </div>
+
+                {loading ? (
+                  <div className="flex items-end gap-0.5 h-24">
+                    {[...Array(30)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="flex-1 bg-surface-light animate-pulse rounded-t"
+                        style={{ height: `${20 + Math.random() * 60}%` }}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex items-end gap-0.5 h-28" title="Daily token usage">
+                    {tokenData.daily_usage.map((d) => {
+                      const h = maxDaily > 0 ? (d.tokens / maxDaily) * 100 : 0;
+                      const label = d.date.substring(5); // MM-DD
+                      return (
+                        <div
+                          key={d.date}
+                          className="flex-1 flex flex-col items-center justify-end h-full group relative"
+                        >
+                          <div
+                            className="w-full rounded-t transition-all duration-300 bg-[rgba(37,99,235,0.6)] group-hover:bg-[#2563EB]"
+                            style={{ height: `${Math.max(h, d.tokens > 0 ? 4 : 0)}%` }}
+                          />
+                          {/* Tooltip */}
+                          <div className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 hidden group-hover:block z-10 pointer-events-none">
+                            <div className="bg-surface border border-border rounded-lg px-2 py-1 text-[10px] whitespace-nowrap shadow-elevated">
+                              <div className="font-medium text-foreground">{fmt(d.tokens)}</div>
+                              <div className="text-muted">{label}</div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* X-axis labels: show start, mid, end */}
+                {!loading && tokenData.daily_usage.length > 0 && (
+                  <div className="flex justify-between text-[9px] text-muted mt-1">
+                    <span>{tokenData.daily_usage[0]?.date.substring(5)}</span>
+                    <span>{tokenData.daily_usage[14]?.date.substring(5)}</span>
+                    <span>{tokenData.daily_usage[29]?.date.substring(5)}</span>
+                  </div>
+                )}
+              </div>
+            </div>{/* ── Buy More Tokens ── */}{isUnlimited ? (
+              <div className="glass rounded-xl p-5 flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#2563EB] shrink-0">
+                  <Zap size={18} />
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-foreground">You have unlimited tokens</div>
+                  <div className="text-xs text-muted mt-0.5">
+                    Your {planConfig.badge_label} plan includes unlimited AI token usage — no limits, no worries.
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="glass rounded-xl p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                    <Package size={14} className="text-[#2563EB]" />
+                    Buy More Tokens
+                  </div>
+                  <Link
+                    href="/dashboard/pricing"
+                    className="flex items-center gap-1 text-xs text-[#2563EB] hover:underline"
+                  >
+                    Or upgrade your plan <ChevronRight size={12} />
+                  </Link>
+                </div>
+
+                <p className="text-xs text-muted">
+                  Need more tokens before your plan resets? Purchase a one-time pack
+                  and it will be added immediately to your balance.
+                </p>
+
+                {/* Pack cards */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {TOKEN_PACKS.map((pack) => (
+                    <button
+                      key={pack.id}
+                      onClick={() =>
+                        setSelectedPack(selectedPack === pack.id ? null : pack.id)
+                      }
+                      className={`relative flex flex-col items-center gap-1.5 p-4 rounded-xl border text-center transition-all ${
+                        selectedPack === pack.id
+                          ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                          : "border-border bg-surface-light text-foreground hover:border-[rgba(37,99,235,0.4)]"
+                      }`}
+                    >
+                      {pack.popular && (
+                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-[#2563EB] text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                          Popular
+                        </div>
+                      )}
+                      <div className="text-lg font-bold">{pack.label}</div>
+                      <div className="text-[10px] text-muted">tokens</div>
+                      <div className="text-sm font-semibold">${pack.price}</div>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Buy button / success */}
+                {buySuccess ? (
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm">
+                    <Zap size={14} />
+                    {buySuccess}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={handleBuy}
+                      disabled={!selectedPack || buying}
+                      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                        selectedPack && !buying
+                          ? "bg-[#2563EB] text-white hover:bg-[#1D4ED8]"
+                          : "bg-surface-light text-muted cursor-not-allowed"
+                      }`}
+                    >
+                      {buying ? (
+                        <Loader2 size={14} className="animate-spin" />
+                      ) : (
+                        <Plus size={14} />
+                      )}
+                      {buying ? "Processing..." : selectedPack ? "Buy Now" : "Select a Pack"}
+                    </button>
+                    {selectedPack && !buying && (
+                      <span className="text-xs text-muted">
+                        {TOKEN_PACKS.find((p) => p.id === selectedPack)?.tokens.toLocaleString()} tokens for ${TOKEN_PACKS.find((p) => p.id === selectedPack)?.price}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                <p className="text-[10px] text-muted">
+                  Token packs are added to your account instantly. Bonus tokens carry
+                  over and are used before your plan&apos;s monthly allocation.
+                </p>
+              </div>
+            )}{/* ── Recent Activity ── */}<div className="glass rounded-xl p-5 space-y-4">
+              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                <Activity size={14} className="text-[#2563EB]" />
+                Recent AI Activity
+              </div>
+
+              {loading ? (
+                <div className="space-y-2">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="h-10 bg-surface-light animate-pulse rounded-xl" />
+                  ))}
+                </div>
+              ) : tokenData.recent_activity.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted">
+                  <Sparkles size={24} className="opacity-30" />
+                  <p className="text-xs">No AI activity recorded this month</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto -mx-1">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="text-left text-[10px] uppercase tracking-wider text-muted border-b border-border">
+                        <th className="pb-2 font-medium pl-1">Time</th>
+                        <th className="pb-2 font-medium">Type</th>
+                        <th className="pb-2 font-medium hidden sm:table-cell">Description</th>
+                        <th className="pb-2 font-medium text-right pr-1">Tokens</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/40">
+                      {tokenData.recent_activity.map((item, idx) => (
+                        <motion.tr key={item.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="hover:bg-surface-light/50 transition-colors">
+                          <td className="py-2.5 pl-1 text-muted whitespace-nowrap">
+                            {formatRelative(item.created_at)}
+                          </td>
+                          <td className="py-2.5">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-light border border-border text-[10px] font-medium text-foreground whitespace-nowrap">
+                              {formatActionType(item.action_type)}
+                            </span>
+                          </td>
+                          <td className="py-2.5 text-muted hidden sm:table-cell max-w-[200px] truncate">
+                            {item.description || "—"}
+                          </td>
+                          <td className="py-2.5 pr-1 text-right font-medium tabular-nums text-[#2563EB] whitespace-nowrap">
+                            {fmt(item.tokens_used)}
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>{/* ── PageAI ── */}<PageAI
+              pageName="Token Usage"
+              context={`The user is on the Token Usage page. They have used ${fmt(used)} tokens this month on the ${planTier} plan. Their limit is ${isUnlimited ? "unlimited" : fmt(effectiveLimit)}. They have ${tokenData.days_remaining} days until the reset. Daily average is ${fmt(tokenData.daily_average)} tokens.`}
+              suggestions={[
+                "How can I reduce my token usage?",
+                "Which features use the most tokens?",
+                "What happens when I run out of tokens?",
+                "How do token packs work?",
+              ]}
+            /></MotionPage>
   );
 }

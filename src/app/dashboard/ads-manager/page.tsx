@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // Code-split the panels — only the active tab loads. Each panel has its
 // own data fetching, so this also avoids waterfall fetches at page load.
@@ -96,60 +97,50 @@ export default function AdsManagerPage() {
   const activeTab = TABS.find((t) => t.id === tab);
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        title="Ads Manager"
-        subtitle="One dashboard for Meta, Google, and TikTok ads — with AI-driven budget reallocation."
-        icon={<Megaphone size={20} />}
-        gradient="blue"
-        eyebrow={
-          <span className="inline-flex items-center gap-1 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[#2563EB]">
-            Cross-platform · AI-optimised
-          </span>
-        }
-      />
-
-      {/* Tabs */}
-      <PrismPanel padding="px-2 py-1" className="flex flex-wrap gap-1">
-        {TABS.map((t, i) => {
-          const Icon = t.icon;
-          const isActive = t.id === tab;
-          return (
-            <motion.button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              initial={{ opacity: 0, y: 8 }}
+    <MotionPage className="space-y-6"><PageHero
+              title="Ads Manager"
+              subtitle="One dashboard for Meta, Google, and TikTok ads — with AI-driven budget reallocation."
+              icon={<Megaphone size={20} />}
+              gradient="blue"
+              eyebrow={
+                <span className="inline-flex items-center gap-1 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[#2563EB]">
+                  Cross-platform · AI-optimised
+                </span>
+              }
+            />{/* Tabs */}<PrismPanel padding="px-2 py-1" className="flex flex-wrap gap-1">
+              {TABS.map((t, i) => {
+                const Icon = t.icon;
+                const isActive = t.id === tab;
+                return (
+                  <motion.button
+                    key={t.id}
+                    onClick={() => setTab(t.id)}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.06 }}
+                    className={`inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border-b-2 -mb-px transition-colors ${
+                      isActive
+                        ? "border-[#2563EB] text-[#2563EB] bg-[rgba(37,99,235,0.08)]"
+                        : "border-transparent text-muted hover:text-text"
+                    }`}
+                  >
+                    <Icon size={14} />
+                    {t.label}
+                  </motion.button>
+                );
+              })}
+            </PrismPanel>{activeTab && (
+              <p className="text-xs text-muted -mt-2">{activeTab.description}</p>
+            )}{/* Tab content */}<motion.div
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.06 }}
-              className={`inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border-b-2 -mb-px transition-colors ${
-                isActive
-                  ? "border-[#2563EB] text-[#2563EB] bg-[rgba(37,99,235,0.08)]"
-                  : "border-transparent text-muted hover:text-text"
-              }`}
+              transition={{ delay: 0.2 }}
             >
-              <Icon size={14} />
-              {t.label}
-            </motion.button>
-          );
-        })}
-      </PrismPanel>
-
-      {activeTab && (
-        <p className="text-xs text-muted -mt-2">{activeTab.description}</p>
-      )}
-
-      {/* Tab content */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        {tab === "overview" && <OverviewPanel />}
-        {tab === "campaigns" && <CampaignsTable />}
-        {tab === "insights" && <InsightsPanel />}
-        {tab === "budgets" && <BudgetsPanel />}
-        {tab === "connect" && <ZernioConnectPanel />}
-      </motion.div>
-    </div>
+              {tab === "overview" && <OverviewPanel />}
+              {tab === "campaigns" && <CampaignsTable />}
+              {tab === "insights" && <InsightsPanel />}
+              {tab === "budgets" && <BudgetsPanel />}
+              {tab === "connect" && <ZernioConnectPanel />}
+            </motion.div></MotionPage>
   );
 }

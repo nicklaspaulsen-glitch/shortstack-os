@@ -16,6 +16,7 @@ import {
 import PageHero from "@/components/ui/page-hero";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 import { PrismPanel } from "@/components/prism";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type Depth = "shallow" | "medium" | "deep";
 
@@ -191,322 +192,314 @@ export default function ColdEmailPage() {
   }
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        eyebrow="EMAIL OUTREACH"
-        icon={<MailPlus size={28} />}
-        title="AI Cold Email"
-        subtitle="Personalized opening lines at scale. Research, generate, and send 1000s a day."
-        gradient="sunset"
-        actions={
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <button
-              onClick={() => setShowCreate((v) => !v)}
-              className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-[#0A0A0B] border border-black/20 hover:bg-black/15 transition-all flex items-center gap-1.5"
-            >
-              <Sparkles size={11} />
-              New Campaign
-            </button>
-          </motion.div>
-        }
-      />
-
-      {error && (
-        <PrismPanel padding="px-3 py-3" className="border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
-          <AlertTriangle size={13} />
-          <span>{error}</span>
-        </PrismPanel>
-      )}
-
-      {showCreate && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.22 }}
-          className="rounded-xl p-4 space-y-3"
-          style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.12)" }}
-        >
-          <div className="flex items-center gap-2">
-            <Sparkles size={13} className="text-[#2563EB]" />
-            <h2 className="text-xs font-semibold text-[#2563EB]">New Campaign</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
-                Campaign Name
-              </label>
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Q2 dental outreach"
-                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB]"
-              />
-            </div>
-            <div>
-              <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
-                Lead status filter
-              </label>
-              <input
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                placeholder="new"
-                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB]"
-              />
-              <p className="text-[9px] text-muted mt-0.5">
-                We pull all leads with this status that have an email.
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
-              Template seed
-            </label>
-            <textarea
-              value={templateSeed}
-              onChange={(e) => setTemplateSeed(e.target.value)}
-              rows={4}
-              className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB] font-mono"
-            />
-            <p className="text-[9px] text-muted mt-0.5">
-              Tokens: <code>{"{{first_name}}"}</code>, <code>{"{{business_name}}"}</code>,{" "}
-              <code>{"{{industry}}"}</code>, <code>{"{{location}}"}</code>,{" "}
-              <code>{"{{personal_hook}}"}</code> (LLM-generated).
-            </p>
-            {/* AI auto-suggest cold-email angles tailored to user's niche +
-                recent campaigns. Click a pill to use as the template seed. */}
-            <AITopicSuggest
-              surface="cold_email"
-              onSelect={picked => setTemplateSeed(picked)}
-              max={5}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
-                Research depth
-              </label>
-              <div className="flex gap-1.5">
-                {(["shallow", "medium", "deep"] as const).map((d) => (
+    <MotionPage className="fade-in space-y-5"><PageHero
+              eyebrow="EMAIL OUTREACH"
+              icon={<MailPlus size={28} />}
+              title="AI Cold Email"
+              subtitle="Personalized opening lines at scale. Research, generate, and send 1000s a day."
+              gradient="sunset"
+              actions={
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <button
-                    key={d}
-                    onClick={() => setDepth(d)}
-                    className={`flex-1 text-[10px] px-2 py-1.5 rounded border transition-all ${
-                      depth === d
-                        ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.10)] text-[#2563EB]"
-                        : "border-border text-muted hover:text-foreground"
-                    }`}
+                    onClick={() => setShowCreate((v) => !v)}
+                    className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-[#0A0A0B] border border-black/20 hover:bg-black/15 transition-all flex items-center gap-1.5"
                   >
-                    <div className="font-medium">{DEPTH_COPY[d].label}</div>
-                    <div className="text-[9px] opacity-70">{DEPTH_COPY[d].cost}</div>
+                    <Sparkles size={11} />
+                    New Campaign
                   </button>
-                ))}
-              </div>
-              <p className="text-[9px] text-muted mt-0.5">{DEPTH_COPY[depth].desc}</p>
-            </div>
-            <div>
-              <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
-                Throttle (per hour)
-              </label>
-              <input
-                type="number"
-                value={throttle}
-                onChange={(e) => setThrottle(parseInt(e.target.value || "100") || 100)}
-                min={1}
-                max={5000}
-                className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground focus:outline-none focus:border-[#2563EB]"
-              />
-              <p className="text-[9px] text-muted mt-0.5">
-                Recommended: 100/hr to protect domain reputation.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2 pt-1">
-            <button
-              onClick={() => setShowCreate(false)}
-              className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground"
-            >
-              Cancel
-            </button>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <button
-                onClick={handleCreate}
-                disabled={creating || !name.trim() || !templateSeed.trim()}
-                className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#1D4ED8] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-              >
-                {creating ? "Building�" : "Create Campaign"}
-              </button>
-            </motion.div>
-          </div>
-        </motion.div>
-      )}
-
-      <PrismPanel rainbow padding="p-0" className="overflow-hidden space-y-0">
-        {loading ? (
-          <div className="p-8 text-center text-[11px] text-muted">Loading�</div>
-        ) : jobs.length === 0 ? (
-          <div className="p-10 text-center">
-            <MailPlus size={22} className="mx-auto mb-2 text-muted opacity-40" />
-            <p className="text-[11px] text-muted">
-              No campaigns yet. Create one to start cold-email at scale.
-            </p>
-          </div>
-        ) : (
-          jobs.map((j, index) => {
-            const progress =
-              j.recipients_count > 0
-                ? Math.round(
-                    ((j.sent_count + j.failed_count + j.generated_count) /
-                      (j.recipients_count * 2)) *
-                      100,
-                  )
-                : 0;
-            const jobSamples = samples[j.id] ?? [];
-            return (
+                </motion.div>
+              }
+            />{error && (
+              <PrismPanel padding="px-3 py-3" className="border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
+                <AlertTriangle size={13} />
+                <span>{error}</span>
+              </PrismPanel>
+            )}{showCreate && (
               <motion.div
-                key={j.id}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.18, delay: index * 0.04 }}
-                whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
-                className="relative p-4 space-y-3 border-b border-black/[0.05] last:border-0"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22 }}
+                className="rounded-xl p-4 space-y-3"
+                style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", borderColor: "rgba(0,0,0,0.12)" }}
               >
-                {/* Rainbow top bar (first item only decorative, per-card via absolute) */}
-                <div
-                  className="absolute top-0 left-0 right-0 h-[2px]"
-                  style={{ background: RAINBOW_BAR, opacity: 0.5 }}
-                />
-
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-semibold truncate">{j.name}</span>
-                      <span
-                        className={`text-[9px] px-1.5 py-0.5 rounded border font-medium ${STATUS_PILLS[j.status]}`}
-                      >
-                        {j.status}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 text-[10px] text-muted">
-                      <span>{j.recipients_count.toLocaleString()} recipients</span>
-                      <span>�</span>
-                      <span>{DEPTH_COPY[j.research_depth].label} research</span>
-                      <span>�</span>
-                      <span>{j.throttle_per_hour}/hr</span>
-                      <span>�</span>
-                      <span>${Number(j.cost_usd).toFixed(4)} spent</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1.5 flex-shrink-0">
-                    {j.status === "pending" && (
-                      <>
-                        <button
-                          onClick={() => handlePreview(j.id)}
-                          disabled={previewing === j.id}
-                          className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
-                        >
-                          {previewing === j.id ? (
-                            <Loader2 size={9} className="animate-spin" />
-                          ) : (
-                            <Eye size={9} />
-                          )}
-                          Preview
-                        </button>
-                        <button
-                          onClick={() => handleStart(j.id)}
-                          className="text-[9px] px-2 py-1 rounded border border-green-500/25 text-green-400 hover:bg-green-500/10 transition-all flex items-center gap-1"
-                        >
-                          <Play size={9} />
-                          Start
-                        </button>
-                      </>
-                    )}
-                    {(j.status === "researching" || j.status === "generating") && (
-                      <button
-                        onClick={() => handleSend(j.id)}
-                        className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1"
-                      >
-                        <Send size={9} />
-                        Send
-                      </button>
-                    )}
-                  </div>
+                <div className="flex items-center gap-2">
+                  <Sparkles size={13} className="text-[#2563EB]" />
+                  <h2 className="text-xs font-semibold text-[#2563EB]">New Campaign</h2>
                 </div>
 
-                <div>
-                  <div className="flex items-center justify-between text-[9px] text-muted mb-1">
-                    <span>
-                      Generated {j.generated_count} / {j.recipients_count}
-                    </span>
-                    <span>
-                      Sent {j.sent_count} � Failed {j.failed_count}
-                    </span>
-                  </div>
-                  <div className="h-1.5 bg-[rgba(0,0,0,0.06)] rounded-full overflow-hidden">
-                    <div
-                      className="h-full transition-all"
-                      style={{
-                        width: `${Math.min(100, progress)}%`,
-                        background: RAINBOW_BAR,
-                      }}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                      Campaign Name
+                    </label>
+                    <input
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Q2 dental outreach"
+                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB]"
                     />
                   </div>
+                  <div>
+                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                      Lead status filter
+                    </label>
+                    <input
+                      value={statusFilter}
+                      onChange={(e) => setStatusFilter(e.target.value)}
+                      placeholder="new"
+                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB]"
+                    />
+                    <p className="text-[9px] text-muted mt-0.5">
+                      We pull all leads with this status that have an email.
+                    </p>
+                  </div>
                 </div>
 
-                {jobSamples.length > 0 && (
-                  <div className="space-y-2 pt-2 border-t border-black/[0.05]">
-                    <p className="text-[9px] text-muted uppercase tracking-wider">
-                      Preview samples
-                    </p>
-                    {jobSamples.map((s) => (
-                      <div key={s.personalization_id} className="rounded-xl p-3 space-y-1.5" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                        {s.error ? (
-                          <div className="text-[10px] text-red-400 flex items-center gap-1.5">
-                            <AlertTriangle size={10} />
-                            {s.error}
-                          </div>
-                        ) : (
-                          <>
-                            <div className="text-[10px] text-muted">
-                              <span className="text-[#2563EB]">Subject:</span> {s.subject}
-                            </div>
-                            <pre className="text-[10px] text-foreground whitespace-pre-wrap font-sans leading-relaxed">
-                              {s.body}
-                            </pre>
-                            <div className="text-[9px] text-muted flex items-center gap-2">
-                              <span>${Number(s.cost_usd).toFixed(5)}</span>
-                              <span>�</span>
-                              <CheckCircle size={9} className="text-green-400" />
-                              <span>generated</span>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <div className="space-y-2">
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                    Template seed
+                  </label>
+                  <textarea
+                    value={templateSeed}
+                    onChange={(e) => setTemplateSeed(e.target.value)}
+                    rows={4}
+                    className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB] font-mono"
+                  />
+                  <p className="text-[9px] text-muted mt-0.5">
+                    Tokens: <code>{"{{first_name}}"}</code>, <code>{"{{business_name}}"}</code>,{" "}
+                    <code>{"{{industry}}"}</code>, <code>{"{{location}}"}</code>,{" "}
+                    <code>{"{{personal_hook}}"}</code> (LLM-generated).
+                  </p>
+                  {/* AI auto-suggest cold-email angles tailored to user's niche +
+                      recent campaigns. Click a pill to use as the template seed. */}
+                  <AITopicSuggest
+                    surface="cold_email"
+                    onSelect={picked => setTemplateSeed(picked)}
+                    max={5}
+                  />
+                </div>
 
-                <div className="flex items-center gap-3 text-[9px] text-muted pt-1">
-                  <span className="flex items-center gap-1">
-                    <Clock size={9} />
-                    Created {new Date(j.created_at).toISOString().split("T")[0]}
-                  </span>
-                  {j.completed_at && (
-                    <span className="flex items-center gap-1">
-                      <CheckCircle size={9} className="text-green-400" />
-                      Completed {new Date(j.completed_at).toISOString().split("T")[0]}
-                    </span>
-                  )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                      Research depth
+                    </label>
+                    <div className="flex gap-1.5">
+                      {(["shallow", "medium", "deep"] as const).map((d) => (
+                        <button
+                          key={d}
+                          onClick={() => setDepth(d)}
+                          className={`flex-1 text-[10px] px-2 py-1.5 rounded border transition-all ${
+                            depth === d
+                              ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.10)] text-[#2563EB]"
+                              : "border-border text-muted hover:text-foreground"
+                          }`}
+                        >
+                          <div className="font-medium">{DEPTH_COPY[d].label}</div>
+                          <div className="text-[9px] opacity-70">{DEPTH_COPY[d].cost}</div>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[9px] text-muted mt-0.5">{DEPTH_COPY[depth].desc}</p>
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                      Throttle (per hour)
+                    </label>
+                    <input
+                      type="number"
+                      value={throttle}
+                      onChange={(e) => setThrottle(parseInt(e.target.value || "100") || 100)}
+                      min={1}
+                      max={5000}
+                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground focus:outline-none focus:border-[#2563EB]"
+                    />
+                    <p className="text-[9px] text-muted mt-0.5">
+                      Recommended: 100/hr to protect domain reputation.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2 pt-1">
+                  <button
+                    onClick={() => setShowCreate(false)}
+                    className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground"
+                  >
+                    Cancel
+                  </button>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <button
+                      onClick={handleCreate}
+                      disabled={creating || !name.trim() || !templateSeed.trim()}
+                      className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#1D4ED8] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    >
+                      {creating ? "Building�" : "Create Campaign"}
+                    </button>
+                  </motion.div>
                 </div>
               </motion.div>
-            );
-          })
-        )}
-      </PrismPanel>
-    </div>
+            )}<PrismPanel rainbow padding="p-0" className="overflow-hidden space-y-0">
+              {loading ? (
+                <div className="p-8 text-center text-[11px] text-muted">Loading�</div>
+              ) : jobs.length === 0 ? (
+                <div className="p-10 text-center">
+                  <MailPlus size={22} className="mx-auto mb-2 text-muted opacity-40" />
+                  <p className="text-[11px] text-muted">
+                    No campaigns yet. Create one to start cold-email at scale.
+                  </p>
+                </div>
+              ) : (
+                jobs.map((j, index) => {
+                  const progress =
+                    j.recipients_count > 0
+                      ? Math.round(
+                          ((j.sent_count + j.failed_count + j.generated_count) /
+                            (j.recipients_count * 2)) *
+                            100,
+                        )
+                      : 0;
+                  const jobSamples = samples[j.id] ?? [];
+                  return (
+                    <motion.div
+                      key={j.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18, delay: index * 0.04 }}
+                      whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
+                      className="relative p-4 space-y-3 border-b border-black/[0.05] last:border-0"
+                    >
+                      {/* Rainbow top bar (first item only decorative, per-card via absolute) */}
+                      <div
+                        className="absolute top-0 left-0 right-0 h-[2px]"
+                        style={{ background: RAINBOW_BAR, opacity: 0.5 }}
+                      />
+
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-sm font-semibold truncate">{j.name}</span>
+                            <span
+                              className={`text-[9px] px-1.5 py-0.5 rounded border font-medium ${STATUS_PILLS[j.status]}`}
+                            >
+                              {j.status}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3 text-[10px] text-muted">
+                            <span>{j.recipients_count.toLocaleString()} recipients</span>
+                            <span>�</span>
+                            <span>{DEPTH_COPY[j.research_depth].label} research</span>
+                            <span>�</span>
+                            <span>{j.throttle_per_hour}/hr</span>
+                            <span>�</span>
+                            <span>${Number(j.cost_usd).toFixed(4)} spent</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          {j.status === "pending" && (
+                            <>
+                              <button
+                                onClick={() => handlePreview(j.id)}
+                                disabled={previewing === j.id}
+                                className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
+                              >
+                                {previewing === j.id ? (
+                                  <Loader2 size={9} className="animate-spin" />
+                                ) : (
+                                  <Eye size={9} />
+                                )}
+                                Preview
+                              </button>
+                              <button
+                                onClick={() => handleStart(j.id)}
+                                className="text-[9px] px-2 py-1 rounded border border-green-500/25 text-green-400 hover:bg-green-500/10 transition-all flex items-center gap-1"
+                              >
+                                <Play size={9} />
+                                Start
+                              </button>
+                            </>
+                          )}
+                          {(j.status === "researching" || j.status === "generating") && (
+                            <button
+                              onClick={() => handleSend(j.id)}
+                              className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1"
+                            >
+                              <Send size={9} />
+                              Send
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between text-[9px] text-muted mb-1">
+                          <span>
+                            Generated {j.generated_count} / {j.recipients_count}
+                          </span>
+                          <span>
+                            Sent {j.sent_count} � Failed {j.failed_count}
+                          </span>
+                        </div>
+                        <div className="h-1.5 bg-[rgba(0,0,0,0.06)] rounded-full overflow-hidden">
+                          <div
+                            className="h-full transition-all"
+                            style={{
+                              width: `${Math.min(100, progress)}%`,
+                              background: RAINBOW_BAR,
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      {jobSamples.length > 0 && (
+                        <div className="space-y-2 pt-2 border-t border-black/[0.05]">
+                          <p className="text-[9px] text-muted uppercase tracking-wider">
+                            Preview samples
+                          </p>
+                          {jobSamples.map((s) => (
+                            <div key={s.personalization_id} className="rounded-xl p-3 space-y-1.5" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                              {s.error ? (
+                                <div className="text-[10px] text-red-400 flex items-center gap-1.5">
+                                  <AlertTriangle size={10} />
+                                  {s.error}
+                                </div>
+                              ) : (
+                                <>
+                                  <div className="text-[10px] text-muted">
+                                    <span className="text-[#2563EB]">Subject:</span> {s.subject}
+                                  </div>
+                                  <pre className="text-[10px] text-foreground whitespace-pre-wrap font-sans leading-relaxed">
+                                    {s.body}
+                                  </pre>
+                                  <div className="text-[9px] text-muted flex items-center gap-2">
+                                    <span>${Number(s.cost_usd).toFixed(5)}</span>
+                                    <span>�</span>
+                                    <CheckCircle size={9} className="text-green-400" />
+                                    <span>generated</span>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="flex items-center gap-3 text-[9px] text-muted pt-1">
+                        <span className="flex items-center gap-1">
+                          <Clock size={9} />
+                          Created {new Date(j.created_at).toISOString().split("T")[0]}
+                        </span>
+                        {j.completed_at && (
+                          <span className="flex items-center gap-1">
+                            <CheckCircle size={9} className="text-green-400" />
+                            Completed {new Date(j.completed_at).toISOString().split("T")[0]}
+                          </span>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })
+              )}
+            </PrismPanel></MotionPage>
   );
 }
 

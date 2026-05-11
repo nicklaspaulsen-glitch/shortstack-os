@@ -23,6 +23,7 @@ import {
 } from "@/lib/plan-limits";
 import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
 import { PrismPanel } from "@/components/prism";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const PROMPT_IDEAS = [
   "A golden retriever running through a field of sunflowers at sunset, cinematic lighting",
@@ -270,26 +271,28 @@ export default function AIVideoPage() {
             ].map(opt => {
               const locked = opt.f > maxFrames;
               return (
-                <button
-                  key={opt.f}
-                  onClick={() => !locked && setNumFrames(opt.f)}
-                  disabled={locked}
-                  className={`p-3 rounded-xl border transition-all text-center relative ${
-                    locked
-                      ? "border-[rgba(37,99,235,0.25)] bg-surface-light/40 opacity-60 cursor-not-allowed"
-                      : numFrames === opt.f
-                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]"
-                        : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
-                  }`}
-                >
-                  {locked && (
-                    <span className="absolute top-1 right-1">
-                      <Lock size={10} className="text-[#2563EB]" />
-                    </span>
-                  )}
-                  <p className="text-sm font-bold">{opt.label}</p>
-                  <p className="text-[9px] text-muted">{opt.sub}</p>
-                </button>
+                <MotionPage>
+                                    <button
+                                    key={opt.f}
+                                    onClick={() => !locked && setNumFrames(opt.f)}
+                                    disabled={locked}
+                                    className={`p-3 rounded-xl border transition-all text-center relative ${
+                                      locked
+                                        ? "border-[rgba(37,99,235,0.25)] bg-surface-light/40 opacity-60 cursor-not-allowed"
+                                        : numFrames === opt.f
+                                          ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]"
+                                          : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                                    }`}
+                                  >
+                                    {locked && (
+                                      <span className="absolute top-1 right-1">
+                                        <Lock size={10} className="text-[#2563EB]" />
+                                      </span>
+                                    )}
+                                    <p className="text-sm font-bold">{opt.label}</p>
+                                    <p className="text-[9px] text-muted">{opt.sub}</p>
+                                  </button>
+                                  </MotionPage>
               );
             })}
           </div>

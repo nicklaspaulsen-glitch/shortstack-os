@@ -9,6 +9,7 @@ import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { Receipt, ArrowRight, ShoppingBag, Briefcase } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface OrderRow {
   id: string;
@@ -64,104 +65,100 @@ export default function OrdersPage() {
   }, [reload]);
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        eyebrow="MY ORDERS"
-        icon={<Receipt size={28} />}
-        title="Marketplace Orders"
-        subtitle="Track services you've bought and orders you're delivering."
-        gradient="gold"
-        actions={
-          <div className="flex items-center gap-1 rounded-lg border border-border bg-black/5 p-1">
-            <button
-              onClick={() => setRole("buyer")}
-              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
-                role === "buyer"
-                  ? "bg-black/10 text-foreground"
-                  : "text-muted hover:text-white"
-              }`}
-            >
-              <ShoppingBag size={12} />
-              Bought
-            </button>
-            <button
-              onClick={() => setRole("seller")}
-              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
-                role === "seller"
-                  ? "bg-black/10 text-foreground"
-                  : "text-muted hover:text-white"
-              }`}
-            >
-              <Briefcase size={12} />
-              Selling
-            </button>
-          </div>
-        }
-      />
-
-      {loading ? (
-        <div className="py-12 text-center text-sm text-muted">Loading...</div>
-      ) : orders.length === 0 ? (
-        <div className="card flex flex-col items-center justify-center py-12 text-center">
-          <Receipt size={36} className="mb-3 text-[#9CA3AF]" />
-          <p className="text-sm font-medium text-[#111827]">
-            No {role === "buyer" ? "purchases" : "incoming orders"} yet
-          </p>
-          <p className="mt-1 text-xs text-muted">
-            {role === "buyer"
-              ? "Browse the marketplace to find services."
-              : "List a service to start receiving orders."}
-          </p>
-          <Link
-            href={role === "buyer" ? "/marketplace" : "/dashboard/marketplace/listings"}
-            className="mt-4 rounded-lg bg-[rgba(37,99,235,0.08)] px-4 py-2 text-sm font-medium text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)]"
-          >
-            {role === "buyer" ? "Browse marketplace" : "Manage listings"}
-          </Link>
-        </div>
-      ) : (
-        <div className="space-y-2">
-          {orders.map((o) => (
-            <Link
-              key={o.id}
-              href={`/dashboard/marketplace/orders/${o.id}`}
-              className="card group flex items-center justify-between gap-4 transition hover:border-[#2563EB]/30"
-            >
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-muted">
-                    #{o.id.slice(0, 8)}
-                  </span>
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                      STATUS_COLOR[o.status] ?? "bg-black/[0.04] text-[#6B7280]"
+    <MotionPage className="fade-in space-y-5"><PageHero
+              eyebrow="MY ORDERS"
+              icon={<Receipt size={28} />}
+              title="Marketplace Orders"
+              subtitle="Track services you've bought and orders you're delivering."
+              gradient="gold"
+              actions={
+                <div className="flex items-center gap-1 rounded-lg border border-border bg-black/5 p-1">
+                  <button
+                    onClick={() => setRole("buyer")}
+                    className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
+                      role === "buyer"
+                        ? "bg-black/10 text-foreground"
+                        : "text-muted hover:text-white"
                     }`}
                   >
-                    {o.status.replace("_", " ")}
-                  </span>
+                    <ShoppingBag size={12} />
+                    Bought
+                  </button>
+                  <button
+                    onClick={() => setRole("seller")}
+                    className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
+                      role === "seller"
+                        ? "bg-black/10 text-foreground"
+                        : "text-muted hover:text-white"
+                    }`}
+                  >
+                    <Briefcase size={12} />
+                    Selling
+                  </button>
                 </div>
-                <div className="mt-1 text-xs text-muted">
-                  {new Date(o.created_at).toLocaleString()}
-                </div>
+              }
+            />{loading ? (
+              <div className="py-12 text-center text-sm text-muted">Loading...</div>
+            ) : orders.length === 0 ? (
+              <div className="card flex flex-col items-center justify-center py-12 text-center">
+                <Receipt size={36} className="mb-3 text-[#9CA3AF]" />
+                <p className="text-sm font-medium text-[#111827]">
+                  No {role === "buyer" ? "purchases" : "incoming orders"} yet
+                </p>
+                <p className="mt-1 text-xs text-muted">
+                  {role === "buyer"
+                    ? "Browse the marketplace to find services."
+                    : "List a service to start receiving orders."}
+                </p>
+                <Link
+                  href={role === "buyer" ? "/marketplace" : "/dashboard/marketplace/listings"}
+                  className="mt-4 rounded-lg bg-[rgba(37,99,235,0.08)] px-4 py-2 text-sm font-medium text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)]"
+                >
+                  {role === "buyer" ? "Browse marketplace" : "Manage listings"}
+                </Link>
               </div>
-              <div className="text-right">
-                <div className="text-sm font-bold text-[#111827]">
-                  {formatPrice(o.amount_cents, o.currency)}
-                </div>
-                {role === "seller" && (
-                  <div className="text-[10px] text-muted">
-                    payout {formatPrice(o.seller_payout_cents, o.currency)}
-                  </div>
-                )}
+            ) : (
+              <div className="space-y-2">
+                {orders.map((o) => (
+                  <Link
+                    key={o.id}
+                    href={`/dashboard/marketplace/orders/${o.id}`}
+                    className="card group flex items-center justify-between gap-4 transition hover:border-[#2563EB]/30"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs text-muted">
+                          #{o.id.slice(0, 8)}
+                        </span>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
+                            STATUS_COLOR[o.status] ?? "bg-black/[0.04] text-[#6B7280]"
+                          }`}
+                        >
+                          {o.status.replace("_", " ")}
+                        </span>
+                      </div>
+                      <div className="mt-1 text-xs text-muted">
+                        {new Date(o.created_at).toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold text-[#111827]">
+                        {formatPrice(o.amount_cents, o.currency)}
+                      </div>
+                      {role === "seller" && (
+                        <div className="text-[10px] text-muted">
+                          payout {formatPrice(o.seller_payout_cents, o.currency)}
+                        </div>
+                      )}
+                    </div>
+                    <ArrowRight
+                      size={14}
+                      className="text-[#9CA3AF] transition group-hover:translate-x-0.5 group-hover:text-[#2563EB]"
+                    />
+                  </Link>
+                ))}
               </div>
-              <ArrowRight
-                size={14}
-                className="text-[#9CA3AF] transition group-hover:translate-x-0.5 group-hover:text-[#2563EB]"
-              />
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
+            )}</MotionPage>
   );
 }

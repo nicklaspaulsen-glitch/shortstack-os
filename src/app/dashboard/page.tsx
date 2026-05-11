@@ -17,6 +17,7 @@ import DashboardHeroStrip from "@/components/dashboard-home/dashboard-hero-strip
 import BentoGrid from "@/components/dashboard-home/bento-grid";
 import OnboardingChecklist from "@/components/dashboard-home/onboarding-checklist";
 import type { BentoData } from "@/components/dashboard-home/types";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /**
  * Dashboard home � the editorial-bento redesign (Phase 2B).
@@ -97,7 +98,9 @@ export default function DashboardPage() {
   // Client portal users get a different shell. Keep the existing client view
   // intact � only the agency owner home is redesigned in this phase.
   if (profile?.role === "client") {
-    return <ClientDashboard />;
+    return <MotionPage>
+                 <ClientDashboard />
+               </MotionPage>;
   }
 
   if (loading) return <PageSkeleton />;

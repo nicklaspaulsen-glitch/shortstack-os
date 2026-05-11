@@ -11,6 +11,7 @@ import Modal from "@/components/ui/modal";
 import { formatDate } from "@/lib/utils";
 import { Film, Calendar, Download, CheckCircle, MessageSquare, AlertTriangle } from "lucide-react";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type RevisionMode = "request" | "changes";
 
@@ -101,7 +102,9 @@ export default function ClientContentPage() {
     }
   }
 
-  if (loading) return <PageLoading />;
+  if (loading) return <MotionPage>
+                          <PageLoading />
+                        </MotionPage>;
 
   const modalTitle = revisionTarget?.mode === "request"
     ? `Request a revision on "${revisionTarget.contentTitle}"`

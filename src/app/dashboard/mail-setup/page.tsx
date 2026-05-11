@@ -34,6 +34,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import MailboxPlanner from "@/components/mail-setup/mailbox-planner";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface DnsRecord {
   type: string;
@@ -205,324 +206,320 @@ export default function MailSetupPage() {
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <PageHero
-        title="Mail Setup"
-        eyebrow="MAIL SETUP"
-        subtitle="Send email from your own branded subdomain (mail.yourdomain.com) so it lands in the inbox, not spam."
-        icon={<Mail size={20} />}
-      />
+    <MotionPage className="min-h-screen bg-background text-foreground"><PageHero
+              title="Mail Setup"
+              eyebrow="MAIL SETUP"
+              subtitle="Send email from your own branded subdomain (mail.yourdomain.com) so it lands in the inbox, not spam."
+              icon={<Mail size={20} />}
+            /><div className="mx-auto max-w-5xl px-6 pb-10 space-y-6">
+              {/* Mailbox Planner — GHL-style mailbox catalog with cost preview.
+                  Per Apr 26 user ask: "showing which mails there is out there
+                  and forming out details to get the thing they want and what
+                  client it is for and what they have to pay for it". */}
+              {mode === "list" && <MailboxPlanner clients={clients} />}
 
-      <div className="mx-auto max-w-5xl px-6 pb-10 space-y-6">
-        {/* Mailbox Planner — GHL-style mailbox catalog with cost preview.
-            Per Apr 26 user ask: "showing which mails there is out there
-            and forming out details to get the thing they want and what
-            client it is for and what they have to pay for it". */}
-        {mode === "list" && <MailboxPlanner clients={clients} />}
-
-        {mode === "list" ? (
-          // ───────────── LIST VIEW ─────────────
-          <>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Your email domains</h2>
-              <button
-                onClick={() => {
-                  setMode("new");
-                  setStep(1);
-                  setNewDomain("");
-                }}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
-              >
-                <Plus size={14} /> Add domain
-              </button>
-            </div>
-
-            {loading ? (
-              <div className="flex items-center gap-2 text-sm text-muted">
-                <Loader size={14} className="animate-spin" /> Loading…
-              </div>
-            ) : domains.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-border/50 glass p-10 text-center">
-                <Mail size={28} className="mx-auto mb-3 text-muted" />
-                <h3 className="mb-1 text-base font-semibold">No custom domains yet</h3>
-                <p className="mx-auto mb-4 max-w-md text-sm text-muted">
-                  Add your first subdomain to send email from your own brand. Outbound messages
-                  will use <span className="font-mono text-foreground">yourname@mail.yourdomain.com</span> instead of the shared ShortStack address.
-                </p>
-                <button
-                  onClick={() => {
-                    setMode("new");
-                    setStep(1);
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white"
-                >
-                  <Plus size={14} /> Add your first domain
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {domains.map((d, idx) => (
-                  <motion.div key={d.resend_id || d.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }}>
-                    <DomainRow
-                      domain={d}
-                      onVerify={() => d.resend_id && verifyDomain(d.resend_id)}
-                      onView={() => setSelected(d)}
-                      onDelete={() => d.resend_id && deleteDomain(d.resend_id)}
-                      polling={polling}
-                    />
-                  </motion.div>
-                ))}
-              </div>
-            )}
-
-            {/* Detail pane for currently-selected row */}
-            {selected && (
-              <div className="mt-6 rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-5">
-                <div className="mb-4 flex items-center justify-between">
-                  <div>
-                    <h3 className="text-sm font-semibold">DNS records for <span className="font-mono">{selected.domain}</span></h3>
-                    <p className="text-[11px] text-muted">
-                      Add each record to your DNS provider exactly as shown, then click Verify.
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setSelected(null)}
-                    className="text-xs text-muted hover:text-foreground"
-                  >
-                    Close
-                  </button>
-                </div>
-                <DnsRecordList
-                  records={selected.records}
-                  copiedRow={copiedRow}
-                  onCopy={copyRecord}
-                />
-                <div className="mt-4 flex gap-2">
-                  <button
-                    onClick={() => selected.resend_id && verifyDomain(selected.resend_id)}
-                    disabled={polling}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-                  >
-                    {polling ? (
-                      <>
-                        <Loader size={14} className="animate-spin" /> Verifying…
-                      </>
-                    ) : (
-                      <>
-                        <RotateCw size={14} /> Verify DNS
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            )}
-          </>
-        ) : (
-          // ───────────── NEW DOMAIN WIZARD ─────────────
-          <>
-            <div className="mb-6 flex items-center gap-2">
-              {[1, 2, 3].map((n) => {
-                const label = n === 1 ? "Domain" : n === 2 ? "Review" : "DNS";
-                const active = step === n;
-                const done = step > n;
-                return (
-                  <div key={n} className="flex flex-1 items-center gap-2">
-                    <div
-                      className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold ${
-                        done
-                          ? "bg-[#2563EB] text-white"
-                          : active
-                            ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] ring-2 ring-[rgba(37,99,235,0.4)]"
-                            : "bg-surface-light text-muted"
-                      }`}
+              {mode === "list" ? (
+                // ───────────── LIST VIEW ─────────────
+                <>
+                  <div className="mb-4 flex items-center justify-between">
+                    <h2 className="text-lg font-semibold">Your email domains</h2>
+                    <button
+                      onClick={() => {
+                        setMode("new");
+                        setStep(1);
+                        setNewDomain("");
+                      }}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
                     >
-                      {done ? <Check size={12} /> : n}
+                      <Plus size={14} /> Add domain
+                    </button>
+                  </div>
+
+                  {loading ? (
+                    <div className="flex items-center gap-2 text-sm text-muted">
+                      <Loader size={14} className="animate-spin" /> Loading…
                     </div>
-                    <span
-                      className={`text-[11px] ${active ? "text-foreground" : "text-muted"}`}
-                    >
-                      {label}
-                    </span>
-                    {n < 3 && <div className="ml-1 flex-1 h-px bg-border/60" />}
+                  ) : domains.length === 0 ? (
+                    <div className="rounded-xl border border-dashed border-border/50 glass p-10 text-center">
+                      <Mail size={28} className="mx-auto mb-3 text-muted" />
+                      <h3 className="mb-1 text-base font-semibold">No custom domains yet</h3>
+                      <p className="mx-auto mb-4 max-w-md text-sm text-muted">
+                        Add your first subdomain to send email from your own brand. Outbound messages
+                        will use <span className="font-mono text-foreground">yourname@mail.yourdomain.com</span> instead of the shared ShortStack address.
+                      </p>
+                      <button
+                        onClick={() => {
+                          setMode("new");
+                          setStep(1);
+                        }}
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white"
+                      >
+                        <Plus size={14} /> Add your first domain
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {domains.map((d, idx) => (
+                        <motion.div key={d.resend_id || d.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }}>
+                          <DomainRow
+                            domain={d}
+                            onVerify={() => d.resend_id && verifyDomain(d.resend_id)}
+                            onView={() => setSelected(d)}
+                            onDelete={() => d.resend_id && deleteDomain(d.resend_id)}
+                            polling={polling}
+                          />
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Detail pane for currently-selected row */}
+                  {selected && (
+                    <div className="mt-6 rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-5">
+                      <div className="mb-4 flex items-center justify-between">
+                        <div>
+                          <h3 className="text-sm font-semibold">DNS records for <span className="font-mono">{selected.domain}</span></h3>
+                          <p className="text-[11px] text-muted">
+                            Add each record to your DNS provider exactly as shown, then click Verify.
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => setSelected(null)}
+                          className="text-xs text-muted hover:text-foreground"
+                        >
+                          Close
+                        </button>
+                      </div>
+                      <DnsRecordList
+                        records={selected.records}
+                        copiedRow={copiedRow}
+                        onCopy={copyRecord}
+                      />
+                      <div className="mt-4 flex gap-2">
+                        <button
+                          onClick={() => selected.resend_id && verifyDomain(selected.resend_id)}
+                          disabled={polling}
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+                        >
+                          {polling ? (
+                            <>
+                              <Loader size={14} className="animate-spin" /> Verifying…
+                            </>
+                          ) : (
+                            <>
+                              <RotateCw size={14} /> Verify DNS
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                // ───────────── NEW DOMAIN WIZARD ─────────────
+                <>
+                  <div className="mb-6 flex items-center gap-2">
+                    {[1, 2, 3].map((n) => {
+                      const label = n === 1 ? "Domain" : n === 2 ? "Review" : "DNS";
+                      const active = step === n;
+                      const done = step > n;
+                      return (
+                        <div key={n} className="flex flex-1 items-center gap-2">
+                          <div
+                            className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold ${
+                              done
+                                ? "bg-[#2563EB] text-white"
+                                : active
+                                  ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] ring-2 ring-[rgba(37,99,235,0.4)]"
+                                  : "bg-surface-light text-muted"
+                            }`}
+                          >
+                            {done ? <Check size={12} /> : n}
+                          </div>
+                          <span
+                            className={`text-[11px] ${active ? "text-foreground" : "text-muted"}`}
+                          >
+                            {label}
+                          </span>
+                          {n < 3 && <div className="ml-1 flex-1 h-px bg-border/60" />}
+                        </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
-            </div>
 
-            {step === 1 && (
-              <div className="glass rounded-xl p-6">
-                <h2 className="mb-1 text-lg font-semibold">Pick a subdomain</h2>
-                <p className="mb-4 text-sm text-muted">
-                  Recommended pattern: <span className="font-mono text-foreground">mail.yourdomain.com</span>
-                  — separates marketing email from your root domain&apos;s reputation.
-                </p>
+                  {step === 1 && (
+                    <div className="glass rounded-xl p-6">
+                      <h2 className="mb-1 text-lg font-semibold">Pick a subdomain</h2>
+                      <p className="mb-4 text-sm text-muted">
+                        Recommended pattern: <span className="font-mono text-foreground">mail.yourdomain.com</span>
+                        — separates marketing email from your root domain&apos;s reputation.
+                      </p>
 
-                <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted">
-                  Subdomain
-                </label>
-                <input
-                  type="text"
-                  value={newDomain}
-                  onChange={(e) => setNewDomain(e.target.value)}
-                  placeholder="mail.yourdomain.com"
-                  className="mb-1 w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 font-mono text-sm placeholder:text-muted"
-                  autoFocus
-                />
-                {newDomain && !validDomain && (
-                  <p className="text-[11px] text-[#2563EB]">
-                    Use a real domain format — e.g. <span className="font-mono">mail.example.com</span>
-                  </p>
-                )}
-                {validDomain && (
-                  <p className="text-[11px] text-emerald-400">✓ Looks good</p>
-                )}
+                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted">
+                        Subdomain
+                      </label>
+                      <input
+                        type="text"
+                        value={newDomain}
+                        onChange={(e) => setNewDomain(e.target.value)}
+                        placeholder="mail.yourdomain.com"
+                        className="mb-1 w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 font-mono text-sm placeholder:text-muted"
+                        autoFocus
+                      />
+                      {newDomain && !validDomain && (
+                        <p className="text-[11px] text-[#2563EB]">
+                          Use a real domain format — e.g. <span className="font-mono">mail.example.com</span>
+                        </p>
+                      )}
+                      {validDomain && (
+                        <p className="text-[11px] text-emerald-400">✓ Looks good</p>
+                      )}
 
-                <div className="mt-6 flex items-start gap-2 rounded-lg bg-[rgba(37,99,235,0.08)] p-3 text-[11px] text-[#2563EB]">
-                  <AlertTriangle size={13} className="mt-0.5 shrink-0" />
-                  <p>
-                    Use a subdomain you CONTROL. You&apos;ll need to add 3–5 DNS records to
-                    complete verification. Don&apos;t use your root domain — it affects your
-                    main website&apos;s email reputation.
-                  </p>
-                </div>
+                      <div className="mt-6 flex items-start gap-2 rounded-lg bg-[rgba(37,99,235,0.08)] p-3 text-[11px] text-[#2563EB]">
+                        <AlertTriangle size={13} className="mt-0.5 shrink-0" />
+                        <p>
+                          Use a subdomain you CONTROL. You&apos;ll need to add 3–5 DNS records to
+                          complete verification. Don&apos;t use your root domain — it affects your
+                          main website&apos;s email reputation.
+                        </p>
+                      </div>
 
-                <div className="mt-5 flex justify-between">
-                  <button
-                    onClick={() => setMode("list")}
-                    className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted hover:text-foreground"
-                  >
-                    <ArrowLeft size={14} /> Cancel
-                  </button>
-                  <button
-                    onClick={() => setStep(2)}
-                    disabled={!validDomain}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
-                  >
-                    Review <ArrowRight size={14} />
-                  </button>
-                </div>
-              </div>
-            )}
+                      <div className="mt-5 flex justify-between">
+                        <button
+                          onClick={() => setMode("list")}
+                          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted hover:text-foreground"
+                        >
+                          <ArrowLeft size={14} /> Cancel
+                        </button>
+                        <button
+                          onClick={() => setStep(2)}
+                          disabled={!validDomain}
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+                        >
+                          Review <ArrowRight size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
-            {step === 2 && (
-              <div className="glass rounded-xl p-6">
-                <h2 className="mb-1 text-lg font-semibold">Confirm</h2>
-                <p className="mb-5 text-sm text-muted">
-                  Ready to register this domain with Resend?
-                </p>
+                  {step === 2 && (
+                    <div className="glass rounded-xl p-6">
+                      <h2 className="mb-1 text-lg font-semibold">Confirm</h2>
+                      <p className="mb-5 text-sm text-muted">
+                        Ready to register this domain with Resend?
+                      </p>
 
-                <div className="mb-5 space-y-3 rounded-lg border border-border/40 bg-background/40 p-4">
-                  <Row label="Domain" value={<span className="font-mono font-semibold">{newDomain}</span>} />
-                  <Row label="Provider" value="Resend" />
-                  <Row label="Cost" value="Free (uses your existing Resend plan)" />
-                  <Row
-                    label="What happens next"
-                    value={
-                      <span className="text-[13px]">
-                        We register the domain with Resend → you receive 3-5 DNS records →
-                        you add them to your DNS provider → we verify.
-                      </span>
-                    }
-                  />
-                </div>
+                      <div className="mb-5 space-y-3 rounded-lg border border-border/40 bg-background/40 p-4">
+                        <Row label="Domain" value={<span className="font-mono font-semibold">{newDomain}</span>} />
+                        <Row label="Provider" value="Resend" />
+                        <Row label="Cost" value="Free (uses your existing Resend plan)" />
+                        <Row
+                          label="What happens next"
+                          value={
+                            <span className="text-[13px]">
+                              We register the domain with Resend → you receive 3-5 DNS records →
+                              you add them to your DNS provider → we verify.
+                            </span>
+                          }
+                        />
+                      </div>
 
-                <div className="flex justify-between">
-                  <button
-                    onClick={() => setStep(1)}
-                    disabled={submitting}
-                    className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted hover:text-foreground disabled:opacity-40"
-                  >
-                    <ArrowLeft size={14} /> Back
-                  </button>
-                  <button
-                    onClick={createDomain}
-                    disabled={submitting}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"
-                  >
-                    {submitting ? (
-                      <>
-                        <Loader size={14} className="animate-spin" /> Creating…
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles size={14} /> Register domain
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            )}
+                      <div className="flex justify-between">
+                        <button
+                          onClick={() => setStep(1)}
+                          disabled={submitting}
+                          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted hover:text-foreground disabled:opacity-40"
+                        >
+                          <ArrowLeft size={14} /> Back
+                        </button>
+                        <button
+                          onClick={createDomain}
+                          disabled={submitting}
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"
+                        >
+                          {submitting ? (
+                            <>
+                              <Loader size={14} className="animate-spin" /> Creating…
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles size={14} /> Register domain
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
-            {step === 3 && selected && (
-              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-6">
-                <div className="mb-4 flex items-center gap-2">
-                  <CheckCircle2 size={20} className="text-emerald-400" />
-                  <h2 className="text-lg font-semibold">
-                    Domain registered — add these DNS records
-                  </h2>
-                </div>
+                  {step === 3 && selected && (
+                    <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-6">
+                      <div className="mb-4 flex items-center gap-2">
+                        <CheckCircle2 size={20} className="text-emerald-400" />
+                        <h2 className="text-lg font-semibold">
+                          Domain registered — add these DNS records
+                        </h2>
+                      </div>
 
-                <DnsRecordList
-                  records={selected.records}
-                  copiedRow={copiedRow}
-                  onCopy={copyRecord}
-                />
+                      <DnsRecordList
+                        records={selected.records}
+                        copiedRow={copiedRow}
+                        onCopy={copyRecord}
+                      />
 
-                <div className="mt-5 rounded-lg border border-border/40 bg-background/40 p-4 text-[12px] text-muted">
-                  <p className="mb-1 font-semibold text-foreground">Adding records in…</p>
-                  <ul className="ml-4 list-disc space-y-0.5">
-                    <li>
-                      <strong>GoDaddy:</strong> Domains → your domain → DNS → Add new record
-                    </li>
-                    <li>
-                      <strong>Cloudflare:</strong> Websites → your site → DNS → Records → Add record
-                    </li>
-                    <li>
-                      <strong>Namecheap:</strong> Domain List → Manage → Advanced DNS → Add new record
-                    </li>
-                    <li>
-                      <strong>Route 53:</strong> Hosted zones → your zone → Create record
-                    </li>
-                  </ul>
-                </div>
+                      <div className="mt-5 rounded-lg border border-border/40 bg-background/40 p-4 text-[12px] text-muted">
+                        <p className="mb-1 font-semibold text-foreground">Adding records in…</p>
+                        <ul className="ml-4 list-disc space-y-0.5">
+                          <li>
+                            <strong>GoDaddy:</strong> Domains → your domain → DNS → Add new record
+                          </li>
+                          <li>
+                            <strong>Cloudflare:</strong> Websites → your site → DNS → Records → Add record
+                          </li>
+                          <li>
+                            <strong>Namecheap:</strong> Domain List → Manage → Advanced DNS → Add new record
+                          </li>
+                          <li>
+                            <strong>Route 53:</strong> Hosted zones → your zone → Create record
+                          </li>
+                        </ul>
+                      </div>
 
-                <div className="mt-5 flex gap-2">
-                  <button
-                    onClick={() => selected.resend_id && verifyDomain(selected.resend_id)}
-                    disabled={polling}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-                  >
-                    {polling ? (
-                      <>
-                        <Loader size={14} className="animate-spin" /> Verifying…
-                      </>
-                    ) : (
-                      <>
-                        <RotateCw size={14} /> Verify DNS
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setMode("list");
-                      loadDomains();
-                    }}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-4 py-2 text-sm font-semibold transition hover:bg-surface-light"
-                  >
-                    Back to list
-                  </button>
-                </div>
+                      <div className="mt-5 flex gap-2">
+                        <button
+                          onClick={() => selected.resend_id && verifyDomain(selected.resend_id)}
+                          disabled={polling}
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+                        >
+                          {polling ? (
+                            <>
+                              <Loader size={14} className="animate-spin" /> Verifying…
+                            </>
+                          ) : (
+                            <>
+                              <RotateCw size={14} /> Verify DNS
+                            </>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setMode("list");
+                            loadDomains();
+                          }}
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-4 py-2 text-sm font-semibold transition hover:bg-surface-light"
+                        >
+                          Back to list
+                        </button>
+                      </div>
 
-                <p className="mt-3 text-[11px] text-muted">
-                  DNS changes typically propagate in 5–30 minutes. You can close this page and come back —
-                  the domain will be in your list with its current status.
-                </p>
-              </div>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+                      <p className="mt-3 text-[11px] text-muted">
+                        DNS changes typically propagate in 5–30 minutes. You can close this page and come back —
+                        the domain will be in your list with its current status.
+                      </p>
+                    </div>
+                  )}
+                </>
+              )}
+            </div></MotionPage>
   );
 }
 

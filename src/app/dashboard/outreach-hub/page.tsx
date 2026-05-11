@@ -26,6 +26,7 @@ import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { PrismPanel } from "@/components/prism";
 import { useQuotaWall } from "@/components/billing/quota-wall";
 import ErrorBoundary from "@/components/error-boundary";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* -- Types -- */
 type MainTab = "campaigns" | "sequences" | "templates" | "analytics" | "settings";
@@ -758,1298 +759,1296 @@ export default function OutreachHubPage() {
   ];
 
   return (
-    <div className="fade-in space-y-4">
-      <ErrorBoundary section="Outreach Hub">
-      {/* -- Hero Header -- */}
-      <PageHero
-        eyebrow="OUTREACH COMMAND"
-        icon={<Send size={22} />}
-        title="Outreach Hub"
-        subtitle="Build targeted outreach campaigns across email, SMS, calls & DMs � target B2B or B2C leads by industry, niche, and location."
-        gradient="gold"
-        actions={
-          <button onClick={handleSave} disabled={saving}
-            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all disabled:opacity-40">
-            {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
-            Save All
-          </button>
-        }
-      />
-
-      {/* -- How Outreach Works (collapsible explainer) -- */}
-      <div className="card border-blue-400/20 bg-gradient-to-br from-blue-500/5 via-surface to-surface">
-        <button
-          onClick={toggleExplainer}
-          className="w-full flex items-center justify-between text-left"
-          aria-expanded={explainerOpen}
-        >
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center text-[#2563EB]">
-              <Target size={14} />
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-foreground">How Outreach Works</h3>
-              <p className="text-[10px] text-muted">Campaign-first workflow � from creation to replies, in 4 steps.</p>
-            </div>
-          </div>
-          {explainerOpen
-            ? <ChevronUp size={14} className="text-muted" />
-            : <ChevronDown size={14} className="text-muted" />}
-        </button>
-
-        {explainerOpen && (
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3 relative">
-            {[
-              {
-                n: 1,
-                title: "Create a Campaign",
-                desc: "Define your goal, audience, channels, and script templates � right here.",
-                icon: <Megaphone size={14} />,
-                href: "#campaigns",
-                cta: "Show me",
-                ctaOnClick: () => setTab("campaigns"),
-                color: "text-blue-400 bg-blue-400/10 border-[rgba(37,99,235,0.25)]",
-              },
-              {
-                n: 2,
-                title: "Pick leads in Lead Finder",
-                desc: "Scrape prospects and assign them to this campaign in one click.",
-                icon: <Users size={14} />,
-                href: "/dashboard/scraper",
-                cta: "Open Lead Finder",
-                color: "text-emerald-400 bg-emerald-400/10 border-emerald-400/25",
-              },
-              {
-                n: 3,
-                title: "Schedule & launch",
-                desc: "Pick timing (once, daily, weekdays, every other day), assign a team member, go live.",
-                icon: <Clock size={14} />,
-                href: "#sequences",
-                cta: "Show me",
-                ctaOnClick: () => setTab("sequences"),
-                color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]",
-              },
-              {
-                n: 4,
-                title: "Track in Outreach Logs",
-                desc: "See replies, AI analysis, and follow-ups � all in one place.",
-                icon: <BarChart3 size={14} />,
-                href: "/dashboard/outreach-logs",
-                cta: "Open Logs",
-                color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]",
-              },
-            ].map((step, idx, arr) => (
-              <div key={step.n} className="relative">
-                <div className="p-3 rounded-xl border border-border bg-surface-light/50 h-full flex flex-col">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className={`w-7 h-7 rounded-full border flex items-center justify-center text-[11px] font-bold ${step.color}`}>
-                      {step.n}
-                    </div>
-                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${step.color}`}>
-                      {step.icon}
-                    </div>
-                  </div>
-                  <p className="text-[12px] font-semibold text-foreground mb-1">{step.title}</p>
-                  <p className="text-[10px] text-muted flex-1 leading-relaxed mb-2">{step.desc}</p>
-                  {step.ctaOnClick ? (
-                    <button
-                      type="button"
-                      onClick={step.ctaOnClick}
-                      className="text-[10px] text-[#2563EB] hover:underline flex items-center gap-1 w-fit"
-                    >
-                      {step.cta} <ChevronDown size={10} className="rotate-[-90deg]" />
-                    </button>
-                  ) : (
-                    <a
-                      href={step.href}
-                      className="text-[10px] text-[#2563EB] hover:underline flex items-center gap-1 w-fit"
-                    >
-                      {step.cta} <ChevronDown size={10} className="rotate-[-90deg]" />
-                    </a>
-                  )}
-                </div>
-                {/* Arrow between steps (desktop) */}
-                {idx < arr.length - 1 && (
-                  <div className="hidden md:flex absolute top-1/2 -right-2 -translate-y-1/2 w-4 h-4 rounded-full bg-surface border border-border items-center justify-center z-10 text-muted">
-                    <ChevronDown size={10} className="rotate-[-90deg]" />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* -- Tabs (sticky) -- */}
-      <PrismPanel padding="p-1" className="sticky top-0 z-10 overflow-x-auto flex gap-1">
-        {TABS.map((t, index) => (
-          <motion.button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.18, delay: index * 0.05 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            className={`px-4 py-2 text-xs rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
-              tab === t.key
-                ? "bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] font-medium"
-                : "text-muted hover:text-foreground border border-transparent"
-            }`}>
-            {t.icon} {t.label}
-          </motion.button>
-        ))}
-      </PrismPanel>
-
-      {/* ------------------------------------------------------------ */}
-      {/*  TAB 1: CAMPAIGNS                                          */}
-      {/* ------------------------------------------------------------ */}
-      {tab === "campaigns" && (
-        <div className="space-y-4">
-          {/* Top row: Create button + Presets */}
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Megaphone size={14} className="text-[#2563EB]" /> Active Campaigns
-              {campaigns.length > 0 && <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{campaigns.length}</span>}
-            </h2>
-            <button onClick={() => setShowCampaignBuilder(!showCampaignBuilder)}
-              className="btn-primary text-xs flex items-center gap-1.5">
-              {showCampaignBuilder ? <X size={12} /> : <Plus size={12} />}
-              {showCampaignBuilder ? "Cancel" : "Create Campaign"}
-            </button>
-          </div>
-
-          {/* -- Campaign Builder -- */}
-          {showCampaignBuilder && (
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.22 }}
-              className="rounded-xl p-5 space-y-5"
-              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
-            >
-              <h3 className="text-sm font-semibold flex items-center gap-2">
-                <Zap size={14} className="text-[#2563EB]" /> New Campaign
-              </h3>
-
-              {/* Presets */}
-              <div>
-                <label className="text-[10px] text-muted block mb-2">Quick Start Presets</label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                  {CAMPAIGN_PRESETS.map(preset => (
-                    <button key={preset.name} onClick={() => {
-                      setNewCampaign(prev => ({
-                        ...prev,
-                        name: preset.name,
-                        targetMode: preset.targetMode,
-                        industries: preset.industries,
-                        channels: { ...preset.channels },
-                        dailyTargets: { ...preset.dailyTargets },
-                      }));
-                      toast.success(`Loaded: ${preset.name}`);
-                    }}
-                      className="text-left p-2.5 rounded-xl border border-border/50 hover:border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.05)] transition-all group">
-                      <p className="text-[10px] font-semibold group-hover:text-[#2563EB]">{preset.name}</p>
-                      <p className="text-[9px] text-muted mt-0.5">{preset.description}</p>
-                      <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-surface-light text-muted mt-1 inline-block">{preset.targetMode.toUpperCase()}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Name */}
-              <div>
-                <label className="text-[10px] text-muted block mb-1">Campaign Name</label>
-                <input value={newCampaign.name} onChange={e => setNewCampaign(p => ({ ...p, name: e.target.value }))}
-                  placeholder="e.g., Q2 Restaurant Push"
-                  className="input w-full text-xs" />
-              </div>
-
-              {/* B2B / B2C toggle */}
-              <div>
-                <label className="text-[10px] text-muted block mb-2">Target Mode</label>
-                <div className="flex gap-2">
-                  {(["b2b", "b2c"] as TargetMode[]).map(m => (
-                    <button key={m} onClick={() => setNewCampaign(p => ({ ...p, targetMode: m }))}
-                      className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-all ${
-                        newCampaign.targetMode === m ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-border/50 hover:border-border"
-                      }`}>{m.toUpperCase()}</button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Industry multi-select */}
-              <div>
-                <label className="text-[10px] text-muted block mb-2">Target Industries</label>
-                <div className="grid grid-cols-3 md:grid-cols-5 gap-1.5">
-                  {B2B_INDUSTRIES.map(ind => {
-                    const Icon = ind.icon;
-                    const selected = newCampaign.industries.includes(ind.id);
-                    return (
-                      <button key={ind.id} onClick={() => setNewCampaign(p => ({ ...p, industries: toggleArray(p.industries, ind.id) }))}
-                        className={`flex items-center gap-1.5 p-2 rounded-lg text-[10px] border transition-all ${
-                          selected ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-border/30 hover:border-border"
-                        }`}>
-                        <Icon size={12} /> {ind.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Channels */}
-              <div>
-                <label className="text-[10px] text-muted block mb-2">Channels</label>
-                <div className="flex gap-3">
-                  {([
-                    { key: "email" as const, label: "Email", icon: <Mail size={14} /> },
-                    { key: "sms" as const, label: "SMS", icon: <Smartphone size={14} /> },
-                    { key: "calls" as const, label: "Calls", icon: <PhoneCall size={14} /> },
-                    { key: "dms" as const, label: "DMs", icon: <MessageSquare size={14} /> },
-                  ]).map(ch => (
-                    <button key={ch.key} onClick={() => setNewCampaign(p => ({ ...p, channels: { ...p.channels, [ch.key]: !p.channels[ch.key] } }))}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs border transition-all ${
-                        newCampaign.channels[ch.key] ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-border/50"
-                      }`}>
-                      {ch.icon} {ch.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Daily targets per channel */}
-              <div>
-                <label className="text-[10px] text-muted block mb-2">Daily Targets per Channel</label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {(["email", "sms", "calls", "dms"] as const).map(ch => (
-                    <div key={ch} className={`space-y-1 ${!newCampaign.channels[ch] ? "opacity-30 pointer-events-none" : ""}`}>
-                      <label className="text-[9px] text-muted capitalize">{ch}</label>
-                      <input type="number" min={0} max={100}
-                        value={newCampaign.dailyTargets[ch]}
-                        onChange={e => setNewCampaign(p => ({ ...p, dailyTargets: { ...p.dailyTargets, [ch]: Number(e.target.value) } }))}
-                        className="input w-full text-xs" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Sequence picker */}
-              <div>
-                <label className="text-[10px] text-muted block mb-2">Outreach Sequence</label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {sequences.map(seq => (
-                    <button key={seq.id} onClick={() => setNewCampaign(p => ({ ...p, sequenceId: seq.id }))}
-                      className={`text-left p-2.5 rounded-xl border transition-all ${
-                        newCampaign.sequenceId === seq.id ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)]" : "border-border/50 hover:border-border"
-                      }`}>
-                      <p className={`text-[10px] font-semibold ${newCampaign.sequenceId === seq.id ? "text-[#2563EB]" : ""}`}>{seq.name}</p>
-                      <p className="text-[9px] text-muted mt-0.5">{seq.steps.length} steps</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Create button */}
-              <motion.div className="flex justify-end" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <button onClick={createCampaign} className="btn-primary text-xs flex items-center gap-1.5">
-                  <Plus size={12} /> Create Campaign
+    <MotionPage className="fade-in space-y-4"><ErrorBoundary section="Outreach Hub">
+            {/* -- Hero Header -- */}
+            <PageHero
+              eyebrow="OUTREACH COMMAND"
+              icon={<Send size={22} />}
+              title="Outreach Hub"
+              subtitle="Build targeted outreach campaigns across email, SMS, calls & DMs � target B2B or B2C leads by industry, niche, and location."
+              gradient="gold"
+              actions={
+                <button onClick={handleSave} disabled={saving}
+                  className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all disabled:opacity-40">
+                  {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+                  Save All
                 </button>
-              </motion.div>
-            </motion.div>
-          )}
+              }
+            />
 
-          {/* -- Campaign List -- */}
-          {campaigns.length === 0 && !showCampaignBuilder && (
-            <div className="card">
-              <EmptyState
-                type="no-campaigns"
-                title="No campaigns yet"
-                description="Create your first outreach campaign to start reaching leads across email, SMS, calls, and social DMs."
-                action={
-                  <button onClick={() => setShowCampaignBuilder(true)}
-                    className="btn-primary text-xs flex items-center gap-1.5">
-                    <Plus size={12} /> Create Your First Campaign
-                  </button>
-                }
-              />
-            </div>
-          )}
-
-          {campaigns.map((campaign, index) => (
-            <motion.div
-              key={campaign.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, delay: index * 0.05 }}
-              className="rounded-xl overflow-hidden space-y-3 p-4"
-              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
-            >
-              {/* Campaign header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                    campaign.status === "active" ? "bg-green-500/10" : campaign.status === "paused" ? "bg-yellow-500/10" : "bg-surface-light"
-                  }`}>
-                    <Megaphone size={14} className={
-                      campaign.status === "active" ? "text-green-400" : campaign.status === "paused" ? "text-yellow-400" : "text-muted"
-                    } />
-                  </div>
-                  <div>
-                    <h3 className="text-xs font-semibold">{campaign.name}</h3>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className={`text-[9px] px-2 py-0.5 rounded-full ${
-                        campaign.status === "active" ? "bg-green-500/10 text-green-400" : campaign.status === "paused" ? "bg-yellow-500/10 text-yellow-400" : "bg-surface-light text-muted"
-                      }`}>{campaign.status}</span>
-                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light text-muted">{campaign.targetMode.toUpperCase()}</span>
-                      {campaign.industries.map(ind => (
-                        <span key={ind} className="text-[8px] text-muted">{B2B_INDUSTRIES.find(i => i.id === ind)?.label || ind}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+            {/* -- How Outreach Works (collapsible explainer) -- */}
+            <div className="card border-blue-400/20 bg-gradient-to-br from-blue-500/5 via-surface to-surface">
+              <button
+                onClick={toggleExplainer}
+                className="w-full flex items-center justify-between text-left"
+                aria-expanded={explainerOpen}
+              >
                 <div className="flex items-center gap-2">
-                  <button onClick={() => toggleCampaignStatus(campaign.id)}
-                    className={`text-[10px] px-3 py-1.5 rounded-lg flex items-center gap-1 border ${
-                      campaign.status === "active"
-                        ? "border-yellow-500/20 text-yellow-400 hover:bg-yellow-500/10"
-                        : "border-green-500/20 text-green-400 hover:bg-green-500/10"
-                    }`}>
-                    {campaign.status === "active" ? <><Pause size={10} /> Pause</> : <><Play size={10} /> Start</>}
-                  </button>
-                  <button onClick={() => deleteCampaign(campaign.id)}
-                    aria-label={`Delete campaign: ${campaign.name}`}
-                    className="text-[10px] px-2 py-1.5 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10">
-                    <Trash2 size={10} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Daily progress bars */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {(["email", "sms", "calls", "dms"] as const).map(ch => {
-                  if (!campaign.channels[ch]) return null;
-                  const progress = campaign.dailyTargets[ch] > 0 ? (campaign.todayProgress[ch] / campaign.dailyTargets[ch]) * 100 : 0;
-                  return (
-                    <div key={ch} className="space-y-1">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[9px] text-muted capitalize flex items-center gap-1">{channelIcon(ch === "calls" ? "call" : ch, 10)} {ch}</span>
-                        <span className="text-[9px] font-mono">{campaign.todayProgress[ch]}/{campaign.dailyTargets[ch]}</span>
-                      </div>
-                      <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
-                        <div className="h-full bg-[#2563EB] rounded-full transition-all" style={{ width: `${Math.min(progress, 100)}%` }} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Stats row */}
-              <div className="flex gap-4 pt-2 border-t border-border/20">
-                {([
-                  { label: "Leads", value: campaign.stats.leads },
-                  { label: "Contacted", value: campaign.stats.contacted },
-                  { label: "Replied", value: campaign.stats.replied },
-                  { label: "Booked", value: campaign.stats.booked },
-                  { label: "Converted", value: campaign.stats.converted },
-                ]).map(s => (
-                  <div key={s.label} className="text-center">
-                    <p className="text-sm font-semibold">{s.value}</p>
-                    <p className="text-[9px] text-muted">{s.label}</p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
-
-      {/* ------------------------------------------------------------ */}
-      {/*  TAB 2: SEQUENCES                                          */}
-      {/* ------------------------------------------------------------ */}
-      {tab === "sequences" && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold flex items-center gap-2">
-              <ListChecks size={14} className="text-[#2563EB]" /> Outreach Sequences
-            </h2>
-            <button onClick={() => setShowCustomBuilder(!showCustomBuilder)}
-              className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
-              {showCustomBuilder ? <><X size={10} /> Cancel</> : <><Plus size={10} /> Build Custom Sequence</>}
-            </button>
-          </div>
-
-          {/* Pre-built sequences */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {sequences.map((seq, index) => (
-              <motion.button
-                key={seq.id}
-                onClick={() => setActiveSequence(seq.id)}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2, delay: index * 0.05 }}
-                whileHover={{ scale: 1.01, y: -2 }}
-                className={`text-left p-4 rounded-xl border transition-all ${
-                  activeSequence === seq.id ? "bg-[rgba(0,0,0,0.03)] backdrop-blur-[20px] border-[rgba(0,0,0,0.12)]" : "bg-[rgba(255,255,255,0.9)] backdrop-blur-[16px] border-[rgba(0,0,0,0.10)] hover:border-black/20"
-                }`}>
-                <div className="flex items-center justify-between mb-1">
-                  <h3 className={`text-xs font-semibold ${activeSequence === seq.id ? "text-[#2563EB]" : ""}`}>{seq.name}</h3>
-                  {activeSequence === seq.id && <CircleDot size={12} className="text-[#2563EB]" />}
-                </div>
-                <p className="text-[9px] text-muted mb-2">{seq.description}</p>
-                <div className="flex items-center gap-2">
-                  <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-surface-light text-muted">{seq.targetMode === "both" ? "B2B & B2C" : seq.targetMode.toUpperCase()}</span>
-                  <span className="text-[8px] text-muted">{seq.steps.length} steps</span>
-                  <div className="flex items-center gap-0.5 ml-auto">
-                    {Array.from(new Set(seq.steps.map(s => s.channel))).map(ch => (
-                      <span key={ch} className={channelColor(ch)}>{channelIcon(ch, 10)}</span>
-                    ))}
-                  </div>
-                </div>
-              </motion.button>
-            ))}
-          </div>
-
-          {/* Active Sequence Timeline */}
-          {activeSequence && (
-            <PrismPanel padding="p-4" className="space-y-4">
-              <h3 className="text-xs font-semibold flex items-center gap-2">
-                <Activity size={12} className="text-[#2563EB]" /> Sequence Timeline: {sequences.find(s => s.id === activeSequence)?.name}
-              </h3>
-              <div className="relative pl-6">
-                {/* Vertical line */}
-                <div className="absolute left-[11px] top-2 bottom-2 w-px bg-border/50" />
-                {sequences.find(s => s.id === activeSequence)?.steps.map((step, idx) => (
-                  <motion.div
-                    key={step.id}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.18, delay: idx * 0.06 }}
-                    className="relative flex items-start gap-4 mb-4 last:mb-0"
-                  >
-                    {/* Dot */}
-                    <div className={`absolute left-[-17px] top-1 w-5 h-5 rounded-full border-2 flex items-center justify-center bg-surface ${
-                      idx === 0 ? "border-indigo-500" : "border-border/50"
-                    }`}>
-                      <span className={`text-[8px] font-bold ${idx === 0 ? "text-[#2563EB]" : "text-muted"}`}>{step.day}</span>
-                    </div>
-                    {/* Content */}
-                    <div className="flex-1 rounded-lg p-3 border border-[rgba(0,0,0,0.10)]" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className={`${channelColor(step.channel)}`}>{channelIcon(step.channel, 12)}</span>
-                        <span className="text-[10px] font-semibold capitalize">{step.channel}</span>
-                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-surface-light text-muted">Day {step.day}</span>
-                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] ml-auto">{conditionLabel(step.condition)}</span>
-                      </div>
-                      <p className="text-[10px] text-muted">{step.action}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </PrismPanel>
-          )}
-
-          {/* Custom Sequence Builder */}
-          {showCustomBuilder && (
-            <div className="card space-y-4">
-              <h3 className="text-xs font-semibold flex items-center gap-2">
-                <Zap size={12} className="text-[#2563EB]" /> Build Custom Sequence
-              </h3>
-              <div>
-                <label className="text-[10px] text-muted block mb-1">Sequence Name</label>
-                <input value={customSeqName} onChange={e => setCustomSeqName(e.target.value)}
-                  placeholder="e.g., My Custom Flow" className="input w-full text-xs" />
-              </div>
-
-              {/* Steps */}
-              {customSteps.map((step, idx) => (
-                <div key={step.id} className="flex items-center gap-2 bg-surface-light/50 rounded-lg p-3 border border-border/20">
-                  <span className="text-[10px] font-bold text-[#2563EB] w-6">#{idx + 1}</span>
-                  <div>
-                    <label className="text-[9px] text-muted">Day</label>
-                    <input type="number" min={1} max={30} value={step.day}
-                      onChange={e => setCustomSteps(prev => prev.map((s, i) => i === idx ? { ...s, day: Number(e.target.value) } : s))}
-                      className="input text-xs w-14" />
+                  <div className="w-7 h-7 rounded-lg bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center text-[#2563EB]">
+                    <Target size={14} />
                   </div>
                   <div>
-                    <label className="text-[9px] text-muted">Channel</label>
-                    <select value={step.channel}
-                      onChange={e => setCustomSteps(prev => prev.map((s, i) => i === idx ? { ...s, channel: e.target.value as SequenceStep["channel"] } : s))}
-                      className="input text-xs">
-                      <option value="email">Email</option>
-                      <option value="sms">SMS</option>
-                      <option value="call">Call</option>
-                      <option value="dm">DM</option>
-                    </select>
+                    <h3 className="text-sm font-semibold text-foreground">How Outreach Works</h3>
+                    <p className="text-[10px] text-muted">Campaign-first workflow � from creation to replies, in 4 steps.</p>
                   </div>
-                  <div className="flex-1">
-                    <label className="text-[9px] text-muted">Action</label>
-                    <input value={step.action} placeholder="Describe the action..."
-                      onChange={e => setCustomSteps(prev => prev.map((s, i) => i === idx ? { ...s, action: e.target.value } : s))}
-                      className="input w-full text-xs" />
-                  </div>
-                  <div>
-                    <label className="text-[9px] text-muted">Condition</label>
-                    <select value={step.condition}
-                      onChange={e => setCustomSteps(prev => prev.map((s, i) => i === idx ? { ...s, condition: e.target.value as SequenceStep["condition"] } : s))}
-                      className="input text-xs">
-                      <option value="always">Always</option>
-                      <option value="no_reply">If no reply</option>
-                      <option value="replied">If replied</option>
-                      <option value="opened">If opened</option>
-                    </select>
-                  </div>
-                  <button onClick={() => setCustomSteps(prev => prev.filter((_, i) => i !== idx))}
-                    aria-label="Remove this step"
-                    className="p-1 hover:bg-red-500/10 rounded mt-3">
-                    <Trash2 size={12} className="text-muted hover:text-red-400" />
-                  </button>
                 </div>
-              ))}
+                {explainerOpen
+                  ? <ChevronUp size={14} className="text-muted" />
+                  : <ChevronDown size={14} className="text-muted" />}
+              </button>
 
-              <div className="flex items-center gap-2">
-                <button onClick={addCustomStep}
-                  className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
-                  <Plus size={10} /> Add Step
-                </button>
-                <button onClick={saveCustomSequence}
-                  className="btn-primary text-xs flex items-center gap-1.5 ml-auto">
-                  <Save size={12} /> Save Sequence
-                </button>
-              </div>
+              {explainerOpen && (
+                <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3 relative">
+                  {[
+                    {
+                      n: 1,
+                      title: "Create a Campaign",
+                      desc: "Define your goal, audience, channels, and script templates � right here.",
+                      icon: <Megaphone size={14} />,
+                      href: "#campaigns",
+                      cta: "Show me",
+                      ctaOnClick: () => setTab("campaigns"),
+                      color: "text-blue-400 bg-blue-400/10 border-[rgba(37,99,235,0.25)]",
+                    },
+                    {
+                      n: 2,
+                      title: "Pick leads in Lead Finder",
+                      desc: "Scrape prospects and assign them to this campaign in one click.",
+                      icon: <Users size={14} />,
+                      href: "/dashboard/scraper",
+                      cta: "Open Lead Finder",
+                      color: "text-emerald-400 bg-emerald-400/10 border-emerald-400/25",
+                    },
+                    {
+                      n: 3,
+                      title: "Schedule & launch",
+                      desc: "Pick timing (once, daily, weekdays, every other day), assign a team member, go live.",
+                      icon: <Clock size={14} />,
+                      href: "#sequences",
+                      cta: "Show me",
+                      ctaOnClick: () => setTab("sequences"),
+                      color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]",
+                    },
+                    {
+                      n: 4,
+                      title: "Track in Outreach Logs",
+                      desc: "See replies, AI analysis, and follow-ups � all in one place.",
+                      icon: <BarChart3 size={14} />,
+                      href: "/dashboard/outreach-logs",
+                      cta: "Open Logs",
+                      color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]",
+                    },
+                  ].map((step, idx, arr) => (
+                    <div key={step.n} className="relative">
+                      <div className="p-3 rounded-xl border border-border bg-surface-light/50 h-full flex flex-col">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className={`w-7 h-7 rounded-full border flex items-center justify-center text-[11px] font-bold ${step.color}`}>
+                            {step.n}
+                          </div>
+                          <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${step.color}`}>
+                            {step.icon}
+                          </div>
+                        </div>
+                        <p className="text-[12px] font-semibold text-foreground mb-1">{step.title}</p>
+                        <p className="text-[10px] text-muted flex-1 leading-relaxed mb-2">{step.desc}</p>
+                        {step.ctaOnClick ? (
+                          <button
+                            type="button"
+                            onClick={step.ctaOnClick}
+                            className="text-[10px] text-[#2563EB] hover:underline flex items-center gap-1 w-fit"
+                          >
+                            {step.cta} <ChevronDown size={10} className="rotate-[-90deg]" />
+                          </button>
+                        ) : (
+                          <a
+                            href={step.href}
+                            className="text-[10px] text-[#2563EB] hover:underline flex items-center gap-1 w-fit"
+                          >
+                            {step.cta} <ChevronDown size={10} className="rotate-[-90deg]" />
+                          </a>
+                        )}
+                      </div>
+                      {/* Arrow between steps (desktop) */}
+                      {idx < arr.length - 1 && (
+                        <div className="hidden md:flex absolute top-1/2 -right-2 -translate-y-1/2 w-4 h-4 rounded-full bg-surface border border-border items-center justify-center z-10 text-muted">
+                          <ChevronDown size={10} className="rotate-[-90deg]" />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      )}
 
-      {/* ------------------------------------------------------------ */}
-      {/*  TAB 3: TEMPLATES                                          */}
-      {/* ------------------------------------------------------------ */}
-      {tab === "templates" && (
-        <div className="space-y-4">
-          {/* Template sub-tabs */}
-          <div className="flex items-center gap-4">
-            <PrismPanel padding="p-1" className="flex gap-1">
-              {([
-                { key: "calls" as TemplateSubTab, label: "Calls", icon: <PhoneCall size={12} />, count: callTemplates.length },
-                { key: "sms" as TemplateSubTab, label: "SMS", icon: <Smartphone size={12} />, count: smsTemplates.length },
-                { key: "email" as TemplateSubTab, label: "Email", icon: <Mail size={12} />, count: emailTemplates.length },
-                { key: "dms" as TemplateSubTab, label: "DMs", icon: <MessageSquare size={12} />, count: dmTemplates.length },
-              ]).map((t, index) => (
+            {/* -- Tabs (sticky) -- */}
+            <PrismPanel padding="p-1" className="sticky top-0 z-10 overflow-x-auto flex gap-1">
+              {TABS.map((t, index) => (
                 <motion.button
                   key={t.key}
-                  onClick={() => setTemplateSubTab(t.key)}
+                  onClick={() => setTab(t.key)}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.18, delay: index * 0.05 }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`px-3 py-2 text-[11px] rounded-lg flex items-center gap-1.5 transition-all ${
-                    templateSubTab === t.key
+                  className={`px-4 py-2 text-xs rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
+                    tab === t.key
                       ? "bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] font-medium"
                       : "text-muted hover:text-foreground border border-transparent"
                   }`}>
                   {t.icon} {t.label}
-                  <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${templateSubTab === t.key ? "bg-[rgba(37,99,235,0.12)]" : "bg-[rgba(0,0,0,0.04)]"}`}>{t.count}</span>
                 </motion.button>
               ))}
             </PrismPanel>
-            <div className="ml-auto flex gap-1">
-              {(["all", "b2b", "b2c"] as const).map(f => (
-                <button key={f} onClick={() => setTemplateFilter(f)}
-                  className={`text-[9px] px-2.5 py-1 rounded-lg border transition-all uppercase ${
-                    templateFilter === f ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-border/30"
-                  }`}>{f}</button>
-              ))}
-            </div>
-          </div>
 
-          {/* -- Calls Templates -- */}
-          {templateSubTab === "calls" && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="lg:col-span-2 space-y-3">
+            {/* ------------------------------------------------------------ */}
+            {/*  TAB 1: CAMPAIGNS                                          */}
+            {/* ------------------------------------------------------------ */}
+            {tab === "campaigns" && (
+              <div className="space-y-4">
+                {/* Top row: Create button + Presets */}
                 <div className="flex items-center justify-between">
                   <h2 className="text-sm font-semibold flex items-center gap-2">
-                    <PhoneCall size={14} className="text-emerald-400" /> Call Scripts &amp; Prompts
+                    <Megaphone size={14} className="text-[#2563EB]" /> Active Campaigns
+                    {campaigns.length > 0 && <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{campaigns.length}</span>}
                   </h2>
-                  <button onClick={() => addTemplate("calls")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
-                    <Plus size={10} /> Add Script
+                  <button onClick={() => setShowCampaignBuilder(!showCampaignBuilder)}
+                    className="btn-primary text-xs flex items-center gap-1.5">
+                    {showCampaignBuilder ? <X size={12} /> : <Plus size={12} />}
+                    {showCampaignBuilder ? "Cancel" : "Create Campaign"}
                   </button>
                 </div>
-                <p className="text-[10px] text-muted">These scripts are sent as system prompts to the ElevenLabs AI agent. Edit them to change how the AI speaks on calls.</p>
-                {callTemplates.map(t => (
-                  <TemplateCard key={t.id} template={t} context="AI cold call script"
-                    onChange={u => updateTemplate("calls", t.id, u)}
-                    onDelete={() => deleteTemplate("calls", t.id)} />
-                ))}
-              </div>
-              <div className="space-y-3">
-                <h2 className="text-sm font-semibold flex items-center gap-2">
-                  <Settings size={14} className="text-muted" /> Call Settings
-                </h2>
-                <PrismPanel padding="p-4" className="space-y-4">
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Agent Name</label>
-                    <input value={callSettings.agentName} onChange={e => setCallSettings(p => ({ ...p, agentName: e.target.value }))}
-                      className="input w-full text-xs" />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">First Message</label>
-                    <textarea value={callSettings.firstMessage} onChange={e => setCallSettings(p => ({ ...p, firstMessage: e.target.value }))}
-                      rows={3} className="input w-full text-xs resize-y" />
-                    <div className="flex justify-end mt-1">
-                      <AIEnhanceButton value={callSettings.firstMessage} context="AI call opening message"
-                        onResult={v => setCallSettings(p => ({ ...p, firstMessage: v }))} />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Max Call Duration</label>
-                    <div className="flex items-center gap-2">
-                      <input type="range" min={30} max={300} step={30} value={callSettings.maxDuration}
-                        onChange={e => setCallSettings(p => ({ ...p, maxDuration: Number(e.target.value) }))}
-                        className="flex-1 accent-[#2563EB]" />
-                      <span className="text-xs font-mono w-12 text-right">{callSettings.maxDuration}s</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs">Voicemail Detection</span>
-                    <button onClick={() => setCallSettings(p => ({ ...p, voicemailDetection: !p.voicemailDetection }))}
-                      className={`${callSettings.voicemailDetection ? "text-[#2563EB]" : "text-muted"}`}>
-                      {callSettings.voicemailDetection ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs">Leave Voicemail</span>
-                    <button onClick={() => setCallSettings(p => ({ ...p, enableVoicemail: !p.enableVoicemail }))}
-                      className={`${callSettings.enableVoicemail ? "text-[#2563EB]" : "text-muted"}`}>
-                      {callSettings.enableVoicemail ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                    </button>
-                  </div>
-                </PrismPanel>
-                {/* Preview */}
-                <PrismPanel padding="p-4" border="strong" className="space-y-3">
-                  <h3 className="text-xs font-semibold flex items-center gap-2"><Eye size={12} /> Live Preview</h3>
-                  <div className="space-y-2">
-                    <input placeholder="Business name..." value={previewVars.business_name || ""}
-                      onChange={e => setPreviewVars(p => ({ ...p, business_name: e.target.value }))}
-                      className="input w-full text-[10px]" />
-                    <input placeholder="Industry..." value={previewVars.industry || ""}
-                      onChange={e => setPreviewVars(p => ({ ...p, industry: e.target.value }))}
-                      className="input w-full text-[10px]" />
-                  </div>
-                  {callTemplates[0] && (
-                    <div className="bg-surface-light rounded-lg p-2.5 text-[10px] whitespace-pre-wrap leading-relaxed max-h-[200px] overflow-y-auto">
-                      {renderPreview(callTemplates[0])}
-                    </div>
-                  )}
-                </PrismPanel>
-              </div>
-            </div>
-          )}
 
-          {/* -- SMS Templates -- */}
-          {templateSubTab === "sms" && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="lg:col-span-2 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-sm font-semibold flex items-center gap-2">
-                    <Smartphone size={14} className="text-green-400" /> SMS Templates
-                  </h2>
-                  <button onClick={() => addTemplate("sms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
-                    <Plus size={10} /> Add Template
-                  </button>
-                </div>
-                <p className="text-[10px] text-muted">Templates are auto-sent based on triggers. Variables like {`{{name}}`} are replaced with lead data. AI personalization rewrites each message to feel unique.</p>
-                {smsTemplates.map(t => (
-                  <TemplateCard key={t.id} template={t} context="SMS outreach message"
-                    onChange={u => updateTemplate("sms", t.id, u)}
-                    onDelete={() => deleteTemplate("sms", t.id)} />
-                ))}
-              </div>
-              <div className="space-y-3">
-                <h2 className="text-sm font-semibold flex items-center gap-2">
-                  <Settings size={14} className="text-muted" /> SMS Settings
-                </h2>
-                <PrismPanel padding="p-4" className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs">AI Personalization</span>
-                    <button onClick={() => setSmsSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
-                      className={`${smsSettings.aiPersonalize ? "text-[#2563EB]" : "text-muted"}`}>
-                      {smsSettings.aiPersonalize ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs">Auto-Reply on Response</span>
-                    <button onClick={() => setSmsSettings(p => ({ ...p, autoReply: !p.autoReply }))}
-                      className={`${smsSettings.autoReply ? "text-[#2563EB]" : "text-muted"}`}>
-                      {smsSettings.autoReply ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                    </button>
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Max Characters</label>
-                    <input type="number" value={smsSettings.maxLength} min={50} max={320}
-                      onChange={e => setSmsSettings(p => ({ ...p, maxLength: Number(e.target.value) }))}
-                      className="input w-full text-xs" />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Send Window</label>
-                    <div className="flex items-center gap-2">
-                      <input type="time" value={smsSettings.sendWindow.start}
-                        onChange={e => setSmsSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, start: e.target.value } }))}
-                        className="input text-xs flex-1" />
-                      <span className="text-[10px] text-muted">to</span>
-                      <input type="time" value={smsSettings.sendWindow.end}
-                        onChange={e => setSmsSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, end: e.target.value } }))}
-                        className="input text-xs flex-1" />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Max Follow-ups</label>
-                    <input type="number" value={smsSettings.maxFollowups} min={0} max={10}
-                      onChange={e => setSmsSettings(p => ({ ...p, maxFollowups: Number(e.target.value) }))}
-                      className="input w-full text-xs" />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Follow-up Days</label>
-                    <div className="flex gap-1">
-                      {[1, 2, 3, 5, 7, 14].map(d => (
-                        <button key={d} onClick={() => {
-                          setSmsSettings(p => ({
-                            ...p,
-                            followupDays: p.followupDays.includes(d)
-                              ? p.followupDays.filter(x => x !== d)
-                              : [...p.followupDays, d].sort((a, b) => a - b),
-                          }));
-                        }} className={`text-[9px] px-2 py-1 rounded-lg border ${
-                          smsSettings.followupDays.includes(d) ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-[rgba(0,0,0,0.06)]"
-                        }`}>Day {d}</button>
-                      ))}
-                    </div>
-                  </div>
-                </PrismPanel>
-              </div>
-            </div>
-          )}
+                {/* -- Campaign Builder -- */}
+                {showCampaignBuilder && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22 }}
+                    className="rounded-xl p-5 space-y-5"
+                    style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                  >
+                    <h3 className="text-sm font-semibold flex items-center gap-2">
+                      <Zap size={14} className="text-[#2563EB]" /> New Campaign
+                    </h3>
 
-          {/* -- Email Templates -- */}
-          {templateSubTab === "email" && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="lg:col-span-2 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-sm font-semibold flex items-center gap-2">
-                    <Mail size={14} className="text-[#2563EB]" /> Email Templates
-                  </h2>
-                  <button onClick={() => addTemplate("email")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
-                    <Plus size={10} /> Add Template
-                  </button>
-                </div>
-                <p className="text-[10px] text-muted">Email templates support AI personalization. Claude generates unique emails for each lead based on these templates. Include the Subject: line at the top.</p>
-                {emailTemplates.map(t => (
-                  <TemplateCard key={t.id} template={t} context="cold outreach email"
-                    onChange={u => updateTemplate("email", t.id, u)}
-                    onDelete={() => deleteTemplate("email", t.id)} />
-                ))}
-              </div>
-              <div className="space-y-3">
-                <h2 className="text-sm font-semibold flex items-center gap-2">
-                  <Settings size={14} className="text-muted" /> Email Settings
-                </h2>
-                <PrismPanel padding="p-4" className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs">AI Personalization</span>
-                    <button onClick={() => setEmailSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
-                      className={`${emailSettings.aiPersonalize ? "text-[#2563EB]" : "text-muted"}`}>
-                      {emailSettings.aiPersonalize ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                    </button>
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">From Name</label>
-                    <input value={emailSettings.fromName} onChange={e => setEmailSettings(p => ({ ...p, fromName: e.target.value }))}
-                      className="input w-full text-xs" />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Email Signature</label>
-                    <textarea value={emailSettings.signature} onChange={e => setEmailSettings(p => ({ ...p, signature: e.target.value }))}
-                      rows={3} className="input w-full text-xs resize-y" />
-                    <div className="flex justify-end mt-1">
-                      <AIEnhanceButton value={emailSettings.signature} context="email signature"
-                        onResult={v => setEmailSettings(p => ({ ...p, signature: v }))} />
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs">Track Opens</span>
-                    <button onClick={() => setEmailSettings(p => ({ ...p, trackOpens: !p.trackOpens }))}
-                      className={`${emailSettings.trackOpens ? "text-[#2563EB]" : "text-muted"}`}>
-                      {emailSettings.trackOpens ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                    </button>
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Max Emails / Day</label>
-                    <input type="number" value={emailSettings.maxPerDay} min={1} max={500}
-                      onChange={e => setEmailSettings(p => ({ ...p, maxPerDay: Number(e.target.value) }))}
-                      className="input w-full text-xs" />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Delay Between Sends</label>
-                    <div className="flex items-center gap-2">
-                      <input type="range" min={0} max={600} step={30} value={emailSettings.sendDelay}
-                        onChange={e => setEmailSettings(p => ({ ...p, sendDelay: Number(e.target.value) }))}
-                        className="flex-1 accent-[#2563EB]" />
-                      <span className="text-xs font-mono w-12 text-right">{emailSettings.sendDelay}ms</span>
-                    </div>
-                  </div>
-                </PrismPanel>
-              </div>
-            </div>
-          )}
-
-          {/* -- DM Templates -- */}
-          {templateSubTab === "dms" && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="lg:col-span-2 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-sm font-semibold flex items-center gap-2">
-                    <MessageSquare size={14} className="text-blue-400" /> Social DM Templates
-                  </h2>
-                  <button onClick={() => addTemplate("dms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
-                    <Plus size={10} /> Add Template
-                  </button>
-                </div>
-                <p className="text-[10px] text-muted">DM templates per platform. Each template can be toggled on/off and customized. AI will personalize based on the lead&apos;s profile.</p>
-                <div className="flex gap-1">
-                  {[
-                    { id: "all", label: "All", icon: <Globe size={11} /> },
-                    { id: "instagram", label: "Instagram", icon: <InstagramIcon size={12} /> },
-                    { id: "facebook", label: "Facebook", icon: <FacebookIcon size={12} /> },
-                    { id: "linkedin", label: "LinkedIn", icon: <LinkedInIcon size={12} /> },
-                    { id: "tiktok", label: "TikTok", icon: <TikTokIcon size={12} /> },
-                  ].map(p => (
-                    <button key={p.id} className="text-[10px] px-2.5 py-1.5 rounded-lg flex items-center gap-1 text-muted border border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]">
-                      {p.icon} {p.label}
-                    </button>
-                  ))}
-                </div>
-                {dmTemplates.map(t => (
-                  <TemplateCard key={t.id} template={t} context="social media DM outreach message"
-                    onChange={u => updateTemplate("dms", t.id, u)}
-                    onDelete={() => deleteTemplate("dms", t.id)} />
-                ))}
-              </div>
-              <div className="space-y-3">
-                <h2 className="text-sm font-semibold flex items-center gap-2">
-                  <Settings size={14} className="text-muted" /> DM Settings
-                </h2>
-                <PrismPanel padding="p-4" className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs">AI Personalization</span>
-                    <button onClick={() => setDmSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
-                      className={`${dmSettings.aiPersonalize ? "text-[#2563EB]" : "text-muted"}`}>
-                      {dmSettings.aiPersonalize ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs">Auto Follow-up</span>
-                    <button onClick={() => setDmSettings(p => ({ ...p, autoFollowup: !p.autoFollowup }))}
-                      className={`${dmSettings.autoFollowup ? "text-[#2563EB]" : "text-muted"}`}>
-                      {dmSettings.autoFollowup ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                    </button>
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-2">Active Platforms</label>
-                    <div className="space-y-2">
-                      {([
-                        { key: "instagram" as const, label: "Instagram", icon: <InstagramIcon size={14} /> },
-                        { key: "facebook" as const, label: "Facebook", icon: <FacebookIcon size={14} /> },
-                        { key: "linkedin" as const, label: "LinkedIn", icon: <LinkedInIcon size={14} /> },
-                        { key: "tiktok" as const, label: "TikTok", icon: <TikTokIcon size={14} /> },
-                      ]).map(p => (
-                        <div key={p.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light">
-                          <button onClick={() => setDmSettings(prev => ({
-                            ...prev,
-                            platforms: { ...prev.platforms, [p.key]: !prev.platforms[p.key] }
-                          }))} className={`${dmSettings.platforms[p.key] ? "text-[#2563EB]" : "text-muted"}`}>
-                            {dmSettings.platforms[p.key] ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
+                    {/* Presets */}
+                    <div>
+                      <label className="text-[10px] text-muted block mb-2">Quick Start Presets</label>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        {CAMPAIGN_PRESETS.map(preset => (
+                          <button key={preset.name} onClick={() => {
+                            setNewCampaign(prev => ({
+                              ...prev,
+                              name: preset.name,
+                              targetMode: preset.targetMode,
+                              industries: preset.industries,
+                              channels: { ...preset.channels },
+                              dailyTargets: { ...preset.dailyTargets },
+                            }));
+                            toast.success(`Loaded: ${preset.name}`);
+                          }}
+                            className="text-left p-2.5 rounded-xl border border-border/50 hover:border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.05)] transition-all group">
+                            <p className="text-[10px] font-semibold group-hover:text-[#2563EB]">{preset.name}</p>
+                            <p className="text-[9px] text-muted mt-0.5">{preset.description}</p>
+                            <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-surface-light text-muted mt-1 inline-block">{preset.targetMode.toUpperCase()}</span>
                           </button>
-                          {p.icon}
-                          <span className="text-xs">{p.label}</span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Name */}
+                    <div>
+                      <label className="text-[10px] text-muted block mb-1">Campaign Name</label>
+                      <input value={newCampaign.name} onChange={e => setNewCampaign(p => ({ ...p, name: e.target.value }))}
+                        placeholder="e.g., Q2 Restaurant Push"
+                        className="input w-full text-xs" />
+                    </div>
+
+                    {/* B2B / B2C toggle */}
+                    <div>
+                      <label className="text-[10px] text-muted block mb-2">Target Mode</label>
+                      <div className="flex gap-2">
+                        {(["b2b", "b2c"] as TargetMode[]).map(m => (
+                          <button key={m} onClick={() => setNewCampaign(p => ({ ...p, targetMode: m }))}
+                            className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-all ${
+                              newCampaign.targetMode === m ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-border/50 hover:border-border"
+                            }`}>{m.toUpperCase()}</button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Industry multi-select */}
+                    <div>
+                      <label className="text-[10px] text-muted block mb-2">Target Industries</label>
+                      <div className="grid grid-cols-3 md:grid-cols-5 gap-1.5">
+                        {B2B_INDUSTRIES.map(ind => {
+                          const Icon = ind.icon;
+                          const selected = newCampaign.industries.includes(ind.id);
+                          return (
+                            <button key={ind.id} onClick={() => setNewCampaign(p => ({ ...p, industries: toggleArray(p.industries, ind.id) }))}
+                              className={`flex items-center gap-1.5 p-2 rounded-lg text-[10px] border transition-all ${
+                                selected ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-border/30 hover:border-border"
+                              }`}>
+                              <Icon size={12} /> {ind.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Channels */}
+                    <div>
+                      <label className="text-[10px] text-muted block mb-2">Channels</label>
+                      <div className="flex gap-3">
+                        {([
+                          { key: "email" as const, label: "Email", icon: <Mail size={14} /> },
+                          { key: "sms" as const, label: "SMS", icon: <Smartphone size={14} /> },
+                          { key: "calls" as const, label: "Calls", icon: <PhoneCall size={14} /> },
+                          { key: "dms" as const, label: "DMs", icon: <MessageSquare size={14} /> },
+                        ]).map(ch => (
+                          <button key={ch.key} onClick={() => setNewCampaign(p => ({ ...p, channels: { ...p.channels, [ch.key]: !p.channels[ch.key] } }))}
+                            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs border transition-all ${
+                              newCampaign.channels[ch.key] ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-border/50"
+                            }`}>
+                            {ch.icon} {ch.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Daily targets per channel */}
+                    <div>
+                      <label className="text-[10px] text-muted block mb-2">Daily Targets per Channel</label>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {(["email", "sms", "calls", "dms"] as const).map(ch => (
+                          <div key={ch} className={`space-y-1 ${!newCampaign.channels[ch] ? "opacity-30 pointer-events-none" : ""}`}>
+                            <label className="text-[9px] text-muted capitalize">{ch}</label>
+                            <input type="number" min={0} max={100}
+                              value={newCampaign.dailyTargets[ch]}
+                              onChange={e => setNewCampaign(p => ({ ...p, dailyTargets: { ...p.dailyTargets, [ch]: Number(e.target.value) } }))}
+                              className="input w-full text-xs" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Sequence picker */}
+                    <div>
+                      <label className="text-[10px] text-muted block mb-2">Outreach Sequence</label>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {sequences.map(seq => (
+                          <button key={seq.id} onClick={() => setNewCampaign(p => ({ ...p, sequenceId: seq.id }))}
+                            className={`text-left p-2.5 rounded-xl border transition-all ${
+                              newCampaign.sequenceId === seq.id ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)]" : "border-border/50 hover:border-border"
+                            }`}>
+                            <p className={`text-[10px] font-semibold ${newCampaign.sequenceId === seq.id ? "text-[#2563EB]" : ""}`}>{seq.name}</p>
+                            <p className="text-[9px] text-muted mt-0.5">{seq.steps.length} steps</p>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Create button */}
+                    <motion.div className="flex justify-end" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <button onClick={createCampaign} className="btn-primary text-xs flex items-center gap-1.5">
+                        <Plus size={12} /> Create Campaign
+                      </button>
+                    </motion.div>
+                  </motion.div>
+                )}
+
+                {/* -- Campaign List -- */}
+                {campaigns.length === 0 && !showCampaignBuilder && (
+                  <div className="card">
+                    <EmptyState
+                      type="no-campaigns"
+                      title="No campaigns yet"
+                      description="Create your first outreach campaign to start reaching leads across email, SMS, calls, and social DMs."
+                      action={
+                        <button onClick={() => setShowCampaignBuilder(true)}
+                          className="btn-primary text-xs flex items-center gap-1.5">
+                          <Plus size={12} /> Create Your First Campaign
+                        </button>
+                      }
+                    />
+                  </div>
+                )}
+
+                {campaigns.map((campaign, index) => (
+                  <motion.div
+                    key={campaign.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, delay: index * 0.05 }}
+                    className="rounded-xl overflow-hidden space-y-3 p-4"
+                    style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                  >
+                    {/* Campaign header */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                          campaign.status === "active" ? "bg-green-500/10" : campaign.status === "paused" ? "bg-yellow-500/10" : "bg-surface-light"
+                        }`}>
+                          <Megaphone size={14} className={
+                            campaign.status === "active" ? "text-green-400" : campaign.status === "paused" ? "text-yellow-400" : "text-muted"
+                          } />
+                        </div>
+                        <div>
+                          <h3 className="text-xs font-semibold">{campaign.name}</h3>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className={`text-[9px] px-2 py-0.5 rounded-full ${
+                              campaign.status === "active" ? "bg-green-500/10 text-green-400" : campaign.status === "paused" ? "bg-yellow-500/10 text-yellow-400" : "bg-surface-light text-muted"
+                            }`}>{campaign.status}</span>
+                            <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light text-muted">{campaign.targetMode.toUpperCase()}</span>
+                            {campaign.industries.map(ind => (
+                              <span key={ind} className="text-[8px] text-muted">{B2B_INDUSTRIES.find(i => i.id === ind)?.label || ind}</span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => toggleCampaignStatus(campaign.id)}
+                          className={`text-[10px] px-3 py-1.5 rounded-lg flex items-center gap-1 border ${
+                            campaign.status === "active"
+                              ? "border-yellow-500/20 text-yellow-400 hover:bg-yellow-500/10"
+                              : "border-green-500/20 text-green-400 hover:bg-green-500/10"
+                          }`}>
+                          {campaign.status === "active" ? <><Pause size={10} /> Pause</> : <><Play size={10} /> Start</>}
+                        </button>
+                        <button onClick={() => deleteCampaign(campaign.id)}
+                          aria-label={`Delete campaign: ${campaign.name}`}
+                          className="text-[10px] px-2 py-1.5 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10">
+                          <Trash2 size={10} />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Daily progress bars */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {(["email", "sms", "calls", "dms"] as const).map(ch => {
+                        if (!campaign.channels[ch]) return null;
+                        const progress = campaign.dailyTargets[ch] > 0 ? (campaign.todayProgress[ch] / campaign.dailyTargets[ch]) * 100 : 0;
+                        return (
+                          <div key={ch} className="space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[9px] text-muted capitalize flex items-center gap-1">{channelIcon(ch === "calls" ? "call" : ch, 10)} {ch}</span>
+                              <span className="text-[9px] font-mono">{campaign.todayProgress[ch]}/{campaign.dailyTargets[ch]}</span>
+                            </div>
+                            <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
+                              <div className="h-full bg-[#2563EB] rounded-full transition-all" style={{ width: `${Math.min(progress, 100)}%` }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Stats row */}
+                    <div className="flex gap-4 pt-2 border-t border-border/20">
+                      {([
+                        { label: "Leads", value: campaign.stats.leads },
+                        { label: "Contacted", value: campaign.stats.contacted },
+                        { label: "Replied", value: campaign.stats.replied },
+                        { label: "Booked", value: campaign.stats.booked },
+                        { label: "Converted", value: campaign.stats.converted },
+                      ]).map(s => (
+                        <div key={s.label} className="text-center">
+                          <p className="text-sm font-semibold">{s.value}</p>
+                          <p className="text-[9px] text-muted">{s.label}</p>
                         </div>
                       ))}
                     </div>
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Max DMs / Day</label>
-                    <input type="number" value={dmSettings.maxPerDay} min={1} max={100}
-                      onChange={e => setDmSettings(p => ({ ...p, maxPerDay: Number(e.target.value) }))}
-                      className="input w-full text-xs" />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Send Window</label>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------ */}
+            {/*  TAB 2: SEQUENCES                                          */}
+            {/* ------------------------------------------------------------ */}
+            {tab === "sequences" && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-semibold flex items-center gap-2">
+                    <ListChecks size={14} className="text-[#2563EB]" /> Outreach Sequences
+                  </h2>
+                  <button onClick={() => setShowCustomBuilder(!showCustomBuilder)}
+                    className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
+                    {showCustomBuilder ? <><X size={10} /> Cancel</> : <><Plus size={10} /> Build Custom Sequence</>}
+                  </button>
+                </div>
+
+                {/* Pre-built sequences */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {sequences.map((seq, index) => (
+                    <motion.button
+                      key={seq.id}
+                      onClick={() => setActiveSequence(seq.id)}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2, delay: index * 0.05 }}
+                      whileHover={{ scale: 1.01, y: -2 }}
+                      className={`text-left p-4 rounded-xl border transition-all ${
+                        activeSequence === seq.id ? "bg-[rgba(0,0,0,0.03)] backdrop-blur-[20px] border-[rgba(0,0,0,0.12)]" : "bg-[rgba(255,255,255,0.9)] backdrop-blur-[16px] border-[rgba(0,0,0,0.10)] hover:border-black/20"
+                      }`}>
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className={`text-xs font-semibold ${activeSequence === seq.id ? "text-[#2563EB]" : ""}`}>{seq.name}</h3>
+                        {activeSequence === seq.id && <CircleDot size={12} className="text-[#2563EB]" />}
+                      </div>
+                      <p className="text-[9px] text-muted mb-2">{seq.description}</p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-surface-light text-muted">{seq.targetMode === "both" ? "B2B & B2C" : seq.targetMode.toUpperCase()}</span>
+                        <span className="text-[8px] text-muted">{seq.steps.length} steps</span>
+                        <div className="flex items-center gap-0.5 ml-auto">
+                          {Array.from(new Set(seq.steps.map(s => s.channel))).map(ch => (
+                            <span key={ch} className={channelColor(ch)}>{channelIcon(ch, 10)}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* Active Sequence Timeline */}
+                {activeSequence && (
+                  <PrismPanel padding="p-4" className="space-y-4">
+                    <h3 className="text-xs font-semibold flex items-center gap-2">
+                      <Activity size={12} className="text-[#2563EB]" /> Sequence Timeline: {sequences.find(s => s.id === activeSequence)?.name}
+                    </h3>
+                    <div className="relative pl-6">
+                      {/* Vertical line */}
+                      <div className="absolute left-[11px] top-2 bottom-2 w-px bg-border/50" />
+                      {sequences.find(s => s.id === activeSequence)?.steps.map((step, idx) => (
+                        <motion.div
+                          key={step.id}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.18, delay: idx * 0.06 }}
+                          className="relative flex items-start gap-4 mb-4 last:mb-0"
+                        >
+                          {/* Dot */}
+                          <div className={`absolute left-[-17px] top-1 w-5 h-5 rounded-full border-2 flex items-center justify-center bg-surface ${
+                            idx === 0 ? "border-indigo-500" : "border-border/50"
+                          }`}>
+                            <span className={`text-[8px] font-bold ${idx === 0 ? "text-[#2563EB]" : "text-muted"}`}>{step.day}</span>
+                          </div>
+                          {/* Content */}
+                          <div className="flex-1 rounded-lg p-3 border border-[rgba(0,0,0,0.10)]" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className={`${channelColor(step.channel)}`}>{channelIcon(step.channel, 12)}</span>
+                              <span className="text-[10px] font-semibold capitalize">{step.channel}</span>
+                              <span className="text-[8px] px-1.5 py-0.5 rounded bg-surface-light text-muted">Day {step.day}</span>
+                              <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] ml-auto">{conditionLabel(step.condition)}</span>
+                            </div>
+                            <p className="text-[10px] text-muted">{step.action}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </PrismPanel>
+                )}
+
+                {/* Custom Sequence Builder */}
+                {showCustomBuilder && (
+                  <div className="card space-y-4">
+                    <h3 className="text-xs font-semibold flex items-center gap-2">
+                      <Zap size={12} className="text-[#2563EB]" /> Build Custom Sequence
+                    </h3>
+                    <div>
+                      <label className="text-[10px] text-muted block mb-1">Sequence Name</label>
+                      <input value={customSeqName} onChange={e => setCustomSeqName(e.target.value)}
+                        placeholder="e.g., My Custom Flow" className="input w-full text-xs" />
+                    </div>
+
+                    {/* Steps */}
+                    {customSteps.map((step, idx) => (
+                      <div key={step.id} className="flex items-center gap-2 bg-surface-light/50 rounded-lg p-3 border border-border/20">
+                        <span className="text-[10px] font-bold text-[#2563EB] w-6">#{idx + 1}</span>
+                        <div>
+                          <label className="text-[9px] text-muted">Day</label>
+                          <input type="number" min={1} max={30} value={step.day}
+                            onChange={e => setCustomSteps(prev => prev.map((s, i) => i === idx ? { ...s, day: Number(e.target.value) } : s))}
+                            className="input text-xs w-14" />
+                        </div>
+                        <div>
+                          <label className="text-[9px] text-muted">Channel</label>
+                          <select value={step.channel}
+                            onChange={e => setCustomSteps(prev => prev.map((s, i) => i === idx ? { ...s, channel: e.target.value as SequenceStep["channel"] } : s))}
+                            className="input text-xs">
+                            <option value="email">Email</option>
+                            <option value="sms">SMS</option>
+                            <option value="call">Call</option>
+                            <option value="dm">DM</option>
+                          </select>
+                        </div>
+                        <div className="flex-1">
+                          <label className="text-[9px] text-muted">Action</label>
+                          <input value={step.action} placeholder="Describe the action..."
+                            onChange={e => setCustomSteps(prev => prev.map((s, i) => i === idx ? { ...s, action: e.target.value } : s))}
+                            className="input w-full text-xs" />
+                        </div>
+                        <div>
+                          <label className="text-[9px] text-muted">Condition</label>
+                          <select value={step.condition}
+                            onChange={e => setCustomSteps(prev => prev.map((s, i) => i === idx ? { ...s, condition: e.target.value as SequenceStep["condition"] } : s))}
+                            className="input text-xs">
+                            <option value="always">Always</option>
+                            <option value="no_reply">If no reply</option>
+                            <option value="replied">If replied</option>
+                            <option value="opened">If opened</option>
+                          </select>
+                        </div>
+                        <button onClick={() => setCustomSteps(prev => prev.filter((_, i) => i !== idx))}
+                          aria-label="Remove this step"
+                          className="p-1 hover:bg-red-500/10 rounded mt-3">
+                          <Trash2 size={12} className="text-muted hover:text-red-400" />
+                        </button>
+                      </div>
+                    ))}
+
                     <div className="flex items-center gap-2">
-                      <input type="time" value={dmSettings.sendWindow.start}
-                        onChange={e => setDmSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, start: e.target.value } }))}
+                      <button onClick={addCustomStep}
+                        className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
+                        <Plus size={10} /> Add Step
+                      </button>
+                      <button onClick={saveCustomSequence}
+                        className="btn-primary text-xs flex items-center gap-1.5 ml-auto">
+                        <Save size={12} /> Save Sequence
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------ */}
+            {/*  TAB 3: TEMPLATES                                          */}
+            {/* ------------------------------------------------------------ */}
+            {tab === "templates" && (
+              <div className="space-y-4">
+                {/* Template sub-tabs */}
+                <div className="flex items-center gap-4">
+                  <PrismPanel padding="p-1" className="flex gap-1">
+                    {([
+                      { key: "calls" as TemplateSubTab, label: "Calls", icon: <PhoneCall size={12} />, count: callTemplates.length },
+                      { key: "sms" as TemplateSubTab, label: "SMS", icon: <Smartphone size={12} />, count: smsTemplates.length },
+                      { key: "email" as TemplateSubTab, label: "Email", icon: <Mail size={12} />, count: emailTemplates.length },
+                      { key: "dms" as TemplateSubTab, label: "DMs", icon: <MessageSquare size={12} />, count: dmTemplates.length },
+                    ]).map((t, index) => (
+                      <motion.button
+                        key={t.key}
+                        onClick={() => setTemplateSubTab(t.key)}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.18, delay: index * 0.05 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.97 }}
+                        className={`px-3 py-2 text-[11px] rounded-lg flex items-center gap-1.5 transition-all ${
+                          templateSubTab === t.key
+                            ? "bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] font-medium"
+                            : "text-muted hover:text-foreground border border-transparent"
+                        }`}>
+                        {t.icon} {t.label}
+                        <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${templateSubTab === t.key ? "bg-[rgba(37,99,235,0.12)]" : "bg-[rgba(0,0,0,0.04)]"}`}>{t.count}</span>
+                      </motion.button>
+                    ))}
+                  </PrismPanel>
+                  <div className="ml-auto flex gap-1">
+                    {(["all", "b2b", "b2c"] as const).map(f => (
+                      <button key={f} onClick={() => setTemplateFilter(f)}
+                        className={`text-[9px] px-2.5 py-1 rounded-lg border transition-all uppercase ${
+                          templateFilter === f ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-border/30"
+                        }`}>{f}</button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* -- Calls Templates -- */}
+                {templateSubTab === "calls" && (
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div className="lg:col-span-2 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-sm font-semibold flex items-center gap-2">
+                          <PhoneCall size={14} className="text-emerald-400" /> Call Scripts &amp; Prompts
+                        </h2>
+                        <button onClick={() => addTemplate("calls")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
+                          <Plus size={10} /> Add Script
+                        </button>
+                      </div>
+                      <p className="text-[10px] text-muted">These scripts are sent as system prompts to the ElevenLabs AI agent. Edit them to change how the AI speaks on calls.</p>
+                      {callTemplates.map(t => (
+                        <TemplateCard key={t.id} template={t} context="AI cold call script"
+                          onChange={u => updateTemplate("calls", t.id, u)}
+                          onDelete={() => deleteTemplate("calls", t.id)} />
+                      ))}
+                    </div>
+                    <div className="space-y-3">
+                      <h2 className="text-sm font-semibold flex items-center gap-2">
+                        <Settings size={14} className="text-muted" /> Call Settings
+                      </h2>
+                      <PrismPanel padding="p-4" className="space-y-4">
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">Agent Name</label>
+                          <input value={callSettings.agentName} onChange={e => setCallSettings(p => ({ ...p, agentName: e.target.value }))}
+                            className="input w-full text-xs" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">First Message</label>
+                          <textarea value={callSettings.firstMessage} onChange={e => setCallSettings(p => ({ ...p, firstMessage: e.target.value }))}
+                            rows={3} className="input w-full text-xs resize-y" />
+                          <div className="flex justify-end mt-1">
+                            <AIEnhanceButton value={callSettings.firstMessage} context="AI call opening message"
+                              onResult={v => setCallSettings(p => ({ ...p, firstMessage: v }))} />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">Max Call Duration</label>
+                          <div className="flex items-center gap-2">
+                            <input type="range" min={30} max={300} step={30} value={callSettings.maxDuration}
+                              onChange={e => setCallSettings(p => ({ ...p, maxDuration: Number(e.target.value) }))}
+                              className="flex-1 accent-[#2563EB]" />
+                            <span className="text-xs font-mono w-12 text-right">{callSettings.maxDuration}s</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs">Voicemail Detection</span>
+                          <button onClick={() => setCallSettings(p => ({ ...p, voicemailDetection: !p.voicemailDetection }))}
+                            className={`${callSettings.voicemailDetection ? "text-[#2563EB]" : "text-muted"}`}>
+                            {callSettings.voicemailDetection ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
+                          </button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs">Leave Voicemail</span>
+                          <button onClick={() => setCallSettings(p => ({ ...p, enableVoicemail: !p.enableVoicemail }))}
+                            className={`${callSettings.enableVoicemail ? "text-[#2563EB]" : "text-muted"}`}>
+                            {callSettings.enableVoicemail ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
+                          </button>
+                        </div>
+                      </PrismPanel>
+                      {/* Preview */}
+                      <PrismPanel padding="p-4" border="strong" className="space-y-3">
+                        <h3 className="text-xs font-semibold flex items-center gap-2"><Eye size={12} /> Live Preview</h3>
+                        <div className="space-y-2">
+                          <input placeholder="Business name..." value={previewVars.business_name || ""}
+                            onChange={e => setPreviewVars(p => ({ ...p, business_name: e.target.value }))}
+                            className="input w-full text-[10px]" />
+                          <input placeholder="Industry..." value={previewVars.industry || ""}
+                            onChange={e => setPreviewVars(p => ({ ...p, industry: e.target.value }))}
+                            className="input w-full text-[10px]" />
+                        </div>
+                        {callTemplates[0] && (
+                          <div className="bg-surface-light rounded-lg p-2.5 text-[10px] whitespace-pre-wrap leading-relaxed max-h-[200px] overflow-y-auto">
+                            {renderPreview(callTemplates[0])}
+                          </div>
+                        )}
+                      </PrismPanel>
+                    </div>
+                  </div>
+                )}
+
+                {/* -- SMS Templates -- */}
+                {templateSubTab === "sms" && (
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div className="lg:col-span-2 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-sm font-semibold flex items-center gap-2">
+                          <Smartphone size={14} className="text-green-400" /> SMS Templates
+                        </h2>
+                        <button onClick={() => addTemplate("sms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
+                          <Plus size={10} /> Add Template
+                        </button>
+                      </div>
+                      <p className="text-[10px] text-muted">Templates are auto-sent based on triggers. Variables like {`{{name}}`} are replaced with lead data. AI personalization rewrites each message to feel unique.</p>
+                      {smsTemplates.map(t => (
+                        <TemplateCard key={t.id} template={t} context="SMS outreach message"
+                          onChange={u => updateTemplate("sms", t.id, u)}
+                          onDelete={() => deleteTemplate("sms", t.id)} />
+                      ))}
+                    </div>
+                    <div className="space-y-3">
+                      <h2 className="text-sm font-semibold flex items-center gap-2">
+                        <Settings size={14} className="text-muted" /> SMS Settings
+                      </h2>
+                      <PrismPanel padding="p-4" className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs">AI Personalization</span>
+                          <button onClick={() => setSmsSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
+                            className={`${smsSettings.aiPersonalize ? "text-[#2563EB]" : "text-muted"}`}>
+                            {smsSettings.aiPersonalize ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
+                          </button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs">Auto-Reply on Response</span>
+                          <button onClick={() => setSmsSettings(p => ({ ...p, autoReply: !p.autoReply }))}
+                            className={`${smsSettings.autoReply ? "text-[#2563EB]" : "text-muted"}`}>
+                            {smsSettings.autoReply ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
+                          </button>
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">Max Characters</label>
+                          <input type="number" value={smsSettings.maxLength} min={50} max={320}
+                            onChange={e => setSmsSettings(p => ({ ...p, maxLength: Number(e.target.value) }))}
+                            className="input w-full text-xs" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">Send Window</label>
+                          <div className="flex items-center gap-2">
+                            <input type="time" value={smsSettings.sendWindow.start}
+                              onChange={e => setSmsSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, start: e.target.value } }))}
+                              className="input text-xs flex-1" />
+                            <span className="text-[10px] text-muted">to</span>
+                            <input type="time" value={smsSettings.sendWindow.end}
+                              onChange={e => setSmsSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, end: e.target.value } }))}
+                              className="input text-xs flex-1" />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">Max Follow-ups</label>
+                          <input type="number" value={smsSettings.maxFollowups} min={0} max={10}
+                            onChange={e => setSmsSettings(p => ({ ...p, maxFollowups: Number(e.target.value) }))}
+                            className="input w-full text-xs" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">Follow-up Days</label>
+                          <div className="flex gap-1">
+                            {[1, 2, 3, 5, 7, 14].map(d => (
+                              <button key={d} onClick={() => {
+                                setSmsSettings(p => ({
+                                  ...p,
+                                  followupDays: p.followupDays.includes(d)
+                                    ? p.followupDays.filter(x => x !== d)
+                                    : [...p.followupDays, d].sort((a, b) => a - b),
+                                }));
+                              }} className={`text-[9px] px-2 py-1 rounded-lg border ${
+                                smsSettings.followupDays.includes(d) ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-[rgba(0,0,0,0.06)]"
+                              }`}>Day {d}</button>
+                            ))}
+                          </div>
+                        </div>
+                      </PrismPanel>
+                    </div>
+                  </div>
+                )}
+
+                {/* -- Email Templates -- */}
+                {templateSubTab === "email" && (
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div className="lg:col-span-2 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-sm font-semibold flex items-center gap-2">
+                          <Mail size={14} className="text-[#2563EB]" /> Email Templates
+                        </h2>
+                        <button onClick={() => addTemplate("email")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
+                          <Plus size={10} /> Add Template
+                        </button>
+                      </div>
+                      <p className="text-[10px] text-muted">Email templates support AI personalization. Claude generates unique emails for each lead based on these templates. Include the Subject: line at the top.</p>
+                      {emailTemplates.map(t => (
+                        <TemplateCard key={t.id} template={t} context="cold outreach email"
+                          onChange={u => updateTemplate("email", t.id, u)}
+                          onDelete={() => deleteTemplate("email", t.id)} />
+                      ))}
+                    </div>
+                    <div className="space-y-3">
+                      <h2 className="text-sm font-semibold flex items-center gap-2">
+                        <Settings size={14} className="text-muted" /> Email Settings
+                      </h2>
+                      <PrismPanel padding="p-4" className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs">AI Personalization</span>
+                          <button onClick={() => setEmailSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
+                            className={`${emailSettings.aiPersonalize ? "text-[#2563EB]" : "text-muted"}`}>
+                            {emailSettings.aiPersonalize ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
+                          </button>
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">From Name</label>
+                          <input value={emailSettings.fromName} onChange={e => setEmailSettings(p => ({ ...p, fromName: e.target.value }))}
+                            className="input w-full text-xs" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">Email Signature</label>
+                          <textarea value={emailSettings.signature} onChange={e => setEmailSettings(p => ({ ...p, signature: e.target.value }))}
+                            rows={3} className="input w-full text-xs resize-y" />
+                          <div className="flex justify-end mt-1">
+                            <AIEnhanceButton value={emailSettings.signature} context="email signature"
+                              onResult={v => setEmailSettings(p => ({ ...p, signature: v }))} />
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs">Track Opens</span>
+                          <button onClick={() => setEmailSettings(p => ({ ...p, trackOpens: !p.trackOpens }))}
+                            className={`${emailSettings.trackOpens ? "text-[#2563EB]" : "text-muted"}`}>
+                            {emailSettings.trackOpens ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
+                          </button>
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">Max Emails / Day</label>
+                          <input type="number" value={emailSettings.maxPerDay} min={1} max={500}
+                            onChange={e => setEmailSettings(p => ({ ...p, maxPerDay: Number(e.target.value) }))}
+                            className="input w-full text-xs" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">Delay Between Sends</label>
+                          <div className="flex items-center gap-2">
+                            <input type="range" min={0} max={600} step={30} value={emailSettings.sendDelay}
+                              onChange={e => setEmailSettings(p => ({ ...p, sendDelay: Number(e.target.value) }))}
+                              className="flex-1 accent-[#2563EB]" />
+                            <span className="text-xs font-mono w-12 text-right">{emailSettings.sendDelay}ms</span>
+                          </div>
+                        </div>
+                      </PrismPanel>
+                    </div>
+                  </div>
+                )}
+
+                {/* -- DM Templates -- */}
+                {templateSubTab === "dms" && (
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div className="lg:col-span-2 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-sm font-semibold flex items-center gap-2">
+                          <MessageSquare size={14} className="text-blue-400" /> Social DM Templates
+                        </h2>
+                        <button onClick={() => addTemplate("dms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
+                          <Plus size={10} /> Add Template
+                        </button>
+                      </div>
+                      <p className="text-[10px] text-muted">DM templates per platform. Each template can be toggled on/off and customized. AI will personalize based on the lead&apos;s profile.</p>
+                      <div className="flex gap-1">
+                        {[
+                          { id: "all", label: "All", icon: <Globe size={11} /> },
+                          { id: "instagram", label: "Instagram", icon: <InstagramIcon size={12} /> },
+                          { id: "facebook", label: "Facebook", icon: <FacebookIcon size={12} /> },
+                          { id: "linkedin", label: "LinkedIn", icon: <LinkedInIcon size={12} /> },
+                          { id: "tiktok", label: "TikTok", icon: <TikTokIcon size={12} /> },
+                        ].map(p => (
+                          <button key={p.id} className="text-[10px] px-2.5 py-1.5 rounded-lg flex items-center gap-1 text-muted border border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]">
+                            {p.icon} {p.label}
+                          </button>
+                        ))}
+                      </div>
+                      {dmTemplates.map(t => (
+                        <TemplateCard key={t.id} template={t} context="social media DM outreach message"
+                          onChange={u => updateTemplate("dms", t.id, u)}
+                          onDelete={() => deleteTemplate("dms", t.id)} />
+                      ))}
+                    </div>
+                    <div className="space-y-3">
+                      <h2 className="text-sm font-semibold flex items-center gap-2">
+                        <Settings size={14} className="text-muted" /> DM Settings
+                      </h2>
+                      <PrismPanel padding="p-4" className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs">AI Personalization</span>
+                          <button onClick={() => setDmSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
+                            className={`${dmSettings.aiPersonalize ? "text-[#2563EB]" : "text-muted"}`}>
+                            {dmSettings.aiPersonalize ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
+                          </button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs">Auto Follow-up</span>
+                          <button onClick={() => setDmSettings(p => ({ ...p, autoFollowup: !p.autoFollowup }))}
+                            className={`${dmSettings.autoFollowup ? "text-[#2563EB]" : "text-muted"}`}>
+                            {dmSettings.autoFollowup ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
+                          </button>
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-2">Active Platforms</label>
+                          <div className="space-y-2">
+                            {([
+                              { key: "instagram" as const, label: "Instagram", icon: <InstagramIcon size={14} /> },
+                              { key: "facebook" as const, label: "Facebook", icon: <FacebookIcon size={14} /> },
+                              { key: "linkedin" as const, label: "LinkedIn", icon: <LinkedInIcon size={14} /> },
+                              { key: "tiktok" as const, label: "TikTok", icon: <TikTokIcon size={14} /> },
+                            ]).map(p => (
+                              <div key={p.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light">
+                                <button onClick={() => setDmSettings(prev => ({
+                                  ...prev,
+                                  platforms: { ...prev.platforms, [p.key]: !prev.platforms[p.key] }
+                                }))} className={`${dmSettings.platforms[p.key] ? "text-[#2563EB]" : "text-muted"}`}>
+                                  {dmSettings.platforms[p.key] ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
+                                </button>
+                                {p.icon}
+                                <span className="text-xs">{p.label}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">Max DMs / Day</label>
+                          <input type="number" value={dmSettings.maxPerDay} min={1} max={100}
+                            onChange={e => setDmSettings(p => ({ ...p, maxPerDay: Number(e.target.value) }))}
+                            className="input w-full text-xs" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] text-muted block mb-1">Send Window</label>
+                          <div className="flex items-center gap-2">
+                            <input type="time" value={dmSettings.sendWindow.start}
+                              onChange={e => setDmSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, start: e.target.value } }))}
+                              className="input text-xs flex-1" />
+                            <span className="text-[10px] text-muted">to</span>
+                            <input type="time" value={dmSettings.sendWindow.end}
+                              onChange={e => setDmSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, end: e.target.value } }))}
+                              className="input text-xs flex-1" />
+                          </div>
+                        </div>
+                      </PrismPanel>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------ */}
+            {/*  TAB 4: ANALYTICS                                          */}
+            {/* ------------------------------------------------------------ */}
+            {tab === "analytics" && (
+              <div className="space-y-4">
+                {/* Stats cards row */}
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                  {[
+                    { label: "Total Leads", value: 0, change: "0%" },
+                    { label: "Contacted", value: 0, change: "0%" },
+                    { label: "Replied", value: 0, change: "0%" },
+                    { label: "Booked", value: 0, change: "0%" },
+                    { label: "Converted", value: 0, change: "0%" },
+                  ].map((stat, index) => (
+                    <motion.div
+                      key={stat.label}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.22, delay: index * 0.06 }}
+                      whileHover={{ y: -2 }}
+                      className="rounded-xl overflow-hidden relative"
+                      style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                    >
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+                      <div className="p-4">
+                        <p className="text-[10px] text-muted mb-1">{stat.label}</p>
+                        <p className="text-xl font-bold">{stat.value}</p>
+                        <div className="flex items-center gap-1 mt-1">
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-black/[0.04] text-muted">{stat.change}</span>
+                          <span className="text-[9px] text-muted">vs last period</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Channel Performance */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: 0.3 }}
+                  className="rounded-xl overflow-hidden"
+                  style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                >
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+                  <div className="p-4 space-y-4">
+                  <h3 className="text-xs font-semibold flex items-center gap-2">
+                    <BarChart3 size={12} className="text-[#2563EB]" /> Channel Performance
+                  </h3>
+                  <div className="space-y-3">
+                    {[
+                      { channel: "Email", icon: <Mail size={14} />, color: "bg-[#2563EB]", sent: 0, opened: 0, replied: 0 },
+                      { channel: "SMS", icon: <Smartphone size={14} />, color: "bg-green-400", sent: 0, opened: 0, replied: 0 },
+                      { channel: "Calls", icon: <PhoneCall size={14} />, color: "bg-emerald-400", sent: 0, opened: 0, replied: 0 },
+                      { channel: "DMs", icon: <MessageSquare size={14} />, color: "bg-blue-400", sent: 0, opened: 0, replied: 0 },
+                    ].map(ch => (
+                      <div key={ch.channel} className="space-y-1.5">
+                        <div className="flex items-center gap-2 text-xs">
+                          {ch.icon}
+                          <span className="font-medium w-16">{ch.channel}</span>
+                          <span className="text-[9px] text-muted">Sent: {ch.sent}</span>
+                          <span className="text-[9px] text-muted ml-3">Opened: {ch.opened}</span>
+                          <span className="text-[9px] text-muted ml-3">Replied: {ch.replied}</span>
+                        </div>
+                        <div className="flex gap-1 h-2">
+                          <div className={`${ch.color} rounded-full`} style={{ width: "0%" }} />
+                          <div className={`${ch.color}/50 rounded-full`} style={{ width: "0%" }} />
+                          <div className={`${ch.color}/25 rounded-full`} style={{ width: "0%" }} />
+                          <div className="flex-1 bg-surface-light rounded-full" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  </div>
+                </motion.div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Response Rate Heatmap */}
+                  <PrismPanel padding="p-4" className="space-y-3">
+                    <h3 className="text-xs font-semibold flex items-center gap-2">
+                      <Clock size={12} className="text-muted" /> Response Rate by Day
+                    </h3>
+                    <div className="space-y-1">
+                      <div className="flex gap-1 items-center mb-2">
+                        <span className="text-[9px] text-muted w-12"></span>
+                        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(d => (
+                          <span key={d} className="text-[8px] text-muted flex-1 text-center">{d}</span>
+                        ))}
+                      </div>
+                      {["Email", "SMS", "Call", "DM"].map(ch => (
+                        <div key={ch} className="flex gap-1 items-center">
+                          <span className="text-[9px] text-muted w-12">{ch}</span>
+                          {Array.from({ length: 7 }).map((_, i) => (
+                            <div key={i} className="flex-1 h-6 rounded bg-surface-light/50 border border-border/20" />
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-[9px] text-muted text-center">No data yet</p>
+                  </PrismPanel>
+
+                  {/* Conversion Funnel */}
+                  <PrismPanel padding="p-4" className="space-y-3">
+                    <h3 className="text-xs font-semibold flex items-center gap-2">
+                      <Target size={12} className="text-[#2563EB]" /> Conversion Funnel
+                    </h3>
+                    <div className="space-y-2">
+                      {[
+                        { stage: "Leads Found", value: 0, width: "100%" },
+                        { stage: "Contacted", value: 0, width: "80%" },
+                        { stage: "Replied", value: 0, width: "60%" },
+                        { stage: "Booked", value: 0, width: "40%" },
+                        { stage: "Converted", value: 0, width: "20%" },
+                      ].map(s => (
+                        <div key={s.stage} className="flex items-center gap-3">
+                          <span className="text-[10px] text-muted w-20">{s.stage}</span>
+                          <div className="flex-1 h-6 bg-surface-light rounded-lg overflow-hidden flex items-center" style={{ maxWidth: s.width }}>
+                            <div className="h-full bg-[rgba(37,99,235,0.12)] w-0 rounded-lg" />
+                            <span className="text-[10px] font-mono ml-2">{s.value}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </PrismPanel>
+                </div>
+
+                {/* Best Performing */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: 0.5 }}
+                  className="rounded-xl p-6 text-center"
+                  style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                >
+                  <div className="w-12 h-12 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center mx-auto mb-3">
+                    <Star size={20} className="text-[#2563EB]" />
+                  </div>
+                  <h3 className="text-sm font-semibold mb-1">Best Performing</h3>
+                  <p className="text-[11px] text-muted">No data yet � launch your first campaign to see which channels and sequences perform best.</p>
+                </motion.div>
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------ */}
+            {/*  TAB 5: SETTINGS                                           */}
+            {/* ------------------------------------------------------------ */}
+            {tab === "settings" && (
+              <div className="max-w-2xl space-y-4">
+                {/* Global AI Settings */}
+                <PrismPanel padding="p-5" className="space-y-5">
+                  <h2 className="text-sm font-semibold flex items-center gap-2">
+                    <Sparkles size={14} className="text-[#2563EB]" /> Global AI Settings
+                  </h2>
+                  <p className="text-[10px] text-muted">These settings apply across all outreach channels. They control how the AI generates and personalizes messages.</p>
+
+                  <div>
+                    <label className="text-xs font-medium block mb-2">Communication Tone</label>
+                    <div className="flex gap-2 flex-wrap">
+                      {["friendly", "professional", "casual", "bold", "empathetic", "authoritative"].map(t => (
+                        <button key={t} onClick={() => setGlobalSettings(p => ({ ...p, tone: t }))}
+                          className={`text-[10px] px-3 py-1.5 rounded-lg capitalize border ${
+                            globalSettings.tone === t ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
+                          }`}>{t}</button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium block mb-2">Sales Aggressiveness</label>
+                    <div className="flex gap-2">
+                      {[
+                        { key: "soft", label: "Soft Sell", desc: "Helpful, no pressure" },
+                        { key: "medium", label: "Medium", desc: "Clear CTA, light urgency" },
+                        { key: "aggressive", label: "Hard Sell", desc: "Strong push, urgency" },
+                      ].map(a => (
+                        <button key={a.key} onClick={() => setGlobalSettings(p => ({ ...p, aggressiveness: a.key }))}
+                          className={`flex-1 text-left p-2.5 rounded-xl border transition-all ${
+                            globalSettings.aggressiveness === a.key ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)]" : "border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
+                          }`}>
+                          <p className={`text-xs font-semibold ${globalSettings.aggressiveness === a.key ? "text-[#2563EB]" : ""}`}>{a.label}</p>
+                          <p className="text-[9px] text-muted">{a.desc}</p>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium block mb-1">Brand Voice</label>
+                    <p className="text-[9px] text-muted mb-2">Describe your agency&apos;s voice and personality. This is used as context for all AI-generated messages.</p>
+                    <textarea value={globalSettings.brandVoice}
+                      onChange={e => setGlobalSettings(p => ({ ...p, brandVoice: e.target.value }))}
+                      rows={4} className="input w-full text-xs resize-y" />
+                    <div className="flex justify-end mt-1">
+                      <AIEnhanceButton value={globalSettings.brandVoice} context="brand voice description for an agency"
+                        onResult={v => setGlobalSettings(p => ({ ...p, brandVoice: v }))} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium block mb-1">Custom AI Instructions</label>
+                    <p className="text-[9px] text-muted mb-2">Additional instructions for the AI across all channels. E.g., &quot;Always mention our free consultation&quot; or &quot;Never use the word &apos;cheap&apos;&quot;.</p>
+                    <textarea value={globalSettings.customInstructions}
+                      onChange={e => setGlobalSettings(p => ({ ...p, customInstructions: e.target.value }))}
+                      rows={4} className="input w-full text-xs resize-y"
+                      placeholder="Add any custom rules or instructions for the AI..." />
+                    <div className="flex justify-end mt-1">
+                      <AIEnhanceButton value={globalSettings.customInstructions || "custom AI instructions for outreach"} context="AI behavior instructions"
+                        onResult={v => setGlobalSettings(p => ({ ...p, customInstructions: v }))} />
+                    </div>
+                  </div>
+                </PrismPanel>
+
+                {/* Daily Limits */}
+                <PrismPanel padding="p-4" className="space-y-4">
+                  <h2 className="text-sm font-semibold flex items-center gap-2">
+                    <AlertCircle size={14} className="text-[#2563EB]" /> Daily Limits
+                  </h2>
+                  <p className="text-[10px] text-muted">Maximum number of outreach actions per day across all campaigns.</p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div>
+                      <label className="text-[10px] text-muted block mb-1 flex items-center gap-1"><Mail size={10} /> Max Emails</label>
+                      <input type="number" value={dailyLimits.email} min={1} max={500}
+                        onChange={e => setDailyLimits(p => ({ ...p, email: Number(e.target.value) }))}
+                        className="input w-full text-xs" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-muted block mb-1 flex items-center gap-1"><Smartphone size={10} /> Max SMS</label>
+                      <input type="number" value={dailyLimits.sms} min={1} max={500}
+                        onChange={e => setDailyLimits(p => ({ ...p, sms: Number(e.target.value) }))}
+                        className="input w-full text-xs" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-muted block mb-1 flex items-center gap-1"><PhoneCall size={10} /> Max Calls</label>
+                      <input type="number" value={dailyLimits.calls} min={1} max={200}
+                        onChange={e => setDailyLimits(p => ({ ...p, calls: Number(e.target.value) }))}
+                        className="input w-full text-xs" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-muted block mb-1 flex items-center gap-1"><MessageSquare size={10} /> Max DMs</label>
+                      <input type="number" value={dailyLimits.dms} min={1} max={200}
+                        onChange={e => setDailyLimits(p => ({ ...p, dms: Number(e.target.value) }))}
+                        className="input w-full text-xs" />
+                    </div>
+                  </div>
+                </PrismPanel>
+
+                {/* Compliance */}
+                <PrismPanel padding="p-4" className="space-y-4">
+                  <h2 className="text-sm font-semibold flex items-center gap-2">
+                    <Shield size={14} className="text-[#2563EB]" /> Compliance
+                  </h2>
+                  <p className="text-[10px] text-muted">Ensure your outreach complies with regulations.</p>
+                  <div className="space-y-3">
+                    {[
+                      { key: "optOut" as const, label: "Opt-Out Handling", desc: "Automatically stop contacting leads who opt out" },
+                      { key: "dncList" as const, label: "DNC List", desc: "Respect Do Not Call registry" },
+                      { key: "tcpa" as const, label: "TCPA Compliance", desc: "Follow Telephone Consumer Protection Act rules" },
+                      { key: "canSpam" as const, label: "CAN-SPAM Compliance", desc: "Follow CAN-SPAM Act for email marketing" },
+                    ].map(c => (
+                      <div key={c.key} className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light">
+                        <div>
+                          <p className="text-xs font-medium">{c.label}</p>
+                          <p className="text-[9px] text-muted">{c.desc}</p>
+                        </div>
+                        <button onClick={() => setCompliance(p => ({ ...p, [c.key]: !p[c.key] }))}
+                          className={`${compliance[c.key] ? "text-[#2563EB]" : "text-muted"}`}>
+                          {compliance[c.key] ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </PrismPanel>
+
+                {/* Default Target Mode + Timezone + Working Hours */}
+                <PrismPanel padding="p-4" className="space-y-4">
+                  <h2 className="text-sm font-semibold flex items-center gap-2">
+                    <Settings size={14} className="text-[#2563EB]" /> General
+                  </h2>
+
+                  <div>
+                    <label className="text-xs font-medium block mb-2">Default Target Mode</label>
+                    <div className="flex gap-2">
+                      {(["b2b", "b2c"] as TargetMode[]).map(m => (
+                        <button key={m} onClick={() => setDefaultTargetMode(m)}
+                          className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-all ${
+                            defaultTargetMode === m ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-border/50"
+                          }`}>{m.toUpperCase()}</button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium block mb-1">Timezone</label>
+                    <select value={timezone} onChange={e => setTimezone(e.target.value)} className="input w-full text-xs">
+                      {["America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles", "America/Phoenix", "Pacific/Honolulu", "America/Anchorage", "Europe/London", "Europe/Paris", "Asia/Tokyo"].map(tz => (
+                        <option key={tz} value={tz}>{tz.replace("_", " ")}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium block mb-1">Working Hours</label>
+                    <p className="text-[9px] text-muted mb-2">Outreach will only be sent during these hours.</p>
+                    <div className="flex items-center gap-2">
+                      <input type="time" value={workingHours.start}
+                        onChange={e => setWorkingHours(p => ({ ...p, start: e.target.value }))}
                         className="input text-xs flex-1" />
                       <span className="text-[10px] text-muted">to</span>
-                      <input type="time" value={dmSettings.sendWindow.end}
-                        onChange={e => setDmSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, end: e.target.value } }))}
+                      <input type="time" value={workingHours.end}
+                        onChange={e => setWorkingHours(p => ({ ...p, end: e.target.value }))}
                         className="input text-xs flex-1" />
                     </div>
                   </div>
                 </PrismPanel>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
 
-      {/* ------------------------------------------------------------ */}
-      {/*  TAB 4: ANALYTICS                                          */}
-      {/* ------------------------------------------------------------ */}
-      {tab === "analytics" && (
-        <div className="space-y-4">
-          {/* Stats cards row */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            {[
-              { label: "Total Leads", value: 0, change: "0%" },
-              { label: "Contacted", value: 0, change: "0%" },
-              { label: "Replied", value: 0, change: "0%" },
-              { label: "Booked", value: 0, change: "0%" },
-              { label: "Converted", value: 0, change: "0%" },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: index * 0.06 }}
-                whileHover={{ y: -2 }}
-                className="rounded-xl overflow-hidden relative"
-                style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
-              >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-                <div className="p-4">
-                  <p className="text-[10px] text-muted mb-1">{stat.label}</p>
-                  <p className="text-xl font-bold">{stat.value}</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-black/[0.04] text-muted">{stat.change}</span>
-                    <span className="text-[9px] text-muted">vs last period</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Channel Performance */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: 0.3 }}
-            className="rounded-xl overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
-          >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-            <div className="p-4 space-y-4">
-            <h3 className="text-xs font-semibold flex items-center gap-2">
-              <BarChart3 size={12} className="text-[#2563EB]" /> Channel Performance
-            </h3>
-            <div className="space-y-3">
-              {[
-                { channel: "Email", icon: <Mail size={14} />, color: "bg-[#2563EB]", sent: 0, opened: 0, replied: 0 },
-                { channel: "SMS", icon: <Smartphone size={14} />, color: "bg-green-400", sent: 0, opened: 0, replied: 0 },
-                { channel: "Calls", icon: <PhoneCall size={14} />, color: "bg-emerald-400", sent: 0, opened: 0, replied: 0 },
-                { channel: "DMs", icon: <MessageSquare size={14} />, color: "bg-blue-400", sent: 0, opened: 0, replied: 0 },
-              ].map(ch => (
-                <div key={ch.channel} className="space-y-1.5">
-                  <div className="flex items-center gap-2 text-xs">
-                    {ch.icon}
-                    <span className="font-medium w-16">{ch.channel}</span>
-                    <span className="text-[9px] text-muted">Sent: {ch.sent}</span>
-                    <span className="text-[9px] text-muted ml-3">Opened: {ch.opened}</span>
-                    <span className="text-[9px] text-muted ml-3">Replied: {ch.replied}</span>
-                  </div>
-                  <div className="flex gap-1 h-2">
-                    <div className={`${ch.color} rounded-full`} style={{ width: "0%" }} />
-                    <div className={`${ch.color}/50 rounded-full`} style={{ width: "0%" }} />
-                    <div className={`${ch.color}/25 rounded-full`} style={{ width: "0%" }} />
-                    <div className="flex-1 bg-surface-light rounded-full" />
-                  </div>
-                </div>
-              ))}
-            </div>
-            </div>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Response Rate Heatmap */}
-            <PrismPanel padding="p-4" className="space-y-3">
-              <h3 className="text-xs font-semibold flex items-center gap-2">
-                <Clock size={12} className="text-muted" /> Response Rate by Day
-              </h3>
-              <div className="space-y-1">
-                <div className="flex gap-1 items-center mb-2">
-                  <span className="text-[9px] text-muted w-12"></span>
-                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(d => (
-                    <span key={d} className="text-[8px] text-muted flex-1 text-center">{d}</span>
-                  ))}
-                </div>
-                {["Email", "SMS", "Call", "DM"].map(ch => (
-                  <div key={ch} className="flex gap-1 items-center">
-                    <span className="text-[9px] text-muted w-12">{ch}</span>
-                    {Array.from({ length: 7 }).map((_, i) => (
-                      <div key={i} className="flex-1 h-6 rounded bg-surface-light/50 border border-border/20" />
+                {/* Variable reference */}
+                <PrismPanel padding="p-4" className="space-y-3">
+                  <h3 className="text-xs font-semibold flex items-center gap-2">
+                    <Hash size={12} className="text-[#2563EB]" /> Available Variables
+                  </h3>
+                  <p className="text-[9px] text-muted">Use these in any template. They&apos;re replaced with real lead data at send time.</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {[
+                      { var: "name", desc: "Lead/owner name" },
+                      { var: "business_name", desc: "Business name" },
+                      { var: "industry", desc: "Business industry" },
+                      { var: "city", desc: "City location" },
+                      { var: "phone", desc: "Phone number" },
+                      { var: "email", desc: "Email address" },
+                      { var: "website", desc: "Website URL" },
+                      { var: "rating", desc: "Google rating" },
+                      { var: "review_count", desc: "Number of reviews" },
+                      { var: "days_ago", desc: "Days since last contact" },
+                      { var: "callback_number", desc: "Your callback number" },
+                      { var: "rating_mention", desc: "Rating praise snippet" },
+                    ].map(v => (
+                      <div key={v.var} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light text-[10px]">
+                        <code className="text-[#2563EB] font-mono text-[9px]">{`{{${v.var}}}`}</code>
+                        <span className="text-muted">{v.desc}</span>
+                      </div>
                     ))}
                   </div>
-                ))}
+                </PrismPanel>
               </div>
-              <p className="text-[9px] text-muted text-center">No data yet</p>
-            </PrismPanel>
+            )}
 
-            {/* Conversion Funnel */}
-            <PrismPanel padding="p-4" className="space-y-3">
-              <h3 className="text-xs font-semibold flex items-center gap-2">
-                <Target size={12} className="text-[#2563EB]" /> Conversion Funnel
-              </h3>
-              <div className="space-y-2">
-                {[
-                  { stage: "Leads Found", value: 0, width: "100%" },
-                  { stage: "Contacted", value: 0, width: "80%" },
-                  { stage: "Replied", value: 0, width: "60%" },
-                  { stage: "Booked", value: 0, width: "40%" },
-                  { stage: "Converted", value: 0, width: "20%" },
-                ].map(s => (
-                  <div key={s.stage} className="flex items-center gap-3">
-                    <span className="text-[10px] text-muted w-20">{s.stage}</span>
-                    <div className="flex-1 h-6 bg-surface-light rounded-lg overflow-hidden flex items-center" style={{ maxWidth: s.width }}>
-                      <div className="h-full bg-[rgba(37,99,235,0.12)] w-0 rounded-lg" />
-                      <span className="text-[10px] font-mono ml-2">{s.value}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </PrismPanel>
-          </div>
-
-          {/* Best Performing */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: 0.5 }}
-            className="rounded-xl p-6 text-center"
-            style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
-          >
-            <div className="w-12 h-12 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center mx-auto mb-3">
-              <Star size={20} className="text-[#2563EB]" />
-            </div>
-            <h3 className="text-sm font-semibold mb-1">Best Performing</h3>
-            <p className="text-[11px] text-muted">No data yet � launch your first campaign to see which channels and sequences perform best.</p>
-          </motion.div>
-        </div>
-      )}
-
-      {/* ------------------------------------------------------------ */}
-      {/*  TAB 5: SETTINGS                                           */}
-      {/* ------------------------------------------------------------ */}
-      {tab === "settings" && (
-        <div className="max-w-2xl space-y-4">
-          {/* Global AI Settings */}
-          <PrismPanel padding="p-5" className="space-y-5">
-            <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Sparkles size={14} className="text-[#2563EB]" /> Global AI Settings
-            </h2>
-            <p className="text-[10px] text-muted">These settings apply across all outreach channels. They control how the AI generates and personalizes messages.</p>
-
-            <div>
-              <label className="text-xs font-medium block mb-2">Communication Tone</label>
-              <div className="flex gap-2 flex-wrap">
-                {["friendly", "professional", "casual", "bold", "empathetic", "authoritative"].map(t => (
-                  <button key={t} onClick={() => setGlobalSettings(p => ({ ...p, tone: t }))}
-                    className={`text-[10px] px-3 py-1.5 rounded-lg capitalize border ${
-                      globalSettings.tone === t ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
-                    }`}>{t}</button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="text-xs font-medium block mb-2">Sales Aggressiveness</label>
-              <div className="flex gap-2">
-                {[
-                  { key: "soft", label: "Soft Sell", desc: "Helpful, no pressure" },
-                  { key: "medium", label: "Medium", desc: "Clear CTA, light urgency" },
-                  { key: "aggressive", label: "Hard Sell", desc: "Strong push, urgency" },
-                ].map(a => (
-                  <button key={a.key} onClick={() => setGlobalSettings(p => ({ ...p, aggressiveness: a.key }))}
-                    className={`flex-1 text-left p-2.5 rounded-xl border transition-all ${
-                      globalSettings.aggressiveness === a.key ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)]" : "border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
-                    }`}>
-                    <p className={`text-xs font-semibold ${globalSettings.aggressiveness === a.key ? "text-[#2563EB]" : ""}`}>{a.label}</p>
-                    <p className="text-[9px] text-muted">{a.desc}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="text-xs font-medium block mb-1">Brand Voice</label>
-              <p className="text-[9px] text-muted mb-2">Describe your agency&apos;s voice and personality. This is used as context for all AI-generated messages.</p>
-              <textarea value={globalSettings.brandVoice}
-                onChange={e => setGlobalSettings(p => ({ ...p, brandVoice: e.target.value }))}
-                rows={4} className="input w-full text-xs resize-y" />
-              <div className="flex justify-end mt-1">
-                <AIEnhanceButton value={globalSettings.brandVoice} context="brand voice description for an agency"
-                  onResult={v => setGlobalSettings(p => ({ ...p, brandVoice: v }))} />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-xs font-medium block mb-1">Custom AI Instructions</label>
-              <p className="text-[9px] text-muted mb-2">Additional instructions for the AI across all channels. E.g., &quot;Always mention our free consultation&quot; or &quot;Never use the word &apos;cheap&apos;&quot;.</p>
-              <textarea value={globalSettings.customInstructions}
-                onChange={e => setGlobalSettings(p => ({ ...p, customInstructions: e.target.value }))}
-                rows={4} className="input w-full text-xs resize-y"
-                placeholder="Add any custom rules or instructions for the AI..." />
-              <div className="flex justify-end mt-1">
-                <AIEnhanceButton value={globalSettings.customInstructions || "custom AI instructions for outreach"} context="AI behavior instructions"
-                  onResult={v => setGlobalSettings(p => ({ ...p, customInstructions: v }))} />
-              </div>
-            </div>
-          </PrismPanel>
-
-          {/* Daily Limits */}
-          <PrismPanel padding="p-4" className="space-y-4">
-            <h2 className="text-sm font-semibold flex items-center gap-2">
-              <AlertCircle size={14} className="text-[#2563EB]" /> Daily Limits
-            </h2>
-            <p className="text-[10px] text-muted">Maximum number of outreach actions per day across all campaigns.</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div>
-                <label className="text-[10px] text-muted block mb-1 flex items-center gap-1"><Mail size={10} /> Max Emails</label>
-                <input type="number" value={dailyLimits.email} min={1} max={500}
-                  onChange={e => setDailyLimits(p => ({ ...p, email: Number(e.target.value) }))}
-                  className="input w-full text-xs" />
-              </div>
-              <div>
-                <label className="text-[10px] text-muted block mb-1 flex items-center gap-1"><Smartphone size={10} /> Max SMS</label>
-                <input type="number" value={dailyLimits.sms} min={1} max={500}
-                  onChange={e => setDailyLimits(p => ({ ...p, sms: Number(e.target.value) }))}
-                  className="input w-full text-xs" />
-              </div>
-              <div>
-                <label className="text-[10px] text-muted block mb-1 flex items-center gap-1"><PhoneCall size={10} /> Max Calls</label>
-                <input type="number" value={dailyLimits.calls} min={1} max={200}
-                  onChange={e => setDailyLimits(p => ({ ...p, calls: Number(e.target.value) }))}
-                  className="input w-full text-xs" />
-              </div>
-              <div>
-                <label className="text-[10px] text-muted block mb-1 flex items-center gap-1"><MessageSquare size={10} /> Max DMs</label>
-                <input type="number" value={dailyLimits.dms} min={1} max={200}
-                  onChange={e => setDailyLimits(p => ({ ...p, dms: Number(e.target.value) }))}
-                  className="input w-full text-xs" />
-              </div>
-            </div>
-          </PrismPanel>
-
-          {/* Compliance */}
-          <PrismPanel padding="p-4" className="space-y-4">
-            <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Shield size={14} className="text-[#2563EB]" /> Compliance
-            </h2>
-            <p className="text-[10px] text-muted">Ensure your outreach complies with regulations.</p>
-            <div className="space-y-3">
-              {[
-                { key: "optOut" as const, label: "Opt-Out Handling", desc: "Automatically stop contacting leads who opt out" },
-                { key: "dncList" as const, label: "DNC List", desc: "Respect Do Not Call registry" },
-                { key: "tcpa" as const, label: "TCPA Compliance", desc: "Follow Telephone Consumer Protection Act rules" },
-                { key: "canSpam" as const, label: "CAN-SPAM Compliance", desc: "Follow CAN-SPAM Act for email marketing" },
-              ].map(c => (
-                <div key={c.key} className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light">
-                  <div>
-                    <p className="text-xs font-medium">{c.label}</p>
-                    <p className="text-[9px] text-muted">{c.desc}</p>
-                  </div>
-                  <button onClick={() => setCompliance(p => ({ ...p, [c.key]: !p[c.key] }))}
-                    className={`${compliance[c.key] ? "text-[#2563EB]" : "text-muted"}`}>
-                    {compliance[c.key] ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </PrismPanel>
-
-          {/* Default Target Mode + Timezone + Working Hours */}
-          <PrismPanel padding="p-4" className="space-y-4">
-            <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Settings size={14} className="text-[#2563EB]" /> General
-            </h2>
-
-            <div>
-              <label className="text-xs font-medium block mb-2">Default Target Mode</label>
-              <div className="flex gap-2">
-                {(["b2b", "b2c"] as TargetMode[]).map(m => (
-                  <button key={m} onClick={() => setDefaultTargetMode(m)}
-                    className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-all ${
-                      defaultTargetMode === m ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-border/50"
-                    }`}>{m.toUpperCase()}</button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="text-xs font-medium block mb-1">Timezone</label>
-              <select value={timezone} onChange={e => setTimezone(e.target.value)} className="input w-full text-xs">
-                {["America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles", "America/Phoenix", "Pacific/Honolulu", "America/Anchorage", "Europe/London", "Europe/Paris", "Asia/Tokyo"].map(tz => (
-                  <option key={tz} value={tz}>{tz.replace("_", " ")}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="text-xs font-medium block mb-1">Working Hours</label>
-              <p className="text-[9px] text-muted mb-2">Outreach will only be sent during these hours.</p>
-              <div className="flex items-center gap-2">
-                <input type="time" value={workingHours.start}
-                  onChange={e => setWorkingHours(p => ({ ...p, start: e.target.value }))}
-                  className="input text-xs flex-1" />
-                <span className="text-[10px] text-muted">to</span>
-                <input type="time" value={workingHours.end}
-                  onChange={e => setWorkingHours(p => ({ ...p, end: e.target.value }))}
-                  className="input text-xs flex-1" />
-              </div>
-            </div>
-          </PrismPanel>
-
-          {/* Variable reference */}
-          <PrismPanel padding="p-4" className="space-y-3">
-            <h3 className="text-xs font-semibold flex items-center gap-2">
-              <Hash size={12} className="text-[#2563EB]" /> Available Variables
-            </h3>
-            <p className="text-[9px] text-muted">Use these in any template. They&apos;re replaced with real lead data at send time.</p>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {[
-                { var: "name", desc: "Lead/owner name" },
-                { var: "business_name", desc: "Business name" },
-                { var: "industry", desc: "Business industry" },
-                { var: "city", desc: "City location" },
-                { var: "phone", desc: "Phone number" },
-                { var: "email", desc: "Email address" },
-                { var: "website", desc: "Website URL" },
-                { var: "rating", desc: "Google rating" },
-                { var: "review_count", desc: "Number of reviews" },
-                { var: "days_ago", desc: "Days since last contact" },
-                { var: "callback_number", desc: "Your callback number" },
-                { var: "rating_mention", desc: "Rating praise snippet" },
-              ].map(v => (
-                <div key={v.var} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light text-[10px]">
-                  <code className="text-[#2563EB] font-mono text-[9px]">{`{{${v.var}}}`}</code>
-                  <span className="text-muted">{v.desc}</span>
-                </div>
-              ))}
-            </div>
-          </PrismPanel>
-        </div>
-      )}
-
-      <PageAI pageName="Outreach Hub" context="outreach campaigns, lead finder, B2B/B2C targeting, sequence builder, cold call scripts, SMS templates, email templates, social DM templates, AI settings, analytics, campaign management, industry targeting"
-        suggestions={["Help me create a restaurant outreach campaign", "What sequence works best for B2B?", "Generate 5 SMS follow-up variations", "What tone works best for LinkedIn DMs?"]} />
-      </ErrorBoundary>
-    </div>
+            <PageAI pageName="Outreach Hub" context="outreach campaigns, lead finder, B2B/B2C targeting, sequence builder, cold call scripts, SMS templates, email templates, social DM templates, AI settings, analytics, campaign management, industry targeting"
+              suggestions={["Help me create a restaurant outreach campaign", "What sequence works best for B2B?", "Generate 5 SMS follow-up variations", "What tone works best for LinkedIn DMs?"]} />
+            </ErrorBoundary></MotionPage>
   );
 }
 

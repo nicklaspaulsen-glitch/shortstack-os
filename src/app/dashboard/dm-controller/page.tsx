@@ -20,6 +20,7 @@ import {
 import CreationWizard, { WizardStep } from "@/components/creation-wizard";
 import InlineSocialConnect from "@/components/inline-social-connect";
 import { useSocialAccounts } from "@/hooks/use-social-accounts";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* ------------------------------------------------------------------ */
 /*  Platforms & Constants                                              */
@@ -527,1085 +528,1047 @@ export default function DMControllerPage() {
   /* ------------------------------------------------------------------ */
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Send size={28} />}
-        title="DM Controller"
-        subtitle="Multi-platform cold DM command center · AI-assisted · Compliance-safe."
-        gradient="blue"
-        eyebrow={<><CircleDot size={9} className={cn("inline mr-1.5", running ? "text-green-400 animate-pulse" : "text-muted")} />{running ? "Running" : "Idle"}</>}
-        actions={
-          <div className="flex items-center gap-2">
-            <div className={cn(
-              "flex items-center gap-1.5 text-[10px] border px-2.5 py-1 rounded-md",
-              running ? "bg-green-400/10 border-green-400/30 text-green-400" :
-                       "bg-black/5 border-border text-muted"
-            )}>
-              <span className={cn("w-1.5 h-1.5 rounded-full", running ? "bg-green-400 animate-pulse" : "bg-black/15")} />
-              {running ? `Running · ${completed}/${totalDMs}` : "Paused"}
-            </div>
-            {running && (
-              <button onClick={() => setRunning(false)} className="text-[10px] bg-red-500/20 border border-red-500/40 text-red-200 px-2.5 py-1 rounded-md hover:bg-red-500/30 transition-all flex items-center gap-1">
-                <Pause size={10} /> Pause all
-              </button>
-            )}
-          </div>
-        }
-      />
-
-      {/* Stat strip */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-        <StatTile label="Total Sent"           value={totalSent.toLocaleString()}    icon={<Send size={12} />}           tone="blue"   index={0} />
-        <StatTile label="Reply Rate"           value={`${replyRate}%`}               icon={<MessageSquare size={12} />}  tone="green"  index={1} />
-        <StatTile label="Positive Replies"     value={`${positiveReplyRate}%`}       icon={<ThumbsUp size={12} />}       tone="blue"   index={2} />
-        <StatTile label="Booked Calls"         value={totalBooked.toLocaleString()}  icon={<UserCheck size={12} />}      tone="purple" index={3} />
-        <StatTile label="Active Campaigns"     value={campaigns.filter(c => c.status === "running").length} icon={<Target size={12} />} tone="pink" index={4} />
-      </div>
-
-      {/* Compliance stripe */}
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        <Pill tone="ok"    icon={<CheckCircle size={10} />}>No compliance flags · {config.platforms.length} platform{config.platforms.length === 1 ? "" : "s"} active</Pill>
-        {config.warmup && <Pill tone="info" icon={<Flame size={10} />}>Warm-up mode ON · ramping 7 days</Pill>}
-        <Pill tone={safety.rating === "green" ? "ok" : safety.rating === "amber" ? "warn" : "bad"} icon={<Shield size={10} />}>
-          Safety score: {safety.score}/100
-        </Pill>
-        <Pill tone="info" icon={<Timer size={10} />}>
-          Send window: {config.sendWindowStart}–{config.sendWindowEnd}
-        </Pill>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 overflow-x-auto pb-1">
-        {tabs.map(t => (
-          <button
-            key={t.id}
-            onClick={() => setActiveTab(t.id)}
-            className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border",
-              activeTab === t.id
-                ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB] font-medium"
-                : "border-border text-muted hover:text-foreground"
-            )}
-          >
-            <t.icon size={12} /> {t.label}
-          </button>
-        ))}
-      </div>
-
-      {/* =============================================================
-         TAB 1 · SETUP
-         ============================================================= */}
-      {activeTab === "setup" && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2 space-y-4">
-
-            {/* How DM Controller works — beginner-friendly flow */}
-            <HowItWorksFlow />
-
-            {/* Lead Source — where the DMs go */}
-            <LeadSourcePicker />
-
-            {/* Sender Accounts — which of YOUR accounts send the DMs */}
-            <SenderAccountPicker />
-
-            {/* Platform Selector w/ real brand icons */}
-            <div className="card p-4">
-              <h2 className="text-xs font-semibold mb-2">Platforms</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {PLATFORMS.map(p => {
-                  const active = config.platforms.includes(p.id);
-                  return (
-                    <button
-                      key={p.id}
-                      onClick={() => togglePlatform(p.id)}
-                      className={cn(
-                        "flex items-center gap-2.5 p-3 rounded-xl border transition-all",
-                        active ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-border opacity-60 hover:opacity-90"
-                      )}
-                    >
-                      {p.icon(22)}
-                      <div className="text-left">
-                        <p className="text-xs font-semibold">{p.name}</p>
-                        <p className={cn("text-[9px]", active ? "text-green-400" : "text-muted")}>
-                          {active ? "Active" : "Disabled"}
-                        </p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Settings */}
-            <div className="card p-4">
-              <h2 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings size={13} className="text-[#2563EB]" /> Settings</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">DMs per platform</label>
-                  <input type="number" min={1} max={100} value={config.dmsPerPlatform}
-                    onChange={e => setConfig({ ...config, dmsPerPlatform: parseInt(e.target.value) || 20 })}
-                    className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground" />
-                </div>
-                <div>
-                  <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Delay between DMs (sec)</label>
-                  <input type="number" min={15} max={120} value={config.delayBetween}
-                    onChange={e => setConfig({ ...config, delayBetween: parseInt(e.target.value) || 45 })}
-                    className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground" />
-                </div>
-              </div>
-              <div className="mt-3">
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Message Style</label>
-                <div className="flex flex-wrap gap-1.5">
-                  {["friendly", "professional", "bold", "casual"].map(s => (
-                    <button key={s} onClick={() => setConfig({ ...config, messageStyle: s })}
-                      className={cn(
-                        "text-[10px] px-3 py-1 rounded-lg border transition-all capitalize",
-                        config.messageStyle === s ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
-                      )}>{s}</button>
-                  ))}
-                </div>
-              </div>
-              <div className="mt-3">
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Send Window</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="text-[8px] text-muted">Start</label>
-                    <input type="time" value={config.sendWindowStart} onChange={e => setConfig({ ...config, sendWindowStart: e.target.value })} className="w-full rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground" />
-                  </div>
-                  <div>
-                    <label className="text-[8px] text-muted">End</label>
-                    <input type="time" value={config.sendWindowEnd} onChange={e => setConfig({ ...config, sendWindowEnd: e.target.value })} className="w-full rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground" />
-                  </div>
-                </div>
-              </div>
-              <div className="mt-3 flex items-center justify-between p-3 rounded-lg border border-border">
+    <MotionPage className="fade-in space-y-5"><PageHero
+              icon={<Send size={28} />}
+              title="DM Controller"
+              subtitle="Multi-platform cold DM command center · AI-assisted · Compliance-safe."
+              gradient="blue"
+              eyebrow={<><CircleDot size={9} className={cn("inline mr-1.5", running ? "text-green-400 animate-pulse" : "text-muted")} />{running ? "Running" : "Idle"}</>}
+              actions={
                 <div className="flex items-center gap-2">
-                  <Flame size={14} className="text-orange-400" />
-                  <div>
-                    <p className="text-xs font-semibold">Warm-up mode</p>
-                    <p className="text-[10px] text-muted">Ramps DM volume over 7 days to avoid spam filters.</p>
-                  </div>
-                </div>
-                <button onClick={() => setConfig({ ...config, warmup: !config.warmup })}
-                  className={cn(
-                    "relative w-11 h-6 rounded-full transition-all",
-                    config.warmup ? "bg-orange-500" : "bg-[rgba(0,0,0,0.12)]"
+                  <div className={cn(
+                    "flex items-center gap-1.5 text-[10px] border px-2.5 py-1 rounded-md",
+                    running ? "bg-green-400/10 border-green-400/30 text-green-400" :
+                             "bg-black/5 border-border text-muted"
                   )}>
-                  <span className={cn(
-                    "absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all",
-                    config.warmup ? "left-5" : "left-0.5"
-                  )} />
-                </button>
-              </div>
-            </div>
-
-            {/* Target Niches */}
-            <div className="card p-4">
-              <h2 className="text-xs font-semibold mb-2">Target Niches</h2>
-              <div className="flex flex-wrap gap-1.5">
-                {NICHES.map(n => (
-                  <button key={n} onClick={() => toggleNiche(n)}
-                    className={cn(
-                      "text-[10px] px-2.5 py-1 rounded-lg border transition-all",
-                      config.niches.includes(n) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
-                    )}>{n}</button>
-                ))}
-              </div>
-            </div>
-
-            {/* Services */}
-            <div className="card p-4">
-              <h2 className="text-xs font-semibold mb-2">Services to Pitch</h2>
-              <div className="flex flex-wrap gap-1.5">
-                {SERVICES.map(s => (
-                  <button key={s} onClick={() => toggleService(s)}
-                    className={cn(
-                      "text-[10px] px-2.5 py-1 rounded-lg border transition-all",
-                      config.services.includes(s) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
-                    )}>{s}</button>
-                ))}
-              </div>
-            </div>
-
-            {/* Custom Message + variable autocomplete */}
-            <div className="card p-4">
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-xs font-semibold">Custom Message</h2>
-                <div className="relative">
-                  <button onClick={() => setShowVars(v => !v)} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
-                    <Plus size={10} /> Variable
-                  </button>
-                  {showVars && (
-                    <div className="absolute right-0 top-full mt-1 z-30 w-48 card p-1 shadow-xl">
-                      {VARIABLES.map(v => (
-                        <button key={v} onClick={() => insertVariable(v)} className="w-full text-left text-[10px] font-mono px-2 py-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-foreground">
-                          {v}
-                        </button>
-                      ))}
-                    </div>
+                    <span className={cn("w-1.5 h-1.5 rounded-full", running ? "bg-green-400 animate-pulse" : "bg-black/15")} />
+                    {running ? `Running · ${completed}/${totalDMs}` : "Paused"}
+                  </div>
+                  {running && (
+                    <button onClick={() => setRunning(false)} className="text-[10px] bg-red-500/20 border border-red-500/40 text-red-200 px-2.5 py-1 rounded-md hover:bg-red-500/30 transition-all flex items-center gap-1">
+                      <Pause size={10} /> Pause all
+                    </button>
                   )}
                 </div>
-              </div>
-              <textarea
-                value={config.customMessage}
-                onChange={e => setConfig({ ...config, customMessage: e.target.value })}
-                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-24"
-                placeholder="Use variables: {name}, {business_name}, {industry}, {city}, {service}"
-              />
-              <div className="mt-1.5 text-[9px] text-muted flex items-center justify-between">
-                <span>{config.customMessage.length} chars</span>
-                <span>{VARIABLES.filter(v => config.customMessage.includes(v)).length}/{VARIABLES.length} variables used</span>
-              </div>
-            </div>
-          </div>
-
-          {/* ---- Right-side panel: Preview, Safety, Launch ---- */}
-          <div className="space-y-4">
-            {/* DM Preview */}
-            <div className="card p-4">
-              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2">
-                <Eye size={12} className="text-[#2563EB]" /> Live Preview
-              </h3>
-              <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] overflow-hidden">
-                <div className="px-3 py-2 border-b border-[rgba(0,0,0,0.06)] flex items-center gap-2 bg-[rgba(0,0,0,0.04)]">
-                  {platformIcon(config.platforms[0] || "instagram", 16)}
-                  <span className="text-[10px] font-semibold">{platformName(config.platforms[0] || "instagram")}</span>
-                  <span className="text-[9px] text-muted ml-auto">@{(config.niches[0] || "prospect").toLowerCase().replace(/\s+/g, "_")}_co</span>
-                </div>
-                <div className="p-3 space-y-2">
-                  <div className="text-[9px] text-muted flex items-center gap-1"><Clock size={8} /> just now</div>
-                  <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[11px] leading-relaxed text-[#374151]">
-                    {previewText || <span className="text-muted italic">Your message will appear here…</span>}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Safety meter */}
-            <div className="card p-4">
-              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2">
-                <Shield size={12} className={cn(
-                  safety.rating === "green" ? "text-green-400" :
-                  safety.rating === "amber" ? "text-amber-400" : "text-red-400"
-                )} /> Safety Score
-              </h3>
-              <div className="flex items-end gap-3 mb-2">
-                <span className={cn(
-                  "text-3xl font-bold font-mono",
-                  safety.rating === "green" ? "text-green-400" :
-                  safety.rating === "amber" ? "text-amber-400" : "text-red-400"
-                )}>{safety.score}</span>
-                <span className="text-[10px] text-muted pb-1 uppercase tracking-wider">{safety.rating}</span>
-              </div>
-              <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 mb-3 overflow-hidden">
-                <div className={cn(
-                  "h-full rounded-full transition-all",
-                  safety.rating === "green" ? "bg-green-500" :
-                  safety.rating === "amber" ? "bg-amber-500" : "bg-red-500"
-                )} style={{ width: `${safety.score}%` }} />
-              </div>
-              <div className="space-y-1 text-[9px]">
-                <Meter label="Delay"   value={safety.delayScore} />
-                <Meter label="Volume"  value={safety.volumeScore} />
-                <Meter label="Quality" value={safety.msgScore} />
-              </div>
-            </div>
-
-            {/* Launch */}
-            <div className="card p-4 border-[rgba(37,99,235,0.1)] relative overflow-hidden">
-              <div className="text-center py-3">
-                <div className={cn(
-                  "w-14 h-14  flex items-center justify-center mx-auto mb-3",
-                  running ? "bg-green-400/10 animate-pulse" : "bg-[rgba(37,99,235,0.08)]"
-                )}>
-                  {running
-                    ? <Clock size={24} className="text-green-400 animate-spin" />
-                    : <Send size={24} className="text-[#2563EB]" />}
-                </div>
-                <h3 className="text-sm font-bold mb-1">
-                  {running ? "Sending DMs…" : totalDMs === 0 ? "No targets" : "Ready to Launch"}
-                </h3>
-                <div className="space-y-0.5 text-[10px] text-muted mb-3">
-                  <p>Platforms: {config.platforms.length}</p>
-                  <p>Total DMs: {totalDMs}</p>
-                  <p>Est. time: {totalDMs === 0 ? "—" : `~${estimatedTime} min`}</p>
-                </div>
-                {running && (
-                  <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 mb-3 overflow-hidden">
-                    <div className="h-full bg-[#2563EB] rounded-full transition-all" style={{ width: `${(completed / Math.max(totalDMs, 1)) * 100}%` }} />
-                  </div>
-                )}
+              }
+            />{/* Stat strip */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+              <StatTile label="Total Sent"           value={totalSent.toLocaleString()}    icon={<Send size={12} />}           tone="blue"   index={0} />
+              <StatTile label="Reply Rate"           value={`${replyRate}%`}               icon={<MessageSquare size={12} />}  tone="green"  index={1} />
+              <StatTile label="Positive Replies"     value={`${positiveReplyRate}%`}       icon={<ThumbsUp size={12} />}       tone="blue"   index={2} />
+              <StatTile label="Booked Calls"         value={totalBooked.toLocaleString()}  icon={<UserCheck size={12} />}      tone="purple" index={3} />
+              <StatTile label="Active Campaigns"     value={campaigns.filter(c => c.status === "running").length} icon={<Target size={12} />} tone="pink" index={4} />
+            </div>{/* Compliance stripe */}<div className="flex gap-2 overflow-x-auto pb-1">
+              <Pill tone="ok"    icon={<CheckCircle size={10} />}>No compliance flags · {config.platforms.length} platform{config.platforms.length === 1 ? "" : "s"} active</Pill>
+              {config.warmup && <Pill tone="info" icon={<Flame size={10} />}>Warm-up mode ON · ramping 7 days</Pill>}
+              <Pill tone={safety.rating === "green" ? "ok" : safety.rating === "amber" ? "warn" : "bad"} icon={<Shield size={10} />}>
+                Safety score: {safety.score}/100
+              </Pill>
+              <Pill tone="info" icon={<Timer size={10} />}>
+                Send window: {config.sendWindowStart}–{config.sendWindowEnd}
+              </Pill>
+            </div>{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
+              {tabs.map(t => (
                 <button
-                  onClick={running ? () => setRunning(false) : startDMRun}
-                  disabled={!running && config.platforms.length === 0}
+                  key={t.id}
+                  onClick={() => setActiveTab(t.id)}
                   className={cn(
-                    "w-full text-xs py-2.5 flex items-center justify-center gap-2 rounded-xl font-semibold transition-all",
-                    running ? "bg-red-500 text-white hover:bg-red-600" : "bg-[#2563EB] text-white disabled:opacity-50"
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border",
+                    activeTab === t.id
+                      ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB] font-medium"
+                      : "border-border text-muted hover:text-foreground"
                   )}
                 >
-                  {running ? <><Pause size={14} /> Stop</> : <><Play size={14} /> Start DM Run</>}
+                  <t.icon size={12} /> {t.label}
                 </button>
-              </div>
-            </div>
+              ))}
+            </div>{/* =============================================================
+               TAB 1 · SETUP
+               ============================================================= */}{activeTab === "setup" && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div className="lg:col-span-2 space-y-4">
 
-            {/* Requirements */}
-            <div className="card p-4">
-              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Zap size={12} className="text-yellow-400" /> Requirements</h3>
-              <div className="space-y-1.5 text-[10px] text-muted">
-                <p>1. Chrome open with extension</p>
-                <p>2. Logged into social accounts</p>
-                <p>3. Keep Chrome in foreground</p>
-                <p>4. Do not touch the mouse</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+                  {/* How DM Controller works — beginner-friendly flow */}
+                  <HowItWorksFlow />
 
-      {/* =============================================================
-         TAB 2 · CAMPAIGNS
-         ============================================================= */}
-      {activeTab === "campaigns" && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-sm font-semibold">Active Campaigns</h2>
-              <p className="text-[10px] text-muted">Run multiple DM campaigns in parallel — each with its own template & volume.</p>
-            </div>
-            <button onClick={() => setWizardOpen(true)} className="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-[11px] font-semibold flex items-center gap-1.5 hover:scale-[1.02] transition-transform">
-              <Plus size={12} /> New Campaign
-            </button>
-          </div>
-          {campaigns.length === 0 ? (
-            <div className="card p-10 text-center">
-              <EmptyIllustration icon={<Target size={40} />} />
-              <h3 className="text-sm font-semibold mt-3">No campaigns yet</h3>
-              <p className="text-[11px] text-muted mt-1">Spin up your first campaign in under 60 seconds.</p>
-              <button onClick={() => setWizardOpen(true)} className="mt-4 px-4 py-2 rounded-lg bg-[#2563EB] text-white text-[11px] font-semibold inline-flex items-center gap-1.5">
-                <Plus size={12} /> Create campaign
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-2">
-              {campaigns.map(c => {
-                const platform = PLATFORMS.find(p => p.id === c.platform);
-                const replyRate = c.sent ? ((c.replied / c.sent) * 100).toFixed(1) : "0.0";
-                const progressPct = c.leads ? Math.round((c.sent / c.leads) * 100) : 0;
-                return (
-                  <div key={c.id} className="card p-4 hover:border-[rgba(37,99,235,0.2)] transition-all">
-                    <div className="flex items-start gap-3">
-                      <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
-                        {platform?.icon(22)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <p className="text-xs font-semibold truncate">{c.name}</p>
-                          <StatusBadge status={c.status} />
-                        </div>
-                        <div className="mt-1.5 flex items-center gap-3 text-[10px] text-muted flex-wrap">
-                          <span className="flex items-center gap-1"><Users size={9} /> {c.leads} leads</span>
-                          <span className="flex items-center gap-1"><Send size={9} /> {c.sent} sent</span>
-                          <span className="flex items-center gap-1 text-green-400"><MessageSquare size={9} /> {c.replied} replies · {replyRate}%</span>
-                          <span className="flex items-center gap-1 text-[#2563EB]"><UserCheck size={9} /> {c.booked} booked</span>
-                          <span className="flex items-center gap-1"><Clock size={9} /> {c.lastActivity}</span>
-                        </div>
-                        {/* Progress bar */}
-                        <div className="mt-2 w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 overflow-hidden">
-                          <div className="h-full bg-[#2563EB] rounded-full transition-all" style={{ width: `${progressPct}%` }} />
-                        </div>
-                      </div>
-                      {/* Mini dashboard */}
-                      <div className="hidden md:flex items-center gap-3 pr-1">
-                        <MiniStat label="Sent"    value={c.sent}    />
-                        <MiniStat label="Replies" value={c.replied} tone="green" />
-                        <MiniStat label="Booked"  value={c.booked}  tone="blue"  />
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <button onClick={() => toggleCampaign(c.id)} title={c.status === "running" ? "Pause" : "Play"}
-                          className="p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
-                          {c.status === "running" ? <Pause size={12} /> : <Play size={12} />}
-                        </button>
-                        <button onClick={() => setActiveTab("analytics")} title="Analytics"
-                          className="p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
-                          <BarChart3 size={12} />
-                        </button>
-                        <button onClick={() => setActiveTab("setup")} title="Edit"
-                          className="p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
-                          <Edit3 size={12} />
-                        </button>
-                        <button onClick={() => deleteCampaign(c.id)} title="Delete"
-                          className="p-2 rounded-lg border border-border hover:border-red-400/40 hover:text-red-400 transition-all">
-                          <Trash2 size={12} />
-                        </button>
-                      </div>
+                  {/* Lead Source — where the DMs go */}
+                  <LeadSourcePicker />
+
+                  {/* Sender Accounts — which of YOUR accounts send the DMs */}
+                  <SenderAccountPicker />
+
+                  {/* Platform Selector w/ real brand icons */}
+                  <div className="card p-4">
+                    <h2 className="text-xs font-semibold mb-2">Platforms</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      {PLATFORMS.map(p => {
+                        const active = config.platforms.includes(p.id);
+                        return (
+                          <button
+                            key={p.id}
+                            onClick={() => togglePlatform(p.id)}
+                            className={cn(
+                              "flex items-center gap-2.5 p-3 rounded-xl border transition-all",
+                              active ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-border opacity-60 hover:opacity-90"
+                            )}
+                          >
+                            {p.icon(22)}
+                            <div className="text-left">
+                              <p className="text-xs font-semibold">{p.name}</p>
+                              <p className={cn("text-[9px]", active ? "text-green-400" : "text-muted")}>
+                                {active ? "Active" : "Disabled"}
+                              </p>
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
 
-      {/* =============================================================
-         TAB 3 · TEMPLATES
-         ============================================================= */}
-      {activeTab === "templates" && (
-        <div className="space-y-4">
-          <div className="flex flex-wrap items-center gap-1.5">
-            <button onClick={() => setTemplateFilter("all")}
-              className={cn("text-[10px] px-2.5 py-1 rounded-lg border transition-all",
-                templateFilter === "all" ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
-              )}>All ({templates.length})</button>
-            {TEMPLATE_GOALS.map(g => (
-              <button key={g.id} onClick={() => setTemplateFilter(g.id)}
-                className={cn("text-[10px] px-2.5 py-1 rounded-lg border transition-all flex items-center gap-1",
-                  templateFilter === g.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
-                )}><g.icon size={9} className={g.color} /> {g.label}</button>
-            ))}
-            <div className="ml-auto">
-              <button onClick={() => {
-                const t: DMTemplate = {
-                  id: `t${Date.now()}`,
-                  name: "Custom Template",
-                  goal: "cold_intro",
-                  subject: "{business_name}",
-                  opener: "Hey {name}, noticed you run {business_name}.",
-                  value: "Quick idea that might be worth your time.",
-                  cta: "Worth a 10 min chat this week?",
-                  social_proof: "",
-                  custom: true,
-                };
-                setTemplates(ts => [t, ...ts]);
-              }} className="px-3 py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] text-[10px] font-semibold flex items-center gap-1.5">
-                <Plus size={10} /> New Template
-              </button>
-            </div>
-          </div>
-
-          {templates.filter(t => templateFilter === "all" || t.goal === templateFilter).length === 0 ? (
-            <div className="card p-10 text-center">
-              <EmptyIllustration icon={<Copy size={40} />} />
-              <h3 className="text-sm font-semibold mt-3">No templates in this category</h3>
-              <p className="text-[11px] text-muted mt-1">Try another filter or create a new one.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {templates.filter(t => templateFilter === "all" || t.goal === templateFilter).map(t => {
-                const goal = TEMPLATE_GOALS.find(g => g.id === t.goal);
-                const isOptimizing = optimizing === t.id;
-                const isOptimized = optimizeResult?.id === t.id;
-                return (
-                  <div key={t.id} className="card p-4 space-y-2">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          {goal && <goal.icon size={11} className={goal.color} />}
-                          <p className="text-xs font-semibold truncate">{t.name}</p>
-                          {t.custom && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">Custom</span>}
-                        </div>
-                        <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">{goal?.label}</p>
+                  {/* Settings */}
+                  <div className="card p-4">
+                    <h2 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings size={13} className="text-[#2563EB]" /> Settings</h2>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">DMs per platform</label>
+                        <input type="number" min={1} max={100} value={config.dmsPerPlatform}
+                          onChange={e => setConfig({ ...config, dmsPerPlatform: parseInt(e.target.value) || 20 })}
+                          className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground" />
                       </div>
-                      <button onClick={() => setTemplates(ts => ts.filter(x => x.id !== t.id))} className="text-muted hover:text-red-400 p-1">
-                        <Trash2 size={11} />
+                      <div>
+                        <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Delay between DMs (sec)</label>
+                        <input type="number" min={15} max={120} value={config.delayBetween}
+                          onChange={e => setConfig({ ...config, delayBetween: parseInt(e.target.value) || 45 })}
+                          className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground" />
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Message Style</label>
+                      <div className="flex flex-wrap gap-1.5">
+                        {["friendly", "professional", "bold", "casual"].map(s => (
+                          <button key={s} onClick={() => setConfig({ ...config, messageStyle: s })}
+                            className={cn(
+                              "text-[10px] px-3 py-1 rounded-lg border transition-all capitalize",
+                              config.messageStyle === s ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
+                            )}>{s}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Send Window</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[8px] text-muted">Start</label>
+                          <input type="time" value={config.sendWindowStart} onChange={e => setConfig({ ...config, sendWindowStart: e.target.value })} className="w-full rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground" />
+                        </div>
+                        <div>
+                          <label className="text-[8px] text-muted">End</label>
+                          <input type="time" value={config.sendWindowEnd} onChange={e => setConfig({ ...config, sendWindowEnd: e.target.value })} className="w-full rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground" />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-3 flex items-center justify-between p-3 rounded-lg border border-border">
+                      <div className="flex items-center gap-2">
+                        <Flame size={14} className="text-orange-400" />
+                        <div>
+                          <p className="text-xs font-semibold">Warm-up mode</p>
+                          <p className="text-[10px] text-muted">Ramps DM volume over 7 days to avoid spam filters.</p>
+                        </div>
+                      </div>
+                      <button onClick={() => setConfig({ ...config, warmup: !config.warmup })}
+                        className={cn(
+                          "relative w-11 h-6 rounded-full transition-all",
+                          config.warmup ? "bg-orange-500" : "bg-[rgba(0,0,0,0.12)]"
+                        )}>
+                        <span className={cn(
+                          "absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all",
+                          config.warmup ? "left-5" : "left-0.5"
+                        )} />
                       </button>
                     </div>
+                  </div>
 
-                    <div className="space-y-1.5 pt-1 border-t border-border">
-                      <TemplateField label="Subject"     value={t.subject}      onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, subject: v } : x))}     />
-                      <TemplateField label="Opener"      value={t.opener}       onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, opener: v } : x))}      />
-                      <TemplateField label="Value prop"  value={t.value}        onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, value: v } : x))}       />
-                      <TemplateField label="CTA"         value={t.cta}          onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, cta: v } : x))}         />
-                      <TemplateField label="Social proof" value={t.social_proof} onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, social_proof: v } : x))} />
+                  {/* Target Niches */}
+                  <div className="card p-4">
+                    <h2 className="text-xs font-semibold mb-2">Target Niches</h2>
+                    <div className="flex flex-wrap gap-1.5">
+                      {NICHES.map(n => (
+                        <button key={n} onClick={() => toggleNiche(n)}
+                          className={cn(
+                            "text-[10px] px-2.5 py-1 rounded-lg border transition-all",
+                            config.niches.includes(n) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
+                          )}>{n}</button>
+                      ))}
                     </div>
+                  </div>
 
-                    {isOptimized && optimizeResult?.result && (
-                      <div className="p-2.5 rounded-lg border border-purple-400/30 bg-purple-400/[0.04] text-[10px] space-y-1.5">
-                        <div className="flex items-center gap-1.5 text-purple-300 font-semibold"><Wand2 size={10} /> AI Optimized</div>
-                        {optimizeResult.result.optimized_template && (
-                          <p className="text-foreground leading-relaxed">&quot;{optimizeResult.result.optimized_template}&quot;</p>
-                        )}
-                        <div className="flex items-center gap-3">
-                          {typeof optimizeResult.result.predicted_reply_lift_pct === "number" && (
-                            <span className="text-green-400">+{optimizeResult.result.predicted_reply_lift_pct}% predicted lift</span>
-                          )}
-                          {typeof optimizeResult.result.safety_score === "number" && (
-                            <span className="text-muted">Safety: {optimizeResult.result.safety_score}/100</span>
-                          )}
-                        </div>
-                        {optimizeResult.result.improvements && optimizeResult.result.improvements.length > 0 && (
-                          <ul className="space-y-0.5 text-muted">
-                            {optimizeResult.result.improvements.slice(0, 3).map((it, i) => (
-                              <li key={i} className="flex gap-1"><ChevronRight size={9} className="shrink-0 mt-0.5" /> {it}</li>
+                  {/* Services */}
+                  <div className="card p-4">
+                    <h2 className="text-xs font-semibold mb-2">Services to Pitch</h2>
+                    <div className="flex flex-wrap gap-1.5">
+                      {SERVICES.map(s => (
+                        <button key={s} onClick={() => toggleService(s)}
+                          className={cn(
+                            "text-[10px] px-2.5 py-1 rounded-lg border transition-all",
+                            config.services.includes(s) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
+                          )}>{s}</button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Custom Message + variable autocomplete */}
+                  <div className="card p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h2 className="text-xs font-semibold">Custom Message</h2>
+                      <div className="relative">
+                        <button onClick={() => setShowVars(v => !v)} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
+                          <Plus size={10} /> Variable
+                        </button>
+                        {showVars && (
+                          <div className="absolute right-0 top-full mt-1 z-30 w-48 card p-1 shadow-xl">
+                            {VARIABLES.map(v => (
+                              <button key={v} onClick={() => insertVariable(v)} className="w-full text-left text-[10px] font-mono px-2 py-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-foreground">
+                                {v}
+                              </button>
                             ))}
-                          </ul>
+                          </div>
                         )}
                       </div>
-                    )}
+                    </div>
+                    <textarea
+                      value={config.customMessage}
+                      onChange={e => setConfig({ ...config, customMessage: e.target.value })}
+                      className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-24"
+                      placeholder="Use variables: {name}, {business_name}, {industry}, {city}, {service}"
+                    />
+                    <div className="mt-1.5 text-[9px] text-muted flex items-center justify-between">
+                      <span>{config.customMessage.length} chars</span>
+                      <span>{VARIABLES.filter(v => config.customMessage.includes(v)).length}/{VARIABLES.length} variables used</span>
+                    </div>
+                  </div>
+                </div>
 
-                    <div className="flex items-center gap-1.5 pt-1">
+                {/* ---- Right-side panel: Preview, Safety, Launch ---- */}
+                <div className="space-y-4">
+                  {/* DM Preview */}
+                  <div className="card p-4">
+                    <h3 className="text-xs font-semibold mb-2 flex items-center gap-2">
+                      <Eye size={12} className="text-[#2563EB]" /> Live Preview
+                    </h3>
+                    <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] overflow-hidden">
+                      <div className="px-3 py-2 border-b border-[rgba(0,0,0,0.06)] flex items-center gap-2 bg-[rgba(0,0,0,0.04)]">
+                        {platformIcon(config.platforms[0] || "instagram", 16)}
+                        <span className="text-[10px] font-semibold">{platformName(config.platforms[0] || "instagram")}</span>
+                        <span className="text-[9px] text-muted ml-auto">@{(config.niches[0] || "prospect").toLowerCase().replace(/\s+/g, "_")}_co</span>
+                      </div>
+                      <div className="p-3 space-y-2">
+                        <div className="text-[9px] text-muted flex items-center gap-1"><Clock size={8} /> just now</div>
+                        <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[11px] leading-relaxed text-[#374151]">
+                          {previewText || <span className="text-muted italic">Your message will appear here…</span>}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Safety meter */}
+                  <div className="card p-4">
+                    <h3 className="text-xs font-semibold mb-2 flex items-center gap-2">
+                      <Shield size={12} className={cn(
+                        safety.rating === "green" ? "text-green-400" :
+                        safety.rating === "amber" ? "text-amber-400" : "text-red-400"
+                      )} /> Safety Score
+                    </h3>
+                    <div className="flex items-end gap-3 mb-2">
+                      <span className={cn(
+                        "text-3xl font-bold font-mono",
+                        safety.rating === "green" ? "text-green-400" :
+                        safety.rating === "amber" ? "text-amber-400" : "text-red-400"
+                      )}>{safety.score}</span>
+                      <span className="text-[10px] text-muted pb-1 uppercase tracking-wider">{safety.rating}</span>
+                    </div>
+                    <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 mb-3 overflow-hidden">
+                      <div className={cn(
+                        "h-full rounded-full transition-all",
+                        safety.rating === "green" ? "bg-green-500" :
+                        safety.rating === "amber" ? "bg-amber-500" : "bg-red-500"
+                      )} style={{ width: `${safety.score}%` }} />
+                    </div>
+                    <div className="space-y-1 text-[9px]">
+                      <Meter label="Delay"   value={safety.delayScore} />
+                      <Meter label="Volume"  value={safety.volumeScore} />
+                      <Meter label="Quality" value={safety.msgScore} />
+                    </div>
+                  </div>
+
+                  {/* Launch */}
+                  <div className="card p-4 border-[rgba(37,99,235,0.1)] relative overflow-hidden">
+                    <div className="text-center py-3">
+                      <div className={cn(
+                        "w-14 h-14  flex items-center justify-center mx-auto mb-3",
+                        running ? "bg-green-400/10 animate-pulse" : "bg-[rgba(37,99,235,0.08)]"
+                      )}>
+                        {running
+                          ? <Clock size={24} className="text-green-400 animate-spin" />
+                          : <Send size={24} className="text-[#2563EB]" />}
+                      </div>
+                      <h3 className="text-sm font-bold mb-1">
+                        {running ? "Sending DMs…" : totalDMs === 0 ? "No targets" : "Ready to Launch"}
+                      </h3>
+                      <div className="space-y-0.5 text-[10px] text-muted mb-3">
+                        <p>Platforms: {config.platforms.length}</p>
+                        <p>Total DMs: {totalDMs}</p>
+                        <p>Est. time: {totalDMs === 0 ? "—" : `~${estimatedTime} min`}</p>
+                      </div>
+                      {running && (
+                        <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 mb-3 overflow-hidden">
+                          <div className="h-full bg-[#2563EB] rounded-full transition-all" style={{ width: `${(completed / Math.max(totalDMs, 1)) * 100}%` }} />
+                        </div>
+                      )}
                       <button
-                        onClick={() => optimizeTemplate(t)}
-                        disabled={isOptimizing}
-                        className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-purple-400/30 bg-purple-400/[0.04] text-purple-300 hover:bg-purple-400/10 transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+                        onClick={running ? () => setRunning(false) : startDMRun}
+                        disabled={!running && config.platforms.length === 0}
+                        className={cn(
+                          "w-full text-xs py-2.5 flex items-center justify-center gap-2 rounded-xl font-semibold transition-all",
+                          running ? "bg-red-500 text-white hover:bg-red-600" : "bg-[#2563EB] text-white disabled:opacity-50"
+                        )}
                       >
-                        {isOptimizing ? <Loader2 size={10} className="animate-spin" /> : <Wand2 size={10} />}
-                        {isOptimizing ? "Optimizing…" : "AI Rewrite in brand voice"}
-                      </button>
-                      <button
-                        onClick={() => {
-                          const msg = [t.opener, t.value, t.cta, t.social_proof].filter(Boolean).join(" ");
-                          setConfig(prev => ({ ...prev, customMessage: msg }));
-                          setActiveTab("setup");
-                        }}
-                        className="text-[10px] px-2 py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1.5"
-                      >
-                        <ArrowRight size={10} /> Clone to campaign
+                        {running ? <><Pause size={14} /> Stop</> : <><Play size={14} /> Start DM Run</>}
                       </button>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
 
-      {/* =============================================================
-         TAB 4 · INBOX
-         ============================================================= */}
-      {activeTab === "inbox" && (
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
-          <div className="lg:col-span-2 space-y-2 max-h-[70vh] overflow-y-auto pr-1">
-            {inbox.length === 0 ? (
-              <div className="card p-8 text-center">
-                <EmptyIllustration icon={<Inbox size={36} />} />
-                <p className="text-xs text-muted mt-2">No replies yet. Start a campaign to see inbound DMs.</p>
+                  {/* Requirements */}
+                  <div className="card p-4">
+                    <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Zap size={12} className="text-yellow-400" /> Requirements</h3>
+                    <div className="space-y-1.5 text-[10px] text-muted">
+                      <p>1. Chrome open with extension</p>
+                      <p>2. Logged into social accounts</p>
+                      <p>3. Keep Chrome in foreground</p>
+                      <p>4. Do not touch the mouse</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            ) : inbox.map(r => (
-              <button
-                key={r.id}
-                onClick={() => { setOpenReplyId(r.id); setAiReplies(null); setAiReplyError(null); }}
-                className={cn(
-                  "w-full text-left card p-3 transition-all",
-                  openReplyId === r.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "hover:border-[rgba(0,0,0,0.14)]"
-                )}
-              >
-                <div className="flex items-start gap-2">
-                  <div className="shrink-0">{platformIcon(r.platform, 20)}</div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <p className="text-xs font-semibold truncate">{r.from}</p>
-                      <SentimentBadge sentiment={r.sentiment} />
-                      {r.status !== "new" && <StatusChip status={r.status} />}
-                    </div>
-                    <p className="text-[10px] text-muted line-clamp-2 mt-0.5">{r.preview}</p>
-                    <p className="text-[9px] text-muted mt-1">{r.timestamp}</p>
+            )}{/* =============================================================
+               TAB 2 · CAMPAIGNS
+               ============================================================= */}{activeTab === "campaigns" && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-sm font-semibold">Active Campaigns</h2>
+                    <p className="text-[10px] text-muted">Run multiple DM campaigns in parallel — each with its own template & volume.</p>
                   </div>
+                  <button onClick={() => setWizardOpen(true)} className="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-[11px] font-semibold flex items-center gap-1.5 hover:scale-[1.02] transition-transform">
+                    <Plus size={12} /> New Campaign
+                  </button>
                 </div>
-              </button>
-            ))}
-          </div>
-          <div className="lg:col-span-3">
-            {openReply ? (
-              <div className="card p-4 space-y-3">
-                <div className="flex items-center justify-between gap-2 pb-3 border-b border-border">
-                  <div className="flex items-center gap-2 min-w-0">
-                    {platformIcon(openReply.platform, 22)}
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold truncate">{openReply.from}</p>
-                      <p className="text-[10px] text-muted">{platformName(openReply.platform)} · {openReply.timestamp}</p>
-                    </div>
-                  </div>
-                  <SentimentBadge sentiment={openReply.sentiment} />
-                </div>
-
-                {/* Conversation thread */}
-                <div className="space-y-2">
-                  <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[11px] text-[#374151]">
-                    <p className="text-[9px] text-muted mb-1">You</p>
-                    {openReply.original}
-                  </div>
-                  <div className="max-w-[85%] ml-auto px-3 py-2 rounded-br-sm bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[11px] text-[#374151]">
-                    <p className="text-[9px] text-[#2563EB] mb-1">{openReply.from}</p>
-                    {openReply.full}
-                  </div>
-                </div>
-
-                {/* AI Replies */}
-                <div className="pt-2 border-t border-border">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-xs font-semibold flex items-center gap-1.5"><Sparkles size={11} className="text-purple-400" /> AI Reply Drafts</h4>
-                    <button
-                      onClick={() => generateAIReplies(openReply)}
-                      disabled={aiReplyLoading}
-                      className="text-[10px] px-2.5 py-1 rounded-lg border border-purple-400/30 bg-purple-400/[0.04] text-purple-300 hover:bg-purple-400/10 flex items-center gap-1.5 disabled:opacity-50"
-                    >
-                      {aiReplyLoading ? <Loader2 size={10} className="animate-spin" /> : <Wand2 size={10} />}
-                      {aiReplyLoading ? "Drafting…" : aiReplies ? "Regenerate" : "Suggest Reply"}
+                {campaigns.length === 0 ? (
+                  <div className="card p-10 text-center">
+                    <EmptyIllustration icon={<Target size={40} />} />
+                    <h3 className="text-sm font-semibold mt-3">No campaigns yet</h3>
+                    <p className="text-[11px] text-muted mt-1">Spin up your first campaign in under 60 seconds.</p>
+                    <button onClick={() => setWizardOpen(true)} className="mt-4 px-4 py-2 rounded-lg bg-[#2563EB] text-white text-[11px] font-semibold inline-flex items-center gap-1.5">
+                      <Plus size={12} /> Create campaign
                     </button>
                   </div>
-                  {aiReplyError && <p className="text-[10px] text-red-400">{aiReplyError}</p>}
-                  {aiReplies && aiReplies.length > 0 ? (
-                    <div className="space-y-2">
-                      {aiReplies.map((r, i) => (
-                        <div key={i} className="p-3 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] space-y-1.5">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[9px] uppercase tracking-wider text-purple-300 font-semibold">{r.tone}</span>
+                ) : (
+                  <div className="grid grid-cols-1 gap-2">
+                    {campaigns.map(c => {
+                      const platform = PLATFORMS.find(p => p.id === c.platform);
+                      const replyRate = c.sent ? ((c.replied / c.sent) * 100).toFixed(1) : "0.0";
+                      const progressPct = c.leads ? Math.round((c.sent / c.leads) * 100) : 0;
+                      return (
+                        <div key={c.id} className="card p-4 hover:border-[rgba(37,99,235,0.2)] transition-all">
+                          <div className="flex items-start gap-3">
+                            <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
+                              {platform?.icon(22)}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <p className="text-xs font-semibold truncate">{c.name}</p>
+                                <StatusBadge status={c.status} />
+                              </div>
+                              <div className="mt-1.5 flex items-center gap-3 text-[10px] text-muted flex-wrap">
+                                <span className="flex items-center gap-1"><Users size={9} /> {c.leads} leads</span>
+                                <span className="flex items-center gap-1"><Send size={9} /> {c.sent} sent</span>
+                                <span className="flex items-center gap-1 text-green-400"><MessageSquare size={9} /> {c.replied} replies · {replyRate}%</span>
+                                <span className="flex items-center gap-1 text-[#2563EB]"><UserCheck size={9} /> {c.booked} booked</span>
+                                <span className="flex items-center gap-1"><Clock size={9} /> {c.lastActivity}</span>
+                              </div>
+                              {/* Progress bar */}
+                              <div className="mt-2 w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 overflow-hidden">
+                                <div className="h-full bg-[#2563EB] rounded-full transition-all" style={{ width: `${progressPct}%` }} />
+                              </div>
+                            </div>
+                            {/* Mini dashboard */}
+                            <div className="hidden md:flex items-center gap-3 pr-1">
+                              <MiniStat label="Sent"    value={c.sent}    />
+                              <MiniStat label="Replies" value={c.replied} tone="green" />
+                              <MiniStat label="Booked"  value={c.booked}  tone="blue"  />
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <button onClick={() => toggleCampaign(c.id)} title={c.status === "running" ? "Pause" : "Play"}
+                                className="p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
+                                {c.status === "running" ? <Pause size={12} /> : <Play size={12} />}
+                              </button>
+                              <button onClick={() => setActiveTab("analytics")} title="Analytics"
+                                className="p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
+                                <BarChart3 size={12} />
+                              </button>
+                              <button onClick={() => setActiveTab("setup")} title="Edit"
+                                className="p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
+                                <Edit3 size={12} />
+                              </button>
+                              <button onClick={() => deleteCampaign(c.id)} title="Delete"
+                                className="p-2 rounded-lg border border-border hover:border-red-400/40 hover:text-red-400 transition-all">
+                                <Trash2 size={12} />
+                              </button>
+                            </div>
                           </div>
-                          <p className="text-[11px] leading-relaxed">{r.text}</p>
-                          {r.cta && <p className="text-[9px] text-muted italic">CTA: {r.cta}</p>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}{/* =============================================================
+               TAB 3 · TEMPLATES
+               ============================================================= */}{activeTab === "templates" && (
+              <div className="space-y-4">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <button onClick={() => setTemplateFilter("all")}
+                    className={cn("text-[10px] px-2.5 py-1 rounded-lg border transition-all",
+                      templateFilter === "all" ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
+                    )}>All ({templates.length})</button>
+                  {TEMPLATE_GOALS.map(g => (
+                    <button key={g.id} onClick={() => setTemplateFilter(g.id)}
+                      className={cn("text-[10px] px-2.5 py-1 rounded-lg border transition-all flex items-center gap-1",
+                        templateFilter === g.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
+                      )}><g.icon size={9} className={g.color} /> {g.label}</button>
+                  ))}
+                  <div className="ml-auto">
+                    <button onClick={() => {
+                      const t: DMTemplate = {
+                        id: `t${Date.now()}`,
+                        name: "Custom Template",
+                        goal: "cold_intro",
+                        subject: "{business_name}",
+                        opener: "Hey {name}, noticed you run {business_name}.",
+                        value: "Quick idea that might be worth your time.",
+                        cta: "Worth a 10 min chat this week?",
+                        social_proof: "",
+                        custom: true,
+                      };
+                      setTemplates(ts => [t, ...ts]);
+                    }} className="px-3 py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] text-[10px] font-semibold flex items-center gap-1.5">
+                      <Plus size={10} /> New Template
+                    </button>
+                  </div>
+                </div>
+
+                {templates.filter(t => templateFilter === "all" || t.goal === templateFilter).length === 0 ? (
+                  <div className="card p-10 text-center">
+                    <EmptyIllustration icon={<Copy size={40} />} />
+                    <h3 className="text-sm font-semibold mt-3">No templates in this category</h3>
+                    <p className="text-[11px] text-muted mt-1">Try another filter or create a new one.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {templates.filter(t => templateFilter === "all" || t.goal === templateFilter).map(t => {
+                      const goal = TEMPLATE_GOALS.find(g => g.id === t.goal);
+                      const isOptimizing = optimizing === t.id;
+                      const isOptimized = optimizeResult?.id === t.id;
+                      return (
+                        <div key={t.id} className="card p-4 space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                {goal && <goal.icon size={11} className={goal.color} />}
+                                <p className="text-xs font-semibold truncate">{t.name}</p>
+                                {t.custom && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">Custom</span>}
+                              </div>
+                              <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">{goal?.label}</p>
+                            </div>
+                            <button onClick={() => setTemplates(ts => ts.filter(x => x.id !== t.id))} className="text-muted hover:text-red-400 p-1">
+                              <Trash2 size={11} />
+                            </button>
+                          </div>
+
+                          <div className="space-y-1.5 pt-1 border-t border-border">
+                            <TemplateField label="Subject"     value={t.subject}      onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, subject: v } : x))}     />
+                            <TemplateField label="Opener"      value={t.opener}       onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, opener: v } : x))}      />
+                            <TemplateField label="Value prop"  value={t.value}        onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, value: v } : x))}       />
+                            <TemplateField label="CTA"         value={t.cta}          onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, cta: v } : x))}         />
+                            <TemplateField label="Social proof" value={t.social_proof} onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, social_proof: v } : x))} />
+                          </div>
+
+                          {isOptimized && optimizeResult?.result && (
+                            <div className="p-2.5 rounded-lg border border-purple-400/30 bg-purple-400/[0.04] text-[10px] space-y-1.5">
+                              <div className="flex items-center gap-1.5 text-purple-300 font-semibold"><Wand2 size={10} /> AI Optimized</div>
+                              {optimizeResult.result.optimized_template && (
+                                <p className="text-foreground leading-relaxed">&quot;{optimizeResult.result.optimized_template}&quot;</p>
+                              )}
+                              <div className="flex items-center gap-3">
+                                {typeof optimizeResult.result.predicted_reply_lift_pct === "number" && (
+                                  <span className="text-green-400">+{optimizeResult.result.predicted_reply_lift_pct}% predicted lift</span>
+                                )}
+                                {typeof optimizeResult.result.safety_score === "number" && (
+                                  <span className="text-muted">Safety: {optimizeResult.result.safety_score}/100</span>
+                                )}
+                              </div>
+                              {optimizeResult.result.improvements && optimizeResult.result.improvements.length > 0 && (
+                                <ul className="space-y-0.5 text-muted">
+                                  {optimizeResult.result.improvements.slice(0, 3).map((it, i) => (
+                                    <li key={i} className="flex gap-1"><ChevronRight size={9} className="shrink-0 mt-0.5" /> {it}</li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          )}
+
                           <div className="flex items-center gap-1.5 pt-1">
-                            <button onClick={() => navigator.clipboard?.writeText(r.text)} className="text-[9px] px-2 py-0.5 rounded border border-border text-muted hover:text-foreground">Copy</button>
-                            <button className="text-[9px] px-2 py-0.5 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]">Use this</button>
+                            <button
+                              onClick={() => optimizeTemplate(t)}
+                              disabled={isOptimizing}
+                              className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-purple-400/30 bg-purple-400/[0.04] text-purple-300 hover:bg-purple-400/10 transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+                            >
+                              {isOptimizing ? <Loader2 size={10} className="animate-spin" /> : <Wand2 size={10} />}
+                              {isOptimizing ? "Optimizing…" : "AI Rewrite in brand voice"}
+                            </button>
+                            <button
+                              onClick={() => {
+                                const msg = [t.opener, t.value, t.cta, t.social_proof].filter(Boolean).join(" ");
+                                setConfig(prev => ({ ...prev, customMessage: msg }));
+                                setActiveTab("setup");
+                              }}
+                              className="text-[10px] px-2 py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1.5"
+                            >
+                              <ArrowRight size={10} /> Clone to campaign
+                            </button>
                           </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}{/* =============================================================
+               TAB 4 · INBOX
+               ============================================================= */}{activeTab === "inbox" && (
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
+                <div className="lg:col-span-2 space-y-2 max-h-[70vh] overflow-y-auto pr-1">
+                  {inbox.length === 0 ? (
+                    <div className="card p-8 text-center">
+                      <EmptyIllustration icon={<Inbox size={36} />} />
+                      <p className="text-xs text-muted mt-2">No replies yet. Start a campaign to see inbound DMs.</p>
+                    </div>
+                  ) : inbox.map(r => (
+                    <button
+                      key={r.id}
+                      onClick={() => { setOpenReplyId(r.id); setAiReplies(null); setAiReplyError(null); }}
+                      className={cn(
+                        "w-full text-left card p-3 transition-all",
+                        openReplyId === r.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "hover:border-[rgba(0,0,0,0.14)]"
+                      )}
+                    >
+                      <div className="flex items-start gap-2">
+                        <div className="shrink-0">{platformIcon(r.platform, 20)}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <p className="text-xs font-semibold truncate">{r.from}</p>
+                            <SentimentBadge sentiment={r.sentiment} />
+                            {r.status !== "new" && <StatusChip status={r.status} />}
+                          </div>
+                          <p className="text-[10px] text-muted line-clamp-2 mt-0.5">{r.preview}</p>
+                          <p className="text-[9px] text-muted mt-1">{r.timestamp}</p>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <div className="lg:col-span-3">
+                  {openReply ? (
+                    <div className="card p-4 space-y-3">
+                      <div className="flex items-center justify-between gap-2 pb-3 border-b border-border">
+                        <div className="flex items-center gap-2 min-w-0">
+                          {platformIcon(openReply.platform, 22)}
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold truncate">{openReply.from}</p>
+                            <p className="text-[10px] text-muted">{platformName(openReply.platform)} · {openReply.timestamp}</p>
+                          </div>
+                        </div>
+                        <SentimentBadge sentiment={openReply.sentiment} />
+                      </div>
+
+                      {/* Conversation thread */}
+                      <div className="space-y-2">
+                        <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[11px] text-[#374151]">
+                          <p className="text-[9px] text-muted mb-1">You</p>
+                          {openReply.original}
+                        </div>
+                        <div className="max-w-[85%] ml-auto px-3 py-2 rounded-br-sm bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[11px] text-[#374151]">
+                          <p className="text-[9px] text-[#2563EB] mb-1">{openReply.from}</p>
+                          {openReply.full}
+                        </div>
+                      </div>
+
+                      {/* AI Replies */}
+                      <div className="pt-2 border-t border-border">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="text-xs font-semibold flex items-center gap-1.5"><Sparkles size={11} className="text-purple-400" /> AI Reply Drafts</h4>
+                          <button
+                            onClick={() => generateAIReplies(openReply)}
+                            disabled={aiReplyLoading}
+                            className="text-[10px] px-2.5 py-1 rounded-lg border border-purple-400/30 bg-purple-400/[0.04] text-purple-300 hover:bg-purple-400/10 flex items-center gap-1.5 disabled:opacity-50"
+                          >
+                            {aiReplyLoading ? <Loader2 size={10} className="animate-spin" /> : <Wand2 size={10} />}
+                            {aiReplyLoading ? "Drafting…" : aiReplies ? "Regenerate" : "Suggest Reply"}
+                          </button>
+                        </div>
+                        {aiReplyError && <p className="text-[10px] text-red-400">{aiReplyError}</p>}
+                        {aiReplies && aiReplies.length > 0 ? (
+                          <div className="space-y-2">
+                            {aiReplies.map((r, i) => (
+                              <div key={i} className="p-3 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] space-y-1.5">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-[9px] uppercase tracking-wider text-purple-300 font-semibold">{r.tone}</span>
+                                </div>
+                                <p className="text-[11px] leading-relaxed">{r.text}</p>
+                                {r.cta && <p className="text-[9px] text-muted italic">CTA: {r.cta}</p>}
+                                <div className="flex items-center gap-1.5 pt-1">
+                                  <button onClick={() => navigator.clipboard?.writeText(r.text)} className="text-[9px] px-2 py-0.5 rounded border border-border text-muted hover:text-foreground">Copy</button>
+                                  <button className="text-[9px] px-2 py-0.5 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]">Use this</button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : !aiReplyLoading && !aiReplyError ? (
+                          <p className="text-[10px] text-muted italic">Click &quot;Suggest Reply&quot; to get 3 AI-drafted responses.</p>
+                        ) : null}
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-1.5 pt-2 border-t border-border">
+                        <button
+                          onClick={() => setInbox(ibx => ibx.map(x => x.id === openReply.id ? { ...x, status: "closed" } : x))}
+                          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border hover:border-[rgba(0,0,0,0.14)] text-muted hover:text-foreground flex items-center justify-center gap-1.5">
+                          <CheckCircle size={10} /> Close
+                        </button>
+                        <button
+                          onClick={() => setInbox(ibx => ibx.map(x => x.id === openReply.id ? { ...x, status: "handed_off" } : x))}
+                          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border hover:border-blue-400/30 text-muted hover:text-blue-400 flex items-center justify-center gap-1.5">
+                          <UserCheck size={10} /> Hand off
+                        </button>
+                        <button
+                          onClick={() => setInbox(ibx => ibx.map(x => x.id === openReply.id ? { ...x, status: "needs_human" } : x))}
+                          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border hover:border-amber-400/30 text-muted hover:text-amber-400 flex items-center justify-center gap-1.5">
+                          <Flag size={10} /> Needs human
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="card p-10 text-center h-full flex items-center justify-center">
+                      <div>
+                        <EmptyIllustration icon={<MessageSquare size={40} />} />
+                        <h3 className="text-sm font-semibold mt-3">Select a reply</h3>
+                        <p className="text-[11px] text-muted mt-1">Pick a conversation from the left to view & respond.</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}{/* =============================================================
+               TAB 5 · ANALYTICS
+               ============================================================= */}{activeTab === "analytics" && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {[
+                    { val: totalSent, label: "Sent today", color: "" },
+                    { val: `${replyRate}%`, label: "Reply Rate", color: "text-green-400" },
+                    { val: `${positiveReplyRate}%`, label: "Positive Reply Rate", color: "text-blue-400" },
+                    { val: totalBooked, label: "Booked Calls", color: "text-[#2563EB]" },
+                  ].map((s, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden text-center">
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+                      <div className="p-3">
+                        <p className={cn("text-2xl font-bold font-mono", s.color)}>{s.val}</p>
+                        <p className="text-[10px] text-muted">{s.label}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Per-platform breakdown */}
+                <div className="card p-4">
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><TrendingUp size={12} className="text-[#2563EB]" /> By Platform</h3>
+                  <div className="space-y-3">
+                    {PLATFORMS.map(p => {
+                      const rows = campaigns.filter(c => c.platform === p.id);
+                      const sent = rows.reduce((s, r) => s + r.sent, 0);
+                      const replied = rows.reduce((s, r) => s + r.replied, 0);
+                      const rate = sent ? ((replied / sent) * 100) : 0;
+                      return (
+                        <div key={p.id}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs font-medium flex items-center gap-2">{p.icon(14)} {p.name}</span>
+                            <span className="text-xs text-muted">{sent} sent · {replied} replies · {rate.toFixed(1)}%</span>
+                          </div>
+                          <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 overflow-hidden">
+                            <div className="h-full rounded-full bg-[#2563EB] transition-all" style={{ width: `${Math.min(100, rate * 5)}%` }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Per-campaign leaderboard */}
+                <div className="card p-4">
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Star size={12} className="text-[#2563EB]" /> Campaign Leaderboard</h3>
+                  {campaigns.length === 0 ? (
+                    <p className="text-[10px] text-muted">No campaigns yet.</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {[...campaigns].sort((a, b) => (b.replied / Math.max(b.sent, 1)) - (a.replied / Math.max(a.sent, 1))).slice(0, 6).map((c, i) => {
+                        const rate = c.sent ? ((c.replied / c.sent) * 100).toFixed(1) : "0.0";
+                        return (
+                          <div key={c.id} className="flex items-center gap-3 p-2 rounded-lg border border-border">
+                            <div className="w-6 h-6 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-[10px] font-bold flex items-center justify-center">{i + 1}</div>
+                            <div className="shrink-0">{platformIcon(c.platform, 14)}</div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs truncate">{c.name}</p>
+                              <p className="text-[10px] text-muted">{c.sent} sent · {c.replied} replies</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-sm font-bold font-mono text-green-400">{rate}%</p>
+                              <p className="text-[9px] text-muted">reply rate</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* AI Insights + heatmap */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="card p-4">
+                    <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Lightbulb size={12} className="text-purple-400" /> AI Insights</h3>
+                    <div className="space-y-2">
+                      <InsightBubble tone="positive">
+                        <strong>LinkedIn is 3× more effective</strong> for your niche this week — 22.6% reply rate vs 7.8% across other platforms.
+                      </InsightBubble>
+                      <InsightBubble tone="warning">
+                        <strong>Instagram reply rate dropped 18%</strong> — try shortening opener to under 90 chars.
+                      </InsightBubble>
+                      <InsightBubble tone="info">
+                        <strong>Best time to send</strong>: Tue/Thu 10–11am local. Avoid Mondays before noon.
+                      </InsightBubble>
+                      <InsightBubble tone="positive">
+                        <strong>Warm-up paying off</strong> — zero shadow-ban flags this week.
+                      </InsightBubble>
+                    </div>
+                  </div>
+                  <div className="card p-4">
+                    <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Calendar size={12} className="text-[#2563EB]" /> Best Time Heatmap</h3>
+                    <Heatmap />
+                    <p className="text-[9px] text-muted mt-2">Darker = higher reply rate · based on the last 30 days of campaign data.</p>
+                  </div>
+                </div>
+              </div>
+            )}{/* =============================================================
+               TAB 6 · AUTOMATION
+               ============================================================= */}{activeTab === "automation" && (
+              <div className="space-y-4">
+                <div className="card p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-xs font-semibold flex items-center gap-2"><Zap size={12} className="text-[#2563EB]" /> Automation Rules</h3>
+                    <button
+                      onClick={() => setRules(rs => [{
+                        id: `r${Date.now()}`,
+                        type: "auto_reply",
+                        label: "New rule",
+                        config: "Customize me",
+                        enabled: false,
+                      }, ...rs])}
+                      className="px-2.5 py-1 rounded-lg bg-[#2563EB] text-white text-[10px] font-semibold flex items-center gap-1">
+                      <Plus size={10} /> Add rule
+                    </button>
+                  </div>
+                  {rules.length === 0 ? (
+                    <p className="text-[10px] text-muted py-4 text-center">No automation rules configured.</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {rules.map(r => (
+                        <div key={r.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                          <div className="shrink-0 w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                            {r.type === "auto_reply"    && <MessageSquare size={14} className="text-[#2563EB]" />}
+                            {r.type === "auto_followup" && <RefreshCw size={14} className="text-[#2563EB]" />}
+                            {r.type === "auto_tag"      && <Sparkles size={14} className="text-[#2563EB]" />}
+                            {r.type === "auto_handoff"  && <UserCheck size={14} className="text-[#2563EB]" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold">{r.label}</p>
+                            <p className="text-[10px] text-muted">{r.config}</p>
+                          </div>
+                          <button
+                            onClick={() => setRules(rs => rs.map(x => x.id === r.id ? { ...x, enabled: !x.enabled } : x))}
+                            className={cn(
+                              "relative w-10 h-5 rounded-full transition-all",
+                              r.enabled ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.12)]"
+                            )}>
+                            <span className={cn(
+                              "absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all",
+                              r.enabled ? "left-[22px]" : "left-0.5"
+                            )} />
+                          </button>
+                          <button className="p-1.5 rounded-lg border border-border text-muted hover:text-foreground" aria-label="Edit rule"><Edit3 size={11} /></button>
+                          <button onClick={() => setRules(rs => rs.filter(x => x.id !== r.id))} className="p-1.5 rounded-lg border border-border text-muted hover:text-red-400" aria-label="Delete rule"><Trash2 size={11} /></button>
                         </div>
                       ))}
                     </div>
-                  ) : !aiReplyLoading && !aiReplyError ? (
-                    <p className="text-[10px] text-muted italic">Click &quot;Suggest Reply&quot; to get 3 AI-drafted responses.</p>
-                  ) : null}
+                  )}
                 </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-1.5 pt-2 border-t border-border">
-                  <button
-                    onClick={() => setInbox(ibx => ibx.map(x => x.id === openReply.id ? { ...x, status: "closed" } : x))}
-                    className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border hover:border-[rgba(0,0,0,0.14)] text-muted hover:text-foreground flex items-center justify-center gap-1.5">
-                    <CheckCircle size={10} /> Close
-                  </button>
-                  <button
-                    onClick={() => setInbox(ibx => ibx.map(x => x.id === openReply.id ? { ...x, status: "handed_off" } : x))}
-                    className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border hover:border-blue-400/30 text-muted hover:text-blue-400 flex items-center justify-center gap-1.5">
-                    <UserCheck size={10} /> Hand off
-                  </button>
-                  <button
-                    onClick={() => setInbox(ibx => ibx.map(x => x.id === openReply.id ? { ...x, status: "needs_human" } : x))}
-                    className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border hover:border-amber-400/30 text-muted hover:text-amber-400 flex items-center justify-center gap-1.5">
-                    <Flag size={10} /> Needs human
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="card p-10 text-center h-full flex items-center justify-center">
-                <div>
-                  <EmptyIllustration icon={<MessageSquare size={40} />} />
-                  <h3 className="text-sm font-semibold mt-3">Select a reply</h3>
-                  <p className="text-[11px] text-muted mt-1">Pick a conversation from the left to view & respond.</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* =============================================================
-         TAB 5 · ANALYTICS
-         ============================================================= */}
-      {activeTab === "analytics" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              { val: totalSent, label: "Sent today", color: "" },
-              { val: `${replyRate}%`, label: "Reply Rate", color: "text-green-400" },
-              { val: `${positiveReplyRate}%`, label: "Positive Reply Rate", color: "text-blue-400" },
-              { val: totalBooked, label: "Booked Calls", color: "text-[#2563EB]" },
-            ].map((s, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden text-center">
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-                <div className="p-3">
-                  <p className={cn("text-2xl font-bold font-mono", s.color)}>{s.val}</p>
-                  <p className="text-[10px] text-muted">{s.label}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Per-platform breakdown */}
-          <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><TrendingUp size={12} className="text-[#2563EB]" /> By Platform</h3>
-            <div className="space-y-3">
-              {PLATFORMS.map(p => {
-                const rows = campaigns.filter(c => c.platform === p.id);
-                const sent = rows.reduce((s, r) => s + r.sent, 0);
-                const replied = rows.reduce((s, r) => s + r.replied, 0);
-                const rate = sent ? ((replied / sent) * 100) : 0;
-                return (
-                  <div key={p.id}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium flex items-center gap-2">{p.icon(14)} {p.name}</span>
-                      <span className="text-xs text-muted">{sent} sent · {replied} replies · {rate.toFixed(1)}%</span>
-                    </div>
-                    <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 overflow-hidden">
-                      <div className="h-full rounded-full bg-[#2563EB] transition-all" style={{ width: `${Math.min(100, rate * 5)}%` }} />
-                    </div>
+                <div className="card p-4">
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><GitBranch size={12} className="text-[#2563EB]" /> Available Automation Types</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <TypeCard title="Auto-reply to keywords"  desc="Match inbound keywords → fire template response instantly" icon={<MessageSquare size={14} />} />
+                    <TypeCard title="Auto-follow-up after X days"  desc="Send a scheduled follow-up if no reply within N days" icon={<RefreshCw size={14} />} />
+                    <TypeCard title="Auto-tag by sentiment"  desc="Tag replies hot / warm / cold based on detected sentiment" icon={<Sparkles size={14} />} />
+                    <TypeCard title="Auto-hand-off when qualified" desc="Pause bot & ping a human when qualify signals detected" icon={<UserCheck size={14} />} />
                   </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Per-campaign leaderboard */}
-          <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Star size={12} className="text-[#2563EB]" /> Campaign Leaderboard</h3>
-            {campaigns.length === 0 ? (
-              <p className="text-[10px] text-muted">No campaigns yet.</p>
-            ) : (
-              <div className="space-y-2">
-                {[...campaigns].sort((a, b) => (b.replied / Math.max(b.sent, 1)) - (a.replied / Math.max(a.sent, 1))).slice(0, 6).map((c, i) => {
-                  const rate = c.sent ? ((c.replied / c.sent) * 100).toFixed(1) : "0.0";
-                  return (
-                    <div key={c.id} className="flex items-center gap-3 p-2 rounded-lg border border-border">
-                      <div className="w-6 h-6 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-[10px] font-bold flex items-center justify-center">{i + 1}</div>
-                      <div className="shrink-0">{platformIcon(c.platform, 14)}</div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs truncate">{c.name}</p>
-                        <p className="text-[10px] text-muted">{c.sent} sent · {c.replied} replies</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-bold font-mono text-green-400">{rate}%</p>
-                        <p className="text-[9px] text-muted">reply rate</p>
-                      </div>
-                    </div>
-                  );
-                })}
+                </div>
               </div>
-            )}
-          </div>
+            )}{/* =============================================================
+               TAB 7 · COMPLIANCE
+               ============================================================= */}{activeTab === "compliance" && (
+              <div className="space-y-4">
+                {/* Rate-limit status */}
+                <div className="card p-4">
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Shield size={12} className="text-[#2563EB]" /> Rate Limit Status · per platform</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {PLATFORMS.map(p => {
+                      const usage = Math.floor(Math.random() * 80);
+                      return (
+                        <div key={p.id} className="p-3 rounded-lg border border-border">
+                          <div className="flex items-center gap-2 mb-2">
+                            {p.icon(16)}
+                            <span className="text-xs font-semibold">{p.name}</span>
+                          </div>
+                          <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 mb-1 overflow-hidden">
+                            <div className={cn(
+                              "h-full rounded-full",
+                              usage > 70 ? "bg-red-500" : usage > 40 ? "bg-amber-500" : "bg-green-500"
+                            )} style={{ width: `${usage}%` }} />
+                          </div>
+                          <p className="text-[9px] text-muted">{usage}% of daily quota</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
 
-          {/* AI Insights + heatmap */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="card p-4">
-              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Lightbulb size={12} className="text-purple-400" /> AI Insights</h3>
-              <div className="space-y-2">
-                <InsightBubble tone="positive">
-                  <strong>LinkedIn is 3× more effective</strong> for your niche this week — 22.6% reply rate vs 7.8% across other platforms.
-                </InsightBubble>
-                <InsightBubble tone="warning">
-                  <strong>Instagram reply rate dropped 18%</strong> — try shortening opener to under 90 chars.
-                </InsightBubble>
-                <InsightBubble tone="info">
-                  <strong>Best time to send</strong>: Tue/Thu 10–11am local. Avoid Mondays before noon.
-                </InsightBubble>
-                <InsightBubble tone="positive">
-                  <strong>Warm-up paying off</strong> — zero shadow-ban flags this week.
-                </InsightBubble>
-              </div>
-            </div>
-            <div className="card p-4">
-              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Calendar size={12} className="text-[#2563EB]" /> Best Time Heatmap</h3>
-              <Heatmap />
-              <p className="text-[9px] text-muted mt-2">Darker = higher reply rate · based on the last 30 days of campaign data.</p>
-            </div>
-          </div>
-        </div>
-      )}
+                {/* Warm-up progress per account */}
+                <div className="card p-4">
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Flame size={12} className="text-orange-400" /> Warm-Up Progress</h3>
+                  <div className="space-y-2">
+                    {PLATFORMS.map((p, idx) => {
+                      const day = Math.min(7, idx + 2);
+                      const pct = (day / 7) * 100;
+                      return (
+                        <div key={p.id}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs font-medium flex items-center gap-2">{p.icon(14)} {p.name}</span>
+                            <span className="text-[10px] text-muted">Day {day} / 7</span>
+                          </div>
+                          <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 overflow-hidden">
+                            <div className="h-full rounded-full bg-orange-500" style={{ width: `${pct}%` }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
 
-      {/* =============================================================
-         TAB 6 · AUTOMATION
-         ============================================================= */}
-      {activeTab === "automation" && (
-        <div className="space-y-4">
-          <div className="card p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-semibold flex items-center gap-2"><Zap size={12} className="text-[#2563EB]" /> Automation Rules</h3>
-              <button
-                onClick={() => setRules(rs => [{
-                  id: `r${Date.now()}`,
-                  type: "auto_reply",
-                  label: "New rule",
-                  config: "Customize me",
-                  enabled: false,
-                }, ...rs])}
-                className="px-2.5 py-1 rounded-lg bg-[#2563EB] text-white text-[10px] font-semibold flex items-center gap-1">
-                <Plus size={10} /> Add rule
-              </button>
-            </div>
-            {rules.length === 0 ? (
-              <p className="text-[10px] text-muted py-4 text-center">No automation rules configured.</p>
-            ) : (
-              <div className="space-y-2">
-                {rules.map(r => (
-                  <div key={r.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
-                    <div className="shrink-0 w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
-                      {r.type === "auto_reply"    && <MessageSquare size={14} className="text-[#2563EB]" />}
-                      {r.type === "auto_followup" && <RefreshCw size={14} className="text-[#2563EB]" />}
-                      {r.type === "auto_tag"      && <Sparkles size={14} className="text-[#2563EB]" />}
-                      {r.type === "auto_handoff"  && <UserCheck size={14} className="text-[#2563EB]" />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold">{r.label}</p>
-                      <p className="text-[10px] text-muted">{r.config}</p>
-                    </div>
+                {/* Blacklist · usernames */}
+                <div className="card p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-xs font-semibold flex items-center gap-2"><Ban size={12} className="text-red-400" /> Username Blacklist</h3>
+                    <span className="text-[10px] text-muted">{blacklist.length} entries</span>
+                  </div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <input
+                      value={blacklistInput}
+                      onChange={e => setBlacklistInput(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === "Enter" && blacklistInput.trim()) {
+                          setBlacklist(bl => [...bl, { name: blacklistInput.trim(), platform: "instagram", reason: "Manual", date: new Date().toLocaleDateString() }]);
+                          setBlacklistInput("");
+                        }
+                      }}
+                      placeholder="@username or handle · Enter to add"
+                      className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground"
+                    />
                     <button
-                      onClick={() => setRules(rs => rs.map(x => x.id === r.id ? { ...x, enabled: !x.enabled } : x))}
-                      className={cn(
-                        "relative w-10 h-5 rounded-full transition-all",
-                        r.enabled ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.12)]"
+                      onClick={() => {
+                        if (blacklistInput.trim()) {
+                          setBlacklist(bl => [...bl, { name: blacklistInput.trim(), platform: "instagram", reason: "Manual", date: new Date().toLocaleDateString() }]);
+                          setBlacklistInput("");
+                        }
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-[10px] font-semibold flex items-center gap-1">
+                      <Plus size={10} /> Add
+                    </button>
+                  </div>
+                  {blacklist.length === 0 ? (
+                    <p className="text-[10px] text-muted text-center py-4">No blacklisted accounts.</p>
+                  ) : (
+                    <div className="space-y-1.5">
+                      {blacklist.map((b, i) => (
+                        <div key={i} className="flex items-center justify-between p-2.5 rounded-lg border border-border">
+                          <div className="flex items-center gap-2.5">
+                            <Ban size={12} className="text-red-400" />
+                            <div>
+                              <p className="text-xs">{b.name}</p>
+                              <p className="text-[9px] text-muted">{b.platform} · {b.reason} · {b.date}</p>
+                            </div>
+                          </div>
+                          <button onClick={() => setBlacklist(bl => bl.filter((_, idx) => idx !== i))} className="text-muted hover:text-red-400">
+                            <Trash2 size={11} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Keyword blacklist */}
+                <div className="card p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-xs font-semibold flex items-center gap-2"><AlertTriangle size={12} className="text-amber-400" /> Keyword Blocklist</h3>
+                    <span className="text-[10px] text-muted">{keywordBlacklist.length} entries</span>
+                  </div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <input
+                      value={keywordInput}
+                      onChange={e => setKeywordInput(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === "Enter" && keywordInput.trim()) {
+                          setKeywordBlacklist(kw => [...kw, keywordInput.trim()]);
+                          setKeywordInput("");
+                        }
+                      }}
+                      placeholder="Keyword · Enter to add"
+                      className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground"
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {keywordBlacklist.map((kw, i) => (
+                      <span key={i} className="text-[10px] px-2.5 py-1 rounded-lg border border-red-400/30 bg-red-400/[0.04] text-red-300 flex items-center gap-1.5">
+                        {kw}
+                        <button onClick={() => setKeywordBlacklist(list => list.filter((_, idx) => idx !== i))} className="hover:text-red-400">
+                          <X size={10} />
+                        </button>
+                      </span>
+                    ))}
+                    {keywordBlacklist.length === 0 && <p className="text-[10px] text-muted">No keywords blocked.</p>}
+                  </div>
+                </div>
+
+                {/* Opt-out / DNC */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="card p-4">
+                    <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><MinusCircle size={12} className="text-amber-400" /> Opt-out list</h3>
+                    <p className="text-[10px] text-muted mb-2">Accounts that asked to be removed. Auto-enforced across platforms.</p>
+                    <div className="text-[10px] text-muted text-center py-2">
+                      0 opt-outs recorded.
+                    </div>
+                  </div>
+                  <div className="card p-4">
+                    <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><ShieldAlert size={12} className="text-red-400" /> Do-not-contact</h3>
+                    <p className="text-[10px] text-muted mb-2">Legally-mandated exclusions. Sync with your CRM.</p>
+                    <div className="text-[10px] text-muted text-center py-2">
+                      0 DNC records.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}{/* =============================================================
+               TAB 8 · LIVE ACTIVITY
+               ============================================================= */}{activeTab === "live" && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {PLATFORMS.map(p => {
+                    const sessionsActive = running && config.platforms.includes(p.id);
+                    return (
+                      <div key={p.id} className={cn(
+                        "card p-3 flex items-center gap-2.5",
+                        sessionsActive && "border-green-400/40 bg-green-400/[0.03]"
                       )}>
-                      <span className={cn(
-                        "absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all",
-                        r.enabled ? "left-[22px]" : "left-0.5"
-                      )} />
-                    </button>
-                    <button className="p-1.5 rounded-lg border border-border text-muted hover:text-foreground" aria-label="Edit rule"><Edit3 size={11} /></button>
-                    <button onClick={() => setRules(rs => rs.filter(x => x.id !== r.id))} className="p-1.5 rounded-lg border border-border text-muted hover:text-red-400" aria-label="Delete rule"><Trash2 size={11} /></button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><GitBranch size={12} className="text-[#2563EB]" /> Available Automation Types</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <TypeCard title="Auto-reply to keywords"  desc="Match inbound keywords → fire template response instantly" icon={<MessageSquare size={14} />} />
-              <TypeCard title="Auto-follow-up after X days"  desc="Send a scheduled follow-up if no reply within N days" icon={<RefreshCw size={14} />} />
-              <TypeCard title="Auto-tag by sentiment"  desc="Tag replies hot / warm / cold based on detected sentiment" icon={<Sparkles size={14} />} />
-              <TypeCard title="Auto-hand-off when qualified" desc="Pause bot & ping a human when qualify signals detected" icon={<UserCheck size={14} />} />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* =============================================================
-         TAB 7 · COMPLIANCE
-         ============================================================= */}
-      {activeTab === "compliance" && (
-        <div className="space-y-4">
-          {/* Rate-limit status */}
-          <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Shield size={12} className="text-[#2563EB]" /> Rate Limit Status · per platform</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {PLATFORMS.map(p => {
-                const usage = Math.floor(Math.random() * 80);
-                return (
-                  <div key={p.id} className="p-3 rounded-lg border border-border">
-                    <div className="flex items-center gap-2 mb-2">
-                      {p.icon(16)}
-                      <span className="text-xs font-semibold">{p.name}</span>
-                    </div>
-                    <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 mb-1 overflow-hidden">
-                      <div className={cn(
-                        "h-full rounded-full",
-                        usage > 70 ? "bg-red-500" : usage > 40 ? "bg-amber-500" : "bg-green-500"
-                      )} style={{ width: `${usage}%` }} />
-                    </div>
-                    <p className="text-[9px] text-muted">{usage}% of daily quota</p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Warm-up progress per account */}
-          <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Flame size={12} className="text-orange-400" /> Warm-Up Progress</h3>
-            <div className="space-y-2">
-              {PLATFORMS.map((p, idx) => {
-                const day = Math.min(7, idx + 2);
-                const pct = (day / 7) * 100;
-                return (
-                  <div key={p.id}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium flex items-center gap-2">{p.icon(14)} {p.name}</span>
-                      <span className="text-[10px] text-muted">Day {day} / 7</span>
-                    </div>
-                    <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 overflow-hidden">
-                      <div className="h-full rounded-full bg-orange-500" style={{ width: `${pct}%` }} />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Blacklist · usernames */}
-          <div className="card p-4">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-xs font-semibold flex items-center gap-2"><Ban size={12} className="text-red-400" /> Username Blacklist</h3>
-              <span className="text-[10px] text-muted">{blacklist.length} entries</span>
-            </div>
-            <div className="flex items-center gap-2 mb-3">
-              <input
-                value={blacklistInput}
-                onChange={e => setBlacklistInput(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === "Enter" && blacklistInput.trim()) {
-                    setBlacklist(bl => [...bl, { name: blacklistInput.trim(), platform: "instagram", reason: "Manual", date: new Date().toLocaleDateString() }]);
-                    setBlacklistInput("");
-                  }
-                }}
-                placeholder="@username or handle · Enter to add"
-                className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground"
-              />
-              <button
-                onClick={() => {
-                  if (blacklistInput.trim()) {
-                    setBlacklist(bl => [...bl, { name: blacklistInput.trim(), platform: "instagram", reason: "Manual", date: new Date().toLocaleDateString() }]);
-                    setBlacklistInput("");
-                  }
-                }}
-                className="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-[10px] font-semibold flex items-center gap-1">
-                <Plus size={10} /> Add
-              </button>
-            </div>
-            {blacklist.length === 0 ? (
-              <p className="text-[10px] text-muted text-center py-4">No blacklisted accounts.</p>
-            ) : (
-              <div className="space-y-1.5">
-                {blacklist.map((b, i) => (
-                  <div key={i} className="flex items-center justify-between p-2.5 rounded-lg border border-border">
-                    <div className="flex items-center gap-2.5">
-                      <Ban size={12} className="text-red-400" />
-                      <div>
-                        <p className="text-xs">{b.name}</p>
-                        <p className="text-[9px] text-muted">{b.platform} · {b.reason} · {b.date}</p>
+                        {p.icon(20)}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold">{p.name}</p>
+                          <p className="text-[9px] text-muted">{sessionsActive ? "Active session" : "Idle"}</p>
+                        </div>
+                        {sessionsActive && <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />}
                       </div>
+                    );
+                  })}
+                </div>
+
+                <div className="card p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-xs font-semibold flex items-center gap-2">
+                      <Activity size={12} className={cn(running ? "text-green-400" : "text-muted")} />
+                      Real-time Activity
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => setLiveEvents([])} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground">Clear</button>
+                      {running && (
+                        <button onClick={() => setRunning(false)} className="text-[10px] px-2.5 py-1 rounded-lg bg-red-500 text-white flex items-center gap-1.5">
+                          <PauseCircle size={10} /> Pause all
+                        </button>
+                      )}
                     </div>
-                    <button onClick={() => setBlacklist(bl => bl.filter((_, idx) => idx !== i))} className="text-muted hover:text-red-400">
-                      <Trash2 size={11} />
-                    </button>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Keyword blacklist */}
-          <div className="card p-4">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-xs font-semibold flex items-center gap-2"><AlertTriangle size={12} className="text-amber-400" /> Keyword Blocklist</h3>
-              <span className="text-[10px] text-muted">{keywordBlacklist.length} entries</span>
-            </div>
-            <div className="flex items-center gap-2 mb-3">
-              <input
-                value={keywordInput}
-                onChange={e => setKeywordInput(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === "Enter" && keywordInput.trim()) {
-                    setKeywordBlacklist(kw => [...kw, keywordInput.trim()]);
-                    setKeywordInput("");
-                  }
-                }}
-                placeholder="Keyword · Enter to add"
-                className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground"
-              />
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {keywordBlacklist.map((kw, i) => (
-                <span key={i} className="text-[10px] px-2.5 py-1 rounded-lg border border-red-400/30 bg-red-400/[0.04] text-red-300 flex items-center gap-1.5">
-                  {kw}
-                  <button onClick={() => setKeywordBlacklist(list => list.filter((_, idx) => idx !== i))} className="hover:text-red-400">
-                    <X size={10} />
-                  </button>
-                </span>
-              ))}
-              {keywordBlacklist.length === 0 && <p className="text-[10px] text-muted">No keywords blocked.</p>}
-            </div>
-          </div>
-
-          {/* Opt-out / DNC */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="card p-4">
-              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><MinusCircle size={12} className="text-amber-400" /> Opt-out list</h3>
-              <p className="text-[10px] text-muted mb-2">Accounts that asked to be removed. Auto-enforced across platforms.</p>
-              <div className="text-[10px] text-muted text-center py-2">
-                0 opt-outs recorded.
-              </div>
-            </div>
-            <div className="card p-4">
-              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><ShieldAlert size={12} className="text-red-400" /> Do-not-contact</h3>
-              <p className="text-[10px] text-muted mb-2">Legally-mandated exclusions. Sync with your CRM.</p>
-              <div className="text-[10px] text-muted text-center py-2">
-                0 DNC records.
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* =============================================================
-         TAB 8 · LIVE ACTIVITY
-         ============================================================= */}
-      {activeTab === "live" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {PLATFORMS.map(p => {
-              const sessionsActive = running && config.platforms.includes(p.id);
-              return (
-                <div key={p.id} className={cn(
-                  "card p-3 flex items-center gap-2.5",
-                  sessionsActive && "border-green-400/40 bg-green-400/[0.03]"
-                )}>
-                  {p.icon(20)}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold">{p.name}</p>
-                    <p className="text-[9px] text-muted">{sessionsActive ? "Active session" : "Idle"}</p>
+                  <div ref={liveRef} className="max-h-[50vh] overflow-y-auto space-y-1">
+                    {liveEvents.length === 0 ? (
+                      <div className="text-center py-10">
+                        <EmptyIllustration icon={<Activity size={36} />} />
+                        <p className="text-xs text-muted mt-2">No activity. {running ? "Events will stream in real-time." : "Start a campaign to see live events."}</p>
+                      </div>
+                    ) : liveEvents.map(ev => (
+                      <div key={ev.id} className="flex items-center gap-2.5 p-2 rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.03)]">
+                        <span className="text-[9px] font-mono text-muted shrink-0 w-16">{ev.at}</span>
+                        <div className="shrink-0">{platformIcon(ev.platform, 12)}</div>
+                        <LiveIcon kind={ev.kind} />
+                        <p className="text-[10px] flex-1 truncate">
+                          <LiveLabel kind={ev.kind} /> <span className="text-[#2563EB] font-mono">{ev.handle}</span>
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                  {sessionsActive && <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />}
                 </div>
-              );
-            })}
-          </div>
-
-          <div className="card p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-semibold flex items-center gap-2">
-                <Activity size={12} className={cn(running ? "text-green-400" : "text-muted")} />
-                Real-time Activity
-              </h3>
-              <div className="flex items-center gap-2">
-                <button onClick={() => setLiveEvents([])} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground">Clear</button>
-                {running && (
-                  <button onClick={() => setRunning(false)} className="text-[10px] px-2.5 py-1 rounded-lg bg-red-500 text-white flex items-center gap-1.5">
-                    <PauseCircle size={10} /> Pause all
-                  </button>
-                )}
               </div>
-            </div>
-            <div ref={liveRef} className="max-h-[50vh] overflow-y-auto space-y-1">
-              {liveEvents.length === 0 ? (
-                <div className="text-center py-10">
-                  <EmptyIllustration icon={<Activity size={36} />} />
-                  <p className="text-xs text-muted mt-2">No activity. {running ? "Events will stream in real-time." : "Start a campaign to see live events."}</p>
-                </div>
-              ) : liveEvents.map(ev => (
-                <div key={ev.id} className="flex items-center gap-2.5 p-2 rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.03)]">
-                  <span className="text-[9px] font-mono text-muted shrink-0 w-16">{ev.at}</span>
-                  <div className="shrink-0">{platformIcon(ev.platform, 12)}</div>
-                  <LiveIcon kind={ev.kind} />
-                  <p className="text-[10px] flex-1 truncate">
-                    <LiveLabel kind={ev.kind} /> <span className="text-[#2563EB] font-mono">{ev.handle}</span>
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* =============================================================
-         Creation Wizard (campaigns)
-         ============================================================= */}
-      <CreationWizard
-        open={wizardOpen}
-        title="New DM Campaign"
-        subtitle="Set up a campaign in under 60 seconds"
-        icon={<Target size={18} />}
-        steps={wizardSteps}
-        initialData={{
-          platform: "instagram",
-          volume: 20,
-          niche: NICHES[0],
-          service: SERVICES[0],
-          template: templates[0]?.id,
-        }}
-        onClose={() => setWizardOpen(false)}
-        onComplete={createCampaign}
-        submitLabel="Create Campaign"
-      />
-    </div>
+            )}{/* =============================================================
+               Creation Wizard (campaigns)
+               ============================================================= */}<CreationWizard
+              open={wizardOpen}
+              title="New DM Campaign"
+              subtitle="Set up a campaign in under 60 seconds"
+              icon={<Target size={18} />}
+              steps={wizardSteps}
+              initialData={{
+                platform: "instagram",
+                volume: 20,
+                niche: NICHES[0],
+                service: SERVICES[0],
+                template: templates[0]?.id,
+              }}
+              onClose={() => setWizardOpen(false)}
+              onComplete={createCampaign}
+              submitLabel="Create Campaign"
+            /></MotionPage>
   );
 }
 

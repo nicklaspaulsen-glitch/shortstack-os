@@ -36,6 +36,7 @@ import {
   Zap,
   Play,
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type Status = "ok" | "configured" | "missing" | "error";
 
@@ -144,9 +145,8 @@ export default function SystemStatusPage() {
 
   if (authLoading || fetchState === "loading") {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] text-muted text-sm">
-        Checking systems…
-      </div>
+      <MotionPage className="flex items-center justify-center min-h-[60vh] text-muted text-sm">Checking systems…
+              </MotionPage>
     );
   }
 

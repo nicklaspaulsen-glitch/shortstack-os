@@ -18,6 +18,7 @@ import {
   Pause,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface Variant {
   id: string;
@@ -127,10 +128,7 @@ export default function AbTestDetailPage() {
 
   if (loading || !test) {
     return (
-      <div className="p-6 max-w-6xl mx-auto space-y-6">
-        <div className="h-32 bg-black/[0.04] animate-pulse rounded-xl" />
-        <div className="h-64 bg-black/[0.04] animate-pulse rounded-xl" />
-      </div>
+      <MotionPage className="p-6 max-w-6xl mx-auto space-y-6"><div className="h-32 bg-black/[0.04] animate-pulse rounded-xl" /><div className="h-64 bg-black/[0.04] animate-pulse rounded-xl" /></MotionPage>
     );
   }
 

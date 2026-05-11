@@ -10,6 +10,7 @@ import Tab2AIUpload from "./components/Tab2AIUpload";
 import Tab3Trends from "./components/Tab3Trends";
 import Tab4Stats from "./components/Tab4Stats";
 import Tab5TopCommenters from "./components/Tab5TopCommenters";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type StudioTab = "calendar" | "ai-upload" | "trends" | "stats" | "commenters";
 
@@ -33,48 +34,38 @@ export default function SocialStudioPage() {
   const [tab, setTab] = useState<StudioTab>("calendar");
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        title="Social Studio"
-        subtitle="Plan, post, and grow across every platform"
-        gradient="gold"
-        icon={<Megaphone size={20} />}
-        eyebrow="POST STUDIO"
-      />
-
-      <div className="glass rounded-xl p-1 flex flex-wrap gap-1">
-        {TABS.map((t, index) => {
-          const active = tab === t.key;
-          return (
-            <motion.button
-              key={t.key}
-              type="button"
-              onClick={() => setTab(t.key)}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.18, delay: index * 0.05 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              className={`flex-1 min-w-[140px] px-3 py-2 rounded-md text-xs font-medium inline-flex items-center justify-center gap-2 transition-all ${
-                active
-                  ? "bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] shadow-inner"
-                  : "border border-transparent text-muted hover:text-foreground hover:bg-[rgba(0,0,0,0.03)]"
-              }`}
-              aria-pressed={active}
-              title={t.description}
-            >
-              {t.icon}
-              <span>{t.label}</span>
-            </motion.button>
-          );
-        })}
-      </div>
-
-      {tab === "calendar"   && <Tab1Calendar />}
-      {tab === "ai-upload"  && <Tab2AIUpload />}
-      {tab === "trends"     && <Tab3Trends />}
-      {tab === "stats"      && <Tab4Stats />}
-      {tab === "commenters" && <Tab5TopCommenters />}
-    </div>
+    <MotionPage className="space-y-6"><PageHero
+              title="Social Studio"
+              subtitle="Plan, post, and grow across every platform"
+              gradient="gold"
+              icon={<Megaphone size={20} />}
+              eyebrow="POST STUDIO"
+            /><div className="glass rounded-xl p-1 flex flex-wrap gap-1">
+              {TABS.map((t, index) => {
+                const active = tab === t.key;
+                return (
+                  <motion.button
+                    key={t.key}
+                    type="button"
+                    onClick={() => setTab(t.key)}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.18, delay: index * 0.05 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    className={`flex-1 min-w-[140px] px-3 py-2 rounded-md text-xs font-medium inline-flex items-center justify-center gap-2 transition-all ${
+                      active
+                        ? "bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] shadow-inner"
+                        : "border border-transparent text-muted hover:text-foreground hover:bg-[rgba(0,0,0,0.03)]"
+                    }`}
+                    aria-pressed={active}
+                    title={t.description}
+                  >
+                    {t.icon}
+                    <span>{t.label}</span>
+                  </motion.button>
+                );
+              })}
+            </div>{tab === "calendar"   && <Tab1Calendar />}{tab === "ai-upload"  && <Tab2AIUpload />}{tab === "trends"     && <Tab3Trends />}{tab === "stats"      && <Tab4Stats />}{tab === "commenters" && <Tab5TopCommenters />}</MotionPage>
   );
 }

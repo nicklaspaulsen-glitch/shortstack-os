@@ -14,6 +14,7 @@ import { createClient } from "@/lib/supabase/client";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type MainTab = "all" | "builder" | "recurring" | "reminders" | "templates" | "aging" | "revenue";
 
@@ -141,618 +142,585 @@ export default function InvoicesPage() {
   ];
 
   return (
-    <div className="fade-in space-y-5">
-      {/* Hero Header */}
-      <PageHero
-        eyebrow="INVOICING"
-        icon={<CreditCard size={22} />}
-        title="Invoices"
-        subtitle={`${invoicesData.length} invoices � track payments, reminders, and recurring billing.`}
-        gradient="blue"
-        actions={
-          <div className="flex gap-2">
-            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-              <Link
-                href="/dashboard/invoices/new"
-                className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold text-black font-medium hover:bg-gold/90 transition-all"
-              >
-                <Sparkles size={12} /> AI Smart Invoice
-              </Link>
-            </motion.div>
-            <motion.button
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => setActiveTab("builder")}
-              className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all"
-            >
-              <Plus size={12} /> New Invoice
-            </motion.button>
-          </div>
-        }
-      />
-
-      {/* Loading note */}
-      {loading && (
-        <p className="text-[11px] text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices�</p>
-      )}
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        {STATS.map((stat, index) => (
-          <PrismPanel key={stat.label} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
-            <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
-            <p className="text-lg font-bold">{stat.value}</p>
-            <p className="text-[9px] text-muted">{stat.label}</p>
-          </PrismPanel>
-        ))}
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
-        {TABS.map(t => (
-          <button key={t.key} onClick={() => setActiveTab(t.key)}
-            className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === t.key ? "bg-[rgba(37,99,235,0.10)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] font-medium" : "text-muted hover:text-foreground"
-            }`}>{t.icon} {t.label}</button>
-        ))}
-      </div>
-
-      {/* ===== ALL INVOICES ===== */}
-      {activeTab === "all" && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 flex-wrap">
-            <div className="relative flex-1 min-w-[200px]">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-              <input
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-[rgba(0,0,0,0.08)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
-                placeholder="Search invoices..."
-                aria-label="Search invoices"
-              />
-            </div>
-            <div className="flex gap-1.5">
-              {(["all", "sent", "paid", "overdue", "draft"] as const).map(f => (
-                <button key={f} onClick={() => setFilter(f)}
-                  className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                    filter === f ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)]" : "text-muted border border-[rgba(0,0,0,0.06)]"
-                  }`}>{f}</button>
+    <MotionPage className="fade-in space-y-5">{/* Hero Header */}<PageHero
+              eyebrow="INVOICING"
+              icon={<CreditCard size={22} />}
+              title="Invoices"
+              subtitle={`${invoicesData.length} invoices � track payments, reminders, and recurring billing.`}
+              gradient="blue"
+              actions={
+                <div className="flex gap-2">
+                  <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                    <Link
+                      href="/dashboard/invoices/new"
+                      className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold text-black font-medium hover:bg-gold/90 transition-all"
+                    >
+                      <Sparkles size={12} /> AI Smart Invoice
+                    </Link>
+                  </motion.div>
+                  <motion.button
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setActiveTab("builder")}
+                    className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all"
+                  >
+                    <Plus size={12} /> New Invoice
+                  </motion.button>
+                </div>
+              }
+            />{/* Loading note */}{loading && (
+              <p className="text-[11px] text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices�</p>
+            )}{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              {STATS.map((stat, index) => (
+                <PrismPanel key={stat.label} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
+                  <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
+                  <p className="text-lg font-bold">{stat.value}</p>
+                  <p className="text-[9px] text-muted">{stat.label}</p>
+                </PrismPanel>
               ))}
-            </div>
-          </div>
+            </div>{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
+              {TABS.map(t => (
+                <button key={t.key} onClick={() => setActiveTab(t.key)}
+                  className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
+                    activeTab === t.key ? "bg-[rgba(37,99,235,0.10)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] font-medium" : "text-muted hover:text-foreground"
+                  }`}>{t.icon} {t.label}</button>
+              ))}
+            </div>{/* ===== ALL INVOICES ===== */}{activeTab === "all" && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="relative flex-1 min-w-[200px]">
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                    <input
+                      value={search}
+                      onChange={e => setSearch(e.target.value)}
+                      className="rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-[rgba(0,0,0,0.08)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                      placeholder="Search invoices..."
+                      aria-label="Search invoices"
+                    />
+                  </div>
+                  <div className="flex gap-1.5">
+                    {(["all", "sent", "paid", "overdue", "draft"] as const).map(f => (
+                      <button key={f} onClick={() => setFilter(f)}
+                        className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
+                          filter === f ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)]" : "text-muted border border-[rgba(0,0,0,0.06)]"
+                        }`}>{f}</button>
+                    ))}
+                  </div>
+                </div>
 
-          <PrismPanel rainbow padding="p-0" className="overflow-hidden">
-            {filtered.length === 0 ? (
-              <div className="p-4">
-                <EmptyState
-                  type="no-invoices"
-                  title="No Invoices Yet"
-                  description="Create your first invoice to start tracking payments, set up recurring billing, and get paid faster."
-                  action={
-                    <button onClick={() => setActiveTab("builder")} className="btn-primary text-xs">
-                      Create Invoice
-                    </button>
-                  }
-                />
-              </div>
-            ) : (
-              <motion.div className="divide-y divide-[rgba(0,0,0,0.06)]" variants={containerVariants} initial="hidden" animate="visible">
-                {filtered.map((inv) => {
-                  const isOverdue = (inv.status === "sent" && inv.dueDate < today) || inv.status === "overdue";
-                  return (
-                    <div key={inv.id}>
-                      <motion.div
-                        variants={itemVariants}
-                        onClick={() => setExpandedInvoice(expandedInvoice === inv.id ? null : inv.id)}
-                        className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-[rgba(37,99,235,0.05)] ${
-                          isOverdue ? "bg-rose-50" : ""
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                            inv.status === "paid" ? "bg-emerald-50" : isOverdue ? "bg-rose-50" : inv.status === "draft" ? "bg-surface" : "bg-amber-50"
-                          }`}>
-                            {inv.status === "paid" ? <CheckCircle size={16} className="text-emerald-700" /> :
-                             isOverdue ? <AlertTriangle size={16} className="text-rose-700" /> :
-                             inv.status === "draft" ? <FileText size={16} className="text-muted" /> :
-                             <Clock size={16} className="text-amber-600" />}
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <p className="text-sm font-semibold">{inv.client}</p>
-                              <span className="text-[8px] font-mono text-muted">{inv.id}</span>
-                              {inv.recurring && <RefreshCw size={8} className="text-[#2563EB]" />}
-                              {inv.currency !== "USD" && <Globe size={8} className="text-blue-400" />}
-                            </div>
-                            <p className="text-[10px] text-muted">{inv.description}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <div className="text-right">
-                            <p className="text-lg font-bold">{formatCurrency(inv.amount, inv.currency)}</p>
-                            <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
-                          </div>
-                          <span className={`text-[9px] px-2 py-0.5 rounded-full ${
-                            inv.status === "paid" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
-                            isOverdue ? "bg-rose-50 text-rose-700 border border-rose-200" :
-                            inv.status === "draft" ? "bg-[rgba(0,0,0,0.05)] text-muted border border-[rgba(0,0,0,0.08)]" :
-                            inv.status === "sent" ? "bg-blue-50 text-blue-700 border border-blue-200" :
-                            "bg-amber-50 text-amber-700 border border-amber-200"
-                          }`}>{isOverdue ? "overdue" : inv.status}</span>
-                          <ChevronRight size={14} className="text-muted" />
-                        </div>
-                      </motion.div>
-                      {expandedInvoice === inv.id && (
-                        <div className="ml-4 mb-3 p-3 rounded-lg bg-surface border border-border space-y-2 mx-4">
-                          <div className="grid grid-cols-4 gap-3 text-[10px]">
-                            <div><span className="text-muted">Sent:</span> <span>{inv.sentDate || "Not sent"}</span></div>
-                            <div><span className="text-muted">Due:</span> <span>{inv.dueDate}</span></div>
-                            <div><span className="text-muted">Tax:</span> <span>{inv.tax > 0 ? formatCurrency(inv.tax) : "None"}</span></div>
-                            <div><span className="text-muted">Currency:</span> <span>{inv.currency}</span></div>
-                          </div>
-                          <div className="flex gap-2 pt-2 items-center">
-                            <Link href="/dashboard/billing" className="btn-ghost text-[9px] flex items-center gap-1">
-                              <ArrowRight size={9} /> Manage in Stripe portal
-                            </Link>
-                            {inv.paymentLink && (
-                              <button
-                                onClick={() => {
-                                  navigator.clipboard.writeText(inv.paymentLink)
-                                    .then(() => toast.success("Payment link copied"))
-                                    .catch(() => toast.error("Copy failed"));
-                                }}
-                                className="btn-ghost text-[9px] flex items-center gap-1">
-                                <Copy size={9} /> Copy Pay Link
-                              </button>
+                <PrismPanel rainbow padding="p-0" className="overflow-hidden">
+                  {filtered.length === 0 ? (
+                    <div className="p-4">
+                      <EmptyState
+                        type="no-invoices"
+                        title="No Invoices Yet"
+                        description="Create your first invoice to start tracking payments, set up recurring billing, and get paid faster."
+                        action={
+                          <button onClick={() => setActiveTab("builder")} className="btn-primary text-xs">
+                            Create Invoice
+                          </button>
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <motion.div className="divide-y divide-[rgba(0,0,0,0.06)]" variants={containerVariants} initial="hidden" animate="visible">
+                      {filtered.map((inv) => {
+                        const isOverdue = (inv.status === "sent" && inv.dueDate < today) || inv.status === "overdue";
+                        return (
+                          <div key={inv.id}>
+                            <motion.div
+                              variants={itemVariants}
+                              onClick={() => setExpandedInvoice(expandedInvoice === inv.id ? null : inv.id)}
+                              className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-[rgba(37,99,235,0.05)] ${
+                                isOverdue ? "bg-rose-50" : ""
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                                  inv.status === "paid" ? "bg-emerald-50" : isOverdue ? "bg-rose-50" : inv.status === "draft" ? "bg-surface" : "bg-amber-50"
+                                }`}>
+                                  {inv.status === "paid" ? <CheckCircle size={16} className="text-emerald-700" /> :
+                                   isOverdue ? <AlertTriangle size={16} className="text-rose-700" /> :
+                                   inv.status === "draft" ? <FileText size={16} className="text-muted" /> :
+                                   <Clock size={16} className="text-amber-600" />}
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <p className="text-sm font-semibold">{inv.client}</p>
+                                    <span className="text-[8px] font-mono text-muted">{inv.id}</span>
+                                    {inv.recurring && <RefreshCw size={8} className="text-[#2563EB]" />}
+                                    {inv.currency !== "USD" && <Globe size={8} className="text-blue-400" />}
+                                  </div>
+                                  <p className="text-[10px] text-muted">{inv.description}</p>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-4">
+                                <div className="text-right">
+                                  <p className="text-lg font-bold">{formatCurrency(inv.amount, inv.currency)}</p>
+                                  <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
+                                </div>
+                                <span className={`text-[9px] px-2 py-0.5 rounded-full ${
+                                  inv.status === "paid" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
+                                  isOverdue ? "bg-rose-50 text-rose-700 border border-rose-200" :
+                                  inv.status === "draft" ? "bg-[rgba(0,0,0,0.05)] text-muted border border-[rgba(0,0,0,0.08)]" :
+                                  inv.status === "sent" ? "bg-blue-50 text-blue-700 border border-blue-200" :
+                                  "bg-amber-50 text-amber-700 border border-amber-200"
+                                }`}>{isOverdue ? "overdue" : inv.status}</span>
+                                <ChevronRight size={14} className="text-muted" />
+                              </div>
+                            </motion.div>
+                            {expandedInvoice === inv.id && (
+                              <div className="ml-4 mb-3 p-3 rounded-lg bg-surface border border-border space-y-2 mx-4">
+                                <div className="grid grid-cols-4 gap-3 text-[10px]">
+                                  <div><span className="text-muted">Sent:</span> <span>{inv.sentDate || "Not sent"}</span></div>
+                                  <div><span className="text-muted">Due:</span> <span>{inv.dueDate}</span></div>
+                                  <div><span className="text-muted">Tax:</span> <span>{inv.tax > 0 ? formatCurrency(inv.tax) : "None"}</span></div>
+                                  <div><span className="text-muted">Currency:</span> <span>{inv.currency}</span></div>
+                                </div>
+                                <div className="flex gap-2 pt-2 items-center">
+                                  <Link href="/dashboard/billing" className="btn-ghost text-[9px] flex items-center gap-1">
+                                    <ArrowRight size={9} /> Manage in Stripe portal
+                                  </Link>
+                                  {inv.paymentLink && (
+                                    <button
+                                      onClick={() => {
+                                        navigator.clipboard.writeText(inv.paymentLink)
+                                          .then(() => toast.success("Payment link copied"))
+                                          .catch(() => toast.error("Copy failed"));
+                                      }}
+                                      className="btn-ghost text-[9px] flex items-center gap-1">
+                                      <Copy size={9} /> Copy Pay Link
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
                             )}
                           </div>
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                </PrismPanel>
+              </div>
+            )}{/* ===== INVOICE BUILDER ===== */}{activeTab === "builder" && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  <div className="lg:col-span-2 space-y-3">
+                    <PrismPanel rainbow glow padding="p-4" className="space-y-3">
+                      <h3 className="text-sm font-semibold">Invoice Builder</h3>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Client</label>
+                          <select className="input w-full text-xs">
+                            <option value="">Select client...</option>
+                            {Array.from(new Set(invoicesData.map(i => i.client))).map(c => (
+                              <option key={c} value={c}>{c}</option>
+                            ))}
+                          </select>
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </motion.div>
-            )}
-          </PrismPanel>
-        </div>
-      )}
-
-      {/* ===== INVOICE BUILDER ===== */}
-      {activeTab === "builder" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="lg:col-span-2 space-y-3">
-              <PrismPanel rainbow glow padding="p-4" className="space-y-3">
-                <h3 className="text-sm font-semibold">Invoice Builder</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Client</label>
-                    <select className="input w-full text-xs">
-                      <option value="">Select client...</option>
-                      {Array.from(new Set(invoicesData.map(i => i.client))).map(c => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Currency</label>
-                    <select value={selectedCurrency} onChange={e => setSelectedCurrency(e.target.value)} className="input w-full text-xs">
-                      <option value="USD">USD ($)</option>
-                      <option value="EUR">EUR (�)</option>
-                      <option value="GBP">GBP (�)</option>
-                      <option value="SEK">SEK (kr)</option>
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Description</label>
-                  <input className="input w-full text-xs" placeholder="e.g., Growth Package - April 2026" />
-                </div>
-
-                {/* Line Items */}
-                <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Line Items</label>
-                  <div className="space-y-1.5">
-                    <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-1 px-2">
-                      <span className="col-span-5">Description</span>
-                      <span className="col-span-2 text-center">Qty</span>
-                      <span className="col-span-2 text-center">Rate</span>
-                      <span className="col-span-2 text-right">Amount</span>
-                      <span className="col-span-1"></span>
-                    </div>
-                    {[
-                      { desc: "Social Media Management", qty: 1, rate: 997 },
-                      { desc: "Paid Ads Management", qty: 1, rate: 1500 },
-                    ].map((item, i) => (
-                      <div key={i} className="grid grid-cols-12 items-center text-[10px] py-1.5 px-2 rounded bg-surface-light">
-                        <span className="col-span-5">{item.desc}</span>
-                        <span className="col-span-2 text-center">{item.qty}</span>
-                        <span className="col-span-2 text-center">{formatCurrency(item.rate, selectedCurrency)}</span>
-                        <span className="col-span-2 text-right font-bold">{formatCurrency(item.qty * item.rate, selectedCurrency)}</span>
-                        <button
-                          onClick={() => toast("The in-app invoice builder is being replaced with Stripe's hosted invoices. Use /dashboard/billing ? Stripe portal to create real invoices today.", { icon: "??", duration: 6000 })}
-                          className="col-span-1 text-right text-muted hover:text-rose-700"><X size={10} /></button>
+                        <div>
+                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Currency</label>
+                          <select value={selectedCurrency} onChange={e => setSelectedCurrency(e.target.value)} className="input w-full text-xs">
+                            <option value="USD">USD ($)</option>
+                            <option value="EUR">EUR (�)</option>
+                            <option value="GBP">GBP (�)</option>
+                            <option value="SEK">SEK (kr)</option>
+                          </select>
+                        </div>
                       </div>
-                    ))}
-                    <button
-                      onClick={() => toast("In-app line items aren't wired. Create invoices via Stripe's hosted portal at /dashboard/billing.", { icon: "??", duration: 6000 })}
-                      className="text-[9px] text-[#2563EB] flex items-center gap-1 px-2"><Plus size={9} /> Add Line Item</button>
-                  </div>
-                </div>
+                      <div>
+                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Description</label>
+                        <input className="input w-full text-xs" placeholder="e.g., Growth Package - April 2026" />
+                      </div>
 
-                {/* Tax Calculator */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Tax Rate (%)</label>
-                    <input type="number" value={taxRate} onChange={e => setTaxRate(Number(e.target.value))} className="input w-full text-xs" placeholder="0" />
-                  </div>
-                  <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Due In</label>
-                    <select className="input w-full text-xs">
-                      <option value="7">7 days</option>
-                      <option value="14">14 days</option>
-                      <option value="30">30 days</option>
-                      <option value="60">60 days</option>
-                    </select>
-                  </div>
-                </div>
-              </PrismPanel>
-            </div>
+                      {/* Line Items */}
+                      <div>
+                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Line Items</label>
+                        <div className="space-y-1.5">
+                          <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-1 px-2">
+                            <span className="col-span-5">Description</span>
+                            <span className="col-span-2 text-center">Qty</span>
+                            <span className="col-span-2 text-center">Rate</span>
+                            <span className="col-span-2 text-right">Amount</span>
+                            <span className="col-span-1"></span>
+                          </div>
+                          {[
+                            { desc: "Social Media Management", qty: 1, rate: 997 },
+                            { desc: "Paid Ads Management", qty: 1, rate: 1500 },
+                          ].map((item, i) => (
+                            <div key={i} className="grid grid-cols-12 items-center text-[10px] py-1.5 px-2 rounded bg-surface-light">
+                              <span className="col-span-5">{item.desc}</span>
+                              <span className="col-span-2 text-center">{item.qty}</span>
+                              <span className="col-span-2 text-center">{formatCurrency(item.rate, selectedCurrency)}</span>
+                              <span className="col-span-2 text-right font-bold">{formatCurrency(item.qty * item.rate, selectedCurrency)}</span>
+                              <button
+                                onClick={() => toast("The in-app invoice builder is being replaced with Stripe's hosted invoices. Use /dashboard/billing ? Stripe portal to create real invoices today.", { icon: "??", duration: 6000 })}
+                                className="col-span-1 text-right text-muted hover:text-rose-700"><X size={10} /></button>
+                            </div>
+                          ))}
+                          <button
+                            onClick={() => toast("In-app line items aren't wired. Create invoices via Stripe's hosted portal at /dashboard/billing.", { icon: "??", duration: 6000 })}
+                            className="text-[9px] text-[#2563EB] flex items-center gap-1 px-2"><Plus size={9} /> Add Line Item</button>
+                        </div>
+                      </div>
 
-            {/* Sidebar */}
-            <div className="space-y-3">
-              <PrismPanel rainbow padding="p-4">
-                <h4 className="text-xs font-semibold mb-3">Invoice Summary</h4>
-                <div className="space-y-2 text-[10px]">
-                  <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatCurrency(2497, selectedCurrency)}</span></div>
-                  <div className="flex justify-between"><span className="text-muted">Tax ({taxRate}%)</span><span>{formatCurrency(Math.round(2497 * taxRate / 100), selectedCurrency)}</span></div>
-                  <div className="border-t border-[rgba(0,0,0,0.08)] pt-2 flex justify-between font-bold">
-                    <span>Total</span><span className="text-[#1D4ED8] font-bold">{formatCurrency(Math.round(2497 * (1 + taxRate / 100)), selectedCurrency)}</span>
+                      {/* Tax Calculator */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Tax Rate (%)</label>
+                          <input type="number" value={taxRate} onChange={e => setTaxRate(Number(e.target.value))} className="input w-full text-xs" placeholder="0" />
+                        </div>
+                        <div>
+                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Due In</label>
+                          <select className="input w-full text-xs">
+                            <option value="7">7 days</option>
+                            <option value="14">14 days</option>
+                            <option value="30">30 days</option>
+                            <option value="60">60 days</option>
+                          </select>
+                        </div>
+                      </div>
+                    </PrismPanel>
                   </div>
-                </div>
-                <Link href="/dashboard/billing" className="btn-primary w-full text-xs mt-4 flex items-center justify-center gap-1.5">
-                  <Send size={12} /> Create in Stripe portal
-                </Link>
-                <button
-                  onClick={() => toast("Draft invoices save to Stripe. Open /dashboard/billing ? Manage subscription to draft there.", { icon: "??", duration: 6000 })}
-                  className="btn-secondary w-full text-xs mt-2 flex items-center justify-center gap-1.5">
-                  <FileText size={12} /> Save as Draft
-                </button>
-              </PrismPanel>
 
-              {/* Quick Invoice from Proposal */}
-              <PrismPanel rainbow padding="p-4">
-                <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
-                  <Zap size={12} className="text-[#2563EB]" /> Quick Invoice
-                </h4>
-                <p className="text-[9px] text-muted mb-3">Generate invoice from an accepted proposal</p>
-                <select className="input w-full text-xs mb-2">
-                  <option value="">Select proposal...</option>
-                </select>
-                <button
-                  onClick={() => toast("Proposals ? invoice pipeline ships with the proposals module. Track progress on the roadmap.", { icon: "??", duration: 6000 })}
-                  className="w-full text-xs flex items-center justify-center gap-1.5 bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] rounded-lg py-1.5 hover:bg-[rgba(37,99,235,0.14)] transition-all">
-                  <ArrowRight size={12} /> Create from Proposal
-                </button>
-              </PrismPanel>
+                  {/* Sidebar */}
+                  <div className="space-y-3">
+                    <PrismPanel rainbow padding="p-4">
+                      <h4 className="text-xs font-semibold mb-3">Invoice Summary</h4>
+                      <div className="space-y-2 text-[10px]">
+                        <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatCurrency(2497, selectedCurrency)}</span></div>
+                        <div className="flex justify-between"><span className="text-muted">Tax ({taxRate}%)</span><span>{formatCurrency(Math.round(2497 * taxRate / 100), selectedCurrency)}</span></div>
+                        <div className="border-t border-[rgba(0,0,0,0.08)] pt-2 flex justify-between font-bold">
+                          <span>Total</span><span className="text-[#1D4ED8] font-bold">{formatCurrency(Math.round(2497 * (1 + taxRate / 100)), selectedCurrency)}</span>
+                        </div>
+                      </div>
+                      <Link href="/dashboard/billing" className="btn-primary w-full text-xs mt-4 flex items-center justify-center gap-1.5">
+                        <Send size={12} /> Create in Stripe portal
+                      </Link>
+                      <button
+                        onClick={() => toast("Draft invoices save to Stripe. Open /dashboard/billing ? Manage subscription to draft there.", { icon: "??", duration: 6000 })}
+                        className="btn-secondary w-full text-xs mt-2 flex items-center justify-center gap-1.5">
+                        <FileText size={12} /> Save as Draft
+                      </button>
+                    </PrismPanel>
 
-              {/* Payment Link */}
-              <PrismPanel rainbow padding="p-4">
-                <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
-                  <CreditCard size={12} className="text-[#2563EB]" /> Payment Links
-                </h4>
-                <p className="text-[9px] text-muted mb-2">Stripe-powered payment links for quick collection</p>
-                <Link href="/dashboard/clients" className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
-                  <CreditCard size={12} /> Open client ? Subscribe
-                </Link>
-              </PrismPanel>
-            </div>
-          </div>
-        </div>
-      )}
+                    {/* Quick Invoice from Proposal */}
+                    <PrismPanel rainbow padding="p-4">
+                      <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
+                        <Zap size={12} className="text-[#2563EB]" /> Quick Invoice
+                      </h4>
+                      <p className="text-[9px] text-muted mb-3">Generate invoice from an accepted proposal</p>
+                      <select className="input w-full text-xs mb-2">
+                        <option value="">Select proposal...</option>
+                      </select>
+                      <button
+                        onClick={() => toast("Proposals ? invoice pipeline ships with the proposals module. Track progress on the roadmap.", { icon: "??", duration: 6000 })}
+                        className="w-full text-xs flex items-center justify-center gap-1.5 bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] rounded-lg py-1.5 hover:bg-[rgba(37,99,235,0.14)] transition-all">
+                        <ArrowRight size={12} /> Create from Proposal
+                      </button>
+                    </PrismPanel>
 
-      {/* ===== RECURRING INVOICES ===== */}
-      {activeTab === "recurring" && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold flex items-center gap-2">
-              <RefreshCw size={14} className="text-[#2563EB]" /> Recurring Invoices
-            </h3>
-            <Link href="/dashboard/clients" className="btn-primary text-xs flex items-center gap-1.5">
-              <Plus size={12} /> Add Recurring
-            </Link>
-          </div>
-          <div className="space-y-2">
-            {invoicesData.filter(i => i.recurring).length === 0 ? (
-              <PrismPanel padding="py-8 px-4" className="text-center">
-                <RefreshCw size={20} className="mx-auto mb-2 text-muted/30" />
-                <p className="text-xs text-muted">No recurring invoices yet</p>
-              </PrismPanel>
-            ) : invoicesData.filter(i => i.recurring).map((inv, index) => (
-              <motion.div
-                key={inv.id}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.18, delay: index * 0.05 }}
-                className="rounded-xl p-4 flex items-center justify-between border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
-              >
-                <div className="flex items-center gap-3">
-                  <RefreshCw size={14} className="text-[#2563EB]" />
-                  <div>
-                    <p className="text-xs font-semibold">{inv.client}</p>
-                    <p className="text-[10px] text-muted">{inv.description}</p>
+                    {/* Payment Link */}
+                    <PrismPanel rainbow padding="p-4">
+                      <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
+                        <CreditCard size={12} className="text-[#2563EB]" /> Payment Links
+                      </h4>
+                      <p className="text-[9px] text-muted mb-2">Stripe-powered payment links for quick collection</p>
+                      <Link href="/dashboard/clients" className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
+                        <CreditCard size={12} /> Open client ? Subscribe
+                      </Link>
+                    </PrismPanel>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 text-[10px]">
-                  <div className="text-center">
-                    <p className="font-bold text-[#1D4ED8]">{formatCurrency(inv.amount)}</p>
-                    <p className="text-[8px] text-muted">Monthly</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-medium">1st of month</p>
-                    <p className="text-[8px] text-muted">Next invoice</p>
-                  </div>
-                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
-                  <button
-                    onClick={() => toast("Pause recurring from the Stripe customer portal � use Billing ? Manage subscription.", { icon: "??", duration: 6000 })}
-                    className="text-[9px] text-muted hover:text-rose-700">Pause</button>
+              </div>
+            )}{/* ===== RECURRING INVOICES ===== */}{activeTab === "recurring" && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <RefreshCw size={14} className="text-[#2563EB]" /> Recurring Invoices
+                  </h3>
+                  <Link href="/dashboard/clients" className="btn-primary text-xs flex items-center gap-1.5">
+                    <Plus size={12} /> Add Recurring
+                  </Link>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-          <PrismPanel rainbow padding="p-4" className="text-center">
-            <p className="text-sm font-bold text-[#1D4ED8]">{formatCurrency(recurringTotal)}/mo</p>
-            <p className="text-[10px] text-muted">Total monthly recurring revenue from invoices</p>
-          </PrismPanel>
-        </div>
-      )}
-
-      {/* ===== LATE PAYMENT REMINDERS ===== */}
-      {activeTab === "reminders" && (
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold flex items-center gap-2">
-            <Clock size={14} className="text-[#2563EB]" /> Late Payment Reminder Settings
-          </h3>
-          <div className="space-y-2">
-            {[
-              { delay: "1 day overdue", message: "Friendly reminder that your invoice is due", enabled: true },
-              { delay: "3 days overdue", message: "Your invoice is 3 days past due", enabled: true },
-              { delay: "7 days overdue", message: "Important: Payment overdue - please resolve", enabled: true },
-              { delay: "14 days overdue", message: "Final notice before account review", enabled: false },
-              { delay: "30 days overdue", message: "Account suspension warning", enabled: false },
-            ].map((reminder, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.18, delay: i * 0.05 }}
-                className={`rounded-xl p-4 flex items-center justify-between border border-[rgba(0,0,0,0.08)] ${!reminder.enabled ? "opacity-50" : ""}`} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${i < 2 ? "bg-amber-50" : i < 4 ? "bg-orange-50" : "bg-rose-50"}`}>
-                    <Clock size={14} className={i < 2 ? "text-amber-600" : i < 4 ? "text-orange-600" : "text-rose-700"} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold">{reminder.delay}</p>
-                    <p className="text-[10px] text-muted">{reminder.message}</p>
-                  </div>
-                </div>
-                <div className={`w-8 h-4 rounded-full ${reminder.enabled ? "bg-[#2563EB]" : "bg-surface-light"}`}>
-                  <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${reminder.enabled ? "ml-4" : "ml-0.5"}`} />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-          {/* Currently overdue */}
-          <PrismPanel rainbow padding="p-4">
-            <h4 className="text-xs font-semibold mb-3 flex items-center gap-2 text-rose-700">
-              <AlertTriangle size={12} /> Currently Overdue
-            </h4>
-            <div className="space-y-1.5">
-              {invoicesData.filter(i => i.status === "overdue").length === 0 ? (
-                <p className="text-[10px] text-muted text-center py-4">No overdue invoices</p>
-              ) : invoicesData.filter(i => i.status === "overdue").map(inv => (
-                <div key={inv.id} className="flex items-center justify-between p-2.5 rounded bg-rose-50 border border-rose-200 text-[10px]">
-                  <div>
-                    <p className="font-semibold">{inv.client} - {inv.id}</p>
-                    <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <p className="font-bold text-rose-700">{formatCurrency(inv.amount)}</p>
-                    <button
-                      onClick={() => toast("Automated reminders are coming. For now, contact the client directly or use Stripe's payment reminder emails.", { icon: "??", duration: 6000 })}
-                      className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] hover:bg-[rgba(37,99,235,0.14)]">Send Reminder</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </PrismPanel>
-        </div>
-      )}
-
-      {/* ===== INVOICE TEMPLATES ===== */}
-      {activeTab === "templates" && (
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold">Invoice Templates</h3>
-          {INVOICE_TEMPLATES.length === 0 && (
-            <PrismPanel padding="py-8 px-4" className="text-center">
-              <FileText size={20} className="mx-auto mb-2 text-muted/30" />
-              <p className="text-xs text-muted">No invoice templates yet</p>
-            </PrismPanel>
-          )}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {INVOICE_TEMPLATES.map((t, index) => (
-              <motion.div
-                key={t.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: index * 0.06 }}
-                whileHover={{ y: -3 }}
-                className="rounded-xl p-4 cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
-                    <FileText size={16} className="text-[#2563EB]" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold">{t.name}</p>
-                    <p className="text-[10px] text-muted">{t.description}</p>
-                  </div>
-                </div>
-                <div className="flex gap-1.5 mt-2">
-                  {t.sections.map(s => (
-                    <span key={s} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.03)] text-muted">{s}</span>
+                <div className="space-y-2">
+                  {invoicesData.filter(i => i.recurring).length === 0 ? (
+                    <PrismPanel padding="py-8 px-4" className="text-center">
+                      <RefreshCw size={20} className="mx-auto mb-2 text-muted/30" />
+                      <p className="text-xs text-muted">No recurring invoices yet</p>
+                    </PrismPanel>
+                  ) : invoicesData.filter(i => i.recurring).map((inv, index) => (
+                    <motion.div
+                      key={inv.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18, delay: index * 0.05 }}
+                      className="rounded-xl p-4 flex items-center justify-between border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <RefreshCw size={14} className="text-[#2563EB]" />
+                        <div>
+                          <p className="text-xs font-semibold">{inv.client}</p>
+                          <p className="text-[10px] text-muted">{inv.description}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 text-[10px]">
+                        <div className="text-center">
+                          <p className="font-bold text-[#1D4ED8]">{formatCurrency(inv.amount)}</p>
+                          <p className="text-[8px] text-muted">Monthly</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="font-medium">1st of month</p>
+                          <p className="text-[8px] text-muted">Next invoice</p>
+                        </div>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
+                        <button
+                          onClick={() => toast("Pause recurring from the Stripe customer portal � use Billing ? Manage subscription.", { icon: "??", duration: 6000 })}
+                          className="text-[9px] text-muted hover:text-rose-700">Pause</button>
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
-                <button
-                  onClick={() => toast("Invoice templates aren't yet persisted. Create invoices via Stripe at /dashboard/billing for now.", { icon: "??", duration: 6000 })}
-                  className="btn-secondary text-[9px] mt-3 w-full">Use Template</button>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ===== AGING REPORT ===== */}
-      {activeTab === "aging" && (
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold flex items-center gap-2">
-            <AlertTriangle size={14} className="text-[#2563EB]" /> Accounts Receivable Aging
-          </h3>
-          <div className="grid grid-cols-5 gap-3">
-            {[
-              { range: "Current", amount: totalSent - totalOverdue, count: invoicesData.filter(i => i.status === "sent" && i.dueDate >= today).length, color: "text-emerald-700" },
-              { range: "1-7 days", amount: 0, count: 0, color: "text-amber-600" },
-              { range: "8-14 days", amount: 0, count: 0, color: "text-orange-600" },
-              { range: "15-30 days", amount: 0, count: 0, color: "text-rose-700" },
-              { range: "30+ days", amount: 0, count: 0, color: "text-rose-700" },
-            ].map((bucket, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: i * 0.06 }}
-                whileHover={{ y: -2 }}
-                className="rounded-xl text-center p-3 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
-              >
-                <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
-                <p className="text-[9px] text-muted uppercase mb-1">{bucket.range}</p>
-                <p className={`text-lg font-bold ${bucket.color}`}>{formatCurrency(bucket.amount)}</p>
-                <p className="text-[8px] text-muted">{bucket.count} invoice{bucket.count !== 1 ? "s" : ""}</p>
-              </motion.div>
-            ))}
-          </div>
-          <PrismPanel rainbow padding="p-0" className="overflow-hidden">
-            <div className="p-3 border-b border-[rgba(0,0,0,0.08)]">
-              <h4 className="text-xs font-semibold">Invoice History</h4>
-            </div>
-            <div className="divide-y divide-[rgba(0,0,0,0.06)]">
-              <div className="grid grid-cols-6 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-3">
-                <span>Invoice</span><span>Client</span><span>Amount</span><span>Due Date</span><span>Status</span><span>Age</span>
+                <PrismPanel rainbow padding="p-4" className="text-center">
+                  <p className="text-sm font-bold text-[#1D4ED8]">{formatCurrency(recurringTotal)}/mo</p>
+                  <p className="text-[10px] text-muted">Total monthly recurring revenue from invoices</p>
+                </PrismPanel>
               </div>
-              {invoicesData.length === 0 ? (
-                <div className="text-center py-6">
-                  <p className="text-[10px] text-muted">No invoice history yet</p>
+            )}{/* ===== LATE PAYMENT REMINDERS ===== */}{activeTab === "reminders" && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <Clock size={14} className="text-[#2563EB]" /> Late Payment Reminder Settings
+                </h3>
+                <div className="space-y-2">
+                  {[
+                    { delay: "1 day overdue", message: "Friendly reminder that your invoice is due", enabled: true },
+                    { delay: "3 days overdue", message: "Your invoice is 3 days past due", enabled: true },
+                    { delay: "7 days overdue", message: "Important: Payment overdue - please resolve", enabled: true },
+                    { delay: "14 days overdue", message: "Final notice before account review", enabled: false },
+                    { delay: "30 days overdue", message: "Account suspension warning", enabled: false },
+                  ].map((reminder, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18, delay: i * 0.05 }}
+                      className={`rounded-xl p-4 flex items-center justify-between border border-[rgba(0,0,0,0.08)] ${!reminder.enabled ? "opacity-50" : ""}`} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${i < 2 ? "bg-amber-50" : i < 4 ? "bg-orange-50" : "bg-rose-50"}`}>
+                          <Clock size={14} className={i < 2 ? "text-amber-600" : i < 4 ? "text-orange-600" : "text-rose-700"} />
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold">{reminder.delay}</p>
+                          <p className="text-[10px] text-muted">{reminder.message}</p>
+                        </div>
+                      </div>
+                      <div className={`w-8 h-4 rounded-full ${reminder.enabled ? "bg-[#2563EB]" : "bg-surface-light"}`}>
+                        <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${reminder.enabled ? "ml-4" : "ml-0.5"}`} />
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
-              ) : invoicesData.map((inv, index) => {
-                const dueDate = new Date(inv.dueDate);
-                const ageDays = Math.max(0, Math.floor((Date.now() - dueDate.getTime()) / 86400000));
-                return (
-                  <motion.div
-                    key={inv.id}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.18, delay: index * 0.03 }}
-                    className="grid grid-cols-6 text-[10px] py-2 px-3 hover:bg-indigo-500/5 transition-colors items-center"
-                  >
-                    <span className="font-mono text-muted">{inv.id}</span>
-                    <span className="font-medium">{inv.client}</span>
-                    <span className="font-bold">{formatCurrency(inv.amount, inv.currency)}</span>
-                    <span className="text-muted">{inv.dueDate}</span>
-                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
-                      inv.status === "paid" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
-                      inv.status === "overdue" ? "bg-rose-50 text-rose-700 border border-rose-200" :
-                      "bg-amber-50 text-amber-700 border border-amber-200"
-                    }`}>{inv.status}</span>
-                    <span className={ageDays > 7 ? "text-rose-700" : "text-muted"}>{ageDays}d</span>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </PrismPanel>
-        </div>
-      )}
-
-      {/* ===== REVENUE SUMMARY ===== */}
-      {activeTab === "revenue" && (
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold flex items-center gap-2">
-            <BarChart3 size={14} className="text-[#2563EB]" /> Revenue Summary
-          </h3>
-          <div className="grid grid-cols-3 gap-4">
-            {[
-              { label: "Paid Invoices", value: formatCurrency(totalPaid), sub: "All-time collected", color: "text-emerald-700" },
-              { label: "Outstanding", value: formatCurrency(totalSent), sub: "Sent, not paid", color: "text-[#2563EB]" },
-              { label: "Overdue", value: formatCurrency(totalOverdue), sub: "Needs chasing", color: "text-rose-700" },
-            ].map((card, index) => (
-              <motion.div
-                key={card.label}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: index * 0.06 }}
-                whileHover={{ y: -2 }}
-                className="rounded-xl text-center p-5 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
-              >
-                <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
-                <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>
-                <p className={`text-2xl font-bold ${card.color}`}>{card.value}</p>
-                <p className="text-[9px] text-muted mt-1">{card.sub}</p>
-              </motion.div>
-            ))}
-          </div>
-          {/* Monthly bar chart */}
-          <PrismPanel rainbow padding="p-4">
-            <h4 className="text-xs font-semibold mb-3">Monthly Revenue</h4>
-            <div className="flex items-end gap-3 h-40">
-              {invoicesData.length === 0 ? (
-                <div className="flex-1 flex items-center justify-center">
-                  <p className="text-[10px] text-muted">No revenue data yet</p>
+                {/* Currently overdue */}
+                <PrismPanel rainbow padding="p-4">
+                  <h4 className="text-xs font-semibold mb-3 flex items-center gap-2 text-rose-700">
+                    <AlertTriangle size={12} /> Currently Overdue
+                  </h4>
+                  <div className="space-y-1.5">
+                    {invoicesData.filter(i => i.status === "overdue").length === 0 ? (
+                      <p className="text-[10px] text-muted text-center py-4">No overdue invoices</p>
+                    ) : invoicesData.filter(i => i.status === "overdue").map(inv => (
+                      <div key={inv.id} className="flex items-center justify-between p-2.5 rounded bg-rose-50 border border-rose-200 text-[10px]">
+                        <div>
+                          <p className="font-semibold">{inv.client} - {inv.id}</p>
+                          <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <p className="font-bold text-rose-700">{formatCurrency(inv.amount)}</p>
+                          <button
+                            onClick={() => toast("Automated reminders are coming. For now, contact the client directly or use Stripe's payment reminder emails.", { icon: "??", duration: 6000 })}
+                            className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] hover:bg-[rgba(37,99,235,0.14)]">Send Reminder</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </PrismPanel>
+              </div>
+            )}{/* ===== INVOICE TEMPLATES ===== */}{activeTab === "templates" && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold">Invoice Templates</h3>
+                {INVOICE_TEMPLATES.length === 0 && (
+                  <PrismPanel padding="py-8 px-4" className="text-center">
+                    <FileText size={20} className="mx-auto mb-2 text-muted/30" />
+                    <p className="text-xs text-muted">No invoice templates yet</p>
+                  </PrismPanel>
+                )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {INVOICE_TEMPLATES.map((t, index) => (
+                    <motion.div
+                      key={t.id}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.22, delay: index * 0.06 }}
+                      whileHover={{ y: -3 }}
+                      className="rounded-xl p-4 cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-10 h-10 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                          <FileText size={16} className="text-[#2563EB]" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold">{t.name}</p>
+                          <p className="text-[10px] text-muted">{t.description}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-1.5 mt-2">
+                        {t.sections.map(s => (
+                          <span key={s} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.03)] text-muted">{s}</span>
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => toast("Invoice templates aren't yet persisted. Create invoices via Stripe at /dashboard/billing for now.", { icon: "??", duration: 6000 })}
+                        className="btn-secondary text-[9px] mt-3 w-full">Use Template</button>
+                    </motion.div>
+                  ))}
                 </div>
-              ) : [
-                { month: "Jan", amount: 0 },
-                { month: "Feb", amount: 0 },
-                { month: "Mar", amount: 0 },
-                { month: "Apr", amount: totalPaid },
-              ].map((m, i) => (
-                <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                  <p className="text-[9px] font-bold">{formatCurrency(m.amount)}</p>
-                  <div className="w-full bg-[#2563EB] rounded-t" style={{ height: `${m.amount > 0 ? Math.max((m.amount / 20000) * 100, 4) : 0}%`, minHeight: m.amount > 0 ? 8 : 2 }} />
-                  <span className="text-[8px] text-muted">{m.month}</span>
+              </div>
+            )}{/* ===== AGING REPORT ===== */}{activeTab === "aging" && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <AlertTriangle size={14} className="text-[#2563EB]" /> Accounts Receivable Aging
+                </h3>
+                <div className="grid grid-cols-5 gap-3">
+                  {[
+                    { range: "Current", amount: totalSent - totalOverdue, count: invoicesData.filter(i => i.status === "sent" && i.dueDate >= today).length, color: "text-emerald-700" },
+                    { range: "1-7 days", amount: 0, count: 0, color: "text-amber-600" },
+                    { range: "8-14 days", amount: 0, count: 0, color: "text-orange-600" },
+                    { range: "15-30 days", amount: 0, count: 0, color: "text-rose-700" },
+                    { range: "30+ days", amount: 0, count: 0, color: "text-rose-700" },
+                  ].map((bucket, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.22, delay: i * 0.06 }}
+                      whileHover={{ y: -2 }}
+                      className="rounded-xl text-center p-3 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                    >
+                      <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
+                      <p className="text-[9px] text-muted uppercase mb-1">{bucket.range}</p>
+                      <p className={`text-lg font-bold ${bucket.color}`}>{formatCurrency(bucket.amount)}</p>
+                      <p className="text-[8px] text-muted">{bucket.count} invoice{bucket.count !== 1 ? "s" : ""}</p>
+                    </motion.div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </PrismPanel>
-          {/* Collection rate */}
-          <PrismPanel rainbow padding="p-4">
-            <h4 className="text-xs font-semibold mb-3">Collection Metrics</h4>
-            <div className="grid grid-cols-3 gap-3">
-              <div className="bg-surface-light rounded-lg p-3 text-center">
-                <p className="text-xl font-bold text-emerald-700">--</p>
-                <p className="text-[9px] text-muted">Collection Rate</p>
+                <PrismPanel rainbow padding="p-0" className="overflow-hidden">
+                  <div className="p-3 border-b border-[rgba(0,0,0,0.08)]">
+                    <h4 className="text-xs font-semibold">Invoice History</h4>
+                  </div>
+                  <div className="divide-y divide-[rgba(0,0,0,0.06)]">
+                    <div className="grid grid-cols-6 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-3">
+                      <span>Invoice</span><span>Client</span><span>Amount</span><span>Due Date</span><span>Status</span><span>Age</span>
+                    </div>
+                    {invoicesData.length === 0 ? (
+                      <div className="text-center py-6">
+                        <p className="text-[10px] text-muted">No invoice history yet</p>
+                      </div>
+                    ) : invoicesData.map((inv, index) => {
+                      const dueDate = new Date(inv.dueDate);
+                      const ageDays = Math.max(0, Math.floor((Date.now() - dueDate.getTime()) / 86400000));
+                      return (
+                        <motion.div
+                          key={inv.id}
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.18, delay: index * 0.03 }}
+                          className="grid grid-cols-6 text-[10px] py-2 px-3 hover:bg-indigo-500/5 transition-colors items-center"
+                        >
+                          <span className="font-mono text-muted">{inv.id}</span>
+                          <span className="font-medium">{inv.client}</span>
+                          <span className="font-bold">{formatCurrency(inv.amount, inv.currency)}</span>
+                          <span className="text-muted">{inv.dueDate}</span>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
+                            inv.status === "paid" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
+                            inv.status === "overdue" ? "bg-rose-50 text-rose-700 border border-rose-200" :
+                            "bg-amber-50 text-amber-700 border border-amber-200"
+                          }`}>{inv.status}</span>
+                          <span className={ageDays > 7 ? "text-rose-700" : "text-muted"}>{ageDays}d</span>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </PrismPanel>
               </div>
-              <div className="bg-surface-light rounded-lg p-3 text-center">
-                <p className="text-xl font-bold">--</p>
-                <p className="text-[9px] text-muted">Avg Days to Pay</p>
+            )}{/* ===== REVENUE SUMMARY ===== */}{activeTab === "revenue" && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <BarChart3 size={14} className="text-[#2563EB]" /> Revenue Summary
+                </h3>
+                <div className="grid grid-cols-3 gap-4">
+                  {[
+                    { label: "Paid Invoices", value: formatCurrency(totalPaid), sub: "All-time collected", color: "text-emerald-700" },
+                    { label: "Outstanding", value: formatCurrency(totalSent), sub: "Sent, not paid", color: "text-[#2563EB]" },
+                    { label: "Overdue", value: formatCurrency(totalOverdue), sub: "Needs chasing", color: "text-rose-700" },
+                  ].map((card, index) => (
+                    <motion.div
+                      key={card.label}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.22, delay: index * 0.06 }}
+                      whileHover={{ y: -2 }}
+                      className="rounded-xl text-center p-5 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                    >
+                      <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
+                      <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>
+                      <p className={`text-2xl font-bold ${card.color}`}>{card.value}</p>
+                      <p className="text-[9px] text-muted mt-1">{card.sub}</p>
+                    </motion.div>
+                  ))}
+                </div>
+                {/* Monthly bar chart */}
+                <PrismPanel rainbow padding="p-4">
+                  <h4 className="text-xs font-semibold mb-3">Monthly Revenue</h4>
+                  <div className="flex items-end gap-3 h-40">
+                    {invoicesData.length === 0 ? (
+                      <div className="flex-1 flex items-center justify-center">
+                        <p className="text-[10px] text-muted">No revenue data yet</p>
+                      </div>
+                    ) : [
+                      { month: "Jan", amount: 0 },
+                      { month: "Feb", amount: 0 },
+                      { month: "Mar", amount: 0 },
+                      { month: "Apr", amount: totalPaid },
+                    ].map((m, i) => (
+                      <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                        <p className="text-[9px] font-bold">{formatCurrency(m.amount)}</p>
+                        <div className="w-full bg-[#2563EB] rounded-t" style={{ height: `${m.amount > 0 ? Math.max((m.amount / 20000) * 100, 4) : 0}%`, minHeight: m.amount > 0 ? 8 : 2 }} />
+                        <span className="text-[8px] text-muted">{m.month}</span>
+                      </div>
+                    ))}
+                  </div>
+                </PrismPanel>
+                {/* Collection rate */}
+                <PrismPanel rainbow padding="p-4">
+                  <h4 className="text-xs font-semibold mb-3">Collection Metrics</h4>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-surface-light rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold text-emerald-700">--</p>
+                      <p className="text-[9px] text-muted">Collection Rate</p>
+                    </div>
+                    <div className="bg-surface-light rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold">--</p>
+                      <p className="text-[9px] text-muted">Avg Days to Pay</p>
+                    </div>
+                    <div className="bg-surface-light rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold text-[#1D4ED8]">{formatCurrency(recurringTotal)}</p>
+                      <p className="text-[9px] text-muted">Monthly Recurring</p>
+                    </div>
+                  </div>
+                </PrismPanel>
               </div>
-              <div className="bg-surface-light rounded-lg p-3 text-center">
-                <p className="text-xl font-bold text-[#1D4ED8]">{formatCurrency(recurringTotal)}</p>
-                <p className="text-[9px] text-muted">Monthly Recurring</p>
-              </div>
-            </div>
-          </PrismPanel>
-        </div>
-      )}
-    </div>
+            )}</MotionPage>
   );
 }
 

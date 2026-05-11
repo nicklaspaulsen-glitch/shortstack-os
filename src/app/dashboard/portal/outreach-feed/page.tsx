@@ -18,6 +18,7 @@ import { MessagesSquare } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import OutreachFeedClient from "@/components/outreach/outreach-feed-client";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface WhiteLabelSettings {
   client_can_reply: boolean;
@@ -54,12 +55,11 @@ export default function ClientOutreachFeedPage() {
 
   if (loading) {
     return (
-      <div
-        className="rounded-xl border border-[rgba(0,0,0,0.08)] p-10 text-center text-[#6B7280] text-sm"
-        style={{ background: "rgba(255,255,255,0.88)" }}
-      >
-        Loading…
-      </div>
+      <MotionPage
+                className="rounded-xl border border-[rgba(0,0,0,0.08)] p-10 text-center text-[#6B7280] text-sm"
+                style={{ background: "rgba(255,255,255,0.88)" }}
+              >Loading…
+              </MotionPage>
     );
   }
 

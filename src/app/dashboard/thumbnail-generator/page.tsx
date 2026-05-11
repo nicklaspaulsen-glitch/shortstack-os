@@ -46,6 +46,7 @@ import HistoryPanel from "@/components/thumbnail-editor/history-panel";
 import AiFirstStarter from "@/components/thumbnail-editor/ai-first-starter";
 import StockPhotosPanel from "@/components/thumbnail-editor/stock-photos-panel";
 import type { StockPhoto } from "@/lib/integrations/stock-photos";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // Electron hint — the preload script sets window.electron. We check for
 // truthy at runtime to decide whether to show the native picker.
@@ -629,164 +630,166 @@ export default function ThumbnailEditorProPage() {
   void flattenHistory;
 
   return (
-    <motion.div
-      className="fixed inset-0 bg-[#F3F6FA] text-[#111827] flex flex-col"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.22 }}
-    >
-      <TopBar
-        canUndo={history.past.length > 0}
-        canRedo={history.future.length > 0}
-        zoom={state.viewport.zoom}
-        showRulers={state.viewport.showRulers}
-        showGrid={state.viewport.showGrid}
-        onUndo={onUndo}
-        onRedo={onRedo}
-        onZoomIn={onZoomIn}
-        onZoomOut={onZoomOut}
-        onFit={onFit}
-        onToggleRulers={() =>
-          dispatch({
-            type: "SET_VIEWPORT",
-            patch: { showRulers: !state.viewport.showRulers },
-          })
-        }
-        onToggleGrid={() =>
-          dispatch({
-            type: "SET_VIEWPORT",
-            patch: { showGrid: !state.viewport.showGrid },
-          })
-        }
-        onPickPreset={onPickPreset}
-        onAddText={onAddText}
-        onAddShape={onAddShape}
-        onUpload={onUpload}
-        onOpenNativePicker={hasElectron ? onOpenNativePicker : undefined}
-        hasElectron={hasElectron}
-        onAIFill={() => setAIFillOpen(true)}
-        onAIRemove={runAIRemove}
-        onAIUpscale={runAIUpscale}
-        onTextToLayer={() => setTextToLayerOpen(true)}
-        onStockPhotos={() => setStockPhotosOpen(true)}
-        onExport={onExport}
-      />
+    <MotionPage>
+            <motion.div
+            className="fixed inset-0 bg-[#F3F6FA] text-[#111827] flex flex-col"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.22 }}
+          >
+            <TopBar
+              canUndo={history.past.length > 0}
+              canRedo={history.future.length > 0}
+              zoom={state.viewport.zoom}
+              showRulers={state.viewport.showRulers}
+              showGrid={state.viewport.showGrid}
+              onUndo={onUndo}
+              onRedo={onRedo}
+              onZoomIn={onZoomIn}
+              onZoomOut={onZoomOut}
+              onFit={onFit}
+              onToggleRulers={() =>
+                dispatch({
+                  type: "SET_VIEWPORT",
+                  patch: { showRulers: !state.viewport.showRulers },
+                })
+              }
+              onToggleGrid={() =>
+                dispatch({
+                  type: "SET_VIEWPORT",
+                  patch: { showGrid: !state.viewport.showGrid },
+                })
+              }
+              onPickPreset={onPickPreset}
+              onAddText={onAddText}
+              onAddShape={onAddShape}
+              onUpload={onUpload}
+              onOpenNativePicker={hasElectron ? onOpenNativePicker : undefined}
+              hasElectron={hasElectron}
+              onAIFill={() => setAIFillOpen(true)}
+              onAIRemove={runAIRemove}
+              onAIUpscale={runAIUpscale}
+              onTextToLayer={() => setTextToLayerOpen(true)}
+              onStockPhotos={() => setStockPhotosOpen(true)}
+              onExport={onExport}
+            />
 
-      <div className="flex-1 flex min-h-0">
-        <ToolsPalette
-          active={state.activeTool}
-          onSelect={(tool: ToolId) => dispatch({ type: "SET_TOOL", tool })}
-          foregroundColor={state.foregroundColor}
-          backgroundColor={state.backgroundColor}
-          onSwapColors={() => {
-            dispatch({ type: "SET_FG_COLOR", color: state.backgroundColor });
-            dispatch({ type: "SET_BG_COLOR", color: state.foregroundColor });
-          }}
-          onFgColor={(c) => dispatch({ type: "SET_FG_COLOR", color: c })}
-          onBgColor={(c) => dispatch({ type: "SET_BG_COLOR", color: c })}
-        />
+            <div className="flex-1 flex min-h-0">
+              <ToolsPalette
+                active={state.activeTool}
+                onSelect={(tool: ToolId) => dispatch({ type: "SET_TOOL", tool })}
+                foregroundColor={state.foregroundColor}
+                backgroundColor={state.backgroundColor}
+                onSwapColors={() => {
+                  dispatch({ type: "SET_FG_COLOR", color: state.backgroundColor });
+                  dispatch({ type: "SET_BG_COLOR", color: state.foregroundColor });
+                }}
+                onFgColor={(c) => dispatch({ type: "SET_FG_COLOR", color: c })}
+                onBgColor={(c) => dispatch({ type: "SET_BG_COLOR", color: c })}
+              />
 
-        <EditorCanvas
-          state={state}
-          onSelectionChange={(selection) =>
-            dispatch({ type: "SET_SELECTION", selection })
-          }
-          onSelectLayers={(ids) => dispatch({ type: "SELECT_LAYERS", ids })}
-          onPanZoom={(patch) => dispatch({ type: "SET_VIEWPORT", patch })}
-          onUpdateLayer={(id, patch) =>
-            dispatch({ type: "UPDATE_LAYER", id, patch })
-          }
-          onRegisterRenderer={(fn) => {
-            renderGetter.current = fn;
-          }}
-        />
+              <EditorCanvas
+                state={state}
+                onSelectionChange={(selection) =>
+                  dispatch({ type: "SET_SELECTION", selection })
+                }
+                onSelectLayers={(ids) => dispatch({ type: "SELECT_LAYERS", ids })}
+                onPanZoom={(patch) => dispatch({ type: "SET_VIEWPORT", patch })}
+                onUpdateLayer={(id, patch) =>
+                  dispatch({ type: "UPDATE_LAYER", id, patch })
+                }
+                onRegisterRenderer={(fn) => {
+                  renderGetter.current = fn;
+                }}
+              />
 
-        <LayersPanel {...layersProps} />
-        <HistoryPanel
-          history={history}
-          onJump={(entryId) => historyDispatch({ type: "JUMP", entryId })}
-          onUndo={onUndo}
-          onRedo={onRedo}
-        />
-      </div>
+              <LayersPanel {...layersProps} />
+              <HistoryPanel
+                history={history}
+                onJump={(entryId) => historyDispatch({ type: "JUMP", entryId })}
+                onUndo={onUndo}
+                onRedo={onRedo}
+              />
+            </div>
 
-      <AIFillDialog
-        open={aiFillOpen}
-        title="AI Generative Fill"
-        subtitle="Describe what to render in the selected area"
-        submitLabel="Fill"
-        busy={aiBusy}
-        onClose={() => setAIFillOpen(false)}
-        onSubmit={runAIFill}
-        presetSuggestions={[
-          "a dramatic sky with lightning",
-          "a wooden texture background",
-          "a cinematic explosion",
-          "a cyberpunk cityscape",
-        ]}
-      />
-      <AIFillDialog
-        open={textToLayerOpen}
-        title="Text → Layer"
-        subtitle="Generate a full-canvas layer from a prompt"
-        submitLabel="Generate"
-        busy={aiBusy}
-        onClose={() => setTextToLayerOpen(false)}
-        onSubmit={runTextToLayer}
-        presetSuggestions={[
-          "MrBeast thumbnail, shocked face, dramatic lighting",
-          "cinematic cyberpunk cityscape, neon glow, rain",
-          "bold colorful pop-art style, extreme contrast",
-          "tutorial thumbnail, clean flat lay, bright lighting",
-        ]}
-      />
+            <AIFillDialog
+              open={aiFillOpen}
+              title="AI Generative Fill"
+              subtitle="Describe what to render in the selected area"
+              submitLabel="Fill"
+              busy={aiBusy}
+              onClose={() => setAIFillOpen(false)}
+              onSubmit={runAIFill}
+              presetSuggestions={[
+                "a dramatic sky with lightning",
+                "a wooden texture background",
+                "a cinematic explosion",
+                "a cyberpunk cityscape",
+              ]}
+            />
+            <AIFillDialog
+              open={textToLayerOpen}
+              title="Text → Layer"
+              subtitle="Generate a full-canvas layer from a prompt"
+              submitLabel="Generate"
+              busy={aiBusy}
+              onClose={() => setTextToLayerOpen(false)}
+              onSubmit={runTextToLayer}
+              presetSuggestions={[
+                "MrBeast thumbnail, shocked face, dramatic lighting",
+                "cinematic cyberpunk cityscape, neon glow, rain",
+                "bold colorful pop-art style, extreme contrast",
+                "tutorial thumbnail, clean flat lay, bright lighting",
+              ]}
+            />
 
-      <StockPhotosPanel
-        open={stockPhotosOpen}
-        onClose={() => setStockPhotosOpen(false)}
-        onInsert={onInsertStockPhoto}
-        defaultOrientation={
-          state.canvasWidth > state.canvasHeight
-            ? "landscape"
-            : state.canvasWidth < state.canvasHeight
-              ? "portrait"
-              : "square"
-        }
-      />
+            <StockPhotosPanel
+              open={stockPhotosOpen}
+              onClose={() => setStockPhotosOpen(false)}
+              onInsert={onInsertStockPhoto}
+              defaultOrientation={
+                state.canvasWidth > state.canvasHeight
+                  ? "landscape"
+                  : state.canvasWidth < state.canvasHeight
+                    ? "portrait"
+                    : "square"
+              }
+            />
 
-      {/* HistoryState is consumed by HistoryPanel, no extra surface */}
-      <HistoryTypeGuard history={history} />
+            {/* HistoryState is consumed by HistoryPanel, no extra surface */}
+            <HistoryTypeGuard history={history} />
 
-      {/* AI-first starter overlay — shows when canvas is empty + not skipped.
-          Per the apr27 backlog Pikzel-AI request: "user describes what they
-          want → AI generates → ONLY THEN does the editor surface for
-          refinement". User can skip to use the traditional blank canvas. */}
-      {state.layers.length === 0 && !aiStarterSkipped && (
-        <AiFirstStarter
-          width={state.canvasWidth}
-          height={state.canvasHeight}
-          onPickThumbnail={(imageUrl) => {
-            const layer = createImageLayer(imageUrl, {
-              x: 0,
-              y: 0,
-              width: state.canvasWidth,
-              height: state.canvasHeight,
-              name: "AI starter",
-            });
-            commit({ type: "ADD_LAYER", layer }, "AI thumbnail starter");
-            toast.success("Thumbnail loaded — refine in the editor");
-          }}
-          onSkip={() => {
-            setAiStarterSkipped(true);
-            try {
-              sessionStorage.setItem("thumbnail-ai-starter-skipped", "1");
-            } catch {
-              /* private mode etc — fine */
-            }
-          }}
-        />
-      )}
-    </motion.div>
+            {/* AI-first starter overlay — shows when canvas is empty + not skipped.
+                Per the apr27 backlog Pikzel-AI request: "user describes what they
+                want → AI generates → ONLY THEN does the editor surface for
+                refinement". User can skip to use the traditional blank canvas. */}
+            {state.layers.length === 0 && !aiStarterSkipped && (
+              <AiFirstStarter
+                width={state.canvasWidth}
+                height={state.canvasHeight}
+                onPickThumbnail={(imageUrl) => {
+                  const layer = createImageLayer(imageUrl, {
+                    x: 0,
+                    y: 0,
+                    width: state.canvasWidth,
+                    height: state.canvasHeight,
+                    name: "AI starter",
+                  });
+                  commit({ type: "ADD_LAYER", layer }, "AI thumbnail starter");
+                  toast.success("Thumbnail loaded — refine in the editor");
+                }}
+                onSkip={() => {
+                  setAiStarterSkipped(true);
+                  try {
+                    sessionStorage.setItem("thumbnail-ai-starter-skipped", "1");
+                  } catch {
+                    /* private mode etc — fine */
+                  }
+                }}
+              />
+            )}
+          </motion.div>
+          </MotionPage>
   );
 }
 

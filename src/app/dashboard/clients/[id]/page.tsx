@@ -24,6 +24,7 @@ import ClientBillingPanel from "@/components/clients/client-billing-panel";
 import SmartManageOverlay from "@/components/clients/smart-manage-overlay";
 import ClientVoiceProfile from "@/components/clients/client-voice-profile";
 import AgentMemoryPanel from "@/components/agent-memory/agent-memory-panel";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
 const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
@@ -85,7 +86,9 @@ export default function ClientDetailPage() {
     }
   }
 
-  if (loading) return <PageLoading />;
+  if (loading) return <MotionPage>
+                          <PageLoading />
+                        </MotionPage>;
   if (!client) return <div className="text-muted p-8">Client not found</div>;
 
   const completedTasks = tasks.filter(t => t.is_completed).length;

@@ -32,6 +32,7 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type Severity = "investigating" | "identified" | "monitoring" | "resolved";
 
@@ -236,9 +237,8 @@ export default function AdminStatusPage() {
 
   if (authLoading || (incidents === null && !forbidden)) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] text-muted text-sm">
-        Loading status page…
-      </div>
+      <MotionPage className="flex items-center justify-center min-h-[60vh] text-muted text-sm">Loading status page…
+              </MotionPage>
     );
   }
 

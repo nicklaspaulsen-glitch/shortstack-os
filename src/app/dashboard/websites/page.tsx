@@ -18,6 +18,7 @@ import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { VercelIcon, GoDaddyIcon } from "@/components/ui/platform-icons";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface WebsiteProject {
   id: string;
@@ -845,585 +846,557 @@ export default function WebsitesPage() {
   const indexHtml = active?.generated_files?.["index.html"] || "";
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        eyebrow="WEBSITES"
-        icon={<Globe size={28} />}
-        title="Websites that convert"
-        subtitle="Pick a niche. Get a high-converting client site live in 3 minutes &mdash; proven to convert at 4-6%."
-        gradient="sunset"
-        actions={
-          <>
-            <div className="flex items-center gap-1.5 text-[10px] text-black/65 bg-black/8 border border-black/15 px-2 py-1 rounded-lg">
-              <VercelIcon size={12} /> Vercel
-              <span className="opacity-40">&middot;</span>
-              <GoDaddyIcon size={12} /> GoDaddy
-            </div>
-            <button
-              onClick={startBlank}
-              className="text-xs px-3 py-2 rounded-lg border border-black/20 text-[#0A0A0B] hover:bg-black/8 hover:border-black/30 flex items-center gap-1.5"
-            >
-              <Plus size={13} /> Build from scratch
-            </button>
-          </>
-        }
-      />
-
-      {/* Social proof strip */}
-      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border bg-gradient-to-r from-amber-500/[0.04] via-transparent to-emerald-500/[0.04]">
-        <div className="flex items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-1.5 text-[11px] text-foreground/90">
-            <TrendingUp size={12} className="text-emerald-400" />
-            <span className="font-semibold">1,240+ sites</span>
-            <span className="text-muted">launched this month</span>
-          </div>
-          <span className="w-px h-4 bg-border" />
-          <div className="flex items-center gap-1.5 text-[11px] text-foreground/90">
-            <Target size={12} className="text-[#2563EB]" />
-            <span className="font-semibold">4.6% avg CVR</span>
-            <span className="text-muted">across templates</span>
-          </div>
-          <span className="w-px h-4 bg-border hidden sm:block" />
-          <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-foreground/90">
-            <Clock size={12} className="text-sky-400" />
-            <span className="font-semibold">3 min</span>
-            <span className="text-muted">median time to live</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-1">
-          {["A", "M", "J", "K", "R"].map((l, i) => (
-            <span
-              key={i}
-              className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400/30 to-orange-500/30 border border-border text-[9px] font-semibold flex items-center justify-center text-foreground/80"
-              style={{ marginLeft: i === 0 ? 0 : -6 }}
-            >
-              {l}
-            </span>
-          ))}
-          <span className="text-[10px] text-muted ml-2">Trusted by agencies & freelancers</span>
-        </div>
-      </div>
-
-      {/* Wizard */}
-      <CreationWizard
-        open={wizardOpen}
-        title="Website Builder"
-        subtitle="A few quick questions &mdash; then a live demo URL you can share in minutes."
-        icon={<Globe size={18} />}
-        submitLabel="Generate my site"
-        initialData={wizardPreset}
-        steps={steps}
-        onClose={() => setWizardOpen(false)}
-        onComplete={handleWizardComplete}
-      />
-
-      {/* -------------------- Niche template gallery -------------------- */}
-      <div className="space-y-3">
-        <div className="flex items-end justify-between flex-wrap gap-2">
-          <div>
-            <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Layout size={14} className="text-[#2563EB]" />
-              Pick a niche. Ship in 30 seconds.
-            </h2>
-            <p className="text-[11px] text-muted mt-0.5">
-              Battle-tested templates &mdash; every one is prewired for conversion.
-            </p>
-          </div>
-          <button
-            onClick={startBlank}
-            className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] flex items-center gap-1"
-          >
-            Start from a blank canvas <ArrowRight size={10} />
-          </button>
-        </div>
-
-        {/* Niche filter tabs � spring indicator via layoutId */}
-        <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter templates by niche">
-          {NICHE_FILTERS.map((niche) => {
-            const filterKey = niche === "All" ? "all" : niche;
-            const isActive = nicheFilter === filterKey;
-            return (
-              <button
-                key={niche}
-                type="button"
-                onClick={() => setNicheFilter(filterKey)}
-                className="relative px-3 py-1 text-[11px] font-medium rounded-full transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/60"
-                style={{ color: isActive ? "#1D4ED8" : "rgba(0,0,0,0.40)" }}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId="niche-filter-pill"
-                    className="absolute inset-0 rounded-full border border-[rgba(0,0,0,0.12)] bg-[rgba(0,0,0,0.06)]"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <span className="relative">{niche}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 [perspective:1200px]">
-          {filteredTemplates.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => pickTemplate(t)}
-              className="group relative text-left  overflow-hidden border border-border bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 hover:-translate-y-1 hover:border-[rgba(37,99,235,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(37,99,235,0.6)] [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
-            >
-              {/* Preview image */}
-              <div className="relative aspect-[3/2] overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={t.image}
-                  alt={`${t.niche} template preview`}
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.08]"
-                />
-                <div className={`absolute inset-0 bg-gradient-to-tr ${t.accent} mix-blend-multiply opacity-70`} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-
-                {/* Niche chip */}
-                <span className="absolute top-2.5 left-2.5 text-[9px] px-2 py-0.5 rounded-full bg-black/55 backdrop-blur-md text-white border border-border font-medium tracking-wide uppercase">
-                  {t.niche}
-                </span>
-                {/* CVR metric */}
-                <span className="absolute top-2.5 right-2.5 text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/90 backdrop-blur-md text-black border border-border font-semibold flex items-center gap-1">
-                  <TrendingUp size={9} /> {t.cvr}
-                </span>
-
-                {/* Bottom overlay content � hidden when wireframe preview is shown */}
-                <div className="absolute bottom-0 left-0 right-0 p-3 transition-opacity duration-200 group-hover:opacity-0">
-                  <p className="text-[13px] font-bold text-white drop-shadow-sm">{t.name}</p>
-                  <p className="text-[10px] text-foreground mt-0.5 line-clamp-2">{t.tagline}</p>
-                </div>
-
-                {/* Wireframe mini-preview � slides up from bottom on hover */}
-                <div className="absolute inset-x-0 bottom-0 h-[72%] translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out pointer-events-none">
-                  <div className="absolute inset-0 bg-black/88 backdrop-blur-sm" />
-                  <div className="relative h-full flex flex-col p-2.5 gap-2">
-                    {/* Mini wireframe sketch */}
-                    <div className="flex-1 rounded-lg border border-border overflow-hidden flex flex-col gap-1 p-1.5 bg-white/[0.03]">
-                      {/* Nav bar */}
-                      <div className="flex items-center gap-1 pb-1 border-b border-border">
-                        <div className="h-1.5 w-6 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.9 }} />
-                        <div className="flex-1" />
-                        {[...Array(3)].map((_, i) => (
-                          <div key={i} className="h-1 w-3 rounded-full bg-black/10" />
-                        ))}
-                      </div>
-                      {/* Hero block */}
-                      <div className="h-5 rounded flex items-center justify-center" style={{ backgroundColor: `${t.preset.brand_primary}22` }}>
-                        <div className="h-1 w-10 rounded-full" style={{ backgroundColor: `${t.preset.brand_primary}99` }} />
-                      </div>
-                      {/* Feature row */}
-                      <div className="flex gap-1">
-                        {[...Array(3)].map((_, i) => (
-                          <div key={i} className="flex-1 h-3 rounded bg-white/[0.06] border border-border" />
-                        ))}
-                      </div>
-                      {/* CTA strip */}
-                      <div className="flex items-center justify-center gap-1">
-                        <div className="h-2.5 w-10 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.85 }} />
-                        <div className="h-2.5 w-6 rounded-full bg-black/10" />
-                      </div>
-                    </div>
-                    {/* Section chips */}
-                    <div className="flex flex-wrap gap-1 shrink-0">
-                      {t.preset.sections.slice(0, 5).map((s) => (
-                        <span
-                          key={s}
-                          className="text-[8px] px-1.5 py-0.5 rounded-full bg-white/[0.08] text-muted border border-border capitalize"
-                        >
-                          {s.replace(/_/g, " ")}
-                        </span>
-                      ))}
-                    </div>
+    <MotionPage className="fade-in space-y-5"><PageHero
+              eyebrow="WEBSITES"
+              icon={<Globe size={28} />}
+              title="Websites that convert"
+              subtitle="Pick a niche. Get a high-converting client site live in 3 minutes &mdash; proven to convert at 4-6%."
+              gradient="sunset"
+              actions={
+                <>
+                  <div className="flex items-center gap-1.5 text-[10px] text-black/65 bg-black/8 border border-black/15 px-2 py-1 rounded-lg">
+                    <VercelIcon size={12} /> Vercel
+                    <span className="opacity-40">&middot;</span>
+                    <GoDaddyIcon size={12} /> GoDaddy
                   </div>
+                  <button
+                    onClick={startBlank}
+                    className="text-xs px-3 py-2 rounded-lg border border-black/20 text-[#0A0A0B] hover:bg-black/8 hover:border-black/30 flex items-center gap-1.5"
+                  >
+                    <Plus size={13} /> Build from scratch
+                  </button>
+                </>
+              }
+            />{/* Social proof strip */}<div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border bg-gradient-to-r from-amber-500/[0.04] via-transparent to-emerald-500/[0.04]">
+              <div className="flex items-center gap-4 flex-wrap">
+                <div className="flex items-center gap-1.5 text-[11px] text-foreground/90">
+                  <TrendingUp size={12} className="text-emerald-400" />
+                  <span className="font-semibold">1,240+ sites</span>
+                  <span className="text-muted">launched this month</span>
+                </div>
+                <span className="w-px h-4 bg-border" />
+                <div className="flex items-center gap-1.5 text-[11px] text-foreground/90">
+                  <Target size={12} className="text-[#2563EB]" />
+                  <span className="font-semibold">4.6% avg CVR</span>
+                  <span className="text-muted">across templates</span>
+                </div>
+                <span className="w-px h-4 bg-border hidden sm:block" />
+                <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-foreground/90">
+                  <Clock size={12} className="text-sky-400" />
+                  <span className="font-semibold">3 min</span>
+                  <span className="text-muted">median time to live</span>
                 </div>
               </div>
-
-              {/* Footer bar */}
-              <div className="flex items-center justify-between px-3 py-2.5 bg-surface">
-                <span className="text-[10px] text-muted flex items-center gap-1">
-                  <Clock size={10} className="text-[rgba(37,99,235,0.7)]" /> {t.avgLaunch}
-                </span>
-                <span className="text-[10px] text-[#2563EB] font-semibold flex items-center gap-1 transition-transform duration-200 group-hover:translate-x-0.5">
-                  Use this <ArrowRight size={11} />
-                </span>
+              <div className="flex items-center gap-1">
+                {["A", "M", "J", "K", "R"].map((l, i) => (
+                  <span
+                    key={i}
+                    className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400/30 to-orange-500/30 border border-border text-[9px] font-semibold flex items-center justify-center text-foreground/80"
+                    style={{ marginLeft: i === 0 ? 0 : -6 }}
+                  >
+                    {l}
+                  </span>
+                ))}
+                <span className="text-[10px] text-muted ml-2">Trusted by agencies & freelancers</span>
               </div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Demo-ready banner � shown while demo is live and not yet subscribed */}
-      {active && effectiveStatus(active) === "preview" && (
-        <div className="card p-4 bg-gradient-to-br from-emerald-500/[0.06] to-transparent border-emerald-500/30 fade-in">
-          <div className="flex items-center gap-3 flex-wrap">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-              <Rocket size={18} className="text-emerald-400" />
-            </div>
-            <div className="flex-1 min-w-[200px]">
-              <p className="text-xs font-semibold text-emerald-400">Your demo is live &mdash; try it before you pay</p>
-              <p className="text-[10px] text-muted">
-                Free for {daysUntil(active.demo_expires_at) ?? 14} days. Go live anytime when you&apos;re ready &mdash; custom monthly price based on what&apos;s in your site.
-              </p>
-            </div>
-            <div className="flex items-center gap-1.5">
-              {(active.preview_url || active.vercel_url) && (
-                <a
-                  href={active.preview_url || active.vercel_url || "#"}
-                  target="_blank"
-                  rel="noopener"
-                  className="text-[10px] px-3 py-2 rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/8 flex items-center gap-1"
+            </div>{/* Wizard */}<CreationWizard
+              open={wizardOpen}
+              title="Website Builder"
+              subtitle="A few quick questions &mdash; then a live demo URL you can share in minutes."
+              icon={<Globe size={18} />}
+              submitLabel="Generate my site"
+              initialData={wizardPreset}
+              steps={steps}
+              onClose={() => setWizardOpen(false)}
+              onComplete={handleWizardComplete}
+            />{/* -------------------- Niche template gallery -------------------- */}<div className="space-y-3">
+              <div className="flex items-end justify-between flex-wrap gap-2">
+                <div>
+                  <h2 className="text-sm font-semibold flex items-center gap-2">
+                    <Layout size={14} className="text-[#2563EB]" />
+                    Pick a niche. Ship in 30 seconds.
+                  </h2>
+                  <p className="text-[11px] text-muted mt-0.5">
+                    Battle-tested templates &mdash; every one is prewired for conversion.
+                  </p>
+                </div>
+                <button
+                  onClick={startBlank}
+                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] flex items-center gap-1"
                 >
-                  <ExternalLink size={11} /> View demo
-                </a>
-              )}
-              <button
-                onClick={() => openPricing(active)}
-                className="text-[10px] px-3 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center gap-1 hover:shadow-lg hover:shadow-amber-400/30"
-              >
-                <Rocket size={11} /> See pricing
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+                  Start from a blank canvas <ArrowRight size={10} />
+                </button>
+              </div>
 
-      {/* Active project result */}
-      {active && (
-        <div className="card space-y-3">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <h2 className="text-sm font-semibold truncate">{active.name}</h2>
-              <span className={`text-[9px] px-2 py-0.5 rounded-full border ${STATUS_BADGE[effectiveStatus(active)] || STATUS_BADGE.draft}`}>
-                {STATUS_LABEL[effectiveStatus(active)] || active.status}
-              </span>
-              {effectiveStatus(active) === "preview" && active.demo_expires_at && (
-                <span className="text-[9px] px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] inline-flex items-center gap-1">
-                  <Clock size={9} /> {daysUntil(active.demo_expires_at)} days left
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <button
-                onClick={() => regenerate(active)}
-                disabled={regenerating}
-                aria-label="Regenerate website"
-                className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1 disabled:opacity-50"
-              >
-                {regenerating ? <Loader size={10} className="animate-spin" /> : <RefreshCw size={10} />}
-                Regenerate
-              </button>
-              <button
-                onClick={() => shareDemo(active)}
-                className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1"
-              >
-                <Share2 size={10} /> Share Demo
-              </button>
-              <button
-                onClick={() => openPricing(active)}
-                className="text-[10px] px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center gap-1"
-              >
-                <Rocket size={10} /> Go Live
-              </button>
-              <button
-                onClick={() => deploy(active)}
-                disabled={deploying || !indexHtml}
-                className="text-[10px] px-3 py-1.5 rounded-lg bg-black text-white hover:bg-black/80 flex items-center gap-1 disabled:opacity-50"
-              >
-                {deploying ? <Loader size={10} className="animate-spin" /> : <VercelIcon size={10} />}
-                Deploy
-              </button>
-              {active.vercel_url && (
-                <a href={active.vercel_url} target="_blank" rel="noopener" className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
-                  <ExternalLink size={10} /> Open
-                </a>
-              )}
-            </div>
-          </div>
-
-          {(active.preview_url || active.vercel_url) && (
-            <div className="flex items-center justify-between p-2 rounded-lg bg-surface-light border border-border">
-              <a href={active.preview_url || active.vercel_url || "#"} target="_blank" rel="noopener" className="text-[11px] text-[#2563EB] hover:text-[#3B82F6] truncate">
-                {active.preview_url || active.vercel_url}
-              </a>
-              <button onClick={() => { navigator.clipboard.writeText(active.preview_url || active.vercel_url || ""); toast.success("Copied"); }}>
-                <Copy size={11} className="text-muted hover:text-foreground" />
-              </button>
-            </div>
-          )}
-
-          {/* Viewport toggle + open-in-new-tab */}
-          {indexHtml && (
-            <div className="flex items-center justify-between gap-2">
-              <div className="inline-flex items-center rounded-lg border border-border bg-surface-light p-0.5">
-                {[
-                  { id: "desktop" as const, label: "Desktop", Icon: Monitor },
-                  { id: "tablet" as const, label: "Tablet", Icon: Tablet },
-                  { id: "mobile" as const, label: "Mobile", Icon: Smartphone },
-                ].map((v) => {
-                  const on = viewport === v.id;
+              {/* Niche filter tabs � spring indicator via layoutId */}
+              <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter templates by niche">
+                {NICHE_FILTERS.map((niche) => {
+                  const filterKey = niche === "All" ? "all" : niche;
+                  const isActive = nicheFilter === filterKey;
                   return (
                     <button
-                      key={v.id}
-                      onClick={() => setViewport(v.id)}
-                      aria-label={v.label}
-                      aria-pressed={on}
-                      className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] transition ${
-                        on ? "bg-[#2563EB] text-white font-semibold" : "text-muted hover:text-foreground"
-                      }`}
+                      key={niche}
+                      type="button"
+                      onClick={() => setNicheFilter(filterKey)}
+                      className="relative px-3 py-1 text-[11px] font-medium rounded-full transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/60"
+                      style={{ color: isActive ? "#1D4ED8" : "rgba(0,0,0,0.40)" }}
                     >
-                      <v.Icon size={11} /> {v.label}
+                      {isActive && (
+                        <motion.span
+                          layoutId="niche-filter-pill"
+                          className="absolute inset-0 rounded-full border border-[rgba(0,0,0,0.12)] bg-[rgba(0,0,0,0.06)]"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                      <span className="relative">{niche}</span>
                     </button>
                   );
                 })}
               </div>
-              {(active.preview_url || active.vercel_url) && (
-                <a
-                  href={active.preview_url || active.vercel_url || "#"}
-                  target="_blank"
-                  rel="noopener"
-                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] flex items-center gap-1"
-                >
-                  <ExternalLink size={10} /> Open in new tab
-                </a>
-              )}
-            </div>
-          )}
 
-          {indexHtml ? (
-            <div className="rounded-xl border border-border overflow-hidden bg-[#1a1c23] flex items-center justify-center p-3" style={{ height: 640 }}>
-              <div
-                className="bg-white transition-all duration-300 shadow-2xl shadow-black/40 rounded-lg overflow-hidden"
-                style={{
-                  width: viewport === "desktop" ? "100%" : viewport === "tablet" ? 768 : 390,
-                  maxWidth: "100%",
-                  height: "100%",
-                }}
-              >
-                <iframe srcDoc={indexHtml} className="w-full h-full border-0" title="Website preview" sandbox="allow-scripts" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 [perspective:1200px]">
+                {filteredTemplates.map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => pickTemplate(t)}
+                    className="group relative text-left  overflow-hidden border border-border bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 hover:-translate-y-1 hover:border-[rgba(37,99,235,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(37,99,235,0.6)] [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
+                  >
+                    {/* Preview image */}
+                    <div className="relative aspect-[3/2] overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={t.image}
+                        alt={`${t.niche} template preview`}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.08]"
+                      />
+                      <div className={`absolute inset-0 bg-gradient-to-tr ${t.accent} mix-blend-multiply opacity-70`} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+                      {/* Niche chip */}
+                      <span className="absolute top-2.5 left-2.5 text-[9px] px-2 py-0.5 rounded-full bg-black/55 backdrop-blur-md text-white border border-border font-medium tracking-wide uppercase">
+                        {t.niche}
+                      </span>
+                      {/* CVR metric */}
+                      <span className="absolute top-2.5 right-2.5 text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/90 backdrop-blur-md text-black border border-border font-semibold flex items-center gap-1">
+                        <TrendingUp size={9} /> {t.cvr}
+                      </span>
+
+                      {/* Bottom overlay content � hidden when wireframe preview is shown */}
+                      <div className="absolute bottom-0 left-0 right-0 p-3 transition-opacity duration-200 group-hover:opacity-0">
+                        <p className="text-[13px] font-bold text-white drop-shadow-sm">{t.name}</p>
+                        <p className="text-[10px] text-foreground mt-0.5 line-clamp-2">{t.tagline}</p>
+                      </div>
+
+                      {/* Wireframe mini-preview � slides up from bottom on hover */}
+                      <div className="absolute inset-x-0 bottom-0 h-[72%] translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out pointer-events-none">
+                        <div className="absolute inset-0 bg-black/88 backdrop-blur-sm" />
+                        <div className="relative h-full flex flex-col p-2.5 gap-2">
+                          {/* Mini wireframe sketch */}
+                          <div className="flex-1 rounded-lg border border-border overflow-hidden flex flex-col gap-1 p-1.5 bg-white/[0.03]">
+                            {/* Nav bar */}
+                            <div className="flex items-center gap-1 pb-1 border-b border-border">
+                              <div className="h-1.5 w-6 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.9 }} />
+                              <div className="flex-1" />
+                              {[...Array(3)].map((_, i) => (
+                                <div key={i} className="h-1 w-3 rounded-full bg-black/10" />
+                              ))}
+                            </div>
+                            {/* Hero block */}
+                            <div className="h-5 rounded flex items-center justify-center" style={{ backgroundColor: `${t.preset.brand_primary}22` }}>
+                              <div className="h-1 w-10 rounded-full" style={{ backgroundColor: `${t.preset.brand_primary}99` }} />
+                            </div>
+                            {/* Feature row */}
+                            <div className="flex gap-1">
+                              {[...Array(3)].map((_, i) => (
+                                <div key={i} className="flex-1 h-3 rounded bg-white/[0.06] border border-border" />
+                              ))}
+                            </div>
+                            {/* CTA strip */}
+                            <div className="flex items-center justify-center gap-1">
+                              <div className="h-2.5 w-10 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.85 }} />
+                              <div className="h-2.5 w-6 rounded-full bg-black/10" />
+                            </div>
+                          </div>
+                          {/* Section chips */}
+                          <div className="flex flex-wrap gap-1 shrink-0">
+                            {t.preset.sections.slice(0, 5).map((s) => (
+                              <span
+                                key={s}
+                                className="text-[8px] px-1.5 py-0.5 rounded-full bg-white/[0.08] text-muted border border-border capitalize"
+                              >
+                                {s.replace(/_/g, " ")}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Footer bar */}
+                    <div className="flex items-center justify-between px-3 py-2.5 bg-surface">
+                      <span className="text-[10px] text-muted flex items-center gap-1">
+                        <Clock size={10} className="text-[rgba(37,99,235,0.7)]" /> {t.avgLaunch}
+                      </span>
+                      <span className="text-[10px] text-[#2563EB] font-semibold flex items-center gap-1 transition-transform duration-200 group-hover:translate-x-0.5">
+                        Use this <ArrowRight size={11} />
+                      </span>
+                    </div>
+                  </button>
+                ))}
               </div>
-            </div>
-          ) : (
-            <div className="py-10 text-center text-xs text-muted">
-              <Loader size={18} className="animate-spin mx-auto mb-2" />
-              Generating&hellip;
-            </div>
-          )}
-        </div>
-      )}
+            </div>{/* Demo-ready banner � shown while demo is live and not yet subscribed */}{active && effectiveStatus(active) === "preview" && (
+              <div className="card p-4 bg-gradient-to-br from-emerald-500/[0.06] to-transparent border-emerald-500/30 fade-in">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
+                    <Rocket size={18} className="text-emerald-400" />
+                  </div>
+                  <div className="flex-1 min-w-[200px]">
+                    <p className="text-xs font-semibold text-emerald-400">Your demo is live &mdash; try it before you pay</p>
+                    <p className="text-[10px] text-muted">
+                      Free for {daysUntil(active.demo_expires_at) ?? 14} days. Go live anytime when you&apos;re ready &mdash; custom monthly price based on what&apos;s in your site.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    {(active.preview_url || active.vercel_url) && (
+                      <a
+                        href={active.preview_url || active.vercel_url || "#"}
+                        target="_blank"
+                        rel="noopener"
+                        className="text-[10px] px-3 py-2 rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/8 flex items-center gap-1"
+                      >
+                        <ExternalLink size={11} /> View demo
+                      </a>
+                    )}
+                    <button
+                      onClick={() => openPricing(active)}
+                      className="text-[10px] px-3 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center gap-1 hover:shadow-lg hover:shadow-amber-400/30"
+                    >
+                      <Rocket size={11} /> See pricing
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}{/* Active project result */}{active && (
+              <div className="card space-y-3">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <h2 className="text-sm font-semibold truncate">{active.name}</h2>
+                    <span className={`text-[9px] px-2 py-0.5 rounded-full border ${STATUS_BADGE[effectiveStatus(active)] || STATUS_BADGE.draft}`}>
+                      {STATUS_LABEL[effectiveStatus(active)] || active.status}
+                    </span>
+                    {effectiveStatus(active) === "preview" && active.demo_expires_at && (
+                      <span className="text-[9px] px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] inline-flex items-center gap-1">
+                        <Clock size={9} /> {daysUntil(active.demo_expires_at)} days left
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <button
+                      onClick={() => regenerate(active)}
+                      disabled={regenerating}
+                      aria-label="Regenerate website"
+                      className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1 disabled:opacity-50"
+                    >
+                      {regenerating ? <Loader size={10} className="animate-spin" /> : <RefreshCw size={10} />}
+                      Regenerate
+                    </button>
+                    <button
+                      onClick={() => shareDemo(active)}
+                      className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1"
+                    >
+                      <Share2 size={10} /> Share Demo
+                    </button>
+                    <button
+                      onClick={() => openPricing(active)}
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center gap-1"
+                    >
+                      <Rocket size={10} /> Go Live
+                    </button>
+                    <button
+                      onClick={() => deploy(active)}
+                      disabled={deploying || !indexHtml}
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-black text-white hover:bg-black/80 flex items-center gap-1 disabled:opacity-50"
+                    >
+                      {deploying ? <Loader size={10} className="animate-spin" /> : <VercelIcon size={10} />}
+                      Deploy
+                    </button>
+                    {active.vercel_url && (
+                      <a href={active.vercel_url} target="_blank" rel="noopener" className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
+                        <ExternalLink size={10} /> Open
+                      </a>
+                    )}
+                  </div>
+                </div>
 
-      {/* Projects list */}
-      <div className="glass rounded-xl overflow-hidden">
-        <div className="px-4 pt-4 pb-3">
-          <h2 className="section-header flex items-center gap-2">
-            <Layout size={13} className="text-[#2563EB]" /> Your websites ({projects.length})
-          </h2>
-        </div>
-        {loading ? (
-          <div className="py-8 text-center text-muted text-xs">Loading...</div>
-        ) : projects.length === 0 ? (
-          <div className="py-10 text-center">
-            <Globe size={24} className="mx-auto mb-2 text-muted/30" />
-            <p className="text-xs text-muted mb-3">No websites yet. Pick a niche template above and you&apos;ll have a live demo URL in 3 minutes &mdash; no card required.</p>
-            <button
-              onClick={startBlank}
-              className="text-xs px-4 py-2 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] inline-flex items-center gap-1.5"
-            >
-              <Plus size={12} /> Or build from scratch
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-4">
-            {projects.map((p, index) => {
-              const html = p.generated_files?.["index.html"] || "";
-              const clientName = clients.find((c) => c.id === p.client_id)?.business_name;
-              const status = effectiveStatus(p);
-              const days = daysUntil(p.demo_expires_at);
-              return (
+                {(active.preview_url || active.vercel_url) && (
+                  <div className="flex items-center justify-between p-2 rounded-lg bg-surface-light border border-border">
+                    <a href={active.preview_url || active.vercel_url || "#"} target="_blank" rel="noopener" className="text-[11px] text-[#2563EB] hover:text-[#3B82F6] truncate">
+                      {active.preview_url || active.vercel_url}
+                    </a>
+                    <button onClick={() => { navigator.clipboard.writeText(active.preview_url || active.vercel_url || ""); toast.success("Copied"); }}>
+                      <Copy size={11} className="text-muted hover:text-foreground" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Viewport toggle + open-in-new-tab */}
+                {indexHtml && (
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="inline-flex items-center rounded-lg border border-border bg-surface-light p-0.5">
+                      {[
+                        { id: "desktop" as const, label: "Desktop", Icon: Monitor },
+                        { id: "tablet" as const, label: "Tablet", Icon: Tablet },
+                        { id: "mobile" as const, label: "Mobile", Icon: Smartphone },
+                      ].map((v) => {
+                        const on = viewport === v.id;
+                        return (
+                          <button
+                            key={v.id}
+                            onClick={() => setViewport(v.id)}
+                            aria-label={v.label}
+                            aria-pressed={on}
+                            className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] transition ${
+                              on ? "bg-[#2563EB] text-white font-semibold" : "text-muted hover:text-foreground"
+                            }`}
+                          >
+                            <v.Icon size={11} /> {v.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {(active.preview_url || active.vercel_url) && (
+                      <a
+                        href={active.preview_url || active.vercel_url || "#"}
+                        target="_blank"
+                        rel="noopener"
+                        className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] flex items-center gap-1"
+                      >
+                        <ExternalLink size={10} /> Open in new tab
+                      </a>
+                    )}
+                  </div>
+                )}
+
+                {indexHtml ? (
+                  <div className="rounded-xl border border-border overflow-hidden bg-[#1a1c23] flex items-center justify-center p-3" style={{ height: 640 }}>
+                    <div
+                      className="bg-white transition-all duration-300 shadow-2xl shadow-black/40 rounded-lg overflow-hidden"
+                      style={{
+                        width: viewport === "desktop" ? "100%" : viewport === "tablet" ? 768 : 390,
+                        maxWidth: "100%",
+                        height: "100%",
+                      }}
+                    >
+                      <iframe srcDoc={indexHtml} className="w-full h-full border-0" title="Website preview" sandbox="allow-scripts" />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="py-10 text-center text-xs text-muted">
+                    <Loader size={18} className="animate-spin mx-auto mb-2" />
+                    Generating&hellip;
+                  </div>
+                )}
+              </div>
+            )}{/* Projects list */}<div className="glass rounded-xl overflow-hidden">
+              <div className="px-4 pt-4 pb-3">
+                <h2 className="section-header flex items-center gap-2">
+                  <Layout size={13} className="text-[#2563EB]" /> Your websites ({projects.length})
+                </h2>
+              </div>
+              {loading ? (
+                <div className="py-8 text-center text-muted text-xs">Loading...</div>
+              ) : projects.length === 0 ? (
+                <div className="py-10 text-center">
+                  <Globe size={24} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-xs text-muted mb-3">No websites yet. Pick a niche template above and you&apos;ll have a live demo URL in 3 minutes &mdash; no card required.</p>
+                  <button
+                    onClick={startBlank}
+                    className="text-xs px-4 py-2 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] inline-flex items-center gap-1.5"
+                  >
+                    <Plus size={12} /> Or build from scratch
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-4">
+                  {projects.map((p, index) => {
+                    const html = p.generated_files?.["index.html"] || "";
+                    const clientName = clients.find((c) => c.id === p.client_id)?.business_name;
+                    const status = effectiveStatus(p);
+                    const days = daysUntil(p.demo_expires_at);
+                    return (
+                      <motion.div
+                        key={p.id}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.22, delay: index * 0.06 }}
+                        whileHover={{ y: -4, scale: 1.01 }}
+                        className="glass rounded-xl p-0 overflow-hidden shadow-lg shadow-black/20 relative"
+                      >
+                        <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
+                        {/* Thumbnail */}
+                        <div className="relative h-36 bg-surface border-b border-border overflow-hidden">
+                          {html ? (
+                            <iframe
+                              srcDoc={html}
+                              className="w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none"
+                              title={`${p.name} preview`}
+                              sandbox=""
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full text-muted">
+                              <Globe size={24} className="opacity-30" />
+                            </div>
+                          )}
+                          <span className={`absolute top-2 right-2 text-[9px] px-2 py-0.5 rounded-full border backdrop-blur ${STATUS_BADGE[status] || STATUS_BADGE.draft}`}>
+                            {STATUS_LABEL[status] || p.status}
+                          </span>
+                          {status === "preview" && days !== null && (
+                            <span className="absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] backdrop-blur inline-flex items-center gap-1">
+                              <Clock size={9} /> {days}d
+                            </span>
+                          )}
+                          {status === "live" && p.pricing_tier && (
+                            <span className={`absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full text-white bg-gradient-to-r ${TIER_COLOR[p.pricing_tier] || TIER_COLOR.starter}`}>
+                              {p.pricing_tier}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="p-3 space-y-2">
+                          <div>
+                            <p className="text-xs font-semibold truncate">{p.name}</p>
+                            <p className="text-[9px] text-muted truncate">
+                              {clientName ? `${clientName} � ` : ""}
+                              {p.industry || p.template_style || "uncategorized"}
+                            </p>
+                          </div>
+
+                          {/* Status pipeline timeline */}
+                          {(() => {
+                            const STEPS = ["draft", "generating", "preview", "live"] as const;
+                            const stepIdx = STEPS.indexOf(status as typeof STEPS[number]);
+                            const currentIdx = stepIdx === -1 ? 0 : stepIdx;
+                            const stepColors = ["text-muted", "text-[#2563EB]", "text-[#2563EB]", "text-green-400"] as const;
+                            const activeColor = stepColors[currentIdx] || stepColors[0];
+                            return (
+                              <div className="flex items-center gap-0.5">
+                                {STEPS.map((step, i) => {
+                                  const done = i < currentIdx;
+                                  const active = i === currentIdx;
+                                  return (
+                                    <div key={step} className="flex items-center gap-0.5 flex-1">
+                                      <div
+                                        className={`h-1 rounded-full flex-1 transition-all ${
+                                          done ? "bg-[#2563EB]/60" : active ? "bg-[#2563EB]/30" : "bg-[rgba(0,0,0,0.06)]"
+                                        }`}
+                                      />
+                                      {i === STEPS.length - 1 && (
+                                        <span className={`text-[8px] shrink-0 ml-1 ${active ? activeColor : done ? "text-green-400" : "text-muted/40"}`}>
+                                          {STATUS_LABEL[status] || status}
+                                        </span>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            );
+                          })()}
+
+                          {(p.preview_url || p.vercel_url || p.custom_domain) && (
+                            <a
+                              href={p.custom_domain ? `https://${p.custom_domain}` : (p.preview_url || p.vercel_url || "#")}
+                              target="_blank"
+                              rel="noopener"
+                              className="text-[10px] text-[#2563EB] hover:text-[#3B82F6] truncate block"
+                            >
+                              {p.custom_domain || p.preview_url || p.vercel_url}
+                            </a>
+                          )}
+
+                          <div className="flex items-center justify-between pt-1 gap-1">
+                            <div className="flex items-center gap-1 flex-wrap">
+                              <button onClick={() => setActive(p)} className="text-[10px] px-2 py-1 rounded-md bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
+                                <Eye size={10} /> Open
+                              </button>
+                              {status === "preview" && (
+                                <>
+                                  <button onClick={() => openPricing(p)} className="text-[10px] px-2 py-1 rounded-md bg-gradient-to-r from-amber-400 to-orange-500 text-black font-semibold flex items-center gap-1">
+                                    <Rocket size={10} /> Go Live
+                                  </button>
+                                  <button onClick={() => shareDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-border text-muted hover:text-foreground flex items-center gap-1">
+                                    <Share2 size={10} />
+                                  </button>
+                                </>
+                              )}
+                              {status === "expired" && (
+                                <button onClick={() => extendDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] flex items-center gap-1">
+                                  <Calendar size={10} /> Extend
+                                </button>
+                              )}
+                              {status === "live" && p.monthly_price && (
+                                <span className="text-[10px] px-2 py-1 rounded-md bg-green-500/10 text-green-400 border border-green-500/30 inline-flex items-center gap-1">
+                                  <DollarSign size={10} />{p.monthly_price}/mo
+                                </span>
+                              )}
+                            </div>
+                            <button onClick={() => deleteProject(p.id)} aria-label={`Delete ${p.name}`} className="p-1 rounded-md hover:bg-red-500/10 text-muted hover:text-red-400">
+                              <Trash2 size={10} />
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>{/* How it works */}<div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {[
+                { icon: <Layout size={12} />, title: "1. Pick a niche", body: "Nine battle-tested templates, each one prewired for the conversion pattern that niche responds to." },
+                { icon: <Rocket size={12} />, title: "2. Share the demo", body: "Auto-deployed to a live URL in under 3 minutes. Send it to your client � free for 14 days, no card." },
+                { icon: <DollarSign size={12} />, title: "3. Go live, get paid", body: "Connect a domain and subscribe. Transparent monthly pricing based on what's actually in the site." },
+              ].map((item, index) => (
                 <motion.div
-                  key={p.id}
+                  key={item.title}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: index * 0.06 }}
-                  whileHover={{ y: -4, scale: 1.01 }}
-                  className="glass rounded-xl p-0 overflow-hidden shadow-lg shadow-black/20 relative"
+                  whileHover={{ y: -2 }}
+                  className="glass rounded-xl p-4 relative overflow-hidden"
                 >
                   <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
-                  {/* Thumbnail */}
-                  <div className="relative h-36 bg-surface border-b border-border overflow-hidden">
-                    {html ? (
-                      <iframe
-                        srcDoc={html}
-                        className="w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none"
-                        title={`${p.name} preview`}
-                        sandbox=""
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full text-muted">
-                        <Globe size={24} className="opacity-30" />
-                      </div>
-                    )}
-                    <span className={`absolute top-2 right-2 text-[9px] px-2 py-0.5 rounded-full border backdrop-blur ${STATUS_BADGE[status] || STATUS_BADGE.draft}`}>
-                      {STATUS_LABEL[status] || p.status}
-                    </span>
-                    {status === "preview" && days !== null && (
-                      <span className="absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] backdrop-blur inline-flex items-center gap-1">
-                        <Clock size={9} /> {days}d
-                      </span>
-                    )}
-                    {status === "live" && p.pricing_tier && (
-                      <span className={`absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full text-white bg-gradient-to-r ${TIER_COLOR[p.pricing_tier] || TIER_COLOR.starter}`}>
-                        {p.pricing_tier}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="p-3 space-y-2">
-                    <div>
-                      <p className="text-xs font-semibold truncate">{p.name}</p>
-                      <p className="text-[9px] text-muted truncate">
-                        {clientName ? `${clientName} � ` : ""}
-                        {p.industry || p.template_style || "uncategorized"}
-                      </p>
-                    </div>
-
-                    {/* Status pipeline timeline */}
-                    {(() => {
-                      const STEPS = ["draft", "generating", "preview", "live"] as const;
-                      const stepIdx = STEPS.indexOf(status as typeof STEPS[number]);
-                      const currentIdx = stepIdx === -1 ? 0 : stepIdx;
-                      const stepColors = ["text-muted", "text-[#2563EB]", "text-[#2563EB]", "text-green-400"] as const;
-                      const activeColor = stepColors[currentIdx] || stepColors[0];
-                      return (
-                        <div className="flex items-center gap-0.5">
-                          {STEPS.map((step, i) => {
-                            const done = i < currentIdx;
-                            const active = i === currentIdx;
-                            return (
-                              <div key={step} className="flex items-center gap-0.5 flex-1">
-                                <div
-                                  className={`h-1 rounded-full flex-1 transition-all ${
-                                    done ? "bg-[#2563EB]/60" : active ? "bg-[#2563EB]/30" : "bg-[rgba(0,0,0,0.06)]"
-                                  }`}
-                                />
-                                {i === STEPS.length - 1 && (
-                                  <span className={`text-[8px] shrink-0 ml-1 ${active ? activeColor : done ? "text-green-400" : "text-muted/40"}`}>
-                                    {STATUS_LABEL[status] || status}
-                                  </span>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      );
-                    })()}
-
-                    {(p.preview_url || p.vercel_url || p.custom_domain) && (
-                      <a
-                        href={p.custom_domain ? `https://${p.custom_domain}` : (p.preview_url || p.vercel_url || "#")}
-                        target="_blank"
-                        rel="noopener"
-                        className="text-[10px] text-[#2563EB] hover:text-[#3B82F6] truncate block"
-                      >
-                        {p.custom_domain || p.preview_url || p.vercel_url}
-                      </a>
-                    )}
-
-                    <div className="flex items-center justify-between pt-1 gap-1">
-                      <div className="flex items-center gap-1 flex-wrap">
-                        <button onClick={() => setActive(p)} className="text-[10px] px-2 py-1 rounded-md bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
-                          <Eye size={10} /> Open
-                        </button>
-                        {status === "preview" && (
-                          <>
-                            <button onClick={() => openPricing(p)} className="text-[10px] px-2 py-1 rounded-md bg-gradient-to-r from-amber-400 to-orange-500 text-black font-semibold flex items-center gap-1">
-                              <Rocket size={10} /> Go Live
-                            </button>
-                            <button onClick={() => shareDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-border text-muted hover:text-foreground flex items-center gap-1">
-                              <Share2 size={10} />
-                            </button>
-                          </>
-                        )}
-                        {status === "expired" && (
-                          <button onClick={() => extendDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] flex items-center gap-1">
-                            <Calendar size={10} /> Extend
-                          </button>
-                        )}
-                        {status === "live" && p.monthly_price && (
-                          <span className="text-[10px] px-2 py-1 rounded-md bg-green-500/10 text-green-400 border border-green-500/30 inline-flex items-center gap-1">
-                            <DollarSign size={10} />{p.monthly_price}/mo
-                          </span>
-                        )}
-                      </div>
-                      <button onClick={() => deleteProject(p.id)} aria-label={`Delete ${p.name}`} className="p-1 rounded-md hover:bg-red-500/10 text-muted hover:text-red-400">
-                        <Trash2 size={10} />
-                      </button>
-                    </div>
-                  </div>
+                  <h3 className="section-header flex items-center gap-2 text-[#2563EB]">{item.icon} {item.title}</h3>
+                  <p className="text-[10px] text-muted">{item.body}</p>
                 </motion.div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* How it works */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {[
-          { icon: <Layout size={12} />, title: "1. Pick a niche", body: "Nine battle-tested templates, each one prewired for the conversion pattern that niche responds to." },
-          { icon: <Rocket size={12} />, title: "2. Share the demo", body: "Auto-deployed to a live URL in under 3 minutes. Send it to your client � free for 14 days, no card." },
-          { icon: <DollarSign size={12} />, title: "3. Go live, get paid", body: "Connect a domain and subscribe. Transparent monthly pricing based on what's actually in the site." },
-        ].map((item, index) => (
-          <motion.div
-            key={item.title}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, delay: index * 0.06 }}
-            whileHover={{ y: -2 }}
-            className="glass rounded-xl p-4 relative overflow-hidden"
-          >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
-            <h3 className="section-header flex items-center gap-2 text-[#2563EB]">{item.icon} {item.title}</h3>
-            <p className="text-[10px] text-muted">{item.body}</p>
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="glass rounded-xl p-4">
-        <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
-          <ShieldCheck size={11} className="text-[#2563EB]" /> Every template ships with
-        </h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px] text-muted">
-          <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Bold hero headline + subheader</div>
-          <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Social proof above the fold</div>
-          <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> CTA repeated 3+ times</div>
-          <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Benefit-driven copy</div>
-          <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Mobile-first responsive</div>
-          <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Trust badges & guarantees</div>
-          <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Lighthouse 90+ scores</div>
-          <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Scroll-reveal animations</div>
-        </div>
-      </div>
-
-      {/* Pricing modal */}
-      {pricingFor && (
-        <PricingModal
-          project={pricingFor}
-          quote={quote}
-          quoteLoading={quoteLoading}
-          activeAddons={activeAddons}
-          billingCycle={billingCycle}
-          subscribing={subscribing}
-          onClose={() => setPricingFor(null)}
-          onToggleAddon={toggleAddon}
-          onCycleChange={setBillingCycle}
-          onSubscribe={subscribe}
-        />
-      )}
-    </div>
+              ))}
+            </div><div className="glass rounded-xl p-4">
+              <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
+                <ShieldCheck size={11} className="text-[#2563EB]" /> Every template ships with
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px] text-muted">
+                <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Bold hero headline + subheader</div>
+                <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Social proof above the fold</div>
+                <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> CTA repeated 3+ times</div>
+                <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Benefit-driven copy</div>
+                <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Mobile-first responsive</div>
+                <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Trust badges & guarantees</div>
+                <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Lighthouse 90+ scores</div>
+                <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Scroll-reveal animations</div>
+              </div>
+            </div>{/* Pricing modal */}{pricingFor && (
+              <PricingModal
+                project={pricingFor}
+                quote={quote}
+                quoteLoading={quoteLoading}
+                activeAddons={activeAddons}
+                billingCycle={billingCycle}
+                subscribing={subscribing}
+                onClose={() => setPricingFor(null)}
+                onToggleAddon={toggleAddon}
+                onCycleChange={setBillingCycle}
+                onSubscribe={subscribe}
+              />
+            )}</MotionPage>
   );
 }
 

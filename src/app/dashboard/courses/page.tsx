@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import Link from "next/link";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface Course {
   id: string;
@@ -110,138 +111,131 @@ export default function CoursesPage() {
   const filtered = courses.filter(c => filter === "all" || c.status === filter);
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB]">
-      <PageHero
-        eyebrow="COURSES"
-        title="Courses"
-        subtitle="Build and sell membership courses. Your students access them at their portal."
-        icon={<BookOpen size={28} />}
-        gradient="purple"
-        actions={
-          <button
-            onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
-          >
-            <Plus size={16} />
-            New Course
-          </button>
-        }
-      />
-
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Filter tabs */}
-        <div className="flex gap-2 mb-6">
-          {(["all", "published", "draft"] as Filter[]).map(f => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium capitalize transition-colors ${
-                filter === f
-                  ? "bg-purple-600 text-[#0A0A0B]"
-                  : "bg-black/5 text-black/60 hover:text-[#0A0A0B] hover:bg-black/10"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-
-        {/* Course grid */}
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="glass rounded-xl h-52 animate-pulse" />
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-24 text-black/40">
-            <BookOpen size={48} className="mx-auto mb-4 opacity-30" />
-            <p className="text-lg">No courses yet</p>
-            <p className="text-sm mt-1">Click &ldquo;New Course&rdquo; to create your first one</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filtered.map((course, i) => (
-              <CourseCard
-                key={course.id}
-                course={course}
-                index={i}
-                onDelete={handleDelete}
-                onTogglePublish={handleTogglePublish}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Create modal */}
-      {showCreate && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="glass  p-6 w-full max-w-md">
-            <h2 className="text-lg font-semibold text-[#0A0A0B] mb-4">New Course</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-black/60 mb-1">Title *</label>
-                <input
-                  value={newTitle}
-                  onChange={e => setNewTitle(e.target.value)}
-                  placeholder="e.g. 12-Week Fitness Program"
-                  className="w-full glass rounded-lg px-3 py-2 text-[#0A0A0B] placeholder-black/35 text-sm focus:outline-none focus:border-purple-500"
-                />
+    <MotionPage className="min-h-screen bg-[#FAFAFB]"><PageHero
+              eyebrow="COURSES"
+              title="Courses"
+              subtitle="Build and sell membership courses. Your students access them at their portal."
+              icon={<BookOpen size={28} />}
+              gradient="purple"
+              actions={
+                <button
+                  onClick={() => setShowCreate(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  <Plus size={16} />
+                  New Course
+                </button>
+              }
+            /><div className="max-w-7xl mx-auto px-6 py-8">
+              {/* Filter tabs */}
+              <div className="flex gap-2 mb-6">
+                {(["all", "published", "draft"] as Filter[]).map(f => (
+                  <button
+                    key={f}
+                    onClick={() => setFilter(f)}
+                    className={`px-4 py-1.5 rounded-full text-sm font-medium capitalize transition-colors ${
+                      filter === f
+                        ? "bg-purple-600 text-[#0A0A0B]"
+                        : "bg-black/5 text-black/60 hover:text-[#0A0A0B] hover:bg-black/10"
+                    }`}
+                  >
+                    {f}
+                  </button>
+                ))}
               </div>
-              <div>
-                <label className="block text-sm text-black/60 mb-1">Description</label>
-                <textarea
-                  value={newDescription}
-                  onChange={e => setNewDescription(e.target.value)}
-                  rows={2}
-                  placeholder="Brief descriptionâ€¦"
-                  className="w-full glass rounded-lg px-3 py-2 text-[#0A0A0B] placeholder-black/35 text-sm focus:outline-none focus:border-purple-500 resize-none"
-                />
-              </div>
-              <div className="flex items-center gap-3">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={newIsFree}
-                    onChange={e => setNewIsFree(e.target.checked)}
-                    className="accent-purple-500"
-                  />
-                  <span className="text-sm text-black/65">Free course</span>
-                </label>
-                {!newIsFree && (
-                  <div className="flex items-center gap-1 ml-auto">
-                    <span className="text-black/40 text-sm">$</span>
-                    <input
-                      type="number"
-                      value={newPrice}
-                      onChange={e => setNewPrice(e.target.value)}
-                      placeholder="0.00"
-                      className="w-24 glass rounded-lg px-2 py-1.5 text-[#0A0A0B] text-sm focus:outline-none focus:border-purple-500"
+
+              {/* Course grid */}
+              {loading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="glass rounded-xl h-52 animate-pulse" />
+                  ))}
+                </div>
+              ) : filtered.length === 0 ? (
+                <div className="text-center py-24 text-black/40">
+                  <BookOpen size={48} className="mx-auto mb-4 opacity-30" />
+                  <p className="text-lg">No courses yet</p>
+                  <p className="text-sm mt-1">Click &ldquo;New Course&rdquo; to create your first one</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {filtered.map((course, i) => (
+                    <CourseCard
+                      key={course.id}
+                      course={course}
+                      index={i}
+                      onDelete={handleDelete}
+                      onTogglePublish={handleTogglePublish}
                     />
+                  ))}
+                </div>
+              )}
+            </div>{/* Create modal */}{showCreate && (
+              <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                <div className="glass  p-6 w-full max-w-md">
+                  <h2 className="text-lg font-semibold text-[#0A0A0B] mb-4">New Course</h2>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm text-black/60 mb-1">Title *</label>
+                      <input
+                        value={newTitle}
+                        onChange={e => setNewTitle(e.target.value)}
+                        placeholder="e.g. 12-Week Fitness Program"
+                        className="w-full glass rounded-lg px-3 py-2 text-[#0A0A0B] placeholder-black/35 text-sm focus:outline-none focus:border-purple-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-black/60 mb-1">Description</label>
+                      <textarea
+                        value={newDescription}
+                        onChange={e => setNewDescription(e.target.value)}
+                        rows={2}
+                        placeholder="Brief descriptionâ€¦"
+                        className="w-full glass rounded-lg px-3 py-2 text-[#0A0A0B] placeholder-black/35 text-sm focus:outline-none focus:border-purple-500 resize-none"
+                      />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={newIsFree}
+                          onChange={e => setNewIsFree(e.target.checked)}
+                          className="accent-purple-500"
+                        />
+                        <span className="text-sm text-black/65">Free course</span>
+                      </label>
+                      {!newIsFree && (
+                        <div className="flex items-center gap-1 ml-auto">
+                          <span className="text-black/40 text-sm">$</span>
+                          <input
+                            type="number"
+                            value={newPrice}
+                            onChange={e => setNewPrice(e.target.value)}
+                            placeholder="0.00"
+                            className="w-24 glass rounded-lg px-2 py-1.5 text-[#0A0A0B] text-sm focus:outline-none focus:border-purple-500"
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
+                  <div className="flex gap-3 mt-6">
+                    <button
+                      onClick={() => setShowCreate(false)}
+                      className="flex-1 px-4 py-2 bg-black/5 hover:bg-black/10 text-black/65 rounded-lg text-sm transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => void handleCreate()}
+                      disabled={creating}
+                      className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors"
+                    >
+                      {creating ? "Creatingâ€¦" : "Create Course"}
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-3 mt-6">
-              <button
-                onClick={() => setShowCreate(false)}
-                className="flex-1 px-4 py-2 bg-black/5 hover:bg-black/10 text-black/65 rounded-lg text-sm transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => void handleCreate()}
-                disabled={creating}
-                className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors"
-              >
-                {creating ? "Creatingâ€¦" : "Create Course"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            )}</MotionPage>
   );
 }
 

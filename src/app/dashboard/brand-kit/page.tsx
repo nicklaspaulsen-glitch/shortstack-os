@@ -17,6 +17,7 @@ import { PrismPanel } from "@/components/prism";
 import WebsiteScraper from "@/components/ui/website-scraper";
 import { useAutoSave } from "@/lib/use-auto-save";
 import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type MainTab = "extract" | "colors" | "typography" | "media" | "generate";
 
@@ -280,623 +281,597 @@ export default function BrandKitPage() {
   ];
 
   return (
-    <div className="fade-in p-6 max-w-7xl mx-auto space-y-6">
-      <AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />
-      <PageHero
-        icon={<Palette size={28} />}
-        eyebrow="BRAND KIT"
-        title="Brand Kit"
-        subtitle="Build your agency's brand identity � extract colors, fonts & logos from any URL, then auto-apply them across all client assets."
-        gradient="purple"
-        actions={
-          brand ? (
-            <>
-              <div className="relative" ref={exportMenuRef}>
-                <motion.button
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => setShowExportMenu((v) => !v)}
-                  className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
-                >
-                  <Download size={13} /> Export Kit <ChevronDown size={12} className={`transition-transform ${showExportMenu ? "rotate-180" : ""}`} />
-                </motion.button>
+    <MotionPage className="fade-in p-6 max-w-7xl mx-auto space-y-6"><AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} /><PageHero
+              icon={<Palette size={28} />}
+              eyebrow="BRAND KIT"
+              title="Brand Kit"
+              subtitle="Build your agency's brand identity � extract colors, fonts & logos from any URL, then auto-apply them across all client assets."
+              gradient="purple"
+              actions={
+                brand ? (
+                  <>
+                    <div className="relative" ref={exportMenuRef}>
+                      <motion.button
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => setShowExportMenu((v) => !v)}
+                        className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
+                      >
+                        <Download size={13} /> Export Kit <ChevronDown size={12} className={`transition-transform ${showExportMenu ? "rotate-180" : ""}`} />
+                      </motion.button>
 
-                {showExportMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-surface border border-border/30 rounded-xl shadow-2xl z-50 py-1 overflow-hidden">
-                    <button
-                      onClick={exportAsJSON}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors"
-                    >
-                      <Braces size={14} className="text-[#2563EB] shrink-0" />
-                      <div>
-                        <p className="font-medium">Export as JSON</p>
-                        <p className="text-[10px] text-muted">Full brand data file</p>
-                      </div>
-                    </button>
-                    <button
-                      onClick={copyBrandSummary}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors"
-                    >
-                      <ClipboardList size={14} className="text-[#2563EB] shrink-0" />
-                      <div>
-                        <p className="font-medium">Copy Brand Summary</p>
-                        <p className="text-[10px] text-muted">Formatted text to clipboard</p>
-                      </div>
-                    </button>
-                    <button
-                      onClick={exportCSSVariables}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors"
-                    >
-                      <FileCode size={14} className="text-[#2563EB] shrink-0" />
-                      <div>
-                        <p className="font-medium">Export CSS Variables</p>
-                        <p className="text-[10px] text-muted">Colors &amp; fonts as CSS</p>
-                      </div>
-                    </button>
-                  </div>
-                )}
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => { setBrand(null); setUrl(""); setTab("extract"); if (typeof window !== "undefined") { localStorage.removeItem("ss_brand_kit_data"); localStorage.removeItem("ss_brand_kit_url"); } }}
-                className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
-              >
-                <RefreshCw size={13} /> New Scan
-              </motion.button>
-            </>
-          ) : null
-        }
-      />
-
-      {/* Auto-save footer */}
-      {(brand || url.trim()) && (
-        <div className="flex items-center justify-between text-[10px] text-muted/70 px-1">
-          <span className="flex items-center gap-1">
-            <Check size={10} className="text-emerald-400/60" />
-            Brand kit auto-saves locally as you extract
-          </span>
-          <div className="flex items-center gap-2">
-            <span className="text-muted/50">or save manually</span>
-            <button
-              disabled={savingManual}
-              onClick={async () => {
-                setSavingManual(true);
-                try {
-                  await saveBrandKit({ url, brand });
-                  toast.success("Brand kit saved");
-                } catch (err) {
-                  console.error("Manual brand save failed:", err);
-                  toast.error("Save failed");
-                }
-                setSavingManual(false);
-              }}
-              className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1"
-            >
-              <Save size={10} /> {savingManual ? "Saving..." : "Save"}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Tabs */}
-      <div className="flex gap-1 border-b border-border/30 pb-px">
-        {tabs.map(t => (
-          <button
-            key={t.key}
-            onClick={() => !t.disabled && setTab(t.key)}
-            disabled={t.disabled}
-            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-all ${
-              tab === t.key
-                ? "text-[#2563EB] border-b-2 border-[#2563EB] bg-[rgba(37,99,235,0.05)]"
-                : t.disabled
-                  ? "text-muted/40 cursor-not-allowed"
-                  : "text-muted hover:text-foreground"
-            }`}
-          >
-            {t.icon} {t.label}
-          </button>
-        ))}
-      </div>
-
-      {/* -- EXTRACT TAB -- */}
-      {tab === "extract" && (
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-6"
-        >
-          {/* URL Input */}
-          <motion.div variants={tileVariants} className="rounded-xl p-8 text-center space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-            <div className="w-16 h-16 mx-auto bg-[rgba(37,99,235,0.08)]  flex items-center justify-center mb-4">
-              <Globe size={28} className="text-[#2563EB]" />
-            </div>
-            <h2 className="text-lg font-bold">Extract Brand Identity</h2>
-            <p className="text-xs text-muted max-w-md mx-auto">
-              Enter a website URL and we&apos;ll analyze it to extract brand colors, fonts, logos, imagery, and social profiles.
-              Use this data to generate on-brand content instantly.
-            </p>
-            <div className="max-w-lg mx-auto flex gap-2">
-              <div className="relative flex-1">
-                <Link2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                <input
-                  type="url"
-                  placeholder="https://example.com"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && scrapeBrand()}
-                  className="rounded-lg w-full pl-9 py-2.5 text-sm bg-transparent focus:outline-none focus:ring-1 focus:ring-[#2563EB]/40 placeholder:text-muted" style={{ border: "1px solid rgba(0,0,0,0.10)" }}
-                  disabled={loading}
-                />
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={scrapeBrand}
-                disabled={loading}
-                className="btn-primary px-6 py-2.5 text-sm flex items-center gap-2"
-              >
-                {loading ? <Loader size={14} className="animate-spin" /> : <Zap size={14} />}
-                {loading ? "Scanning..." : "Extract"}
-              </motion.button>
-            </div>
-          </motion.div>
-
-          {/* Optional business + brand analyzer (AI-augmented website extraction) */}
-          <motion.div variants={tileVariants}>
-            <WebsiteScraper
-              ctaLabel="Pull brand colors + logo"
-              onExtract={(r) => {
-                if (!url && r.url) setUrl(r.url);
-                const colors = r.extracted.primaryColor ? [r.extracted.primaryColor] : [];
-                const socials = r.extracted.socialLinks.map((s) => ({ platform: s.platform, url: s.url }));
-                setBrand({
-                  siteName: r.extracted.businessName || "Unknown Site",
-                  description: r.extracted.description || "",
-                  favicon: r.extracted.logo || "",
-                  ogImage: r.extracted.ogImage || "",
-                  colors,
-                  fonts: [],
-                  images: r.extracted.ogImage ? [r.extracted.ogImage] : [],
-                  socialLinks: socials,
-                  headings: r.extracted.keywords.slice(0, 8),
-                  ctaTexts: r.ai?.services || [],
-                });
-                toast.success("Brand profile populated from website");
-                setTab("colors");
-              }}
-            />
-          </motion.div>
-
-          {/* How it works */}
-          <motion.div variants={containerVariants} className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { icon: <Globe size={18} />, title: "1. Paste URL", desc: "Enter any website address" },
-              { icon: <Eye size={18} />, title: "2. We Analyze", desc: "Colors, fonts, images, socials" },
-              { icon: <Palette size={18} />, title: "3. Brand Kit", desc: "Complete brand profile ready" },
-              { icon: <Sparkles size={18} />, title: "4. Generate", desc: "Create on-brand content" },
-            ].map((step, i) => (
-              <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="rounded-xl p-4 text-center relative overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
-                <div className="w-10 h-10 mx-auto bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center text-[#2563EB] mb-2 mt-1">
-                  {step.icon}
-                </div>
-                <p className="text-xs font-semibold">{step.title}</p>
-                <p className="text-[10px] text-muted mt-0.5">{step.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Brand overview (after scan) */}
-          {brand && (
-            <motion.div variants={tileVariants} className="rounded-xl p-6 space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-              <div className="flex items-center gap-4">
-                {brand.favicon && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={brand.favicon} alt="Favicon" className="w-10 h-10 rounded-lg bg-surface-light border border-border/20" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-                )}
-                <div>
-                  <h3 className="font-bold text-sm">{brand.siteName || "Unknown Site"}</h3>
-                  <p className="text-[10px] text-muted">{brand.description || "No description found"}</p>
-                </div>
-              </div>
-
-              <motion.div variants={containerVariants} className="grid grid-cols-4 gap-3">
-                {[
-                  { icon: <Palette size={14} />, value: brand.colors.length, label: "Colors" },
-                  { icon: <Type size={14} />, value: brand.fonts.length, label: "Fonts" },
-                  { icon: <ImageIcon size={14} />, value: brand.images.length, label: "Images" },
-                  { icon: <Share2 size={14} />, value: brand.socialLinks.length, label: "Socials" },
-                ].map(({ icon, value, label }) => (
-                  <motion.div
-                    key={label}
-                    variants={tileVariants}
-                    whileHover={{ y: -2 }}
-                    className="rounded-xl p-3 text-center relative overflow-hidden" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.16)" }}
-                  >
-                    <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
-                    <div className="text-[#2563EB] mx-auto mb-1 mt-1 flex justify-center">{icon}</div>
-                    <p className="text-lg font-bold font-mono">{value}</p>
-                    <p className="text-[9px] text-muted uppercase">{label}</p>
-                  </motion.div>
-                ))}
-              </motion.div>
-
-              <div className="flex items-center gap-2">
-                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setTab("colors")} className="btn-primary text-xs px-4 py-2 flex items-center gap-1.5">
-                  <Palette size={13} /> View Colors <ChevronRight size={12} />
-                </motion.button>
-                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setTab("generate")} className="btn-secondary text-xs px-4 py-2 flex items-center gap-1.5">
-                  <Sparkles size={13} /> Generate Content <ChevronRight size={12} />
-                </motion.button>
-              </div>
-            </motion.div>
-          )}
-        </motion.div>
-      )}
-
-      {/* -- COLORS TAB -- */}
-      {tab === "colors" && brand && (
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-6"
-        >
-          {/* Color palette */}
-          <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold flex items-center gap-2">
-                <Palette size={14} className="text-[#2563EB]" /> Extracted Color Palette
-              </h3>
-              <motion.button whileHover={{ scale: 1.05 }} onClick={copyAllColors} className="text-xs text-muted hover:text-[#2563EB] flex items-center gap-1">
-                <Copy size={12} /> Copy All
-              </motion.button>
-            </div>
-
-            {brand.colors.length === 0 ? (
-              <p className="text-xs text-muted text-center py-8">No brand colors detected. The site may use CSS variables or external stylesheets.</p>
-            ) : (
-              <>
-                {/* Large swatches */}
-                <motion.div variants={containerVariants} className="grid grid-cols-6 gap-3 mb-6">
-                  {brand.colors.slice(0, 6).map((color) => (
+                      {showExportMenu && (
+                        <div className="absolute right-0 top-full mt-2 w-56 bg-surface border border-border/30 rounded-xl shadow-2xl z-50 py-1 overflow-hidden">
+                          <button
+                            onClick={exportAsJSON}
+                            className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors"
+                          >
+                            <Braces size={14} className="text-[#2563EB] shrink-0" />
+                            <div>
+                              <p className="font-medium">Export as JSON</p>
+                              <p className="text-[10px] text-muted">Full brand data file</p>
+                            </div>
+                          </button>
+                          <button
+                            onClick={copyBrandSummary}
+                            className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors"
+                          >
+                            <ClipboardList size={14} className="text-[#2563EB] shrink-0" />
+                            <div>
+                              <p className="font-medium">Copy Brand Summary</p>
+                              <p className="text-[10px] text-muted">Formatted text to clipboard</p>
+                            </div>
+                          </button>
+                          <button
+                            onClick={exportCSSVariables}
+                            className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors"
+                          >
+                            <FileCode size={14} className="text-[#2563EB] shrink-0" />
+                            <div>
+                              <p className="font-medium">Export CSS Variables</p>
+                              <p className="text-[10px] text-muted">Colors &amp; fonts as CSS</p>
+                            </div>
+                          </button>
+                        </div>
+                      )}
+                    </div>
                     <motion.button
-                      key={color}
-                      variants={tileVariants}
-                      whileHover={{ scale: 1.07 }}
-                      onClick={() => copyColor(color)}
-                      className="group relative aspect-square rounded-xl border border-border/20 transition-all hover:shadow-lg"
-                      style={{ backgroundColor: color }}
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => { setBrand(null); setUrl(""); setTab("extract"); if (typeof window !== "undefined") { localStorage.removeItem("ss_brand_kit_data"); localStorage.removeItem("ss_brand_kit_url"); } }}
+                      className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
                     >
-                      <div className="absolute inset-x-0 bottom-0 bg-black/60 backdrop-blur-sm rounded-b-xl px-2 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <p className="text-[10px] font-mono text-white text-center flex items-center justify-center gap-1">
-                          {copiedColor === color ? <Check size={10} /> : <Copy size={10} />}
-                          {color}
-                        </p>
-                      </div>
+                      <RefreshCw size={13} /> New Scan
                     </motion.button>
+                  </>
+                ) : null
+              }
+            />{/* Auto-save footer */}{(brand || url.trim()) && (
+              <div className="flex items-center justify-between text-[10px] text-muted/70 px-1">
+                <span className="flex items-center gap-1">
+                  <Check size={10} className="text-emerald-400/60" />
+                  Brand kit auto-saves locally as you extract
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted/50">or save manually</span>
+                  <button
+                    disabled={savingManual}
+                    onClick={async () => {
+                      setSavingManual(true);
+                      try {
+                        await saveBrandKit({ url, brand });
+                        toast.success("Brand kit saved");
+                      } catch (err) {
+                        console.error("Manual brand save failed:", err);
+                        toast.error("Save failed");
+                      }
+                      setSavingManual(false);
+                    }}
+                    className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1"
+                  >
+                    <Save size={10} /> {savingManual ? "Saving..." : "Save"}
+                  </button>
+                </div>
+              </div>
+            )}{/* Tabs */}<div className="flex gap-1 border-b border-border/30 pb-px">
+              {tabs.map(t => (
+                <button
+                  key={t.key}
+                  onClick={() => !t.disabled && setTab(t.key)}
+                  disabled={t.disabled}
+                  className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-all ${
+                    tab === t.key
+                      ? "text-[#2563EB] border-b-2 border-[#2563EB] bg-[rgba(37,99,235,0.05)]"
+                      : t.disabled
+                        ? "text-muted/40 cursor-not-allowed"
+                        : "text-muted hover:text-foreground"
+                  }`}
+                >
+                  {t.icon} {t.label}
+                </button>
+              ))}
+            </div>{/* -- EXTRACT TAB -- */}{tab === "extract" && (
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-6"
+              >
+                {/* URL Input */}
+                <motion.div variants={tileVariants} className="rounded-xl p-8 text-center space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <div className="w-16 h-16 mx-auto bg-[rgba(37,99,235,0.08)]  flex items-center justify-center mb-4">
+                    <Globe size={28} className="text-[#2563EB]" />
+                  </div>
+                  <h2 className="text-lg font-bold">Extract Brand Identity</h2>
+                  <p className="text-xs text-muted max-w-md mx-auto">
+                    Enter a website URL and we&apos;ll analyze it to extract brand colors, fonts, logos, imagery, and social profiles.
+                    Use this data to generate on-brand content instantly.
+                  </p>
+                  <div className="max-w-lg mx-auto flex gap-2">
+                    <div className="relative flex-1">
+                      <Link2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                      <input
+                        type="url"
+                        placeholder="https://example.com"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && scrapeBrand()}
+                        className="rounded-lg w-full pl-9 py-2.5 text-sm bg-transparent focus:outline-none focus:ring-1 focus:ring-[#2563EB]/40 placeholder:text-muted" style={{ border: "1px solid rgba(0,0,0,0.10)" }}
+                        disabled={loading}
+                      />
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={scrapeBrand}
+                      disabled={loading}
+                      className="btn-primary px-6 py-2.5 text-sm flex items-center gap-2"
+                    >
+                      {loading ? <Loader size={14} className="animate-spin" /> : <Zap size={14} />}
+                      {loading ? "Scanning..." : "Extract"}
+                    </motion.button>
+                  </div>
+                </motion.div>
+
+                {/* Optional business + brand analyzer (AI-augmented website extraction) */}
+                <motion.div variants={tileVariants}>
+                  <WebsiteScraper
+                    ctaLabel="Pull brand colors + logo"
+                    onExtract={(r) => {
+                      if (!url && r.url) setUrl(r.url);
+                      const colors = r.extracted.primaryColor ? [r.extracted.primaryColor] : [];
+                      const socials = r.extracted.socialLinks.map((s) => ({ platform: s.platform, url: s.url }));
+                      setBrand({
+                        siteName: r.extracted.businessName || "Unknown Site",
+                        description: r.extracted.description || "",
+                        favicon: r.extracted.logo || "",
+                        ogImage: r.extracted.ogImage || "",
+                        colors,
+                        fonts: [],
+                        images: r.extracted.ogImage ? [r.extracted.ogImage] : [],
+                        socialLinks: socials,
+                        headings: r.extracted.keywords.slice(0, 8),
+                        ctaTexts: r.ai?.services || [],
+                      });
+                      toast.success("Brand profile populated from website");
+                      setTab("colors");
+                    }}
+                  />
+                </motion.div>
+
+                {/* How it works */}
+                <motion.div variants={containerVariants} className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {[
+                    { icon: <Globe size={18} />, title: "1. Paste URL", desc: "Enter any website address" },
+                    { icon: <Eye size={18} />, title: "2. We Analyze", desc: "Colors, fonts, images, socials" },
+                    { icon: <Palette size={18} />, title: "3. Brand Kit", desc: "Complete brand profile ready" },
+                    { icon: <Sparkles size={18} />, title: "4. Generate", desc: "Create on-brand content" },
+                  ].map((step, i) => (
+                    <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="rounded-xl p-4 text-center relative overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                      <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
+                      <div className="w-10 h-10 mx-auto bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center text-[#2563EB] mb-2 mt-1">
+                        {step.icon}
+                      </div>
+                      <p className="text-xs font-semibold">{step.title}</p>
+                      <p className="text-[10px] text-muted mt-0.5">{step.desc}</p>
+                    </motion.div>
                   ))}
                 </motion.div>
 
-                {/* Small swatches */}
-                {brand.colors.length > 6 && (
-                  <motion.div variants={containerVariants} className="flex flex-wrap gap-2">
-                    {brand.colors.slice(6).map((color) => (
-                      <motion.button
-                        key={color}
-                        variants={rowVariants}
-                        whileHover={{ x: 2 }}
-                        onClick={() => copyColor(color)}
-                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:border-[rgba(37,99,235,0.25)] transition-all text-xs" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
-                      >
-                        <div className="w-4 h-4 rounded-md border border-border/30" style={{ backgroundColor: color }} />
-                        <span className="font-mono text-[10px]">{color}</span>
-                      </motion.button>
-                    ))}
-                  </motion.div>
-                )}
-              </>
-            )}
-          </motion.div>
+                {/* Brand overview (after scan) */}
+                {brand && (
+                  <motion.div variants={tileVariants} className="rounded-xl p-6 space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                    <div className="flex items-center gap-4">
+                      {brand.favicon && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={brand.favicon} alt="Favicon" className="w-10 h-10 rounded-lg bg-surface-light border border-border/20" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                      )}
+                      <div>
+                        <h3 className="font-bold text-sm">{brand.siteName || "Unknown Site"}</h3>
+                        <p className="text-[10px] text-muted">{brand.description || "No description found"}</p>
+                      </div>
+                    </div>
 
-          {/* Color harmony suggestions */}
-          {brand.colors.length >= 2 && (
-            <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Hash size={14} className="text-[#2563EB]" /> Suggested Pairings
-              </h3>
-              <motion.div variants={containerVariants} className="grid grid-cols-3 gap-3">
+                    <motion.div variants={containerVariants} className="grid grid-cols-4 gap-3">
+                      {[
+                        { icon: <Palette size={14} />, value: brand.colors.length, label: "Colors" },
+                        { icon: <Type size={14} />, value: brand.fonts.length, label: "Fonts" },
+                        { icon: <ImageIcon size={14} />, value: brand.images.length, label: "Images" },
+                        { icon: <Share2 size={14} />, value: brand.socialLinks.length, label: "Socials" },
+                      ].map(({ icon, value, label }) => (
+                        <motion.div
+                          key={label}
+                          variants={tileVariants}
+                          whileHover={{ y: -2 }}
+                          className="rounded-xl p-3 text-center relative overflow-hidden" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.16)" }}
+                        >
+                          <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
+                          <div className="text-[#2563EB] mx-auto mb-1 mt-1 flex justify-center">{icon}</div>
+                          <p className="text-lg font-bold font-mono">{value}</p>
+                          <p className="text-[9px] text-muted uppercase">{label}</p>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+
+                    <div className="flex items-center gap-2">
+                      <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setTab("colors")} className="btn-primary text-xs px-4 py-2 flex items-center gap-1.5">
+                        <Palette size={13} /> View Colors <ChevronRight size={12} />
+                      </motion.button>
+                      <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setTab("generate")} className="btn-secondary text-xs px-4 py-2 flex items-center gap-1.5">
+                        <Sparkles size={13} /> Generate Content <ChevronRight size={12} />
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                )}
+              </motion.div>
+            )}{/* -- COLORS TAB -- */}{tab === "colors" && brand && (
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-6"
+              >
+                {/* Color palette */}
+                <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm font-semibold flex items-center gap-2">
+                      <Palette size={14} className="text-[#2563EB]" /> Extracted Color Palette
+                    </h3>
+                    <motion.button whileHover={{ scale: 1.05 }} onClick={copyAllColors} className="text-xs text-muted hover:text-[#2563EB] flex items-center gap-1">
+                      <Copy size={12} /> Copy All
+                    </motion.button>
+                  </div>
+
+                  {brand.colors.length === 0 ? (
+                    <p className="text-xs text-muted text-center py-8">No brand colors detected. The site may use CSS variables or external stylesheets.</p>
+                  ) : (
+                    <>
+                      {/* Large swatches */}
+                      <motion.div variants={containerVariants} className="grid grid-cols-6 gap-3 mb-6">
+                        {brand.colors.slice(0, 6).map((color) => (
+                          <motion.button
+                            key={color}
+                            variants={tileVariants}
+                            whileHover={{ scale: 1.07 }}
+                            onClick={() => copyColor(color)}
+                            className="group relative aspect-square rounded-xl border border-border/20 transition-all hover:shadow-lg"
+                            style={{ backgroundColor: color }}
+                          >
+                            <div className="absolute inset-x-0 bottom-0 bg-black/60 backdrop-blur-sm rounded-b-xl px-2 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <p className="text-[10px] font-mono text-white text-center flex items-center justify-center gap-1">
+                                {copiedColor === color ? <Check size={10} /> : <Copy size={10} />}
+                                {color}
+                              </p>
+                            </div>
+                          </motion.button>
+                        ))}
+                      </motion.div>
+
+                      {/* Small swatches */}
+                      {brand.colors.length > 6 && (
+                        <motion.div variants={containerVariants} className="flex flex-wrap gap-2">
+                          {brand.colors.slice(6).map((color) => (
+                            <motion.button
+                              key={color}
+                              variants={rowVariants}
+                              whileHover={{ x: 2 }}
+                              onClick={() => copyColor(color)}
+                              className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:border-[rgba(37,99,235,0.25)] transition-all text-xs" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
+                            >
+                              <div className="w-4 h-4 rounded-md border border-border/30" style={{ backgroundColor: color }} />
+                              <span className="font-mono text-[10px]">{color}</span>
+                            </motion.button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </>
+                  )}
+                </motion.div>
+
+                {/* Color harmony suggestions */}
                 {brand.colors.length >= 2 && (
-                  <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                    <p className="text-[9px] text-muted uppercase mb-2">Primary + Accent</p>
-                    <div className="flex h-12 rounded-lg overflow-hidden">
-                      <div className="flex-1" style={{ backgroundColor: brand.colors[0] }} />
-                      <div className="flex-1" style={{ backgroundColor: brand.colors[1] }} />
-                    </div>
+                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Hash size={14} className="text-[#2563EB]" /> Suggested Pairings
+                    </h3>
+                    <motion.div variants={containerVariants} className="grid grid-cols-3 gap-3">
+                      {brand.colors.length >= 2 && (
+                        <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                          <p className="text-[9px] text-muted uppercase mb-2">Primary + Accent</p>
+                          <div className="flex h-12 rounded-lg overflow-hidden">
+                            <div className="flex-1" style={{ backgroundColor: brand.colors[0] }} />
+                            <div className="flex-1" style={{ backgroundColor: brand.colors[1] }} />
+                          </div>
+                        </motion.div>
+                      )}
+                      {brand.colors.length >= 3 && (
+                        <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                          <p className="text-[9px] text-muted uppercase mb-2">Tricolor</p>
+                          <div className="flex h-12 rounded-lg overflow-hidden">
+                            <div className="flex-1" style={{ backgroundColor: brand.colors[0] }} />
+                            <div className="flex-1" style={{ backgroundColor: brand.colors[1] }} />
+                            <div className="flex-1" style={{ backgroundColor: brand.colors[2] }} />
+                          </div>
+                        </motion.div>
+                      )}
+                      {brand.colors.length >= 4 && (
+                        <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                          <p className="text-[9px] text-muted uppercase mb-2">Full Palette</p>
+                          <div className="flex h-12 rounded-lg overflow-hidden">
+                            {brand.colors.slice(0, 5).map((c, i) => (
+                              <div key={i} className="flex-1" style={{ backgroundColor: c }} />
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </motion.div>
                   </motion.div>
                 )}
-                {brand.colors.length >= 3 && (
-                  <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                    <p className="text-[9px] text-muted uppercase mb-2">Tricolor</p>
-                    <div className="flex h-12 rounded-lg overflow-hidden">
-                      <div className="flex-1" style={{ backgroundColor: brand.colors[0] }} />
-                      <div className="flex-1" style={{ backgroundColor: brand.colors[1] }} />
-                      <div className="flex-1" style={{ backgroundColor: brand.colors[2] }} />
-                    </div>
+
+                {/* Social links found */}
+                {brand.socialLinks.length > 0 && (
+                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Share2 size={14} className="text-[#2563EB]" /> Social Profiles Found
+                    </h3>
+                    <motion.div variants={containerVariants} className="flex flex-wrap gap-2">
+                      {brand.socialLinks.map((s, i) => (
+                        <motion.a
+                          key={i}
+                          variants={rowVariants}
+                          whileHover={{ x: 2 }}
+                          href={s.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 rounded-lg px-3 py-2 hover:border-[rgba(37,99,235,0.25)] transition-all text-xs" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
+                        >
+                          <ExternalLink size={12} className="text-[#2563EB]" />
+                          {s.platform}
+                        </motion.a>
+                      ))}
+                    </motion.div>
                   </motion.div>
                 )}
-                {brand.colors.length >= 4 && (
-                  <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                    <p className="text-[9px] text-muted uppercase mb-2">Full Palette</p>
-                    <div className="flex h-12 rounded-lg overflow-hidden">
-                      {brand.colors.slice(0, 5).map((c, i) => (
-                        <div key={i} className="flex-1" style={{ backgroundColor: c }} />
+              </motion.div>
+            )}{/* -- TYPOGRAPHY TAB -- */}{tab === "typography" && brand && (
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-6"
+              >
+                <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
+                    <Type size={14} className="text-[#2563EB]" /> Extracted Fonts
+                  </h3>
+                  {brand.fonts.length === 0 ? (
+                    <p className="text-xs text-muted text-center py-8">No custom fonts detected. The site may use system fonts or load fonts dynamically.</p>
+                  ) : (
+                    <motion.div variants={containerVariants} className="space-y-4">
+                      {brand.fonts.map((font, i) => (
+                        <motion.div key={i} variants={tileVariants} whileHover={{ y: -1 }} className="rounded-lg p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-xs font-semibold">{font}</p>
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              onClick={() => { navigator.clipboard.writeText(font); toast.success(`Copied "${font}"`); }}
+                              className="text-[10px] text-muted hover:text-[#2563EB] flex items-center gap-1"
+                            >
+                              <Copy size={10} /> Copy
+                            </motion.button>
+                          </div>
+                          <p className="text-2xl" style={{ fontFamily: `"${font}", sans-serif` }}>
+                            The quick brown fox jumps over the lazy dog
+                          </p>
+                          <p className="text-sm mt-1" style={{ fontFamily: `"${font}", sans-serif` }}>
+                            ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789
+                          </p>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+                  )}
+                </motion.div>
+
+                {/* Headings from site */}
+                {brand.headings.length > 0 && (
+                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <FileText size={14} className="text-[#2563EB]" /> Key Headlines Found
+                    </h3>
+                    <motion.div variants={containerVariants} className="space-y-2">
+                      {brand.headings.map((h, i) => (
+                        <motion.div
+                          key={i}
+                          variants={rowVariants}
+                          whileHover={{ x: 4, backgroundColor: "rgba(0,0,0,0.03)" }}
+                          className="flex items-center justify-between rounded-lg px-3 py-2" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
+                        >
+                          <p className="text-xs">{h}</p>
+                          <button
+                            onClick={() => { navigator.clipboard.writeText(h); toast.success("Copied!"); }}
+                            className="text-muted hover:text-[#2563EB] shrink-0 ml-2"
+                          >
+                            <Copy size={12} />
+                          </button>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+                  </motion.div>
+                )}
+
+                {/* CTAs */}
+                {brand.ctaTexts.length > 0 && (
+                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Zap size={14} className="text-[#2563EB]" /> Call-to-Action Texts
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {brand.ctaTexts.map((cta, i) => (
+                        <span key={i} className="bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.20)] px-3 py-1.5 rounded-lg text-xs font-medium">
+                          {cta}
+                        </span>
                       ))}
                     </div>
                   </motion.div>
                 )}
               </motion.div>
-            </motion.div>
-          )}
-
-          {/* Social links found */}
-          {brand.socialLinks.length > 0 && (
-            <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Share2 size={14} className="text-[#2563EB]" /> Social Profiles Found
-              </h3>
-              <motion.div variants={containerVariants} className="flex flex-wrap gap-2">
-                {brand.socialLinks.map((s, i) => (
-                  <motion.a
-                    key={i}
-                    variants={rowVariants}
-                    whileHover={{ x: 2 }}
-                    href={s.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 hover:border-[rgba(37,99,235,0.25)] transition-all text-xs" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
-                  >
-                    <ExternalLink size={12} className="text-[#2563EB]" />
-                    {s.platform}
-                  </motion.a>
-                ))}
-              </motion.div>
-            </motion.div>
-          )}
-        </motion.div>
-      )}
-
-      {/* -- TYPOGRAPHY TAB -- */}
-      {tab === "typography" && brand && (
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-6"
-        >
-          <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-            <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
-              <Type size={14} className="text-[#2563EB]" /> Extracted Fonts
-            </h3>
-            {brand.fonts.length === 0 ? (
-              <p className="text-xs text-muted text-center py-8">No custom fonts detected. The site may use system fonts or load fonts dynamically.</p>
-            ) : (
-              <motion.div variants={containerVariants} className="space-y-4">
-                {brand.fonts.map((font, i) => (
-                  <motion.div key={i} variants={tileVariants} whileHover={{ y: -1 }} className="rounded-lg p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs font-semibold">{font}</p>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        onClick={() => { navigator.clipboard.writeText(font); toast.success(`Copied "${font}"`); }}
-                        className="text-[10px] text-muted hover:text-[#2563EB] flex items-center gap-1"
-                      >
-                        <Copy size={10} /> Copy
-                      </motion.button>
-                    </div>
-                    <p className="text-2xl" style={{ fontFamily: `"${font}", sans-serif` }}>
-                      The quick brown fox jumps over the lazy dog
-                    </p>
-                    <p className="text-sm mt-1" style={{ fontFamily: `"${font}", sans-serif` }}>
-                      ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789
-                    </p>
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
-          </motion.div>
-
-          {/* Headings from site */}
-          {brand.headings.length > 0 && (
-            <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <FileText size={14} className="text-[#2563EB]" /> Key Headlines Found
-              </h3>
-              <motion.div variants={containerVariants} className="space-y-2">
-                {brand.headings.map((h, i) => (
-                  <motion.div
-                    key={i}
-                    variants={rowVariants}
-                    whileHover={{ x: 4, backgroundColor: "rgba(0,0,0,0.03)" }}
-                    className="flex items-center justify-between rounded-lg px-3 py-2" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
-                  >
-                    <p className="text-xs">{h}</p>
-                    <button
-                      onClick={() => { navigator.clipboard.writeText(h); toast.success("Copied!"); }}
-                      className="text-muted hover:text-[#2563EB] shrink-0 ml-2"
-                    >
-                      <Copy size={12} />
-                    </button>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
-          )}
-
-          {/* CTAs */}
-          {brand.ctaTexts.length > 0 && (
-            <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Zap size={14} className="text-[#2563EB]" /> Call-to-Action Texts
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {brand.ctaTexts.map((cta, i) => (
-                  <span key={i} className="bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.20)] px-3 py-1.5 rounded-lg text-xs font-medium">
-                    {cta}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </motion.div>
-      )}
-
-      {/* -- MEDIA TAB -- */}
-      {tab === "media" && brand && (
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-6"
-        >
-          {/* OG Image */}
-          {brand.ogImage && (
-            <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Share2 size={14} className="text-[#2563EB]" /> Social Preview Image (OG)
-              </h3>
-              <div className="rounded-lg overflow-hidden border border-border/20 max-w-2xl">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={brand.ogImage} alt="OG Preview" className="w-full h-auto" onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }} />
-              </div>
-            </motion.div>
-          )}
-
-          {/* All images */}
-          <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-            <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
-              <ImageIcon size={14} className="text-[#2563EB]" /> Extracted Images
-              <span className="text-[10px] text-muted bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded">{brand.images.length}</span>
-            </h3>
-            {brand.images.length === 0 ? (
-              <p className="text-xs text-muted text-center py-8">No images found on the page.</p>
-            ) : (
-              <motion.div variants={containerVariants} className="grid grid-cols-4 gap-3">
-                {brand.images.map((img, i) => (
-                  <motion.div
-                    key={i}
-                    variants={tileVariants}
-                    whileHover={{ y: -2 }}
-                    className="group relative aspect-video rounded-lg overflow-hidden border border-border/20 bg-surface-light"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={img}
-                      alt={`Brand image ${i + 1}`}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                      onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }}
-                    />
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                      <a href={img} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-black/10 rounded-lg hover:bg-black/15">
-                        <ExternalLink size={14} className="text-white" />
-                      </a>
-                      <button
-                        onClick={() => { navigator.clipboard.writeText(img); toast.success("Image URL copied!"); }}
-                        className="p-1.5 bg-black/10 rounded-lg hover:bg-black/15"
-                      >
-                        <Copy size={14} className="text-white" />
-                      </button>
+            )}{/* -- MEDIA TAB -- */}{tab === "media" && brand && (
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-6"
+              >
+                {/* OG Image */}
+                {brand.ogImage && (
+                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Share2 size={14} className="text-[#2563EB]" /> Social Preview Image (OG)
+                    </h3>
+                    <div className="rounded-lg overflow-hidden border border-border/20 max-w-2xl">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={brand.ogImage} alt="OG Preview" className="w-full h-auto" onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }} />
                     </div>
                   </motion.div>
-                ))}
+                )}
+
+                {/* All images */}
+                <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
+                    <ImageIcon size={14} className="text-[#2563EB]" /> Extracted Images
+                    <span className="text-[10px] text-muted bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded">{brand.images.length}</span>
+                  </h3>
+                  {brand.images.length === 0 ? (
+                    <p className="text-xs text-muted text-center py-8">No images found on the page.</p>
+                  ) : (
+                    <motion.div variants={containerVariants} className="grid grid-cols-4 gap-3">
+                      {brand.images.map((img, i) => (
+                        <motion.div
+                          key={i}
+                          variants={tileVariants}
+                          whileHover={{ y: -2 }}
+                          className="group relative aspect-video rounded-lg overflow-hidden border border-border/20 bg-surface-light"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={img}
+                            alt={`Brand image ${i + 1}`}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                            onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }}
+                          />
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                            <a href={img} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-black/10 rounded-lg hover:bg-black/15">
+                              <ExternalLink size={14} className="text-white" />
+                            </a>
+                            <button
+                              onClick={() => { navigator.clipboard.writeText(img); toast.success("Image URL copied!"); }}
+                              className="p-1.5 bg-black/10 rounded-lg hover:bg-black/15"
+                            >
+                              <Copy size={14} className="text-white" />
+                            </button>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+                  )}
+                </motion.div>
               </motion.div>
-            )}
-          </motion.div>
-        </motion.div>
-      )}
-
-      {/* -- GENERATE TAB -- */}
-      {tab === "generate" && brand && (
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-6"
-        >
-          {/* Brand context summary */}
-          <motion.div variants={tileVariants} className="rounded-xl p-4 flex items-center gap-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-            {brand.favicon && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={brand.favicon} alt="" className="w-8 h-8 rounded-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-            )}
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold">{brand.siteName || "Brand"}</p>
-              <p className="text-[10px] text-muted truncate">{brand.colors.length} colors, {brand.fonts.length} fonts, {brand.images.length} images extracted</p>
-            </div>
-            <div className="flex gap-1">
-              {brand.colors.slice(0, 5).map((c, i) => (
-                <div key={i} className="w-5 h-5 rounded-md border border-border/20" style={{ backgroundColor: c }} />
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Presets grid */}
-          <motion.div variants={tileVariants}>
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <Sparkles size={14} className="text-[#2563EB]" /> Content Presets
-            </h3>
-            <p className="text-xs text-muted mb-4">
-              Choose what to generate using the extracted brand data. Each preset uses your colors, fonts, and imagery automatically.
-            </p>
-            <motion.div variants={containerVariants} className="grid grid-cols-2 gap-3">
-              {GENERATE_PRESETS.map((preset) => (
-                <motion.button
-                  key={preset.id}
-                  variants={tileVariants}
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => generateFromPreset(preset.id)}
-                  disabled={generating}
-                  style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
-                  className={`text-left rounded-xl p-4 hover:border-[rgba(37,99,235,0.25)] transition-all group ${
-                    selectedPreset === preset.id && generating
-                      ? "border-[rgba(37,99,235,0.40)] bg-[rgba(37,99,235,0.05)]"
-                      : ""
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className={`p-2 rounded-lg ${
-                      selectedPreset === preset.id && generating
-                        ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]"
-                        : "bg-[rgba(0,0,0,0.04)] text-muted group-hover:text-[#2563EB]"
-                    } transition-colors`}>
-                      {selectedPreset === preset.id && generating ? <Loader size={16} className="animate-spin" /> : preset.icon}
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold">{preset.label}</p>
-                      <p className="text-[10px] text-muted mt-0.5">{preset.desc}</p>
-                    </div>
+            )}{/* -- GENERATE TAB -- */}{tab === "generate" && brand && (
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-6"
+              >
+                {/* Brand context summary */}
+                <motion.div variants={tileVariants} className="rounded-xl p-4 flex items-center gap-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  {brand.favicon && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={brand.favicon} alt="" className="w-8 h-8 rounded-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold">{brand.siteName || "Brand"}</p>
+                    <p className="text-[10px] text-muted truncate">{brand.colors.length} colors, {brand.fonts.length} fonts, {brand.images.length} images extracted</p>
                   </div>
-                </motion.button>
-              ))}
-            </motion.div>
-          </motion.div>
-        </motion.div>
-      )}
+                  <div className="flex gap-1">
+                    {brand.colors.slice(0, 5).map((c, i) => (
+                      <div key={i} className="w-5 h-5 rounded-md border border-border/20" style={{ backgroundColor: c }} />
+                    ))}
+                  </div>
+                </motion.div>
 
-      <PageAI
-        pageName="brand-kit"
-        context="Brand Kit page � extracts brand identity (colors, fonts, logos, imagery) from any website URL and generates on-brand content using presets."
-        suggestions={[
-          "What colors work best for social media ads?",
-          "Suggest font pairings for this brand",
-          "Generate ad copy ideas from these brand elements",
-        ]}
-      />
-    </div>
+                {/* Presets grid */}
+                <motion.div variants={tileVariants}>
+                  <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                    <Sparkles size={14} className="text-[#2563EB]" /> Content Presets
+                  </h3>
+                  <p className="text-xs text-muted mb-4">
+                    Choose what to generate using the extracted brand data. Each preset uses your colors, fonts, and imagery automatically.
+                  </p>
+                  <motion.div variants={containerVariants} className="grid grid-cols-2 gap-3">
+                    {GENERATE_PRESETS.map((preset) => (
+                      <motion.button
+                        key={preset.id}
+                        variants={tileVariants}
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => generateFromPreset(preset.id)}
+                        disabled={generating}
+                        style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                        className={`text-left rounded-xl p-4 hover:border-[rgba(37,99,235,0.25)] transition-all group ${
+                          selectedPreset === preset.id && generating
+                            ? "border-[rgba(37,99,235,0.40)] bg-[rgba(37,99,235,0.05)]"
+                            : ""
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={`p-2 rounded-lg ${
+                            selectedPreset === preset.id && generating
+                              ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]"
+                              : "bg-[rgba(0,0,0,0.04)] text-muted group-hover:text-[#2563EB]"
+                          } transition-colors`}>
+                            {selectedPreset === preset.id && generating ? <Loader size={16} className="animate-spin" /> : preset.icon}
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold">{preset.label}</p>
+                            <p className="text-[10px] text-muted mt-0.5">{preset.desc}</p>
+                          </div>
+                        </div>
+                      </motion.button>
+                    ))}
+                  </motion.div>
+                </motion.div>
+              </motion.div>
+            )}<PageAI
+              pageName="brand-kit"
+              context="Brand Kit page � extracts brand identity (colors, fonts, logos, imagery) from any website URL and generates on-brand content using presets."
+              suggestions={[
+                "What colors work best for social media ads?",
+                "Suggest font pairings for this brand",
+                "Generate ad copy ideas from these brand elements",
+              ]}
+            /></MotionPage>
   );
 }
 

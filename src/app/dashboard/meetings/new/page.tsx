@@ -7,6 +7,7 @@ import { ArrowLeft, Upload, Loader2, Mic, FileAudio } from "lucide-react";
 import toast from "react-hot-toast";
 import { ALLOWED_VOICE_SAMPLE, buildAccept, validateFile } from "@/lib/file-types";
 import { useAuth } from "@/lib/auth-context";
+import { MotionPage } from "@/components/motion/motion-page";
 
 export default function NewMeetingPage() {
   const { profile } = useAuth();
@@ -122,110 +123,106 @@ export default function NewMeetingPage() {
   }[stage];
 
   return (
-    <div className="fade-in space-y-5 max-w-2xl mx-auto">
-      <div className="flex items-center gap-3">
-        <Link
-          href="/dashboard/meetings"
-          className="text-muted hover:text-foreground transition-colors"
-        >
-          <ArrowLeft size={16} />
-        </Link>
-        <h1 className="text-lg font-bold">New meeting</h1>
-      </div>
-
-      <div className="card p-5 space-y-4">
-        <div>
-          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
-            Title
-          </label>
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g., 'Strategy kickoff — Acme Co'"
-            className="input w-full text-xs"
-          />
-        </div>
-
-        <div>
-          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
-            Audio file
-          </label>
-          <div
-            onDrop={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDragOver(false);
-              pick(e.dataTransfer.files?.[0]);
-            }}
-            onDragOver={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDragOver(true);
-            }}
-            onDragLeave={() => setDragOver(false)}
-            onClick={() => inputRef.current?.click()}
-            className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
-              dragOver
-                ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]"
-                : file
-                ? "border-green-400/30 bg-green-400/5"
-                : "border-border hover:border-[rgba(37,99,235,0.25)]"
-            }`}
-          >
-            <input
-              ref={inputRef}
-              type="file"
-              accept={buildAccept(ALLOWED_VOICE_SAMPLE)}
-              className="hidden"
-              onChange={(e) => pick(e.target.files?.[0] ?? undefined)}
-            />
-            {file ? (
-              <div className="flex items-center justify-center gap-2 text-[11px]">
-                <FileAudio size={14} className="text-green-400" />
-                <span className="font-medium">{file.name}</span>
-                <span className="text-muted">
-                  ({(file.size / 1024 / 1024).toFixed(1)} MB)
-                </span>
+    <MotionPage className="fade-in space-y-5 max-w-2xl mx-auto"><div className="flex items-center gap-3">
+              <Link
+                href="/dashboard/meetings"
+                className="text-muted hover:text-foreground transition-colors"
+              >
+                <ArrowLeft size={16} />
+              </Link>
+              <h1 className="text-lg font-bold">New meeting</h1>
+            </div><div className="card p-5 space-y-4">
+              <div>
+                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                  Title
+                </label>
+                <input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g., 'Strategy kickoff — Acme Co'"
+                  className="input w-full text-xs"
+                />
               </div>
-            ) : (
-              <>
-                <Upload size={24} className="mx-auto mb-2 text-muted" />
-                <p className="text-[11px] font-medium">Drop an audio file here</p>
-                <p className="text-[10px] text-muted mt-1">
-                  MP3, WAV, M4A, OGG, WebM up to 250 MB
-                </p>
-              </>
-            )}
-          </div>
-        </div>
 
-        {busy && (
-          <div className="space-y-2">
-            <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
-              <div
-                className="h-full bg-[#2563EB] transition-all"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <p className="text-[10px] text-muted flex items-center gap-1.5">
-              <Loader2 size={10} className="animate-spin" /> {stageLabel}
-            </p>
-          </div>
-        )}
+              <div>
+                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                  Audio file
+                </label>
+                <div
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setDragOver(false);
+                    pick(e.dataTransfer.files?.[0]);
+                  }}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setDragOver(true);
+                  }}
+                  onDragLeave={() => setDragOver(false)}
+                  onClick={() => inputRef.current?.click()}
+                  className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
+                    dragOver
+                      ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]"
+                      : file
+                      ? "border-green-400/30 bg-green-400/5"
+                      : "border-border hover:border-[rgba(37,99,235,0.25)]"
+                  }`}
+                >
+                  <input
+                    ref={inputRef}
+                    type="file"
+                    accept={buildAccept(ALLOWED_VOICE_SAMPLE)}
+                    className="hidden"
+                    onChange={(e) => pick(e.target.files?.[0] ?? undefined)}
+                  />
+                  {file ? (
+                    <div className="flex items-center justify-center gap-2 text-[11px]">
+                      <FileAudio size={14} className="text-green-400" />
+                      <span className="font-medium">{file.name}</span>
+                      <span className="text-muted">
+                        ({(file.size / 1024 / 1024).toFixed(1)} MB)
+                      </span>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload size={24} className="mx-auto mb-2 text-muted" />
+                      <p className="text-[11px] font-medium">Drop an audio file here</p>
+                      <p className="text-[10px] text-muted mt-1">
+                        MP3, WAV, M4A, OGG, WebM up to 250 MB
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
 
-        <button
-          onClick={run}
-          disabled={busy || !file || !title.trim()}
-          className="btn-primary w-full text-xs flex items-center justify-center gap-1.5 disabled:opacity-40"
-        >
-          {busy ? (
-            <Loader2 size={12} className="animate-spin" />
-          ) : (
-            <Mic size={12} />
-          )}
-          {busy ? stageLabel : "Upload + transcribe"}
-        </button>
-      </div>
-    </div>
+              {busy && (
+                <div className="space-y-2">
+                  <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#2563EB] transition-all"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <p className="text-[10px] text-muted flex items-center gap-1.5">
+                    <Loader2 size={10} className="animate-spin" /> {stageLabel}
+                  </p>
+                </div>
+              )}
+
+              <button
+                onClick={run}
+                disabled={busy || !file || !title.trim()}
+                className="btn-primary w-full text-xs flex items-center justify-center gap-1.5 disabled:opacity-40"
+              >
+                {busy ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <Mic size={12} />
+                )}
+                {busy ? stageLabel : "Upload + transcribe"}
+              </button>
+            </div></MotionPage>
   );
 }

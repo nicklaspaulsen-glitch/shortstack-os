@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const ClientOnboardingWizard = dynamic(() => import("@/components/client-onboarding-wizard"), { ssr: false });
 const AutopilotDashboard = dynamic(() => import("@/components/autopilot-dashboard"), { ssr: false });
@@ -123,7 +124,9 @@ export default function ClientPortalPage() {
     if (savedBot) setBotName(savedBot);
   }, [client]);
 
-  if (loading) return <PageLoading />;
+  if (loading) return <MotionPage>
+                          <PageLoading />
+                        </MotionPage>;
 
   if (!client) {
     return <ClientSelfOnboarding profileId={profile?.id || ""} profileEmail={profile?.email || ""} profileName={profile?.full_name || ""} onComplete={fetchPortalData} />;

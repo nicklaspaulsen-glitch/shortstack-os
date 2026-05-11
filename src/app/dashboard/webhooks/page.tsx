@@ -12,6 +12,7 @@ import {
 import EmptyState from "@/components/empty-state";
 import PageHero from "@/components/ui/page-hero";
 import { ZapierIcon, SlackIcon } from "@/components/ui/platform-icons";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /** Pick a brand icon from a template/integration name. */
 function TemplateBrandIcon({ name, size = 14 }: { name: string; size?: number }) {
@@ -220,275 +221,256 @@ export default function WebhooksPage() {
   }
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Webhook size={28} />}
-        title="Webhooks"
-        eyebrow="WEBHOOKS"
-        subtitle={`${webhooks.length} endpoints · ${webhooks.filter(w => w.active).length} active`}
-        gradient="blue"
-        actions={
-          <button onClick={() => { setShowCreate(true); setTab("Endpoints"); }} className="px-3 py-1.5 rounded-lg bg-black/8 border border-black/15 text-[#0A0A0B] text-xs font-semibold hover:bg-black/12 transition-all flex items-center gap-1.5">
-            <Plus size={12} /> New Webhook
-          </button>
-        }
-      />
-
-      {/* Inbound webhook URL */}
-      <motion.div
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.08, duration: 0.38, ease: "easeOut" }}
-        className="glass rounded-xl p-4"
-      >
-        <h2 className="section-header">Inbound Webhook URL</h2>
-        <p className="text-[10px] text-muted mb-2">Send data TO Trinity from external tools (Zapier, Make, n8n)</p>
-        <div className="flex gap-2">
-          <code className="flex-1 text-[10px] font-mono p-2.5 rounded-lg truncate bg-surface-light border border-border">{inboundUrl}</code>
-          <button onClick={() => { navigator.clipboard.writeText(inboundUrl); toast.success("Copied"); }} className="btn-secondary text-xs px-3"><Copy size={12} /></button>
-        </div>
-      </motion.div>
-
-      {/* Local-only disclaimer */}
-      <motion.div
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.16, duration: 0.38, ease: "easeOut" }}
-        className="glass rounded-xl p-4 border-warning/20 bg-warning/5"
-      >
-        <div className="flex items-start gap-2">
-          <AlertCircle size={12} className="text-warning shrink-0 mt-0.5" />
-          <p className="text-[10px] text-muted leading-relaxed">
-            Outbound endpoints and delivery log are stored locally in your browser while the server-side
-            <code className="mx-1 font-mono">/api/webhooks/manage</code> endpoint is wrapped up.
-            They&apos;ll persist across reloads but won&apos;t fire automatically yet. Trinity still delivers the
-            platform webhooks it already knows about (Stripe, Resend, Telegram, GHL, ElevenLabs).
-          </p>
-        </div>
-      </motion.div>
-
-      {/* Tabs */}
-      <motion.div
-        className="flex gap-1 glass rounded-lg px-2 py-1.5"
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.24, duration: 0.35, ease: "easeOut" }}
-      >
-        {TABS.map(t => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all ${
-              tab === t ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "text-muted border border-transparent hover:text-foreground"
-            }`}>{t}</button>
-        ))}
-      </motion.div>
-
-      {/* ═══ ENDPOINTS TAB ═══ */}
-      {tab === "Endpoints" && (
-        <div className="space-y-3">
-          {showCreate && (
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="glass rounded-xl p-4 border-indigo-500/10"
-            >
-              <h2 className="section-header">Create Outbound Webhook</h2>
-              <div className="space-y-3">
-                <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-                  className="input w-full" placeholder="Webhook name (e.g. Zapier Lead Sync)" />
-                <input value={form.url} onChange={e => setForm({ ...form, url: e.target.value })}
-                  className="input w-full" placeholder="https://hooks.zapier.com/..." />
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <p className="text-[10px] text-muted font-semibold">Events:</p>
-                    <div className="flex gap-1">
-                      {categories.map(c => (
-                        <button key={c} onClick={() => setFilterCategory(c)}
-                          className={`text-[8px] px-2 py-0.5 rounded capitalize ${filterCategory === c ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>{c}</button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {filteredEvents.map(event => (
-                      <button key={event.id} onClick={() => toggleEvent(event.id)}
-                        className={`flex items-center gap-2 p-2 rounded-lg text-[10px] transition-all text-left border ${
-                          form.events.includes(event.id) ? "border-[rgba(37,99,235,0.1)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
-                        }`}>
-                        {event.icon}
-                        <span>{event.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                {formError && (
-                  <div className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-[10px] text-red-400 flex items-center gap-1.5">
-                    <AlertCircle size={10} /> {formError}
-                  </div>
-                )}
-                <div className="flex justify-end gap-2">
-                  <button onClick={() => { setShowCreate(false); setFormError(null); }} className="btn-secondary text-xs">Cancel</button>
-                  <button onClick={createWebhook} className="btn-primary text-xs">Create Webhook</button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {webhooks.length === 0 && !showCreate ? (
-            <EmptyState
-              icon={<Webhook size={24} />}
-              title="No Webhooks Yet"
-              description="Connect Trinity to Zapier, Make, Slack, or any external tool by creating outbound webhooks that fire on key events."
-              actionLabel="Create Webhook"
-              onAction={() => setShowCreate(true)}
-            />
-          ) : (
-            <div className="space-y-2">
-              {webhooks.map((wh, i) => (
-                <motion.div
-                  key={wh.id}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.07, duration: 0.35, ease: "easeOut" }}
-                  whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                  className={`p-4 rounded-xl border transition-colors ${wh.active ? "glass border-black/10" : "bg-surface border-border/50 opacity-60"}`}>
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-2.5 h-2.5 rounded-full ${wh.active ? "bg-emerald-400" : "bg-muted"}`} />
-                      <div>
-                        <p className="text-xs font-semibold">{wh.name}</p>
-                        <p className="text-[9px] text-muted font-mono truncate max-w-[300px]">{wh.url}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <button onClick={() => toggleActive(wh.id)} className="text-muted hover:text-foreground p-1" title={wh.active ? "Pause" : "Resume"}>
-                        {wh.active ? <Pause size={12} /> : <Play size={12} />}
-                      </button>
-                      <button onClick={() => setShowSecret(showSecret === wh.id ? null : wh.id)} className="text-muted hover:text-foreground p-1" title="Show secret">
-                        <Key size={12} />
-                      </button>
-                      <button onClick={() => deleteWebhook(wh.id)} className="text-muted hover:text-red-400 p-1">
-                        <Trash2 size={12} />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {wh.events.map(e => (
-                      <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{e}</span>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-4 text-[9px] text-muted">
-                    <span>Last: {wh.lastTriggered || "Never"}</span>
-                    <span className="text-emerald-400">{wh.successCount} delivered</span>
-                    {wh.failCount > 0 && <span className="text-red-400">{wh.failCount} failed</span>}
-                    <span>Retries: {wh.retryCount}x</span>
-                    <span>Limit: {wh.rateLimit}/min</span>
-                  </div>
-                  {showSecret === wh.id && (
-                    <div className="mt-2 p-2 rounded-lg bg-black/5 border border-border">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] text-muted">Signing Secret:</span>
-                        <code className="text-[10px] font-mono text-[#2563EB]">{wh.secret}</code>
-                        <button onClick={() => navigator.clipboard.writeText(wh.secret)} className="text-muted hover:text-[#2563EB]"><Copy size={10} /></button>
-                      </div>
-                    </div>
-                  )}
-                  {editingRetry === wh.id && (
-                    <div className="mt-2 grid grid-cols-2 gap-2">
-                      <div>
-                        <label className="text-[8px] text-muted">Retry Count</label>
-                        <input type="number" defaultValue={wh.retryCount} className="input w-full text-[10px]" min={0} max={10} />
-                      </div>
-                      <div>
-                        <label className="text-[8px] text-muted">Rate Limit/min</label>
-                        <input type="number" defaultValue={wh.rateLimit} className="input w-full text-[10px]" min={1} max={1000} />
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ═══ DELIVERY LOG TAB ═══ */}
-      {tab === "Delivery Log" && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-          className="glass rounded-xl overflow-hidden p-4"
-        >
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-            <FileText size={14} className="text-[#2563EB]" /> Delivery Log
-          </h2>
-          <div className="space-y-1.5">
-            {deliveries.map(d => (
-              <div key={d.id}>
-                <button onClick={() => setExpandedDelivery(expandedDelivery === d.id ? null : d.id)}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border hover:border-indigo-500/20 transition-all text-left">
-                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
-                    d.statusCode < 300 ? "bg-emerald-500/10 text-emerald-400" : d.statusCode < 500 ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "bg-red-500/10 text-red-400"
-                  }`}>{d.statusCode}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-medium">{d.webhookName}</span>
-                      <span className="text-[9px] text-[#2563EB]">{d.event}</span>
-                    </div>
-                  </div>
-                  <span className="text-[9px] text-muted font-mono">{d.responseTime}ms</span>
-                  <span className="text-[9px] text-muted">{d.timestamp}</span>
+    <MotionPage className="fade-in space-y-5"><PageHero
+              icon={<Webhook size={28} />}
+              title="Webhooks"
+              eyebrow="WEBHOOKS"
+              subtitle={`${webhooks.length} endpoints · ${webhooks.filter(w => w.active).length} active`}
+              gradient="blue"
+              actions={
+                <button onClick={() => { setShowCreate(true); setTab("Endpoints"); }} className="px-3 py-1.5 rounded-lg bg-black/8 border border-black/15 text-[#0A0A0B] text-xs font-semibold hover:bg-black/12 transition-all flex items-center gap-1.5">
+                  <Plus size={12} /> New Webhook
                 </button>
-                {expandedDelivery === d.id && (
-                  <div className="mx-3 mb-2 p-3 rounded-lg bg-black/5 border border-border space-y-2">
-                    <div>
-                      <p className="text-[9px] text-muted uppercase mb-1">Request Payload</p>
-                      <pre className="text-[10px] font-mono text-emerald-400 whitespace-pre-wrap">{d.payload}</pre>
+              }
+            />{/* Inbound webhook URL */}<motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.08, duration: 0.38, ease: "easeOut" }}
+              className="glass rounded-xl p-4"
+            >
+              <h2 className="section-header">Inbound Webhook URL</h2>
+              <p className="text-[10px] text-muted mb-2">Send data TO Trinity from external tools (Zapier, Make, n8n)</p>
+              <div className="flex gap-2">
+                <code className="flex-1 text-[10px] font-mono p-2.5 rounded-lg truncate bg-surface-light border border-border">{inboundUrl}</code>
+                <button onClick={() => { navigator.clipboard.writeText(inboundUrl); toast.success("Copied"); }} className="btn-secondary text-xs px-3"><Copy size={12} /></button>
+              </div>
+            </motion.div>{/* Local-only disclaimer */}<motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.16, duration: 0.38, ease: "easeOut" }}
+              className="glass rounded-xl p-4 border-warning/20 bg-warning/5"
+            >
+              <div className="flex items-start gap-2">
+                <AlertCircle size={12} className="text-warning shrink-0 mt-0.5" />
+                <p className="text-[10px] text-muted leading-relaxed">
+                  Outbound endpoints and delivery log are stored locally in your browser while the server-side
+                  <code className="mx-1 font-mono">/api/webhooks/manage</code> endpoint is wrapped up.
+                  They&apos;ll persist across reloads but won&apos;t fire automatically yet. Trinity still delivers the
+                  platform webhooks it already knows about (Stripe, Resend, Telegram, GHL, ElevenLabs).
+                </p>
+              </div>
+            </motion.div>{/* Tabs */}<motion.div
+              className="flex gap-1 glass rounded-lg px-2 py-1.5"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.24, duration: 0.35, ease: "easeOut" }}
+            >
+              {TABS.map(t => (
+                <button key={t} onClick={() => setTab(t)}
+                  className={`px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all ${
+                    tab === t ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "text-muted border border-transparent hover:text-foreground"
+                  }`}>{t}</button>
+              ))}
+            </motion.div>{/* ═══ ENDPOINTS TAB ═══ */}{tab === "Endpoints" && (
+              <div className="space-y-3">
+                {showCreate && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, ease: "easeOut" }}
+                    className="glass rounded-xl p-4 border-indigo-500/10"
+                  >
+                    <h2 className="section-header">Create Outbound Webhook</h2>
+                    <div className="space-y-3">
+                      <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
+                        className="input w-full" placeholder="Webhook name (e.g. Zapier Lead Sync)" />
+                      <input value={form.url} onChange={e => setForm({ ...form, url: e.target.value })}
+                        className="input w-full" placeholder="https://hooks.zapier.com/..." />
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <p className="text-[10px] text-muted font-semibold">Events:</p>
+                          <div className="flex gap-1">
+                            {categories.map(c => (
+                              <button key={c} onClick={() => setFilterCategory(c)}
+                                className={`text-[8px] px-2 py-0.5 rounded capitalize ${filterCategory === c ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>{c}</button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          {filteredEvents.map(event => (
+                            <button key={event.id} onClick={() => toggleEvent(event.id)}
+                              className={`flex items-center gap-2 p-2 rounded-lg text-[10px] transition-all text-left border ${
+                                form.events.includes(event.id) ? "border-[rgba(37,99,235,0.1)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
+                              }`}>
+                              {event.icon}
+                              <span>{event.label}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      {formError && (
+                        <div className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-[10px] text-red-400 flex items-center gap-1.5">
+                          <AlertCircle size={10} /> {formError}
+                        </div>
+                      )}
+                      <div className="flex justify-end gap-2">
+                        <button onClick={() => { setShowCreate(false); setFormError(null); }} className="btn-secondary text-xs">Cancel</button>
+                        <button onClick={createWebhook} className="btn-primary text-xs">Create Webhook</button>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-[9px] text-muted uppercase mb-1">Response</p>
-                      <pre className="text-[10px] font-mono text-blue-400 whitespace-pre-wrap">{d.response}</pre>
-                    </div>
+                  </motion.div>
+                )}
+
+                {webhooks.length === 0 && !showCreate ? (
+                  <EmptyState
+                    icon={<Webhook size={24} />}
+                    title="No Webhooks Yet"
+                    description="Connect Trinity to Zapier, Make, Slack, or any external tool by creating outbound webhooks that fire on key events."
+                    actionLabel="Create Webhook"
+                    onAction={() => setShowCreate(true)}
+                  />
+                ) : (
+                  <div className="space-y-2">
+                    {webhooks.map((wh, i) => (
+                      <motion.div
+                        key={wh.id}
+                        initial={{ opacity: 0, x: -12 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.07, duration: 0.35, ease: "easeOut" }}
+                        whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                        className={`p-4 rounded-xl border transition-colors ${wh.active ? "glass border-black/10" : "bg-surface border-border/50 opacity-60"}`}>
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-2.5 h-2.5 rounded-full ${wh.active ? "bg-emerald-400" : "bg-muted"}`} />
+                            <div>
+                              <p className="text-xs font-semibold">{wh.name}</p>
+                              <p className="text-[9px] text-muted font-mono truncate max-w-[300px]">{wh.url}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <button onClick={() => toggleActive(wh.id)} className="text-muted hover:text-foreground p-1" title={wh.active ? "Pause" : "Resume"}>
+                              {wh.active ? <Pause size={12} /> : <Play size={12} />}
+                            </button>
+                            <button onClick={() => setShowSecret(showSecret === wh.id ? null : wh.id)} className="text-muted hover:text-foreground p-1" title="Show secret">
+                              <Key size={12} />
+                            </button>
+                            <button onClick={() => deleteWebhook(wh.id)} className="text-muted hover:text-red-400 p-1">
+                              <Trash2 size={12} />
+                            </button>
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap gap-1 mb-2">
+                          {wh.events.map(e => (
+                            <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{e}</span>
+                          ))}
+                        </div>
+                        <div className="flex items-center gap-4 text-[9px] text-muted">
+                          <span>Last: {wh.lastTriggered || "Never"}</span>
+                          <span className="text-emerald-400">{wh.successCount} delivered</span>
+                          {wh.failCount > 0 && <span className="text-red-400">{wh.failCount} failed</span>}
+                          <span>Retries: {wh.retryCount}x</span>
+                          <span>Limit: {wh.rateLimit}/min</span>
+                        </div>
+                        {showSecret === wh.id && (
+                          <div className="mt-2 p-2 rounded-lg bg-black/5 border border-border">
+                            <div className="flex items-center gap-2">
+                              <span className="text-[9px] text-muted">Signing Secret:</span>
+                              <code className="text-[10px] font-mono text-[#2563EB]">{wh.secret}</code>
+                              <button onClick={() => navigator.clipboard.writeText(wh.secret)} className="text-muted hover:text-[#2563EB]"><Copy size={10} /></button>
+                            </div>
+                          </div>
+                        )}
+                        {editingRetry === wh.id && (
+                          <div className="mt-2 grid grid-cols-2 gap-2">
+                            <div>
+                              <label className="text-[8px] text-muted">Retry Count</label>
+                              <input type="number" defaultValue={wh.retryCount} className="input w-full text-[10px]" min={0} max={10} />
+                            </div>
+                            <div>
+                              <label className="text-[8px] text-muted">Rate Limit/min</label>
+                              <input type="number" defaultValue={wh.rateLimit} className="input w-full text-[10px]" min={1} max={1000} />
+                            </div>
+                          </div>
+                        )}
+                      </motion.div>
+                    ))}
                   </div>
                 )}
               </div>
-            ))}
-          </div>
-        </motion.div>
-      )}
-
-      {/* ═══ TEST TAB ═══ */}
-      {tab === "Test" && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-          className="glass rounded-xl p-4"
-        >
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-            <Send size={14} className="text-[#2563EB]" /> Test Webhook
-          </h2>
-          <p className="text-[10px] text-muted mb-3">Send a test payload to any configured webhook endpoint.</p>
-          <div className="space-y-3">
-            <div>
-              <label className="text-[9px] text-muted uppercase mb-1 block">Webhook</label>
-              <select value={testWebhook} onChange={e => setTestWebhook(e.target.value)} className="input w-full text-xs">
-                <option value="">Select webhook...</option>
-                {webhooks.filter(w => w.active).map(w => (
-                  <option key={w.id} value={w.id}>{w.name}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="text-[9px] text-muted uppercase mb-1 block">Event Type</label>
-              <select value={testEvent} onChange={e => setTestEvent(e.target.value)} className="input w-full text-xs">
-                {EVENTS.map(e => <option key={e.id} value={e.id}>{e.label}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="text-[9px] text-muted uppercase mb-1 block">Payload Preview</label>
-              <pre className="bg-black/5 rounded-lg p-3 text-[10px] font-mono text-emerald-700">
-{`{
+            )}{/* ═══ DELIVERY LOG TAB ═══ */}{tab === "Delivery Log" && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+                className="glass rounded-xl overflow-hidden p-4"
+              >
+                <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
+                  <FileText size={14} className="text-[#2563EB]" /> Delivery Log
+                </h2>
+                <div className="space-y-1.5">
+                  {deliveries.map(d => (
+                    <div key={d.id}>
+                      <button onClick={() => setExpandedDelivery(expandedDelivery === d.id ? null : d.id)}
+                        className="w-full flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border hover:border-indigo-500/20 transition-all text-left">
+                        <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
+                          d.statusCode < 300 ? "bg-emerald-500/10 text-emerald-400" : d.statusCode < 500 ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "bg-red-500/10 text-red-400"
+                        }`}>{d.statusCode}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-medium">{d.webhookName}</span>
+                            <span className="text-[9px] text-[#2563EB]">{d.event}</span>
+                          </div>
+                        </div>
+                        <span className="text-[9px] text-muted font-mono">{d.responseTime}ms</span>
+                        <span className="text-[9px] text-muted">{d.timestamp}</span>
+                      </button>
+                      {expandedDelivery === d.id && (
+                        <div className="mx-3 mb-2 p-3 rounded-lg bg-black/5 border border-border space-y-2">
+                          <div>
+                            <p className="text-[9px] text-muted uppercase mb-1">Request Payload</p>
+                            <pre className="text-[10px] font-mono text-emerald-400 whitespace-pre-wrap">{d.payload}</pre>
+                          </div>
+                          <div>
+                            <p className="text-[9px] text-muted uppercase mb-1">Response</p>
+                            <pre className="text-[10px] font-mono text-blue-400 whitespace-pre-wrap">{d.response}</pre>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}{/* ═══ TEST TAB ═══ */}{tab === "Test" && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+                className="glass rounded-xl p-4"
+              >
+                <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
+                  <Send size={14} className="text-[#2563EB]" /> Test Webhook
+                </h2>
+                <p className="text-[10px] text-muted mb-3">Send a test payload to any configured webhook endpoint.</p>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-[9px] text-muted uppercase mb-1 block">Webhook</label>
+                    <select value={testWebhook} onChange={e => setTestWebhook(e.target.value)} className="input w-full text-xs">
+                      <option value="">Select webhook...</option>
+                      {webhooks.filter(w => w.active).map(w => (
+                        <option key={w.id} value={w.id}>{w.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-muted uppercase mb-1 block">Event Type</label>
+                    <select value={testEvent} onChange={e => setTestEvent(e.target.value)} className="input w-full text-xs">
+                      {EVENTS.map(e => <option key={e.id} value={e.id}>{e.label}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-muted uppercase mb-1 block">Payload Preview</label>
+                    <pre className="bg-black/5 rounded-lg p-3 text-[10px] font-mono text-emerald-700">
+      {`{
   "event": "${testEvent}",
   "timestamp": "${new Date().toISOString()}",
   "data": {
@@ -496,124 +478,117 @@ export default function WebhooksPage() {
     "test": true
   }
 }`}
-              </pre>
-            </div>
-            <button onClick={sendTestWebhook} disabled={!testWebhook || testing}
-              className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40">
-              {testing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />} {testing ? "Sending..." : "Send Test"}
-            </button>
-            {testStatus && (
-              <div className={`p-3 rounded-lg text-[10px] flex items-center gap-2 ${
-                testStatus.ok
-                  ? "bg-emerald-500/10 border border-emerald-500/15 text-emerald-400"
-                  : "bg-red-500/10 border border-red-500/15 text-red-400"
-              }`}>
-                {testStatus.ok ? <CheckCircle size={12} /> : <AlertCircle size={12} />} {testStatus.message}
-              </div>
-            )}
-          </div>
-        </motion.div>
-      )}
-
-      {/* ═══ TEMPLATES TAB ═══ */}
-      {tab === "Templates" && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-          className="space-y-3"
-        >
-          <h2 className="text-sm font-bold flex items-center gap-2">
-            <FileText size={14} className="text-[#2563EB]" /> Webhook Templates
-          </h2>
-          <p className="text-[10px] text-muted">Quick-start with pre-configured webhook templates.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {TEMPLATES.map((t, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.07, duration: 0.35, ease: "easeOut" }}
-                whileHover={{ y: -4, scale: 1.01 }}
-                className="glass rounded-xl p-3"
-              >
-                <p className="text-xs font-semibold mb-1 flex items-center gap-1.5">
-                  <TemplateBrandIcon name={t.name} size={14} />
-                  {t.name}
-                </p>
-                <p className="text-[9px] text-muted font-mono mb-2">{t.url}</p>
-                <div className="flex flex-wrap gap-1 mb-2">
-                  {t.events.map(e => <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{e}</span>)}
+                    </pre>
+                  </div>
+                  <button onClick={sendTestWebhook} disabled={!testWebhook || testing}
+                    className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40">
+                    {testing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />} {testing ? "Sending..." : "Send Test"}
+                  </button>
+                  {testStatus && (
+                    <div className={`p-3 rounded-lg text-[10px] flex items-center gap-2 ${
+                      testStatus.ok
+                        ? "bg-emerald-500/10 border border-emerald-500/15 text-emerald-400"
+                        : "bg-red-500/10 border border-red-500/15 text-red-400"
+                    }`}>
+                      {testStatus.ok ? <CheckCircle size={12} /> : <AlertCircle size={12} />} {testStatus.message}
+                    </div>
+                  )}
                 </div>
-                <button onClick={() => { setForm({ name: t.name, url: "", events: t.events }); setShowCreate(true); setTab("Endpoints"); }}
-                  className="text-[10px] text-[#2563EB] flex items-center gap-1 hover:underline">
-                  <ArrowRight size={10} /> Use Template
-                </button>
               </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      )}
-
-      {/* ═══ SETTINGS TAB ═══ */}
-      {tab === "Settings" && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-          className="space-y-4"
-        >
-          <div className="glass rounded-xl p-4">
-            <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-              <Shield size={14} className="text-[#2563EB]" /> Global Webhook Settings
-            </h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-[9px] text-muted uppercase mb-1 block">Default Retry Count</label>
-                <input type="number" defaultValue={3} className="input w-full text-xs" min={0} max={10} />
-              </div>
-              <div>
-                <label className="text-[9px] text-muted uppercase mb-1 block">Retry Backoff (seconds)</label>
-                <input type="number" defaultValue={30} className="input w-full text-xs" min={5} max={300} />
-              </div>
-              <div>
-                <label className="text-[9px] text-muted uppercase mb-1 block">Global Rate Limit (req/min)</label>
-                <input type="number" defaultValue={100} className="input w-full text-xs" min={1} max={1000} />
-              </div>
-              <div>
-                <label className="text-[9px] text-muted uppercase mb-1 block">Timeout (seconds)</label>
-                <input type="number" defaultValue={30} className="input w-full text-xs" min={5} max={120} />
-              </div>
-            </div>
-          </div>
-          <div className="glass rounded-xl p-4">
-            <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-              <Filter size={14} className="text-[#2563EB]" /> Filter Rules
-            </h2>
-            <p className="text-[10px] text-muted mb-3">Add conditions to filter which payloads get delivered.</p>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]">
-                <span className="text-[#2563EB] font-mono">IF</span>
-                <span>lead.source</span>
-                <span className="text-muted">=</span>
-                <span className="text-emerald-400">&quot;google_maps&quot;</span>
-                <span className="text-muted ml-auto">Active</span>
-              </div>
-              <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]">
-                <span className="text-[#2563EB] font-mono">IF</span>
-                <span>deal.value</span>
-                <span className="text-muted">&gt;</span>
-                <span className="text-emerald-400">1000</span>
-                <span className="text-muted ml-auto">Active</span>
-              </div>
-            </div>
-            <button className="mt-2 text-[10px] text-[#2563EB] flex items-center gap-1 hover:underline"><Plus size={10} /> Add Filter Rule</button>
-          </div>
-          <div className="flex justify-end">
-            <button className="btn-primary text-xs flex items-center gap-1.5"><CheckCircle size={12} /> Save Settings</button>
-          </div>
-        </motion.div>
-      )}
-    </div>
+            )}{/* ═══ TEMPLATES TAB ═══ */}{tab === "Templates" && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+                className="space-y-3"
+              >
+                <h2 className="text-sm font-bold flex items-center gap-2">
+                  <FileText size={14} className="text-[#2563EB]" /> Webhook Templates
+                </h2>
+                <p className="text-[10px] text-muted">Quick-start with pre-configured webhook templates.</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {TEMPLATES.map((t, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.07, duration: 0.35, ease: "easeOut" }}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                      className="glass rounded-xl p-3"
+                    >
+                      <p className="text-xs font-semibold mb-1 flex items-center gap-1.5">
+                        <TemplateBrandIcon name={t.name} size={14} />
+                        {t.name}
+                      </p>
+                      <p className="text-[9px] text-muted font-mono mb-2">{t.url}</p>
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {t.events.map(e => <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{e}</span>)}
+                      </div>
+                      <button onClick={() => { setForm({ name: t.name, url: "", events: t.events }); setShowCreate(true); setTab("Endpoints"); }}
+                        className="text-[10px] text-[#2563EB] flex items-center gap-1 hover:underline">
+                        <ArrowRight size={10} /> Use Template
+                      </button>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}{/* ═══ SETTINGS TAB ═══ */}{tab === "Settings" && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+                className="space-y-4"
+              >
+                <div className="glass rounded-xl p-4">
+                  <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
+                    <Shield size={14} className="text-[#2563EB]" /> Global Webhook Settings
+                  </h2>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[9px] text-muted uppercase mb-1 block">Default Retry Count</label>
+                      <input type="number" defaultValue={3} className="input w-full text-xs" min={0} max={10} />
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted uppercase mb-1 block">Retry Backoff (seconds)</label>
+                      <input type="number" defaultValue={30} className="input w-full text-xs" min={5} max={300} />
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted uppercase mb-1 block">Global Rate Limit (req/min)</label>
+                      <input type="number" defaultValue={100} className="input w-full text-xs" min={1} max={1000} />
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted uppercase mb-1 block">Timeout (seconds)</label>
+                      <input type="number" defaultValue={30} className="input w-full text-xs" min={5} max={120} />
+                    </div>
+                  </div>
+                </div>
+                <div className="glass rounded-xl p-4">
+                  <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
+                    <Filter size={14} className="text-[#2563EB]" /> Filter Rules
+                  </h2>
+                  <p className="text-[10px] text-muted mb-3">Add conditions to filter which payloads get delivered.</p>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]">
+                      <span className="text-[#2563EB] font-mono">IF</span>
+                      <span>lead.source</span>
+                      <span className="text-muted">=</span>
+                      <span className="text-emerald-400">&quot;google_maps&quot;</span>
+                      <span className="text-muted ml-auto">Active</span>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]">
+                      <span className="text-[#2563EB] font-mono">IF</span>
+                      <span>deal.value</span>
+                      <span className="text-muted">&gt;</span>
+                      <span className="text-emerald-400">1000</span>
+                      <span className="text-muted ml-auto">Active</span>
+                    </div>
+                  </div>
+                  <button className="mt-2 text-[10px] text-[#2563EB] flex items-center gap-1 hover:underline"><Plus size={10} /> Add Filter Rule</button>
+                </div>
+                <div className="flex justify-end">
+                  <button className="btn-primary text-xs flex items-center gap-1.5"><CheckCircle size={12} /> Save Settings</button>
+                </div>
+              </motion.div>
+            )}</MotionPage>
   );
 }

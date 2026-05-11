@@ -24,6 +24,7 @@ import {
   Lock,
   AlertTriangle,
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface Row {
   id: string;
@@ -135,9 +136,8 @@ export default function SelfTestDashboard() {
 
   if (authLoading || state === "loading") {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] text-muted text-sm">
-        Loading self-test results…
-      </div>
+      <MotionPage className="flex items-center justify-center min-h-[60vh] text-muted text-sm">Loading self-test results…
+              </MotionPage>
     );
   }
 

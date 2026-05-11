@@ -30,6 +30,7 @@ import SettingsCard from "@/components/settings/settings-card";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { tokens } from "@/lib/brand/tokens";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /**
  * Settings index — Phase 2B editorial-bento redesign.
@@ -132,502 +133,489 @@ export default function SettingsIndexPage() {
   }, [profile?.id, profile?.plan_tier]);
 
   return (
-    <div className="fade-in space-y-6 max-w-[1200px] mx-auto">
-      <PageHero
-        variant="default"
-        gradient="purple"
-        eyebrow="Configuration"
-        title="Settings"
-        subtitle="Configure your workspace, your brand, and the integrations that power ShortStack."
-      />
+    <MotionPage className="fade-in space-y-6 max-w-[1200px] mx-auto"><PageHero
+              variant="default"
+              gradient="purple"
+              eyebrow="Configuration"
+              title="Settings"
+              subtitle="Configure your workspace, your brand, and the integrations that power ShortStack."
+            /><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <SettingsCard
+                index={0}
+                href="/dashboard/profile"
+                title="Account & Profile"
+                description="Your name, email, avatar, password, and account deletion."
+                Icon={User}
+                preview={
+                  <>
+                    <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                      Signed in as
+                    </span>
+                    <span
+                      className="text-[11px] font-medium truncate"
+                      style={{ color: tokens.text.primary }}
+                    >
+                      {profile?.email || "Loading..."}
+                    </span>
+                  </>
+                }
+              />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <SettingsCard
-          index={0}
-          href="/dashboard/profile"
-          title="Account & Profile"
-          description="Your name, email, avatar, password, and account deletion."
-          Icon={User}
-          preview={
-            <>
-              <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                Signed in as
-              </span>
-              <span
-                className="text-[11px] font-medium truncate"
-                style={{ color: tokens.text.primary }}
-              >
-                {profile?.email || "Loading..."}
-              </span>
-            </>
-          }
-        />
+              <SettingsCard
+                index={1}
+                href="/dashboard/white-label"
+                title="Branding & White-label"
+                description="Logo, brand color, custom domain, support email."
+                Icon={Palette}
+                preview={<BrandPreviewRow brand={brand} />}
+              />
 
-        <SettingsCard
-          index={1}
-          href="/dashboard/white-label"
-          title="Branding & White-label"
-          description="Logo, brand color, custom domain, support email."
-          Icon={Palette}
-          preview={<BrandPreviewRow brand={brand} />}
-        />
+              <SettingsCard
+                index={2}
+                href="/dashboard/settings/email-templates"
+                title="Email Templates"
+                description="Welcome, invite, and reset emails — branded with your colors."
+                Icon={Mail}
+                queued
+                preview={
+                  <>
+                    <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                      3 templates
+                    </span>
+                    <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                      Welcome / Invite / Reset
+                    </span>
+                  </>
+                }
+              />
 
-        <SettingsCard
-          index={2}
-          href="/dashboard/settings/email-templates"
-          title="Email Templates"
-          description="Welcome, invite, and reset emails — branded with your colors."
-          Icon={Mail}
-          queued
-          preview={
-            <>
-              <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                3 templates
-              </span>
-              <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                Welcome / Invite / Reset
-              </span>
-            </>
-          }
-        />
+              <SettingsCard
+                index={3}
+                href="/dashboard/settings/voice-profile"
+                title="Voice Profile"
+                description="Your writing voice + audio voice clones used by the AI agents."
+                Icon={Mic}
+                preview={
+                  <>
+                    <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                      Min. corpus
+                    </span>
+                    <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                      200 words to activate
+                    </span>
+                  </>
+                }
+              />
 
-        <SettingsCard
-          index={3}
-          href="/dashboard/settings/voice-profile"
-          title="Voice Profile"
-          description="Your writing voice + audio voice clones used by the AI agents."
-          Icon={Mic}
-          preview={
-            <>
-              <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                Min. corpus
-              </span>
-              <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                200 words to activate
-              </span>
-            </>
-          }
-        />
+              <SettingsCard
+                index={4}
+                href="/dashboard/integrations-hub"
+                title="Integrations"
+                description="Stripe, Resend, Twilio, Nango, RunPod, ElevenLabs, and more."
+                Icon={Plug}
+                preview={<IntegrationsPreviewRow integrations={integrations} />}
+              />
 
-        <SettingsCard
-          index={4}
-          href="/dashboard/integrations-hub"
-          title="Integrations"
-          description="Stripe, Resend, Twilio, Nango, RunPod, ElevenLabs, and more."
-          Icon={Plug}
-          preview={<IntegrationsPreviewRow integrations={integrations} />}
-        />
+              <SettingsCard
+                index={5}
+                href="/dashboard/team"
+                title="Team"
+                description="Members, roles, and per-seat permissions."
+                Icon={Users}
+                preview={
+                  <>
+                    <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                      Members
+                    </span>
+                    <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                      Invite teammates
+                    </span>
+                  </>
+                }
+              />
 
-        <SettingsCard
-          index={5}
-          href="/dashboard/team"
-          title="Team"
-          description="Members, roles, and per-seat permissions."
-          Icon={Users}
-          preview={
-            <>
-              <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                Members
-              </span>
-              <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                Invite teammates
-              </span>
-            </>
-          }
-        />
+              <SettingsCard
+                index={6}
+                href="/dashboard/billing"
+                title="Billing & Plan"
+                description="Current plan, invoices, and usage caps."
+                Icon={CreditCard}
+                preview={<PlanPreviewRow plan={plan} />}
+              />
 
-        <SettingsCard
-          index={6}
-          href="/dashboard/billing"
-          title="Billing & Plan"
-          description="Current plan, invoices, and usage caps."
-          Icon={CreditCard}
-          preview={<PlanPreviewRow plan={plan} />}
-        />
+              <SettingsCard
+                index={7}
+                href="/dashboard/notifications"
+                title="Notifications"
+                description="Email, push, and Slack toggles for every alert type."
+                Icon={Bell}
+                preview={
+                  <>
+                    <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                      Channels
+                    </span>
+                    <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                      Email · Push · Slack
+                    </span>
+                  </>
+                }
+              />
 
-        <SettingsCard
-          index={7}
-          href="/dashboard/notifications"
-          title="Notifications"
-          description="Email, push, and Slack toggles for every alert type."
-          Icon={Bell}
-          preview={
-            <>
-              <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                Channels
-              </span>
-              <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                Email · Push · Slack
-              </span>
-            </>
-          }
-        />
+              <SettingsCard
+                index={8}
+                href="/dashboard/api/keys"
+                title="API & Webhooks"
+                description="Personal API keys + outgoing webhook signing secrets."
+                Icon={Code}
+                preview={
+                  <>
+                    <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                      Programmatic
+                    </span>
+                    <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                      REST + Webhooks
+                    </span>
+                  </>
+                }
+              />
 
-        <SettingsCard
-          index={8}
-          href="/dashboard/api/keys"
-          title="API & Webhooks"
-          description="Personal API keys + outgoing webhook signing secrets."
-          Icon={Code}
-          preview={
-            <>
-              <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                Programmatic
-              </span>
-              <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                REST + Webhooks
-              </span>
-            </>
-          }
-        />
+              <SettingsCard
+                index={9}
+                href="/dashboard/settings/danger"
+                title="Danger Zone"
+                description="Export workspace data, transfer ownership, delete account."
+                Icon={AlertTriangle}
+                danger
+                preview={
+                  <>
+                    <span
+                      className="text-[10px] uppercase tracking-wider font-semibold"
+                      style={{ color: tokens.status.error }}
+                    >
+                      Irreversible
+                    </span>
+                    <span className="text-[11px]" style={{ color: tokens.text.muted }}>
+                      Read carefully
+                    </span>
+                  </>
+                }
+              />
+            </div>{/* ── Channel & Infrastructure config ─────────────────────────────── */}<motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: 0.12 }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <h2
+                  className="font-editorial text-[11px] uppercase tracking-[0.18em]"
+                  style={{ color: tokens.text.muted }}
+                >
+                  Channels &amp; Infrastructure
+                </h2>
+                <div className="flex-1 h-px" style={{ background: tokens.border.subtle }} />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <SettingsCard
+                  index={10}
+                  href="/dashboard/phone-email"
+                  title="Phone & Email"
+                  description="Twilio phone numbers, caller ID, and sending email addresses."
+                  Icon={Phone}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Channels
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        SMS · Voice · Email
+                      </span>
+                    </>
+                  }
+                />
 
-        <SettingsCard
-          index={9}
-          href="/dashboard/settings/danger"
-          title="Danger Zone"
-          description="Export workspace data, transfer ownership, delete account."
-          Icon={AlertTriangle}
-          danger
-          preview={
-            <>
-              <span
-                className="text-[10px] uppercase tracking-wider font-semibold"
-                style={{ color: tokens.status.error }}
-              >
-                Irreversible
-              </span>
-              <span className="text-[11px]" style={{ color: tokens.text.muted }}>
-                Read carefully
-              </span>
-            </>
-          }
-        />
-      </div>
+                <SettingsCard
+                  index={11}
+                  href="/dashboard/phone-setup"
+                  title="Phone Setup"
+                  description="Configure Twilio SID, auth token, and inbound call routing."
+                  Icon={Phone}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Provider
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        Twilio
+                      </span>
+                    </>
+                  }
+                />
 
-      {/* ── Channel & Infrastructure config ─────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.22, delay: 0.12 }}
-      >
-        <div className="flex items-center gap-3 mb-4">
-          <h2
-            className="font-editorial text-[11px] uppercase tracking-[0.18em]"
-            style={{ color: tokens.text.muted }}
-          >
-            Channels &amp; Infrastructure
-          </h2>
-          <div className="flex-1 h-px" style={{ background: tokens.border.subtle }} />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <SettingsCard
-            index={10}
-            href="/dashboard/phone-email"
-            title="Phone & Email"
-            description="Twilio phone numbers, caller ID, and sending email addresses."
-            Icon={Phone}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Channels
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  SMS · Voice · Email
-                </span>
-              </>
-            }
-          />
+                <SettingsCard
+                  index={12}
+                  href="/dashboard/mail-setup"
+                  title="Mail Setup"
+                  description="Resend / SMTP configuration, DNS records, and deliverability."
+                  Icon={Mail}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Provider
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        Resend / SMTP
+                      </span>
+                    </>
+                  }
+                />
 
-          <SettingsCard
-            index={11}
-            href="/dashboard/phone-setup"
-            title="Phone Setup"
-            description="Configure Twilio SID, auth token, and inbound call routing."
-            Icon={Phone}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Provider
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  Twilio
-                </span>
-              </>
-            }
-          />
+                <SettingsCard
+                  index={13}
+                  href="/dashboard/domains"
+                  title="Domains"
+                  description="Custom domains for portals, landing pages, and white-label apps."
+                  Icon={Globe2}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        CNAME / A
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        Fully custom domain
+                      </span>
+                    </>
+                  }
+                />
 
-          <SettingsCard
-            index={12}
-            href="/dashboard/mail-setup"
-            title="Mail Setup"
-            description="Resend / SMTP configuration, DNS records, and deliverability."
-            Icon={Mail}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Provider
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  Resend / SMTP
-                </span>
-              </>
-            }
-          />
+                <SettingsCard
+                  index={14}
+                  href="/dashboard/usage"
+                  title="Usage & Tokens"
+                  description="AI token consumption, credit balance, and plan usage caps."
+                  Icon={Zap}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Credits
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        Usage breakdown
+                      </span>
+                    </>
+                  }
+                />
+              </div>
+            </motion.div>{/* ── Developer tools ──────────────────────────────────────────────── */}<motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: 0.18 }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <h2
+                  className="font-editorial text-[11px] uppercase tracking-[0.18em]"
+                  style={{ color: tokens.text.muted }}
+                >
+                  Developer
+                </h2>
+                <div className="flex-1 h-px" style={{ background: tokens.border.subtle }} />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <SettingsCard
+                  index={15}
+                  href="/dashboard/api/keys"
+                  title="API Keys"
+                  description="Personal access tokens for the ShortStack REST API."
+                  Icon={Code}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Programmatic
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        Bearer token auth
+                      </span>
+                    </>
+                  }
+                />
 
-          <SettingsCard
-            index={13}
-            href="/dashboard/domains"
-            title="Domains"
-            description="Custom domains for portals, landing pages, and white-label apps."
-            Icon={Globe2}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  CNAME / A
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  Fully custom domain
-                </span>
-              </>
-            }
-          />
+                <SettingsCard
+                  index={16}
+                  href="/dashboard/webhooks"
+                  title="Webhooks"
+                  description="Outgoing webhook endpoints — trigger external services on events."
+                  Icon={Webhook}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Outgoing
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        HMAC signed
+                      </span>
+                    </>
+                  }
+                />
 
-          <SettingsCard
-            index={14}
-            href="/dashboard/usage"
-            title="Usage & Tokens"
-            description="AI token consumption, credit balance, and plan usage caps."
-            Icon={Zap}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Credits
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  Usage breakdown
-                </span>
-              </>
-            }
-          />
-        </div>
-      </motion.div>
+                <SettingsCard
+                  index={17}
+                  href="/dashboard/api/webhooks"
+                  title="API Webhooks"
+                  description="Inbound webhook subscriptions via the public REST API."
+                  Icon={Webhook}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Inbound
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        Event subscriptions
+                      </span>
+                    </>
+                  }
+                />
 
-      {/* ── Developer tools ──────────────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.22, delay: 0.18 }}
-      >
-        <div className="flex items-center gap-3 mb-4">
-          <h2
-            className="font-editorial text-[11px] uppercase tracking-[0.18em]"
-            style={{ color: tokens.text.muted }}
-          >
-            Developer
-          </h2>
-          <div className="flex-1 h-px" style={{ background: tokens.border.subtle }} />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <SettingsCard
-            index={15}
-            href="/dashboard/api/keys"
-            title="API Keys"
-            description="Personal access tokens for the ShortStack REST API."
-            Icon={Code}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Programmatic
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  Bearer token auth
-                </span>
-              </>
-            }
-          />
+                <SettingsCard
+                  index={18}
+                  href="/dashboard/activity-log"
+                  title="Activity Log"
+                  description="Audit trail of all actions taken in your workspace."
+                  Icon={ClipboardList}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Audit
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        Full history
+                      </span>
+                    </>
+                  }
+                />
+              </div>
+            </motion.div>{/* ── Business & Admin ─────────────────────────────────────────────── */}<motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: 0.24 }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <h2
+                  className="font-editorial text-[11px] uppercase tracking-[0.18em]"
+                  style={{ color: tokens.text.muted }}
+                >
+                  Business &amp; Admin
+                </h2>
+                <div className="flex-1 h-px" style={{ background: tokens.border.subtle }} />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <SettingsCard
+                  index={20}
+                  href="/dashboard/subaccounts"
+                  title="Subaccounts"
+                  description="Create and manage sub-agency accounts under your workspace."
+                  Icon={Building2}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Multi-tenant
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        Sub-agencies
+                      </span>
+                    </>
+                  }
+                />
 
-          <SettingsCard
-            index={16}
-            href="/dashboard/webhooks"
-            title="Webhooks"
-            description="Outgoing webhook endpoints — trigger external services on events."
-            Icon={Webhook}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Outgoing
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  HMAC signed
-                </span>
-              </>
-            }
-          />
+                <SettingsCard
+                  index={21}
+                  href="/dashboard/pricing"
+                  title="Pricing Plans"
+                  description="Configure the pricing tiers you offer your clients."
+                  Icon={CreditCard}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Monetization
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        Client tiers
+                      </span>
+                    </>
+                  }
+                />
 
-          <SettingsCard
-            index={17}
-            href="/dashboard/api/webhooks"
-            title="API Webhooks"
-            description="Inbound webhook subscriptions via the public REST API."
-            Icon={Webhook}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Inbound
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  Event subscriptions
-                </span>
-              </>
-            }
-          />
+                <SettingsCard
+                  index={22}
+                  href="/dashboard/affiliates"
+                  title="Affiliates"
+                  description="Manage your affiliate program and referral commissions."
+                  Icon={Gift}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Referrals
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        Commission tracking
+                      </span>
+                    </>
+                  }
+                />
 
-          <SettingsCard
-            index={18}
-            href="/dashboard/activity-log"
-            title="Activity Log"
-            description="Audit trail of all actions taken in your workspace."
-            Icon={ClipboardList}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Audit
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  Full history
-                </span>
-              </>
-            }
-          />
-        </div>
-      </motion.div>
+                <SettingsCard
+                  index={23}
+                  href="/dashboard/verticals"
+                  title="Vertical Templates"
+                  description="Industry-specific page and workflow templates for your niche."
+                  Icon={LayoutTemplate}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Templates
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        By industry
+                      </span>
+                    </>
+                  }
+                />
 
-      {/* ── Business & Admin ─────────────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.22, delay: 0.24 }}
-      >
-        <div className="flex items-center gap-3 mb-4">
-          <h2
-            className="font-editorial text-[11px] uppercase tracking-[0.18em]"
-            style={{ color: tokens.text.muted }}
-          >
-            Business &amp; Admin
-          </h2>
-          <div className="flex-1 h-px" style={{ background: tokens.border.subtle }} />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <SettingsCard
-            index={20}
-            href="/dashboard/subaccounts"
-            title="Subaccounts"
-            description="Create and manage sub-agency accounts under your workspace."
-            Icon={Building2}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Multi-tenant
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  Sub-agencies
-                </span>
-              </>
-            }
-          />
+                <SettingsCard
+                  index={24}
+                  href="/dashboard/monitor"
+                  title="Monitor"
+                  description="System health, uptime checks, and background job status."
+                  Icon={Activity}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Observability
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        Uptime &amp; jobs
+                      </span>
+                    </>
+                  }
+                />
 
-          <SettingsCard
-            index={21}
-            href="/dashboard/pricing"
-            title="Pricing Plans"
-            description="Configure the pricing tiers you offer your clients."
-            Icon={CreditCard}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Monetization
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  Client tiers
-                </span>
-              </>
-            }
-          />
-
-          <SettingsCard
-            index={22}
-            href="/dashboard/affiliates"
-            title="Affiliates"
-            description="Manage your affiliate program and referral commissions."
-            Icon={Gift}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Referrals
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  Commission tracking
-                </span>
-              </>
-            }
-          />
-
-          <SettingsCard
-            index={23}
-            href="/dashboard/verticals"
-            title="Vertical Templates"
-            description="Industry-specific page and workflow templates for your niche."
-            Icon={LayoutTemplate}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Templates
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  By industry
-                </span>
-              </>
-            }
-          />
-
-          <SettingsCard
-            index={24}
-            href="/dashboard/monitor"
-            title="Monitor"
-            description="System health, uptime checks, and background job status."
-            Icon={Activity}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Observability
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  Uptime &amp; jobs
-                </span>
-              </>
-            }
-          />
-
-          <SettingsCard
-            index={25}
-            href="/dashboard/download"
-            title="Desktop App"
-            description="Download the ShortStack desktop client for Mac or Windows."
-            Icon={Download}
-            preview={
-              <>
-                <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
-                  Native
-                </span>
-                <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                  Mac · Windows
-                </span>
-              </>
-            }
-          />
-        </div>
-      </motion.div>
-    </div>
+                <SettingsCard
+                  index={25}
+                  href="/dashboard/download"
+                  title="Desktop App"
+                  description="Download the ShortStack desktop client for Mac or Windows."
+                  Icon={Download}
+                  preview={
+                    <>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
+                        Native
+                      </span>
+                      <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
+                        Mac · Windows
+                      </span>
+                    </>
+                  }
+                />
+              </div>
+            </motion.div></MotionPage>
   );
 }
 

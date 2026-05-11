@@ -10,6 +10,7 @@ import {
 import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type Channel = "email" | "dm" | "sms" | "call";
 type Tab = "compose" | "history" | "templates";
@@ -184,263 +185,242 @@ export default function ClientOutreachPage() {
   ];
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-xl font-bold flex items-center gap-2 text-gray-900">
-          <Send size={20} className="text-blue-600" />
-          Outreach Center
-        </h1>
-        <p className="text-xs text-gray-500 mt-1">Launch multi-channel campaigns with AI-personalized messages</p>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-4 gap-3">
-        {[
-          { label: "Sent", value: stats.sent, icon: <CheckCircle size={14} />, color: "text-blue-600" },
-          { label: "Replied", value: stats.replied, icon: <MessageSquare size={14} />, color: "text-green-700" },
-          { label: "Pending", value: stats.pending, icon: <Clock size={14} />, color: "text-yellow-600" },
-          { label: "Failed", value: stats.failed, icon: <XCircle size={14} />, color: "text-red-600" },
-        ].map((s) => (
-          <div key={s.label} className="card flex items-center gap-3 py-3">
-            <div className={s.color}>{s.icon}</div>
-            <div>
-              <p className="text-lg font-bold text-gray-900">{s.value}</p>
-              <p className="text-[9px] text-gray-500 uppercase tracking-wider">{s.label}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Channel Selector */}
-      <div className="flex gap-2">
-        {channels.map((ch) => (
-          <button
-            key={ch.id}
-            onClick={() => { setChannel(ch.id); setSelectedTemplate(0); }}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium transition-all ${
-              channel === ch.id
-                ? "bg-blue-50 text-blue-700 border border-blue-200"
-                : "bg-white text-gray-500 hover:text-gray-800 border border-gray-200"
-            }`}
-          >
-            {ch.icon} {ch.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Tab nav */}
-      <div className="flex gap-4 border-b border-gray-200">
-        {(["compose", "history", "templates"] as Tab[]).map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`pb-2 text-xs font-medium capitalize transition-colors border-b-2 ${
-              tab === t ? "text-blue-600 border-blue-600" : "text-gray-500 border-transparent hover:text-gray-800"
-            }`}
-          >
-            {t}
-          </button>
-        ))}
-      </div>
-
-      {/* Compose Tab */}
-      {tab === "compose" && (
-        <div className="grid grid-cols-3 gap-4">
-          {/* Main compose area */}
-          <div className="col-span-2 space-y-3">
-            {channel === "email" && (
-              <div>
-                <label className="text-[9px] text-gray-500 uppercase tracking-wider block mb-1">Subject Line</label>
-                <input
-                  type="text"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  className="input w-full text-xs"
-                  placeholder="Quick question about {business_name}"
-                />
-              </div>
-            )}
-            <div>
-              <label className="text-[9px] text-gray-500 uppercase tracking-wider block mb-1">
-                {channel === "call" ? "Call Script" : "Message Body"}
-              </label>
-              <textarea
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                rows={channel === "call" ? 6 : 8}
-                className="input w-full text-xs resize-none"
-                placeholder="Type your message..."
-              />
-              <p className="text-[9px] text-gray-400 mt-1">
-                Variables: {"{business_name}"}, {"{name}"}, {"{industry}"}, {"{my_name}"}
-              </p>
-            </div>
-
-            {/* Launch button */}
-            <button
-              onClick={sendCampaign}
-              disabled={sending}
-              className="btn-primary w-full py-3 text-sm flex items-center justify-center gap-2"
-            >
-              {sending ? <Loader size={14} className="animate-spin" /> : <Zap size={14} />}
-              {sending ? "Launching..." : `Launch ${channel === "email" ? "Email" : channel === "dm" ? "DM" : channel === "sms" ? "SMS" : "Call"} Campaign`}
-            </button>
-          </div>
-
-          {/* Config sidebar */}
-          <div className="space-y-3">
-            <div className="card">
-              <h3 className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold mb-2">Campaign Settings</h3>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-[9px] text-gray-500 uppercase block mb-1">Batch Size</label>
-                  <input type="number" value={batchSize} onChange={(e) => setBatchSize(+e.target.value)}
-                    className="input w-full text-xs" min={1} max={100} />
+    <MotionPage className="p-6 space-y-6">{/* Header */}<div>
+              <h1 className="text-xl font-bold flex items-center gap-2 text-gray-900">
+                <Send size={20} className="text-blue-600" />
+                Outreach Center
+              </h1>
+              <p className="text-xs text-gray-500 mt-1">Launch multi-channel campaigns with AI-personalized messages</p>
+            </div>{/* Stats */}<div className="grid grid-cols-4 gap-3">
+              {[
+                { label: "Sent", value: stats.sent, icon: <CheckCircle size={14} />, color: "text-blue-600" },
+                { label: "Replied", value: stats.replied, icon: <MessageSquare size={14} />, color: "text-green-700" },
+                { label: "Pending", value: stats.pending, icon: <Clock size={14} />, color: "text-yellow-600" },
+                { label: "Failed", value: stats.failed, icon: <XCircle size={14} />, color: "text-red-600" },
+              ].map((s) => (
+                <div key={s.label} className="card flex items-center gap-3 py-3">
+                  <div className={s.color}>{s.icon}</div>
+                  <div>
+                    <p className="text-lg font-bold text-gray-900">{s.value}</p>
+                    <p className="text-[9px] text-gray-500 uppercase tracking-wider">{s.label}</p>
+                  </div>
                 </div>
-                <div>
-                  <label className="text-[9px] text-gray-500 uppercase block mb-1">Target Leads</label>
-                  <select value={targetTier} onChange={(e) => setTargetTier(e.target.value as typeof targetTier)}
-                    className="input w-full text-xs">
-                    <option value="cold">Cold (New leads)</option>
-                    <option value="warm">Warm (Contacted)</option>
-                    <option value="hot">Hot (Replied)</option>
-                    <option value="all">All Leads</option>
-                  </select>
-                </div>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={useAI} onChange={(e) => setUseAI(e.target.checked)}
-                    className="w-3.5 h-3.5 rounded border-border" />
-                  <span className="text-[10px] flex items-center gap-1">
-                    <Sparkles size={10} className="text-blue-600" /> AI Personalization
-                  </span>
-                </label>
-              </div>
-            </div>
+              ))}
+            </div>{/* Channel Selector */}<div className="flex gap-2">
+              {channels.map((ch) => (
+                <button
+                  key={ch.id}
+                  onClick={() => { setChannel(ch.id); setSelectedTemplate(0); }}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                    channel === ch.id
+                      ? "bg-blue-50 text-blue-700 border border-blue-200"
+                      : "bg-white text-gray-500 hover:text-gray-800 border border-gray-200"
+                  }`}
+                >
+                  {ch.icon} {ch.label}
+                </button>
+              ))}
+            </div>{/* Tab nav */}<div className="flex gap-4 border-b border-gray-200">
+              {(["compose", "history", "templates"] as Tab[]).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={`pb-2 text-xs font-medium capitalize transition-colors border-b-2 ${
+                    tab === t ? "text-blue-600 border-blue-600" : "text-gray-500 border-transparent hover:text-gray-800"
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>{/* Compose Tab */}{tab === "compose" && (
+              <div className="grid grid-cols-3 gap-4">
+                {/* Main compose area */}
+                <div className="col-span-2 space-y-3">
+                  {channel === "email" && (
+                    <div>
+                      <label className="text-[9px] text-gray-500 uppercase tracking-wider block mb-1">Subject Line</label>
+                      <input
+                        type="text"
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                        className="input w-full text-xs"
+                        placeholder="Quick question about {business_name}"
+                      />
+                    </div>
+                  )}
+                  <div>
+                    <label className="text-[9px] text-gray-500 uppercase tracking-wider block mb-1">
+                      {channel === "call" ? "Call Script" : "Message Body"}
+                    </label>
+                    <textarea
+                      value={body}
+                      onChange={(e) => setBody(e.target.value)}
+                      rows={channel === "call" ? 6 : 8}
+                      className="input w-full text-xs resize-none"
+                      placeholder="Type your message..."
+                    />
+                    <p className="text-[9px] text-gray-400 mt-1">
+                      Variables: {"{business_name}"}, {"{name}"}, {"{industry}"}, {"{my_name}"}
+                    </p>
+                  </div>
 
-            {/* Template picker */}
-            <div className="card">
-              <h3 className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold mb-2">Quick Templates</h3>
-              <div className="space-y-1.5">
-                {MESSAGE_TEMPLATES[channel].map((tpl, i) => (
+                  {/* Launch button */}
                   <button
-                    key={tpl.name}
-                    onClick={() => setSelectedTemplate(i)}
-                    className={`w-full text-left px-2.5 py-2 rounded-lg text-[10px] transition-colors ${
-                      selectedTemplate === i
-                        ? "bg-blue-50 text-blue-700 border border-blue-200"
-                        : "bg-gray-50 text-gray-500 hover:text-gray-800"
-                    }`}
+                    onClick={sendCampaign}
+                    disabled={sending}
+                    className="btn-primary w-full py-3 text-sm flex items-center justify-center gap-2"
                   >
-                    {tpl.name}
+                    {sending ? <Loader size={14} className="animate-spin" /> : <Zap size={14} />}
+                    {sending ? "Launching..." : `Launch ${channel === "email" ? "Email" : channel === "dm" ? "DM" : channel === "sms" ? "SMS" : "Call"} Campaign`}
                   </button>
-                ))}
+                </div>
+
+                {/* Config sidebar */}
+                <div className="space-y-3">
+                  <div className="card">
+                    <h3 className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold mb-2">Campaign Settings</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-[9px] text-gray-500 uppercase block mb-1">Batch Size</label>
+                        <input type="number" value={batchSize} onChange={(e) => setBatchSize(+e.target.value)}
+                          className="input w-full text-xs" min={1} max={100} />
+                      </div>
+                      <div>
+                        <label className="text-[9px] text-gray-500 uppercase block mb-1">Target Leads</label>
+                        <select value={targetTier} onChange={(e) => setTargetTier(e.target.value as typeof targetTier)}
+                          className="input w-full text-xs">
+                          <option value="cold">Cold (New leads)</option>
+                          <option value="warm">Warm (Contacted)</option>
+                          <option value="hot">Hot (Replied)</option>
+                          <option value="all">All Leads</option>
+                        </select>
+                      </div>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked={useAI} onChange={(e) => setUseAI(e.target.checked)}
+                          className="w-3.5 h-3.5 rounded border-border" />
+                        <span className="text-[10px] flex items-center gap-1">
+                          <Sparkles size={10} className="text-blue-600" /> AI Personalization
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Template picker */}
+                  <div className="card">
+                    <h3 className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold mb-2">Quick Templates</h3>
+                    <div className="space-y-1.5">
+                      {MESSAGE_TEMPLATES[channel].map((tpl, i) => (
+                        <button
+                          key={tpl.name}
+                          onClick={() => setSelectedTemplate(i)}
+                          className={`w-full text-left px-2.5 py-2 rounded-lg text-[10px] transition-colors ${
+                            selectedTemplate === i
+                              ? "bg-blue-50 text-blue-700 border border-blue-200"
+                              : "bg-gray-50 text-gray-500 hover:text-gray-800"
+                          }`}
+                        >
+                          {tpl.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {channel === "dm" && (
+                    <div className="card bg-blue-50 border-blue-200">
+                      <p className="text-[10px] text-blue-700 flex items-center gap-1 mb-1">
+                        <Globe size={10} /> Chrome Extension Required
+                      </p>
+                      <p className="text-[9px] text-gray-500">
+                        Social DMs are sent through the browser extension. Make sure it is installed and your accounts are logged in.
+                      </p>
+                    </div>
+                  )}
+
+                  {channel === "call" && (
+                    <div className="card bg-blue-50 border-blue-200">
+                      <p className="text-[10px] text-blue-700 flex items-center gap-1 mb-1">
+                        <Bot size={10} /> AI-Powered Calls
+                      </p>
+                      <p className="text-[9px] text-gray-500">
+                        Calls use AI voice agents. Each lead will receive a natural conversation following your script.
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-
-            {channel === "dm" && (
-              <div className="card bg-blue-50 border-blue-200">
-                <p className="text-[10px] text-blue-700 flex items-center gap-1 mb-1">
-                  <Globe size={10} /> Chrome Extension Required
-                </p>
-                <p className="text-[9px] text-gray-500">
-                  Social DMs are sent through the browser extension. Make sure it is installed and your accounts are logged in.
-                </p>
+            )}{/* History Tab */}{tab === "history" && (
+              <div className="card p-0 overflow-hidden">
+                {loadingHistory ? (
+                  <div className="text-center py-12 text-gray-500">
+                    <Loader size={16} className="animate-spin mx-auto mb-2" /> Loading history...
+                  </div>
+                ) : history.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500">
+                    <Send size={20} className="mx-auto mb-2 opacity-30" />
+                    <p className="text-xs">No outreach history yet. Launch your first campaign above.</p>
+                  </div>
+                ) : (
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b border-gray-200 bg-gray-50">
+                        <th className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-gray-500 font-semibold">Business</th>
+                        <th className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-gray-500 font-semibold">Channel</th>
+                        <th className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-gray-500 font-semibold">Message</th>
+                        <th className="px-3 py-2.5 text-center text-[9px] uppercase tracking-wider text-gray-500 font-semibold">Status</th>
+                        <th className="px-3 py-2.5 text-right text-[9px] uppercase tracking-wider text-gray-500 font-semibold">Sent</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {history.map((log) => (
+                        <tr key={log.id} className="border-b border-gray-100 hover:bg-gray-50">
+                          <td className="px-3 py-2.5 font-medium text-gray-900">{log.business_name}</td>
+                          <td className="px-3 py-2.5 capitalize text-gray-500">{log.platform}</td>
+                          <td className="px-3 py-2.5 text-gray-500 max-w-[200px] truncate">{log.message_text}</td>
+                          <td className="px-3 py-2.5 text-center">
+                            <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium ${
+                              log.status === "sent" ? "bg-blue-50 text-blue-700" :
+                              log.status === "replied" ? "bg-green-50 text-green-700" :
+                              log.status === "pending" ? "bg-yellow-50 text-yellow-700" :
+                              "bg-red-50 text-red-700"
+                            }`}>{log.status}</span>
+                          </td>
+                          <td className="px-3 py-2.5 text-right text-gray-500 text-[10px]">
+                            {new Date(log.sent_at).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
-            )}
-
-            {channel === "call" && (
-              <div className="card bg-blue-50 border-blue-200">
-                <p className="text-[10px] text-blue-700 flex items-center gap-1 mb-1">
-                  <Bot size={10} /> AI-Powered Calls
-                </p>
-                <p className="text-[9px] text-gray-500">
-                  Calls use AI voice agents. Each lead will receive a natural conversation following your script.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* History Tab */}
-      {tab === "history" && (
-        <div className="card p-0 overflow-hidden">
-          {loadingHistory ? (
-            <div className="text-center py-12 text-gray-500">
-              <Loader size={16} className="animate-spin mx-auto mb-2" /> Loading history...
-            </div>
-          ) : history.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
-              <Send size={20} className="mx-auto mb-2 opacity-30" />
-              <p className="text-xs">No outreach history yet. Launch your first campaign above.</p>
-            </div>
-          ) : (
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-gray-500 font-semibold">Business</th>
-                  <th className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-gray-500 font-semibold">Channel</th>
-                  <th className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-gray-500 font-semibold">Message</th>
-                  <th className="px-3 py-2.5 text-center text-[9px] uppercase tracking-wider text-gray-500 font-semibold">Status</th>
-                  <th className="px-3 py-2.5 text-right text-[9px] uppercase tracking-wider text-gray-500 font-semibold">Sent</th>
-                </tr>
-              </thead>
-              <tbody>
-                {history.map((log) => (
-                  <tr key={log.id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="px-3 py-2.5 font-medium text-gray-900">{log.business_name}</td>
-                    <td className="px-3 py-2.5 capitalize text-gray-500">{log.platform}</td>
-                    <td className="px-3 py-2.5 text-gray-500 max-w-[200px] truncate">{log.message_text}</td>
-                    <td className="px-3 py-2.5 text-center">
-                      <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium ${
-                        log.status === "sent" ? "bg-blue-50 text-blue-700" :
-                        log.status === "replied" ? "bg-green-50 text-green-700" :
-                        log.status === "pending" ? "bg-yellow-50 text-yellow-700" :
-                        "bg-red-50 text-red-700"
-                      }`}>{log.status}</span>
-                    </td>
-                    <td className="px-3 py-2.5 text-right text-gray-500 text-[10px]">
-                      {new Date(log.sent_at).toLocaleDateString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
-
-      {/* Templates Tab */}
-      {tab === "templates" && (
-        <div className="grid grid-cols-2 gap-4">
-          {Object.entries(MESSAGE_TEMPLATES).map(([ch, templates]) => (
-            <div key={ch} className="card">
-              <h3 className="text-xs font-semibold capitalize flex items-center gap-2 mb-3 text-gray-900">
-                {ch === "email" && <Mail size={13} className="text-blue-600" />}
-                {ch === "dm" && <MessageSquare size={13} className="text-blue-600" />}
-                {ch === "sms" && <Smartphone size={13} className="text-green-700" />}
-                {ch === "call" && <Phone size={13} className="text-blue-600" />}
-                {ch} Templates
-              </h3>
-              <div className="space-y-2">
-                {templates.map((tpl) => (
-                  <div key={tpl.name} className="p-2.5 rounded-lg bg-gray-50 border border-gray-200">
-                    <p className="text-[10px] font-medium mb-1 text-gray-900">{tpl.name}</p>
-                    <p className="text-[9px] text-gray-500 line-clamp-3">{tpl.body}</p>
-                    <button
-                      onClick={() => { setChannel(ch as Channel); setBody(tpl.body); if ("subject" in tpl) setSubject(tpl.subject || ""); setTab("compose"); }}
-                      className="text-[9px] text-blue-600 hover:text-blue-700 mt-1.5 flex items-center gap-0.5"
-                    >
-                      Use template <ArrowRight size={8} />
-                    </button>
+            )}{/* Templates Tab */}{tab === "templates" && (
+              <div className="grid grid-cols-2 gap-4">
+                {Object.entries(MESSAGE_TEMPLATES).map(([ch, templates]) => (
+                  <div key={ch} className="card">
+                    <h3 className="text-xs font-semibold capitalize flex items-center gap-2 mb-3 text-gray-900">
+                      {ch === "email" && <Mail size={13} className="text-blue-600" />}
+                      {ch === "dm" && <MessageSquare size={13} className="text-blue-600" />}
+                      {ch === "sms" && <Smartphone size={13} className="text-green-700" />}
+                      {ch === "call" && <Phone size={13} className="text-blue-600" />}
+                      {ch} Templates
+                    </h3>
+                    <div className="space-y-2">
+                      {templates.map((tpl) => (
+                        <div key={tpl.name} className="p-2.5 rounded-lg bg-gray-50 border border-gray-200">
+                          <p className="text-[10px] font-medium mb-1 text-gray-900">{tpl.name}</p>
+                          <p className="text-[9px] text-gray-500 line-clamp-3">{tpl.body}</p>
+                          <button
+                            onClick={() => { setChannel(ch as Channel); setBody(tpl.body); if ("subject" in tpl) setSubject(tpl.subject || ""); setTab("compose"); }}
+                            className="text-[9px] text-blue-600 hover:text-blue-700 mt-1.5 flex items-center gap-0.5"
+                          >
+                            Use template <ArrowRight size={8} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+            )}</MotionPage>
   );
 }

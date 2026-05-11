@@ -15,6 +15,7 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -128,139 +129,135 @@ export default function WorkflowLibraryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F3F6FA] text-[#111827]">
-      <PageHero
-        title="Workflow Library"
-        subtitle="Battle-tested automations you can install in one click"
-        gradient="purple"
-        icon={<Sparkles size={20} />}
-        eyebrow="WORKFLOW LIBRARY"
-      />
-
-      <div className="mx-auto max-w-6xl px-6 py-8">
-        {/* Filters */}
-        <div className="mb-6 flex flex-wrap items-center gap-3">
-          <div className="relative flex-1 min-w-[240px]">
-            <Search
-              size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]"
-            />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search templates..."
-              className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white pl-9 pr-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <Filter size={14} className="text-[#9CA3AF]" />
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-sm text-[#111827] focus:border-[#2563EB] focus:outline-none"
-            >
-              <option value="all">All categories</option>
-              {Object.entries(CATEGORY_LABELS).map(([k, label]) => (
-                <option key={k} value={k}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <Link
-            href="/dashboard/automations"
-            className="ml-auto inline-flex items-center gap-1.5 text-xs text-[#6B7280] hover:text-[#374151]"
-          >
-            Back to automations <ArrowRight size={12} />
-          </Link>
-        </div>
-
-        {/* Cards */}
-        {loading ? (
-          <div className="flex items-center justify-center py-24 text-[#9CA3AF]">
-            <Loader className="animate-spin" size={20} />
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-6 py-16 text-center text-[#9CA3AF]">
-            No templates match your filters.
-          </div>
-        ) : (
-          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((t) => (
-              <motion.article
-                key={t.id}
-                variants={itemVariants}
-                className="group rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 transition hover:border-[rgba(0,0,0,0.14)] hover:bg-[#F8FAFC]"
-              >
-                <div className="mb-3 flex items-center justify-between gap-2">
-                  <span
-                    className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
-                      CATEGORY_COLORS[t.category] ||
-                      "bg-[rgba(0,0,0,0.06)] text-[#374151] border-[rgba(0,0,0,0.10)]"
-                    }`}
-                  >
-                    {CATEGORY_LABELS[t.category] || t.category}
-                  </span>
-                  {t.installed && (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-400">
-                      <Check size={10} /> Installed
-                    </span>
-                  )}
+    <MotionPage className="min-h-screen bg-[#F3F6FA] text-[#111827]"><PageHero
+              title="Workflow Library"
+              subtitle="Battle-tested automations you can install in one click"
+              gradient="purple"
+              icon={<Sparkles size={20} />}
+              eyebrow="WORKFLOW LIBRARY"
+            /><div className="mx-auto max-w-6xl px-6 py-8">
+              {/* Filters */}
+              <div className="mb-6 flex flex-wrap items-center gap-3">
+                <div className="relative flex-1 min-w-[240px]">
+                  <Search
+                    size={14}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]"
+                  />
+                  <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search templates..."
+                    className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white pl-9 pr-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
+                  />
                 </div>
-
-                <h3 className="mb-1.5 text-base font-semibold text-[#111827]">
-                  {t.name}
-                </h3>
-                <p className="mb-4 text-sm text-[#6B7280] leading-relaxed">
-                  {t.description}
-                </p>
-
-                <div className="mb-4 flex flex-wrap gap-2 text-[11px] text-[#9CA3AF]">
-                  <span className="inline-flex items-center gap-1">
-                    <Zap size={11} /> {t.step_count} steps
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <Clock size={11} /> ~{t.estimated_setup_minutes} min setup
-                  </span>
-                </div>
-
-                {t.required_integrations.length > 0 && (
-                  <div className="mb-4 text-[11px] text-[#9CA3AF]">
-                    <span className="text-[#6B7280]">Needs:</span>{" "}
-                    {t.required_integrations.map((i) => (
-                      <span
-                        key={i}
-                        className="ml-1 inline-flex rounded bg-[rgba(0,0,0,0.06)] px-1.5 py-0.5 font-mono text-[10px] text-[#374151]"
-                      >
-                        {i}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
                 <div className="flex items-center gap-2">
-                  {t.installed ? (
-                    <Link
-                      href={`/dashboard/automations`}
-                      className="flex-1 rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-center text-xs font-semibold text-[#374151] hover:bg-[rgba(0,0,0,0.06)]"
-                    >
-                      Open
-                    </Link>
-                  ) : (
-                    <button
-                      onClick={() => install(t.id)}
-                      disabled={installing === t.id}
-                      className="flex-1 rounded-lg bg-[#2563EB] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#3B82F6] disabled:opacity-60"
-                    >
-                      {installing === t.id ? "Installing..." : "Install"}
-                    </button>
-                  )}
+                  <Filter size={14} className="text-[#9CA3AF]" />
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-sm text-[#111827] focus:border-[#2563EB] focus:outline-none"
+                  >
+                    <option value="all">All categories</option>
+                    {Object.entries(CATEGORY_LABELS).map(([k, label]) => (
+                      <option key={k} value={k}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              </motion.article>
-            ))}
-          </motion.div>
-        )}
-      </div>
-    </div>
+                <Link
+                  href="/dashboard/automations"
+                  className="ml-auto inline-flex items-center gap-1.5 text-xs text-[#6B7280] hover:text-[#374151]"
+                >
+                  Back to automations <ArrowRight size={12} />
+                </Link>
+              </div>
+
+              {/* Cards */}
+              {loading ? (
+                <div className="flex items-center justify-center py-24 text-[#9CA3AF]">
+                  <Loader className="animate-spin" size={20} />
+                </div>
+              ) : filtered.length === 0 ? (
+                <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-6 py-16 text-center text-[#9CA3AF]">
+                  No templates match your filters.
+                </div>
+              ) : (
+                <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {filtered.map((t) => (
+                    <motion.article
+                      key={t.id}
+                      variants={itemVariants}
+                      className="group rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 transition hover:border-[rgba(0,0,0,0.14)] hover:bg-[#F8FAFC]"
+                    >
+                      <div className="mb-3 flex items-center justify-between gap-2">
+                        <span
+                          className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                            CATEGORY_COLORS[t.category] ||
+                            "bg-[rgba(0,0,0,0.06)] text-[#374151] border-[rgba(0,0,0,0.10)]"
+                          }`}
+                        >
+                          {CATEGORY_LABELS[t.category] || t.category}
+                        </span>
+                        {t.installed && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-400">
+                            <Check size={10} /> Installed
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="mb-1.5 text-base font-semibold text-[#111827]">
+                        {t.name}
+                      </h3>
+                      <p className="mb-4 text-sm text-[#6B7280] leading-relaxed">
+                        {t.description}
+                      </p>
+
+                      <div className="mb-4 flex flex-wrap gap-2 text-[11px] text-[#9CA3AF]">
+                        <span className="inline-flex items-center gap-1">
+                          <Zap size={11} /> {t.step_count} steps
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <Clock size={11} /> ~{t.estimated_setup_minutes} min setup
+                        </span>
+                      </div>
+
+                      {t.required_integrations.length > 0 && (
+                        <div className="mb-4 text-[11px] text-[#9CA3AF]">
+                          <span className="text-[#6B7280]">Needs:</span>{" "}
+                          {t.required_integrations.map((i) => (
+                            <span
+                              key={i}
+                              className="ml-1 inline-flex rounded bg-[rgba(0,0,0,0.06)] px-1.5 py-0.5 font-mono text-[10px] text-[#374151]"
+                            >
+                              {i}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="flex items-center gap-2">
+                        {t.installed ? (
+                          <Link
+                            href={`/dashboard/automations`}
+                            className="flex-1 rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-center text-xs font-semibold text-[#374151] hover:bg-[rgba(0,0,0,0.06)]"
+                          >
+                            Open
+                          </Link>
+                        ) : (
+                          <button
+                            onClick={() => install(t.id)}
+                            disabled={installing === t.id}
+                            className="flex-1 rounded-lg bg-[#2563EB] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#3B82F6] disabled:opacity-60"
+                          >
+                            {installing === t.id ? "Installing..." : "Install"}
+                          </button>
+                        )}
+                      </div>
+                    </motion.article>
+                  ))}
+                </motion.div>
+              )}
+            </div></MotionPage>
   );
 }

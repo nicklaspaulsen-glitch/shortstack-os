@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -380,212 +381,201 @@ export default function WorkspaceFilesPage() {
   const rootFolders = folderTree["root"] ?? [];
 
   return (
-    <div className="flex flex-col gap-6">
-      <PageHero
-        title="Workspace files"
-        subtitle="Drive-style storage on Cloudflare R2 — briefs, thumbnails, videos, contracts, and brand assets in one place."
-        gradient="gold"
-        eyebrow="Workspace"
-        icon={<Sparkles size={20} />}
-        actions={
-          <>
-            <button
-              type="button"
-              onClick={() => setCreatingFolder((v) => !v)}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border text-foreground text-sm px-3 py-1.5 transition"
-            >
-              <FolderPlus size={14} /> New folder
-            </button>
-            <label className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-400/90 hover:bg-cyan-300 text-slate-900 text-sm font-medium px-3 py-1.5 cursor-pointer transition">
-              <UploadIcon size={14} /> Upload
-              <input
-                type="file"
-                multiple
-                className="hidden"
-                onChange={(e) => {
-                  if (e.target.files) void handleUpload(e.target.files);
-                  e.target.value = "";
-                }}
-              />
-            </label>
-          </>
-        }
-      />
-
-      {/* New-folder inline prompt */}
-      {creatingFolder && (
-        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-black/[0.06] bg-black/[0.04] p-3">
-          <input
-            value={newFolderName}
-            onChange={(e) => setNewFolderName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") void handleCreateFolder();
-            }}
-            placeholder="Folder name"
-            autoFocus
-            className="flex-1 min-w-[180px] rounded-md bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm px-3 py-1.5 outline-none focus:border-[rgba(37,99,235,0.6)]"
-          />
-          <select
-            value={newFolderPermission}
-            onChange={(e) => setNewFolderPermission(e.target.value as Folder["permission"])}
-            className="rounded-md bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm px-2 py-1.5"
-          >
-            <option value="owner_only">Owner only</option>
-            <option value="team_read">Team can view</option>
-            <option value="team_write">Team can edit</option>
-            <option value="client_can_view">Client can view</option>
-          </select>
-          <button
-            type="button"
-            onClick={() => void handleCreateFolder()}
-            className="rounded-md bg-cyan-400 hover:bg-cyan-300 text-slate-900 text-sm font-medium px-3 py-1.5"
-          >
-            Create
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setCreatingFolder(false);
-              setNewFolderName("");
-            }}
-            className="rounded-md text-[#6B7280] hover:text-[#111827] text-sm px-2 py-1.5"
-          >
-            Cancel
-          </button>
-        </div>
-      )}
-
-      {/* 2-column body */}
-      <div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-6">
-        {/* LEFT — folder tree */}
-        <aside className="rounded-xl border border-black/[0.06] bg-white p-2 h-fit">
-          <h3 className="text-[11px] uppercase tracking-wide text-[#9CA3AF] px-2 pt-2 pb-1.5">
-            Folders
-          </h3>
-          {loading && rootFolders.length === 0 ? (
-            <div className="px-2 py-4 text-[#9CA3AF] text-sm">Loading…</div>
-          ) : (
-            <ul className="space-y-0.5">
-              {rootFolders.map((f) => (
-                <FolderTreeNode
-                  key={f.id}
-                  folder={f}
-                  depth={0}
-                  expanded={expanded}
-                  folderTree={folderTree}
-                  activeFolderId={activeFolderId}
-                  onToggle={toggleExpand}
-                  onSelect={selectFolder}
-                />
-              ))}
-            </ul>
-          )}
-        </aside>
-
-        {/* RIGHT — folder contents */}
-        <section
-          ref={dropRef}
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          className="rounded-xl border border-black/[0.06] bg-white p-4 min-h-[420px]"
-        >
-          {/* Breadcrumb */}
-          <nav className="flex flex-wrap items-center gap-1.5 text-sm text-[#6B7280] mb-4">
-            <span className="text-[#9CA3AF]">Files</span>
-            {breadcrumb.map((c, i) => (
-              <span key={c.id} className="flex items-center gap-1.5">
-                <ChevronRight size={12} className="text-[#9CA3AF]" />
-                <span className={i === breadcrumb.length - 1 ? "text-[#111827]" : ""}>{c.name}</span>
-              </span>
-            ))}
-          </nav>
-
-          {uploading > 0 && (
-            <div className="mb-3 flex items-center gap-2 text-cyan-300 text-sm">
-              <Loader2 size={14} className="animate-spin" /> Uploading {uploading} file
-              {uploading === 1 ? "" : "s"}…
-            </div>
-          )}
-
-          {!activeFolderId ? (
-            <div className="flex flex-col items-center justify-center py-16 text-[#9CA3AF]">
-              <FolderIcon size={32} />
-              <p className="mt-3 text-sm">Select a folder to see its files</p>
-            </div>
-          ) : files.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-[#9CA3AF]">
-              <FilePlus size={32} />
-              <p className="mt-3 text-sm">No files yet — drop a file here or click Upload</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-              {files.map((f) => (
-                <FileCard
-                  key={f.id}
-                  file={f}
-                  onContextMenu={(e, file) => {
-                    e.preventDefault();
-                    setContextMenu({ x: e.clientX, y: e.clientY, file });
+    <MotionPage className="flex flex-col gap-6"><PageHero
+              title="Workspace files"
+              subtitle="Drive-style storage on Cloudflare R2 — briefs, thumbnails, videos, contracts, and brand assets in one place."
+              gradient="gold"
+              eyebrow="Workspace"
+              icon={<Sparkles size={20} />}
+              actions={
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setCreatingFolder((v) => !v)}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border text-foreground text-sm px-3 py-1.5 transition"
+                  >
+                    <FolderPlus size={14} /> New folder
+                  </button>
+                  <label className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-400/90 hover:bg-cyan-300 text-slate-900 text-sm font-medium px-3 py-1.5 cursor-pointer transition">
+                    <UploadIcon size={14} /> Upload
+                    <input
+                      type="file"
+                      multiple
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files) void handleUpload(e.target.files);
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                </>
+              }
+            />{/* New-folder inline prompt */}{creatingFolder && (
+              <div className="flex flex-wrap items-center gap-2 rounded-xl border border-black/[0.06] bg-black/[0.04] p-3">
+                <input
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") void handleCreateFolder();
                   }}
-                  onDoubleClick={(file) => void handleDownload(file)}
+                  placeholder="Folder name"
+                  autoFocus
+                  className="flex-1 min-w-[180px] rounded-md bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm px-3 py-1.5 outline-none focus:border-[rgba(37,99,235,0.6)]"
                 />
-              ))}
-            </div>
-          )}
-        </section>
-      </div>
+                <select
+                  value={newFolderPermission}
+                  onChange={(e) => setNewFolderPermission(e.target.value as Folder["permission"])}
+                  className="rounded-md bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm px-2 py-1.5"
+                >
+                  <option value="owner_only">Owner only</option>
+                  <option value="team_read">Team can view</option>
+                  <option value="team_write">Team can edit</option>
+                  <option value="client_can_view">Client can view</option>
+                </select>
+                <button
+                  type="button"
+                  onClick={() => void handleCreateFolder()}
+                  className="rounded-md bg-cyan-400 hover:bg-cyan-300 text-slate-900 text-sm font-medium px-3 py-1.5"
+                >
+                  Create
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCreatingFolder(false);
+                    setNewFolderName("");
+                  }}
+                  className="rounded-md text-[#6B7280] hover:text-[#111827] text-sm px-2 py-1.5"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}{/* 2-column body */}<div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-6">
+              {/* LEFT — folder tree */}
+              <aside className="rounded-xl border border-black/[0.06] bg-white p-2 h-fit">
+                <h3 className="text-[11px] uppercase tracking-wide text-[#9CA3AF] px-2 pt-2 pb-1.5">
+                  Folders
+                </h3>
+                {loading && rootFolders.length === 0 ? (
+                  <div className="px-2 py-4 text-[#9CA3AF] text-sm">Loading…</div>
+                ) : (
+                  <ul className="space-y-0.5">
+                    {rootFolders.map((f) => (
+                      <FolderTreeNode
+                        key={f.id}
+                        folder={f}
+                        depth={0}
+                        expanded={expanded}
+                        folderTree={folderTree}
+                        activeFolderId={activeFolderId}
+                        onToggle={toggleExpand}
+                        onSelect={selectFolder}
+                      />
+                    ))}
+                  </ul>
+                )}
+              </aside>
 
-      {/* Context menu */}
-      {contextMenu && (
-        <div
-          className="fixed z-50 rounded-md border border-black/[0.06] bg-white shadow-2xl py-1 text-sm"
-          style={{ top: contextMenu.y, left: contextMenu.x }}
-        >
-          {[
-            {
-              label: "Open / download",
-              icon: <FileIcon size={14} />,
-              fn: () => handleDownload(contextMenu.file),
-            },
-            {
-              label: "Copy 24h share link",
-              icon: <Link2 size={14} />,
-              fn: () => handleShareLink(contextMenu.file),
-            },
-            {
-              label: "Rename",
-              icon: <Edit2 size={14} />,
-              fn: () => handleRenameFile(contextMenu.file),
-            },
-            {
-              label: "Move",
-              icon: <Move size={14} />,
-              fn: () => toast("Move UX coming soon — drag-drop or use the API"),
-            },
-            {
-              label: "Delete",
-              icon: <Trash2 size={14} />,
-              fn: () => handleDeleteFile(contextMenu.file),
-              danger: true,
-            },
-          ].map((row) => (
-            <button
-              type="button"
-              key={row.label}
-              onClick={() => {
-                void row.fn();
-                closeContext();
-              }}
-              className={`flex items-center gap-2 px-3 py-1.5 w-full text-left ${
-                row.danger ? "text-red-700 hover:bg-red-500/10" : "text-[#111827] hover:bg-black/[0.04]"
-              }`}
-            >
-              {row.icon} {row.label}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+              {/* RIGHT — folder contents */}
+              <section
+                ref={dropRef}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                className="rounded-xl border border-black/[0.06] bg-white p-4 min-h-[420px]"
+              >
+                {/* Breadcrumb */}
+                <nav className="flex flex-wrap items-center gap-1.5 text-sm text-[#6B7280] mb-4">
+                  <span className="text-[#9CA3AF]">Files</span>
+                  {breadcrumb.map((c, i) => (
+                    <span key={c.id} className="flex items-center gap-1.5">
+                      <ChevronRight size={12} className="text-[#9CA3AF]" />
+                      <span className={i === breadcrumb.length - 1 ? "text-[#111827]" : ""}>{c.name}</span>
+                    </span>
+                  ))}
+                </nav>
+
+                {uploading > 0 && (
+                  <div className="mb-3 flex items-center gap-2 text-cyan-300 text-sm">
+                    <Loader2 size={14} className="animate-spin" /> Uploading {uploading} file
+                    {uploading === 1 ? "" : "s"}…
+                  </div>
+                )}
+
+                {!activeFolderId ? (
+                  <div className="flex flex-col items-center justify-center py-16 text-[#9CA3AF]">
+                    <FolderIcon size={32} />
+                    <p className="mt-3 text-sm">Select a folder to see its files</p>
+                  </div>
+                ) : files.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 text-[#9CA3AF]">
+                    <FilePlus size={32} />
+                    <p className="mt-3 text-sm">No files yet — drop a file here or click Upload</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                    {files.map((f) => (
+                      <FileCard
+                        key={f.id}
+                        file={f}
+                        onContextMenu={(e, file) => {
+                          e.preventDefault();
+                          setContextMenu({ x: e.clientX, y: e.clientY, file });
+                        }}
+                        onDoubleClick={(file) => void handleDownload(file)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </section>
+            </div>{/* Context menu */}{contextMenu && (
+              <div
+                className="fixed z-50 rounded-md border border-black/[0.06] bg-white shadow-2xl py-1 text-sm"
+                style={{ top: contextMenu.y, left: contextMenu.x }}
+              >
+                {[
+                  {
+                    label: "Open / download",
+                    icon: <FileIcon size={14} />,
+                    fn: () => handleDownload(contextMenu.file),
+                  },
+                  {
+                    label: "Copy 24h share link",
+                    icon: <Link2 size={14} />,
+                    fn: () => handleShareLink(contextMenu.file),
+                  },
+                  {
+                    label: "Rename",
+                    icon: <Edit2 size={14} />,
+                    fn: () => handleRenameFile(contextMenu.file),
+                  },
+                  {
+                    label: "Move",
+                    icon: <Move size={14} />,
+                    fn: () => toast("Move UX coming soon — drag-drop or use the API"),
+                  },
+                  {
+                    label: "Delete",
+                    icon: <Trash2 size={14} />,
+                    fn: () => handleDeleteFile(contextMenu.file),
+                    danger: true,
+                  },
+                ].map((row) => (
+                  <button
+                    type="button"
+                    key={row.label}
+                    onClick={() => {
+                      void row.fn();
+                      closeContext();
+                    }}
+                    className={`flex items-center gap-2 px-3 py-1.5 w-full text-left ${
+                      row.danger ? "text-red-700 hover:bg-red-500/10" : "text-[#111827] hover:bg-black/[0.04]"
+                    }`}
+                  >
+                    {row.icon} {row.label}
+                  </button>
+                ))}
+              </div>
+            )}</MotionPage>
   );
 
   // (close component)

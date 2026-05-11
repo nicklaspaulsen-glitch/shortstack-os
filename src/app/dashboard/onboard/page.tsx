@@ -19,6 +19,7 @@ import SoloOnboardingWizard from "@/components/onboarding/solo-onboarding-wizard
 import { USER_TYPES, UserType } from "@/lib/user-types";
 import toast from "react-hot-toast";
 import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* ================================================================== */
 /*  Icon lookup for user-type cards                                    */
@@ -452,36 +453,33 @@ export default function OnboardPage() {
   // Step 0: User type selector (shown first for everyone)
   if (!userType) {
     return (
-      <div className="fade-in space-y-6">
-        <PageHero
-          icon={<Sparkles size={28} />}
-          title="Welcome to Trinity"
-          subtitle="Tell us who you are — we'll set up your workspace."
-          gradient="gold"
-        />
-        <div className="glass rounded-xl p-6">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
-            <p className="text-sm text-muted">Pick one — you can change it later in Settings.</p>
-          </div>
-          <ChoiceCards
-            columns={4}
-            size="md"
-            value={null}
-            onChange={(id) => setUserType(id as UserType)}
-            ariaLabel="What best describes you?"
-            items={USER_TYPES.map((t): ChoiceCardItem => {
-              const Icon = USER_TYPE_ICONS[t.iconKey] || Sparkles;
-              return {
-                id: t.id,
-                title: t.label,
-                description: t.description,
-                icon: <Icon size={18} />,
-              };
-            })}
-          />
-        </div>
-      </div>
+      <MotionPage className="fade-in space-y-6"><PageHero
+                  icon={<Sparkles size={28} />}
+                  title="Welcome to Trinity"
+                  subtitle="Tell us who you are — we'll set up your workspace."
+                  gradient="gold"
+                /><div className="glass rounded-xl p-6">
+                  <div className="text-center mb-6">
+                    <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
+                    <p className="text-sm text-muted">Pick one — you can change it later in Settings.</p>
+                  </div>
+                  <ChoiceCards
+                    columns={4}
+                    size="md"
+                    value={null}
+                    onChange={(id) => setUserType(id as UserType)}
+                    ariaLabel="What best describes you?"
+                    items={USER_TYPES.map((t): ChoiceCardItem => {
+                      const Icon = USER_TYPE_ICONS[t.iconKey] || Sparkles;
+                      return {
+                        id: t.id,
+                        title: t.label,
+                        description: t.description,
+                        icon: <Icon size={18} />,
+                      };
+                    })}
+                  />
+                </div></MotionPage>
     );
   }
 

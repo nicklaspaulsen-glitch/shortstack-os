@@ -12,6 +12,7 @@ import { PrismPanel } from "@/components/prism";
 import { createClient } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface TagRow {
   id: string;
@@ -226,209 +227,198 @@ export default function TagsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        eyebrow="TAG MANAGER"
-        title="Tag Manager"
-        subtitle="Unified tag namespace across leads, clients, deals, and content."
-        icon={<Tag size={22} />}
-        gradient="blue"
-        actions={
-          <div className="flex items-center gap-2">
-            <button onClick={handleBulkDeleteUnused} disabled={bulkBusy}
-              className="btn-ghost flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg disabled:opacity-50"
-              title="Remove every tag that has zero usages">
-              <Sparkles size={13} /> Clean Unused
-            </button>
-            <button onClick={() => setShowCreate((v) => !v)}
-              className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
-              <Plus size={16} /> New Tag
-            </button>
-          </div>
-        }
-      />
-
-      {/* Bulk-action bar — appears when at least one tag is selected */}
-      {selected.size > 0 && (
-        <PrismPanel padding="p-3" border="strong" className="flex items-center justify-between gap-3">
-          <p className="text-xs text-[#6B7280]">
-            <span className="font-semibold text-[#374151]">{selected.size}</span> tag{selected.size === 1 ? "" : "s"} selected
-          </p>
-          <div className="flex items-center gap-2">
-            <button onClick={() => setShowMerge((v) => !v)} disabled={bulkBusy}
-              className="btn-ghost flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg">
-              <GitMerge size={12} /> Merge into…
-            </button>
-            <button onClick={() => setSelected(new Set())} className="btn-ghost text-xs px-3 py-1.5 rounded-lg">
-              Clear
-            </button>
-          </div>
-        </PrismPanel>
-      )}
-
-      {showMerge && selected.size > 0 && (
-        <PrismPanel padding="p-4" border="strong" className="space-y-3">
-          <p className="text-sm font-semibold text-[#374151]">Merge {selected.size} tag{selected.size === 1 ? "" : "s"} into:</p>
-          <input
-            className="input w-full text-sm"
-            placeholder="Target tag name (existing or new)"
-            value={mergeTarget}
-            onChange={(e) => setMergeTarget(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleBulkMerge()}
-            autoFocus
-          />
-          <p className="text-[11px] text-muted">
-            Every lead currently tagged with the selected names will be re-tagged
-            with the target. The source tag rows are deleted.
-          </p>
-          <div className="flex items-center gap-2">
-            <button onClick={handleBulkMerge} disabled={bulkBusy || !mergeTarget.trim()}
-              className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
-              {bulkBusy ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Merge
-            </button>
-            <button onClick={() => setShowMerge(false)} className="btn-ghost text-sm px-3 py-1.5 rounded-lg">
-              Cancel
-            </button>
-          </div>
-        </PrismPanel>
-      )}
-
-      {showCreate && (
-        <PrismPanel padding="p-5" className="space-y-4">
-          <p className="font-semibold text-[#374151] text-sm">New Tag</p>
-          <div className="flex flex-wrap gap-3">
-            <input className="input flex-1 min-w-[160px] text-sm" placeholder="Tag name"
-              value={newName} onChange={(e) => setNewName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleCreate()} autoFocus />
-            <input className="input w-36 text-sm" placeholder="Category (optional)"
-              value={newCategory} onChange={(e) => setNewCategory(e.target.value)} />
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted">Colour:</span>
-            <ColorPicker value={newColor} onChange={setNewColor} />
-          </div>
-          <div className="flex gap-2">
-            <button onClick={handleCreate} disabled={saving || !newName.trim()}
-              className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
-              {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Save
-            </button>
-            <button onClick={() => setShowCreate(false)}
-              className="btn-ghost flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg">
-              <X size={13} /> Cancel
-            </button>
-          </div>
-        </PrismPanel>
-      )}
-
-      {loading ? <TableSkeleton rows={6} /> : tags.length === 0 ? (
-        <PrismPanel padding="p-12" className="flex flex-col items-center gap-4 text-center">
-          <Tag size={40} className="text-muted opacity-30" />
-          <p className="text-[#374151] font-semibold">No tags yet</p>
-          <p className="text-muted text-sm max-w-xs">Create tags to segment and organise every record in one place.</p>
-          <button onClick={() => setShowCreate(true)}
-            className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
-            <Plus size={15} /> Create first tag
-          </button>
-        </PrismPanel>
-      ) : (
-        <PrismPanel padding="p-0" className="overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
-                <th className="px-3 py-3 w-10">
-                  <input
-                    type="checkbox"
-                    checked={selected.size > 0 && selected.size === tags.length}
-                    onChange={() =>
-                      setSelected((prev) =>
-                        prev.size === tags.length ? new Set() : new Set(tags.map((t) => t.id)),
-                      )
-                    }
-                    className="rounded accent-[#2563EB]"
-                    title="Select all"
-                  />
-                </th>
-                <th className="text-left px-4 py-3 font-medium">Tag</th>
-                <th className="text-left px-4 py-3 font-medium hidden sm:table-cell">Category</th>
-                <th className="text-left px-4 py-3 font-medium hidden md:table-cell">Usage</th>
-                <th className="px-4 py-3 w-24" />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[rgba(0,0,0,0.06)]">
-              {tags.map((tag) =>
-                editId === tag.id ? (
-                  <tr key={tag.id}>
-                    <td className="px-3 py-3" />
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <ColorPicker value={editColor} onChange={setEditColor} />
-                        <input className="input text-sm h-8 w-32" value={editName}
-                          onChange={(e) => setEditName(e.target.value)}
-                          onKeyDown={(e) => e.key === "Enter" && handleUpdate(tag.id)} autoFocus />
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 hidden sm:table-cell">
-                      <input className="input text-sm h-8 w-28" value={editCategory}
-                        onChange={(e) => setEditCategory(e.target.value)} placeholder="Category" />
-                    </td>
-                    <td className="px-4 py-3 hidden md:table-cell" />
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1">
-                        <button onClick={() => handleUpdate(tag.id)} disabled={saving}
-                          className="p-1.5 rounded hover:bg-green-500/20 text-green-400">
-                          {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
-                        </button>
-                        <button onClick={() => setEditId(null)} className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted">
-                          <X size={13} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  <motion.tr key={tag.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: tags.indexOf(tag) * 0.04 }} className="hover:bg-[rgba(0,0,0,0.02)] transition-colors group">
-                    <td className="px-3 py-3">
-                      <input
-                        type="checkbox"
-                        checked={selected.has(tag.id)}
-                        onChange={() => toggleSelect(tag.id)}
-                        className="rounded accent-[#2563EB]"
-                      />
-                    </td>
-                    <td className="px-4 py-3"><TagBadge tag={tag} /></td>
-                    <td className="px-4 py-3 text-muted hidden sm:table-cell">{tag.category ?? "—"}</td>
-                    <td className="px-4 py-3 hidden md:table-cell">
-                      {tag._leadCount + tag._assetCount > 0 ? (
-                        <Link
-                          href={`/dashboard/leads?tag=${encodeURIComponent(tag.name)}`}
-                          className="inline-flex items-center gap-1 text-xs bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] px-2 py-0.5 rounded-full transition-all"
-                          title={`${tag._leadCount} leads · ${tag._assetCount} assets — click to filter Leads`}
-                        >
-                          <Users size={11} /> {tag._leadCount}
-                          <ExternalLink size={10} className="opacity-50" />
-                        </Link>
+    <MotionPage className="space-y-6"><PageHero
+              eyebrow="TAG MANAGER"
+              title="Tag Manager"
+              subtitle="Unified tag namespace across leads, clients, deals, and content."
+              icon={<Tag size={22} />}
+              gradient="blue"
+              actions={
+                <div className="flex items-center gap-2">
+                  <button onClick={handleBulkDeleteUnused} disabled={bulkBusy}
+                    className="btn-ghost flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg disabled:opacity-50"
+                    title="Remove every tag that has zero usages">
+                    <Sparkles size={13} /> Clean Unused
+                  </button>
+                  <button onClick={() => setShowCreate((v) => !v)}
+                    className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
+                    <Plus size={16} /> New Tag
+                  </button>
+                </div>
+              }
+            />{/* Bulk-action bar — appears when at least one tag is selected */}{selected.size > 0 && (
+              <PrismPanel padding="p-3" border="strong" className="flex items-center justify-between gap-3">
+                <p className="text-xs text-[#6B7280]">
+                  <span className="font-semibold text-[#374151]">{selected.size}</span> tag{selected.size === 1 ? "" : "s"} selected
+                </p>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => setShowMerge((v) => !v)} disabled={bulkBusy}
+                    className="btn-ghost flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg">
+                    <GitMerge size={12} /> Merge into…
+                  </button>
+                  <button onClick={() => setSelected(new Set())} className="btn-ghost text-xs px-3 py-1.5 rounded-lg">
+                    Clear
+                  </button>
+                </div>
+              </PrismPanel>
+            )}{showMerge && selected.size > 0 && (
+              <PrismPanel padding="p-4" border="strong" className="space-y-3">
+                <p className="text-sm font-semibold text-[#374151]">Merge {selected.size} tag{selected.size === 1 ? "" : "s"} into:</p>
+                <input
+                  className="input w-full text-sm"
+                  placeholder="Target tag name (existing or new)"
+                  value={mergeTarget}
+                  onChange={(e) => setMergeTarget(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleBulkMerge()}
+                  autoFocus
+                />
+                <p className="text-[11px] text-muted">
+                  Every lead currently tagged with the selected names will be re-tagged
+                  with the target. The source tag rows are deleted.
+                </p>
+                <div className="flex items-center gap-2">
+                  <button onClick={handleBulkMerge} disabled={bulkBusy || !mergeTarget.trim()}
+                    className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
+                    {bulkBusy ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Merge
+                  </button>
+                  <button onClick={() => setShowMerge(false)} className="btn-ghost text-sm px-3 py-1.5 rounded-lg">
+                    Cancel
+                  </button>
+                </div>
+              </PrismPanel>
+            )}{showCreate && (
+              <PrismPanel padding="p-5" className="space-y-4">
+                <p className="font-semibold text-[#374151] text-sm">New Tag</p>
+                <div className="flex flex-wrap gap-3">
+                  <input className="input flex-1 min-w-[160px] text-sm" placeholder="Tag name"
+                    value={newName} onChange={(e) => setNewName(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleCreate()} autoFocus />
+                  <input className="input w-36 text-sm" placeholder="Category (optional)"
+                    value={newCategory} onChange={(e) => setNewCategory(e.target.value)} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-muted">Colour:</span>
+                  <ColorPicker value={newColor} onChange={setNewColor} />
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={handleCreate} disabled={saving || !newName.trim()}
+                    className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
+                    {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Save
+                  </button>
+                  <button onClick={() => setShowCreate(false)}
+                    className="btn-ghost flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg">
+                    <X size={13} /> Cancel
+                  </button>
+                </div>
+              </PrismPanel>
+            )}{loading ? <TableSkeleton rows={6} /> : tags.length === 0 ? (
+              <PrismPanel padding="p-12" className="flex flex-col items-center gap-4 text-center">
+                <Tag size={40} className="text-muted opacity-30" />
+                <p className="text-[#374151] font-semibold">No tags yet</p>
+                <p className="text-muted text-sm max-w-xs">Create tags to segment and organise every record in one place.</p>
+                <button onClick={() => setShowCreate(true)}
+                  className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
+                  <Plus size={15} /> Create first tag
+                </button>
+              </PrismPanel>
+            ) : (
+              <PrismPanel padding="p-0" className="overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
+                      <th className="px-3 py-3 w-10">
+                        <input
+                          type="checkbox"
+                          checked={selected.size > 0 && selected.size === tags.length}
+                          onChange={() =>
+                            setSelected((prev) =>
+                              prev.size === tags.length ? new Set() : new Set(tags.map((t) => t.id)),
+                            )
+                          }
+                          className="rounded accent-[#2563EB]"
+                          title="Select all"
+                        />
+                      </th>
+                      <th className="text-left px-4 py-3 font-medium">Tag</th>
+                      <th className="text-left px-4 py-3 font-medium hidden sm:table-cell">Category</th>
+                      <th className="text-left px-4 py-3 font-medium hidden md:table-cell">Usage</th>
+                      <th className="px-4 py-3 w-24" />
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[rgba(0,0,0,0.06)]">
+                    {tags.map((tag) =>
+                      editId === tag.id ? (
+                        <tr key={tag.id}>
+                          <td className="px-3 py-3" />
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-2">
+                              <ColorPicker value={editColor} onChange={setEditColor} />
+                              <input className="input text-sm h-8 w-32" value={editName}
+                                onChange={(e) => setEditName(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && handleUpdate(tag.id)} autoFocus />
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 hidden sm:table-cell">
+                            <input className="input text-sm h-8 w-28" value={editCategory}
+                              onChange={(e) => setEditCategory(e.target.value)} placeholder="Category" />
+                          </td>
+                          <td className="px-4 py-3 hidden md:table-cell" />
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-1">
+                              <button onClick={() => handleUpdate(tag.id)} disabled={saving}
+                                className="p-1.5 rounded hover:bg-green-500/20 text-green-400">
+                                {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
+                              </button>
+                              <button onClick={() => setEditId(null)} className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted">
+                                <X size={13} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
                       ) : (
-                        <span className="text-muted text-xs">0</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => startEdit(tag)}
-                          className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#374151]">
-                          <Pencil size={13} />
-                        </button>
-                        <button onClick={() => handleDelete(tag.id)} disabled={deleting === tag.id}
-                          className="p-1.5 rounded hover:bg-red-500/20 text-muted hover:text-red-400">
-                          {deleting === tag.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
-                        </button>
-                      </div>
-                    </td>
-                  </motion.tr>
-                )
-              )}
-            </tbody>
-          </table>
-        </PrismPanel>
-      )}
-    </div>
+                        <motion.tr key={tag.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: tags.indexOf(tag) * 0.04 }} className="hover:bg-[rgba(0,0,0,0.02)] transition-colors group">
+                          <td className="px-3 py-3">
+                            <input
+                              type="checkbox"
+                              checked={selected.has(tag.id)}
+                              onChange={() => toggleSelect(tag.id)}
+                              className="rounded accent-[#2563EB]"
+                            />
+                          </td>
+                          <td className="px-4 py-3"><TagBadge tag={tag} /></td>
+                          <td className="px-4 py-3 text-muted hidden sm:table-cell">{tag.category ?? "—"}</td>
+                          <td className="px-4 py-3 hidden md:table-cell">
+                            {tag._leadCount + tag._assetCount > 0 ? (
+                              <Link
+                                href={`/dashboard/leads?tag=${encodeURIComponent(tag.name)}`}
+                                className="inline-flex items-center gap-1 text-xs bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] px-2 py-0.5 rounded-full transition-all"
+                                title={`${tag._leadCount} leads · ${tag._assetCount} assets — click to filter Leads`}
+                              >
+                                <Users size={11} /> {tag._leadCount}
+                                <ExternalLink size={10} className="opacity-50" />
+                              </Link>
+                            ) : (
+                              <span className="text-muted text-xs">0</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button onClick={() => startEdit(tag)}
+                                className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#374151]">
+                                <Pencil size={13} />
+                              </button>
+                              <button onClick={() => handleDelete(tag.id)} disabled={deleting === tag.id}
+                                className="p-1.5 rounded hover:bg-red-500/20 text-muted hover:text-red-400">
+                                {deleting === tag.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                              </button>
+                            </div>
+                          </td>
+                        </motion.tr>
+                      )
+                    )}
+                  </tbody>
+                </table>
+              </PrismPanel>
+            )}</MotionPage>
   );
 }

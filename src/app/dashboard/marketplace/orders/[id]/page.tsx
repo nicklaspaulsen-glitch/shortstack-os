@@ -12,6 +12,7 @@ import {
   Send,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface OrderDetail {
   order: {
@@ -148,7 +149,7 @@ export default function OrderDetailPage() {
 
   if (loading) {
     return (
-      <div className="py-20 text-center text-sm text-muted">Loading order...</div>
+      <MotionPage className="py-20 text-center text-sm text-muted">Loading order...</MotionPage>
     );
   }
   if (!data) {

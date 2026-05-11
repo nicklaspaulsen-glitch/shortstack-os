@@ -53,6 +53,7 @@ import {
   Circle,
   ChevronLeft,
 } from "lucide-react";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // -- Types ------------------------------------------------------------
 type Channel =
@@ -384,238 +385,229 @@ export default function ConversationsPage() {
   const selected = conversations.find((c) => c.id === selectedId) || null;
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-[#FAFAFB] text-[#0A0A0B]">
-      {/* -- LEFT: conversation list � hidden on mobile when viewing a thread -- */}
-      <aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-[rgba(0,0,0,0.08)] flex-col`}>
-        <div className="p-4 border-b border-[rgba(0,0,0,0.08)]">
-          <h1 className="text-lg font-semibold mb-3 flex items-center gap-2">
-            <Inbox size={18} className="text-indigo-400" />
-            Conversations
-          </h1>
-          <div className="relative">
-            <Search
-              size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-[#71717A]"
-            />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search�"
-              className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg pl-9 pr-3 py-2 text-sm placeholder-[#71717A] focus:outline-none focus:border-[#1D4ED8]/40"
-            />
-          </div>
-        </div>
-
-        {/* Filter tabs */}
-        <div className="flex flex-wrap gap-1 px-3 py-2 border-b border-[rgba(0,0,0,0.08)]">
-          {FILTERS.map((f, i) => (
-            <motion.button
-              key={f.key}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => setFilter(f.key)}
-              className={`text-xs px-2.5 py-1 rounded-md transition ${
-                filter === f.key
-                  ? "bg-[#1D4ED8]/10 text-[#1D4ED8] border border-[#1D4ED8]/20"
-                  : "text-[#52525B] hover:text-[#111827] hover:bg-[rgba(0,0,0,0.04)] border border-transparent"
-              }`}
-              title={`Shortcut: ${i + 1}`}
-            >
-              {f.label}
-            </motion.button>
-          ))}
-        </div>
-
-        {/* List */}
-        <div className="flex-1 overflow-y-auto">
-          {loading ? (
-            <div className="p-2 space-y-px">
-              {Array.from({ length: 7 }).map((_, i) => (
-                <div key={i} className="flex items-start gap-3 px-3 py-3 rounded-lg">
-                  <Skeleton className="w-8 h-8 rounded-full shrink-0" />
-                  <div className="flex-1 space-y-2 min-w-0">
-                    <div className="flex items-center justify-between gap-2">
-                      <Skeleton className="h-3 w-28" />
-                      <Skeleton className="h-2 w-10" />
-                    </div>
-                    <Skeleton className="h-2 w-full" />
-                    <Skeleton className="h-2 w-3/4" />
-                  </div>
+    <MotionPage className="flex h-[calc(100vh-4rem)] bg-[#FAFAFB] text-[#0A0A0B]">{/* -- LEFT: conversation list � hidden on mobile when viewing a thread -- */}<aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-[rgba(0,0,0,0.08)] flex-col`}>
+              <div className="p-4 border-b border-[rgba(0,0,0,0.08)]">
+                <h1 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                  <Inbox size={18} className="text-indigo-400" />
+                  Conversations
+                </h1>
+                <div className="relative">
+                  <Search
+                    size={14}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[#71717A]"
+                  />
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search�"
+                    className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg pl-9 pr-3 py-2 text-sm placeholder-[#71717A] focus:outline-none focus:border-[#1D4ED8]/40"
+                  />
                 </div>
-              ))}
-            </div>
-          ) : conversations.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-3">
-              <div className="w-12 h-12 bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.08)] flex items-center justify-center">
-                <Inbox size={20} className="text-[#1D4ED8]/60" />
               </div>
-              <div>
-                <p className="text-sm font-medium text-[#71717A] mb-1">No conversations yet</p>
-                <p className="text-[10px] text-[#71717A] leading-relaxed max-w-[180px]">
-                  Inbound messages from email, SMS, and social will appear here.
-                </p>
-              </div>
-            </div>
-          ) : (
-            conversations.map((c, index) => (
-              <ConversationRow
-                key={c.id}
-                c={c}
-                active={c.id === selectedId}
-                index={index}
-                onClick={() => {
-                  setSelectedId(c.id);
-                  setMobileView("thread");
-                }}
-              />
-            ))
-          )}
-        </div>
-      </aside>
 
-      {/* -- MIDDLE: thread � hidden on mobile when showing the list -- */}
-      <main className={`${mobileView === "list" ? "hidden" : "flex"} md:flex flex-1 flex-col min-w-0`}>
-        {!selected ? (
-          <div className="flex-1 flex items-center justify-center text-[#71717A] text-sm">
-            Select a conversation to view
-          </div>
-        ) : (
-          <>
-            {/* Header */}
-            <header className="px-5 py-3 border-b border-[rgba(0,0,0,0.08)] flex items-center justify-between gap-3">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  {/* Back button � mobile only */}
-                  <button
-                    className="flex md:hidden items-center gap-1 text-[#52525B] hover:text-[#111827] mr-1"
-                    onClick={() => setMobileView("list")}
-                    aria-label="Back to conversations"
+              {/* Filter tabs */}
+              <div className="flex flex-wrap gap-1 px-3 py-2 border-b border-[rgba(0,0,0,0.08)]">
+                {FILTERS.map((f, i) => (
+                  <motion.button
+                    key={f.key}
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => setFilter(f.key)}
+                    className={`text-xs px-2.5 py-1 rounded-md transition ${
+                      filter === f.key
+                        ? "bg-[#1D4ED8]/10 text-[#1D4ED8] border border-[#1D4ED8]/20"
+                        : "text-[#52525B] hover:text-[#111827] hover:bg-[rgba(0,0,0,0.04)] border border-transparent"
+                    }`}
+                    title={`Shortcut: ${i + 1}`}
                   >
-                    <ChevronLeft size={18} />
-                  </button>
-                  <ChannelPill channel={selected.channel} />
-                  <span className="font-medium truncate">
-                    {selected.contact?.business_name ||
-                      selected.contact?.contact_name ||
-                      selected.external_thread_id}
-                  </span>
-                </div>
-                {selected.subject && (
-                  <div className="text-xs text-[#71717A] mt-0.5 truncate">{selected.subject}</div>
+                    {f.label}
+                  </motion.button>
+                ))}
+              </div>
+
+              {/* List */}
+              <div className="flex-1 overflow-y-auto">
+                {loading ? (
+                  <div className="p-2 space-y-px">
+                    {Array.from({ length: 7 }).map((_, i) => (
+                      <div key={i} className="flex items-start gap-3 px-3 py-3 rounded-lg">
+                        <Skeleton className="w-8 h-8 rounded-full shrink-0" />
+                        <div className="flex-1 space-y-2 min-w-0">
+                          <div className="flex items-center justify-between gap-2">
+                            <Skeleton className="h-3 w-28" />
+                            <Skeleton className="h-2 w-10" />
+                          </div>
+                          <Skeleton className="h-2 w-full" />
+                          <Skeleton className="h-2 w-3/4" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : conversations.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-3">
+                    <div className="w-12 h-12 bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.08)] flex items-center justify-center">
+                      <Inbox size={20} className="text-[#1D4ED8]/60" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-[#71717A] mb-1">No conversations yet</p>
+                      <p className="text-[10px] text-[#71717A] leading-relaxed max-w-[180px]">
+                        Inbound messages from email, SMS, and social will appear here.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  conversations.map((c, index) => (
+                    <ConversationRow
+                      key={c.id}
+                      c={c}
+                      active={c.id === selectedId}
+                      index={index}
+                      onClick={() => {
+                        setSelectedId(c.id);
+                        setMobileView("thread");
+                      }}
+                    />
+                  ))
                 )}
               </div>
-              <div className="flex items-center gap-1 text-[#374151]">
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setStatus(selected.id, "snoozed")}
-                  className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)]"
-                  title="Snooze (s)"
-                >
-                  <Clock size={15} />
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setStatus(selected.id, "archived")}
-                  className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)]"
-                  title="Archive (e)"
-                >
-                  <Archive size={15} />
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setStatus(selected.id, "closed")}
-                  className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)]"
-                  title="Close (c)"
-                >
-                  <CheckCircle2 size={15} />
-                </motion.button>
-              </div>
-            </header>
-
-            {/* Messages */}
-            <div
-              ref={threadScrollRef}
-              className="flex-1 overflow-y-auto px-5 py-4 space-y-3"
-            >
-              {loadingThread ? (
-                <div className="space-y-4 py-2">
-                  <div className="flex justify-start"><div className="space-y-1 flex flex-col items-start"><Skeleton className="h-10 rounded-2xl w-32" /><Skeleton className="h-2 w-12" /></div></div>
-                  <div className="flex justify-end"><div className="space-y-1 flex flex-col items-end"><Skeleton className="h-10 rounded-2xl w-44" /><Skeleton className="h-2 w-12" /></div></div>
-                  <div className="flex justify-start"><div className="space-y-1 flex flex-col items-start"><Skeleton className="h-10 rounded-2xl w-24" /><Skeleton className="h-2 w-12" /></div></div>
-                  <div className="flex justify-end"><div className="space-y-1 flex flex-col items-end"><Skeleton className="h-10 rounded-2xl w-40" /><Skeleton className="h-2 w-12" /></div></div>
-                  <div className="flex justify-start"><div className="space-y-1 flex flex-col items-start"><Skeleton className="h-10 rounded-2xl w-36" /><Skeleton className="h-2 w-12" /></div></div>
-                </div>
-              ) : messages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full gap-2 py-16 text-center">
-                  <MessageCircle size={28} className="text-[#9CA3AF]" />
-                  <p className="text-xs text-[#71717A]">No messages yet � say hello</p>
+            </aside>{/* -- MIDDLE: thread � hidden on mobile when showing the list -- */}<main className={`${mobileView === "list" ? "hidden" : "flex"} md:flex flex-1 flex-col min-w-0`}>
+              {!selected ? (
+                <div className="flex-1 flex items-center justify-center text-[#71717A] text-sm">
+                  Select a conversation to view
                 </div>
               ) : (
-                messages.map((m) => <MessageBubble key={m.id} m={m} />)
+                <>
+                  {/* Header */}
+                  <header className="px-5 py-3 border-b border-[rgba(0,0,0,0.08)] flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        {/* Back button � mobile only */}
+                        <button
+                          className="flex md:hidden items-center gap-1 text-[#52525B] hover:text-[#111827] mr-1"
+                          onClick={() => setMobileView("list")}
+                          aria-label="Back to conversations"
+                        >
+                          <ChevronLeft size={18} />
+                        </button>
+                        <ChannelPill channel={selected.channel} />
+                        <span className="font-medium truncate">
+                          {selected.contact?.business_name ||
+                            selected.contact?.contact_name ||
+                            selected.external_thread_id}
+                        </span>
+                      </div>
+                      {selected.subject && (
+                        <div className="text-xs text-[#71717A] mt-0.5 truncate">{selected.subject}</div>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1 text-[#374151]">
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => setStatus(selected.id, "snoozed")}
+                        className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)]"
+                        title="Snooze (s)"
+                      >
+                        <Clock size={15} />
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => setStatus(selected.id, "archived")}
+                        className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)]"
+                        title="Archive (e)"
+                      >
+                        <Archive size={15} />
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => setStatus(selected.id, "closed")}
+                        className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)]"
+                        title="Close (c)"
+                      >
+                        <CheckCircle2 size={15} />
+                      </motion.button>
+                    </div>
+                  </header>
+
+                  {/* Messages */}
+                  <div
+                    ref={threadScrollRef}
+                    className="flex-1 overflow-y-auto px-5 py-4 space-y-3"
+                  >
+                    {loadingThread ? (
+                      <div className="space-y-4 py-2">
+                        <div className="flex justify-start"><div className="space-y-1 flex flex-col items-start"><Skeleton className="h-10 rounded-2xl w-32" /><Skeleton className="h-2 w-12" /></div></div>
+                        <div className="flex justify-end"><div className="space-y-1 flex flex-col items-end"><Skeleton className="h-10 rounded-2xl w-44" /><Skeleton className="h-2 w-12" /></div></div>
+                        <div className="flex justify-start"><div className="space-y-1 flex flex-col items-start"><Skeleton className="h-10 rounded-2xl w-24" /><Skeleton className="h-2 w-12" /></div></div>
+                        <div className="flex justify-end"><div className="space-y-1 flex flex-col items-end"><Skeleton className="h-10 rounded-2xl w-40" /><Skeleton className="h-2 w-12" /></div></div>
+                        <div className="flex justify-start"><div className="space-y-1 flex flex-col items-start"><Skeleton className="h-10 rounded-2xl w-36" /><Skeleton className="h-2 w-12" /></div></div>
+                      </div>
+                    ) : messages.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center h-full gap-2 py-16 text-center">
+                        <MessageCircle size={28} className="text-[#9CA3AF]" />
+                        <p className="text-xs text-[#71717A]">No messages yet � say hello</p>
+                      </div>
+                    ) : (
+                      messages.map((m) => <MessageBubble key={m.id} m={m} />)
+                    )}
+                  </div>
+
+                  {/* Composer */}
+                  <div className="border-t border-[rgba(0,0,0,0.08)] p-3">
+                    <div className="flex items-end gap-2 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg p-2">
+                      <button
+                        type="button"
+                        className="p-1.5 text-[#71717A] hover:text-[#374151] rounded"
+                        title="Attach"
+                      >
+                        <Paperclip size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        className="p-1.5 text-[#71717A] hover:text-[#374151] rounded"
+                        title="Emoji"
+                      >
+                        <Smile size={16} />
+                      </button>
+                      <textarea
+                        ref={composerRef}
+                        value={composerText}
+                        onChange={(e) => setComposerText(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                            e.preventDefault();
+                            handleSend();
+                          }
+                        }}
+                        placeholder={`Reply via ${CHANNEL_META[selected.channel].label}… (Cmd/Ctrl+Enter to send)`}
+                        rows={2}
+                        className="flex-1 bg-transparent outline-none resize-none text-sm text-[#374151] placeholder-[#9CA3AF]"
+                      />
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleSend}
+                        disabled={sending || !composerText.trim()}
+                        className="px-3 py-1.5 rounded bg-[#2563EB] text-white text-sm font-medium disabled:opacity-40 hover:bg-[#3B82F6] flex items-center gap-1.5"
+                      >
+                        {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                        Send
+                      </motion.button>
+                    </div>
+                    <div className="text-[11px] text-[#71717A] mt-1.5 pl-2">
+                      Sending as {CHANNEL_META[selected.channel].label}
+                    </div>
+                  </div>
+                </>
               )}
-            </div>
-
-            {/* Composer */}
-            <div className="border-t border-[rgba(0,0,0,0.08)] p-3">
-              <div className="flex items-end gap-2 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg p-2">
-                <button
-                  type="button"
-                  className="p-1.5 text-[#71717A] hover:text-[#374151] rounded"
-                  title="Attach"
-                >
-                  <Paperclip size={16} />
-                </button>
-                <button
-                  type="button"
-                  className="p-1.5 text-[#71717A] hover:text-[#374151] rounded"
-                  title="Emoji"
-                >
-                  <Smile size={16} />
-                </button>
-                <textarea
-                  ref={composerRef}
-                  value={composerText}
-                  onChange={(e) => setComposerText(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-                      e.preventDefault();
-                      handleSend();
-                    }
-                  }}
-                  placeholder={`Reply via ${CHANNEL_META[selected.channel].label}… (Cmd/Ctrl+Enter to send)`}
-                  rows={2}
-                  className="flex-1 bg-transparent outline-none resize-none text-sm text-[#374151] placeholder-[#9CA3AF]"
-                />
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleSend}
-                  disabled={sending || !composerText.trim()}
-                  className="px-3 py-1.5 rounded bg-[#2563EB] text-white text-sm font-medium disabled:opacity-40 hover:bg-[#3B82F6] flex items-center gap-1.5"
-                >
-                  {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                  Send
-                </motion.button>
-              </div>
-              <div className="text-[11px] text-[#71717A] mt-1.5 pl-2">
-                Sending as {CHANNEL_META[selected.channel].label}
-              </div>
-            </div>
-          </>
-        )}
-      </main>
-
-      {/* -- RIGHT: contact + actions � desktop only -- */}
-      {selected && (
-        <aside className="hidden md:block w-[280px] flex-shrink-0 border-l border-[rgba(0,0,0,0.08)] overflow-y-auto bg-white">
-          <ContactPanel conversation={selected} contact={contact} onStatus={(s) => setStatus(selected.id, s)} />
-        </aside>
-      )}
-    </div>
+            </main>{/* -- RIGHT: contact + actions � desktop only -- */}{selected && (
+              <aside className="hidden md:block w-[280px] flex-shrink-0 border-l border-[rgba(0,0,0,0.08)] overflow-y-auto bg-white">
+                <ContactPanel conversation={selected} contact={contact} onStatus={(s) => setStatus(selected.id, s)} />
+              </aside>
+            )}</MotionPage>
   );
 }
 

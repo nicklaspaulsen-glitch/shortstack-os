@@ -16,6 +16,7 @@ import {
 import toast from "react-hot-toast";
 import { getMaxStorageUpload, formatBytes } from "@/lib/plan-config";
 import { ALLOWED_GENERAL_UPLOADS, buildAccept, validateFile } from "@/lib/file-types";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface ClientUpload {
   id: string;
@@ -186,7 +187,9 @@ export default function ClientUploadsPage() {
   }
 
   function getFileIcon(type: string) {
-    if (type.startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(type)) return <ImageIcon size={14} className="text-blue-600" />;
+    if (type.startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(type)) return <MotionPage>
+                                                                                                              <ImageIcon size={14} className="text-blue-600" />
+                                                                                                            </MotionPage>;
     if (type.startsWith("video") || ["mp4", "mov", "avi", "webm"].includes(type)) return <Film size={14} className="text-purple-700" />;
     if (type.startsWith("audio") || ["mp3", "wav", "ogg"].includes(type)) return <Music size={14} className="text-pink-700" />;
     if (["pdf", "doc", "docx", "txt"].includes(type)) return <FileText size={14} className="text-[#374151]" />;

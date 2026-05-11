@@ -15,6 +15,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface BrowserTask {
   id: string;
@@ -144,182 +145,171 @@ export default function BrowserTasksPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        title="AI Browser Tasks"
-        subtitle="Tell the agent what you want done. It drives a real browser to get it."
-        gradient="purple"
-        icon={<Bot size={28} />}
-        eyebrow={
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(0,0,0,0.06)] px-2.5 py-1 text-[11px] font-medium text-[#374151] backdrop-blur">
-            <Sparkles size={11} /> Beta — Playwright + Claude
-          </span>
-        }
-      />
-
-      {/* New task card */}
-      <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 backdrop-blur">
-        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#374151]">
-          <Plus size={15} /> New task
-        </div>
-
-        {selectedTemplate ? (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-sm font-medium text-[#374151]">{selectedTemplate.name}</div>
-                {selectedTemplate.description && (
-                  <div className="text-xs text-[#6B7280]">{selectedTemplate.description}</div>
-                )}
-              </div>
-              <button
-                onClick={() => {
-                  setSelectedTemplateId(null);
-                  setTemplateValues({});
-                }}
-                className="text-xs text-[#6B7280] hover:text-[#111827]"
-              >
-                Clear
-              </button>
-            </div>
-            {selectedTemplate.variables.map((v) => (
-              <label key={v.name} className="block">
-                <span className="block text-xs font-medium text-[#6B7280]">
-                  {v.name}
-                  {v.required && <span className="text-rose-500"> *</span>}
-                  <span className="ml-1 text-[10px] uppercase tracking-wide text-[#9CA3AF]">{v.kind}</span>
+    <MotionPage className="space-y-6"><PageHero
+              title="AI Browser Tasks"
+              subtitle="Tell the agent what you want done. It drives a real browser to get it."
+              gradient="purple"
+              icon={<Bot size={28} />}
+              eyebrow={
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(0,0,0,0.06)] px-2.5 py-1 text-[11px] font-medium text-[#374151] backdrop-blur">
+                  <Sparkles size={11} /> Beta — Playwright + Claude
                 </span>
-                <input
-                  type={v.kind === "number" ? "number" : v.kind === "url" ? "url" : "text"}
-                  value={templateValues[v.name] ?? ""}
-                  onChange={(e) =>
-                    setTemplateValues((prev) => ({ ...prev, [v.name]: e.target.value }))
-                  }
-                  className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
-                  placeholder={`{{${v.name}}}`}
-                />
-              </label>
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-3">
-            <label className="block">
-              <span className="block text-xs font-medium text-[#6B7280]">Goal</span>
-              <textarea
-                value={goal}
-                onChange={(e) => setGoal(e.target.value)}
-                rows={3}
-                placeholder="Visit example.com/pricing and extract every tier as JSON…"
-                className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
-              />
-            </label>
-            <label className="block">
-              <span className="block text-xs font-medium text-[#6B7280]">Start URL (optional)</span>
-              <input
-                type="url"
-                value={startUrl}
-                onChange={(e) => setStartUrl(e.target.value)}
-                placeholder="https://example.com"
-                className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
-              />
-            </label>
-          </div>
-        )}
+              }
+            />{/* New task card */}<div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 backdrop-blur">
+              <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#374151]">
+                <Plus size={15} /> New task
+              </div>
 
-        <div className="mt-4 flex items-center justify-end gap-2">
-          <button
-            onClick={submit}
-            disabled={submitting}
-            className="inline-flex items-center gap-1.5 rounded-md bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[rgba(37,99,235,0.30)] transition hover:bg-[#3B82F6] disabled:opacity-50"
-          >
-            {submitting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
-            Queue task
-          </button>
-        </div>
-      </div>
-
-      {/* Templates */}
-      {templates.length > 0 && (
-        <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 backdrop-blur">
-          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#374151]">
-            <Sparkles size={15} /> Try a template
-          </div>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {templates.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => {
-                  setSelectedTemplateId(t.id);
-                  setTemplateValues({});
-                }}
-                className={`group rounded-lg border p-3 text-left transition ${
-                  selectedTemplateId === t.id
-                    ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
-                    : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] hover:border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.06)]"
-                }`}
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="text-sm font-medium text-[#374151]">{t.name}</div>
-                  {t.category && (
-                    <span className="rounded-full bg-[rgba(0,0,0,0.06)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[#6B7280]">
-                      {t.category.replace("_", " ")}
-                    </span>
-                  )}
-                </div>
-                {t.description && (
-                  <div className="mt-1 text-xs text-[#6B7280] line-clamp-2">{t.description}</div>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Task list */}
-      <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white backdrop-blur">
-        <div className="flex items-center gap-2 border-b border-[rgba(0,0,0,0.08)] px-5 py-3 text-sm font-semibold text-[#374151]">
-          <Globe size={15} /> Tasks
-          <span className="ml-2 rounded-full bg-[rgba(0,0,0,0.06)] px-2 py-0.5 text-[10px] text-[#6B7280]">
-            {tasks.length}
-          </span>
-        </div>
-        {loading ? (
-          <div className="flex items-center justify-center px-5 py-10 text-sm text-[#9CA3AF]">
-            <Loader2 size={16} className="mr-2 animate-spin" /> Loading…
-          </div>
-        ) : tasks.length === 0 ? (
-          <div className="px-5 py-10 text-center text-sm text-[#9CA3AF]">
-            No tasks yet. Queue your first one above.
-          </div>
-        ) : (
-          <ul className="divide-y divide-[rgba(0,0,0,0.06)]">
-            {tasks.map((t) => {
-              const status = STATUS_STYLES[t.status];
-              return (
-                <li key={t.id}>
-                  <Link
-                    href={`/dashboard/automations/browser-tasks/${t.id}`}
-                    className="flex items-center gap-3 px-5 py-3 hover:bg-[rgba(0,0,0,0.03)]"
-                  >
-                    <span
-                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${status.bg} ${status.fg}`}
+              {selectedTemplate ? (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-sm font-medium text-[#374151]">{selectedTemplate.name}</div>
+                      {selectedTemplate.description && (
+                        <div className="text-xs text-[#6B7280]">{selectedTemplate.description}</div>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => {
+                        setSelectedTemplateId(null);
+                        setTemplateValues({});
+                      }}
+                      className="text-xs text-[#6B7280] hover:text-[#111827]"
                     >
-                      {status.icon} {status.label}
-                    </span>
-                    <span className="flex-1 truncate text-sm text-[#374151]">{t.goal}</span>
-                    <span className="hidden text-xs text-[#9CA3AF] md:inline">
-                      {t.steps_taken}/{t.max_steps} steps
-                    </span>
-                    <span className="hidden text-xs text-[#9CA3AF] md:inline">{fmtCost(t.total_cost_usd)}</span>
-                    <span className="hidden text-xs text-[#9CA3AF] lg:inline">{fmtDate(t.created_at)}</span>
-                    <ChevronRight size={14} className="text-[#9CA3AF]" />
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
-    </div>
+                      Clear
+                    </button>
+                  </div>
+                  {selectedTemplate.variables.map((v) => (
+                    <label key={v.name} className="block">
+                      <span className="block text-xs font-medium text-[#6B7280]">
+                        {v.name}
+                        {v.required && <span className="text-rose-500"> *</span>}
+                        <span className="ml-1 text-[10px] uppercase tracking-wide text-[#9CA3AF]">{v.kind}</span>
+                      </span>
+                      <input
+                        type={v.kind === "number" ? "number" : v.kind === "url" ? "url" : "text"}
+                        value={templateValues[v.name] ?? ""}
+                        onChange={(e) =>
+                          setTemplateValues((prev) => ({ ...prev, [v.name]: e.target.value }))
+                        }
+                        className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
+                        placeholder={`{{${v.name}}}`}
+                      />
+                    </label>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <label className="block">
+                    <span className="block text-xs font-medium text-[#6B7280]">Goal</span>
+                    <textarea
+                      value={goal}
+                      onChange={(e) => setGoal(e.target.value)}
+                      rows={3}
+                      placeholder="Visit example.com/pricing and extract every tier as JSON…"
+                      className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="block text-xs font-medium text-[#6B7280]">Start URL (optional)</span>
+                    <input
+                      type="url"
+                      value={startUrl}
+                      onChange={(e) => setStartUrl(e.target.value)}
+                      placeholder="https://example.com"
+                      className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
+                    />
+                  </label>
+                </div>
+              )}
+
+              <div className="mt-4 flex items-center justify-end gap-2">
+                <button
+                  onClick={submit}
+                  disabled={submitting}
+                  className="inline-flex items-center gap-1.5 rounded-md bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[rgba(37,99,235,0.30)] transition hover:bg-[#3B82F6] disabled:opacity-50"
+                >
+                  {submitting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+                  Queue task
+                </button>
+              </div>
+            </div>{/* Templates */}{templates.length > 0 && (
+              <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 backdrop-blur">
+                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#374151]">
+                  <Sparkles size={15} /> Try a template
+                </div>
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+                  {templates.map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => {
+                        setSelectedTemplateId(t.id);
+                        setTemplateValues({});
+                      }}
+                      className={`group rounded-lg border p-3 text-left transition ${
+                        selectedTemplateId === t.id
+                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
+                          : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] hover:border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.06)]"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="text-sm font-medium text-[#374151]">{t.name}</div>
+                        {t.category && (
+                          <span className="rounded-full bg-[rgba(0,0,0,0.06)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[#6B7280]">
+                            {t.category.replace("_", " ")}
+                          </span>
+                        )}
+                      </div>
+                      {t.description && (
+                        <div className="mt-1 text-xs text-[#6B7280] line-clamp-2">{t.description}</div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}{/* Task list */}<div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white backdrop-blur">
+              <div className="flex items-center gap-2 border-b border-[rgba(0,0,0,0.08)] px-5 py-3 text-sm font-semibold text-[#374151]">
+                <Globe size={15} /> Tasks
+                <span className="ml-2 rounded-full bg-[rgba(0,0,0,0.06)] px-2 py-0.5 text-[10px] text-[#6B7280]">
+                  {tasks.length}
+                </span>
+              </div>
+              {loading ? (
+                <div className="flex items-center justify-center px-5 py-10 text-sm text-[#9CA3AF]">
+                  <Loader2 size={16} className="mr-2 animate-spin" /> Loading…
+                </div>
+              ) : tasks.length === 0 ? (
+                <div className="px-5 py-10 text-center text-sm text-[#9CA3AF]">
+                  No tasks yet. Queue your first one above.
+                </div>
+              ) : (
+                <ul className="divide-y divide-[rgba(0,0,0,0.06)]">
+                  {tasks.map((t) => {
+                    const status = STATUS_STYLES[t.status];
+                    return (
+                      <li key={t.id}>
+                        <Link
+                          href={`/dashboard/automations/browser-tasks/${t.id}`}
+                          className="flex items-center gap-3 px-5 py-3 hover:bg-[rgba(0,0,0,0.03)]"
+                        >
+                          <span
+                            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${status.bg} ${status.fg}`}
+                          >
+                            {status.icon} {status.label}
+                          </span>
+                          <span className="flex-1 truncate text-sm text-[#374151]">{t.goal}</span>
+                          <span className="hidden text-xs text-[#9CA3AF] md:inline">
+                            {t.steps_taken}/{t.max_steps} steps
+                          </span>
+                          <span className="hidden text-xs text-[#9CA3AF] md:inline">{fmtCost(t.total_cost_usd)}</span>
+                          <span className="hidden text-xs text-[#9CA3AF] lg:inline">{fmtDate(t.created_at)}</span>
+                          <ChevronRight size={14} className="text-[#9CA3AF]" />
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div></MotionPage>
   );
 }

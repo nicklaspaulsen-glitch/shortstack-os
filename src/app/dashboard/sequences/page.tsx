@@ -14,6 +14,7 @@ import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { ListOrdered } from "lucide-react";
 import { PrismPanel } from "@/components/prism";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type MainTab = "builder" | "templates" | "analytics" | "enrollment" | "runs" | "settings";
 
@@ -593,687 +594,655 @@ export default function SequencesPage() {
   ];
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        icon={<ListOrdered size={28} />}
-        eyebrow="SEQUENCE BUILDER"
-        title="Email Sequences"
-        subtitle="Multi-channel drip campaigns with AI & A/B testing."
-        gradient="purple"
-        actions={
-          <>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
-                <Sparkles size={12} /> Generate with AI
-              </button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <button className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5" onClick={() => {
-                const draft: Sequence = {
-                  id: `tmp_${Date.now()}`,
-                  name: "Untitled Sequence",
-                  description: null,
-                  steps: [],
-                  active: false,
-                  enrolled: 0, completed: 0, replied: 0,
-                  persisted: false,
-                };
-                setSequences(prev => [draft, ...prev]);
-                setActiveSequence(draft);
-              }}>
-                <Plus size={12} /> New Sequence
-              </button>
-            </motion.div>
-          </>
-        }
-      />
-
-      {/* Recent activity panel � last 10 step executions from trinity_log */}
-      <PrismPanel padding="p-4" className="overflow-hidden">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-xs font-semibold flex items-center gap-2">
-            <Activity size={12} className="text-[#2563EB]" /> Recent activity
-          </h3>
-          <button onClick={() => void loadActivity()} className="text-[10px] text-muted hover:text-foreground">Refresh</button>
-        </div>
-        {activity.length === 0 ? (
-          <p className="text-[10px] text-muted">No sequence activity yet. Once the hourly cron runs, executions will appear here.</p>
-        ) : (
-          <ul className="space-y-1">
-            {activity.map(a => (
-              <li key={a.id} className="flex items-center justify-between text-[10px] py-1 border-b border-black/[0.05] last:border-0">
-                <span className="flex items-center gap-2">
-                  <span className={`px-1.5 py-0.5 rounded text-[9px] ${a.status === "completed" ? "bg-green-500/10 text-green-400" : a.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-gray-500/10 text-gray-400"}`}>
-                    {a.status || "run"}
-                  </span>
-                  <span>{a.description || `${a.sequence_name} ? step ${(a.step_order ?? 0) + 1}`}</span>
-                </span>
-                <span className="text-muted">{a.executed_at ? new Date(a.executed_at).toLocaleString() : ""}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </PrismPanel>
-
-      {/* AI Summary Card */}
-      {aiSummary && (
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.22 }}
-          className="rounded-xl overflow-hidden p-4"
-          style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.12)" }}
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Sparkles size={16} className="text-[#2563EB]" />
-              <div>
-                <p className="text-xs font-semibold">{aiSummary.name}</p>
-                <p className="text-[10px] text-muted">{aiSummary.description}</p>
+    <MotionPage className="fade-in space-y-5"><PageHero
+              icon={<ListOrdered size={28} />}
+              eyebrow="SEQUENCE BUILDER"
+              title="Email Sequences"
+              subtitle="Multi-channel drip campaigns with AI & A/B testing."
+              gradient="purple"
+              actions={
+                <>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
+                      <Sparkles size={12} /> Generate with AI
+                    </button>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <button className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5" onClick={() => {
+                      const draft: Sequence = {
+                        id: `tmp_${Date.now()}`,
+                        name: "Untitled Sequence",
+                        description: null,
+                        steps: [],
+                        active: false,
+                        enrolled: 0, completed: 0, replied: 0,
+                        persisted: false,
+                      };
+                      setSequences(prev => [draft, ...prev]);
+                      setActiveSequence(draft);
+                    }}>
+                      <Plus size={12} /> New Sequence
+                    </button>
+                  </motion.div>
+                </>
+              }
+            />{/* Recent activity panel � last 10 step executions from trinity_log */}<PrismPanel padding="p-4" className="overflow-hidden">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xs font-semibold flex items-center gap-2">
+                  <Activity size={12} className="text-[#2563EB]" /> Recent activity
+                </h3>
+                <button onClick={() => void loadActivity()} className="text-[10px] text-muted hover:text-foreground">Refresh</button>
               </div>
-            </div>
-            <div className="flex items-center gap-4 text-[10px]">
-              <div className="text-center"><p className="font-bold text-[#2563EB]">{aiSummary.step_count}</p><p className="text-muted">Steps</p></div>
-              <div className="text-center"><p className="font-bold text-[#2563EB]">{aiSummary.channels.length}</p><p className="text-muted">Channels</p></div>
-              <div className="text-center"><p className="font-bold text-[#2563EB]">{aiSummary.duration_days}d</p><p className="text-muted">Duration</p></div>
-              <button onClick={() => setAiSummary(null)} className="text-muted hover:text-foreground p-1"><XCircle size={12} /></button>
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      {/* AI Generator Modal */}
-      <Modal isOpen={showAiModal} onClose={() => setShowAiModal(false)} title="Generate Sequence with AI" size="lg">
-        <div className="space-y-4">
-          <div>
-            <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Objective / Goal *</label>
-            <textarea value={aiObjective} onChange={e => setAiObjective(e.target.value)} rows={3} className="input w-full text-xs"
-              placeholder="e.g. Book discovery calls with dental practice owners..." />
-          </div>
-          <div>
-            <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Audience *</label>
-            <input value={aiAudience} onChange={e => setAiAudience(e.target.value)} className="input w-full text-xs"
-              placeholder="e.g. Dental practice owners in the US, 50+ patients/month" />
-          </div>
-          <div>
-            <label className="text-[10px] text-muted uppercase tracking-wider block mb-2">Channels *</label>
-            <div className="flex gap-2">
-              {([{ key: "email", label: "Email" }, { key: "sms", label: "SMS" }, { key: "dm", label: "DM" }] as const).map(c => (
-                <label key={c.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border cursor-pointer hover:border-[rgba(37,99,235,0.2)] transition-all">
-                  <input type="checkbox" checked={aiChannels[c.key]} onChange={() => setAiChannels(prev => ({ ...prev, [c.key]: !prev[c.key] }))} className="accent-[#2563EB]" />
-                  <span className="text-xs">{c.label}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Length (days)</label>
-              <select value={aiLength} onChange={e => setAiLength(parseInt(e.target.value))} className="input w-full text-xs">
-                {[3, 5, 7, 10, 14].map(d => <option key={d} value={d}>{d} days</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Tone</label>
-              <select value={aiTone} onChange={e => setAiTone(e.target.value)} className="input w-full text-xs">
-                <option value="professional">Professional</option>
-                <option value="friendly">Friendly</option>
-                <option value="casual">Casual</option>
-                <option value="direct">Direct</option>
-                <option value="warm">Warm</option>
-              </select>
-            </div>
-          </div>
-          <div className="flex items-center justify-end gap-2 pt-2">
-            <button onClick={() => setShowAiModal(false)} className="btn-ghost text-xs">Cancel</button>
-            <button onClick={handleGenerateSequence} disabled={aiGenerating} className="btn-primary text-xs flex items-center gap-1.5">
-              {aiGenerating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
-              {aiGenerating ? "Generating..." : "Generate"}
-            </button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
-        {TABS.map(t => (
-          <button key={t.key} onClick={() => setActiveTab(t.key)}
-            className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === t.key ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
-            }`}>{t.icon} {t.label}</button>
-        ))}
-      </div>
-
-      {/* ===== SEQUENCE BUILDER ===== */}
-      {activeTab === "builder" && (
-        <div className="space-y-4">
-          {!activeSequence ? (
-            <>
-              {/* Sequence List */}
-              {loading ? (
-                <div className="card p-8 text-center">
-                  <Loader2 size={24} className="animate-spin mx-auto text-[#2563EB] mb-2" />
-                  <p className="text-[10px] text-muted">Loading sequences...</p>
-                </div>
+              {activity.length === 0 ? (
+                <p className="text-[10px] text-muted">No sequence activity yet. Once the hourly cron runs, executions will appear here.</p>
               ) : (
-                <PrismPanel rainbow padding="p-0" className="overflow-hidden space-y-0">
-                  {sequences.map((seq, index) => (
-                    <motion.div
-                      key={seq.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                      className="p-4 flex items-center justify-between border-b border-black/[0.05] last:border-0"
-                    >
+                <ul className="space-y-1">
+                  {activity.map(a => (
+                    <li key={a.id} className="flex items-center justify-between text-[10px] py-1 border-b border-black/[0.05] last:border-0">
+                      <span className="flex items-center gap-2">
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] ${a.status === "completed" ? "bg-green-500/10 text-green-400" : a.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-gray-500/10 text-gray-400"}`}>
+                          {a.status || "run"}
+                        </span>
+                        <span>{a.description || `${a.sequence_name} ? step ${(a.step_order ?? 0) + 1}`}</span>
+                      </span>
+                      <span className="text-muted">{a.executed_at ? new Date(a.executed_at).toLocaleString() : ""}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </PrismPanel>{/* AI Summary Card */}{aiSummary && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22 }}
+                className="rounded-xl overflow-hidden p-4"
+                style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.12)" }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Sparkles size={16} className="text-[#2563EB]" />
+                    <div>
+                      <p className="text-xs font-semibold">{aiSummary.name}</p>
+                      <p className="text-[10px] text-muted">{aiSummary.description}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 text-[10px]">
+                    <div className="text-center"><p className="font-bold text-[#2563EB]">{aiSummary.step_count}</p><p className="text-muted">Steps</p></div>
+                    <div className="text-center"><p className="font-bold text-[#2563EB]">{aiSummary.channels.length}</p><p className="text-muted">Channels</p></div>
+                    <div className="text-center"><p className="font-bold text-[#2563EB]">{aiSummary.duration_days}d</p><p className="text-muted">Duration</p></div>
+                    <button onClick={() => setAiSummary(null)} className="text-muted hover:text-foreground p-1"><XCircle size={12} /></button>
+                  </div>
+                </div>
+              </motion.div>
+            )}{/* AI Generator Modal */}<Modal isOpen={showAiModal} onClose={() => setShowAiModal(false)} title="Generate Sequence with AI" size="lg">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Objective / Goal *</label>
+                  <textarea value={aiObjective} onChange={e => setAiObjective(e.target.value)} rows={3} className="input w-full text-xs"
+                    placeholder="e.g. Book discovery calls with dental practice owners..." />
+                </div>
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Audience *</label>
+                  <input value={aiAudience} onChange={e => setAiAudience(e.target.value)} className="input w-full text-xs"
+                    placeholder="e.g. Dental practice owners in the US, 50+ patients/month" />
+                </div>
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-2">Channels *</label>
+                  <div className="flex gap-2">
+                    {([{ key: "email", label: "Email" }, { key: "sms", label: "SMS" }, { key: "dm", label: "DM" }] as const).map(c => (
+                      <label key={c.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border cursor-pointer hover:border-[rgba(37,99,235,0.2)] transition-all">
+                        <input type="checkbox" checked={aiChannels[c.key]} onChange={() => setAiChannels(prev => ({ ...prev, [c.key]: !prev[c.key] }))} className="accent-[#2563EB]" />
+                        <span className="text-xs">{c.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Length (days)</label>
+                    <select value={aiLength} onChange={e => setAiLength(parseInt(e.target.value))} className="input w-full text-xs">
+                      {[3, 5, 7, 10, 14].map(d => <option key={d} value={d}>{d} days</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Tone</label>
+                    <select value={aiTone} onChange={e => setAiTone(e.target.value)} className="input w-full text-xs">
+                      <option value="professional">Professional</option>
+                      <option value="friendly">Friendly</option>
+                      <option value="casual">Casual</option>
+                      <option value="direct">Direct</option>
+                      <option value="warm">Warm</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="flex items-center justify-end gap-2 pt-2">
+                  <button onClick={() => setShowAiModal(false)} className="btn-ghost text-xs">Cancel</button>
+                  <button onClick={handleGenerateSequence} disabled={aiGenerating} className="btn-primary text-xs flex items-center gap-1.5">
+                    {aiGenerating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                    {aiGenerating ? "Generating..." : "Generate"}
+                  </button>
+                </div>
+              </div>
+            </Modal>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+              {TABS.map(t => (
+                <button key={t.key} onClick={() => setActiveTab(t.key)}
+                  className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
+                    activeTab === t.key ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
+                  }`}>{t.icon} {t.label}</button>
+              ))}
+            </div>{/* ===== SEQUENCE BUILDER ===== */}{activeTab === "builder" && (
+              <div className="space-y-4">
+                {!activeSequence ? (
+                  <>
+                    {/* Sequence List */}
+                    {loading ? (
+                      <div className="card p-8 text-center">
+                        <Loader2 size={24} className="animate-spin mx-auto text-[#2563EB] mb-2" />
+                        <p className="text-[10px] text-muted">Loading sequences...</p>
+                      </div>
+                    ) : (
+                      <PrismPanel rainbow padding="p-0" className="overflow-hidden space-y-0">
+                        {sequences.map((seq, index) => (
+                          <motion.div
+                            key={seq.id}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.18, delay: index * 0.04 }}
+                            whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                            className="p-4 flex items-center justify-between border-b border-black/[0.05] last:border-0"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={`w-2.5 h-2.5 rounded-full ${seq.active ? "bg-green-400 animate-pulse" : "bg-muted"}`} />
+                              <div>
+                                <p className="text-xs font-semibold">{seq.name}</p>
+                                <p className="text-[10px] text-muted">{seq.steps.length} steps | {seq.enrolled} enrolled</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <div className="grid grid-cols-3 gap-4 text-center text-[10px]">
+                                <div><p className="font-bold">{seq.enrolled}</p><p className="text-[8px] text-muted">Enrolled</p></div>
+                                <div><p className="font-bold text-green-400">{seq.replied}</p><p className="text-[8px] text-muted">Replied</p></div>
+                                <div><p className="font-bold text-[#2563EB]">{seq.enrolled > 0 ? ((seq.replied / seq.enrolled) * 100).toFixed(1) : 0}%</p><p className="text-[8px] text-muted">Rate</p></div>
+                              </div>
+                              <div className="flex gap-1.5">
+                                <button onClick={() => void openSequence(seq)} className="btn-secondary text-[9px] py-1 px-2">Edit</button>
+                                <button onClick={() => void cloneSequence(seq)} className="btn-ghost text-[9px] py-1 px-2"><Copy size={10} /></button>
+                                <button onClick={() => void handleDelete(seq)} className="btn-ghost text-[9px] py-1 px-2 text-red-400"><Trash2 size={10} /></button>
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </PrismPanel>
+                    )}
+                    {/* Quick create from template hint */}
+                    <div className="card border-[rgba(37,99,235,0.1)] text-center py-6">
+                      <Sparkles size={24} className="mx-auto mb-2 text-[#2563EB]" />
+                      <p className="text-sm font-semibold">Create a new sequence</p>
+                      <p className="text-[10px] text-muted mt-1">Pick a template from the Templates tab, or build from scratch</p>
+                      <button onClick={() => setActiveTab("templates")} className="btn-secondary text-xs mt-3">Browse Templates</button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="space-y-4">
+                    {/* Sequence Editor Header */}
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className={`w-2.5 h-2.5 rounded-full ${seq.active ? "bg-green-400 animate-pulse" : "bg-muted"}`} />
+                        <button onClick={() => setActiveSequence(null)} className="btn-ghost text-xs">Back</button>
+                        <input value={activeSequence.name}
+                          onChange={e => {
+                            const updated = { ...activeSequence, name: e.target.value };
+                            setActiveSequence(updated);
+                            setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
+                          }}
+                          className="input text-sm font-semibold w-64" />
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => void handleSave()} disabled={saving}
+                          className="btn-primary text-xs flex items-center gap-1.5">
+                          {saving ? <Loader2 size={12} className="animate-spin" /> : null} Save
+                        </button>
+                        <button onClick={() => void toggleSequence()}
+                          className={`text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium ${
+                            activeSequence.active ? "bg-red-400/10 text-red-400 border border-red-400/20" : "btn-primary"
+                          }`}>
+                          {activeSequence.active ? <><Pause size={12} /> Pause</> : <><Play size={12} /> Activate</>}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* A/B Test Toggle */}
+                    <div className="card p-3 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Target size={14} className="text-[#2563EB]" />
                         <div>
-                          <p className="text-xs font-semibold">{seq.name}</p>
-                          <p className="text-[10px] text-muted">{seq.steps.length} steps | {seq.enrolled} enrolled</p>
+                          <p className="text-xs font-semibold">A/B Testing</p>
+                          <p className="text-[9px] text-muted">Split test subject lines and content</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <div className="grid grid-cols-3 gap-4 text-center text-[10px]">
-                          <div><p className="font-bold">{seq.enrolled}</p><p className="text-[8px] text-muted">Enrolled</p></div>
-                          <div><p className="font-bold text-green-400">{seq.replied}</p><p className="text-[8px] text-muted">Replied</p></div>
-                          <div><p className="font-bold text-[#2563EB]">{seq.enrolled > 0 ? ((seq.replied / seq.enrolled) * 100).toFixed(1) : 0}%</p><p className="text-[8px] text-muted">Rate</p></div>
+                      <button onClick={() => setAbEnabled(!abEnabled)}
+                        className={`w-10 h-5 rounded-full transition-all flex items-center ${abEnabled ? "bg-[#2563EB] justify-end" : "bg-surface-light justify-start"}`}>
+                        <div className="w-4 h-4 bg-white rounded-full mx-0.5 shadow" />
+                      </button>
+                    </div>
+
+                    {/* Visual Step Builder */}
+                    <div className="space-y-2">
+                      {activeSequence.steps.map((step, i) => {
+                        const colors = STEP_COLORS[step.type];
+                        return (
+                          <div key={step.id}>
+                            <motion.div
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.18, delay: i * 0.04 }}
+                              whileHover={{ y: -2 }}
+                              className={`p-4 rounded-xl border ${colors.border}`}
+                              style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
+                            >
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase flex items-center gap-1 ${colors.text}`}>
+                                    {STEP_ICONS[step.type]} {step.type === "wait" ? `Wait ${step.delay_days}d` : step.type === "condition" ? "Condition" : step.type}
+                                  </span>
+                                  <span className="text-[9px] text-muted">Step {i + 1}</span>
+                                  {step.channel && <span className="text-[8px] px-1.5 py-0.5 rounded bg-black/[0.04] text-muted capitalize">{step.channel}</span>}
+                                </div>
+                                <button onClick={() => removeStep(step.id)} className="text-muted hover:text-red-400 p-1"><Trash2 size={12} /></button>
+                              </div>
+
+                              {step.type === "wait" ? (
+                                <div className="flex items-center gap-2">
+                                  <Clock size={14} className="text-muted" />
+                                  <input type="number" min={1} max={30} value={step.delay_days}
+                                    onChange={e => {
+                                      const steps = [...activeSequence.steps];
+                                      steps[i] = { ...steps[i], delay_days: parseInt(e.target.value) || 1 };
+                                      const updated = { ...activeSequence, steps };
+                                      setActiveSequence(updated);
+                                      setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
+                                    }}
+                                    className="input w-16 text-xs text-center" />
+                                  <span className="text-xs text-muted">days</span>
+                                </div>
+                              ) : step.type === "condition" ? (
+                                <div className="flex items-center gap-2">
+                                  <GitBranch size={14} className="text-[#2563EB]" />
+                                  <select className="input text-xs" value={step.conditionType || "replied"}
+                                    onChange={e => {
+                                      const steps = [...activeSequence.steps];
+                                      steps[i] = { ...steps[i], conditionType: e.target.value };
+                                      const updated = { ...activeSequence, steps };
+                                      setActiveSequence(updated);
+                                      setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
+                                    }}>
+                                    <option value="replied">If replied</option>
+                                    <option value="opened">If opened email</option>
+                                    <option value="clicked">If clicked link</option>
+                                    <option value="not_replied">If no reply</option>
+                                    <option value="booked">If booked call</option>
+                                  </select>
+                                  <ArrowRight size={12} className="text-muted" />
+                                  <span className="text-[10px] text-muted">Then continue / Exit sequence</span>
+                                </div>
+                              ) : (
+                                <div className="space-y-2">
+                                  {step.type === "email" && (
+                                    <input value={step.subject || ""} onChange={e => {
+                                      const steps = [...activeSequence.steps];
+                                      steps[i] = { ...steps[i], subject: e.target.value };
+                                      const updated = { ...activeSequence, steps };
+                                      setActiveSequence(updated);
+                                      setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
+                                    }} className="input w-full text-xs" placeholder="Subject line..." />
+                                  )}
+                                  {abEnabled && step.type === "email" && (
+                                    <input className="input w-full text-xs border-dashed" placeholder="Variant B subject line (A/B test)..." />
+                                  )}
+                                  <textarea value={step.body} onChange={e => {
+                                    const steps = [...activeSequence.steps];
+                                    steps[i] = { ...steps[i], body: e.target.value };
+                                    const updated = { ...activeSequence, steps };
+                                    setActiveSequence(updated);
+                                    setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
+                                  }} className="input w-full text-xs h-20 resize-none" placeholder="Message body..." />
+                                </div>
+                              )}
+                            </motion.div>
+                            {i < activeSequence.steps.length - 1 && (
+                              <div className="flex justify-center py-1">
+                                <ArrowDown size={14} className="text-muted/30" />
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Add Step Buttons */}
+                    <div className="flex gap-2 justify-center pt-2 flex-wrap">
+                      {[
+                        { type: "email" as const, label: "Email", icon: <Mail size={10} /> },
+                        { type: "sms" as const, label: "SMS", icon: <MessageSquare size={10} /> },
+                        { type: "call" as const, label: "Call", icon: <Phone size={10} /> },
+                        { type: "social" as const, label: "DM", icon: <Share2 size={10} /> },
+                        { type: "wait" as const, label: "Wait", icon: <Clock size={10} /> },
+                        { type: "condition" as const, label: "Condition", icon: <GitBranch size={10} /> },
+                      ].map(s => (
+                        <button key={s.type} onClick={() => addStep(s.type)}
+                          className="btn-secondary text-[10px] flex items-center gap-1 px-3 py-1.5">
+                          <Plus size={10} /> {s.icon} {s.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Exit Conditions */}
+                    <div className="card">
+                      <h4 className="text-xs font-semibold mb-2 flex items-center gap-2">
+                        <XCircle size={12} className="text-red-400" /> Exit Conditions
+                      </h4>
+                      <div className="space-y-1.5">
+                        {[
+                          { label: "Contact replies to any message", enabled: true },
+                          { label: "Contact books a meeting", enabled: true },
+                          { label: "Contact unsubscribes", enabled: true },
+                          { label: "Email bounces (hard bounce)", enabled: true },
+                          { label: "Contact marked as client", enabled: false },
+                        ].map((ex, i) => (
+                          <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
+                            <div className="flex items-center gap-2">
+                              <CheckCircle size={10} className={ex.enabled ? "text-green-400" : "text-muted"} />
+                              <span>{ex.label}</span>
+                            </div>
+                            <div className={`w-6 h-3 rounded-full ${ex.enabled ? "bg-green-400" : "bg-surface"}`}>
+                              <div className={`w-2.5 h-2.5 bg-white rounded-full mt-px ${ex.enabled ? "ml-3" : "ml-0.5"}`} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}{/* ===== TEMPLATE LIBRARY ===== */}{activeTab === "templates" && (
+              <div className="space-y-4">
+                <div className="flex gap-1.5 flex-wrap">
+                  {templateCategories.map(c => (
+                    <button key={c} onClick={() => setTemplateFilter(c)}
+                      className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
+                        templateFilter === c ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-black/[0.08]"
+                      }`}>{c}</button>
+                  ))}
+                </div>
+                <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-3" variants={containerVariants} initial="hidden" animate="visible">
+                  {filteredTemplates.map((t, i) => (
+                    <motion.div
+                      key={i}
+                      variants={itemVariants}
+                      whileHover={{ y: -2 }}
+                      className="rounded-xl overflow-hidden relative p-4" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                    >
+                      <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <p className="text-xs font-semibold">{t.name}</p>
+                          <p className="text-[10px] text-muted mt-0.5">{t.description}</p>
                         </div>
-                        <div className="flex gap-1.5">
-                          <button onClick={() => void openSequence(seq)} className="btn-secondary text-[9px] py-1 px-2">Edit</button>
-                          <button onClick={() => void cloneSequence(seq)} className="btn-ghost text-[9px] py-1 px-2"><Copy size={10} /></button>
-                          <button onClick={() => void handleDelete(seq)} className="btn-ghost text-[9px] py-1 px-2 text-red-400"><Trash2 size={10} /></button>
-                        </div>
+                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{t.category}</span>
+                      </div>
+                      <div className="flex gap-1 mt-2 mb-3">
+                        {t.steps.map((s, j) => (
+                          <div key={j} className={`w-6 h-6 rounded flex items-center justify-center ${STEP_COLORS[s.type].bg}`}>
+                            <span className={STEP_COLORS[s.type].text}>{STEP_ICONS[s.type]}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex items-center justify-end">
+                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                          <button onClick={() => void createFromTemplate(t)}
+                            className="btn-primary text-[9px] px-2 py-1 flex items-center gap-1"><Plus size={9} /> Use Template</button>
+                        </motion.div>
                       </div>
                     </motion.div>
                   ))}
-                </PrismPanel>
-              )}
-              {/* Quick create from template hint */}
-              <div className="card border-[rgba(37,99,235,0.1)] text-center py-6">
-                <Sparkles size={24} className="mx-auto mb-2 text-[#2563EB]" />
-                <p className="text-sm font-semibold">Create a new sequence</p>
-                <p className="text-[10px] text-muted mt-1">Pick a template from the Templates tab, or build from scratch</p>
-                <button onClick={() => setActiveTab("templates")} className="btn-secondary text-xs mt-3">Browse Templates</button>
+                </motion.div>
               </div>
-            </>
-          ) : (
-            <div className="space-y-4">
-              {/* Sequence Editor Header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <button onClick={() => setActiveSequence(null)} className="btn-ghost text-xs">Back</button>
-                  <input value={activeSequence.name}
-                    onChange={e => {
-                      const updated = { ...activeSequence, name: e.target.value };
-                      setActiveSequence(updated);
-                      setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
-                    }}
-                    className="input text-sm font-semibold w-64" />
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => void handleSave()} disabled={saving}
-                    className="btn-primary text-xs flex items-center gap-1.5">
-                    {saving ? <Loader2 size={12} className="animate-spin" /> : null} Save
-                  </button>
-                  <button onClick={() => void toggleSequence()}
-                    className={`text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium ${
-                      activeSequence.active ? "bg-red-400/10 text-red-400 border border-red-400/20" : "btn-primary"
-                    }`}>
-                    {activeSequence.active ? <><Pause size={12} /> Pause</> : <><Play size={12} /> Activate</>}
-                  </button>
-                </div>
-              </div>
-
-              {/* A/B Test Toggle */}
-              <div className="card p-3 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Target size={14} className="text-[#2563EB]" />
-                  <div>
-                    <p className="text-xs font-semibold">A/B Testing</p>
-                    <p className="text-[9px] text-muted">Split test subject lines and content</p>
-                  </div>
-                </div>
-                <button onClick={() => setAbEnabled(!abEnabled)}
-                  className={`w-10 h-5 rounded-full transition-all flex items-center ${abEnabled ? "bg-[#2563EB] justify-end" : "bg-surface-light justify-start"}`}>
-                  <div className="w-4 h-4 bg-white rounded-full mx-0.5 shadow" />
-                </button>
-              </div>
-
-              {/* Visual Step Builder */}
-              <div className="space-y-2">
-                {activeSequence.steps.map((step, i) => {
-                  const colors = STEP_COLORS[step.type];
-                  return (
-                    <div key={step.id}>
-                      <motion.div
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.18, delay: i * 0.04 }}
-                        whileHover={{ y: -2 }}
-                        className={`p-4 rounded-xl border ${colors.border}`}
-                        style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase flex items-center gap-1 ${colors.text}`}>
-                              {STEP_ICONS[step.type]} {step.type === "wait" ? `Wait ${step.delay_days}d` : step.type === "condition" ? "Condition" : step.type}
-                            </span>
-                            <span className="text-[9px] text-muted">Step {i + 1}</span>
-                            {step.channel && <span className="text-[8px] px-1.5 py-0.5 rounded bg-black/[0.04] text-muted capitalize">{step.channel}</span>}
-                          </div>
-                          <button onClick={() => removeStep(step.id)} className="text-muted hover:text-red-400 p-1"><Trash2 size={12} /></button>
-                        </div>
-
-                        {step.type === "wait" ? (
-                          <div className="flex items-center gap-2">
-                            <Clock size={14} className="text-muted" />
-                            <input type="number" min={1} max={30} value={step.delay_days}
-                              onChange={e => {
-                                const steps = [...activeSequence.steps];
-                                steps[i] = { ...steps[i], delay_days: parseInt(e.target.value) || 1 };
-                                const updated = { ...activeSequence, steps };
-                                setActiveSequence(updated);
-                                setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
-                              }}
-                              className="input w-16 text-xs text-center" />
-                            <span className="text-xs text-muted">days</span>
-                          </div>
-                        ) : step.type === "condition" ? (
-                          <div className="flex items-center gap-2">
-                            <GitBranch size={14} className="text-[#2563EB]" />
-                            <select className="input text-xs" value={step.conditionType || "replied"}
-                              onChange={e => {
-                                const steps = [...activeSequence.steps];
-                                steps[i] = { ...steps[i], conditionType: e.target.value };
-                                const updated = { ...activeSequence, steps };
-                                setActiveSequence(updated);
-                                setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
-                              }}>
-                              <option value="replied">If replied</option>
-                              <option value="opened">If opened email</option>
-                              <option value="clicked">If clicked link</option>
-                              <option value="not_replied">If no reply</option>
-                              <option value="booked">If booked call</option>
-                            </select>
-                            <ArrowRight size={12} className="text-muted" />
-                            <span className="text-[10px] text-muted">Then continue / Exit sequence</span>
-                          </div>
-                        ) : (
-                          <div className="space-y-2">
-                            {step.type === "email" && (
-                              <input value={step.subject || ""} onChange={e => {
-                                const steps = [...activeSequence.steps];
-                                steps[i] = { ...steps[i], subject: e.target.value };
-                                const updated = { ...activeSequence, steps };
-                                setActiveSequence(updated);
-                                setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
-                              }} className="input w-full text-xs" placeholder="Subject line..." />
-                            )}
-                            {abEnabled && step.type === "email" && (
-                              <input className="input w-full text-xs border-dashed" placeholder="Variant B subject line (A/B test)..." />
-                            )}
-                            <textarea value={step.body} onChange={e => {
-                              const steps = [...activeSequence.steps];
-                              steps[i] = { ...steps[i], body: e.target.value };
-                              const updated = { ...activeSequence, steps };
-                              setActiveSequence(updated);
-                              setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
-                            }} className="input w-full text-xs h-20 resize-none" placeholder="Message body..." />
-                          </div>
-                        )}
-                      </motion.div>
-                      {i < activeSequence.steps.length - 1 && (
-                        <div className="flex justify-center py-1">
-                          <ArrowDown size={14} className="text-muted/30" />
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Add Step Buttons */}
-              <div className="flex gap-2 justify-center pt-2 flex-wrap">
-                {[
-                  { type: "email" as const, label: "Email", icon: <Mail size={10} /> },
-                  { type: "sms" as const, label: "SMS", icon: <MessageSquare size={10} /> },
-                  { type: "call" as const, label: "Call", icon: <Phone size={10} /> },
-                  { type: "social" as const, label: "DM", icon: <Share2 size={10} /> },
-                  { type: "wait" as const, label: "Wait", icon: <Clock size={10} /> },
-                  { type: "condition" as const, label: "Condition", icon: <GitBranch size={10} /> },
-                ].map(s => (
-                  <button key={s.type} onClick={() => addStep(s.type)}
-                    className="btn-secondary text-[10px] flex items-center gap-1 px-3 py-1.5">
-                    <Plus size={10} /> {s.icon} {s.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Exit Conditions */}
-              <div className="card">
-                <h4 className="text-xs font-semibold mb-2 flex items-center gap-2">
-                  <XCircle size={12} className="text-red-400" /> Exit Conditions
-                </h4>
-                <div className="space-y-1.5">
+            )}{/* ===== PERFORMANCE ANALYTICS ===== */}{activeTab === "analytics" && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                   {[
-                    { label: "Contact replies to any message", enabled: true },
-                    { label: "Contact books a meeting", enabled: true },
-                    { label: "Contact unsubscribes", enabled: true },
-                    { label: "Email bounces (hard bounce)", enabled: true },
-                    { label: "Contact marked as client", enabled: false },
-                  ].map((ex, i) => (
-                    <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle size={10} className={ex.enabled ? "text-green-400" : "text-muted"} />
-                        <span>{ex.label}</span>
-                      </div>
-                      <div className={`w-6 h-3 rounded-full ${ex.enabled ? "bg-green-400" : "bg-surface"}`}>
-                        <div className={`w-2.5 h-2.5 bg-white rounded-full mt-px ${ex.enabled ? "ml-3" : "ml-0.5"}`} />
-                      </div>
-                    </div>
+                    { label: "Total Enrolled", value: sequences.reduce((s, seq) => s + seq.enrolled, 0), color: "text-[#2563EB]" },
+                    { label: "Completed", value: sequences.reduce((s, seq) => s + seq.completed, 0), color: "text-green-600" },
+                    { label: "Replied", value: sequences.reduce((s, seq) => s + seq.replied, 0), color: "text-[#2563EB]" },
+                    { label: "Avg Reply Rate", value: sequences.length > 0 ? `${(sequences.reduce((s, seq) => s + (seq.enrolled > 0 ? seq.replied / seq.enrolled : 0), 0) / sequences.length * 100).toFixed(1)}%` : "0%", color: "text-[#2563EB]" },
+                    { label: "Active Sequences", value: sequences.filter(s => s.active).length, color: "text-[#2563EB]" },
+                  ].map((stat, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.22, delay: i * 0.06 }}
+                      whileHover={{ y: -2 }}
+                      className="rounded-xl overflow-hidden relative text-center p-3" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
+                    >
+                      <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
+                      <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
+                      <p className="text-[9px] text-muted">{stat.label}</p>
+                    </motion.div>
                   ))}
                 </div>
+                <PrismPanel padding="p-4" className="overflow-hidden">
+                  <h3 className="text-sm font-semibold mb-3">Sequence Performance</h3>
+                  <div className="space-y-3">
+                    {sequences.map((seq, index) => {
+                      const replyRate = seq.enrolled > 0 ? ((seq.replied / seq.enrolled) * 100) : 0;
+                      return (
+                        <motion.div
+                          key={seq.id}
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.18, delay: index * 0.04 }}
+                          whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                          className="p-3 rounded-lg bg-surface-light border border-border"
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-xs font-semibold flex items-center gap-2">
+                              <span className={`w-2 h-2 rounded-full ${seq.active ? "bg-green-400" : "bg-muted"}`} />
+                              {seq.name}
+                            </p>
+                            <span className="text-[9px] text-muted">{seq.steps.length} steps</span>
+                          </div>
+                          <div className="grid grid-cols-4 gap-2 text-center text-[10px]">
+                            <div><p className="font-bold">{seq.enrolled}</p><p className="text-[8px] text-muted">Enrolled</p></div>
+                            <div><p className="font-bold text-green-400">{seq.completed}</p><p className="text-[8px] text-muted">Completed</p></div>
+                            <div><p className="font-bold text-[#2563EB]">{seq.replied}</p><p className="text-[8px] text-muted">Replied</p></div>
+                            <div><p className="font-bold text-[#2563EB]">{replyRate.toFixed(1)}%</p><p className="text-[8px] text-muted">Reply Rate</p></div>
+                          </div>
+                          <div className="w-full bg-surface rounded-full h-1.5 mt-2">
+                            <div className="rounded-full h-1.5" style={{ width: `${seq.enrolled > 0 ? (seq.completed / seq.enrolled) * 100 : 0}%`, background: RAINBOW_BAR }} />
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </PrismPanel>
               </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ===== TEMPLATE LIBRARY ===== */}
-      {activeTab === "templates" && (
-        <div className="space-y-4">
-          <div className="flex gap-1.5 flex-wrap">
-            {templateCategories.map(c => (
-              <button key={c} onClick={() => setTemplateFilter(c)}
-                className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                  templateFilter === c ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-black/[0.08]"
-                }`}>{c}</button>
-            ))}
-          </div>
-          <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-3" variants={containerVariants} initial="hidden" animate="visible">
-            {filteredTemplates.map((t, i) => (
-              <motion.div
-                key={i}
-                variants={itemVariants}
-                whileHover={{ y: -2 }}
-                className="rounded-xl overflow-hidden relative p-4" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
-              >
-                <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <p className="text-xs font-semibold">{t.name}</p>
-                    <p className="text-[10px] text-muted mt-0.5">{t.description}</p>
-                  </div>
-                  <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{t.category}</span>
+            )}{/* ===== ENROLLMENT RULES ===== */}{activeTab === "enrollment" && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <Users size={14} className="text-[#2563EB]" /> Contact Enrollment Rules
+                </h3>
+                <div className="card">
+                  <p className="text-[10px] text-muted mb-3">
+                    To enroll leads, call POST /api/sequences/{`{sequence_id}`}/enroll with {`{ lead_ids: [...] }`}.
+                    Rule-based auto-enrollment is coming next.
+                  </p>
                 </div>
-                <div className="flex gap-1 mt-2 mb-3">
-                  {t.steps.map((s, j) => (
-                    <div key={j} className={`w-6 h-6 rounded flex items-center justify-center ${STEP_COLORS[s.type].bg}`}>
-                      <span className={STEP_COLORS[s.type].text}>{STEP_ICONS[s.type]}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex items-center justify-end">
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <button onClick={() => void createFromTemplate(t)}
-                      className="btn-primary text-[9px] px-2 py-1 flex items-center gap-1"><Plus size={9} /> Use Template</button>
-                  </motion.div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      )}
-
-      {/* ===== PERFORMANCE ANALYTICS ===== */}
-      {activeTab === "analytics" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            {[
-              { label: "Total Enrolled", value: sequences.reduce((s, seq) => s + seq.enrolled, 0), color: "text-[#2563EB]" },
-              { label: "Completed", value: sequences.reduce((s, seq) => s + seq.completed, 0), color: "text-green-600" },
-              { label: "Replied", value: sequences.reduce((s, seq) => s + seq.replied, 0), color: "text-[#2563EB]" },
-              { label: "Avg Reply Rate", value: sequences.length > 0 ? `${(sequences.reduce((s, seq) => s + (seq.enrolled > 0 ? seq.replied / seq.enrolled : 0), 0) / sequences.length * 100).toFixed(1)}%` : "0%", color: "text-[#2563EB]" },
-              { label: "Active Sequences", value: sequences.filter(s => s.active).length, color: "text-[#2563EB]" },
-            ].map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: i * 0.06 }}
-                whileHover={{ y: -2 }}
-                className="rounded-xl overflow-hidden relative text-center p-3" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}
-              >
-                <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
-                <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
-                <p className="text-[9px] text-muted">{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
-          <PrismPanel padding="p-4" className="overflow-hidden">
-            <h3 className="text-sm font-semibold mb-3">Sequence Performance</h3>
-            <div className="space-y-3">
-              {sequences.map((seq, index) => {
-                const replyRate = seq.enrolled > 0 ? ((seq.replied / seq.enrolled) * 100) : 0;
-                return (
-                  <motion.div
-                    key={seq.id}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                    className="p-3 rounded-lg bg-surface-light border border-border"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs font-semibold flex items-center gap-2">
-                        <span className={`w-2 h-2 rounded-full ${seq.active ? "bg-green-400" : "bg-muted"}`} />
-                        {seq.name}
-                      </p>
-                      <span className="text-[9px] text-muted">{seq.steps.length} steps</span>
-                    </div>
-                    <div className="grid grid-cols-4 gap-2 text-center text-[10px]">
-                      <div><p className="font-bold">{seq.enrolled}</p><p className="text-[8px] text-muted">Enrolled</p></div>
-                      <div><p className="font-bold text-green-400">{seq.completed}</p><p className="text-[8px] text-muted">Completed</p></div>
-                      <div><p className="font-bold text-[#2563EB]">{seq.replied}</p><p className="text-[8px] text-muted">Replied</p></div>
-                      <div><p className="font-bold text-[#2563EB]">{replyRate.toFixed(1)}%</p><p className="text-[8px] text-muted">Reply Rate</p></div>
-                    </div>
-                    <div className="w-full bg-surface rounded-full h-1.5 mt-2">
-                      <div className="rounded-full h-1.5" style={{ width: `${seq.enrolled > 0 ? (seq.completed / seq.enrolled) * 100 : 0}%`, background: RAINBOW_BAR }} />
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </PrismPanel>
-        </div>
-      )}
-
-      {/* ===== ENROLLMENT RULES ===== */}
-      {activeTab === "enrollment" && (
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold flex items-center gap-2">
-            <Users size={14} className="text-[#2563EB]" /> Contact Enrollment Rules
-          </h3>
-          <div className="card">
-            <p className="text-[10px] text-muted mb-3">
-              To enroll leads, call POST /api/sequences/{`{sequence_id}`}/enroll with {`{ lead_ids: [...] }`}.
-              Rule-based auto-enrollment is coming next.
-            </p>
-          </div>
-          <div className="card">
-            <h4 className="text-xs font-semibold mb-3 flex items-center gap-2">
-              <Eye size={12} className="text-[#2563EB]" /> Reply Detection Rules
-            </h4>
-            <div className="space-y-1.5">
-              {[
-                { condition: "Positive reply detected", action: "Pause sequence + notify owner + move to Hot", active: true },
-                { condition: "Negative reply (not interested)", action: "Remove from sequence + tag 'not-interested'", active: true },
-                { condition: "Out-of-office reply", action: "Pause for 7 days then resume", active: true },
-                { condition: "Unsubscribe request", action: "Immediately exit all sequences", active: true },
-              ].map((rule, i) => (
-                <div key={i} className="flex items-center justify-between p-2.5 rounded bg-surface-light text-[10px]">
-                  <div>
-                    <p className="font-semibold">{rule.condition}</p>
-                    <p className="text-[9px] text-muted">{rule.action}</p>
-                  </div>
-                  <div className={`w-6 h-3 rounded-full ${rule.active ? "bg-green-400" : "bg-surface"}`}>
-                    <div className={`w-2.5 h-2.5 bg-white rounded-full mt-px ${rule.active ? "ml-3" : "ml-0.5"}`} />
+                <div className="card">
+                  <h4 className="text-xs font-semibold mb-3 flex items-center gap-2">
+                    <Eye size={12} className="text-[#2563EB]" /> Reply Detection Rules
+                  </h4>
+                  <div className="space-y-1.5">
+                    {[
+                      { condition: "Positive reply detected", action: "Pause sequence + notify owner + move to Hot", active: true },
+                      { condition: "Negative reply (not interested)", action: "Remove from sequence + tag 'not-interested'", active: true },
+                      { condition: "Out-of-office reply", action: "Pause for 7 days then resume", active: true },
+                      { condition: "Unsubscribe request", action: "Immediately exit all sequences", active: true },
+                    ].map((rule, i) => (
+                      <div key={i} className="flex items-center justify-between p-2.5 rounded bg-surface-light text-[10px]">
+                        <div>
+                          <p className="font-semibold">{rule.condition}</p>
+                          <p className="text-[9px] text-muted">{rule.action}</p>
+                        </div>
+                        <div className={`w-6 h-3 rounded-full ${rule.active ? "bg-green-400" : "bg-surface"}`}>
+                          <div className={`w-2.5 h-2.5 bg-white rounded-full mt-px ${rule.active ? "ml-3" : "ml-0.5"}`} />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ===== ACTIVE RUNS ===== */}
-      {activeTab === "runs" && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold flex items-center gap-2">
-              <Activity size={14} className="text-[#2563EB]" /> Multi-channel runs
-            </h3>
-            <div className="flex items-center gap-2">
-              <select
-                value={runsStatusFilter}
-                onChange={(e) => { setRunsStatusFilter(e.target.value); void loadRuns(e.target.value); }}
-                className="input text-[10px]"
-              >
-                <option value="active">Active</option>
-                <option value="paused">Paused</option>
-                <option value="completed">Completed</option>
-                <option value="exited">Exited</option>
-                <option value="failed">Failed</option>
-                <option value="all">All</option>
-              </select>
-              <button onClick={() => void loadRuns()} className="btn-ghost text-[10px]">Refresh</button>
-            </div>
-          </div>
-          <PrismPanel padding="p-3" className="overflow-hidden">
-            {runsLoading ? (
-              <div className="text-center py-6">
-                <Loader2 size={16} className="animate-spin mx-auto text-[#2563EB] mb-2" />
-                <p className="text-[10px] text-muted">Loading runs...</p>
               </div>
-            ) : runs.length === 0 ? (
-              <p className="text-[10px] text-muted text-center py-4">
-                No multi-channel runs yet. Enroll contacts via POST /api/sequences/enroll
-                with {"{"}sequence_id, contact_ids[]{"}"} to create runs.
-              </p>
-            ) : (
-              <ul className="space-y-1.5">
-                {runs.map((r, index) => (
-                  <motion.li
-                    key={r.id}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                    className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className={`px-1.5 py-0.5 rounded text-[9px] ${
-                        r.status === "active" ? "bg-green-500/10 text-green-400"
-                        : r.status === "paused" ? "bg-yellow-500/10 text-yellow-400"
-                        : r.status === "exited" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                        : r.status === "completed" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                        : "bg-red-500/10 text-red-400"}`}>
-                        {r.status}
-                      </span>
-                      <span>step {r.current_step + 1}</span>
-                      <span className="text-muted">�</span>
-                      <span className="text-muted">contact {r.contact_id ? r.contact_id.slice(0, 8) : "�"}</span>
-                      {r.next_action_at && (
-                        <span className="text-muted">� next {new Date(r.next_action_at).toLocaleString()}</span>
-                      )}
-                      {r.exit_reason && <span className="text-muted">� {r.exit_reason}</span>}
-                    </div>
-                    <div className="flex gap-1">
-                      {r.status === "active" && (
-                        <button onClick={() => void pauseRun(r.id)} className="btn-ghost text-[9px] py-0.5 px-1.5">Pause</button>
-                      )}
-                      {r.status === "paused" && (
-                        <button onClick={() => void resumeRun(r.id)} className="btn-ghost text-[9px] py-0.5 px-1.5">Resume</button>
-                      )}
-                      {(r.status === "active" || r.status === "paused") && (
-                        <button onClick={() => void exitRunCall(r.id)} className="btn-ghost text-[9px] py-0.5 px-1.5 text-red-400">Exit</button>
-                      )}
-                    </div>
-                  </motion.li>
-                ))}
-              </ul>
-            )}
-          </PrismPanel>
-          <p className="text-[9px] text-muted px-2">
-            The cron runner ticks every minute and advances active runs. Reply on
-            email/SMS/DM auto-exits the contact's runs (`exit_reason` will read
-            replied_email / replied_sms / replied_dm).
-          </p>
-        </div>
-      )}
-
-      {/* ===== SETTINGS ===== */}
-      {activeTab === "settings" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="card">
-              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Settings size={14} className="text-[#2563EB]" /> Sending Limits
-              </h3>
+            )}{/* ===== ACTIVE RUNS ===== */}{activeTab === "runs" && (
               <div className="space-y-3">
-                {[
-                  { label: "Max emails per day", value: 50 },
-                  { label: "Max SMS per day", value: 20 },
-                  { label: "Min delay between sends (minutes)", value: 5 },
-                  { label: "Send window start", value: "9:00 AM" },
-                  { label: "Send window end", value: "6:00 PM" },
-                ].map((setting, i) => (
-                  <div key={i} className="flex items-center justify-between text-[10px]">
-                    <span>{setting.label}</span>
-                    <span className="text-[#2563EB] font-semibold">{setting.value}</span>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <Activity size={14} className="text-[#2563EB]" /> Multi-channel runs
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <select
+                      value={runsStatusFilter}
+                      onChange={(e) => { setRunsStatusFilter(e.target.value); void loadRuns(e.target.value); }}
+                      className="input text-[10px]"
+                    >
+                      <option value="active">Active</option>
+                      <option value="paused">Paused</option>
+                      <option value="completed">Completed</option>
+                      <option value="exited">Exited</option>
+                      <option value="failed">Failed</option>
+                      <option value="all">All</option>
+                    </select>
+                    <button onClick={() => void loadRuns()} className="btn-ghost text-[10px]">Refresh</button>
                   </div>
-                ))}
-              </div>
-            </div>
-            <div className="card">
-              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Pause size={14} className="text-[#2563EB]" /> Pause / Resume Controls
-              </h3>
-              <div className="space-y-2">
-                {sequences.map(seq => (
-                  <div key={seq.id} className="flex items-center justify-between p-2.5 rounded bg-surface-light text-[10px]">
-                    <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${seq.active ? "bg-green-400" : "bg-muted"}`} />
-                      <span className="font-semibold">{seq.name}</span>
-                      <span className="text-muted">({seq.enrolled} enrolled)</span>
+                </div>
+                <PrismPanel padding="p-3" className="overflow-hidden">
+                  {runsLoading ? (
+                    <div className="text-center py-6">
+                      <Loader2 size={16} className="animate-spin mx-auto text-[#2563EB] mb-2" />
+                      <p className="text-[10px] text-muted">Loading runs...</p>
                     </div>
-                    <button
-                      onClick={async () => {
-                        const updated = { ...seq, active: !seq.active };
-                        setSequences(prev => prev.map(s => s.id === seq.id ? updated : s));
-                        if (activeSequence?.id === seq.id) setActiveSequence(updated);
-                        if (seq.persisted) {
-                          await fetch(`/api/sequences/${seq.id}`, {
-                            method: "PATCH",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ is_active: updated.active }),
-                          });
-                        }
-                      }}
-                      className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${
-                      seq.active ? "bg-red-400/10 text-red-400" : "bg-green-400/10 text-green-400"
-                    }`}>
-                      {seq.active ? <><Pause size={8} /> Pause</> : <><Play size={8} /> Resume</>}
-                    </button>
-                  </div>
-                ))}
+                  ) : runs.length === 0 ? (
+                    <p className="text-[10px] text-muted text-center py-4">
+                      No multi-channel runs yet. Enroll contacts via POST /api/sequences/enroll
+                      with {"{"}sequence_id, contact_ids[]{"}"} to create runs.
+                    </p>
+                  ) : (
+                    <ul className="space-y-1.5">
+                      {runs.map((r, index) => (
+                        <motion.li
+                          key={r.id}
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.18, delay: index * 0.04 }}
+                          whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                          className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className={`px-1.5 py-0.5 rounded text-[9px] ${
+                              r.status === "active" ? "bg-green-500/10 text-green-400"
+                              : r.status === "paused" ? "bg-yellow-500/10 text-yellow-400"
+                              : r.status === "exited" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                              : r.status === "completed" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                              : "bg-red-500/10 text-red-400"}`}>
+                              {r.status}
+                            </span>
+                            <span>step {r.current_step + 1}</span>
+                            <span className="text-muted">�</span>
+                            <span className="text-muted">contact {r.contact_id ? r.contact_id.slice(0, 8) : "�"}</span>
+                            {r.next_action_at && (
+                              <span className="text-muted">� next {new Date(r.next_action_at).toLocaleString()}</span>
+                            )}
+                            {r.exit_reason && <span className="text-muted">� {r.exit_reason}</span>}
+                          </div>
+                          <div className="flex gap-1">
+                            {r.status === "active" && (
+                              <button onClick={() => void pauseRun(r.id)} className="btn-ghost text-[9px] py-0.5 px-1.5">Pause</button>
+                            )}
+                            {r.status === "paused" && (
+                              <button onClick={() => void resumeRun(r.id)} className="btn-ghost text-[9px] py-0.5 px-1.5">Resume</button>
+                            )}
+                            {(r.status === "active" || r.status === "paused") && (
+                              <button onClick={() => void exitRunCall(r.id)} className="btn-ghost text-[9px] py-0.5 px-1.5 text-red-400">Exit</button>
+                            )}
+                          </div>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  )}
+                </PrismPanel>
+                <p className="text-[9px] text-muted px-2">
+                  The cron runner ticks every minute and advances active runs. Reply on
+                  email/SMS/DM auto-exits the contact's runs (`exit_reason` will read
+                  replied_email / replied_sms / replied_dm).
+                </p>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            )}{/* ===== SETTINGS ===== */}{activeTab === "settings" && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="card">
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Settings size={14} className="text-[#2563EB]" /> Sending Limits
+                    </h3>
+                    <div className="space-y-3">
+                      {[
+                        { label: "Max emails per day", value: 50 },
+                        { label: "Max SMS per day", value: 20 },
+                        { label: "Min delay between sends (minutes)", value: 5 },
+                        { label: "Send window start", value: "9:00 AM" },
+                        { label: "Send window end", value: "6:00 PM" },
+                      ].map((setting, i) => (
+                        <div key={i} className="flex items-center justify-between text-[10px]">
+                          <span>{setting.label}</span>
+                          <span className="text-[#2563EB] font-semibold">{setting.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="card">
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Pause size={14} className="text-[#2563EB]" /> Pause / Resume Controls
+                    </h3>
+                    <div className="space-y-2">
+                      {sequences.map(seq => (
+                        <div key={seq.id} className="flex items-center justify-between p-2.5 rounded bg-surface-light text-[10px]">
+                          <div className="flex items-center gap-2">
+                            <span className={`w-2 h-2 rounded-full ${seq.active ? "bg-green-400" : "bg-muted"}`} />
+                            <span className="font-semibold">{seq.name}</span>
+                            <span className="text-muted">({seq.enrolled} enrolled)</span>
+                          </div>
+                          <button
+                            onClick={async () => {
+                              const updated = { ...seq, active: !seq.active };
+                              setSequences(prev => prev.map(s => s.id === seq.id ? updated : s));
+                              if (activeSequence?.id === seq.id) setActiveSequence(updated);
+                              if (seq.persisted) {
+                                await fetch(`/api/sequences/${seq.id}`, {
+                                  method: "PATCH",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ is_active: updated.active }),
+                                });
+                              }
+                            }}
+                            className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${
+                            seq.active ? "bg-red-400/10 text-red-400" : "bg-green-400/10 text-green-400"
+                          }`}>
+                            {seq.active ? <><Pause size={8} /> Pause</> : <><Play size={8} /> Resume</>}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}</MotionPage>
   );
 }
 

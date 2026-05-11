@@ -27,6 +27,7 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { MetaIcon, GoogleAdsIcon, TikTokIcon } from "@/components/ui/platform-icons";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type Tab = "overview" | "campaigns" | "creatives" | "copy-lab" | "copilot";
 
@@ -364,7 +365,9 @@ export default function AdsPage() {
     return clients.find(c => c.id === clientId)?.business_name || "�";
   }
 
-  if (loading) return <PageLoading />;
+  if (loading) return <MotionPage>
+                          <PageLoading />
+                        </MotionPage>;
 
   return (
     <div className="fade-in space-y-6 max-w-[1400px] mx-auto">

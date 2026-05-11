@@ -10,6 +10,7 @@ import { Store, Plus, Pause, Play, X, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import { useAuth } from "@/lib/auth-context";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface ServiceRow {
   id: string;
@@ -159,235 +160,229 @@ export default function ListingsPage() {
   };
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        eyebrow="MY LISTINGS"
-        icon={<Store size={28} />}
-        title="My Listings"
-        subtitle="Sell your services on the ShortStack marketplace."
-        gradient="blue"
-        actions={
-          <button
-            onClick={() => setShowForm((v) => !v)}
-            className="flex items-center gap-2 rounded-lg border border-border bg-black/5 px-4 py-2 text-sm font-medium text-foreground transition hover:bg-black/10"
-          >
-            <Plus size={14} />
-            New listing
-          </button>
-        }
-      />
-
-      {showForm && (
-        <div className="rounded-xl border border-border bg-surface p-5">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-[#111827]">New service listing</h2>
-            <button
-              onClick={() => {
-                setShowForm(false);
-                setDraft(EMPTY_DRAFT);
-              }}
-              className="text-muted hover:text-[#111827]"
-              aria-label="Cancel"
-            >
-              <X size={16} />
-            </button>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="md:col-span-2">
-              <label htmlFor="svc-title" className="block text-xs text-muted mb-1">
-                Title
-              </label>
-              <input
-                id="svc-title"
-                value={draft.title}
-                onChange={(e) => setDraft({ ...draft, title: e.target.value })}
-                maxLength={200}
-                className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
-                placeholder="Short, specific. e.g. Edit a 60-second YouTube Short"
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label
-                htmlFor="svc-desc"
-                className="block text-xs text-muted mb-1"
-              >
-                Description
-              </label>
-              <textarea
-                id="svc-desc"
-                value={draft.description}
-                onChange={(e) => setDraft({ ...draft, description: e.target.value })}
-                maxLength={5000}
-                rows={5}
-                className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
-                placeholder="What's included, what you need from the buyer, what they'll receive."
-              />
-            </div>
-            <div>
-              <label htmlFor="svc-cat" className="block text-xs text-muted mb-1">
-                Category
-              </label>
-              <select
-                id="svc-cat"
-                value={draft.category}
-                onChange={(e) => setDraft({ ...draft, category: e.target.value })}
-                className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c} value={c} className="capitalize">
-                    {c}
-                  </option>
+    <MotionPage className="fade-in space-y-5"><PageHero
+              eyebrow="MY LISTINGS"
+              icon={<Store size={28} />}
+              title="My Listings"
+              subtitle="Sell your services on the ShortStack marketplace."
+              gradient="blue"
+              actions={
+                <button
+                  onClick={() => setShowForm((v) => !v)}
+                  className="flex items-center gap-2 rounded-lg border border-border bg-black/5 px-4 py-2 text-sm font-medium text-foreground transition hover:bg-black/10"
+                >
+                  <Plus size={14} />
+                  New listing
+                </button>
+              }
+            />{showForm && (
+              <div className="rounded-xl border border-border bg-surface p-5">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-sm font-semibold text-[#111827]">New service listing</h2>
+                  <button
+                    onClick={() => {
+                      setShowForm(false);
+                      setDraft(EMPTY_DRAFT);
+                    }}
+                    className="text-muted hover:text-[#111827]"
+                    aria-label="Cancel"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="md:col-span-2">
+                    <label htmlFor="svc-title" className="block text-xs text-muted mb-1">
+                      Title
+                    </label>
+                    <input
+                      id="svc-title"
+                      value={draft.title}
+                      onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+                      maxLength={200}
+                      className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      placeholder="Short, specific. e.g. Edit a 60-second YouTube Short"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label
+                      htmlFor="svc-desc"
+                      className="block text-xs text-muted mb-1"
+                    >
+                      Description
+                    </label>
+                    <textarea
+                      id="svc-desc"
+                      value={draft.description}
+                      onChange={(e) => setDraft({ ...draft, description: e.target.value })}
+                      maxLength={5000}
+                      rows={5}
+                      className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      placeholder="What's included, what you need from the buyer, what they'll receive."
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="svc-cat" className="block text-xs text-muted mb-1">
+                      Category
+                    </label>
+                    <select
+                      id="svc-cat"
+                      value={draft.category}
+                      onChange={(e) => setDraft({ ...draft, category: e.target.value })}
+                      className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                    >
+                      {CATEGORIES.map((c) => (
+                        <option key={c} value={c} className="capitalize">
+                          {c}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="svc-price"
+                      className="block text-xs text-muted mb-1"
+                    >
+                      Price (USD)
+                    </label>
+                    <input
+                      id="svc-price"
+                      type="number"
+                      min={1}
+                      step="1"
+                      value={draft.priceDollars}
+                      onChange={(e) =>
+                        setDraft({ ...draft, priceDollars: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="svc-days"
+                      className="block text-xs text-muted mb-1"
+                    >
+                      Delivery (days)
+                    </label>
+                    <input
+                      id="svc-days"
+                      type="number"
+                      min={1}
+                      step="1"
+                      value={draft.deliveryDays}
+                      onChange={(e) =>
+                        setDraft({ ...draft, deliveryDays: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="svc-status"
+                      className="block text-xs text-muted mb-1"
+                    >
+                      Status
+                    </label>
+                    <select
+                      id="svc-status"
+                      value={draft.status}
+                      onChange={(e) =>
+                        setDraft({ ...draft, status: e.target.value as "active" | "draft" })
+                      }
+                      className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                    >
+                      <option value="active">Active (visible to buyers)</option>
+                      <option value="draft">Draft (hidden)</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="mt-5 flex justify-end gap-2">
+                  <button
+                    onClick={() => {
+                      setShowForm(false);
+                      setDraft(EMPTY_DRAFT);
+                    }}
+                    className="rounded-lg border border-border px-4 py-2 text-xs text-muted hover:text-[#111827]"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSubmit}
+                    disabled={submitting || !draft.title || !draft.description}
+                    className="flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-bold text-white hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {submitting && <Loader2 size={12} className="animate-spin" />}
+                    Create listing
+                  </button>
+                </div>
+              </div>
+            )}{loading ? (
+              <div className="py-12 text-center text-sm text-muted">Loading...</div>
+            ) : services.length === 0 ? (
+              <div className="card flex flex-col items-center justify-center py-12 text-center">
+                <Store size={36} className="mb-3 text-muted/30" />
+                <p className="text-sm font-medium text-[#111827]">No listings yet</p>
+                <p className="mt-1 text-xs text-muted">
+                  Create your first service to start selling.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {services.map((svc) => (
+                  <div key={svc.id} className="card flex items-center justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="truncate text-sm font-semibold text-[#111827]">
+                          {svc.title}
+                        </h3>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
+                            svc.status === "active"
+                              ? "bg-emerald-500/10 text-emerald-400"
+                              : svc.status === "paused"
+                                ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                                : "bg-[rgba(0,0,0,0.06)] text-[#9CA3AF]"
+                          }`}
+                        >
+                          {svc.status}
+                        </span>
+                      </div>
+                      <p className="mt-1 line-clamp-1 text-xs text-muted">{svc.description}</p>
+                      <div className="mt-2 flex items-center gap-3 text-xs text-muted">
+                        <span className="capitalize">{svc.category}</span>
+                        <span>·</span>
+                        <span>{formatPrice(svc.price_cents, svc.currency)}</span>
+                        <span>·</span>
+                        <span>{svc.delivery_days}d delivery</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {(svc.status === "active" || svc.status === "paused") && (
+                        <button
+                          onClick={() => togglePause(svc)}
+                          className="rounded-lg border border-border p-2 text-muted hover:text-[#111827]"
+                          title={svc.status === "active" ? "Pause" : "Activate"}
+                        >
+                          {svc.status === "active" ? (
+                            <Pause size={14} />
+                          ) : (
+                            <Play size={14} />
+                          )}
+                        </button>
+                      )}
+                      {svc.status !== "closed" && (
+                        <button
+                          onClick={() => closeService(svc)}
+                          className="rounded-lg border border-red-500/20 p-2 text-red-400/60 hover:border-red-500/40 hover:text-red-400"
+                          title="Close"
+                        >
+                          <X size={14} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 ))}
-              </select>
-            </div>
-            <div>
-              <label
-                htmlFor="svc-price"
-                className="block text-xs text-muted mb-1"
-              >
-                Price (USD)
-              </label>
-              <input
-                id="svc-price"
-                type="number"
-                min={1}
-                step="1"
-                value={draft.priceDollars}
-                onChange={(e) =>
-                  setDraft({ ...draft, priceDollars: e.target.value })
-                }
-                className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="svc-days"
-                className="block text-xs text-muted mb-1"
-              >
-                Delivery (days)
-              </label>
-              <input
-                id="svc-days"
-                type="number"
-                min={1}
-                step="1"
-                value={draft.deliveryDays}
-                onChange={(e) =>
-                  setDraft({ ...draft, deliveryDays: e.target.value })
-                }
-                className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="svc-status"
-                className="block text-xs text-muted mb-1"
-              >
-                Status
-              </label>
-              <select
-                id="svc-status"
-                value={draft.status}
-                onChange={(e) =>
-                  setDraft({ ...draft, status: e.target.value as "active" | "draft" })
-                }
-                className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
-              >
-                <option value="active">Active (visible to buyers)</option>
-                <option value="draft">Draft (hidden)</option>
-              </select>
-            </div>
-          </div>
-          <div className="mt-5 flex justify-end gap-2">
-            <button
-              onClick={() => {
-                setShowForm(false);
-                setDraft(EMPTY_DRAFT);
-              }}
-              className="rounded-lg border border-border px-4 py-2 text-xs text-muted hover:text-[#111827]"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={submitting || !draft.title || !draft.description}
-              className="flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-bold text-white hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {submitting && <Loader2 size={12} className="animate-spin" />}
-              Create listing
-            </button>
-          </div>
-        </div>
-      )}
-
-      {loading ? (
-        <div className="py-12 text-center text-sm text-muted">Loading...</div>
-      ) : services.length === 0 ? (
-        <div className="card flex flex-col items-center justify-center py-12 text-center">
-          <Store size={36} className="mb-3 text-muted/30" />
-          <p className="text-sm font-medium text-[#111827]">No listings yet</p>
-          <p className="mt-1 text-xs text-muted">
-            Create your first service to start selling.
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {services.map((svc) => (
-            <div key={svc.id} className="card flex items-center justify-between gap-4">
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="truncate text-sm font-semibold text-[#111827]">
-                    {svc.title}
-                  </h3>
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                      svc.status === "active"
-                        ? "bg-emerald-500/10 text-emerald-400"
-                        : svc.status === "paused"
-                          ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                          : "bg-[rgba(0,0,0,0.06)] text-[#9CA3AF]"
-                    }`}
-                  >
-                    {svc.status}
-                  </span>
-                </div>
-                <p className="mt-1 line-clamp-1 text-xs text-muted">{svc.description}</p>
-                <div className="mt-2 flex items-center gap-3 text-xs text-muted">
-                  <span className="capitalize">{svc.category}</span>
-                  <span>·</span>
-                  <span>{formatPrice(svc.price_cents, svc.currency)}</span>
-                  <span>·</span>
-                  <span>{svc.delivery_days}d delivery</span>
-                </div>
               </div>
-              <div className="flex items-center gap-2">
-                {(svc.status === "active" || svc.status === "paused") && (
-                  <button
-                    onClick={() => togglePause(svc)}
-                    className="rounded-lg border border-border p-2 text-muted hover:text-[#111827]"
-                    title={svc.status === "active" ? "Pause" : "Activate"}
-                  >
-                    {svc.status === "active" ? (
-                      <Pause size={14} />
-                    ) : (
-                      <Play size={14} />
-                    )}
-                  </button>
-                )}
-                {svc.status !== "closed" && (
-                  <button
-                    onClick={() => closeService(svc)}
-                    className="rounded-lg border border-red-500/20 p-2 text-red-400/60 hover:border-red-500/40 hover:text-red-400"
-                    title="Close"
-                  >
-                    <X size={14} />
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+            )}</MotionPage>
   );
 }

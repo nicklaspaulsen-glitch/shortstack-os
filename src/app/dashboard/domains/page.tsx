@@ -14,6 +14,7 @@ import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import { VercelIcon, GoDaddyIcon } from "@/components/ui/platform-icons";
 import { computeMonthlyPrice, computeYearlyPrice } from "@/lib/domain-pricing";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface WebsiteDomain {
   id: string;
@@ -395,451 +396,434 @@ export default function DomainsPage() {
   const domainsOwned = domains.length;
 
   return (
-    <div className="fade-in space-y-5">
-      <PageHero
-        eyebrow="DOMAINS"
-        icon={<Globe2 size={28} />}
-        title="Domains"
-        subtitle="Search, buy & manage domains via GoDaddy. Connect them to your Vercel deployments."
-        gradient="blue"
-        actions={
-          <div className="flex items-center gap-2">
-            {usage && (
-              <div className="flex items-center gap-1.5 text-[10px] text-foreground bg-black/5 border border-border px-2.5 py-1.5 rounded-lg">
-                <Globe size={11} />
+    <MotionPage className="fade-in space-y-5"><PageHero
+              eyebrow="DOMAINS"
+              icon={<Globe2 size={28} />}
+              title="Domains"
+              subtitle="Search, buy & manage domains via GoDaddy. Connect them to your Vercel deployments."
+              gradient="blue"
+              actions={
+                <div className="flex items-center gap-2">
+                  {usage && (
+                    <div className="flex items-center gap-1.5 text-[10px] text-foreground bg-black/5 border border-border px-2.5 py-1.5 rounded-lg">
+                      <Globe size={11} />
+                      <span>
+                        <span className="font-semibold">{domainsOwned}</span>
+                        <span className="opacity-70"> owned</span>
+                        <span className="opacity-60"> · {planTierLabel}</span>
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-1.5 text-[10px] text-foreground bg-black/5 border border-border px-2 py-1 rounded-lg">
+                    <GoDaddyIcon size={12} /> GoDaddy
+                    <span className="opacity-40">·</span>
+                    <VercelIcon size={12} /> Vercel
+                  </div>
+                </div>
+              }
+            />{/* Who-pays clarity banner — agencies pass domain costs to clients, so
+                make it unambiguous on a page where a miscommunication = a chargeback. */}<div className="flex flex-wrap items-start gap-2 rounded-xl border border-blue-500/25 bg-blue-500/5 p-3 text-[11px] text-blue-700">
+              <Info size={13} className="mt-0.5 shrink-0 text-blue-600" />
+              <div className="flex-1 min-w-0">
+                <span className="font-semibold text-blue-800">Who pays?</span>{" "}
                 <span>
-                  <span className="font-semibold">{domainsOwned}</span>
-                  <span className="opacity-70"> owned</span>
-                  <span className="opacity-60"> · {planTierLabel}</span>
+                  Domain purchases charge <span className="font-semibold">your</span> Stripe-linked card.
+                  Most agencies rebill the client (monthly: our yearly-retail price divided by 12 + $4
+                  ops fee; yearly: same with a 20% discount). Adjust the markup in{" "}
+                  <code className="px-1 py-0.5 rounded bg-blue-500/10 text-[10px]">
+                    src/lib/domain-pricing.ts
+                  </code>
+                  .
                 </span>
               </div>
-            )}
-            <div className="flex items-center gap-1.5 text-[10px] text-foreground bg-black/5 border border-border px-2 py-1 rounded-lg">
-              <GoDaddyIcon size={12} /> GoDaddy
-              <span className="opacity-40">·</span>
-              <VercelIcon size={12} /> Vercel
-            </div>
-          </div>
-        }
-      />
+            </div>{/* Domain-as-Hub promo — surface the one-click brand launch flow from
+                the main domains page. Sits above the search so the "buy the
+                domain → launch the brand" loop is discoverable. */}<a
+              href="/dashboard/domains/hub-setup"
+              className="glass rounded-xl block bg-gradient-to-br from-[rgba(37,99,235,0.08)] to-[rgba(37,99,235,0.03)] border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.4)] transition p-4"
+            >
+              <div className="flex items-center gap-3">
+                <Sparkles size={18} className="text-[#2563EB] shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold">One-click brand launch</p>
+                  <p className="text-[10px] text-muted mt-0.5">
+                    Provision email, phone, website, portal, and chat widget on your domain in one flow.
+                  </p>
+                </div>
+                <ArrowUpRight size={14} className="text-[#2563EB] shrink-0" />
+              </div>
+            </a>{/* ── Domain search ────────────────────────────────────────────── */}<div className="glass rounded-xl p-4">
+              <h2 className="section-header flex items-center gap-2">
+                <Search size={13} className="text-[#2563EB]" /> Find & buy a domain
+              </h2>
+              <div className="flex gap-2">
+                <input
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && searchDomains()}
+                  className="input flex-1 text-sm"
+                  placeholder="mybusiness"
+                />
+                <button onClick={searchDomains} disabled={searching} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
+                  {searching ? <Loader size={12} className="animate-spin" /> : <Search size={12} />}
+                  Search
+                </button>
+              </div>
 
-      {/* Who-pays clarity banner — agencies pass domain costs to clients, so
-          make it unambiguous on a page where a miscommunication = a chargeback. */}
-      <div className="flex flex-wrap items-start gap-2 rounded-xl border border-blue-500/25 bg-blue-500/5 p-3 text-[11px] text-blue-700">
-        <Info size={13} className="mt-0.5 shrink-0 text-blue-600" />
-        <div className="flex-1 min-w-0">
-          <span className="font-semibold text-blue-800">Who pays?</span>{" "}
-          <span>
-            Domain purchases charge <span className="font-semibold">your</span> Stripe-linked card.
-            Most agencies rebill the client (monthly: our yearly-retail price divided by 12 + $4
-            ops fee; yearly: same with a 20% discount). Adjust the markup in{" "}
-            <code className="px-1 py-0.5 rounded bg-blue-500/10 text-[10px]">
-              src/lib/domain-pricing.ts
-            </code>
-            .
-          </span>
-        </div>
-      </div>
+              {results.length > 0 && (
+                <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {results.map((r, idx) => {
+                    // Use shared pricing helpers so the buttons match the checkout
+                    // price exactly (previously used hand-rolled math that could drift).
+                    const base = r.price || 12.99;
+                    const monthly = computeMonthlyPrice(base);
+                    const yearly = computeYearlyPrice(monthly);
+                    const rowMonthlyLoading = purchasingDomain === `${r.domain}:monthly`;
+                    const rowYearlyLoading = purchasingDomain === `${r.domain}:yearly`;
+                    const anyRowLoading = rowMonthlyLoading || rowYearlyLoading;
+                    return (
+                      <motion.div key={r.domain} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-3">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2 min-w-0">
+                            {r.available === true
+                              ? <CheckCircle size={14} className="text-success shrink-0" />
+                              : r.available === false
+                                ? <XCircle size={14} className="text-muted shrink-0" />
+                                : <AlertCircle size={14} className="text-amber-400 shrink-0" />}
+                            <div className="min-w-0">
+                              <p className="text-xs font-semibold truncate">{r.domain}</p>
+                              <p className="text-[10px] text-muted">
+                                {r.available === true
+                                  ? (r.price ? `${r.currency} $${r.price.toFixed(2)} wholesale/yr` : "Available")
+                                  : r.available === false
+                                    ? "Taken"
+                                    : "Unknown — can't verify"}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        {r.available === true && (
+                          <>
+                            {/* Clear pricing breakdown BEFORE commit — shows wholesale
+                                vs what-user-pays so there are no surprises at Stripe
+                                checkout. */}
+                            <div className="mb-2 px-2 py-1.5 rounded-md bg-background/40 text-[9px] text-muted leading-relaxed">
+                              Wholesale: ${base.toFixed(2)}/yr · Your price:{" "}
+                              <span className="text-foreground font-semibold">${monthly}/mo</span> or{" "}
+                              <span className="text-foreground font-semibold">${yearly}/yr</span> ·
+                              Includes registration, SSL, DNS, hosting. Renews automatically.
+                            </div>
+                            <div className="grid grid-cols-2 gap-1.5">
+                              <button
+                                onClick={() => purchaseDomain(r.domain, "monthly", r.price || undefined)}
+                                disabled={anyRowLoading}
+                                className="text-[10px] px-2 py-2 rounded-lg border border-border text-foreground hover:border-[rgba(37,99,235,0.4)] hover:bg-black/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                {rowMonthlyLoading ? (
+                                  <Loader size={12} className="animate-spin my-1" />
+                                ) : (
+                                  <>
+                                    <span className="font-bold">${monthly}/mo</span>
+                                    <span className="text-[9px] text-muted">Monthly</span>
+                                  </>
+                                )}
+                              </button>
+                              <button
+                                onClick={() => purchaseDomain(r.domain, "yearly", r.price || undefined)}
+                                disabled={anyRowLoading}
+                                className="relative text-[10px] px-2 py-2 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 text-black font-bold flex flex-col items-center hover:shadow-lg hover:shadow-amber-400/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                              >
+                                {rowYearlyLoading ? (
+                                  <Loader size={12} className="animate-spin my-1" />
+                                ) : (
+                                  <>
+                                    <span className="absolute -top-1.5 right-1 text-[8px] bg-emerald-500 text-white px-1 py-0.5 rounded-full font-bold">Save 20%</span>
+                                    <span>${yearly}/yr</span>
+                                    <span className="text-[9px] opacity-80">Yearly</span>
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>{/* ── Owned domains ────────────────────────────────────────────── */}<div className="glass rounded-xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="section-header flex items-center gap-2 mb-0">
+                  <Globe size={13} className="text-[#2563EB]" /> Your domains ({domains.length})
+                </h2>
+                <button onClick={loadData} className="btn-ghost text-[10px] flex items-center gap-1">
+                  <RefreshCw size={10} /> Refresh
+                </button>
+              </div>
 
-      {/* Domain-as-Hub promo — surface the one-click brand launch flow from
-          the main domains page. Sits above the search so the "buy the
-          domain → launch the brand" loop is discoverable. */}
-      <a
-        href="/dashboard/domains/hub-setup"
-        className="glass rounded-xl block bg-gradient-to-br from-[rgba(37,99,235,0.08)] to-[rgba(37,99,235,0.03)] border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.4)] transition p-4"
-      >
-        <div className="flex items-center gap-3">
-          <Sparkles size={18} className="text-[#2563EB] shrink-0" />
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold">One-click brand launch</p>
-            <p className="text-[10px] text-muted mt-0.5">
-              Provision email, phone, website, portal, and chat widget on your domain in one flow.
-            </p>
-          </div>
-          <ArrowUpRight size={14} className="text-[#2563EB] shrink-0" />
-        </div>
-      </a>
-
-      {/* ── Domain search ────────────────────────────────────────────── */}
-      <div className="glass rounded-xl p-4">
-        <h2 className="section-header flex items-center gap-2">
-          <Search size={13} className="text-[#2563EB]" /> Find & buy a domain
-        </h2>
-        <div className="flex gap-2">
-          <input
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && searchDomains()}
-            className="input flex-1 text-sm"
-            placeholder="mybusiness"
-          />
-          <button onClick={searchDomains} disabled={searching} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-            {searching ? <Loader size={12} className="animate-spin" /> : <Search size={12} />}
-            Search
-          </button>
-        </div>
-
-        {results.length > 0 && (
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
-            {results.map((r, idx) => {
-              // Use shared pricing helpers so the buttons match the checkout
-              // price exactly (previously used hand-rolled math that could drift).
-              const base = r.price || 12.99;
-              const monthly = computeMonthlyPrice(base);
-              const yearly = computeYearlyPrice(monthly);
-              const rowMonthlyLoading = purchasingDomain === `${r.domain}:monthly`;
-              const rowYearlyLoading = purchasingDomain === `${r.domain}:yearly`;
-              const anyRowLoading = rowMonthlyLoading || rowYearlyLoading;
-              return (
-                <motion.div key={r.domain} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2 min-w-0">
-                      {r.available === true
-                        ? <CheckCircle size={14} className="text-success shrink-0" />
-                        : r.available === false
-                          ? <XCircle size={14} className="text-muted shrink-0" />
-                          : <AlertCircle size={14} className="text-amber-400 shrink-0" />}
-                      <div className="min-w-0">
-                        <p className="text-xs font-semibold truncate">{r.domain}</p>
-                        <p className="text-[10px] text-muted">
-                          {r.available === true
-                            ? (r.price ? `${r.currency} $${r.price.toFixed(2)} wholesale/yr` : "Available")
-                            : r.available === false
-                              ? "Taken"
-                              : "Unknown — can't verify"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  {r.available === true && (
-                    <>
-                      {/* Clear pricing breakdown BEFORE commit — shows wholesale
-                          vs what-user-pays so there are no surprises at Stripe
-                          checkout. */}
-                      <div className="mb-2 px-2 py-1.5 rounded-md bg-background/40 text-[9px] text-muted leading-relaxed">
-                        Wholesale: ${base.toFixed(2)}/yr · Your price:{" "}
-                        <span className="text-foreground font-semibold">${monthly}/mo</span> or{" "}
-                        <span className="text-foreground font-semibold">${yearly}/yr</span> ·
-                        Includes registration, SSL, DNS, hosting. Renews automatically.
-                      </div>
-                      <div className="grid grid-cols-2 gap-1.5">
-                        <button
-                          onClick={() => purchaseDomain(r.domain, "monthly", r.price || undefined)}
-                          disabled={anyRowLoading}
-                          className="text-[10px] px-2 py-2 rounded-lg border border-border text-foreground hover:border-[rgba(37,99,235,0.4)] hover:bg-black/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          {rowMonthlyLoading ? (
-                            <Loader size={12} className="animate-spin my-1" />
-                          ) : (
-                            <>
-                              <span className="font-bold">${monthly}/mo</span>
-                              <span className="text-[9px] text-muted">Monthly</span>
-                            </>
+              {loading ? (
+                <div className="py-8 text-center text-muted text-xs">Loading...</div>
+              ) : domains.length === 0 ? (
+                <div className="py-10 text-center">
+                  <Globe size={24} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-xs text-muted">No domains yet. Search above to buy one.</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {domains.map((d, idx) => (
+                    <motion.div key={d.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-3">
+                      <div className="flex items-start justify-between flex-wrap gap-2">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <GoDaddyIcon size={20} />
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <p className="text-sm font-semibold truncate">{d.domain}</p>
+                              <span className={`text-[9px] px-2 py-0.5 rounded-full border ${STATUS_BADGE[d.status] || STATUS_BADGE.pending}`}>
+                                {d.status.replace(/_/g, " ")}
+                              </span>
+                              {/* Resend mail badge — one per status */}
+                              {d.resend_status === "verified" ? (
+                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-green-500/10 text-green-700 border-green-500/30 flex items-center gap-1">
+                                  <MailCheck size={9} /> Mail verified
+                                </span>
+                              ) : d.resend_status === "verifying" || d.resend_status === "pending" ? (
+                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-blue-500/10 text-blue-700 border-blue-500/30 flex items-center gap-1">
+                                  <Mail size={9} /> Mail verifying
+                                </span>
+                              ) : d.resend_status === "failed" ? (
+                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-red-500/10 text-red-700 border-red-500/30 flex items-center gap-1">
+                                  <MailWarning size={9} /> Mail failed
+                                </span>
+                              ) : (
+                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-slate-500/10 text-slate-600 border-slate-500/30 flex items-center gap-1">
+                                  <Mail size={9} /> Mail not set up
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-[10px] text-muted mt-0.5">
+                              {d.purchase_price ? `$${d.purchase_price.toFixed(2)} / year` : "—"}
+                              {d.expires_at && ` · expires ${new Date(d.expires_at).toLocaleDateString()}`}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          {(d.status === "processing" || d.status === "purchased" || d.status === "pending_payment") && (
+                            <button
+                              onClick={() => retryAutoConfigure(d)}
+                              className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1"
+                            >
+                              <RefreshCw size={10} /> Finish setup
+                            </button>
                           )}
-                        </button>
-                        <button
-                          onClick={() => purchaseDomain(r.domain, "yearly", r.price || undefined)}
-                          disabled={anyRowLoading}
-                          className="relative text-[10px] px-2 py-2 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 text-black font-bold flex flex-col items-center hover:shadow-lg hover:shadow-amber-400/30 disabled:opacity-60 disabled:cursor-not-allowed"
-                        >
-                          {rowYearlyLoading ? (
-                            <Loader size={12} className="animate-spin my-1" />
-                          ) : (
-                            <>
-                              <span className="absolute -top-1.5 right-1 text-[8px] bg-emerald-500 text-white px-1 py-0.5 rounded-full font-bold">Save 20%</span>
-                              <span>${yearly}/yr</span>
-                              <span className="text-[9px] opacity-80">Yearly</span>
-                            </>
+                          {/* Resend mail action: set up, or refresh while verifying */}
+                          {!d.resend_status && (
+                            <button
+                              onClick={() => setupMail(d)}
+                              className="text-[10px] px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/25 text-blue-700 hover:bg-blue-500/20 flex items-center gap-1"
+                            >
+                              <Mail size={10} /> Set up mail
+                            </button>
                           )}
-                        </button>
+                          {(d.resend_status === "verifying" || d.resend_status === "pending") && (
+                            <button
+                              onClick={() => refreshMailStatus(d)}
+                              className="text-[10px] px-2.5 py-1 rounded-lg border border-blue-500/25 text-blue-700 hover:bg-blue-500/10 flex items-center gap-1"
+                            >
+                              <RefreshCw size={10} /> Check status
+                            </button>
+                          )}
+                          {d.resend_status === "failed" && (
+                            <button
+                              onClick={() => setupMail(d)}
+                              className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/30 text-red-700 hover:bg-red-500/10 flex items-center gap-1"
+                            >
+                              <RefreshCw size={10} /> Retry mail
+                            </button>
+                          )}
+                          <button onClick={() => openDns(d)} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
+                            <Edit3 size={10} /> DNS
+                          </button>
+                          <button
+                            onClick={() => { navigator.clipboard.writeText(d.domain); toast.success("Copied"); }}
+                            className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1"
+                          >
+                            <Copy size={10} />
+                          </button>
+                          <a
+                            href={`https://${d.domain}`}
+                            target="_blank"
+                            rel="noopener"
+                            className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1"
+                          >
+                            <ExternalLink size={10} />
+                          </a>
+                        </div>
                       </div>
-                    </>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
-        )}
-      </div>
 
-      {/* ── Owned domains ────────────────────────────────────────────── */}
-      <div className="glass rounded-xl p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="section-header flex items-center gap-2 mb-0">
-            <Globe size={13} className="text-[#2563EB]" /> Your domains ({domains.length})
-          </h2>
-          <button onClick={loadData} className="btn-ghost text-[10px] flex items-center gap-1">
-            <RefreshCw size={10} /> Refresh
-          </button>
-        </div>
-
-        {loading ? (
-          <div className="py-8 text-center text-muted text-xs">Loading...</div>
-        ) : domains.length === 0 ? (
-          <div className="py-10 text-center">
-            <Globe size={24} className="mx-auto mb-2 text-muted/30" />
-            <p className="text-xs text-muted">No domains yet. Search above to buy one.</p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {domains.map((d, idx) => (
-              <motion.div key={d.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-3">
-                <div className="flex items-start justify-between flex-wrap gap-2">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <GoDaddyIcon size={20} />
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="text-sm font-semibold truncate">{d.domain}</p>
-                        <span className={`text-[9px] px-2 py-0.5 rounded-full border ${STATUS_BADGE[d.status] || STATUS_BADGE.pending}`}>
-                          {d.status.replace(/_/g, " ")}
-                        </span>
-                        {/* Resend mail badge — one per status */}
-                        {d.resend_status === "verified" ? (
-                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-green-500/10 text-green-700 border-green-500/30 flex items-center gap-1">
-                            <MailCheck size={9} /> Mail verified
-                          </span>
-                        ) : d.resend_status === "verifying" || d.resend_status === "pending" ? (
-                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-blue-500/10 text-blue-700 border-blue-500/30 flex items-center gap-1">
-                            <Mail size={9} /> Mail verifying
-                          </span>
-                        ) : d.resend_status === "failed" ? (
-                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-red-500/10 text-red-700 border-red-500/30 flex items-center gap-1">
-                            <MailWarning size={9} /> Mail failed
-                          </span>
-                        ) : (
-                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-slate-500/10 text-slate-600 border-slate-500/30 flex items-center gap-1">
-                            <Mail size={9} /> Mail not set up
+                      {/* Connect to website */}
+                      <div className="mt-3 pt-3 border-t border-border/60 flex items-center gap-2 flex-wrap">
+                        <span className="text-[10px] text-muted">Link to website:</span>
+                        <select
+                          value={d.website_id || ""}
+                          onChange={e => connectToWebsite(d.id, e.target.value)}
+                          className="text-[10px] py-1 px-2 rounded-lg bg-surface border border-border text-foreground"
+                        >
+                          <option value="">Not linked</option>
+                          {projects.map(p => (
+                            <option key={p.id} value={p.id}>{p.name}</option>
+                          ))}
+                        </select>
+                        {d.website_id && (
+                          <span className="text-[10px] flex items-center gap-1 text-success">
+                            <VercelIcon size={10} /> deployed
                           </span>
                         )}
                       </div>
-                      <p className="text-[10px] text-muted mt-0.5">
-                        {d.purchase_price ? `$${d.purchase_price.toFixed(2)} / year` : "—"}
-                        {d.expires_at && ` · expires ${new Date(d.expires_at).toLocaleDateString()}`}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    {(d.status === "processing" || d.status === "purchased" || d.status === "pending_payment") && (
-                      <button
-                        onClick={() => retryAutoConfigure(d)}
-                        className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1"
-                      >
-                        <RefreshCw size={10} /> Finish setup
-                      </button>
-                    )}
-                    {/* Resend mail action: set up, or refresh while verifying */}
-                    {!d.resend_status && (
-                      <button
-                        onClick={() => setupMail(d)}
-                        className="text-[10px] px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/25 text-blue-700 hover:bg-blue-500/20 flex items-center gap-1"
-                      >
-                        <Mail size={10} /> Set up mail
-                      </button>
-                    )}
-                    {(d.resend_status === "verifying" || d.resend_status === "pending") && (
-                      <button
-                        onClick={() => refreshMailStatus(d)}
-                        className="text-[10px] px-2.5 py-1 rounded-lg border border-blue-500/25 text-blue-700 hover:bg-blue-500/10 flex items-center gap-1"
-                      >
-                        <RefreshCw size={10} /> Check status
-                      </button>
-                    )}
-                    {d.resend_status === "failed" && (
-                      <button
-                        onClick={() => setupMail(d)}
-                        className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/30 text-red-700 hover:bg-red-500/10 flex items-center gap-1"
-                      >
-                        <RefreshCw size={10} /> Retry mail
-                      </button>
-                    )}
-                    <button onClick={() => openDns(d)} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
-                      <Edit3 size={10} /> DNS
-                    </button>
-                    <button
-                      onClick={() => { navigator.clipboard.writeText(d.domain); toast.success("Copied"); }}
-                      className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1"
-                    >
-                      <Copy size={10} />
-                    </button>
-                    <a
-                      href={`https://${d.domain}`}
-                      target="_blank"
-                      rel="noopener"
-                      className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1"
-                    >
-                      <ExternalLink size={10} />
-                    </a>
-                  </div>
-                </div>
 
-                {/* Connect to website */}
-                <div className="mt-3 pt-3 border-t border-border/60 flex items-center gap-2 flex-wrap">
-                  <span className="text-[10px] text-muted">Link to website:</span>
-                  <select
-                    value={d.website_id || ""}
-                    onChange={e => connectToWebsite(d.id, e.target.value)}
-                    className="text-[10px] py-1 px-2 rounded-lg bg-surface border border-border text-foreground"
-                  >
-                    <option value="">Not linked</option>
-                    {projects.map(p => (
-                      <option key={p.id} value={p.id}>{p.name}</option>
-                    ))}
-                  </select>
-                  {d.website_id && (
-                    <span className="text-[10px] flex items-center gap-1 text-success">
-                      <VercelIcon size={10} /> deployed
-                    </span>
-                  )}
-                </div>
+                      {/* Resend mail-status hints */}
+                      {d.resend_status === "verified" && (
+                        <div className="mt-2 px-3 py-2 rounded-lg bg-green-500/5 border border-green-500/20 text-[10px] text-green-700 flex items-center gap-2 flex-wrap">
+                          <MailCheck size={11} />
+                          <span>Client can now send from <span className="font-mono">anything@{d.domain}</span></span>
+                          <a
+                            href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
+                            className="ml-auto inline-flex items-center gap-1 text-green-600 hover:text-green-800"
+                          >
+                            Open in Mail Setup <ArrowUpRight size={10} />
+                          </a>
+                        </div>
+                      )}
+                      {/* When mail is set up but still verifying, cross-link to the
+                          dedicated /dashboard/mail-setup page so the user can
+                          copy-paste DNS records or trigger a re-verify. */}
+                      {(d.resend_status === "verifying" || d.resend_status === "pending") && (
+                        <div className="mt-2 px-3 py-2 rounded-lg bg-blue-500/5 border border-blue-500/25 text-[10px] text-blue-700 flex items-center gap-2 flex-wrap">
+                          <Mail size={11} />
+                          <span>DNS records are propagating — this usually takes a few minutes.</span>
+                          <a
+                            href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
+                            className="ml-auto inline-flex items-center gap-1 text-blue-600 hover:text-blue-800"
+                          >
+                            View records <ArrowUpRight size={10} />
+                          </a>
+                        </div>
+                      )}
+                      {d.resend_status === "failed" && d.resend_last_error && (
+                        <div className="mt-2 px-3 py-2 rounded-lg bg-red-500/5 border border-red-500/20 text-[10px] text-red-700 flex items-start gap-2">
+                          <MailWarning size={11} className="mt-0.5 shrink-0" />
+                          <span className="break-all flex-1">{d.resend_last_error}</span>
+                          <a
+                            href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
+                            className="shrink-0 inline-flex items-center gap-1 text-red-600 hover:text-red-800"
+                          >
+                            Debug <ArrowUpRight size={10} />
+                          </a>
+                        </div>
+                      )}
+                      {/* No mail yet — gentle nudge since this is the "agency flow" win */}
+                      {!d.resend_status && (d.status === "active" || d.status === "dns_configured" || d.status === "purchased") && (
+                        <div className="mt-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] text-[10px] text-[#2563EB] flex items-center gap-2 flex-wrap">
+                          <Sparkles size={11} />
+                          <span>
+                            Send marketing email from{" "}
+                            <span className="font-mono">hello@{d.domain}</span>? Takes ~1 minute.
+                          </span>
+                          <button
+                            onClick={() => setupMail(d)}
+                            className="ml-auto inline-flex items-center gap-1 font-semibold hover:underline"
+                          >
+                            Set up now <ArrowUpRight size={10} />
+                          </button>
+                        </div>
+                      )}
 
-                {/* Resend mail-status hints */}
-                {d.resend_status === "verified" && (
-                  <div className="mt-2 px-3 py-2 rounded-lg bg-green-500/5 border border-green-500/20 text-[10px] text-green-700 flex items-center gap-2 flex-wrap">
-                    <MailCheck size={11} />
-                    <span>Client can now send from <span className="font-mono">anything@{d.domain}</span></span>
-                    <a
-                      href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
-                      className="ml-auto inline-flex items-center gap-1 text-green-600 hover:text-green-800"
-                    >
-                      Open in Mail Setup <ArrowUpRight size={10} />
-                    </a>
-                  </div>
-                )}
-                {/* When mail is set up but still verifying, cross-link to the
-                    dedicated /dashboard/mail-setup page so the user can
-                    copy-paste DNS records or trigger a re-verify. */}
-                {(d.resend_status === "verifying" || d.resend_status === "pending") && (
-                  <div className="mt-2 px-3 py-2 rounded-lg bg-blue-500/5 border border-blue-500/25 text-[10px] text-blue-700 flex items-center gap-2 flex-wrap">
-                    <Mail size={11} />
-                    <span>DNS records are propagating — this usually takes a few minutes.</span>
-                    <a
-                      href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
-                      className="ml-auto inline-flex items-center gap-1 text-blue-600 hover:text-blue-800"
-                    >
-                      View records <ArrowUpRight size={10} />
-                    </a>
-                  </div>
-                )}
-                {d.resend_status === "failed" && d.resend_last_error && (
-                  <div className="mt-2 px-3 py-2 rounded-lg bg-red-500/5 border border-red-500/20 text-[10px] text-red-700 flex items-start gap-2">
-                    <MailWarning size={11} className="mt-0.5 shrink-0" />
-                    <span className="break-all flex-1">{d.resend_last_error}</span>
-                    <a
-                      href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
-                      className="shrink-0 inline-flex items-center gap-1 text-red-600 hover:text-red-800"
-                    >
-                      Debug <ArrowUpRight size={10} />
-                    </a>
-                  </div>
-                )}
-                {/* No mail yet — gentle nudge since this is the "agency flow" win */}
-                {!d.resend_status && (d.status === "active" || d.status === "dns_configured" || d.status === "purchased") && (
-                  <div className="mt-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] text-[10px] text-[#2563EB] flex items-center gap-2 flex-wrap">
-                    <Sparkles size={11} />
-                    <span>
-                      Send marketing email from{" "}
-                      <span className="font-mono">hello@{d.domain}</span>? Takes ~1 minute.
-                    </span>
-                    <button
-                      onClick={() => setupMail(d)}
-                      className="ml-auto inline-flex items-center gap-1 font-semibold hover:underline"
-                    >
-                      Set up now <ArrowUpRight size={10} />
-                    </button>
-                  </div>
-                )}
+                      {/* DNS editor */}
+                      {dnsOpen === d.id && (
+                        <div className="mt-3 pt-3 border-t border-border/60 space-y-2">
+                          <div className="flex items-center justify-between flex-wrap gap-2">
+                            <h3 className="text-[11px] font-semibold flex items-center gap-1.5">
+                              <ShieldCheck size={12} className="text-[#2563EB]" /> DNS Records
+                            </h3>
+                            <div className="flex items-center gap-1.5">
+                              <button onClick={pointToVercel} className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
+                                <VercelIcon size={10} /> Point to Vercel
+                              </button>
+                              <button onClick={addDnsRecord} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
+                                <Plus size={10} /> Record
+                              </button>
+                            </div>
+                          </div>
 
-                {/* DNS editor */}
-                {dnsOpen === d.id && (
-                  <div className="mt-3 pt-3 border-t border-border/60 space-y-2">
-                    <div className="flex items-center justify-between flex-wrap gap-2">
-                      <h3 className="text-[11px] font-semibold flex items-center gap-1.5">
-                        <ShieldCheck size={12} className="text-[#2563EB]" /> DNS Records
-                      </h3>
-                      <div className="flex items-center gap-1.5">
-                        <button onClick={pointToVercel} className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
-                          <VercelIcon size={10} /> Point to Vercel
-                        </button>
-                        <button onClick={addDnsRecord} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
-                          <Plus size={10} /> Record
-                        </button>
-                      </div>
-                    </div>
-
-                    {dnsLoading ? (
-                      <div className="py-4 text-center text-[10px] text-muted">Loading DNS...</div>
-                    ) : dnsRecords.length === 0 ? (
-                      <p className="text-[10px] text-muted py-2">No records. Click &ldquo;Point to Vercel&rdquo; for a one-click setup.</p>
-                    ) : (
-                      <div className="space-y-1.5">
-                        {dnsRecords.map((r, i) => (
-                          <div key={i} className="grid grid-cols-12 gap-1.5 items-center text-[10px]">
-                            <select
-                              value={r.type}
-                              onChange={e => updateDnsRecord(i, { type: e.target.value })}
-                              className="col-span-2 input text-[10px] py-1"
-                            >
-                              {["A", "AAAA", "CNAME", "MX", "TXT", "NS", "SRV"].map(t => <option key={t} value={t}>{t}</option>)}
-                            </select>
-                            <input
-                              value={r.name}
-                              onChange={e => updateDnsRecord(i, { name: e.target.value })}
-                              placeholder="name"
-                              className="col-span-3 input text-[10px] py-1"
-                            />
-                            <input
-                              value={r.data}
-                              onChange={e => updateDnsRecord(i, { data: e.target.value })}
-                              placeholder="value"
-                              className="col-span-5 input text-[10px] py-1"
-                            />
-                            <input
-                              type="number"
-                              value={r.ttl || 3600}
-                              onChange={e => updateDnsRecord(i, { ttl: Number(e.target.value) })}
-                              className="col-span-1 input text-[10px] py-1"
-                            />
-                            <button onClick={() => removeDnsRecord(i)} className="col-span-1 p-1 rounded hover:bg-red-500/10 text-muted hover:text-red-400">
-                              <Trash2 size={10} />
+                          {dnsLoading ? (
+                            <div className="py-4 text-center text-[10px] text-muted">Loading DNS...</div>
+                          ) : dnsRecords.length === 0 ? (
+                            <p className="text-[10px] text-muted py-2">No records. Click &ldquo;Point to Vercel&rdquo; for a one-click setup.</p>
+                          ) : (
+                            <div className="space-y-1.5">
+                              {dnsRecords.map((r, i) => (
+                                <div key={i} className="grid grid-cols-12 gap-1.5 items-center text-[10px]">
+                                  <select
+                                    value={r.type}
+                                    onChange={e => updateDnsRecord(i, { type: e.target.value })}
+                                    className="col-span-2 input text-[10px] py-1"
+                                  >
+                                    {["A", "AAAA", "CNAME", "MX", "TXT", "NS", "SRV"].map(t => <option key={t} value={t}>{t}</option>)}
+                                  </select>
+                                  <input
+                                    value={r.name}
+                                    onChange={e => updateDnsRecord(i, { name: e.target.value })}
+                                    placeholder="name"
+                                    className="col-span-3 input text-[10px] py-1"
+                                  />
+                                  <input
+                                    value={r.data}
+                                    onChange={e => updateDnsRecord(i, { data: e.target.value })}
+                                    placeholder="value"
+                                    className="col-span-5 input text-[10px] py-1"
+                                  />
+                                  <input
+                                    type="number"
+                                    value={r.ttl || 3600}
+                                    onChange={e => updateDnsRecord(i, { ttl: Number(e.target.value) })}
+                                    className="col-span-1 input text-[10px] py-1"
+                                  />
+                                  <button onClick={() => removeDnsRecord(i)} className="col-span-1 p-1 rounded hover:bg-red-500/10 text-muted hover:text-red-400">
+                                    <Trash2 size={10} />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <div className="flex items-center justify-between">
+                            <button onClick={() => setDnsOpen(null)} className="text-[10px] text-muted hover:text-foreground">Close</button>
+                            <button onClick={() => saveDns(d.domain)} disabled={dnsLoading} className="btn-primary text-[10px] disabled:opacity-50">
+                              Save DNS
                             </button>
                           </div>
-                        ))}
-                      </div>
-                    )}
-                    <div className="flex items-center justify-between">
-                      <button onClick={() => setDnsOpen(null)} className="text-[10px] text-muted hover:text-foreground">Close</button>
-                      <button onClick={() => saveDns(d.domain)} disabled={dnsLoading} className="btn-primary text-[10px] disabled:opacity-50">
-                        Save DNS
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Tip card */}
-      <div className="glass rounded-xl p-4 border-[rgba(37,99,235,0.1)]">
-        <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
-          <AlertTriangle size={11} className="text-[#2563EB]" /> How domain ownership works
-        </h3>
-        <ul className="text-[10px] text-muted space-y-1 list-disc list-inside">
-          <li>Domains are registered under your ShortStack GoDaddy customer account.</li>
-          <li>You (the agency) own the registration until you transfer it to the client.</li>
-          <li>Use DNS records above to point your domain to Vercel (A: 76.76.21.21, CNAME: cname.vercel-dns.com).</li>
-          <li>SSL is auto-provisioned by Vercel once DNS resolves.</li>
-          <li>Transfer out any time via the GoDaddy dashboard using the auth code.</li>
-          <li>
-            After purchase →{" "}
-            <a href="/dashboard/mail-setup" className="text-[#2563EB] hover:underline">
-              Mail Setup
-            </a>{" "}
-            writes Resend DKIM/SPF so the client can send email from their own domain.
-          </li>
-        </ul>
-      </div>
-    </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </div>{/* Tip card */}<div className="glass rounded-xl p-4 border-[rgba(37,99,235,0.1)]">
+              <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
+                <AlertTriangle size={11} className="text-[#2563EB]" /> How domain ownership works
+              </h3>
+              <ul className="text-[10px] text-muted space-y-1 list-disc list-inside">
+                <li>Domains are registered under your ShortStack GoDaddy customer account.</li>
+                <li>You (the agency) own the registration until you transfer it to the client.</li>
+                <li>Use DNS records above to point your domain to Vercel (A: 76.76.21.21, CNAME: cname.vercel-dns.com).</li>
+                <li>SSL is auto-provisioned by Vercel once DNS resolves.</li>
+                <li>Transfer out any time via the GoDaddy dashboard using the auth code.</li>
+                <li>
+                  After purchase →{" "}
+                  <a href="/dashboard/mail-setup" className="text-[#2563EB] hover:underline">
+                    Mail Setup
+                  </a>{" "}
+                  writes Resend DKIM/SPF so the client can send email from their own domain.
+                </li>
+              </ul>
+            </div></MotionPage>
   );
 }

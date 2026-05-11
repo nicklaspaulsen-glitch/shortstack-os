@@ -61,6 +61,7 @@ import PageHero from "@/components/ui/page-hero";
 import FirstCallWizard from "@/components/voice-receptionist/first-call-wizard";
 import StatCard from "@/components/ui/stat-card";
 import EmptyState from "@/components/ui/empty-state";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // -------------------------------------------------------------------
 // Types
@@ -612,456 +613,452 @@ export default function VoiceReceptionistPage() {
 
   // -- Render -------------------------------------------------------
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <PageHero
-        title="AI Voice Receptionist"
-        subtitle="Your 24/7 AI receptionist � never miss a call again. Answers every ring, books qualified leads directly to your calendar, screens spam."
-        icon={<PhoneCall size={20} />}
-        gradient="purple"
-        eyebrow="Beta"
-      />
+    <MotionPage className="min-h-screen bg-background text-foreground"><PageHero
+              title="AI Voice Receptionist"
+              subtitle="Your 24/7 AI receptionist � never miss a call again. Answers every ring, books qualified leads directly to your calendar, screens spam."
+              icon={<PhoneCall size={20} />}
+              gradient="purple"
+              eyebrow="Beta"
+            /><div className="mx-auto max-w-6xl space-y-6 px-6 pb-10 pt-6">
+              {/* First-call setup wizard � self-hides once a client is fully
+                  wired (twilio_phone_number + eleven_agent_id both set) and the
+                  user has explicitly dismissed it. */}
+              <FirstCallWizard />
 
-      <div className="mx-auto max-w-6xl space-y-6 px-6 pb-10 pt-6">
-        {/* First-call setup wizard � self-hides once a client is fully
-            wired (twilio_phone_number + eleven_agent_id both set) and the
-            user has explicitly dismissed it. */}
-        <FirstCallWizard />
+              {/* Beta honesty banner � shown until the first real call lands in
+                  voice_calls. Agent setup + Twilio webhook + Haiku classifier are
+                  all live; the banner just explains why the log is still empty on
+                  first run. */}
+              {!usingRealCalls && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22 }}
+                  className="flex items-start gap-3 rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] p-4"
+                >
+                  <AlertCircle size={18} className="mt-0.5 shrink-0 text-[#2563EB]" />
+                  <div className="text-[12px] leading-relaxed">
+                    <p className="font-semibold text-[#2563EB]">
+                      {liveBackend
+                        ? "No real calls yet � showing sample data"
+                        : "Connect ElevenLabs + a Twilio number to start tracking real calls"}
+                    </p>
+                    <p className="mt-1 text-muted">
+                      The pipeline is fully wired � Twilio voice-webhook,
+                      ElevenLabs ConvAI bridge, status callback, and the
+                      conversation-ended webhook all log straight into your{" "}
+                      <code className="rounded bg-black/40 px-1 py-0.5 text-[10.5px]">
+                        voice_calls
+                      </code>{" "}
+                      table. Once your receptionist picks up its first inbound call,
+                      it&apos;ll replace the sample rows below with the
+                      AI-classified outcome (booked / qualified / unqualified /
+                      spam), caller number, duration, and transcript.
+                      {backendNote && (
+                        <span className="mt-1 block text-[11px] text-muted/80">
+                          ({backendNote})
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
 
-        {/* Beta honesty banner � shown until the first real call lands in
-            voice_calls. Agent setup + Twilio webhook + Haiku classifier are
-            all live; the banner just explains why the log is still empty on
-            first run. */}
-        {!usingRealCalls && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22 }}
-            className="flex items-start gap-3 rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] p-4"
-          >
-            <AlertCircle size={18} className="mt-0.5 shrink-0 text-[#2563EB]" />
-            <div className="text-[12px] leading-relaxed">
-              <p className="font-semibold text-[#2563EB]">
-                {liveBackend
-                  ? "No real calls yet � showing sample data"
-                  : "Connect ElevenLabs + a Twilio number to start tracking real calls"}
-              </p>
-              <p className="mt-1 text-muted">
-                The pipeline is fully wired � Twilio voice-webhook,
-                ElevenLabs ConvAI bridge, status callback, and the
-                conversation-ended webhook all log straight into your{" "}
-                <code className="rounded bg-black/40 px-1 py-0.5 text-[10.5px]">
-                  voice_calls
-                </code>{" "}
-                table. Once your receptionist picks up its first inbound call,
-                it&apos;ll replace the sample rows below with the
-                AI-classified outcome (booked / qualified / unqualified /
-                spam), caller number, duration, and transcript.
-                {backendNote && (
-                  <span className="mt-1 block text-[11px] text-muted/80">
-                    ({backendNote})
-                  </span>
-                )}
-              </p>
-            </div>
-          </motion.div>
-        )}
+              {/* -- 1. Overview + stat cards -------------------------------- */}
+              <section>
+                <div className="mb-3 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-base font-semibold">This month</h2>
+                    <p className="text-[11px] text-muted">
+                      Activity across every number pointed at your receptionist agent.
+                    </p>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={loadAll}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-3 py-2 text-[11px] font-medium text-muted hover:bg-surface-light hover:text-foreground"
+                  >
+                    <RefreshCw size={12} /> Refresh
+                  </motion.button>
+                </div>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  {[
+                    { label: "Calls handled", value: stats.handled, icon: <PhoneCall size={14} /> },
+                    { label: "Booked to calendar", value: stats.booked, icon: <CalendarIcon size={14} /> },
+                    { label: "Avg call duration", value: fmtDurationAvg(stats.avgDuration), icon: <Clock size={14} /> },
+                  ].map((card, index) => (
+                    <motion.div
+                      key={card.label}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.22, delay: index * 0.06 }}
+                      whileHover={{ y: -2 }}
+                      className="relative glass rounded-xl overflow-hidden"
+                    >
+                      <div
+                        className="absolute top-0 left-0 right-0"
+                        style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }}
+                      />
+                      <div className="pt-2">
+                        <StatCard
+                          label={card.label}
+                          value={card.value}
+                          icon={card.icon}
+                        />
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
 
-        {/* -- 1. Overview + stat cards -------------------------------- */}
-        <section>
-          <div className="mb-3 flex items-center justify-between">
-            <div>
-              <h2 className="text-base font-semibold">This month</h2>
-              <p className="text-[11px] text-muted">
-                Activity across every number pointed at your receptionist agent.
-              </p>
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={loadAll}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-3 py-2 text-[11px] font-medium text-muted hover:bg-surface-light hover:text-foreground"
-            >
-              <RefreshCw size={12} /> Refresh
-            </motion.button>
-          </div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            {[
-              { label: "Calls handled", value: stats.handled, icon: <PhoneCall size={14} /> },
-              { label: "Booked to calendar", value: stats.booked, icon: <CalendarIcon size={14} /> },
-              { label: "Avg call duration", value: fmtDurationAvg(stats.avgDuration), icon: <Clock size={14} /> },
-            ].map((card, index) => (
-              <motion.div
-                key={card.label}
+              {/* -- 2. Agent setup card ------------------------------------- */}
+              <motion.section
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: index * 0.06 }}
-                whileHover={{ y: -2 }}
-                className="relative glass rounded-xl overflow-hidden"
+                transition={{ duration: 0.22, delay: 0.18 }}
+                className="glass rounded-xl !p-5"
               >
-                <div
-                  className="absolute top-0 left-0 right-0"
-                  style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }}
-                />
-                <div className="pt-2">
-                  <StatCard
-                    label={card.label}
-                    value={card.value}
-                    icon={card.icon}
-                  />
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.10)] text-[#2563EB]">
+                      <Mic size={14} />
+                    </div>
+                    <div>
+                      <h2 className="text-sm font-semibold">Agent setup</h2>
+                      <p className="text-[10px] text-muted">
+                        Voice, greeting, hours, transfer rules. Powers every call the agent takes.
+                      </p>
+                    </div>
+                  </div>
+                  {hasAgent && (
+                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                      {agents.length} agent{agents.length === 1 ? "" : "s"} live
+                    </span>
+                  )}
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
 
-        {/* -- 2. Agent setup card ------------------------------------- */}
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.22, delay: 0.18 }}
-          className="glass rounded-xl !p-5"
-        >
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.10)] text-[#2563EB]">
-                <Mic size={14} />
-              </div>
-              <div>
-                <h2 className="text-sm font-semibold">Agent setup</h2>
-                <p className="text-[10px] text-muted">
-                  Voice, greeting, hours, transfer rules. Powers every call the agent takes.
-                </p>
-              </div>
-            </div>
-            {hasAgent && (
-              <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
-                {agents.length} agent{agents.length === 1 ? "" : "s"} live
-              </span>
-            )}
-          </div>
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                  {/* Left column: identity + voice */}
+                  <div className="space-y-4">
+                    <Field label="Receptionist name">
+                      <input
+                        type="text"
+                        value={config.agentName}
+                        onChange={(e) =>
+                          setConfig({ ...config, agentName: e.target.value })
+                        }
+                        placeholder="Front-desk AI"
+                        className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] placeholder:text-muted/60"
+                      />
+                    </Field>
 
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            {/* Left column: identity + voice */}
-            <div className="space-y-4">
-              <Field label="Receptionist name">
-                <input
-                  type="text"
-                  value={config.agentName}
-                  onChange={(e) =>
-                    setConfig({ ...config, agentName: e.target.value })
-                  }
-                  placeholder="Front-desk AI"
-                  className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] placeholder:text-muted/60"
-                />
-              </Field>
-
-              <Field
-                label="Voice"
-                hint={
-                  voices.length === 0
-                    ? "Voice list loads from ElevenLabs once the API key is set."
-                    : undefined
-                }
-              >
-                <select
-                  value={config.voiceId}
-                  onChange={(e) =>
-                    setConfig({ ...config, voiceId: e.target.value })
-                  }
-                  disabled={voices.length === 0}
-                  className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] disabled:opacity-50"
-                >
-                  <option value="">Default (Rachel)</option>
-                  {voices.map((v) => (
-                    <option key={v.voice_id} value={v.voice_id}>
-                      {v.name}
-                      {v.category ? ` � ${v.category}` : ""}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-
-              {/* Voice-clone upload � honest about not being wired */}
-              <div className="rounded-lg border border-dashed border-border/50 bg-surface-light/20 p-4">
-                <div className="mb-1 flex items-center justify-between">
-                  <p className="text-[12px] font-semibold">Upload voice sample</p>
-                  <span className="rounded-full bg-muted/20 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted">
-                    Coming soon
-                  </span>
-                </div>
-                <p className="text-[11px] text-muted">
-                  Drop a 30-second recording to clone your best salesperson into ElevenLabs.
-                  Shipping next � for now, pick from the stock voice list above.
-                </p>
-                <button
-                  disabled
-                  className="mt-3 inline-flex cursor-not-allowed items-center gap-1.5 rounded-lg bg-surface-light/60 px-3 py-1.5 text-[11px] font-medium text-muted opacity-60"
-                >
-                  <Upload size={11} /> Upload sample (.mp3 / .wav)
-                </button>
-              </div>
-            </div>
-
-            {/* Right column: greeting + hours + transfer */}
-            <div className="space-y-4">
-              <Field label="Greeting script">
-                <textarea
-                  value={config.greeting}
-                  onChange={(e) =>
-                    setConfig({ ...config, greeting: e.target.value })
-                  }
-                  rows={4}
-                  placeholder="Hi, thanks for calling�"
-                  className="w-full resize-none rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] leading-relaxed placeholder:text-muted/60"
-                />
-              </Field>
-
-              <div className="grid grid-cols-2 gap-3">
-                <Field label="Hours start">
-                  <input
-                    type="time"
-                    value={config.hoursStart}
-                    onChange={(e) =>
-                      setConfig({ ...config, hoursStart: e.target.value })
-                    }
-                    className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px]"
-                  />
-                </Field>
-                <Field label="Hours end">
-                  <input
-                    type="time"
-                    value={config.hoursEnd}
-                    onChange={(e) =>
-                      setConfig({ ...config, hoursEnd: e.target.value })
-                    }
-                    className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px]"
-                  />
-                </Field>
-              </div>
-
-              <Field
-                label="Transfer to human"
-                hint="When the agent should hand off to a real phone number."
-              >
-                <select
-                  value={config.transferRule}
-                  onChange={(e) =>
-                    setConfig({
-                      ...config,
-                      transferRule: e.target.value as AgentConfig["transferRule"],
-                    })
-                  }
-                  className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px]"
-                >
-                  <option value="qualified_only">
-                    Only after the lead is qualified
-                  </option>
-                  <option value="always">Always, after the greeting</option>
-                  <option value="never">Never � AI handles the whole call</option>
-                </select>
-              </Field>
-
-              {config.transferRule !== "never" && (
-                <Field label="Transfer number">
-                  <input
-                    type="tel"
-                    value={config.transferNumber}
-                    onChange={(e) =>
-                      setConfig({ ...config, transferNumber: e.target.value })
-                    }
-                    placeholder="+1 415 555 0100"
-                    className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] font-mono placeholder:text-muted/60"
-                  />
-                </Field>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-5 flex flex-wrap items-center justify-end gap-2 border-t border-border/30 pt-4">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={saveConfig}
-              disabled={savingConfig}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-3 py-2 text-[12px] font-medium text-foreground hover:bg-surface-light disabled:opacity-50"
-            >
-              {savingConfig ? (
-                <Loader2 size={12} className="animate-spin" />
-              ) : (
-                <Save size={12} />
-              )}
-              Save settings
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={createAgent}
-              disabled={creatingAgent}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500 px-4 py-2 text-[12px] font-semibold text-white transition hover:bg-indigo-500/90 disabled:opacity-50"
-            >
-              {creatingAgent ? (
-                <>
-                  <Loader2 size={13} className="animate-spin" /> Creating�
-                </>
-              ) : (
-                <>
-                  <Sparkles size={13} /> {hasAgent ? "Create another agent" : "Create agent on ElevenLabs"}
-                </>
-              )}
-            </motion.button>
-          </div>
-        </motion.section>
-
-        {/* -- 3. Call log table --------------------------------------- */}
-        <motion.section
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.22, delay: 0.24 }}
-          className="glass rounded-xl !p-5"
-        >
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.10)] text-[#2563EB]">
-                <FileText size={14} />
-              </div>
-              <div>
-                <h2 className="text-sm font-semibold">Call log</h2>
-                <p className="text-[10px] text-muted">
-                  Every call the agent handled, newest first.
-                </p>
-              </div>
-            </div>
-            {!liveBackend && calls.length > 0 && (
-              <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[10px] font-semibold text-[#2563EB]">
-                Demo data
-              </span>
-            )}
-          </div>
-
-          {loading ? (
-            <div className="flex items-center justify-center gap-2 py-10 text-sm text-muted">
-              <Loader2 size={14} className="animate-spin" /> Loading calls�
-            </div>
-          ) : calls.length === 0 ? (
-            <EmptyState
-              icon={<PhoneCall size={28} />}
-              title="No calls yet"
-              description="Once your receptionist picks up its first call, it'll show up here � caller, outcome, transcript, CRM link."
-            />
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-[12px]">
-                <thead className="border-b border-border/40 text-[10px] uppercase tracking-wider text-muted">
-                  <tr>
-                    <th className="px-2 py-2 font-semibold">Caller</th>
-                    <th className="px-2 py-2 font-semibold">When</th>
-                    <th className="px-2 py-2 font-semibold">Duration</th>
-                    <th className="px-2 py-2 font-semibold">Outcome</th>
-                    <th className="px-2 py-2 font-semibold">Transcript</th>
-                    <th className="px-2 py-2 font-semibold text-right">CRM</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {calls.map((c, index) => {
-                    const om = outcomeMeta(c.outcome);
-                    const OutIcon = om.icon;
-                    return (
-                      <motion.tr
-                        key={c.id}
-                        initial={{ opacity: 0, x: -8 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.18, delay: index * 0.04 }}
-                        whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                        className="border-b border-border/20 transition"
+                    <Field
+                      label="Voice"
+                      hint={
+                        voices.length === 0
+                          ? "Voice list loads from ElevenLabs once the API key is set."
+                          : undefined
+                      }
+                    >
+                      <select
+                        value={config.voiceId}
+                        onChange={(e) =>
+                          setConfig({ ...config, voiceId: e.target.value })
+                        }
+                        disabled={voices.length === 0}
+                        className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] disabled:opacity-50"
                       >
-                        <td className="px-2 py-3 font-mono text-[11.5px]">
-                          {c.caller}
-                        </td>
-                        <td className="px-2 py-3 text-muted">
-                          {fmtRelative(c.startedAt)}
-                        </td>
-                        <td className="px-2 py-3 text-muted">
-                          {fmtDuration(c.durationSec)}
-                        </td>
-                        <td className="px-2 py-3">
-                          <span
-                            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${om.className}`}
-                          >
-                            <OutIcon size={10} /> {om.label}
-                          </span>
-                        </td>
-                        <td className="px-2 py-3 max-w-[320px] truncate text-muted">
-                          {c.transcriptPreview}
-                        </td>
-                        <td className="px-2 py-3 text-right">
-                          {c.crmLink ? (
-                            <Link
-                              href={c.crmLink}
-                              className="inline-flex items-center gap-1 text-[11px] text-[#2563EB] hover:underline"
+                        <option value="">Default (Rachel)</option>
+                        {voices.map((v) => (
+                          <option key={v.voice_id} value={v.voice_id}>
+                            {v.name}
+                            {v.category ? ` � ${v.category}` : ""}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+
+                    {/* Voice-clone upload � honest about not being wired */}
+                    <div className="rounded-lg border border-dashed border-border/50 bg-surface-light/20 p-4">
+                      <div className="mb-1 flex items-center justify-between">
+                        <p className="text-[12px] font-semibold">Upload voice sample</p>
+                        <span className="rounded-full bg-muted/20 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted">
+                          Coming soon
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-muted">
+                        Drop a 30-second recording to clone your best salesperson into ElevenLabs.
+                        Shipping next � for now, pick from the stock voice list above.
+                      </p>
+                      <button
+                        disabled
+                        className="mt-3 inline-flex cursor-not-allowed items-center gap-1.5 rounded-lg bg-surface-light/60 px-3 py-1.5 text-[11px] font-medium text-muted opacity-60"
+                      >
+                        <Upload size={11} /> Upload sample (.mp3 / .wav)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Right column: greeting + hours + transfer */}
+                  <div className="space-y-4">
+                    <Field label="Greeting script">
+                      <textarea
+                        value={config.greeting}
+                        onChange={(e) =>
+                          setConfig({ ...config, greeting: e.target.value })
+                        }
+                        rows={4}
+                        placeholder="Hi, thanks for calling�"
+                        className="w-full resize-none rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] leading-relaxed placeholder:text-muted/60"
+                      />
+                    </Field>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <Field label="Hours start">
+                        <input
+                          type="time"
+                          value={config.hoursStart}
+                          onChange={(e) =>
+                            setConfig({ ...config, hoursStart: e.target.value })
+                          }
+                          className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px]"
+                        />
+                      </Field>
+                      <Field label="Hours end">
+                        <input
+                          type="time"
+                          value={config.hoursEnd}
+                          onChange={(e) =>
+                            setConfig({ ...config, hoursEnd: e.target.value })
+                          }
+                          className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px]"
+                        />
+                      </Field>
+                    </div>
+
+                    <Field
+                      label="Transfer to human"
+                      hint="When the agent should hand off to a real phone number."
+                    >
+                      <select
+                        value={config.transferRule}
+                        onChange={(e) =>
+                          setConfig({
+                            ...config,
+                            transferRule: e.target.value as AgentConfig["transferRule"],
+                          })
+                        }
+                        className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px]"
+                      >
+                        <option value="qualified_only">
+                          Only after the lead is qualified
+                        </option>
+                        <option value="always">Always, after the greeting</option>
+                        <option value="never">Never � AI handles the whole call</option>
+                      </select>
+                    </Field>
+
+                    {config.transferRule !== "never" && (
+                      <Field label="Transfer number">
+                        <input
+                          type="tel"
+                          value={config.transferNumber}
+                          onChange={(e) =>
+                            setConfig({ ...config, transferNumber: e.target.value })
+                          }
+                          placeholder="+1 415 555 0100"
+                          className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] font-mono placeholder:text-muted/60"
+                        />
+                      </Field>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-5 flex flex-wrap items-center justify-end gap-2 border-t border-border/30 pt-4">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={saveConfig}
+                    disabled={savingConfig}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-3 py-2 text-[12px] font-medium text-foreground hover:bg-surface-light disabled:opacity-50"
+                  >
+                    {savingConfig ? (
+                      <Loader2 size={12} className="animate-spin" />
+                    ) : (
+                      <Save size={12} />
+                    )}
+                    Save settings
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={createAgent}
+                    disabled={creatingAgent}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500 px-4 py-2 text-[12px] font-semibold text-white transition hover:bg-indigo-500/90 disabled:opacity-50"
+                  >
+                    {creatingAgent ? (
+                      <>
+                        <Loader2 size={13} className="animate-spin" /> Creating�
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles size={13} /> {hasAgent ? "Create another agent" : "Create agent on ElevenLabs"}
+                      </>
+                    )}
+                  </motion.button>
+                </div>
+              </motion.section>
+
+              {/* -- 3. Call log table --------------------------------------- */}
+              <motion.section
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: 0.24 }}
+                className="glass rounded-xl !p-5"
+              >
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.10)] text-[#2563EB]">
+                      <FileText size={14} />
+                    </div>
+                    <div>
+                      <h2 className="text-sm font-semibold">Call log</h2>
+                      <p className="text-[10px] text-muted">
+                        Every call the agent handled, newest first.
+                      </p>
+                    </div>
+                  </div>
+                  {!liveBackend && calls.length > 0 && (
+                    <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[10px] font-semibold text-[#2563EB]">
+                      Demo data
+                    </span>
+                  )}
+                </div>
+
+                {loading ? (
+                  <div className="flex items-center justify-center gap-2 py-10 text-sm text-muted">
+                    <Loader2 size={14} className="animate-spin" /> Loading calls�
+                  </div>
+                ) : calls.length === 0 ? (
+                  <EmptyState
+                    icon={<PhoneCall size={28} />}
+                    title="No calls yet"
+                    description="Once your receptionist picks up its first call, it'll show up here � caller, outcome, transcript, CRM link."
+                  />
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-[12px]">
+                      <thead className="border-b border-border/40 text-[10px] uppercase tracking-wider text-muted">
+                        <tr>
+                          <th className="px-2 py-2 font-semibold">Caller</th>
+                          <th className="px-2 py-2 font-semibold">When</th>
+                          <th className="px-2 py-2 font-semibold">Duration</th>
+                          <th className="px-2 py-2 font-semibold">Outcome</th>
+                          <th className="px-2 py-2 font-semibold">Transcript</th>
+                          <th className="px-2 py-2 font-semibold text-right">CRM</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {calls.map((c, index) => {
+                          const om = outcomeMeta(c.outcome);
+                          const OutIcon = om.icon;
+                          return (
+                            <motion.tr
+                              key={c.id}
+                              initial={{ opacity: 0, x: -8 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.18, delay: index * 0.04 }}
+                              whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                              className="border-b border-border/20 transition"
                             >
-                              Open <ExternalLink size={10} />
-                            </Link>
-                          ) : (
-                            <span className="text-[10px] text-muted/70">�</span>
-                          )}
-                        </td>
-                      </motion.tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </motion.section>
+                              <td className="px-2 py-3 font-mono text-[11.5px]">
+                                {c.caller}
+                              </td>
+                              <td className="px-2 py-3 text-muted">
+                                {fmtRelative(c.startedAt)}
+                              </td>
+                              <td className="px-2 py-3 text-muted">
+                                {fmtDuration(c.durationSec)}
+                              </td>
+                              <td className="px-2 py-3">
+                                <span
+                                  className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${om.className}`}
+                                >
+                                  <OutIcon size={10} /> {om.label}
+                                </span>
+                              </td>
+                              <td className="px-2 py-3 max-w-[320px] truncate text-muted">
+                                {c.transcriptPreview}
+                              </td>
+                              <td className="px-2 py-3 text-right">
+                                {c.crmLink ? (
+                                  <Link
+                                    href={c.crmLink}
+                                    className="inline-flex items-center gap-1 text-[11px] text-[#2563EB] hover:underline"
+                                  >
+                                    Open <ExternalLink size={10} />
+                                  </Link>
+                                ) : (
+                                  <span className="text-[10px] text-muted/70">�</span>
+                                )}
+                              </td>
+                            </motion.tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </motion.section>
 
-        {/* -- 4. Calendar integration + 5. Quota --------------------- */}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-          <CalendarIntegrationCard />
-          <QuotaCard quota={callQuota} planTier={planUsage?.plan_tier} />
-        </div>
+              {/* -- 4. Calendar integration + 5. Quota --------------------- */}
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                <CalendarIntegrationCard />
+                <QuotaCard quota={callQuota} planTier={planUsage?.plan_tier} />
+              </div>
 
-        {/* Helper footer -------------------------------------------- */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.22, delay: 0.36 }}
-          className="mt-2 glass rounded-xl p-5 text-[12px] text-muted"
-        >
-          <p className="mb-2 font-semibold text-foreground">How it works</p>
-          <ul className="ml-4 list-disc space-y-1">
-            <li>
-              Every incoming call to your provisioned Twilio number hits the ElevenLabs
-              ConvAI agent you configured above.
-            </li>
-            <li>
-              The agent uses your greeting + system prompt to qualify, answer, and (if
-              allowed) book directly into your connected calendar.
-            </li>
-            <li>
-              Call minutes count against your plan tier � see the quota panel for your
-              current usage.
-            </li>
-            <li>
-              Provision phone numbers under{" "}
-              <Link
-                href="/dashboard/phone-email"
-                className="text-[#2563EB] underline"
+              {/* Helper footer -------------------------------------------- */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: 0.36 }}
+                className="mt-2 glass rounded-xl p-5 text-[12px] text-muted"
               >
-                Phone / Email
-              </Link>
-              . Browse every agent under{" "}
-              <Link
-                href="/dashboard/eleven-agents"
-                className="text-[#2563EB] underline"
-              >
-                ElevenAgents
-              </Link>
-              .
-            </li>
-          </ul>
-        </motion.div>
-      </div>
-    </div>
+                <p className="mb-2 font-semibold text-foreground">How it works</p>
+                <ul className="ml-4 list-disc space-y-1">
+                  <li>
+                    Every incoming call to your provisioned Twilio number hits the ElevenLabs
+                    ConvAI agent you configured above.
+                  </li>
+                  <li>
+                    The agent uses your greeting + system prompt to qualify, answer, and (if
+                    allowed) book directly into your connected calendar.
+                  </li>
+                  <li>
+                    Call minutes count against your plan tier � see the quota panel for your
+                    current usage.
+                  </li>
+                  <li>
+                    Provision phone numbers under{" "}
+                    <Link
+                      href="/dashboard/phone-email"
+                      className="text-[#2563EB] underline"
+                    >
+                      Phone / Email
+                    </Link>
+                    . Browse every agent under{" "}
+                    <Link
+                      href="/dashboard/eleven-agents"
+                      className="text-[#2563EB] underline"
+                    >
+                      ElevenAgents
+                    </Link>
+                    .
+                  </li>
+                </ul>
+              </motion.div>
+            </div></MotionPage>
   );
 }
 

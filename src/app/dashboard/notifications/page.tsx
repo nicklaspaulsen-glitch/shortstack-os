@@ -15,6 +15,7 @@ import {
   Info, XCircle, ChevronRight, Filter, Check,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* -- Types -- */
 type NotifType = "all" | "lead" | "outreach" | "autopilot" | "system" | "alert";
@@ -296,275 +297,261 @@ export default function NotificationsPage() {
 
   /* -- Render -- */
   return (
-    <div className="fade-in space-y-6">
-      <PageHero
-        icon={<Bell size={28} />}
-        title="Notifications"
-        eyebrow="NOTIFICATIONS"
-        subtitle="Stay informed about tasks, leads & events."
-        gradient="sunset"
-        actions={
-          <>
-            {unreadCount > 0 && (
-              <span className="text-[10px] font-medium text-[#0A0A0B] bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] px-2.5 py-1 rounded-full">
-                {unreadCount} unread
-              </span>
-            )}
-            <button
-              onClick={() => fetchNotifications()}
-              className="p-2 rounded-xl text-[#0A0A0B] bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.09)] transition-colors"
-              title="Refresh"
-            >
-              <RefreshCw size={14} />
-            </button>
-            {unreadCount > 0 && (
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <button
-                  onClick={markAllRead}
-                  disabled={markingAll}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-[#0A0A0B] bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] hover:bg-[rgba(0,0,0,0.10)] transition-colors disabled:opacity-50"
-                >
-                  {markingAll ? <Loader size={12} className="animate-spin" /> : <Check size={12} />}
-                  Mark All Read
-                </button>
-              </motion.div>
-            )}
-          </>
-        }
-      />
-
-      {/* --- Search + Filter Tabs --- */}
-      <div className="space-y-3">
-        {/* Search */}
-        <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-          <input
-            type="text"
-            placeholder="Search notifications..."
-            aria-label="Search notifications"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="glass w-full pl-9 pr-4 py-2.5 rounded-lg text-xs text-foreground placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.25)] focus:border-[rgba(37,99,235,0.25)] transition-all"
-          />
-        </div>
-
-        {/* Tabs */}
-        <div className="flex items-center gap-1 overflow-x-auto scrollbar-none pb-1">
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-medium whitespace-nowrap transition-all ${
-                activeTab === tab.key
-                  ? "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)]"
-                  : "text-muted hover:text-foreground hover:bg-surface-light border border-transparent"
-              }`}
-            >
-              {tab.icon}
-              {tab.label}
-              {tabCounts[tab.key] > 0 && (
-                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
-                  activeTab === tab.key ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-surface-light text-muted"
-                }`}>
-                  {tabCounts[tab.key]}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* --- Content --- */}
-      {loading ? (
-        <NotificationSkeleton />
-      ) : error ? (
-        <div className="card p-8 text-center">
-          <AlertTriangle size={24} className="mx-auto mb-2 text-danger" />
-          <p className="text-sm text-foreground font-medium mb-1">Failed to load notifications</p>
-          <p className="text-xs text-muted mb-4">{error}</p>
-          <button
-            onClick={fetchNotifications}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium text-[#2563EB] bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.12)] transition-colors"
-          >
-            <RefreshCw size={12} />
-            Try Again
-          </button>
-        </div>
-      ) : filtered.length === 0 ? (
-        searchQuery || activeTab !== "all" ? (
-          <div className="card p-8 text-center">
-            <Filter size={20} className="mx-auto mb-2 text-muted/30" />
-            <p className="text-sm text-foreground font-medium mb-1">No matching notifications</p>
-            <p className="text-xs text-muted">
-              {searchQuery ? `No results for "${searchQuery}"` : `No ${activeTab} notifications yet`}
-            </p>
-            <button
-              onClick={() => { setSearchQuery(""); setActiveTab("all"); }}
-              className="mt-3 text-xs text-[#2563EB] hover:text-[#3B82F6] font-medium transition-colors"
-            >
-              Clear filters
-            </button>
-          </div>
-        ) : (
-          <EmptyState
-            icon={<Bell size={28} />}
-            title="No notifications yet"
-            description="When your agents complete tasks, scrape leads, or send outreach, you'll see updates here."
-          />
-        )
-      ) : (
-        <div className="space-y-6">
-          {grouped.map((group) => (
-            <div key={group.label}>
-              {/* Date group header */}
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-[10px] font-semibold text-muted uppercase tracking-[0.15em]">
-                  {group.label}
-                </span>
-                <div className="flex-1 h-px bg-border/30" />
-                <span className="text-[9px] text-muted">
-                  {group.items.length} {group.items.length === 1 ? "notification" : "notifications"}
-                </span>
+    <MotionPage className="fade-in space-y-6"><PageHero
+              icon={<Bell size={28} />}
+              title="Notifications"
+              eyebrow="NOTIFICATIONS"
+              subtitle="Stay informed about tasks, leads & events."
+              gradient="sunset"
+              actions={
+                <>
+                  {unreadCount > 0 && (
+                    <span className="text-[10px] font-medium text-[#0A0A0B] bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] px-2.5 py-1 rounded-full">
+                      {unreadCount} unread
+                    </span>
+                  )}
+                  <button
+                    onClick={() => fetchNotifications()}
+                    className="p-2 rounded-xl text-[#0A0A0B] bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.09)] transition-colors"
+                    title="Refresh"
+                  >
+                    <RefreshCw size={14} />
+                  </button>
+                  {unreadCount > 0 && (
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <button
+                        onClick={markAllRead}
+                        disabled={markingAll}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-[#0A0A0B] bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] hover:bg-[rgba(0,0,0,0.10)] transition-colors disabled:opacity-50"
+                      >
+                        {markingAll ? <Loader size={12} className="animate-spin" /> : <Check size={12} />}
+                        Mark All Read
+                      </button>
+                    </motion.div>
+                  )}
+                </>
+              }
+            />{/* --- Search + Filter Tabs --- */}<div className="space-y-3">
+              {/* Search */}
+              <div className="relative">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                <input
+                  type="text"
+                  placeholder="Search notifications..."
+                  aria-label="Search notifications"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="glass w-full pl-9 pr-4 py-2.5 rounded-lg text-xs text-foreground placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.25)] focus:border-[rgba(37,99,235,0.25)] transition-all"
+                />
               </div>
 
-              {/* Notification cards */}
-              <div className="space-y-2">
-                {group.items.map((n, index) => {
-                  const config = TYPE_CONFIG[n.type] || TYPE_CONFIG.info;
-                  const actionLabel = getActionLabel(n.type);
+              {/* Tabs */}
+              <div className="flex items-center gap-1 overflow-x-auto scrollbar-none pb-1">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setActiveTab(tab.key)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-medium whitespace-nowrap transition-all ${
+                      activeTab === tab.key
+                        ? "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)]"
+                        : "text-muted hover:text-foreground hover:bg-surface-light border border-transparent"
+                    }`}
+                  >
+                    {tab.icon}
+                    {tab.label}
+                    {tabCounts[tab.key] > 0 && (
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
+                        activeTab === tab.key ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-surface-light text-muted"
+                      }`}>
+                        {tabCounts[tab.key]}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>{/* --- Content --- */}{loading ? (
+              <NotificationSkeleton />
+            ) : error ? (
+              <div className="card p-8 text-center">
+                <AlertTriangle size={24} className="mx-auto mb-2 text-danger" />
+                <p className="text-sm text-foreground font-medium mb-1">Failed to load notifications</p>
+                <p className="text-xs text-muted mb-4">{error}</p>
+                <button
+                  onClick={fetchNotifications}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium text-[#2563EB] bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.12)] transition-colors"
+                >
+                  <RefreshCw size={12} />
+                  Try Again
+                </button>
+              </div>
+            ) : filtered.length === 0 ? (
+              searchQuery || activeTab !== "all" ? (
+                <div className="card p-8 text-center">
+                  <Filter size={20} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-sm text-foreground font-medium mb-1">No matching notifications</p>
+                  <p className="text-xs text-muted">
+                    {searchQuery ? `No results for "${searchQuery}"` : `No ${activeTab} notifications yet`}
+                  </p>
+                  <button
+                    onClick={() => { setSearchQuery(""); setActiveTab("all"); }}
+                    className="mt-3 text-xs text-[#2563EB] hover:text-[#3B82F6] font-medium transition-colors"
+                  >
+                    Clear filters
+                  </button>
+                </div>
+              ) : (
+                <EmptyState
+                  icon={<Bell size={28} />}
+                  title="No notifications yet"
+                  description="When your agents complete tasks, scrape leads, or send outreach, you'll see updates here."
+                />
+              )
+            ) : (
+              <div className="space-y-6">
+                {grouped.map((group) => (
+                  <div key={group.label}>
+                    {/* Date group header */}
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-[10px] font-semibold text-muted uppercase tracking-[0.15em]">
+                        {group.label}
+                      </span>
+                      <div className="flex-1 h-px bg-border/30" />
+                      <span className="text-[9px] text-muted">
+                        {group.items.length} {group.items.length === 1 ? "notification" : "notifications"}
+                      </span>
+                    </div>
+
+                    {/* Notification cards */}
+                    <div className="space-y-2">
+                      {group.items.map((n, index) => {
+                        const config = TYPE_CONFIG[n.type] || TYPE_CONFIG.info;
+                        const actionLabel = getActionLabel(n.type);
+                        return (
+                          <motion.div
+                            key={n.id}
+                            initial={{ opacity: 0, x: -8 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.18, delay: index * 0.04 }}
+                            whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                            className={`glass rounded-xl group relative overflow-hidden transition-all duration-200 hover:shadow-md ${
+                              !n.read
+                                ? "border-l-2 border-l-indigo-500"
+                                : "opacity-75 hover:opacity-100"
+                            }`}
+                          >
+                            <div className="p-4 flex items-start gap-3.5">
+                              {/* Icon */}
+                              <div className={`shrink-0 w-10 h-10 rounded-xl ${config.bg} flex items-center justify-center ${config.color}`}>
+                                {config.icon}
+                              </div>
+
+                              {/* Body */}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-0.5">
+                                  <p className={`text-sm font-medium truncate ${
+                                    !n.read ? "text-foreground" : "text-muted-light"
+                                  }`}>
+                                    {n.title}
+                                  </p>
+                                  {!n.read && (
+                                    <div className="w-2 h-2 rounded-full bg-[#2563EB] shrink-0 animate-pulse" />
+                                  )}
+                                  <span className={`text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${config.bg} ${config.color}`}>
+                                    {config.label}
+                                  </span>
+                                </div>
+                                {n.message && (
+                                  <p className={`text-xs mt-0.5 line-clamp-2 ${
+                                    !n.read ? "text-muted" : "text-muted/60"
+                                  }`}>
+                                    {n.message}
+                                  </p>
+                                )}
+                                <div className="flex items-center gap-3 mt-2">
+                                  <span className="text-[10px] text-muted/60">
+                                    {formatRelativeTime(n.created_at)}
+                                  </span>
+                                  {!n.read && (
+                                    <button
+                                      onClick={() => markRead(n.id)}
+                                      className="text-[10px] text-muted hover:text-foreground flex items-center gap-1 transition-colors"
+                                    >
+                                      <Eye size={10} />
+                                      Mark read
+                                    </button>
+                                  )}
+                                  {actionLabel && n.link && (
+                                    <Link
+                                      href={n.link}
+                                      onClick={() => markRead(n.id)}
+                                      className="text-[10px] text-[#2563EB] hover:text-[#3B82F6] flex items-center gap-1 font-medium transition-colors"
+                                    >
+                                      {actionLabel}
+                                      <ExternalLink size={9} />
+                                    </Link>
+                                  )}
+                                  {actionLabel && !n.link && (
+                                    <span className="text-[10px] text-[rgba(37,99,235,0.5)] flex items-center gap-1">
+                                      {actionLabel}
+                                      <ChevronRight size={9} />
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}{/* --- Stats bar --- */}{!loading && notifications.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                {TABS.filter((t) => t.key !== "all").map((tab, index) => {
+                  const count = tabCounts[tab.key];
+                  const unread = notifications.filter(
+                    (n) => typeToTab(n.type) === tab.key && !n.read
+                  ).length;
                   return (
-                    <motion.div
-                      key={n.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
-                      className={`glass rounded-xl group relative overflow-hidden transition-all duration-200 hover:shadow-md ${
-                        !n.read
-                          ? "border-l-2 border-l-indigo-500"
-                          : "opacity-75 hover:opacity-100"
+                    <motion.button
+                      key={tab.key}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.22, delay: index * 0.06 }}
+                      whileHover={{ y: -2 }}
+                      onClick={() => setActiveTab(tab.key)}
+                      className={`glass rounded-xl p-3 text-center relative overflow-hidden hover:shadow-md transition-all ${
+                        activeTab === tab.key ? "ring-1 ring-indigo-500/30" : ""
                       }`}
                     >
-                      <div className="p-4 flex items-start gap-3.5">
-                        {/* Icon */}
-                        <div className={`shrink-0 w-10 h-10 rounded-xl ${config.bg} flex items-center justify-center ${config.color}`}>
-                          {config.icon}
-                        </div>
-
-                        {/* Body */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-0.5">
-                            <p className={`text-sm font-medium truncate ${
-                              !n.read ? "text-foreground" : "text-muted-light"
-                            }`}>
-                              {n.title}
-                            </p>
-                            {!n.read && (
-                              <div className="w-2 h-2 rounded-full bg-[#2563EB] shrink-0 animate-pulse" />
-                            )}
-                            <span className={`text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${config.bg} ${config.color}`}>
-                              {config.label}
-                            </span>
-                          </div>
-                          {n.message && (
-                            <p className={`text-xs mt-0.5 line-clamp-2 ${
-                              !n.read ? "text-muted" : "text-muted/60"
-                            }`}>
-                              {n.message}
-                            </p>
-                          )}
-                          <div className="flex items-center gap-3 mt-2">
-                            <span className="text-[10px] text-muted/60">
-                              {formatRelativeTime(n.created_at)}
-                            </span>
-                            {!n.read && (
-                              <button
-                                onClick={() => markRead(n.id)}
-                                className="text-[10px] text-muted hover:text-foreground flex items-center gap-1 transition-colors"
-                              >
-                                <Eye size={10} />
-                                Mark read
-                              </button>
-                            )}
-                            {actionLabel && n.link && (
-                              <Link
-                                href={n.link}
-                                onClick={() => markRead(n.id)}
-                                className="text-[10px] text-[#2563EB] hover:text-[#3B82F6] flex items-center gap-1 font-medium transition-colors"
-                              >
-                                {actionLabel}
-                                <ExternalLink size={9} />
-                              </Link>
-                            )}
-                            {actionLabel && !n.link && (
-                              <span className="text-[10px] text-[rgba(37,99,235,0.5)] flex items-center gap-1">
-                                {actionLabel}
-                                <ChevronRight size={9} />
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                      <div
+                        className="absolute top-0 left-0 right-0"
+                        style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)" }}
+                      />
+                      <div className="flex items-center justify-center gap-1.5 mb-1 mt-1">
+                        <span className="text-muted">{tab.icon}</span>
+                        <span className="text-lg font-bold text-foreground">{count}</span>
                       </div>
-                    </motion.div>
+                      <p className="text-[10px] text-muted">{tab.label}</p>
+                      {unread > 0 && (
+                        <span className="text-[8px] text-[#2563EB] bg-[rgba(37,99,235,0.08)] px-1.5 py-0.5 rounded-full mt-1 inline-block">
+                          {unread} new
+                        </span>
+                      )}
+                    </motion.button>
                   );
                 })}
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* --- Stats bar --- */}
-      {!loading && notifications.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          {TABS.filter((t) => t.key !== "all").map((tab, index) => {
-            const count = tabCounts[tab.key];
-            const unread = notifications.filter(
-              (n) => typeToTab(n.type) === tab.key && !n.read
-            ).length;
-            return (
-              <motion.button
-                key={tab.key}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: index * 0.06 }}
-                whileHover={{ y: -2 }}
-                onClick={() => setActiveTab(tab.key)}
-                className={`glass rounded-xl p-3 text-center relative overflow-hidden hover:shadow-md transition-all ${
-                  activeTab === tab.key ? "ring-1 ring-indigo-500/30" : ""
-                }`}
-              >
-                <div
-                  className="absolute top-0 left-0 right-0"
-                  style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)" }}
-                />
-                <div className="flex items-center justify-center gap-1.5 mb-1 mt-1">
-                  <span className="text-muted">{tab.icon}</span>
-                  <span className="text-lg font-bold text-foreground">{count}</span>
-                </div>
-                <p className="text-[10px] text-muted">{tab.label}</p>
-                {unread > 0 && (
-                  <span className="text-[8px] text-[#2563EB] bg-[rgba(37,99,235,0.08)] px-1.5 py-0.5 rounded-full mt-1 inline-block">
-                    {unread} new
-                  </span>
-                )}
-              </motion.button>
-            );
-          })}
-        </div>
-      )}
-
-      {/* --- PageAI --- */}
-      <PageAI
-        pageName="Notifications"
-        context="This is the notifications center showing alerts from lead scraping, outreach campaigns, auto-pilot actions, and system events. The user can filter by type, mark as read, and navigate to relevant pages."
-        suggestions={[
-          "Summarize my unread notifications",
-          "Which alerts need my attention?",
-          "How many leads were scraped this week?",
-          "Show me outreach delivery stats",
-        ]}
-      />
-    </div>
+            )}{/* --- PageAI --- */}<PageAI
+              pageName="Notifications"
+              context="This is the notifications center showing alerts from lead scraping, outreach campaigns, auto-pilot actions, and system events. The user can filter by type, mark as read, and navigate to relevant pages."
+              suggestions={[
+                "Summarize my unread notifications",
+                "Which alerts need my attention?",
+                "How many leads were scraped this week?",
+                "Show me outreach delivery stats",
+              ]}
+            /></MotionPage>
   );
 }

@@ -47,6 +47,7 @@ import {
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // ───────────────────────────────────────────────────────────────────
 // Trigger catalog — mirrors TriggerType in src/lib/workflows/
@@ -325,150 +326,146 @@ export default function TriggersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <PageHero
-        title="Triggers"
-        subtitle="Fire workflows automatically when real-world events happen. 12 event types, filter each with JSON config, see every run in history."
-        icon={<Zap size={20} />}
-        eyebrow="TRIGGER RULES"
-      />
-
-      <div className="mx-auto max-w-5xl space-y-5 px-6 pb-10">
-        {/* Top toolbar */}
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted">
-            {loading
-              ? "Loading…"
-              : `${triggers.length} trigger${triggers.length === 1 ? "" : "s"} · ${triggers.filter((t) => t.is_active).length} active`}
-          </p>
-          <div className="flex gap-2">
-            <button
-              onClick={() => (showRuns ? setShowRuns(false) : loadRuns())}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-3 py-2 text-xs font-medium hover:bg-surface-light"
-            >
-              <Activity size={13} />
-              {showRuns ? "Hide history" : "View history"}
-            </button>
-            <button
-              onClick={() => setShowNew(true)}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
-            >
-              <Plus size={14} /> New trigger
-            </button>
-          </div>
-        </div>
-
-        {/* New trigger modal/form */}
-        {showNew && (
-          <NewTriggerForm
-            workflows={workflows}
-            onClose={() => setShowNew(false)}
-            onCreated={() => {
-              setShowNew(false);
-              loadAll();
-            }}
-          />
-        )}
-
-        {/* List */}
-        {loading ? (
-          <div className="flex items-center gap-2 text-sm text-muted">
-            <Loader size={14} className="animate-spin" /> Loading triggers…
-          </div>
-        ) : triggers.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border/50 glass p-10 text-center">
-            <Zap size={28} className="mx-auto mb-3 text-muted" />
-            <h3 className="mb-1 text-base font-semibold">No triggers yet</h3>
-            <p className="mx-auto mb-4 max-w-md text-sm text-muted">
-              Triggers fire workflows automatically when events happen — like a form being submitted,
-              a tag added to a lead, or an email opened.
-            </p>
-            <button
-              onClick={() => setShowNew(true)}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white"
-            >
-              <Plus size={14} /> Create your first trigger
-            </button>
-          </div>
-        ) : (
-          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-2">
-            {triggers.map((t) => (
-              <motion.div
-                key={t.id}
-                variants={itemVariants}
-              >
-                <TriggerRowCard
-                  trigger={t}
-                  workflowName={workflows.find((w) => w.id === t.workflow_id)?.name}
-                  onToggle={() => toggleActive(t)}
-                  onDelete={() => deleteTrigger(t)}
-                  onFire={() => fireManual(t)}
-                />
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-
-        {/* History panel */}
-        {showRuns && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.4 }}
-            className="mt-6 glass rounded-xl p-5"
-          >
-            <h3 className="mb-3 text-sm font-semibold">Recent trigger runs</h3>
-            {runs.length === 0 ? (
-              <p className="text-xs text-muted">
-                No runs yet. Once a trigger fires, the history shows up here with payload + status.
-                (Endpoint <code className="text-[10px]">/api/triggers/runs</code> not yet implemented — tomorrow.)
-              </p>
-            ) : (
-              <div className="space-y-2">
-                {runs.map((r) => (
-                  <div key={r.id} className="rounded-lg border border-border/30 bg-background/40 p-3 text-[12px]">
-                    <div className="flex items-center justify-between">
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                          r.status === "completed"
-                            ? "bg-emerald-500/15 text-emerald-300"
-                            : r.status === "failed"
-                              ? "bg-rose-500/15 text-rose-300"
-                              : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                        }`}
-                      >
-                        {r.status}
-                      </span>
-                      <span className="text-muted">{new Date(r.started_at).toLocaleString()}</span>
-                    </div>
-                    {r.error && <p className="mt-1 text-rose-300">{r.error}</p>}
-                  </div>
-                ))}
+    <MotionPage className="min-h-screen bg-background text-foreground"><PageHero
+              title="Triggers"
+              subtitle="Fire workflows automatically when real-world events happen. 12 event types, filter each with JSON config, see every run in history."
+              icon={<Zap size={20} />}
+              eyebrow="TRIGGER RULES"
+            /><div className="mx-auto max-w-5xl space-y-5 px-6 pb-10">
+              {/* Top toolbar */}
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-muted">
+                  {loading
+                    ? "Loading…"
+                    : `${triggers.length} trigger${triggers.length === 1 ? "" : "s"} · ${triggers.filter((t) => t.is_active).length} active`}
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => (showRuns ? setShowRuns(false) : loadRuns())}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-3 py-2 text-xs font-medium hover:bg-surface-light"
+                  >
+                    <Activity size={13} />
+                    {showRuns ? "Hide history" : "View history"}
+                  </button>
+                  <button
+                    onClick={() => setShowNew(true)}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
+                  >
+                    <Plus size={14} /> New trigger
+                  </button>
+                </div>
               </div>
-            )}
-          </motion.div>
-        )}
 
-        {/* Help */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
-          className="mt-8 glass rounded-xl p-5 text-[12px] text-muted"
-        >
-          <p className="mb-2 font-semibold text-foreground">How triggers work</p>
-          <ul className="ml-4 list-disc space-y-1">
-            <li>Each trigger links ONE event type to ONE workflow.</li>
-            <li>Config filters let you narrow further (e.g. only when tag = &quot;hot-lead&quot;).</li>
-            <li>Fires are logged to history so you can debug if a workflow didn&apos;t run.</li>
-            <li>
-              Build the workflow first in <Link href="/dashboard/workflow-builder" className="text-[#2563EB] underline">Workflow Builder</Link>,
-              then come back here to set its trigger.
-            </li>
-          </ul>
-        </motion.div>
-      </div>
-    </div>
+              {/* New trigger modal/form */}
+              {showNew && (
+                <NewTriggerForm
+                  workflows={workflows}
+                  onClose={() => setShowNew(false)}
+                  onCreated={() => {
+                    setShowNew(false);
+                    loadAll();
+                  }}
+                />
+              )}
+
+              {/* List */}
+              {loading ? (
+                <div className="flex items-center gap-2 text-sm text-muted">
+                  <Loader size={14} className="animate-spin" /> Loading triggers…
+                </div>
+              ) : triggers.length === 0 ? (
+                <div className="rounded-xl border border-dashed border-border/50 glass p-10 text-center">
+                  <Zap size={28} className="mx-auto mb-3 text-muted" />
+                  <h3 className="mb-1 text-base font-semibold">No triggers yet</h3>
+                  <p className="mx-auto mb-4 max-w-md text-sm text-muted">
+                    Triggers fire workflows automatically when events happen — like a form being submitted,
+                    a tag added to a lead, or an email opened.
+                  </p>
+                  <button
+                    onClick={() => setShowNew(true)}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white"
+                  >
+                    <Plus size={14} /> Create your first trigger
+                  </button>
+                </div>
+              ) : (
+                <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-2">
+                  {triggers.map((t) => (
+                    <motion.div
+                      key={t.id}
+                      variants={itemVariants}
+                    >
+                      <TriggerRowCard
+                        trigger={t}
+                        workflowName={workflows.find((w) => w.id === t.workflow_id)?.name}
+                        onToggle={() => toggleActive(t)}
+                        onDelete={() => deleteTrigger(t)}
+                        onFire={() => fireManual(t)}
+                      />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+
+              {/* History panel */}
+              {showRuns && (
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1, duration: 0.4 }}
+                  className="mt-6 glass rounded-xl p-5"
+                >
+                  <h3 className="mb-3 text-sm font-semibold">Recent trigger runs</h3>
+                  {runs.length === 0 ? (
+                    <p className="text-xs text-muted">
+                      No runs yet. Once a trigger fires, the history shows up here with payload + status.
+                      (Endpoint <code className="text-[10px]">/api/triggers/runs</code> not yet implemented — tomorrow.)
+                    </p>
+                  ) : (
+                    <div className="space-y-2">
+                      {runs.map((r) => (
+                        <div key={r.id} className="rounded-lg border border-border/30 bg-background/40 p-3 text-[12px]">
+                          <div className="flex items-center justify-between">
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                                r.status === "completed"
+                                  ? "bg-emerald-500/15 text-emerald-300"
+                                  : r.status === "failed"
+                                    ? "bg-rose-500/15 text-rose-300"
+                                    : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                              }`}
+                            >
+                              {r.status}
+                            </span>
+                            <span className="text-muted">{new Date(r.started_at).toLocaleString()}</span>
+                          </div>
+                          {r.error && <p className="mt-1 text-rose-300">{r.error}</p>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {/* Help */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
+                className="mt-8 glass rounded-xl p-5 text-[12px] text-muted"
+              >
+                <p className="mb-2 font-semibold text-foreground">How triggers work</p>
+                <ul className="ml-4 list-disc space-y-1">
+                  <li>Each trigger links ONE event type to ONE workflow.</li>
+                  <li>Config filters let you narrow further (e.g. only when tag = &quot;hot-lead&quot;).</li>
+                  <li>Fires are logged to history so you can debug if a workflow didn&apos;t run.</li>
+                  <li>
+                    Build the workflow first in <Link href="/dashboard/workflow-builder" className="text-[#2563EB] underline">Workflow Builder</Link>,
+                    then come back here to set its trigger.
+                  </li>
+                </ul>
+              </motion.div>
+            </div></MotionPage>
   );
 }
 

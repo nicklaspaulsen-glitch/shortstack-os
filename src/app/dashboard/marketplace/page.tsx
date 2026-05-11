@@ -18,6 +18,7 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import PageAI from "@/components/page-ai";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // ── Types ──
 
@@ -303,404 +304,389 @@ export default function MarketplacePage() {
   // ── Render ──
 
   return (
-    <div className="fade-in space-y-6 pb-32">
-      <PageHero
-        eyebrow="MARKETPLACE"
-        icon={<Store size={28} />}
-        title="Marketplace"
-        subtitle="Plugins to supercharge your workflow."
-        gradient="gold"
-        actions={
-          <div className="flex items-center gap-2 rounded-lg border border-border bg-black/5 p-1">
-            <button
-              onClick={() => setViewTab("browse")}
-              className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${
-                viewTab === "browse"
-                  ? "bg-black/10 text-foreground"
-                  : "text-muted hover:text-white"
-              }`}
-            >
-              Browse
-            </button>
-            <button
-              onClick={() => setViewTab("installed")}
-              className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${
-                viewTab === "installed"
-                  ? "bg-black/10 text-foreground"
-                  : "text-muted hover:text-white"
-              }`}
-            >
-              My Plugins
-              <span className="ml-1.5 rounded-full bg-black/10 px-1.5 py-0.5 text-[10px] font-bold text-foreground">
-                {installedIds.size}
-              </span>
-            </button>
-          </div>
-        }
-      />
-
-      {/* ── Search + filters ── */}
-      <div className="space-y-4">
-        {/* Search bar */}
-        <div className="relative">
-          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-          <input
-            type="text"
-            placeholder="Search plugins by name, author, or tag..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-border bg-surface py-2.5 pl-10 pr-4 text-sm text-[#111827] placeholder:text-muted/60 focus:border-[rgba(37,99,235,0.5)] focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.3)]"
-          />
-          {search && (
-            <button
-              onClick={() => setSearch("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-[#111827]"
-            >
-              <X size={16} />
-            </button>
-          )}
-        </div>
-
-        {/* Category pills + sort */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.key}
-                onClick={() => setCategory(cat.key)}
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
-                  category === cat.key
-                    ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] ring-1 ring-[rgba(37,99,235,0.3)]"
-                    : "bg-surface text-muted hover:bg-surface-light hover:text-[#111827]"
-                }`}
-              >
-                {cat.icon}
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Filter size={14} className="text-muted" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortBy)}
-              className="rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-[#111827] focus:border-[rgba(37,99,235,0.5)] focus:outline-none"
-            >
-              <option value="popular">Popular</option>
-              <option value="newest">Newest</option>
-              <option value="rating">Top Rated</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Stats bar ── */}
-      <div className="flex items-center gap-6 border-b border-border pb-4">
-        <div className="text-sm text-muted">
-          <span className="font-semibold text-[#0A0A0B]">{filteredPlugins.length}</span> plugins found
-        </div>
-        <div className="text-sm text-muted">
-          <span className="font-semibold text-[#0A0A0B]">{pluginCatalog.filter((p) => p.price === 0).length}</span> free
-        </div>
-        <div className="text-sm text-muted">
-          <span className="font-semibold text-[#0A0A0B]">{pluginCatalog.filter((p) => p.verified).length}</span> verified
-        </div>
-      </div>
-
-      {/* ── Plugin grid ── */}
-      {viewTab === "browse" ? (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {filteredPlugins.map((plugin, i) => {
-            const isInstalled = installedIds.has(plugin.id);
-            const isInstalling = installing === plugin.id;
-
-            return (
-              <motion.div
-                key={plugin.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.06, duration: 0.4 }}
-                whileHover={{ y: -4, scale: 1.01 }}
-                className="glass rounded-xl group cursor-pointer transition-shadow hover:border-[rgba(37,99,235,0.25)] hover:shadow-lg hover:shadow-[rgba(37,99,235,0.05)]"
-                onClick={() => {
-                  setSelectedPlugin(plugin);
-                  setDetailTab("overview");
-                }}
-              >
-                <div className="flex items-start gap-3">
-                  {/* Icon */}
-                  <div
-                    className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl text-white"
-                    style={{ backgroundColor: plugin.iconColor + "22", color: plugin.iconColor }}
+    <MotionPage className="fade-in space-y-6 pb-32"><PageHero
+              eyebrow="MARKETPLACE"
+              icon={<Store size={28} />}
+              title="Marketplace"
+              subtitle="Plugins to supercharge your workflow."
+              gradient="gold"
+              actions={
+                <div className="flex items-center gap-2 rounded-lg border border-border bg-black/5 p-1">
+                  <button
+                    onClick={() => setViewTab("browse")}
+                    className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${
+                      viewTab === "browse"
+                        ? "bg-black/10 text-foreground"
+                        : "text-muted hover:text-white"
+                    }`}
                   >
-                    {plugin.icon}
-                  </div>
-
-                  {/* Name + author */}
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="truncate text-sm font-semibold text-[#111827] group-hover:text-[#2563EB] transition-colors">
-                        {plugin.name}
-                      </h3>
-                      {plugin.verified && (
-                        <div className="flex items-center gap-0.5 rounded-full bg-[rgba(37,99,235,0.08)] px-1.5 py-0.5" title="Verified">
-                          <Shield size={10} className="text-[#2563EB]" />
-                          <span className="text-[9px] font-bold text-[#2563EB]">VERIFIED</span>
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted">by {plugin.author}</p>
-                  </div>
-
-                  {/* Price */}
-                  <div className="flex-shrink-0">
-                    {plugin.price === 0 ? (
-                      <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-400">
-                        Free
-                      </span>
-                    ) : (
-                      <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2.5 py-0.5 text-[11px] font-bold text-[#2563EB]">
-                        ${plugin.price}/mo
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Description */}
-                <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-muted">
-                  {plugin.description}
-                </p>
-
-                {/* Rating + installs */}
-                <div className="mt-3 flex items-center justify-between">
-                  <StarRating rating={plugin.rating} />
-                  <div className="flex items-center gap-1 text-xs text-muted">
-                    <Download size={11} />
-                    {formatInstalls(plugin.installs)}
-                  </div>
-                </div>
-
-                {/* Tags */}
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {plugin.tags.map((tag) => (
-                    <span key={tag} className="rounded-md bg-surface-light px-2 py-0.5 text-[10px] font-medium text-muted">
-                      {tag}
+                    Browse
+                  </button>
+                  <button
+                    onClick={() => setViewTab("installed")}
+                    className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${
+                      viewTab === "installed"
+                        ? "bg-black/10 text-foreground"
+                        : "text-muted hover:text-white"
+                    }`}
+                  >
+                    My Plugins
+                    <span className="ml-1.5 rounded-full bg-black/10 px-1.5 py-0.5 text-[10px] font-bold text-foreground">
+                      {installedIds.size}
                     </span>
+                  </button>
+                </div>
+              }
+            />{/* ── Search + filters ── */}<div className="space-y-4">
+              {/* Search bar */}
+              <div className="relative">
+                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                <input
+                  type="text"
+                  placeholder="Search plugins by name, author, or tag..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full rounded-lg border border-border bg-surface py-2.5 pl-10 pr-4 text-sm text-[#111827] placeholder:text-muted/60 focus:border-[rgba(37,99,235,0.5)] focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.3)]"
+                />
+                {search && (
+                  <button
+                    onClick={() => setSearch("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-[#111827]"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+
+              {/* Category pills + sort */}
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap gap-2">
+                  {CATEGORIES.map((cat) => (
+                    <button
+                      key={cat.key}
+                      onClick={() => setCategory(cat.key)}
+                      className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
+                        category === cat.key
+                          ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] ring-1 ring-[rgba(37,99,235,0.3)]"
+                          : "bg-surface text-muted hover:bg-surface-light hover:text-[#111827]"
+                      }`}
+                    >
+                      {cat.icon}
+                      {cat.label}
+                    </button>
                   ))}
                 </div>
 
-                {/* Install button */}
-                <div className="mt-4 border-t border-border pt-3">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (!isInstalled && !isInstalling) handleInstall(plugin.id);
-                    }}
-                    disabled={isInstalling}
-                    className={`w-full rounded-lg py-2 text-xs font-semibold transition-all ${
-                      isInstalled
-                        ? "bg-emerald-500/10 text-emerald-400 cursor-default"
-                        : isInstalling
-                        ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] cursor-wait"
-                        : "bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]"
-                    }`}
+                <div className="flex items-center gap-2">
+                  <Filter size={14} className="text-muted" />
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as SortBy)}
+                    className="rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-[#111827] focus:border-[rgba(37,99,235,0.5)] focus:outline-none"
                   >
-                    {isInstalling ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <Loader size={12} className="animate-spin" />
-                        Installing...
-                      </span>
-                    ) : isInstalled ? (
-                      <span className="flex items-center justify-center gap-1.5">
-                        <CheckCircle size={12} />
-                        Installed
-                      </span>
-                    ) : (
-                      <span className="flex items-center justify-center gap-1.5">
-                        <Download size={12} />
-                        Install
-                      </span>
-                    )}
-                  </button>
+                    <option value="popular">Popular</option>
+                    <option value="newest">Newest</option>
+                    <option value="rating">Top Rated</option>
+                  </select>
                 </div>
-              </motion.div>
-            );
-          })}
+              </div>
+            </div>{/* ── Stats bar ── */}<div className="flex items-center gap-6 border-b border-border pb-4">
+              <div className="text-sm text-muted">
+                <span className="font-semibold text-[#0A0A0B]">{filteredPlugins.length}</span> plugins found
+              </div>
+              <div className="text-sm text-muted">
+                <span className="font-semibold text-[#0A0A0B]">{pluginCatalog.filter((p) => p.price === 0).length}</span> free
+              </div>
+              <div className="text-sm text-muted">
+                <span className="font-semibold text-[#0A0A0B]">{pluginCatalog.filter((p) => p.verified).length}</span> verified
+              </div>
+            </div>{/* ── Plugin grid ── */}{viewTab === "browse" ? (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {filteredPlugins.map((plugin, i) => {
+                  const isInstalled = installedIds.has(plugin.id);
+                  const isInstalling = installing === plugin.id;
 
-          {filteredPlugins.length === 0 && (
-            <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
-              <Search size={40} className="mb-3 text-muted/30" />
-              <p className="text-sm font-medium text-[#111827]">No plugins found</p>
-              <p className="mt-1 text-xs text-muted">Try adjusting your search or filters</p>
-            </div>
-          )}
-        </div>
-      ) : (
-        /* ── My Plugins Tab ── */
-        <div className="space-y-3">
-          {filteredPlugins.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Store size={40} className="mb-3 text-muted/30" />
-              <p className="text-sm font-medium text-[#111827]">No plugins installed yet</p>
-              <p className="mt-1 text-xs text-muted">Browse the marketplace to discover plugins</p>
-              <button
-                onClick={() => setViewTab("browse")}
-                className="mt-4 rounded-lg bg-[rgba(37,99,235,0.08)] px-4 py-2 text-sm font-medium text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors"
-              >
-                Browse Marketplace
-              </button>
-            </div>
-          ) : (
-            filteredPlugins.map((plugin, idx) => {
-              const isEnabled = enabledIds.has(plugin.id);
-              const health = getHealthStatus(plugin.id);
-
-              return (
-                <motion.div key={plugin.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between p-4">
-                  <div className="flex items-center gap-3">
-                    {/* Health indicator */}
-                    <div
-                      className={`h-2.5 w-2.5 flex-shrink-0 rounded-full ${
-                        health === "healthy"
-                          ? "bg-emerald-400 shadow-sm shadow-emerald-400/50"
-                          : health === "warning"
-                          ? "bg-amber-400 shadow-sm shadow-amber-400/50"
-                          : "bg-red-400 shadow-sm shadow-red-400/50"
-                      }`}
-                      title={health === "healthy" ? "Healthy" : health === "warning" ? "Needs attention" : "Error"}
-                    />
-
-                    {/* Plugin icon */}
-                    <div
-                      className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg text-white"
-                      style={{ backgroundColor: plugin.iconColor + "22", color: plugin.iconColor }}
-                    >
-                      {plugin.icon}
-                    </div>
-
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-sm font-semibold text-[#111827]">{plugin.name}</h3>
-                        <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                            isEnabled
-                              ? "bg-emerald-500/10 text-emerald-400"
-                              : "bg-red-500/10 text-red-400"
-                          }`}
-                        >
-                          {isEnabled ? "Active" : "Disabled"}
-                        </span>
-                      </div>
-                      <p className="text-xs text-muted">
-                        v{plugin.version} &middot; Updated {plugin.updatedAt}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {/* Enable/Disable toggle */}
-                    <button
-                      onClick={() => toggleEnabled(plugin.id)}
-                      className={`relative h-6 w-11 rounded-full transition-colors ${
-                        isEnabled ? "bg-emerald-500" : "bg-surface-light"
-                      }`}
-                    >
-                      <div
-                        className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
-                          isEnabled ? "left-[22px]" : "left-0.5"
-                        }`}
-                      />
-                    </button>
-
-                    {/* Settings */}
-                    <button
+                  return (
+                    <motion.div
+                      key={plugin.id}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.06, duration: 0.4 }}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                      className="glass rounded-xl group cursor-pointer transition-shadow hover:border-[rgba(37,99,235,0.25)] hover:shadow-lg hover:shadow-[rgba(37,99,235,0.05)]"
                       onClick={() => {
                         setSelectedPlugin(plugin);
-                        setDetailTab("settings");
+                        setDetailTab("overview");
                       }}
-                      className="rounded-lg border border-border p-2 text-muted hover:border-[rgba(37,99,235,0.25)] hover:text-[#2563EB] transition-colors"
-                      title="Settings"
                     >
-                      <Settings size={14} />
-                    </button>
+                      <div className="flex items-start gap-3">
+                        {/* Icon */}
+                        <div
+                          className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl text-white"
+                          style={{ backgroundColor: plugin.iconColor + "22", color: plugin.iconColor }}
+                        >
+                          {plugin.icon}
+                        </div>
 
-                    {/* Uninstall */}
-                    {confirmUninstall === plugin.id ? (
-                      <div className="flex items-center gap-1.5">
+                        {/* Name + author */}
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <h3 className="truncate text-sm font-semibold text-[#111827] group-hover:text-[#2563EB] transition-colors">
+                              {plugin.name}
+                            </h3>
+                            {plugin.verified && (
+                              <div className="flex items-center gap-0.5 rounded-full bg-[rgba(37,99,235,0.08)] px-1.5 py-0.5" title="Verified">
+                                <Shield size={10} className="text-[#2563EB]" />
+                                <span className="text-[9px] font-bold text-[#2563EB]">VERIFIED</span>
+                              </div>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted">by {plugin.author}</p>
+                        </div>
+
+                        {/* Price */}
+                        <div className="flex-shrink-0">
+                          {plugin.price === 0 ? (
+                            <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-400">
+                              Free
+                            </span>
+                          ) : (
+                            <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2.5 py-0.5 text-[11px] font-bold text-[#2563EB]">
+                              ${plugin.price}/mo
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Description */}
+                      <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-muted">
+                        {plugin.description}
+                      </p>
+
+                      {/* Rating + installs */}
+                      <div className="mt-3 flex items-center justify-between">
+                        <StarRating rating={plugin.rating} />
+                        <div className="flex items-center gap-1 text-xs text-muted">
+                          <Download size={11} />
+                          {formatInstalls(plugin.installs)}
+                        </div>
+                      </div>
+
+                      {/* Tags */}
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {plugin.tags.map((tag) => (
+                          <span key={tag} className="rounded-md bg-surface-light px-2 py-0.5 text-[10px] font-medium text-muted">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Install button */}
+                      <div className="mt-4 border-t border-border pt-3">
                         <button
-                          onClick={() => handleUninstall(plugin.id)}
-                          className="rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-400 hover:bg-red-500/20 transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!isInstalled && !isInstalling) handleInstall(plugin.id);
+                          }}
+                          disabled={isInstalling}
+                          className={`w-full rounded-lg py-2 text-xs font-semibold transition-all ${
+                            isInstalled
+                              ? "bg-emerald-500/10 text-emerald-400 cursor-default"
+                              : isInstalling
+                              ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] cursor-wait"
+                              : "bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]"
+                          }`}
                         >
-                          Confirm
-                        </button>
-                        <button
-                          onClick={() => setConfirmUninstall(null)}
-                          className="rounded-lg border border-border px-3 py-2 text-xs text-muted hover:text-[#111827] transition-colors"
-                        >
-                          Cancel
+                          {isInstalling ? (
+                            <span className="flex items-center justify-center gap-2">
+                              <Loader size={12} className="animate-spin" />
+                              Installing...
+                            </span>
+                          ) : isInstalled ? (
+                            <span className="flex items-center justify-center gap-1.5">
+                              <CheckCircle size={12} />
+                              Installed
+                            </span>
+                          ) : (
+                            <span className="flex items-center justify-center gap-1.5">
+                              <Download size={12} />
+                              Install
+                            </span>
+                          )}
                         </button>
                       </div>
-                    ) : (
-                      <button
-                        onClick={() => setConfirmUninstall(plugin.id)}
-                        className="rounded-lg border border-red-500/20 p-2 text-red-400/60 hover:border-red-500/40 hover:text-red-400 transition-colors"
-                        title="Uninstall"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    )}
+                    </motion.div>
+                  );
+                })}
+
+                {filteredPlugins.length === 0 && (
+                  <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                    <Search size={40} className="mb-3 text-muted/30" />
+                    <p className="text-sm font-medium text-[#111827]">No plugins found</p>
+                    <p className="mt-1 text-xs text-muted">Try adjusting your search or filters</p>
                   </div>
-                </motion.div>
-              );
-            })
-          )}
-        </div>
-      )}
-
-      {/* ── Developer Section ── */}
-      <div className="section-header mt-8">
-        <h2 className="text-lg font-semibold text-[#111827]">For Developers</h2>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {/* Build CTA */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }} className="glass rounded-xl border-dashed border-[rgba(37,99,235,0.2)] bg-gradient-to-br from-[rgba(37,99,235,0.05)] to-transparent p-5">
-          <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(37,99,235,0.08)]">
-              <Code2 size={24} className="text-[#2563EB]" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-base font-bold text-[#111827]">Build Your Own Plugin</h3>
-              <p className="mt-1 text-sm text-muted">
-                Extend Trinity with custom plugins. Use our SDK to hook into CRM events,
-                add UI panels, and connect external services.
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <a
-                  href="/dashboard/api-docs"
-                  className="flex items-center gap-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] px-3 py-1.5 text-xs font-semibold text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors">
-                  <BookOpen size={12} />
-                  API Docs
-                </a>
-                <a
-                  href="https://github.com/shortstack-os/plugin-examples"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted hover:border-[rgba(37,99,235,0.25)] hover:text-[#111827] transition-colors">
-                  <ExternalLink size={12} />
-                  View Examples
-                </a>
+                )}
               </div>
-            </div>
-          </div>
-        </motion.div>
+            ) : (
+              /* ── My Plugins Tab ── */
+              <div className="space-y-3">
+                {filteredPlugins.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <Store size={40} className="mb-3 text-muted/30" />
+                    <p className="text-sm font-medium text-[#111827]">No plugins installed yet</p>
+                    <p className="mt-1 text-xs text-muted">Browse the marketplace to discover plugins</p>
+                    <button
+                      onClick={() => setViewTab("browse")}
+                      className="mt-4 rounded-lg bg-[rgba(37,99,235,0.08)] px-4 py-2 text-sm font-medium text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors"
+                    >
+                      Browse Marketplace
+                    </button>
+                  </div>
+                ) : (
+                  filteredPlugins.map((plugin, idx) => {
+                    const isEnabled = enabledIds.has(plugin.id);
+                    const health = getHealthStatus(plugin.id);
 
-        {/* Manifest format */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16, duration: 0.4 }} className="glass rounded-xl p-5">
-          <h3 className="text-sm font-semibold text-[#111827] mb-3">Plugin Manifest Format</h3>
-          <pre className="overflow-x-auto rounded-lg bg-[rgba(0,0,0,0.04)] p-3 text-[11px] leading-relaxed text-muted">
-{`{
+                    return (
+                      <motion.div key={plugin.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between p-4">
+                        <div className="flex items-center gap-3">
+                          {/* Health indicator */}
+                          <div
+                            className={`h-2.5 w-2.5 flex-shrink-0 rounded-full ${
+                              health === "healthy"
+                                ? "bg-emerald-400 shadow-sm shadow-emerald-400/50"
+                                : health === "warning"
+                                ? "bg-amber-400 shadow-sm shadow-amber-400/50"
+                                : "bg-red-400 shadow-sm shadow-red-400/50"
+                            }`}
+                            title={health === "healthy" ? "Healthy" : health === "warning" ? "Needs attention" : "Error"}
+                          />
+
+                          {/* Plugin icon */}
+                          <div
+                            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg text-white"
+                            style={{ backgroundColor: plugin.iconColor + "22", color: plugin.iconColor }}
+                          >
+                            {plugin.icon}
+                          </div>
+
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-sm font-semibold text-[#111827]">{plugin.name}</h3>
+                              <span
+                                className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                                  isEnabled
+                                    ? "bg-emerald-500/10 text-emerald-400"
+                                    : "bg-red-500/10 text-red-400"
+                                }`}
+                              >
+                                {isEnabled ? "Active" : "Disabled"}
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted">
+                              v{plugin.version} &middot; Updated {plugin.updatedAt}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          {/* Enable/Disable toggle */}
+                          <button
+                            onClick={() => toggleEnabled(plugin.id)}
+                            className={`relative h-6 w-11 rounded-full transition-colors ${
+                              isEnabled ? "bg-emerald-500" : "bg-surface-light"
+                            }`}
+                          >
+                            <div
+                              className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                                isEnabled ? "left-[22px]" : "left-0.5"
+                              }`}
+                            />
+                          </button>
+
+                          {/* Settings */}
+                          <button
+                            onClick={() => {
+                              setSelectedPlugin(plugin);
+                              setDetailTab("settings");
+                            }}
+                            className="rounded-lg border border-border p-2 text-muted hover:border-[rgba(37,99,235,0.25)] hover:text-[#2563EB] transition-colors"
+                            title="Settings"
+                          >
+                            <Settings size={14} />
+                          </button>
+
+                          {/* Uninstall */}
+                          {confirmUninstall === plugin.id ? (
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                onClick={() => handleUninstall(plugin.id)}
+                                className="rounded-lg bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-400 hover:bg-red-500/20 transition-colors"
+                              >
+                                Confirm
+                              </button>
+                              <button
+                                onClick={() => setConfirmUninstall(null)}
+                                className="rounded-lg border border-border px-3 py-2 text-xs text-muted hover:text-[#111827] transition-colors"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => setConfirmUninstall(plugin.id)}
+                              className="rounded-lg border border-red-500/20 p-2 text-red-400/60 hover:border-red-500/40 hover:text-red-400 transition-colors"
+                              title="Uninstall"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          )}
+                        </div>
+                      </motion.div>
+                    );
+                  })
+                )}
+              </div>
+            )}{/* ── Developer Section ── */}<div className="section-header mt-8">
+              <h2 className="text-lg font-semibold text-[#111827]">For Developers</h2>
+            </div><div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {/* Build CTA */}
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }} className="glass rounded-xl border-dashed border-[rgba(37,99,235,0.2)] bg-gradient-to-br from-[rgba(37,99,235,0.05)] to-transparent p-5">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(37,99,235,0.08)]">
+                    <Code2 size={24} className="text-[#2563EB]" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-base font-bold text-[#111827]">Build Your Own Plugin</h3>
+                    <p className="mt-1 text-sm text-muted">
+                      Extend Trinity with custom plugins. Use our SDK to hook into CRM events,
+                      add UI panels, and connect external services.
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <a
+                        href="/dashboard/api-docs"
+                        className="flex items-center gap-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] px-3 py-1.5 text-xs font-semibold text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors">
+                        <BookOpen size={12} />
+                        API Docs
+                      </a>
+                      <a
+                        href="https://github.com/shortstack-os/plugin-examples"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted hover:border-[rgba(37,99,235,0.25)] hover:text-[#111827] transition-colors">
+                        <ExternalLink size={12} />
+                        View Examples
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Manifest format */}
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16, duration: 0.4 }} className="glass rounded-xl p-5">
+                <h3 className="text-sm font-semibold text-[#111827] mb-3">Plugin Manifest Format</h3>
+                <pre className="overflow-x-auto rounded-lg bg-[rgba(0,0,0,0.04)] p-3 text-[11px] leading-relaxed text-muted">
+      {`{
   "id": "my-plugin",
   "name": "My Custom Plugin",
   "author": "Your Name",
@@ -714,418 +700,408 @@ export default function MarketplacePage() {
     { "key": "api_key", "label": "API Key", "type": "text" }
   ]
 }`}
-          </pre>
-          <button
-            onClick={() => toast("Plugin submissions open after marketplace launch.", { icon: "info" })}
-            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] py-2 text-xs font-semibold text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors">
-            <Upload size={12} />
-            Submit Your Plugin
-          </button>
-        </motion.div>
-      </div>
-
-      {/* ── Plugin Detail Modal ── */}
-      {selectedPlugin && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-          onClick={() => setSelectedPlugin(null)}
-        >
-          <div
-            className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto  border border-border bg-white shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal header */}
-            <div className="sticky top-0 z-10 border-b border-border bg-white/95 backdrop-blur-sm px-6 py-4">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="flex h-12 w-12 items-center justify-center rounded-xl text-white"
-                    style={{ backgroundColor: selectedPlugin.iconColor + "22", color: selectedPlugin.iconColor }}
-                  >
-                    {selectedPlugin.icon}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h2 className="text-lg font-bold text-[#0A0A0B]">{selectedPlugin.name}</h2>
-                      {selectedPlugin.verified && (
-                        <div className="flex items-center gap-0.5 rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5">
-                          <Shield size={10} className="text-[#2563EB]" />
-                          <span className="text-[10px] font-bold text-[#2563EB]">VERIFIED</span>
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted">
-                      by {selectedPlugin.author} &middot; v{selectedPlugin.version} &middot;{" "}
-                      {selectedPlugin.price === 0 ? (
-                        <span className="text-emerald-400">Free</span>
-                      ) : (
-                        <span className="text-[#2563EB]">${selectedPlugin.price}/mo</span>
-                      )}
-                    </p>
-                  </div>
-                </div>
+                </pre>
                 <button
-                  onClick={() => setSelectedPlugin(null)}
-                  className="rounded-lg p-1.5 text-muted hover:bg-surface hover:text-[#0A0A0B] transition-colors"
-                >
-                  <X size={18} />
+                  onClick={() => toast("Plugin submissions open after marketplace launch.", { icon: "info" })}
+                  className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] py-2 text-xs font-semibold text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors">
+                  <Upload size={12} />
+                  Submit Your Plugin
                 </button>
-              </div>
-
-              {/* Modal tabs */}
-              <div className="mt-4 flex gap-1">
-                {(["overview", "reviews", "changelog", "settings"] as const).map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setDetailTab(tab)}
-                    className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
-                      detailTab === tab
-                        ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                        : "text-muted hover:text-[#0A0A0B]"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Modal content */}
-            <div className="px-6 py-5 space-y-6">
-              {/* ── Overview tab ── */}
-              {detailTab === "overview" && (
-                <>
-                  {/* Stats row */}
-                  <div className="flex flex-wrap gap-4">
-                    <div className="flex items-center gap-2">
-                      <StarRating rating={selectedPlugin.rating} size={14} />
-                    </div>
-                    <div className="flex items-center gap-1.5 text-xs text-muted">
-                      <Download size={13} />
-                      {formatInstalls(selectedPlugin.installs)} installs
-                    </div>
-                    <div className="flex items-center gap-1.5 text-xs text-muted">
-                      <Clock size={13} />
-                      Updated {selectedPlugin.updatedAt}
-                    </div>
-                  </div>
-
-                  {/* Description */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-[#111827] mb-2">About</h3>
-                    <p className="text-sm leading-relaxed text-muted">
-                      {selectedPlugin.longDescription}
-                    </p>
-                  </div>
-
-                  {/* Screenshots */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-[#111827] mb-3">Screenshots</h3>
-                    <div className="flex gap-3 overflow-x-auto pb-2">
-                      {selectedPlugin.screenshots.map((ss, i) => (
+              </motion.div>
+            </div>{/* ── Plugin Detail Modal ── */}{selectedPlugin && (
+              <div
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+                onClick={() => setSelectedPlugin(null)}
+              >
+                <div
+                  className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto  border border-border bg-white shadow-2xl"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Modal header */}
+                  <div className="sticky top-0 z-10 border-b border-border bg-white/95 backdrop-blur-sm px-6 py-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
                         <div
-                          key={i}
-                          className="flex h-36 w-56 flex-shrink-0 items-center justify-center rounded-lg border border-border"
-                          style={{ backgroundColor: ss.color + "15" }}
+                          className="flex h-12 w-12 items-center justify-center rounded-xl text-white"
+                          style={{ backgroundColor: selectedPlugin.iconColor + "22", color: selectedPlugin.iconColor }}
                         >
-                          <div className="text-center">
-                            <ImageIcon size={24} className="mx-auto mb-2" style={{ color: ss.color }} />
-                            <span className="text-[11px] font-medium" style={{ color: ss.color }}>
-                              {ss.label}
-                            </span>
-                          </div>
+                          {selectedPlugin.icon}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Features */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-[#111827] mb-3">Features</h3>
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                      {selectedPlugin.features.map((f, i) => (
-                        <div key={i} className="flex items-start gap-2">
-                          <CheckCircle size={14} className="mt-0.5 flex-shrink-0 text-emerald-400" />
-                          <span className="text-xs text-muted">{f}</span>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h2 className="text-lg font-bold text-[#0A0A0B]">{selectedPlugin.name}</h2>
+                            {selectedPlugin.verified && (
+                              <div className="flex items-center gap-0.5 rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5">
+                                <Shield size={10} className="text-[#2563EB]" />
+                                <span className="text-[10px] font-bold text-[#2563EB]">VERIFIED</span>
+                              </div>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted">
+                            by {selectedPlugin.author} &middot; v{selectedPlugin.version} &middot;{" "}
+                            {selectedPlugin.price === 0 ? (
+                              <span className="text-emerald-400">Free</span>
+                            ) : (
+                              <span className="text-[#2563EB]">${selectedPlugin.price}/mo</span>
+                            )}
+                          </p>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Requirements */}
-                  {selectedPlugin.requirements.length > 0 && (
-                    <div>
-                      <h3 className="text-sm font-semibold text-[#111827] mb-2">Requirements</h3>
-                      <ul className="space-y-1.5">
-                        {selectedPlugin.requirements.map((r, i) => (
-                          <li key={i} className="flex items-center gap-2 text-xs text-muted">
-                            <AlertCircle size={12} className="text-[#2563EB]" />
-                            {r}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2">
-                    {selectedPlugin.tags.map((tag) => (
-                      <span key={tag} className="flex items-center gap-1 rounded-md bg-surface-light px-2.5 py-1 text-[11px] text-muted">
-                        <Tag size={10} />
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </>
-              )}
-
-              {/* ── Reviews tab ── */}
-              {detailTab === "reviews" && (
-                <div className="space-y-4">
-                  {/* Summary */}
-                  <div className="flex items-center gap-4 rounded-lg bg-surface p-4">
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-[#111827]">{selectedPlugin.rating.toFixed(1)}</div>
-                      <StarRating rating={selectedPlugin.rating} size={12} />
-                      <div className="mt-1 text-[10px] text-muted">{selectedPlugin.reviews.length} reviews</div>
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      {[5, 4, 3, 2, 1].map((stars) => {
-                        const count = selectedPlugin.reviews.filter((r) => Math.round(r.rating) === stars).length;
-                        const pct = selectedPlugin.reviews.length > 0 ? (count / selectedPlugin.reviews.length) * 100 : 0;
-                        return (
-                          <div key={stars} className="flex items-center gap-2">
-                            <span className="w-3 text-[10px] text-muted">{stars}</span>
-                            <Star size={10} className="text-[#2563EB] fill-[#2563EB]" />
-                            <div className="h-1.5 flex-1 rounded-full bg-surface-light overflow-hidden">
-                              <div
-                                className="h-full rounded-full bg-[#2563EB]"
-                                style={{ width: `${pct}%` }}
-                              />
-                            </div>
-                            <span className="w-4 text-right text-[10px] text-muted">{count}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Individual reviews */}
-                  {selectedPlugin.reviews.map((review, i) => (
-                    <div key={i} className="rounded-lg border border-border bg-surface p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(37,99,235,0.08)] text-[11px] font-bold text-[#2563EB]">
-                            {review.avatar}
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-[#111827]">{review.name}</p>
-                            <p className="text-[10px] text-muted">{review.date}</p>
-                          </div>
-                        </div>
-                        <StarRating rating={review.rating} size={10} />
                       </div>
-                      <p className="mt-2.5 text-xs leading-relaxed text-muted">{review.comment}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* ── Changelog tab ── */}
-              {detailTab === "changelog" && (
-                <div className="space-y-4">
-                  {selectedPlugin.changelog.map((entry, i) => (
-                    <div key={i} className="relative pl-6">
-                      {/* Timeline line */}
-                      {i < selectedPlugin.changelog.length - 1 && (
-                        <div className="absolute left-[7px] top-6 h-full w-px bg-border" />
-                      )}
-                      {/* Timeline dot */}
-                      <div
-                        className={`absolute left-0 top-1.5 h-3.5 w-3.5 rounded-full border-2 ${
-                          i === 0
-                            ? "border-[#2563EB] bg-[rgba(37,99,235,0.12)]"
-                            : "border-border bg-surface"
-                        }`}
-                      />
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-[#111827]">v{entry.version}</span>
-                          <span className="text-xs text-muted">{entry.date}</span>
-                          {i === 0 && (
-                            <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[9px] font-bold text-[#2563EB]">LATEST</span>
-                          )}
-                        </div>
-                        <p className="mt-1 text-xs text-muted">{entry.notes}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* ── Settings tab ── */}
-              {detailTab === "settings" && (
-                <div className="space-y-4">
-                  {!installedIds.has(selectedPlugin.id) ? (
-                    <div className="flex flex-col items-center justify-center py-8 text-center">
-                      <Settings size={32} className="mb-3 text-muted/30" />
-                      <p className="text-sm text-muted">Install this plugin to configure settings</p>
-                    </div>
-                  ) : (
-                    <>
-                      <p className="text-xs text-muted">
-                        Configure {selectedPlugin.name} settings below. Changes are saved automatically.
-                      </p>
-                      {selectedPlugin.settings.map((setting) => (
-                        <div key={setting.key} className="space-y-1.5">
-                          <label className="text-xs font-medium text-[#111827]">{setting.label}</label>
-                          {setting.type === "toggle" ? (
-                            <button
-                              className={`relative h-6 w-11 rounded-full transition-colors ${
-                                setting.default ? "bg-emerald-500" : "bg-surface-light"
-                              }`}
-                            >
-                              <div
-                                className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
-                                  setting.default ? "left-[22px]" : "left-0.5"
-                                }`}
-                              />
-                            </button>
-                          ) : setting.type === "select" ? (
-                            <select className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-[#111827] focus:border-[rgba(37,99,235,0.5)] focus:outline-none">
-                              <option>{String(setting.default ?? "")}</option>
-                            </select>
-                          ) : (
-                            <input
-                              type="text"
-                              defaultValue={String(setting.default ?? "")}
-                              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-[#111827] placeholder:text-muted/60 focus:border-[rgba(37,99,235,0.5)] focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.3)]"
-                            />
-                          )}
-                        </div>
-                      ))}
                       <button
-                        onClick={() => toast.success("Settings saved")}
-                        className="mt-2 w-full rounded-lg bg-[rgba(37,99,235,0.08)] py-2 text-xs font-semibold text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors">
-                        Save Configuration
+                        onClick={() => setSelectedPlugin(null)}
+                        className="rounded-lg p-1.5 text-muted hover:bg-surface hover:text-[#0A0A0B] transition-colors"
+                      >
+                        <X size={18} />
                       </button>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
+                    </div>
 
-            {/* Modal footer */}
-            <div className="sticky bottom-0 border-t border-border bg-white/95 backdrop-blur-sm px-6 py-4">
-              {installedIds.has(selectedPlugin.id) ? (
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5 text-xs text-emerald-400">
-                    <CheckCircle size={14} />
-                    Installed &middot; v{selectedPlugin.version}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => {
-                        setConfirmUninstall(selectedPlugin.id);
-                      }}
-                      className="rounded-lg border border-red-500/20 px-4 py-2 text-xs font-medium text-red-400 hover:bg-red-500/10 transition-colors"
-                    >
-                      Uninstall
-                    </button>
-                    <button
-                      onClick={() => setSelectedPlugin(null)}
-                      className="rounded-lg bg-surface px-4 py-2 text-xs font-medium text-[#111827] hover:bg-surface-light transition-colors"
-                    >
-                      Close
-                    </button>
+                    {/* Modal tabs */}
+                    <div className="mt-4 flex gap-1">
+                      {(["overview", "reviews", "changelog", "settings"] as const).map((tab) => (
+                        <button
+                          key={tab}
+                          onClick={() => setDetailTab(tab)}
+                          className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
+                            detailTab === tab
+                              ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                              : "text-muted hover:text-[#0A0A0B]"
+                          }`}
+                        >
+                          {tab}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Modal content */}
+                  <div className="px-6 py-5 space-y-6">
+                    {/* ── Overview tab ── */}
+                    {detailTab === "overview" && (
+                      <>
+                        {/* Stats row */}
+                        <div className="flex flex-wrap gap-4">
+                          <div className="flex items-center gap-2">
+                            <StarRating rating={selectedPlugin.rating} size={14} />
+                          </div>
+                          <div className="flex items-center gap-1.5 text-xs text-muted">
+                            <Download size={13} />
+                            {formatInstalls(selectedPlugin.installs)} installs
+                          </div>
+                          <div className="flex items-center gap-1.5 text-xs text-muted">
+                            <Clock size={13} />
+                            Updated {selectedPlugin.updatedAt}
+                          </div>
+                        </div>
+
+                        {/* Description */}
+                        <div>
+                          <h3 className="text-sm font-semibold text-[#111827] mb-2">About</h3>
+                          <p className="text-sm leading-relaxed text-muted">
+                            {selectedPlugin.longDescription}
+                          </p>
+                        </div>
+
+                        {/* Screenshots */}
+                        <div>
+                          <h3 className="text-sm font-semibold text-[#111827] mb-3">Screenshots</h3>
+                          <div className="flex gap-3 overflow-x-auto pb-2">
+                            {selectedPlugin.screenshots.map((ss, i) => (
+                              <div
+                                key={i}
+                                className="flex h-36 w-56 flex-shrink-0 items-center justify-center rounded-lg border border-border"
+                                style={{ backgroundColor: ss.color + "15" }}
+                              >
+                                <div className="text-center">
+                                  <ImageIcon size={24} className="mx-auto mb-2" style={{ color: ss.color }} />
+                                  <span className="text-[11px] font-medium" style={{ color: ss.color }}>
+                                    {ss.label}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Features */}
+                        <div>
+                          <h3 className="text-sm font-semibold text-[#111827] mb-3">Features</h3>
+                          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                            {selectedPlugin.features.map((f, i) => (
+                              <div key={i} className="flex items-start gap-2">
+                                <CheckCircle size={14} className="mt-0.5 flex-shrink-0 text-emerald-400" />
+                                <span className="text-xs text-muted">{f}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Requirements */}
+                        {selectedPlugin.requirements.length > 0 && (
+                          <div>
+                            <h3 className="text-sm font-semibold text-[#111827] mb-2">Requirements</h3>
+                            <ul className="space-y-1.5">
+                              {selectedPlugin.requirements.map((r, i) => (
+                                <li key={i} className="flex items-center gap-2 text-xs text-muted">
+                                  <AlertCircle size={12} className="text-[#2563EB]" />
+                                  {r}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* Tags */}
+                        <div className="flex flex-wrap gap-2">
+                          {selectedPlugin.tags.map((tag) => (
+                            <span key={tag} className="flex items-center gap-1 rounded-md bg-surface-light px-2.5 py-1 text-[11px] text-muted">
+                              <Tag size={10} />
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
+                    {/* ── Reviews tab ── */}
+                    {detailTab === "reviews" && (
+                      <div className="space-y-4">
+                        {/* Summary */}
+                        <div className="flex items-center gap-4 rounded-lg bg-surface p-4">
+                          <div className="text-center">
+                            <div className="text-3xl font-bold text-[#111827]">{selectedPlugin.rating.toFixed(1)}</div>
+                            <StarRating rating={selectedPlugin.rating} size={12} />
+                            <div className="mt-1 text-[10px] text-muted">{selectedPlugin.reviews.length} reviews</div>
+                          </div>
+                          <div className="flex-1 space-y-1">
+                            {[5, 4, 3, 2, 1].map((stars) => {
+                              const count = selectedPlugin.reviews.filter((r) => Math.round(r.rating) === stars).length;
+                              const pct = selectedPlugin.reviews.length > 0 ? (count / selectedPlugin.reviews.length) * 100 : 0;
+                              return (
+                                <div key={stars} className="flex items-center gap-2">
+                                  <span className="w-3 text-[10px] text-muted">{stars}</span>
+                                  <Star size={10} className="text-[#2563EB] fill-[#2563EB]" />
+                                  <div className="h-1.5 flex-1 rounded-full bg-surface-light overflow-hidden">
+                                    <div
+                                      className="h-full rounded-full bg-[#2563EB]"
+                                      style={{ width: `${pct}%` }}
+                                    />
+                                  </div>
+                                  <span className="w-4 text-right text-[10px] text-muted">{count}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Individual reviews */}
+                        {selectedPlugin.reviews.map((review, i) => (
+                          <div key={i} className="rounded-lg border border-border bg-surface p-4">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2.5">
+                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(37,99,235,0.08)] text-[11px] font-bold text-[#2563EB]">
+                                  {review.avatar}
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium text-[#111827]">{review.name}</p>
+                                  <p className="text-[10px] text-muted">{review.date}</p>
+                                </div>
+                              </div>
+                              <StarRating rating={review.rating} size={10} />
+                            </div>
+                            <p className="mt-2.5 text-xs leading-relaxed text-muted">{review.comment}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* ── Changelog tab ── */}
+                    {detailTab === "changelog" && (
+                      <div className="space-y-4">
+                        {selectedPlugin.changelog.map((entry, i) => (
+                          <div key={i} className="relative pl-6">
+                            {/* Timeline line */}
+                            {i < selectedPlugin.changelog.length - 1 && (
+                              <div className="absolute left-[7px] top-6 h-full w-px bg-border" />
+                            )}
+                            {/* Timeline dot */}
+                            <div
+                              className={`absolute left-0 top-1.5 h-3.5 w-3.5 rounded-full border-2 ${
+                                i === 0
+                                  ? "border-[#2563EB] bg-[rgba(37,99,235,0.12)]"
+                                  : "border-border bg-surface"
+                              }`}
+                            />
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-semibold text-[#111827]">v{entry.version}</span>
+                                <span className="text-xs text-muted">{entry.date}</span>
+                                {i === 0 && (
+                                  <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[9px] font-bold text-[#2563EB]">LATEST</span>
+                                )}
+                              </div>
+                              <p className="mt-1 text-xs text-muted">{entry.notes}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* ── Settings tab ── */}
+                    {detailTab === "settings" && (
+                      <div className="space-y-4">
+                        {!installedIds.has(selectedPlugin.id) ? (
+                          <div className="flex flex-col items-center justify-center py-8 text-center">
+                            <Settings size={32} className="mb-3 text-muted/30" />
+                            <p className="text-sm text-muted">Install this plugin to configure settings</p>
+                          </div>
+                        ) : (
+                          <>
+                            <p className="text-xs text-muted">
+                              Configure {selectedPlugin.name} settings below. Changes are saved automatically.
+                            </p>
+                            {selectedPlugin.settings.map((setting) => (
+                              <div key={setting.key} className="space-y-1.5">
+                                <label className="text-xs font-medium text-[#111827]">{setting.label}</label>
+                                {setting.type === "toggle" ? (
+                                  <button
+                                    className={`relative h-6 w-11 rounded-full transition-colors ${
+                                      setting.default ? "bg-emerald-500" : "bg-surface-light"
+                                    }`}
+                                  >
+                                    <div
+                                      className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                                        setting.default ? "left-[22px]" : "left-0.5"
+                                      }`}
+                                    />
+                                  </button>
+                                ) : setting.type === "select" ? (
+                                  <select className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-[#111827] focus:border-[rgba(37,99,235,0.5)] focus:outline-none">
+                                    <option>{String(setting.default ?? "")}</option>
+                                  </select>
+                                ) : (
+                                  <input
+                                    type="text"
+                                    defaultValue={String(setting.default ?? "")}
+                                    className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-[#111827] placeholder:text-muted/60 focus:border-[rgba(37,99,235,0.5)] focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.3)]"
+                                  />
+                                )}
+                              </div>
+                            ))}
+                            <button
+                              onClick={() => toast.success("Settings saved")}
+                              className="mt-2 w-full rounded-lg bg-[rgba(37,99,235,0.08)] py-2 text-xs font-semibold text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors">
+                              Save Configuration
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Modal footer */}
+                  <div className="sticky bottom-0 border-t border-border bg-white/95 backdrop-blur-sm px-6 py-4">
+                    {installedIds.has(selectedPlugin.id) ? (
+                      <div className="flex items-center justify-between">
+                        <span className="flex items-center gap-1.5 text-xs text-emerald-400">
+                          <CheckCircle size={14} />
+                          Installed &middot; v{selectedPlugin.version}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => {
+                              setConfirmUninstall(selectedPlugin.id);
+                            }}
+                            className="rounded-lg border border-red-500/20 px-4 py-2 text-xs font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+                          >
+                            Uninstall
+                          </button>
+                          <button
+                            onClick={() => setSelectedPlugin(null)}
+                            className="rounded-lg bg-surface px-4 py-2 text-xs font-medium text-[#111827] hover:bg-surface-light transition-colors"
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs text-muted">
+                          {selectedPlugin.price === 0
+                            ? "Free to install"
+                            : `$${selectedPlugin.price}/mo after install`}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setSelectedPlugin(null)}
+                            className="rounded-lg border border-border px-4 py-2 text-xs font-medium text-muted hover:text-[#111827] transition-colors"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={() => {
+                              handleInstall(selectedPlugin.id);
+                              setSelectedPlugin(null);
+                            }}
+                            className="rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-bold text-white hover:opacity-90 transition-colors"
+                          >
+                            {selectedPlugin.price === 0 ? "Install Free" : `Install - $${selectedPlugin.price}/mo`}
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              ) : (
-                <div className="flex items-center justify-between">
-                  <div className="text-xs text-muted">
-                    {selectedPlugin.price === 0
-                      ? "Free to install"
-                      : `$${selectedPlugin.price}/mo after install`}
+              </div>
+            )}{/* ── Uninstall confirmation modal (from My Plugins view) ── */}{confirmUninstall && viewTab === "browse" && selectedPlugin && (
+              <div
+                className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+                onClick={() => setConfirmUninstall(null)}
+              >
+                <div
+                  className="w-full max-w-sm rounded-xl border border-border bg-white p-6 shadow-2xl"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500/10">
+                      <Trash2 size={18} className="text-red-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-[#0A0A0B]">Uninstall Plugin</h3>
+                      <p className="text-xs text-muted">This will remove all plugin data</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <p className="text-xs text-muted mb-4">
+                    Are you sure you want to uninstall <span className="text-[#0A0A0B] font-medium">{selectedPlugin.name}</span>?
+                    All configuration and data will be permanently deleted.
+                  </p>
+                  <div className="flex justify-end gap-2">
                     <button
-                      onClick={() => setSelectedPlugin(null)}
-                      className="rounded-lg border border-border px-4 py-2 text-xs font-medium text-muted hover:text-[#111827] transition-colors"
+                      onClick={() => setConfirmUninstall(null)}
+                      className="rounded-lg border border-border px-4 py-2 text-xs text-muted hover:text-[#0A0A0B] transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={() => {
-                        handleInstall(selectedPlugin.id);
+                        handleUninstall(confirmUninstall);
                         setSelectedPlugin(null);
                       }}
-                      className="rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-bold text-white hover:opacity-90 transition-colors"
+                      className="rounded-lg bg-red-500/10 px-4 py-2 text-xs font-semibold text-red-400 hover:bg-red-500/20 transition-colors"
                     >
-                      {selectedPlugin.price === 0 ? "Install Free" : `Install - $${selectedPlugin.price}/mo`}
+                      Uninstall
                     </button>
                   </div>
                 </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── Uninstall confirmation modal (from My Plugins view) ── */}
-      {confirmUninstall && viewTab === "browse" && selectedPlugin && (
-        <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm"
-          onClick={() => setConfirmUninstall(null)}
-        >
-          <div
-            className="w-full max-w-sm rounded-xl border border-border bg-white p-6 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500/10">
-                <Trash2 size={18} className="text-red-400" />
               </div>
-              <div>
-                <h3 className="text-sm font-bold text-[#0A0A0B]">Uninstall Plugin</h3>
-                <p className="text-xs text-muted">This will remove all plugin data</p>
-              </div>
-            </div>
-            <p className="text-xs text-muted mb-4">
-              Are you sure you want to uninstall <span className="text-[#0A0A0B] font-medium">{selectedPlugin.name}</span>?
-              All configuration and data will be permanently deleted.
-            </p>
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setConfirmUninstall(null)}
-                className="rounded-lg border border-border px-4 py-2 text-xs text-muted hover:text-[#0A0A0B] transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  handleUninstall(confirmUninstall);
-                  setSelectedPlugin(null);
-                }}
-                className="rounded-lg bg-red-500/10 px-4 py-2 text-xs font-semibold text-red-400 hover:bg-red-500/20 transition-colors"
-              >
-                Uninstall
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── Page AI ── */}
-      <PageAI
-        pageName="Marketplace"
-        context="Plugin marketplace with 20+ plugins including Slack, Notion, Zapier, Google Ads, Meta Ads, AI Lead Scorer, WhatsApp, Stripe, HubSpot Importer, Email Verifier, SMS Auto-Responder, Calendar Sync, Proposal Templates, Voice Transcription, Social Scheduler, Client Feedback, Data Enrichment, Custom Reports Builder, Telegram Bot, and A/B Testing."
-        suggestions={[
-          "Which free plugins are most popular?",
-          "What plugins work best for lead generation?",
-          "How do I build a custom plugin?",
-          "Which AI plugins are available?",
-        ]}
-      />
-    </div>
+            )}{/* ── Page AI ── */}<PageAI
+              pageName="Marketplace"
+              context="Plugin marketplace with 20+ plugins including Slack, Notion, Zapier, Google Ads, Meta Ads, AI Lead Scorer, WhatsApp, Stripe, HubSpot Importer, Email Verifier, SMS Auto-Responder, Calendar Sync, Proposal Templates, Voice Transcription, Social Scheduler, Client Feedback, Data Enrichment, Custom Reports Builder, Telegram Bot, and A/B Testing."
+              suggestions={[
+                "Which free plugins are most popular?",
+                "What plugins work best for lead generation?",
+                "How do I build a custom plugin?",
+                "Which AI plugins are available?",
+              ]}
+            /></MotionPage>
   );
 }

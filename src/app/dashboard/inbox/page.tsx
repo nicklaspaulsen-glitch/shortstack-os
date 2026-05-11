@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* -- Types -- */
 type InboxCategory = "all" | "scripts" | "emails" | "outreach" | "contracts" | "ideas" | "reports" | "briefings" | "exports";
@@ -517,9 +518,11 @@ export default function InboxPage() {
       scripted: "bg-blue-500/15 text-blue-700",
     };
     return (
-      <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${colors[status] || "bg-[rgba(0,0,0,0.06)] text-muted"}`}>
-        {status}
-      </span>
+      <MotionPage>
+                <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${colors[status] || "bg-[rgba(0,0,0,0.06)] text-muted"}`}>
+                {status}
+              </span>
+              </MotionPage>
     );
   };
 

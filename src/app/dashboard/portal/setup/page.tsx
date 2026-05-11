@@ -9,6 +9,7 @@ import {
   Camera, Video, Globe, Briefcase, AtSign, Hash
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const SOCIAL_PLATFORMS = [
   { id: "instagram", name: "Instagram", icon: <Camera size={24} />, color: "text-pink-500" },
@@ -175,34 +176,25 @@ export default function ClientSetupPage() {
   ];
 
   return (
-    <div className="fade-in max-w-2xl mx-auto py-8 space-y-6">
-      {/* Progress */}
-      <div className="flex gap-1">
-        {steps.map((_, i) => (
-          <div key={i} className={`flex-1 h-1.5 rounded-full transition-all ${i <= step ? "bg-[#2563EB]" : "bg-black/[0.08]"}`} />
-        ))}
-      </div>
-
-      {/* Step content */}
-      <div className="card min-h-[400px] flex flex-col justify-center">
-        {steps[step]}
-      </div>
-
-      {/* Navigation */}
-      <div className="flex justify-between">
-        {step > 0 ? (
-          <button onClick={() => setStep(step - 1)} className="btn-secondary">Back</button>
-        ) : <div />}
-        {step < steps.length - 1 ? (
-          <button onClick={() => setStep(step + 1)} className="btn-primary flex items-center gap-2">
-            {step === 0 ? "Get Started" : "Continue"} <ArrowRight size={16} />
-          </button>
-        ) : (
-          <button onClick={completeSetup} className="btn-primary flex items-center gap-2">
-            Go to My Portal <ArrowRight size={16} />
-          </button>
-        )}
-      </div>
-    </div>
+    <MotionPage className="fade-in max-w-2xl mx-auto py-8 space-y-6">{/* Progress */}<div className="flex gap-1">
+              {steps.map((_, i) => (
+                <div key={i} className={`flex-1 h-1.5 rounded-full transition-all ${i <= step ? "bg-[#2563EB]" : "bg-black/[0.08]"}`} />
+              ))}
+            </div>{/* Step content */}<div className="card min-h-[400px] flex flex-col justify-center">
+              {steps[step]}
+            </div>{/* Navigation */}<div className="flex justify-between">
+              {step > 0 ? (
+                <button onClick={() => setStep(step - 1)} className="btn-secondary">Back</button>
+              ) : <div />}
+              {step < steps.length - 1 ? (
+                <button onClick={() => setStep(step + 1)} className="btn-primary flex items-center gap-2">
+                  {step === 0 ? "Get Started" : "Continue"} <ArrowRight size={16} />
+                </button>
+              ) : (
+                <button onClick={completeSetup} className="btn-primary flex items-center gap-2">
+                  Go to My Portal <ArrowRight size={16} />
+                </button>
+              )}
+            </div></MotionPage>
   );
 }

@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // -- Types ----------------------------------------------------------
 interface VoiceClone {
@@ -161,86 +162,81 @@ export default function VoiceStudioPage() {
   }, [mine, presets, renders]);
 
   return (
-    <div className="min-h-screen pb-12">
-      {/* Higgsfield-style slim header */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(0,0,0,0.08)] bg-white">
-        <div className="w-7 h-7 rounded-xl bg-[rgba(0,0,0,0.07)] flex items-center justify-center shrink-0">
-          <Mic size={13} className="text-[#2563EB]" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h1 className="text-sm font-semibold text-[#0A0A0B] leading-tight">Voice Studio</h1>
-          <p className="text-[9px] text-[#71717A]">Clone � Presets � Renders</p>
-        </div>
-        {stats.mineCount > 0 && (
-          <motion.span
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] text-[#1D4ED8]"
-          >
-            <span className="w-1 h-1 rounded-full bg-[#2563EB] animate-pulse" />
-            {stats.mineCount} voice{stats.mineCount !== 1 ? "s" : ""}
-          </motion.span>
-        )}
-        {stats.presetCount > 0 && (
-          <span className="hidden md:flex items-center gap-1 text-[9px] text-[#71717A] px-2 py-1 rounded-md bg-[rgba(0,0,0,0.02)] border border-[rgba(0,0,0,0.08)]">
-            {stats.presetCount} presets
-          </span>
-        )}
-        <button
-          type="button"
-          onClick={refresh}
-          className="flex items-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2.5 py-1.5 text-[11px] font-medium text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.06)] transition-colors duration-150"
-        >
-          <RefreshCw size={11} /> Refresh
-        </button>
-      </div>
-
-      <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
-        {/* -- Tab bar -- */}
-        <div className="rounded-xl p-1" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}>
-          <nav className="flex gap-1 overflow-x-auto" aria-label="Voice Studio tabs">
-            {TAB_ORDER.map((t) => {
-              const isActive = tab === t;
-              return (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setTab(t)}
-                  className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)]"
-                      : "text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.04)]"
-                  }`}
-                  aria-current={isActive ? "page" : undefined}
+    <MotionPage className="min-h-screen pb-12">{/* Higgsfield-style slim header */}<div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(0,0,0,0.08)] bg-white">
+              <div className="w-7 h-7 rounded-xl bg-[rgba(0,0,0,0.07)] flex items-center justify-center shrink-0">
+                <Mic size={13} className="text-[#2563EB]" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-sm font-semibold text-[#0A0A0B] leading-tight">Voice Studio</h1>
+                <p className="text-[9px] text-[#71717A]">Clone � Presets � Renders</p>
+              </div>
+              {stats.mineCount > 0 && (
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] text-[#1D4ED8]"
                 >
-                  {TAB_LABELS[t]}
-                </button>
-              );
-            })}
-          </nav>
-        </div>
+                  <span className="w-1 h-1 rounded-full bg-[#2563EB] animate-pulse" />
+                  {stats.mineCount} voice{stats.mineCount !== 1 ? "s" : ""}
+                </motion.span>
+              )}
+              {stats.presetCount > 0 && (
+                <span className="hidden md:flex items-center gap-1 text-[9px] text-[#71717A] px-2 py-1 rounded-md bg-[rgba(0,0,0,0.02)] border border-[rgba(0,0,0,0.08)]">
+                  {stats.presetCount} presets
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={refresh}
+                className="flex items-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2.5 py-1.5 text-[11px] font-medium text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.06)] transition-colors duration-150"
+              >
+                <RefreshCw size={11} /> Refresh
+              </button>
+            </div><div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
+              {/* -- Tab bar -- */}
+              <div className="rounded-xl p-1" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                <nav className="flex gap-1 overflow-x-auto" aria-label="Voice Studio tabs">
+                  {TAB_ORDER.map((t) => {
+                    const isActive = tab === t;
+                    return (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setTab(t)}
+                        className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
+                          isActive
+                            ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)]"
+                            : "text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.04)]"
+                        }`}
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        {TAB_LABELS[t]}
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
 
-        {error && (
-          <div className="mt-6 flex items-start gap-3 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-            <AlertTriangle size={18} className="mt-0.5 flex-shrink-0 text-rose-500" />
-            <div>{error}</div>
-          </div>
-        )}
+              {error && (
+                <div className="mt-6 flex items-start gap-3 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+                  <AlertTriangle size={18} className="mt-0.5 flex-shrink-0 text-rose-500" />
+                  <div>{error}</div>
+                </div>
+              )}
 
-        <div className="mt-6">
-          {loading && (
-            <div className="flex items-center justify-center py-12 text-[#71717A]">
-              <Loader2 size={20} className="animate-spin" />
-            </div>
-          )}
-          {!loading && tab === "my_voices" && (
-            <MyVoicesTab clones={mine} onChange={refresh} />
-          )}
-          {tab === "presets" && <PresetsTab presets={presets} loading={loading} onRefresh={refresh} />}
-          {!loading && tab === "renders" && <RendersTab renders={renders} />}
-        </div>
-      </div>
-    </div>
+              <div className="mt-6">
+                {loading && (
+                  <div className="flex items-center justify-center py-12 text-[#71717A]">
+                    <Loader2 size={20} className="animate-spin" />
+                  </div>
+                )}
+                {!loading && tab === "my_voices" && (
+                  <MyVoicesTab clones={mine} onChange={refresh} />
+                )}
+                {tab === "presets" && <PresetsTab presets={presets} loading={loading} onRefresh={refresh} />}
+                {!loading && tab === "renders" && <RendersTab renders={renders} />}
+              </div>
+            </div></MotionPage>
   );
 }
 

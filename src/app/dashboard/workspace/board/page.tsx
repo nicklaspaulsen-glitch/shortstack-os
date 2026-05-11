@@ -20,6 +20,7 @@ import {
 } from "@/components/workspace-board/board-card";
 import { NewTaskModal } from "@/components/workspace-board/new-task-modal";
 import { TaskDrawer } from "@/components/workspace-board/task-drawer";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /**
  * Workspace Board — Trello/Monday-style kanban for agency teams.
@@ -416,250 +417,238 @@ export default function WorkspaceBoardPage() {
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-6 max-w-[1600px] mx-auto space-y-6">
-      <PageHero
-        title="Board"
-        subtitle="Drag tasks across columns. Drop in clients, assign teammates, and ship together."
-        gradient="purple"
-        icon={<Kanban size={20} />}
-        eyebrow="Workspace"
-        actions={
-          <div className="flex items-center gap-2">
-            <motion.button
-              type="button"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => setFiltersOpen((v) => !v)}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border text-sm text-foreground transition-colors"
-            >
-              <Filter size={14} /> Filters
-            </motion.button>
-            <motion.button
-              type="button"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => {
-                setModalDefaultStatus("backlog");
-                setModalOpen(true);
-              }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gold text-black hover:bg-gold/90 text-sm font-medium transition-colors"
-            >
-              <Plus size={14} /> New task
-            </motion.button>
-          </div>
-        }
-      />
-
-      {/* View bar */}
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <div className="inline-flex items-center gap-1 p-1 rounded-lg bg-surface-light border border-border">
-          {(
-            [
-              { v: "all", label: "All tasks" },
-              { v: "my_tasks", label: "My Tasks" },
-              { v: "due_this_week", label: "Due This Week" },
-              { v: "by_client", label: "By Client" },
-              { v: "by_type", label: "By Type" },
-            ] as { v: View; label: string }[]
-          ).map((opt) => (
-            <button
-              key={opt.v}
-              type="button"
-              onClick={() => setView(opt.v)}
-              className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                view === opt.v
-                  ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]"
-                  : "text-muted hover:text-fg"
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-
-        {filtersOpen && (
-          <div className="flex items-center gap-2">
-            <select
-              value={filterClient}
-              onChange={(e) => setFilterClient(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-[#2563EB] focus:outline-none"
-            >
-              <option value="">All clients</option>
-              {clientsList.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.business_name}
-                </option>
-              ))}
-            </select>
-            <select
-              value={filterAssignee}
-              onChange={(e) => setFilterAssignee(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-[#2563EB] focus:outline-none"
-            >
-              <option value="">All assignees</option>
-              {membersList.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.full_name}
-                </option>
-              ))}
-            </select>
-            {(filterClient || filterAssignee) && (
-              <button
-                type="button"
-                onClick={() => {
-                  setFilterClient("");
-                  setFilterAssignee("");
-                }}
-                className="text-[11px] text-muted hover:text-fg"
-              >
-                Clear
-              </button>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Board grid */}
-      {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {TASK_STATUSES.map((s) => (
-            <div
-              key={s}
-              className="h-64 rounded-xl glass animate-pulse"
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {TASK_STATUSES.map((status, colIndex) => {
-            const meta = COLUMN_META[status];
-            const columnTasks = tasksByStatus[status];
-            const isHover = hoverCol === status;
-            return (
-              <motion.div
-                key={status}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: colIndex * 0.06 }}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setHoverCol(status);
-                }}
-                onDragLeave={() => setHoverCol((prev) => (prev === status ? null : prev))}
-                onDrop={() => {
-                  if (draggedId) {
-                    void moveTask(draggedId, status);
-                  }
-                  setDraggedId(null);
-                  setHoverCol(null);
-                }}
-                className="flex flex-col"
-              >
-                {/* Column header */}
-                <div className="glass rounded-xl px-3 py-2.5 mb-2 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-2.5 h-2.5 rounded-full"
-                      style={{ background: meta.color }}
-                    />
-                    <span className="text-xs font-bold uppercase tracking-wider">
-                      {meta.label}
-                    </span>
-                    <span
-                      className="text-[10px] font-mono px-1.5 py-0.5 rounded"
-                      style={{
-                        background: `${meta.color}18`,
-                        color: meta.color,
-                      }}
-                    >
-                      {columnTasks.length}
-                    </span>
-                  </div>
-                  <button
+    <MotionPage className="px-4 sm:px-6 lg:px-8 py-6 max-w-[1600px] mx-auto space-y-6"><PageHero
+              title="Board"
+              subtitle="Drag tasks across columns. Drop in clients, assign teammates, and ship together."
+              gradient="purple"
+              icon={<Kanban size={20} />}
+              eyebrow="Workspace"
+              actions={
+                <div className="flex items-center gap-2">
+                  <motion.button
                     type="button"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setFiltersOpen((v) => !v)}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border text-sm text-foreground transition-colors"
+                  >
+                    <Filter size={14} /> Filters
+                  </motion.button>
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
                     onClick={() => {
-                      setModalDefaultStatus(status);
+                      setModalDefaultStatus("backlog");
                       setModalOpen(true);
                     }}
-                    className="p-1 rounded text-muted hover:text-fg hover:bg-[rgba(0,0,0,0.03)] transition-colors"
-                    aria-label={`Add task to ${meta.label}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gold text-black hover:bg-gold/90 text-sm font-medium transition-colors"
                   >
-                    <Plus size={14} />
-                  </button>
+                    <Plus size={14} /> New task
+                  </motion.button>
                 </div>
+              }
+            />{/* View bar */}<div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="inline-flex items-center gap-1 p-1 rounded-lg bg-surface-light border border-border">
+                {(
+                  [
+                    { v: "all", label: "All tasks" },
+                    { v: "my_tasks", label: "My Tasks" },
+                    { v: "due_this_week", label: "Due This Week" },
+                    { v: "by_client", label: "By Client" },
+                    { v: "by_type", label: "By Type" },
+                  ] as { v: View; label: string }[]
+                ).map((opt) => (
+                  <button
+                    key={opt.v}
+                    type="button"
+                    onClick={() => setView(opt.v)}
+                    className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                      view === opt.v
+                        ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]"
+                        : "text-muted hover:text-fg"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
 
-                {/* Drop zone */}
-                <div
-                  className={`flex-1 min-h-[200px] rounded-xl border border-dashed transition-colors p-2 space-y-2 ${
-                    isHover
-                      ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
-                      : "glass border-[rgba(0,0,0,0.08)]"
-                  }`}
-                >
-                  {columnTasks.length === 0 ? (
-                    <div className="text-center text-[11px] text-muted/70 py-8">
-                      Drop tasks here
-                    </div>
-                  ) : (
-                    columnTasks.map((task, cardIndex) => (
-                      <motion.div
-                        key={task.id}
-                        initial={{ opacity: 0, x: -6 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.16, delay: cardIndex * 0.04 }}
-                      >
-                        <BoardCard
-                          task={task}
-                          clients={clientsById}
-                          members={membersById}
-                          commentCount={commentCountByTask[task.id]}
-                          isDragging={draggedId === task.id}
-                          onDragStart={() => {
-                            setDraggedId(task.id);
-                            justDraggedRef.current = true;
-                          }}
-                          onDragEnd={() => {
-                            setDraggedId(null);
-                            setTimeout(() => {
-                              justDraggedRef.current = false;
-                            }, 50);
-                          }}
-                          onClick={() => {
-                            if (justDraggedRef.current) return;
-                            void openTask(task.id);
-                          }}
-                        />
-                      </motion.div>
-                    ))
+              {filtersOpen && (
+                <div className="flex items-center gap-2">
+                  <select
+                    value={filterClient}
+                    onChange={(e) => setFilterClient(e.target.value)}
+                    className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-[#2563EB] focus:outline-none"
+                  >
+                    <option value="">All clients</option>
+                    {clientsList.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.business_name}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={filterAssignee}
+                    onChange={(e) => setFilterAssignee(e.target.value)}
+                    className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-[#2563EB] focus:outline-none"
+                  >
+                    <option value="">All assignees</option>
+                    {membersList.map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {m.full_name}
+                      </option>
+                    ))}
+                  </select>
+                  {(filterClient || filterAssignee) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFilterClient("");
+                        setFilterAssignee("");
+                      }}
+                      className="text-[11px] text-muted hover:text-fg"
+                    >
+                      Clear
+                    </button>
                   )}
                 </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      )}
+              )}
+            </div>{/* Board grid */}{loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {TASK_STATUSES.map((s) => (
+                  <div
+                    key={s}
+                    className="h-64 rounded-xl glass animate-pulse"
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {TASK_STATUSES.map((status, colIndex) => {
+                  const meta = COLUMN_META[status];
+                  const columnTasks = tasksByStatus[status];
+                  const isHover = hoverCol === status;
+                  return (
+                    <motion.div
+                      key={status}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.22, delay: colIndex * 0.06 }}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        setHoverCol(status);
+                      }}
+                      onDragLeave={() => setHoverCol((prev) => (prev === status ? null : prev))}
+                      onDrop={() => {
+                        if (draggedId) {
+                          void moveTask(draggedId, status);
+                        }
+                        setDraggedId(null);
+                        setHoverCol(null);
+                      }}
+                      className="flex flex-col"
+                    >
+                      {/* Column header */}
+                      <div className="glass rounded-xl px-3 py-2.5 mb-2 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-2.5 h-2.5 rounded-full"
+                            style={{ background: meta.color }}
+                          />
+                          <span className="text-xs font-bold uppercase tracking-wider">
+                            {meta.label}
+                          </span>
+                          <span
+                            className="text-[10px] font-mono px-1.5 py-0.5 rounded"
+                            style={{
+                              background: `${meta.color}18`,
+                              color: meta.color,
+                            }}
+                          >
+                            {columnTasks.length}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setModalDefaultStatus(status);
+                            setModalOpen(true);
+                          }}
+                          className="p-1 rounded text-muted hover:text-fg hover:bg-[rgba(0,0,0,0.03)] transition-colors"
+                          aria-label={`Add task to ${meta.label}`}
+                        >
+                          <Plus size={14} />
+                        </button>
+                      </div>
 
-      <NewTaskModal
-        open={modalOpen}
-        defaultStatus={modalDefaultStatus}
-        clients={clientsList}
-        members={membersList}
-        onClose={() => setModalOpen(false)}
-        onCreate={createTask}
-      />
-
-      <TaskDrawer
-        task={activeTask}
-        comments={activeComments}
-        clients={clientsById}
-        members={membersById}
-        loading={drawerLoading}
-        canDelete={canDelete}
-        onClose={closeTask}
-        onPatch={patchActiveTask}
-        onDelete={deleteActiveTask}
-        onComment={addComment}
-      />
-    </div>
+                      {/* Drop zone */}
+                      <div
+                        className={`flex-1 min-h-[200px] rounded-xl border border-dashed transition-colors p-2 space-y-2 ${
+                          isHover
+                            ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
+                            : "glass border-[rgba(0,0,0,0.08)]"
+                        }`}
+                      >
+                        {columnTasks.length === 0 ? (
+                          <div className="text-center text-[11px] text-muted/70 py-8">
+                            Drop tasks here
+                          </div>
+                        ) : (
+                          columnTasks.map((task, cardIndex) => (
+                            <motion.div
+                              key={task.id}
+                              initial={{ opacity: 0, x: -6 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.16, delay: cardIndex * 0.04 }}
+                            >
+                              <BoardCard
+                                task={task}
+                                clients={clientsById}
+                                members={membersById}
+                                commentCount={commentCountByTask[task.id]}
+                                isDragging={draggedId === task.id}
+                                onDragStart={() => {
+                                  setDraggedId(task.id);
+                                  justDraggedRef.current = true;
+                                }}
+                                onDragEnd={() => {
+                                  setDraggedId(null);
+                                  setTimeout(() => {
+                                    justDraggedRef.current = false;
+                                  }, 50);
+                                }}
+                                onClick={() => {
+                                  if (justDraggedRef.current) return;
+                                  void openTask(task.id);
+                                }}
+                              />
+                            </motion.div>
+                          ))
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}<NewTaskModal
+              open={modalOpen}
+              defaultStatus={modalDefaultStatus}
+              clients={clientsList}
+              members={membersList}
+              onClose={() => setModalOpen(false)}
+              onCreate={createTask}
+            /><TaskDrawer
+              task={activeTask}
+              comments={activeComments}
+              clients={clientsById}
+              members={membersById}
+              loading={drawerLoading}
+              canDelete={canDelete}
+              onClose={closeTask}
+              onPatch={patchActiveTask}
+              onDelete={deleteActiveTask}
+              onComment={addComment}
+            /></MotionPage>
   );
 }

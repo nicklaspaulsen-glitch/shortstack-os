@@ -8,6 +8,7 @@ import { useAppStore } from "@/lib/store";
 import PageHero from "@/components/ui/page-hero";
 import ClientRoomCanvas from "@/components/agent-room/client-room-canvas";
 import { PageLoading } from "@/components/ui/loading";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // Client-portal "agency room" — Kumospace-style live view of every agent
 // working FOR this client. Mirrors the agency-side /dashboard/agent-room
@@ -72,7 +73,9 @@ export default function PortalAgencyRoomPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, impersonatedClient, isImpersonating]);
 
-  if (loading) return <PageLoading />;
+  if (loading) return <MotionPage>
+                          <PageLoading />
+                        </MotionPage>;
 
   if (!client) {
     // Either logged in as an agency staff member with no impersonation, or a

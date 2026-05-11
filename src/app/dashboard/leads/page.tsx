@@ -18,6 +18,7 @@ import PageHero from "@/components/ui/page-hero";
 import { ALLOWED_CSV, buildAccept, validateFile } from "@/lib/file-types";
 import { motion } from "framer-motion";
 import { PrismPanel } from "@/components/prism";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type MainTab = "leads" | "scoring" | "routing" | "attribution" | "nurture" | "enrichment" | "funnel" | "tags";
 
@@ -797,675 +798,638 @@ export default function LeadEnginePage() {
   ];
 
   return (
-    <div className="fade-in space-y-4">
-      {/* Modals */}
-      {showImportModal && <ImportCSVModal onClose={() => setShowImportModal(false)} onSuccess={fetchLeads} />}
-      {showAddModal && <AddLeadModal onClose={() => setShowAddModal(false)} onSuccess={fetchLeads} />}
-
-      {/* Header */}
-      <PageHero
-        eyebrow="CONTACT HQ"
-        icon={<Zap size={28} />}
-        title="Lead Engine"
-        subtitle="Automated lead scoring, routing, enrichment & nurture � build and convert your pipeline."
-        gradient="gold"
-        actions={
-          <>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <button onClick={() => setShowImportModal(true)} aria-label="Import leads from CSV" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5"><Upload size={12} /> Import CSV</button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <button onClick={handleExport} disabled={exporting} aria-label="Export leads to CSV" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5 disabled:opacity-50">
-                {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
-                {exporting ? "Exporting..." : "Export"}
-              </button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <button onClick={() => setShowAddModal(true)} className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.08)] border border-[rgba(0,0,0,0.12)] text-[#0A0A0B] text-xs font-semibold hover:bg-[rgba(0,0,0,0.12)] transition-all flex items-center gap-1.5"><UserPlus size={12} /> Add Lead</button>
-            </motion.div>
-          </>
-        }
-      />
-
-      {/* Stats � collapsible (state persists) */}
-      <CollapsibleStats
-        storageKey="leads"
-        icon={<BarChart3 size={14} className="text-[#2563EB]" />}
-        title="Lead Stats"
-        summary={
-          <>
-            <span><span className="text-foreground font-semibold">{totalLeads}</span> total</span>
-            <span className="opacity-30">�</span>
-            <span><span className="text-red-400 font-semibold">{hotLeads}</span> hot</span>
-            <span className="opacity-30">�</span>
-            <span><span className="text-green-400 font-semibold">{qualifiedLeads}</span> qualified</span>
-            <span className="opacity-30">�</span>
-            <span><span className="text-purple-400 font-semibold">{convertedLeads}</span> converted</span>
-            <span className="opacity-30">�</span>
-            <span>Conv <span className="text-[#2563EB] font-semibold">{totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%</span></span>
-          </>
-        }
-      >
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-          {[
-            { label: "Total Leads", value: totalLeads, icon: <Users size={12} />, color: "text-[#2563EB]" },
-            { label: "Hot Leads", value: hotLeads, icon: <Flame size={12} />, color: "text-red-400" },
-            { label: "Qualified", value: qualifiedLeads, icon: <CheckCircle size={12} />, color: "text-green-400" },
-            { label: "Converted", value: convertedLeads, icon: <Star size={12} />, color: "text-purple-400" },
-            { label: "Avg Score", value: totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length || 0) : 0, icon: <Target size={12} />, color: "text-blue-400" },
-            { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-[#2563EB]" },
-          ].map((stat, index) => (
-            <PrismPanel key={index} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
-              <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
-              <p className="text-lg font-bold">{stat.value}</p>
-              <p className="text-[9px] text-muted">{stat.label}</p>
-            </PrismPanel>
-          ))}
-        </div>
-      </CollapsibleStats>
-
-      {/* Tabs (sticky) */}
-      <div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
-        {TABS.map(t => (
-          <button key={t.key} onClick={() => setActiveTab(t.key)}
-            className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === t.key ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
-            }`}>{t.icon} {t.label}</button>
-        ))}
-      </div>
-
-      {/* ===== ALL LEADS TAB ===== */}
-      {activeTab === "leads" && (
-        <div className="space-y-3">
-          {/* Filters (sticky) */}
-          <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex flex-wrap gap-2 py-2">
-            <div className="relative flex-1 min-w-[200px]">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-              <input type="text" placeholder="Search leads..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="input glass w-full pl-9 text-xs" />
-            </div>
-            <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="input text-xs">
-              <option value="">All Statuses</option>
-              <option value="new">New</option>
-              <option value="contacted">Contacted</option>
-              <option value="qualified">Qualified</option>
-              <option value="booked">Booked</option>
-              <option value="converted">Converted</option>
-            </select>
-            <select value={industryFilter} onChange={e => setIndustryFilter(e.target.value)} className="input text-xs">
-              <option value="">All Industries</option>
-              {industries.map(i => <option key={i} value={i}>{i}</option>)}
-            </select>
-            {/* High-priority filter chip */}
-            <button
-              onClick={() => setHighPriorityOnly(v => !v)}
-              className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
-                highPriorityOnly
-                  ? "bg-green-400/10 border-green-400/30 text-green-400"
-                  : "border-border text-muted hover:border-[rgba(37,99,235,0.1)] hover:text-foreground"
-              }`}
+    <MotionPage className="fade-in space-y-4">{/* Modals */}{showImportModal && <ImportCSVModal onClose={() => setShowImportModal(false)} onSuccess={fetchLeads} />}{showAddModal && <AddLeadModal onClose={() => setShowAddModal(false)} onSuccess={fetchLeads} />}{/* Header */}<PageHero
+              eyebrow="CONTACT HQ"
+              icon={<Zap size={28} />}
+              title="Lead Engine"
+              subtitle="Automated lead scoring, routing, enrichment & nurture � build and convert your pipeline."
+              gradient="gold"
+              actions={
+                <>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <button onClick={() => setShowImportModal(true)} aria-label="Import leads from CSV" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5"><Upload size={12} /> Import CSV</button>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <button onClick={handleExport} disabled={exporting} aria-label="Export leads to CSV" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5 disabled:opacity-50">
+                      {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
+                      {exporting ? "Exporting..." : "Export"}
+                    </button>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <button onClick={() => setShowAddModal(true)} className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.08)] border border-[rgba(0,0,0,0.12)] text-[#0A0A0B] text-xs font-semibold hover:bg-[rgba(0,0,0,0.12)] transition-all flex items-center gap-1.5"><UserPlus size={12} /> Add Lead</button>
+                  </motion.div>
+                </>
+              }
+            />{/* Stats � collapsible (state persists) */}<CollapsibleStats
+              storageKey="leads"
+              icon={<BarChart3 size={14} className="text-[#2563EB]" />}
+              title="Lead Stats"
+              summary={
+                <>
+                  <span><span className="text-foreground font-semibold">{totalLeads}</span> total</span>
+                  <span className="opacity-30">�</span>
+                  <span><span className="text-red-400 font-semibold">{hotLeads}</span> hot</span>
+                  <span className="opacity-30">�</span>
+                  <span><span className="text-green-400 font-semibold">{qualifiedLeads}</span> qualified</span>
+                  <span className="opacity-30">�</span>
+                  <span><span className="text-purple-400 font-semibold">{convertedLeads}</span> converted</span>
+                  <span className="opacity-30">�</span>
+                  <span>Conv <span className="text-[#2563EB] font-semibold">{totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%</span></span>
+                </>
+              }
             >
-              <Flame size={11} /> High priority (70+)
-            </button>
-            {/* Sort by score toggle */}
-            <button
-              onClick={() => setSortByScore(v => !v)}
-              className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
-                sortByScore
-                  ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
-                  : "border-border text-muted hover:border-[rgba(37,99,235,0.1)] hover:text-foreground"
-              }`}
-            >
-              <Target size={11} /> Sort by score
-            </button>
-          </div>
-
-          {/* Split-pane: table (flex-1) + detail panel (sticky right, lg+ only) */}
-          <div className="flex items-start gap-4">
-          <div className="min-w-0 flex-1 space-y-1.5">
-            <div className="overflow-x-auto -mx-1 px-1">
-            <div className="min-w-[600px]">
-            <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-2 px-3">
-              <span className="col-span-3">Business</span>
-              <span className="col-span-2">Contact</span>
-              <span>Source</span>
-              <span className="text-center flex items-center justify-center gap-1">
-                <Target size={9} /> AI Score
-              </span>
-              <span>Status</span>
-              <span className="text-center">Rating</span>
-              <span className="col-span-2">Location</span>
-              <span className="text-center">Actions</span>
-            </div>
-            {loading && (
-              <div className="space-y-1 py-1">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="grid grid-cols-12 items-center gap-2 px-3 py-3 rounded-lg bg-[rgba(0,0,0,0.02)]">
-                    <div className="col-span-3 space-y-1.5">
-                      <Skeleton className="h-3 w-4/5" />
-                      <Skeleton className="h-2 w-3/5" />
-                    </div>
-                    <div className="col-span-2 space-y-1.5">
-                      <Skeleton className="h-2 w-4/5" />
-                      <Skeleton className="h-2 w-3/5" />
-                    </div>
-                    <Skeleton className="h-2 w-3/4" />
-                    <Skeleton className="h-5 w-8 rounded-full mx-auto" />
-                    <Skeleton className="h-4 w-14 rounded-full" />
-                    <Skeleton className="h-3 w-6 rounded mx-auto" />
-                    <div className="col-span-2">
-                      <Skeleton className="h-2 w-3/4" />
-                    </div>
-                    <Skeleton className="h-6 w-10 rounded mx-auto" />
-                  </div>
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+                {[
+                  { label: "Total Leads", value: totalLeads, icon: <Users size={12} />, color: "text-[#2563EB]" },
+                  { label: "Hot Leads", value: hotLeads, icon: <Flame size={12} />, color: "text-red-400" },
+                  { label: "Qualified", value: qualifiedLeads, icon: <CheckCircle size={12} />, color: "text-green-400" },
+                  { label: "Converted", value: convertedLeads, icon: <Star size={12} />, color: "text-purple-400" },
+                  { label: "Avg Score", value: totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length || 0) : 0, icon: <Target size={12} />, color: "text-blue-400" },
+                  { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-[#2563EB]" },
+                ].map((stat, index) => (
+                  <PrismPanel key={index} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
+                    <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
+                    <p className="text-lg font-bold">{stat.value}</p>
+                    <p className="text-[9px] text-muted">{stat.label}</p>
+                  </PrismPanel>
                 ))}
               </div>
-            )}
-            {!loading && leads.length === 0 && (
-              <EmptyState
-                type="no-leads"
-                title="No Leads Yet"
-                description="Start building your pipeline by scraping leads from Google Maps, importing a CSV, or adding them manually."
-                action={
-                  <Link href="/dashboard/scraper" className="btn-primary text-xs inline-flex items-center gap-1.5">
-                    Start Finding Leads
-                  </Link>
-                }
-              />
-            )}
-            {!loading && (
-            <motion.div variants={containerVariants} initial="hidden" animate="visible">
-            {leads.map((lead) => (
-              <motion.div
-                key={lead.id}
-                variants={itemVariants}
-              >
-                <div
-                  onClick={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
-                  onMouseEnter={() => {
-                    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-                    hoverTimerRef.current = setTimeout(() => setSelectedLead(lead), 180);
-                  }}
-                  onMouseLeave={() => {
-                    if (hoverTimerRef.current) { clearTimeout(hoverTimerRef.current); hoverTimerRef.current = null; }
-                  }}
-                  className={`grid grid-cols-12 items-center py-1.5 px-3 rounded-lg border transition-all cursor-pointer text-[10px] ${
-                    selectedLead?.id === lead.id
-                      ? "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.16)]"
-                      : "bg-surface-light border-border hover:border-[rgba(0,0,0,0.10)]"
-                  }`}>
-                  <div className="col-span-3">
-                    <p className="text-xs font-semibold">{lead.business_name}</p>
-                    <p className="text-[9px] text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>
+            </CollapsibleStats>{/* Tabs (sticky) */}<div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
+              {TABS.map(t => (
+                <button key={t.key} onClick={() => setActiveTab(t.key)}
+                  className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
+                    activeTab === t.key ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
+                  }`}>{t.icon} {t.label}</button>
+              ))}
+            </div>{/* ===== ALL LEADS TAB ===== */}{activeTab === "leads" && (
+              <div className="space-y-3">
+                {/* Filters (sticky) */}
+                <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex flex-wrap gap-2 py-2">
+                  <div className="relative flex-1 min-w-[200px]">
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                    <input type="text" placeholder="Search leads..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="input glass w-full pl-9 text-xs" />
                   </div>
-                  <div className="col-span-2">
-                    <p className="text-muted flex items-center gap-1 truncate"><Mail size={9} /> {lead.email || "---"}</p>
-                    <p className="text-muted flex items-center gap-1"><Phone size={9} /> {lead.phone || "---"}</p>
-                  </div>
-                  <span className="text-muted">{lead.source || "---"}</span>
-                  <div className="text-center flex items-center justify-center">
-                    {scoringLeads.has(lead.id) ? (
-                      <Loader size={12} className="animate-spin text-[#2563EB]" />
-                    ) : (
-                      <ScoreBadge score={lead.score} onClick={() => scoreOneLead(lead)} />
-                    )}
-                  </div>
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
-                    lead.status === "converted" ? "bg-purple-400/10 text-purple-400" :
-                    lead.status === "booked" ? "bg-green-400/10 text-green-400" :
-                    lead.status === "qualified" ? "bg-blue-400/10 text-blue-400" :
-                    lead.status === "contacted" || lead.status === "called" ? "bg-yellow-400/10 text-yellow-400" :
-                    lead.status === "replied" ? "bg-emerald-400/10 text-emerald-400" :
-                    "bg-[rgba(0,0,0,0.05)] text-muted"
-                  }`}>{lead.status || "new"}</span>
-                  <div className="text-center flex items-center justify-center gap-0.5">
-                    {lead.google_rating ? (
-                      <>
-                        <Star size={9} className="text-[#2563EB]" />
-                        <span>{lead.google_rating}</span>
-                        <span className="text-muted">({lead.review_count ?? 0})</span>
-                      </>
-                    ) : (
-                      <span className="text-muted">---</span>
-                    )}
-                  </div>
-                  <div className="col-span-2 text-muted truncate">
-                    {[lead.city, lead.state].filter(Boolean).join(", ") || "---"}
-                  </div>
-                  <div className="flex items-center justify-center gap-1" onClick={(e) => e.stopPropagation()}>
-                    <a
-                      href={lead.phone ? `tel:${lead.phone}` : undefined}
-                      onClick={(e) => { if (!lead.phone) { e.preventDefault(); toast.error("No phone number"); } }}
-                      aria-label={lead.phone ? `Call ${lead.business_name}` : "No phone number"}
-                      className={`p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-[#2563EB] ${!lead.phone ? "opacity-40 cursor-not-allowed" : ""}`}
-                      title={lead.phone || "No phone"}
-                    ><Phone size={10} /></a>
-                    <a
-                      href={lead.email ? `mailto:${lead.email}` : undefined}
-                      onClick={(e) => { if (!lead.email) { e.preventDefault(); toast.error("No email"); } }}
-                      aria-label={lead.email ? `Email ${lead.business_name}` : "No email address"}
-                      className={`p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-[#2563EB] ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
-                      title={lead.email || "No email"}
-                    ><Mail size={10} /></a>
-                    <Link
-                      href="/dashboard/dm-controller"
-                      aria-label={`Send DM to ${lead.business_name}`}
-                      className="p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-[#2563EB]"
-                      title="DM via DM Controller"
-                    ><MessageSquare size={10} /></Link>
-                  </div>
+                  <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="input text-xs">
+                    <option value="">All Statuses</option>
+                    <option value="new">New</option>
+                    <option value="contacted">Contacted</option>
+                    <option value="qualified">Qualified</option>
+                    <option value="booked">Booked</option>
+                    <option value="converted">Converted</option>
+                  </select>
+                  <select value={industryFilter} onChange={e => setIndustryFilter(e.target.value)} className="input text-xs">
+                    <option value="">All Industries</option>
+                    {industries.map(i => <option key={i} value={i}>{i}</option>)}
+                  </select>
+                  {/* High-priority filter chip */}
+                  <button
+                    onClick={() => setHighPriorityOnly(v => !v)}
+                    className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
+                      highPriorityOnly
+                        ? "bg-green-400/10 border-green-400/30 text-green-400"
+                        : "border-border text-muted hover:border-[rgba(37,99,235,0.1)] hover:text-foreground"
+                    }`}
+                  >
+                    <Flame size={11} /> High priority (70+)
+                  </button>
+                  {/* Sort by score toggle */}
+                  <button
+                    onClick={() => setSortByScore(v => !v)}
+                    className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
+                      sortByScore
+                        ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                        : "border-border text-muted hover:border-[rgba(37,99,235,0.1)] hover:text-foreground"
+                    }`}
+                  >
+                    <Target size={11} /> Sort by score
+                  </button>
                 </div>
-                {/* Expanded drawer � score breakdown + qualification */}
-                {expandedLead === lead.id && (
-                  <div className="ml-4 mt-2 mb-3 p-3 rounded-lg bg-surface border border-border space-y-3">
-                    {/* AI Score Breakdown */}
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className="text-[10px] font-semibold flex items-center gap-1.5">
-                          <Target size={10} className="text-[#2563EB]" /> AI Score Breakdown
-                        </h4>
-                        {lead.score !== null ? (
-                          <span className="text-[9px] text-muted">
-                            Total: <span className="font-bold text-foreground">{lead.score}/100</span>
-                          </span>
-                        ) : (
-                          <button
-                            onClick={(e) => { e.stopPropagation(); scoreOneLead(lead); }}
-                            disabled={scoringLeads.has(lead.id)}
-                            className="text-[9px] px-2.5 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1 disabled:opacity-50"
-                          >
-                            {scoringLeads.has(lead.id) ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
-                            Score now
-                          </button>
-                        )}
+
+                {/* Split-pane: table (flex-1) + detail panel (sticky right, lg+ only) */}
+                <div className="flex items-start gap-4">
+                <div className="min-w-0 flex-1 space-y-1.5">
+                  <div className="overflow-x-auto -mx-1 px-1">
+                  <div className="min-w-[600px]">
+                  <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-2 px-3">
+                    <span className="col-span-3">Business</span>
+                    <span className="col-span-2">Contact</span>
+                    <span>Source</span>
+                    <span className="text-center flex items-center justify-center gap-1">
+                      <Target size={9} /> AI Score
+                    </span>
+                    <span>Status</span>
+                    <span className="text-center">Rating</span>
+                    <span className="col-span-2">Location</span>
+                    <span className="text-center">Actions</span>
+                  </div>
+                  {loading && (
+                    <div className="space-y-1 py-1">
+                      {Array.from({ length: 8 }).map((_, i) => (
+                        <div key={i} className="grid grid-cols-12 items-center gap-2 px-3 py-3 rounded-lg bg-[rgba(0,0,0,0.02)]">
+                          <div className="col-span-3 space-y-1.5">
+                            <Skeleton className="h-3 w-4/5" />
+                            <Skeleton className="h-2 w-3/5" />
+                          </div>
+                          <div className="col-span-2 space-y-1.5">
+                            <Skeleton className="h-2 w-4/5" />
+                            <Skeleton className="h-2 w-3/5" />
+                          </div>
+                          <Skeleton className="h-2 w-3/4" />
+                          <Skeleton className="h-5 w-8 rounded-full mx-auto" />
+                          <Skeleton className="h-4 w-14 rounded-full" />
+                          <Skeleton className="h-3 w-6 rounded mx-auto" />
+                          <div className="col-span-2">
+                            <Skeleton className="h-2 w-3/4" />
+                          </div>
+                          <Skeleton className="h-6 w-10 rounded mx-auto" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {!loading && leads.length === 0 && (
+                    <EmptyState
+                      type="no-leads"
+                      title="No Leads Yet"
+                      description="Start building your pipeline by scraping leads from Google Maps, importing a CSV, or adding them manually."
+                      action={
+                        <Link href="/dashboard/scraper" className="btn-primary text-xs inline-flex items-center gap-1.5">
+                          Start Finding Leads
+                        </Link>
+                      }
+                    />
+                  )}
+                  {!loading && (
+                  <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                  {leads.map((lead) => (
+                    <motion.div
+                      key={lead.id}
+                      variants={itemVariants}
+                    >
+                      <div
+                        onClick={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
+                        onMouseEnter={() => {
+                          if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+                          hoverTimerRef.current = setTimeout(() => setSelectedLead(lead), 180);
+                        }}
+                        onMouseLeave={() => {
+                          if (hoverTimerRef.current) { clearTimeout(hoverTimerRef.current); hoverTimerRef.current = null; }
+                        }}
+                        className={`grid grid-cols-12 items-center py-1.5 px-3 rounded-lg border transition-all cursor-pointer text-[10px] ${
+                          selectedLead?.id === lead.id
+                            ? "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.16)]"
+                            : "bg-surface-light border-border hover:border-[rgba(0,0,0,0.10)]"
+                        }`}>
+                        <div className="col-span-3">
+                          <p className="text-xs font-semibold">{lead.business_name}</p>
+                          <p className="text-[9px] text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>
+                        </div>
+                        <div className="col-span-2">
+                          <p className="text-muted flex items-center gap-1 truncate"><Mail size={9} /> {lead.email || "---"}</p>
+                          <p className="text-muted flex items-center gap-1"><Phone size={9} /> {lead.phone || "---"}</p>
+                        </div>
+                        <span className="text-muted">{lead.source || "---"}</span>
+                        <div className="text-center flex items-center justify-center">
+                          {scoringLeads.has(lead.id) ? (
+                            <Loader size={12} className="animate-spin text-[#2563EB]" />
+                          ) : (
+                            <ScoreBadge score={lead.score} onClick={() => scoreOneLead(lead)} />
+                          )}
+                        </div>
+                        <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
+                          lead.status === "converted" ? "bg-purple-400/10 text-purple-400" :
+                          lead.status === "booked" ? "bg-green-400/10 text-green-400" :
+                          lead.status === "qualified" ? "bg-blue-400/10 text-blue-400" :
+                          lead.status === "contacted" || lead.status === "called" ? "bg-yellow-400/10 text-yellow-400" :
+                          lead.status === "replied" ? "bg-emerald-400/10 text-emerald-400" :
+                          "bg-[rgba(0,0,0,0.05)] text-muted"
+                        }`}>{lead.status || "new"}</span>
+                        <div className="text-center flex items-center justify-center gap-0.5">
+                          {lead.google_rating ? (
+                            <>
+                              <Star size={9} className="text-[#2563EB]" />
+                              <span>{lead.google_rating}</span>
+                              <span className="text-muted">({lead.review_count ?? 0})</span>
+                            </>
+                          ) : (
+                            <span className="text-muted">---</span>
+                          )}
+                        </div>
+                        <div className="col-span-2 text-muted truncate">
+                          {[lead.city, lead.state].filter(Boolean).join(", ") || "---"}
+                        </div>
+                        <div className="flex items-center justify-center gap-1" onClick={(e) => e.stopPropagation()}>
+                          <a
+                            href={lead.phone ? `tel:${lead.phone}` : undefined}
+                            onClick={(e) => { if (!lead.phone) { e.preventDefault(); toast.error("No phone number"); } }}
+                            aria-label={lead.phone ? `Call ${lead.business_name}` : "No phone number"}
+                            className={`p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-[#2563EB] ${!lead.phone ? "opacity-40 cursor-not-allowed" : ""}`}
+                            title={lead.phone || "No phone"}
+                          ><Phone size={10} /></a>
+                          <a
+                            href={lead.email ? `mailto:${lead.email}` : undefined}
+                            onClick={(e) => { if (!lead.email) { e.preventDefault(); toast.error("No email"); } }}
+                            aria-label={lead.email ? `Email ${lead.business_name}` : "No email address"}
+                            className={`p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-[#2563EB] ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
+                            title={lead.email || "No email"}
+                          ><Mail size={10} /></a>
+                          <Link
+                            href="/dashboard/dm-controller"
+                            aria-label={`Send DM to ${lead.business_name}`}
+                            className="p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-[#2563EB]"
+                            title="DM via DM Controller"
+                          ><MessageSquare size={10} /></Link>
+                        </div>
                       </div>
-                      {lead.score_breakdown ? (
-                        <ScoreBreakdownBars breakdown={lead.score_breakdown} />
-                      ) : (
-                        <p className="text-[9px] text-muted italic">No AI score yet � click &ldquo;Score now&rdquo; above.</p>
-                      )}
-                      {lead.score_reasoning && (
-                        <p className="text-[9px] text-muted mt-2 italic">{lead.score_reasoning}</p>
-                      )}
-                    </div>
+                      {/* Expanded drawer � score breakdown + qualification */}
+                      {expandedLead === lead.id && (
+                        <div className="ml-4 mt-2 mb-3 p-3 rounded-lg bg-surface border border-border space-y-3">
+                          {/* AI Score Breakdown */}
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="text-[10px] font-semibold flex items-center gap-1.5">
+                                <Target size={10} className="text-[#2563EB]" /> AI Score Breakdown
+                              </h4>
+                              {lead.score !== null ? (
+                                <span className="text-[9px] text-muted">
+                                  Total: <span className="font-bold text-foreground">{lead.score}/100</span>
+                                </span>
+                              ) : (
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); scoreOneLead(lead); }}
+                                  disabled={scoringLeads.has(lead.id)}
+                                  className="text-[9px] px-2.5 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1 disabled:opacity-50"
+                                >
+                                  {scoringLeads.has(lead.id) ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
+                                  Score now
+                                </button>
+                              )}
+                            </div>
+                            {lead.score_breakdown ? (
+                              <ScoreBreakdownBars breakdown={lead.score_breakdown} />
+                            ) : (
+                              <p className="text-[9px] text-muted italic">No AI score yet � click &ldquo;Score now&rdquo; above.</p>
+                            )}
+                            {lead.score_reasoning && (
+                              <p className="text-[9px] text-muted mt-2 italic">{lead.score_reasoning}</p>
+                            )}
+                          </div>
 
-                    {/* Engagement Timeline */}
-                    <div className="pt-2 border-t border-border">
-                      <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><Clock size={10} /> Engagement Timeline</h4>
-                      <div className="text-center py-3 text-muted text-[9px]">No engagement data yet.</div>
-                    </div>
+                          {/* Engagement Timeline */}
+                          <div className="pt-2 border-t border-border">
+                            <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><Clock size={10} /> Engagement Timeline</h4>
+                            <div className="text-center py-3 text-muted text-[9px]">No engagement data yet.</div>
+                          </div>
 
-                    {/* Qualification Checklist */}
-                    <div className="pt-2 border-t border-border">
-                      <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><CheckCircle size={10} /> Qualification Checklist</h4>
-                      <div className="grid grid-cols-2 gap-1">
-                        {[
-                          { item: "Has phone number", check: !!lead.phone },
-                          { item: "Has email", check: !!lead.email },
-                          { item: "Website found", check: !!lead.website },
-                          { item: "Rating 4.0+", check: (lead.google_rating ?? 0) >= 4.0 },
-                          { item: "Has address", check: !!lead.address },
-                          { item: "AI Score 70+", check: (lead.score ?? 0) >= 70 },
-                        ].map((q, i) => (
-                          <div key={i} className="flex items-center gap-1.5 text-[9px]">
-                            {q.check ? <CheckCircle size={9} className="text-green-400" /> : <div className="w-2.5 h-2.5 rounded border border-muted" />}
-                            <span className={q.check ? "" : "text-muted"}>{q.item}</span>
+                          {/* Qualification Checklist */}
+                          <div className="pt-2 border-t border-border">
+                            <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><CheckCircle size={10} /> Qualification Checklist</h4>
+                            <div className="grid grid-cols-2 gap-1">
+                              {[
+                                { item: "Has phone number", check: !!lead.phone },
+                                { item: "Has email", check: !!lead.email },
+                                { item: "Website found", check: !!lead.website },
+                                { item: "Rating 4.0+", check: (lead.google_rating ?? 0) >= 4.0 },
+                                { item: "Has address", check: !!lead.address },
+                                { item: "AI Score 70+", check: (lead.score ?? 0) >= 70 },
+                              ].map((q, i) => (
+                                <div key={i} className="flex items-center gap-1.5 text-[9px]">
+                                  {q.check ? <CheckCircle size={9} className="text-green-400" /> : <div className="w-2.5 h-2.5 rounded border border-muted" />}
+                                  <span className={q.check ? "" : "text-muted"}>{q.item}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+                  </motion.div>
+                  )}
+                </div>{/* end min-w-[600px] */}
+                </div>{/* end overflow-x-auto */}
+                </div>{/* end min-w-0 flex-1 table */}
+
+                {/* Side detail panel � desktop only */}
+                {selectedLead && (
+                  <div className="hidden lg:block w-[280px] xl:w-[300px] flex-shrink-0 sticky top-16 self-start">
+                    <LeadDetailPanel
+                      lead={selectedLead}
+                      onScore={scoreOneLead}
+                      scoring={scoringLeads.has(selectedLead.id)}
+                      onClose={() => setSelectedLead(null)}
+                    />
+                  </div>
+                )}
+
+                </div>{/* end split-pane flex */}
+
+                {/* Pagination */}
+                {!loading && totalPages > 1 && (
+                  <div className="flex items-center justify-between pt-3">
+                    <p className="text-[10px] text-muted">
+                      Showing {((page - 1) * LIMIT) + 1}�{Math.min(page * LIMIT, totalCount)} of {totalCount.toLocaleString()} leads
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
+                        className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all">
+                        <ChevronLeft size={14} />
+                      </button>
+                      <span className="text-xs font-mono text-muted">
+                        {page} / {totalPages}
+                      </span>
+                      <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}
+                        className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all">
+                        <ChevronRightIcon size={14} />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Duplicate Detection */}
+                <div className="card">
+                  <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                    <Layers size={14} className="text-yellow-400" /> Duplicate Detection
+                  </h3>
+                  <div className="text-center py-8 text-muted text-xs">No duplicates detected.</div>
+                </div>
+              </div>
+            )}{/* ===== LEAD SCORING MATRIX ===== */}{activeTab === "scoring" && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {/* Scoring Rules */}
+                  <div className="card">
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Target size={14} className="text-[#2563EB]" /> Scoring Matrix
+                    </h3>
+                    <div className="space-y-1.5">
+                      {[
+                        { factor: "Has phone number", points: "+15", category: "Data" },
+                        { factor: "Has email", points: "+10", category: "Data" },
+                        { factor: "Google rating 4.5+", points: "+20", category: "Quality" },
+                        { factor: "50+ reviews", points: "+15", category: "Quality" },
+                        { factor: "Opened email", points: "+10", category: "Engagement" },
+                        { factor: "Clicked link", points: "+15", category: "Engagement" },
+                        { factor: "Replied to DM", points: "+25", category: "Engagement" },
+                        { factor: "Visited website", points: "+5", category: "Engagement" },
+                        { factor: "Booked call", points: "+30", category: "Intent" },
+                        { factor: "No response 7d", points: "-10", category: "Decay" },
+                        { factor: "Bounced email", points: "-20", category: "Data" },
+                        { factor: "Unsubscribed", points: "-50", category: "Disqualify" },
+                      ].map((r, i) => (
+                        <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">{r.category}</span>
+                            <span>{r.factor}</span>
+                          </div>
+                          <span className={`font-bold ${r.points.startsWith("+") ? "text-green-400" : "text-red-400"}`}>{r.points}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Score Distribution */}
+                  <div className="card">
+                    <h3 className="text-sm font-semibold mb-3">Score Distribution</h3>
+                    <div className="space-y-3">
+                      {[
+                        { range: "90-100 (Hot)", count: 0, pct: 0, color: "bg-red-400" },
+                        { range: "70-89 (Warm)", count: 0, pct: 0, color: "bg-orange-400" },
+                        { range: "50-69 (Lukewarm)", count: 0, pct: 0, color: "bg-yellow-400" },
+                        { range: "0-49 (Cold)", count: 0, pct: 0, color: "bg-blue-400" },
+                      ].map((d, i) => (
+                        <div key={i}>
+                          <div className="flex justify-between text-[10px] mb-1">
+                            <span>{d.range}</span>
+                            <span className="text-muted">{d.count} leads ({d.pct}%)</span>
+                          </div>
+                          <div className="w-full bg-surface-light rounded-full h-2">
+                            <div className={`${d.color} rounded-full h-2`} style={{ width: `${d.pct}%` }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Hot Lead Alerts */}
+                    <div className="mt-4 pt-4 border-t border-border">
+                      <h4 className="text-xs font-semibold mb-2 flex items-center gap-2">
+                        <Bell size={12} className="text-red-400" /> Hot Lead Alerts
+                      </h4>
+                      <div className="space-y-1.5">
+                        {leads.filter(l => (l.lead_score ?? 0) >= 80).map(lead => (
+                          <div key={lead.id} className="flex items-center justify-between p-2 rounded bg-red-400/5 border border-red-400/10 text-[10px]">
+                            <div className="flex items-center gap-2">
+                              <Flame size={10} className="text-red-400" />
+                              <span className="font-semibold">{lead.business_name}</span>
+                              <span className="text-muted">Score: {lead.lead_score}</span>
+                            </div>
+                            <Link href={`/dashboard/crm?leadId=${lead.id}`} className="text-[9px] px-2 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]">Open in CRM</Link>
                           </div>
                         ))}
                       </div>
                     </div>
                   </div>
-                )}
-              </motion.div>
-            ))}
-            </motion.div>
-            )}
-          </div>{/* end min-w-[600px] */}
-          </div>{/* end overflow-x-auto */}
-          </div>{/* end min-w-0 flex-1 table */}
-
-          {/* Side detail panel � desktop only */}
-          {selectedLead && (
-            <div className="hidden lg:block w-[280px] xl:w-[300px] flex-shrink-0 sticky top-16 self-start">
-              <LeadDetailPanel
-                lead={selectedLead}
-                onScore={scoreOneLead}
-                scoring={scoringLeads.has(selectedLead.id)}
-                onClose={() => setSelectedLead(null)}
-              />
-            </div>
-          )}
-
-          </div>{/* end split-pane flex */}
-
-          {/* Pagination */}
-          {!loading && totalPages > 1 && (
-            <div className="flex items-center justify-between pt-3">
-              <p className="text-[10px] text-muted">
-                Showing {((page - 1) * LIMIT) + 1}�{Math.min(page * LIMIT, totalCount)} of {totalCount.toLocaleString()} leads
-              </p>
-              <div className="flex items-center gap-2">
-                <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
-                  className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all">
-                  <ChevronLeft size={14} />
-                </button>
-                <span className="text-xs font-mono text-muted">
-                  {page} / {totalPages}
-                </span>
-                <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}
-                  className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all">
-                  <ChevronRightIcon size={14} />
-                </button>
+                </div>
               </div>
-            </div>
-          )}
-
-          {/* Duplicate Detection */}
-          <div className="card">
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <Layers size={14} className="text-yellow-400" /> Duplicate Detection
-            </h3>
-            <div className="text-center py-8 text-muted text-xs">No duplicates detected.</div>
-          </div>
-        </div>
-      )}
-
-      {/* ===== LEAD SCORING MATRIX ===== */}
-      {activeTab === "scoring" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Scoring Rules */}
-            <div className="card">
-              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Target size={14} className="text-[#2563EB]" /> Scoring Matrix
-              </h3>
-              <div className="space-y-1.5">
-                {[
-                  { factor: "Has phone number", points: "+15", category: "Data" },
-                  { factor: "Has email", points: "+10", category: "Data" },
-                  { factor: "Google rating 4.5+", points: "+20", category: "Quality" },
-                  { factor: "50+ reviews", points: "+15", category: "Quality" },
-                  { factor: "Opened email", points: "+10", category: "Engagement" },
-                  { factor: "Clicked link", points: "+15", category: "Engagement" },
-                  { factor: "Replied to DM", points: "+25", category: "Engagement" },
-                  { factor: "Visited website", points: "+5", category: "Engagement" },
-                  { factor: "Booked call", points: "+30", category: "Intent" },
-                  { factor: "No response 7d", points: "-10", category: "Decay" },
-                  { factor: "Bounced email", points: "-20", category: "Data" },
-                  { factor: "Unsubscribed", points: "-50", category: "Disqualify" },
-                ].map((r, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">{r.category}</span>
-                      <span>{r.factor}</span>
-                    </div>
-                    <span className={`font-bold ${r.points.startsWith("+") ? "text-green-400" : "text-red-400"}`}>{r.points}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {/* Score Distribution */}
-            <div className="card">
-              <h3 className="text-sm font-semibold mb-3">Score Distribution</h3>
-              <div className="space-y-3">
-                {[
-                  { range: "90-100 (Hot)", count: 0, pct: 0, color: "bg-red-400" },
-                  { range: "70-89 (Warm)", count: 0, pct: 0, color: "bg-orange-400" },
-                  { range: "50-69 (Lukewarm)", count: 0, pct: 0, color: "bg-yellow-400" },
-                  { range: "0-49 (Cold)", count: 0, pct: 0, color: "bg-blue-400" },
-                ].map((d, i) => (
-                  <div key={i}>
-                    <div className="flex justify-between text-[10px] mb-1">
-                      <span>{d.range}</span>
-                      <span className="text-muted">{d.count} leads ({d.pct}%)</span>
-                    </div>
-                    <div className="w-full bg-surface-light rounded-full h-2">
-                      <div className={`${d.color} rounded-full h-2`} style={{ width: `${d.pct}%` }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {/* Hot Lead Alerts */}
-              <div className="mt-4 pt-4 border-t border-border">
-                <h4 className="text-xs font-semibold mb-2 flex items-center gap-2">
-                  <Bell size={12} className="text-red-400" /> Hot Lead Alerts
-                </h4>
-                <div className="space-y-1.5">
-                  {leads.filter(l => (l.lead_score ?? 0) >= 80).map(lead => (
-                    <div key={lead.id} className="flex items-center justify-between p-2 rounded bg-red-400/5 border border-red-400/10 text-[10px]">
-                      <div className="flex items-center gap-2">
-                        <Flame size={10} className="text-red-400" />
-                        <span className="font-semibold">{lead.business_name}</span>
-                        <span className="text-muted">Score: {lead.lead_score}</span>
+            )}{/* ===== SMART ROUTING ===== */}{activeTab === "routing" && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <GitBranch size={14} className="text-[#2563EB]" /> Smart Lead Routing Rules
+                </h3>
+                <div className="space-y-2">
+                  {[
+                    { condition: "Score >= 80", action: "Assign to Nicklas (Closer)", priority: "High", active: true },
+                    { condition: "Industry = Dental", action: "Route to Dental specialist queue", priority: "Medium", active: true },
+                    { condition: "Source = Referral", action: "Priority queue + auto-call within 1hr", priority: "High", active: true },
+                    { condition: "City = Miami", action: "Assign to local rep", priority: "Low", active: false },
+                    { condition: "No phone number", action: "Route to email nurture sequence", priority: "Medium", active: true },
+                    { condition: "Score < 30", action: "Add to cold storage (revisit in 30d)", priority: "Low", active: true },
+                  ].map((rule, i) => (
+                    <div key={i} className={`card p-4 flex items-center justify-between ${!rule.active ? "opacity-50" : ""}`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full ${rule.priority === "High" ? "bg-red-400" : rule.priority === "Medium" ? "bg-yellow-400" : "bg-blue-400"}`} />
+                        <div>
+                          <p className="text-xs font-semibold">If: {rule.condition}</p>
+                          <p className="text-[10px] text-muted">Then: {rule.action}</p>
+                        </div>
                       </div>
-                      <Link href={`/dashboard/crm?leadId=${lead.id}`} className="text-[9px] px-2 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]">Open in CRM</Link>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[8px] px-1.5 py-0.5 rounded ${
+                          rule.priority === "High" ? "bg-red-400/10 text-red-400" : rule.priority === "Medium" ? "bg-yellow-400/10 text-yellow-400" : "bg-blue-400/10 text-blue-400"
+                        }`}>{rule.priority}</span>
+                        <div className={`w-8 h-4 rounded-full ${rule.active ? "bg-[#2563EB]" : "bg-surface-light"}`}>
+                          <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${rule.active ? "ml-4" : "ml-0.5"}`} />
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ===== SMART ROUTING ===== */}
-      {activeTab === "routing" && (
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold flex items-center gap-2">
-            <GitBranch size={14} className="text-[#2563EB]" /> Smart Lead Routing Rules
-          </h3>
-          <div className="space-y-2">
-            {[
-              { condition: "Score >= 80", action: "Assign to Nicklas (Closer)", priority: "High", active: true },
-              { condition: "Industry = Dental", action: "Route to Dental specialist queue", priority: "Medium", active: true },
-              { condition: "Source = Referral", action: "Priority queue + auto-call within 1hr", priority: "High", active: true },
-              { condition: "City = Miami", action: "Assign to local rep", priority: "Low", active: false },
-              { condition: "No phone number", action: "Route to email nurture sequence", priority: "Medium", active: true },
-              { condition: "Score < 30", action: "Add to cold storage (revisit in 30d)", priority: "Low", active: true },
-            ].map((rule, i) => (
-              <div key={i} className={`card p-4 flex items-center justify-between ${!rule.active ? "opacity-50" : ""}`}>
-                <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${rule.priority === "High" ? "bg-red-400" : rule.priority === "Medium" ? "bg-yellow-400" : "bg-blue-400"}`} />
-                  <div>
-                    <p className="text-xs font-semibold">If: {rule.condition}</p>
-                    <p className="text-[10px] text-muted">Then: {rule.action}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={`text-[8px] px-1.5 py-0.5 rounded ${
-                    rule.priority === "High" ? "bg-red-400/10 text-red-400" : rule.priority === "Medium" ? "bg-yellow-400/10 text-yellow-400" : "bg-blue-400/10 text-blue-400"
-                  }`}>{rule.priority}</span>
-                  <div className={`w-8 h-4 rounded-full ${rule.active ? "bg-[#2563EB]" : "bg-surface-light"}`}>
-                    <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${rule.active ? "ml-4" : "ml-0.5"}`} />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ===== SOURCE ATTRIBUTION ===== */}
-      {activeTab === "attribution" && (
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold flex items-center gap-2">
-            <BarChart3 size={14} className="text-[#2563EB]" /> Lead Source Attribution
-          </h3>
-          <div className="text-center py-12 text-muted text-xs">No source attribution data yet.</div>
-        </div>
-      )}
-
-      {/* ===== NURTURE SEQUENCES ===== */}
-      {activeTab === "nurture" && (
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold flex items-center gap-2">
-            <Mail size={14} className="text-[#2563EB]" /> Lead Nurture Sequences
-          </h3>
-          <div className="text-center py-12 text-muted text-xs">No nurture sequences configured yet.</div>
-        </div>
-      )}
-
-      {/* ===== ENRICHMENT ===== */}
-      {activeTab === "enrichment" && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold flex items-center gap-2">
-              <Zap size={14} className="text-[#2563EB]" /> Lead Enrichment Panel
-            </h3>
-            <button
-              onClick={() => toast("Bulk enrichment coming soon � needs API")}
-              className="btn-primary text-xs flex items-center gap-1.5"
-            ><RefreshCw size={12} /> Enrich All Missing</button>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-            {[
-              { label: "Fully Enriched", value: 0, total: totalLeads, color: "text-green-400" },
-              { label: "Partial Data", value: 0, total: totalLeads, color: "text-yellow-400" },
-              { label: "Missing Email", value: 0, total: totalLeads, color: "text-red-400" },
-              { label: "Missing Phone", value: 0, total: totalLeads, color: "text-red-400" },
-            ].map((s, index) => (
-              <PrismPanel key={index} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
-                <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
-                <p className="text-[9px] text-muted">{s.label}</p>
-                <p className="text-[8px] text-muted">of {s.total} leads</p>
-              </PrismPanel>
-            ))}
-          </div>
-          <div className="space-y-1.5">
-            {leads.length === 0 && (
-              <div className="text-center py-8 text-muted text-xs">No leads to enrich yet.</div>
-            )}
-            {leads.map((lead, index) => (
-              <motion.div
-                key={lead.id}
-                className="flex items-center justify-between p-3 rounded-xl text-[10px] border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)" }}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.18, delay: index * 0.04 }}
-                whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                    lead.email && lead.phone ? "bg-green-400/10" : "bg-yellow-400/10"
-                  }`}>
-                    {lead.email && lead.phone ? <CheckCircle size={12} className="text-green-400" /> : <AlertTriangle size={12} className="text-yellow-400" />}
-                  </div>
-                  <div>
-                    <p className="font-semibold">{lead.business_name}</p>
-                    <p className="text-[9px] text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex gap-2">
-                    <span className={lead.email ? "text-green-400" : "text-red-400"}>{lead.email ? "Email" : "No email"}</span>
-                    <span className={lead.phone ? "text-green-400" : "text-red-400"}>{lead.phone ? "Phone" : "No phone"}</span>
-                    <span className={lead.website ? "text-green-400" : "text-red-400"}>{lead.website ? "Website" : "No site"}</span>
-                  </div>
-                  <button
-                    onClick={() => toast("Per-lead enrichment coming soon � needs API")}
-                    className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]"
-                  >Enrich</button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ===== CONVERSION FUNNEL ===== */}
-      {activeTab === "funnel" && (
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold flex items-center gap-2">
-            <TrendingUp size={14} className="text-[#2563EB]" /> Lead Conversion Funnel
-          </h3>
-          <div className="flex flex-col items-center gap-2">
-            {[
-              { stage: "Total Leads Scraped", count: 0, pct: 0, color: "bg-blue-400" },
-              { stage: "Contacted (DM/Email/Call)", count: 0, pct: 0, color: "bg-purple-400" },
-              { stage: "Replied / Engaged", count: 0, pct: 0, color: "bg-yellow-400" },
-              { stage: "Qualified (Score 70+)", count: 0, pct: 0, color: "bg-orange-400" },
-              { stage: "Booked Discovery Call", count: 0, pct: 0, color: "bg-green-400" },
-              { stage: "Converted to Client", count: 0, pct: 0, color: "bg-[#2563EB]" },
-            ].map((s, i) => (
-              <div key={i} className="w-full max-w-2xl">
-                <div className="flex items-center justify-between mb-1 text-[10px]">
-                  <span className="font-semibold">{s.stage}</span>
-                  <span className="text-muted">{s.count} ({s.pct}%)</span>
-                </div>
-                <div className="w-full bg-surface-light rounded-full h-6 overflow-hidden">
-                  <div className={`${s.color} h-6 rounded-full flex items-center justify-center`} style={{ width: `${s.pct}%` }}>
-                    {s.pct > 15 && <span className="text-[8px] font-bold text-black">{s.count}</span>}
-                  </div>
-                </div>
-                {i < 5 && (
-                  <div className="flex justify-center my-1">
-                    <ArrowDownRight size={12} className="text-muted/30" />
-                    <span className="text-[8px] text-muted ml-1">
-                      {i === 0 ? "0% contact rate" : i === 1 ? "0% reply rate" : i === 2 ? "0% qualify rate" : i === 3 ? "0% book rate" : "0% close rate"}
-                    </span>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ===== TAGS & ALERTS ===== */}
-      {activeTab === "tags" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Lead Tagging System */}
-            <div className="card">
-              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Tag size={14} className="text-[#2563EB]" /> Lead Tagging System
-              </h3>
-              <div className="flex flex-wrap gap-2 mb-3">
-                {["high-value", "responsive", "warm", "needs-nurture", "follow-up", "hot", "referral", "decision-maker", "client", "upsell", "no-budget", "competitor-user"].map(tag => (
-                  <span key={tag} className="text-[9px] px-2 py-1 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] cursor-pointer hover:bg-[rgba(37,99,235,0.12)] transition-all">{tag}</span>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <input value={tagInput} onChange={e => setTagInput(e.target.value)} className="input flex-1 text-xs" placeholder="Create new tag..." />
-                <button
-                  onClick={() => toast("Custom tags coming soon � needs API")}
-                  className="btn-primary text-xs px-3"
-                >Add</button>
-              </div>
-            </div>
-            {/* Hot Lead Alerts Config */}
-            <div className="card">
-              <div className="flex items-center justify-between mb-3">
+            )}{/* ===== SOURCE ATTRIBUTION ===== */}{activeTab === "attribution" && (
+              <div className="space-y-4">
                 <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <Bell size={14} className="text-red-400" /> Hot Lead Alert Settings
+                  <BarChart3 size={14} className="text-[#2563EB]" /> Lead Source Attribution
                 </h3>
-                <button onClick={() => setHotAlerts(!hotAlerts)}
-                  className={`w-10 h-5 rounded-full transition-all flex items-center ${hotAlerts ? "bg-[#2563EB] justify-end" : "bg-surface-light justify-start"}`}>
-                  <div className="w-4 h-4 bg-white rounded-full mx-0.5 shadow" />
-                </button>
+                <div className="text-center py-12 text-muted text-xs">No source attribution data yet.</div>
               </div>
-              <div className="space-y-2">
-                {[
-                  { trigger: "Lead score reaches 80+", channel: "Slack + Email", active: true },
-                  { trigger: "Lead replies to outreach", channel: "Slack + Push", active: true },
-                  { trigger: "Lead books a call", channel: "Slack + SMS", active: true },
-                  { trigger: "Lead visits pricing page", channel: "Slack", active: false },
-                ].map((alert, i) => (
-                  <div key={i} className={`flex items-center justify-between p-2.5 rounded-lg bg-surface-light text-[10px] ${!alert.active ? "opacity-50" : ""}`}>
-                    <div>
-                      <p className="font-semibold">{alert.trigger}</p>
-                      <p className="text-[9px] text-muted">Notify via: {alert.channel}</p>
+            )}{/* ===== NURTURE SEQUENCES ===== */}{activeTab === "nurture" && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <Mail size={14} className="text-[#2563EB]" /> Lead Nurture Sequences
+                </h3>
+                <div className="text-center py-12 text-muted text-xs">No nurture sequences configured yet.</div>
+              </div>
+            )}{/* ===== ENRICHMENT ===== */}{activeTab === "enrichment" && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <Zap size={14} className="text-[#2563EB]" /> Lead Enrichment Panel
+                  </h3>
+                  <button
+                    onClick={() => toast("Bulk enrichment coming soon � needs API")}
+                    className="btn-primary text-xs flex items-center gap-1.5"
+                  ><RefreshCw size={12} /> Enrich All Missing</button>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                  {[
+                    { label: "Fully Enriched", value: 0, total: totalLeads, color: "text-green-400" },
+                    { label: "Partial Data", value: 0, total: totalLeads, color: "text-yellow-400" },
+                    { label: "Missing Email", value: 0, total: totalLeads, color: "text-red-400" },
+                    { label: "Missing Phone", value: 0, total: totalLeads, color: "text-red-400" },
+                  ].map((s, index) => (
+                    <PrismPanel key={index} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
+                      <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
+                      <p className="text-[9px] text-muted">{s.label}</p>
+                      <p className="text-[8px] text-muted">of {s.total} leads</p>
+                    </PrismPanel>
+                  ))}
+                </div>
+                <div className="space-y-1.5">
+                  {leads.length === 0 && (
+                    <div className="text-center py-8 text-muted text-xs">No leads to enrich yet.</div>
+                  )}
+                  {leads.map((lead, index) => (
+                    <motion.div
+                      key={lead.id}
+                      className="flex items-center justify-between p-3 rounded-xl text-[10px] border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)" }}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18, delay: index * 0.04 }}
+                      whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                          lead.email && lead.phone ? "bg-green-400/10" : "bg-yellow-400/10"
+                        }`}>
+                          {lead.email && lead.phone ? <CheckCircle size={12} className="text-green-400" /> : <AlertTriangle size={12} className="text-yellow-400" />}
+                        </div>
+                        <div>
+                          <p className="font-semibold">{lead.business_name}</p>
+                          <p className="text-[9px] text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex gap-2">
+                          <span className={lead.email ? "text-green-400" : "text-red-400"}>{lead.email ? "Email" : "No email"}</span>
+                          <span className={lead.phone ? "text-green-400" : "text-red-400"}>{lead.phone ? "Phone" : "No phone"}</span>
+                          <span className={lead.website ? "text-green-400" : "text-red-400"}>{lead.website ? "Website" : "No site"}</span>
+                        </div>
+                        <button
+                          onClick={() => toast("Per-lead enrichment coming soon � needs API")}
+                          className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]"
+                        >Enrich</button>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}{/* ===== CONVERSION FUNNEL ===== */}{activeTab === "funnel" && (
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <TrendingUp size={14} className="text-[#2563EB]" /> Lead Conversion Funnel
+                </h3>
+                <div className="flex flex-col items-center gap-2">
+                  {[
+                    { stage: "Total Leads Scraped", count: 0, pct: 0, color: "bg-blue-400" },
+                    { stage: "Contacted (DM/Email/Call)", count: 0, pct: 0, color: "bg-purple-400" },
+                    { stage: "Replied / Engaged", count: 0, pct: 0, color: "bg-yellow-400" },
+                    { stage: "Qualified (Score 70+)", count: 0, pct: 0, color: "bg-orange-400" },
+                    { stage: "Booked Discovery Call", count: 0, pct: 0, color: "bg-green-400" },
+                    { stage: "Converted to Client", count: 0, pct: 0, color: "bg-[#2563EB]" },
+                  ].map((s, i) => (
+                    <div key={i} className="w-full max-w-2xl">
+                      <div className="flex items-center justify-between mb-1 text-[10px]">
+                        <span className="font-semibold">{s.stage}</span>
+                        <span className="text-muted">{s.count} ({s.pct}%)</span>
+                      </div>
+                      <div className="w-full bg-surface-light rounded-full h-6 overflow-hidden">
+                        <div className={`${s.color} h-6 rounded-full flex items-center justify-center`} style={{ width: `${s.pct}%` }}>
+                          {s.pct > 15 && <span className="text-[8px] font-bold text-black">{s.count}</span>}
+                        </div>
+                      </div>
+                      {i < 5 && (
+                        <div className="flex justify-center my-1">
+                          <ArrowDownRight size={12} className="text-muted/30" />
+                          <span className="text-[8px] text-muted ml-1">
+                            {i === 0 ? "0% contact rate" : i === 1 ? "0% reply rate" : i === 2 ? "0% qualify rate" : i === 3 ? "0% book rate" : "0% close rate"}
+                          </span>
+                        </div>
+                      )}
                     </div>
-                    <div className={`w-6 h-3 rounded-full ${alert.active ? "bg-green-400" : "bg-surface"}`}>
-                      <div className={`w-2.5 h-2.5 bg-white rounded-full mt-px ${alert.active ? "ml-3" : "ml-0.5"}`} />
+                  ))}
+                </div>
+              </div>
+            )}{/* ===== TAGS & ALERTS ===== */}{activeTab === "tags" && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {/* Lead Tagging System */}
+                  <div className="card">
+                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Tag size={14} className="text-[#2563EB]" /> Lead Tagging System
+                    </h3>
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {["high-value", "responsive", "warm", "needs-nurture", "follow-up", "hot", "referral", "decision-maker", "client", "upsell", "no-budget", "competitor-user"].map(tag => (
+                        <span key={tag} className="text-[9px] px-2 py-1 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] cursor-pointer hover:bg-[rgba(37,99,235,0.12)] transition-all">{tag}</span>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <input value={tagInput} onChange={e => setTagInput(e.target.value)} className="input flex-1 text-xs" placeholder="Create new tag..." />
+                      <button
+                        onClick={() => toast("Custom tags coming soon � needs API")}
+                        className="btn-primary text-xs px-3"
+                      >Add</button>
                     </div>
                   </div>
-                ))}
+                  {/* Hot Lead Alerts Config */}
+                  <div className="card">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-sm font-semibold flex items-center gap-2">
+                        <Bell size={14} className="text-red-400" /> Hot Lead Alert Settings
+                      </h3>
+                      <button onClick={() => setHotAlerts(!hotAlerts)}
+                        className={`w-10 h-5 rounded-full transition-all flex items-center ${hotAlerts ? "bg-[#2563EB] justify-end" : "bg-surface-light justify-start"}`}>
+                        <div className="w-4 h-4 bg-white rounded-full mx-0.5 shadow" />
+                      </button>
+                    </div>
+                    <div className="space-y-2">
+                      {[
+                        { trigger: "Lead score reaches 80+", channel: "Slack + Email", active: true },
+                        { trigger: "Lead replies to outreach", channel: "Slack + Push", active: true },
+                        { trigger: "Lead books a call", channel: "Slack + SMS", active: true },
+                        { trigger: "Lead visits pricing page", channel: "Slack", active: false },
+                      ].map((alert, i) => (
+                        <div key={i} className={`flex items-center justify-between p-2.5 rounded-lg bg-surface-light text-[10px] ${!alert.active ? "opacity-50" : ""}`}>
+                          <div>
+                            <p className="font-semibold">{alert.trigger}</p>
+                            <p className="text-[9px] text-muted">Notify via: {alert.channel}</p>
+                          </div>
+                          <div className={`w-6 h-3 rounded-full ${alert.active ? "bg-green-400" : "bg-surface"}`}>
+                            <div className={`w-2.5 h-2.5 bg-white rounded-full mt-px ${alert.active ? "ml-3" : "ml-0.5"}`} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            )}</MotionPage>
   );
 }
 

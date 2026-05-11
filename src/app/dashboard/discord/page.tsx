@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import { useAuth } from "@/lib/auth-context";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface TrinityIntegration {
   id: string;
@@ -162,14 +163,12 @@ export default function DiscordPage() {
   /** Banner shown on tabs whose UI exists but has no backend yet. */
   function PreviewBanner() {
     return (
-      <div className="card border-warning/20 bg-warning/5">
-        <div className="flex items-start gap-2">
-          <AlertTriangle size={12} className="text-warning shrink-0 mt-0.5" />
-          <p className="text-[10px] text-muted leading-relaxed">
-            <strong className="text-foreground">Preview only.</strong> This tab&apos;s UI is wired up for review; server-side wiring for moderation, analytics, and custom commands ships later. For now use the <span className="text-foreground">Install</span> tab to connect a server and receive real-time pings.
-          </p>
-        </div>
-      </div>
+      <MotionPage className="card border-warning/20 bg-warning/5"><div className="flex items-start gap-2">
+                  <AlertTriangle size={12} className="text-warning shrink-0 mt-0.5" />
+                  <p className="text-[10px] text-muted leading-relaxed">
+                    <strong className="text-foreground">Preview only.</strong> This tab&apos;s UI is wired up for review; server-side wiring for moderation, analytics, and custom commands ships later. For now use the <span className="text-foreground">Install</span> tab to connect a server and receive real-time pings.
+                  </p>
+                </div></MotionPage>
     );
   }
 

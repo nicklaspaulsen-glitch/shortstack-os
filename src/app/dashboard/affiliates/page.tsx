@@ -37,6 +37,7 @@ import {
 import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 type CommissionType = "flat" | "percentage";
@@ -200,74 +201,66 @@ export default function AffiliatesPage() {
   const totalPaidCents = affiliates.reduce((s, a) => s + (a.paid_cents ?? 0), 0);
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        title="Affiliate Program"
-        subtitle="Recruit affiliates, track referrals, and pay commissions automatically with Stripe Connect."
-        icon={<Award size={28} />}
-        gradient="purple"
-        eyebrow="Recurring revenue magnifier"
-      />
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {[
-          <StatCard key="programs" label="Programs" value={programs.length} icon={<Award size={14} />} />,
-          <StatCard key="affiliates" label="Affiliates" value={totalAffiliates} change={totalAffiliates > 0 ? `${approvedAffiliates} approved` : "Invite your first one"} changeType={approvedAffiliates > 0 ? "positive" : "neutral"} icon={<Users size={14} />} />,
-          <StatCard key="pending" label="Pending payouts" value={fmtCents(totalPendingCents)} icon={<Activity size={14} />} premium />,
-          <StatCard key="paid" label="Paid out" value={fmtCents(totalPaidCents)} icon={<DollarSign size={14} />} premium />,
-        ].map((card, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            {card}
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="flex flex-wrap gap-1 border-b border-border">
-        {(
-          [
-            { k: "programs", label: "Programs" },
-            { k: "affiliates", label: "Affiliates" },
-            { k: "referrals", label: "Referrals" },
-            { k: "payouts", label: "Payouts" },
-          ] as { k: TabKey; label: string }[]
-        ).map((t) => (
-          <button
-            key={t.k}
-            onClick={() => setTab(t.k)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-              tab === t.k
-                ? "border-[#2563EB] text-[#2563EB]"
-                : "border-transparent text-muted hover:text-foreground"
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {loading ? (
-        <div className="flex items-center justify-center p-20 text-muted">
-          <Loader2 className="animate-spin" size={20} />
-        </div>
-      ) : tab === "programs" ? (
-        <ProgramsTab programs={programs} onChanged={refresh} />
-      ) : tab === "affiliates" ? (
-        <AffiliatesTab
-          affiliates={affiliates}
-          programs={programs}
-          onChanged={refresh}
-        />
-      ) : tab === "referrals" ? (
-        <ReferralsTab referrals={referrals} affiliates={affiliates} />
-      ) : (
-        <PayoutsTab
-          affiliates={affiliates}
-          programs={programs}
-          onChanged={refresh}
-        />
-      )}
-    </div>
+    <MotionPage className="space-y-6"><PageHero
+              title="Affiliate Program"
+              subtitle="Recruit affiliates, track referrals, and pay commissions automatically with Stripe Connect."
+              icon={<Award size={28} />}
+              gradient="purple"
+              eyebrow="Recurring revenue magnifier"
+            /><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {[
+                <StatCard key="programs" label="Programs" value={programs.length} icon={<Award size={14} />} />,
+                <StatCard key="affiliates" label="Affiliates" value={totalAffiliates} change={totalAffiliates > 0 ? `${approvedAffiliates} approved` : "Invite your first one"} changeType={approvedAffiliates > 0 ? "positive" : "neutral"} icon={<Users size={14} />} />,
+                <StatCard key="pending" label="Pending payouts" value={fmtCents(totalPendingCents)} icon={<Activity size={14} />} premium />,
+                <StatCard key="paid" label="Paid out" value={fmtCents(totalPaidCents)} icon={<DollarSign size={14} />} premium />,
+              ].map((card, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                  {card}
+                </motion.div>
+              ))}
+            </div><div className="flex flex-wrap gap-1 border-b border-border">
+              {(
+                [
+                  { k: "programs", label: "Programs" },
+                  { k: "affiliates", label: "Affiliates" },
+                  { k: "referrals", label: "Referrals" },
+                  { k: "payouts", label: "Payouts" },
+                ] as { k: TabKey; label: string }[]
+              ).map((t) => (
+                <button
+                  key={t.k}
+                  onClick={() => setTab(t.k)}
+                  className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+                    tab === t.k
+                      ? "border-[#2563EB] text-[#2563EB]"
+                      : "border-transparent text-muted hover:text-foreground"
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>{loading ? (
+              <div className="flex items-center justify-center p-20 text-muted">
+                <Loader2 className="animate-spin" size={20} />
+              </div>
+            ) : tab === "programs" ? (
+              <ProgramsTab programs={programs} onChanged={refresh} />
+            ) : tab === "affiliates" ? (
+              <AffiliatesTab
+                affiliates={affiliates}
+                programs={programs}
+                onChanged={refresh}
+              />
+            ) : tab === "referrals" ? (
+              <ReferralsTab referrals={referrals} affiliates={affiliates} />
+            ) : (
+              <PayoutsTab
+                affiliates={affiliates}
+                programs={programs}
+                onChanged={refresh}
+              />
+            )}</MotionPage>
   );
 }
 

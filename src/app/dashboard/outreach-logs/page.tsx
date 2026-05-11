@@ -21,6 +21,7 @@ import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { motion } from "framer-motion";
 import { PrismPanel } from "@/components/prism";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* -- Types -- */
 interface OutreachEntry {
@@ -535,1561 +536,1539 @@ export default function OutreachLogsPage() {
   const bookRate = stats.total > 0 ? ((bookedCount / stats.total) * 100).toFixed(1) : "0";
 
   return (
-    <div className="fade-in space-y-4">
-      {/* Hero Header */}
-      <PageHero
-        eyebrow="OUTREACH HISTORY"
-        icon={<Send size={22} />}
-        title="Outreach Logs"
-        subtitle="Full communication history � calls, emails, SMS, DMs with transcripts & details."
-        gradient="blue"
-      />
-      <div className="flex items-center justify-end">
-        <div className="flex gap-2">
-          <button onClick={() => fetchEntries()} className="btn-secondary text-xs flex items-center gap-1.5">
-            <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
-          </button>
-          <button onClick={exportCSV} className="btn-secondary text-xs flex items-center gap-1.5">
-            <Download size={12} /> Export
-          </button>
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-9 gap-2">
-        {[
-          { label: "Total", value: stats.total, color: "text-[#2563EB]", icon: <Send size={12} /> },
-          { label: "Sent", value: stats.sent, color: "text-blue-400", icon: <CheckCircle size={12} /> },
-          { label: "Replied", value: stats.replied, color: "text-green-400", icon: <ThumbsUp size={12} /> },
-          { label: "Failed", value: stats.failed, color: "text-red-400", icon: <XCircle size={12} /> },
-          { label: "Reply Rate", value: `${replyRate}%`, color: "text-green-400", icon: <BarChart3 size={12} /> },
-          { label: "Book Rate", value: `${bookRate}%`, color: "text-emerald-400", icon: <BookCheck size={12} /> },
-          { label: "Emails", value: stats.byPlatform?.email || 0, color: "text-[#2563EB]", icon: <Mail size={12} /> },
-          { label: "SMS", value: stats.byPlatform?.sms || 0, color: "text-emerald-400", icon: <Phone size={12} /> },
-          { label: "Calls", value: stats.byPlatform?.call || 0, color: "text-blue-400", icon: <PhoneCall size={12} /> },
-        ].map((s, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(0,0,0,0.10)" }}>
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-            <div className="p-2">
-              <div className={`w-5 h-5 rounded-md mx-auto mb-1 flex items-center justify-center bg-black/[0.04] ${s.color}`}>{s.icon}</div>
-              <p className="text-sm font-bold">{s.value}</p>
-              <p className="text-[8px] text-muted">{s.label}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1">
-        {([
-          { key: "outreach" as Tab, label: "All Logs", icon: <Send size={13} /> },
-          { key: "analytics" as Tab, label: "Analytics", icon: <BarChart3 size={13} /> },
-          { key: "provisioning" as Tab, label: "Phones & Email", icon: <Smartphone size={13} /> },
-          { key: "config" as Tab, label: "Config", icon: <Settings size={13} /> },
-        ]).map(t => (
-          <button key={t.key} onClick={() => setTab(t.key)}
-            className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 transition-all ${
-              tab === t.key ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
-            }`}>{t.icon} {t.label}</button>
-        ))}
-      </div>
-
-      {/* ---------- OUTREACH TAB ---------- */}
-      {tab === "outreach" && (
-        <div className={`flex flex-col lg:flex-row gap-4 ${detailEntry ? "" : ""}`}>
-          {/* Main content */}
-          <div className={`space-y-3 transition-all ${detailEntry ? "flex-1 min-w-0" : "w-full"}`}>
-            {/* Filters */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <div className="relative flex-1 min-w-[180px]">
-                <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                <input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
-                  placeholder="Search business, handle, message..."
-                  aria-label="Search outreach logs"
-                  className="input w-full pl-8 text-xs" />
-              </div>
-              <div className="flex gap-1">
-                {[
-                  { val: "all", label: "All", icon: null },
-                  { val: "email", label: "Email", icon: <Mail size={11} /> },
-                  { val: "sms", label: "SMS", icon: <Phone size={11} /> },
-                  { val: "call", label: "Call", icon: <PhoneCall size={11} /> },
-                  { val: "instagram", label: "IG", icon: <InstagramIcon size={12} /> },
-                  { val: "facebook", label: "FB", icon: <FacebookIcon size={12} /> },
-                ].map(p => (
-                  <button key={p.val} onClick={() => { setPlatformFilter(p.val); setPage(1); }}
-                    className={`text-[10px] px-2 py-1.5 rounded-lg flex items-center gap-1 ${
-                      platformFilter === p.val ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
-                    }`}>{p.icon} {p.label}</button>
-                ))}
-              </div>
-              <select value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }}
-                className="input text-xs py-1.5 w-auto">
-                <option value="all">All Status</option>
-                <option value="sent">Sent</option>
-                <option value="replied">Replied</option>
-                <option value="failed">Failed</option>
-                <option value="pending">Pending</option>
-                <option value="interested">Interested</option>
-                <option value="not_interested">Not Interested</option>
-              </select>
-              <div className="flex items-center gap-1 border border-[rgba(0,0,0,0.06)] rounded-lg">
-                <button onClick={() => setViewMode("compact")}
-                  className={`p-1.5 rounded-l-lg ${viewMode === "compact" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>
-                  <LayoutList size={14} />
+    <MotionPage className="fade-in space-y-4">{/* Hero Header */}<PageHero
+              eyebrow="OUTREACH HISTORY"
+              icon={<Send size={22} />}
+              title="Outreach Logs"
+              subtitle="Full communication history � calls, emails, SMS, DMs with transcripts & details."
+              gradient="blue"
+            /><div className="flex items-center justify-end">
+              <div className="flex gap-2">
+                <button onClick={() => fetchEntries()} className="btn-secondary text-xs flex items-center gap-1.5">
+                  <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
                 </button>
-                <button onClick={() => setViewMode("detailed")}
-                  className={`p-1.5 rounded-r-lg ${viewMode === "detailed" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>
-                  <LayoutGrid size={14} />
+                <button onClick={exportCSV} className="btn-secondary text-xs flex items-center gap-1.5">
+                  <Download size={12} /> Export
                 </button>
               </div>
-              <select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
-                className="input text-xs py-1.5 w-auto">
-                <option value={10}>10/page</option>
-                <option value={25}>25/page</option>
-                <option value={50}>50/page</option>
-              </select>
-            </div>
+            </div>{/* Stats */}<div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-9 gap-2">
+              {[
+                { label: "Total", value: stats.total, color: "text-[#2563EB]", icon: <Send size={12} /> },
+                { label: "Sent", value: stats.sent, color: "text-blue-400", icon: <CheckCircle size={12} /> },
+                { label: "Replied", value: stats.replied, color: "text-green-400", icon: <ThumbsUp size={12} /> },
+                { label: "Failed", value: stats.failed, color: "text-red-400", icon: <XCircle size={12} /> },
+                { label: "Reply Rate", value: `${replyRate}%`, color: "text-green-400", icon: <BarChart3 size={12} /> },
+                { label: "Book Rate", value: `${bookRate}%`, color: "text-emerald-400", icon: <BookCheck size={12} /> },
+                { label: "Emails", value: stats.byPlatform?.email || 0, color: "text-[#2563EB]", icon: <Mail size={12} /> },
+                { label: "SMS", value: stats.byPlatform?.sms || 0, color: "text-emerald-400", icon: <Phone size={12} /> },
+                { label: "Calls", value: stats.byPlatform?.call || 0, color: "text-blue-400", icon: <PhoneCall size={12} /> },
+              ].map((s, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+                  <div className="p-2">
+                    <div className={`w-5 h-5 rounded-md mx-auto mb-1 flex items-center justify-center bg-black/[0.04] ${s.color}`}>{s.icon}</div>
+                    <p className="text-sm font-bold">{s.value}</p>
+                    <p className="text-[8px] text-muted">{s.label}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1">
+              {([
+                { key: "outreach" as Tab, label: "All Logs", icon: <Send size={13} /> },
+                { key: "analytics" as Tab, label: "Analytics", icon: <BarChart3 size={13} /> },
+                { key: "provisioning" as Tab, label: "Phones & Email", icon: <Smartphone size={13} /> },
+                { key: "config" as Tab, label: "Config", icon: <Settings size={13} /> },
+              ]).map(t => (
+                <button key={t.key} onClick={() => setTab(t.key)}
+                  className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 transition-all ${
+                    tab === t.key ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
+                  }`}>{t.icon} {t.label}</button>
+              ))}
+            </div>{/* ---------- OUTREACH TAB ---------- */}{tab === "outreach" && (
+              <div className={`flex flex-col lg:flex-row gap-4 ${detailEntry ? "" : ""}`}>
+                {/* Main content */}
+                <div className={`space-y-3 transition-all ${detailEntry ? "flex-1 min-w-0" : "w-full"}`}>
+                  {/* Filters */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <div className="relative flex-1 min-w-[180px]">
+                      <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                      <input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
+                        placeholder="Search business, handle, message..."
+                        aria-label="Search outreach logs"
+                        className="input w-full pl-8 text-xs" />
+                    </div>
+                    <div className="flex gap-1">
+                      {[
+                        { val: "all", label: "All", icon: null },
+                        { val: "email", label: "Email", icon: <Mail size={11} /> },
+                        { val: "sms", label: "SMS", icon: <Phone size={11} /> },
+                        { val: "call", label: "Call", icon: <PhoneCall size={11} /> },
+                        { val: "instagram", label: "IG", icon: <InstagramIcon size={12} /> },
+                        { val: "facebook", label: "FB", icon: <FacebookIcon size={12} /> },
+                      ].map(p => (
+                        <button key={p.val} onClick={() => { setPlatformFilter(p.val); setPage(1); }}
+                          className={`text-[10px] px-2 py-1.5 rounded-lg flex items-center gap-1 ${
+                            platformFilter === p.val ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
+                          }`}>{p.icon} {p.label}</button>
+                      ))}
+                    </div>
+                    <select value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }}
+                      className="input text-xs py-1.5 w-auto">
+                      <option value="all">All Status</option>
+                      <option value="sent">Sent</option>
+                      <option value="replied">Replied</option>
+                      <option value="failed">Failed</option>
+                      <option value="pending">Pending</option>
+                      <option value="interested">Interested</option>
+                      <option value="not_interested">Not Interested</option>
+                    </select>
+                    <div className="flex items-center gap-1 border border-[rgba(0,0,0,0.06)] rounded-lg">
+                      <button onClick={() => setViewMode("compact")}
+                        className={`p-1.5 rounded-l-lg ${viewMode === "compact" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>
+                        <LayoutList size={14} />
+                      </button>
+                      <button onClick={() => setViewMode("detailed")}
+                        className={`p-1.5 rounded-r-lg ${viewMode === "detailed" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>
+                        <LayoutGrid size={14} />
+                      </button>
+                    </div>
+                    <select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
+                      className="input text-xs py-1.5 w-auto">
+                      <option value={10}>10/page</option>
+                      <option value={25}>25/page</option>
+                      <option value={50}>50/page</option>
+                    </select>
+                  </div>
 
-            {/* Date range filter */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <div className="flex items-center gap-1.5 text-[10px] text-muted">
-                <CalendarRange size={13} className="text-[#2563EB]" />
-                <span>Date range:</span>
-              </div>
-              <input
-                type="date"
-                value={dateFrom}
-                onChange={e => { setDateFrom(e.target.value); setPage(1); }}
-                className="input text-xs py-1.5 w-auto"
-                placeholder="From"
-              />
-              <span className="text-[10px] text-muted">?</span>
-              <input
-                type="date"
-                value={dateTo}
-                onChange={e => { setDateTo(e.target.value); setPage(1); }}
-                className="input text-xs py-1.5 w-auto"
-                placeholder="To"
-              />
-              {(dateFrom || dateTo) && (
-                <button
-                  onClick={() => { setDateFrom(""); setDateTo(""); setPage(1); }}
-                  className="text-[10px] px-2 py-1 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-muted flex items-center gap-1"
-                >
-                  <X size={9} /> Clear
-                </button>
-              )}
-            </div>
+                  {/* Date range filter */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <div className="flex items-center gap-1.5 text-[10px] text-muted">
+                      <CalendarRange size={13} className="text-[#2563EB]" />
+                      <span>Date range:</span>
+                    </div>
+                    <input
+                      type="date"
+                      value={dateFrom}
+                      onChange={e => { setDateFrom(e.target.value); setPage(1); }}
+                      className="input text-xs py-1.5 w-auto"
+                      placeholder="From"
+                    />
+                    <span className="text-[10px] text-muted">?</span>
+                    <input
+                      type="date"
+                      value={dateTo}
+                      onChange={e => { setDateTo(e.target.value); setPage(1); }}
+                      className="input text-xs py-1.5 w-auto"
+                      placeholder="To"
+                    />
+                    {(dateFrom || dateTo) && (
+                      <button
+                        onClick={() => { setDateFrom(""); setDateTo(""); setPage(1); }}
+                        className="text-[10px] px-2 py-1 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-muted flex items-center gap-1"
+                      >
+                        <X size={9} /> Clear
+                      </button>
+                    )}
+                  </div>
 
-            {/* Bulk action bar */}
-            {selectedIds.size > 0 && (
-              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] animate-in slide-in-from-top-1">
-                <span className="text-xs font-medium text-[#2563EB]">{selectedIds.size} selected</span>
-                <div className="flex-1" />
-                <div className="relative">
-                  <button onClick={() => setShowDmPicker(!showDmPicker)} disabled={bulkLoading}
-                    className="btn-secondary text-xs flex items-center gap-1.5 px-3 py-1.5">
-                    <MessageSquare size={12} /> DM
-                    <ChevronRight size={10} className={`transition-transform ${showDmPicker ? "rotate-90" : ""}`} />
-                  </button>
-                  {showDmPicker && (
-                    <div className="absolute top-full left-0 mt-1 bg-surface border border-border rounded-lg p-1 shadow-xl z-20 min-w-[160px]">
-                      {DM_PLATFORMS.map(p => (
-                        <button key={p.id} onClick={() => handleBulkOutreach("dm", p.id)}
-                          className="w-full text-left flex items-center gap-2 px-3 py-2 text-xs hover:bg-[rgba(0,0,0,0.03)] rounded-md">
-                          {p.icon} {p.label}
+                  {/* Bulk action bar */}
+                  {selectedIds.size > 0 && (
+                    <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] animate-in slide-in-from-top-1">
+                      <span className="text-xs font-medium text-[#2563EB]">{selectedIds.size} selected</span>
+                      <div className="flex-1" />
+                      <div className="relative">
+                        <button onClick={() => setShowDmPicker(!showDmPicker)} disabled={bulkLoading}
+                          className="btn-secondary text-xs flex items-center gap-1.5 px-3 py-1.5">
+                          <MessageSquare size={12} /> DM
+                          <ChevronRight size={10} className={`transition-transform ${showDmPicker ? "rotate-90" : ""}`} />
                         </button>
+                        {showDmPicker && (
+                          <div className="absolute top-full left-0 mt-1 bg-surface border border-border rounded-lg p-1 shadow-xl z-20 min-w-[160px]">
+                            {DM_PLATFORMS.map(p => (
+                              <button key={p.id} onClick={() => handleBulkOutreach("dm", p.id)}
+                                className="w-full text-left flex items-center gap-2 px-3 py-2 text-xs hover:bg-[rgba(0,0,0,0.03)] rounded-md">
+                                {p.icon} {p.label}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <button onClick={() => handleBulkOutreach("call")} disabled={bulkLoading}
+                        className="btn-secondary text-xs flex items-center gap-1.5 px-3 py-1.5">
+                        <PhoneCall size={12} /> Call
+                      </button>
+                      <button onClick={() => handleBulkOutreach("sms")} disabled={bulkLoading}
+                        className="btn-secondary text-xs flex items-center gap-1.5 px-3 py-1.5">
+                        <Phone size={12} /> SMS
+                      </button>
+                      <button onClick={handleBulkDelete} disabled={bulkLoading}
+                        className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20">
+                        <Trash2 size={12} /> Delete
+                      </button>
+                      <button onClick={() => setSelectedIds(new Set())}
+                        className="text-xs text-muted hover:text-foreground px-2 py-1.5">
+                        <X size={12} />
+                      </button>
+                      {bulkLoading && <Loader2 size={14} className="animate-spin text-[#2563EB]" />}
+                    </div>
+                  )}
+
+                  {/* Entries */}
+                  {loading ? (
+                    <div className="flex items-center justify-center py-16">
+                      <Loader2 size={20} className="animate-spin text-[#2563EB]" />
+                      <span className="ml-2 text-xs text-muted">Loading outreach data...</span>
+                    </div>
+                  ) : entries.length === 0 ? (
+                    <EmptyState
+                      type="no-campaigns"
+                      title="No outreach entries found"
+                      description="Send emails, SMS, or calls from the CRM to see them here."
+                    />
+                  ) : viewMode === "compact" ? (
+                    /* -- Compact table view -- */
+                    <div className="card overflow-hidden p-0">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-border text-[9px] text-muted uppercase tracking-wider">
+                            <th className="p-2.5 w-8">
+                              <button onClick={toggleAll} className={`w-4 h-4 rounded border flex items-center justify-center ${
+                                allSelected ? "bg-[#2563EB] border-[#2563EB]" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(37,99,235,0.25)]"
+                              }`}>{allSelected && <Check size={10} className="text-black" />}</button>
+                            </th>
+                            <th className="p-2.5 text-left w-8">Ch</th>
+                            <th className="p-2.5 text-left">Business</th>
+                            <th className="p-2.5 text-left">Recipient</th>
+                            <th className="p-2.5 text-left">Message Preview</th>
+                            <th className="p-2.5 text-center">Status</th>
+                            <th className="p-2.5 text-center">Reply</th>
+                            <th className="p-2.5 text-right">Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {entries.map(entry => {
+                            const isSelected = selectedIds.has(entry.id);
+                            const isActive = detailEntry?.id === entry.id;
+                            const date = new Date(entry.created_at);
+                            const hasReply = !!entry.reply_text;
+                            return (
+                              <tr key={entry.id}
+                                onClick={() => openDetail(entry)}
+                                className={`border-b border-border/50 text-[11px] transition-colors cursor-pointer ${
+                                  isActive ? "bg-[rgba(37,99,235,0.05)] border-l-2 border-l-[#2563EB]" :
+                                  isSelected ? "bg-[rgba(37,99,235,0.05)]" : "hover:bg-[rgba(0,0,0,0.04)]"
+                                }`}>
+                                <td className="p-2.5" onClick={e => e.stopPropagation()}>
+                                  <button onClick={() => toggleOne(entry.id)} className={`w-4 h-4 rounded border flex items-center justify-center ${
+                                    isSelected ? "bg-[#2563EB] border-[#2563EB]" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(37,99,235,0.25)]"
+                                  }`}>{isSelected && <Check size={10} className="text-black" />}</button>
+                                </td>
+                                <td className="p-2.5">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-muted" />}</td>
+                                <td className="p-2.5 font-medium max-w-[140px] truncate">
+                                  <span className="flex items-center gap-1.5">
+                                    <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${getSentimentColor(entry.status)}`} />
+                                    {entry.business_name || "�"}
+                                  </span>
+                                </td>
+                                <td className="p-2.5 text-muted font-mono text-[10px] max-w-[120px] truncate">{entry.recipient_handle || "�"}</td>
+                                <td className="p-2.5 text-muted max-w-[220px] truncate">
+                                  {entry.platform === "call" ? (
+                                    <span className="flex items-center gap-1"><PhoneCall size={10} className="text-emerald-400" /> AI Call � click for transcript</span>
+                                  ) : entry.message_text?.substring(0, 80) || "�"}
+                                </td>
+                                <td className="p-2.5 text-center">
+                                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-[rgba(0,0,0,0.04)] text-muted"}`}>
+                                    {entry.status}
+                                  </span>
+                                </td>
+                                <td className="p-2.5 text-center">
+                                  {hasReply ? (
+                                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-green-400/10 text-green-400">Yes</span>
+                                  ) : (
+                                    <span className="text-[9px] text-muted">�</span>
+                                  )}
+                                </td>
+                                <td className="p-2.5 text-right text-[10px] text-muted whitespace-nowrap">
+                                  {date.toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
+                                  <span className="ml-1 opacity-50">{date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</span>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    /* -- Detailed card view -- */
+                    <div className="space-y-2">
+                      {entries.map(entry => {
+                        const isSelected = selectedIds.has(entry.id);
+                        const isActive = detailEntry?.id === entry.id;
+                        const date = new Date(entry.created_at);
+                        return (
+                          <div key={entry.id}
+                            onClick={() => openDetail(entry)}
+                            className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                              isActive ? "bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.25)]" :
+                              isSelected ? "bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.2)]" :
+                              entry.status === "replied" || entry.status === "interested" ? "bg-green-400/[0.02] border-green-400/10" :
+                              entry.status === "failed" || entry.status === "bounced" ? "bg-red-400/[0.02] border-red-400/10" :
+                              "bg-surface-light border-border hover:border-[rgba(0,0,0,0.08)]"
+                            }`}>
+                            <div className="flex items-center gap-3">
+                              <button onClick={e => { e.stopPropagation(); toggleOne(entry.id); }} className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center ${
+                                isSelected ? "bg-[#2563EB] border-[#2563EB]" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(37,99,235,0.25)]"
+                              }`}>{isSelected && <Check size={10} className="text-black" />}</button>
+
+                              <div className="flex-shrink-0">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-muted" />}</div>
+
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${getSentimentColor(entry.status)}`} />
+                                  <p className="text-xs font-medium truncate">{entry.business_name || "Unknown"}</p>
+                                  <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted capitalize">{entry.platform}</span>
+                                  {entry.reply_text && <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-green-400/10 text-green-400">replied</span>}
+                                </div>
+                                <p className="text-[10px] text-muted truncate mt-0.5">
+                                  <span className="font-mono">{entry.recipient_handle}</span>
+                                  <span className="mx-1.5 opacity-30">�</span>
+                                  {entry.platform === "call" ? "AI Call � click for transcript" : entry.message_text?.substring(0, 100)}
+                                </p>
+                              </div>
+
+                              <div className="flex items-center gap-2 flex-shrink-0">
+                                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-[rgba(0,0,0,0.04)] text-muted"}`}>
+                                  {entry.status}
+                                </span>
+                                <div className="text-right">
+                                  <p className="text-[9px] text-muted">{date.toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}</p>
+                                  <p className="text-[8px] text-muted opacity-60">{date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="flex items-center justify-between pt-2">
+                      <p className="text-[10px] text-muted">
+                        Showing {(page - 1) * pageSize + 1}�{Math.min(page * pageSize, total)} of {total}
+                      </p>
+                      <div className="flex items-center gap-1">
+                        <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
+                          className="btn-secondary text-xs px-2.5 py-1.5 disabled:opacity-30">
+                          <ChevronLeft size={13} />
+                        </button>
+                        {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+                          let pageNum: number;
+                          if (totalPages <= 7) pageNum = i + 1;
+                          else if (page <= 4) pageNum = i + 1;
+                          else if (page >= totalPages - 3) pageNum = totalPages - 6 + i;
+                          else pageNum = page - 3 + i;
+                          return (
+                            <button key={pageNum} onClick={() => setPage(pageNum)}
+                              className={`text-xs px-2.5 py-1.5 rounded-md min-w-[32px] ${
+                                page === pageNum ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground hover:bg-[rgba(0,0,0,0.03)]"
+                              }`}>{pageNum}</button>
+                          );
+                        })}
+                        <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}
+                          className="btn-secondary text-xs px-2.5 py-1.5 disabled:opacity-30">
+                          <ChevronRight size={13} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* -- DETAIL SIDE PANEL -- */}
+                {detailEntry && (
+                  <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full lg:w-[380px] flex-shrink-0 lg:sticky lg:top-4 lg:self-start">
+                    <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+                    <div className="p-5 space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto">
+                      {/* Header */}
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-2">
+                          {PLATFORM_ICON[detailEntry.platform] || <Mail size={16} />}
+                          <div>
+                            <h3 className="text-sm font-semibold">{detailEntry.business_name}</h3>
+                            <p className="text-[10px] text-muted font-mono">{detailEntry.recipient_handle}</p>
+                          </div>
+                        </div>
+                        <button onClick={() => { setDetailEntry(null); setConversationDetail(null); }}
+                          className="text-muted hover:text-foreground"><X size={14} /></button>
+                      </div>
+
+                      {/* Meta */}
+                      <div className="flex flex-wrap gap-2">
+                        <span className={`text-[9px] px-2 py-0.5 rounded-full flex items-center gap-1 ${getSentimentColor(detailEntry.status).replace("bg-", "bg-").replace("-400", "-400/20")} border border-${getSentimentColor(detailEntry.status).replace("bg-", "").replace("-400", "-400/30")}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${getSentimentColor(detailEntry.status)}`} />
+                          <span className={STATUS_STYLE[detailEntry.status]?.split(" ")[1] || "text-muted"}>{detailEntry.status}</span>
+                        </span>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-muted capitalize">{detailEntry.platform}</span>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-muted">
+                          {new Date(detailEntry.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+                        </span>
+                      </div>
+
+                      {/* Outcome tags */}
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-1 text-[9px] text-muted">
+                          <Tag size={9} /> <span>Mark outcome:</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {OUTCOME_TAGS.map(tag => (
+                            <button
+                              key={tag.status}
+                              onClick={() => updateEntryStatus(detailEntry.id, tag.status)}
+                              className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${
+                                detailEntry.status === tag.status
+                                  ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB] font-medium"
+                                  : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.06)] text-muted hover:border-[rgba(0,0,0,0.10)] hover:text-foreground"
+                              }`}
+                            >
+                              <span>{tag.emoji}</span> {tag.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Quick actions */}
+                      <div className="flex gap-1">
+                        {detailEntry.recipient_handle && (
+                          <button onClick={() => copyText(detailEntry.recipient_handle)} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] flex items-center gap-1">
+                            <Copy size={9} /> Copy
+                          </button>
+                        )}
+                        {detailEntry.lead_id && (
+                          <a href={`/dashboard/crm?lead=${detailEntry.lead_id}`} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
+                            <ExternalLink size={9} /> View Lead
+                          </a>
+                        )}
+                      </div>
+
+                      {/* -- AI ANALYSIS -- */}
+                      <AiAnalysisPanel entry={detailEntry} />
+
+                      {/* -- CALL TRANSCRIPT -- */}
+                      {detailEntry.platform === "call" && (
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <PhoneCall size={14} className="text-emerald-400" />
+                            <h4 className="text-xs font-semibold">Call Transcript</h4>
+                          </div>
+
+                          {detailLoading ? (
+                            <div className="flex items-center justify-center py-8">
+                              <Loader2 size={16} className="animate-spin text-[#2563EB]" />
+                              <span className="ml-2 text-[10px] text-muted">Loading transcript...</span>
+                            </div>
+                          ) : conversationDetail ? (
+                            <>
+                              {/* Call stats */}
+                              <div className="grid grid-cols-3 gap-2">
+                                <div className="bg-surface-light rounded-lg p-2 text-center">
+                                  <Clock size={10} className="mx-auto mb-1 text-muted" />
+                                  <p className="text-[10px] font-bold">{formatDuration(conversationDetail.duration)}</p>
+                                  <p className="text-[7px] text-muted">Duration</p>
+                                </div>
+                                <div className="bg-surface-light rounded-lg p-2 text-center">
+                                  <Hash size={10} className="mx-auto mb-1 text-muted" />
+                                  <p className="text-[10px] font-bold">{conversationDetail.transcript.length}</p>
+                                  <p className="text-[7px] text-muted">Messages</p>
+                                </div>
+                                <div className="bg-surface-light rounded-lg p-2 text-center">
+                                  <span className={`text-[10px] font-bold ${
+                                    conversationDetail.outcome === "interested" ? "text-green-400" :
+                                    conversationDetail.outcome === "not_interested" ? "text-red-400" : "text-muted"
+                                  }`}>{conversationDetail.outcome}</span>
+                                  <p className="text-[7px] text-muted">Outcome</p>
+                                </div>
+                              </div>
+
+                              {/* Summary */}
+                              {conversationDetail.summary && (
+                                <div className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg p-2.5">
+                                  <p className="text-[9px] text-muted uppercase tracking-wider mb-1">AI Summary</p>
+                                  <p className="text-[10px] leading-relaxed">{conversationDetail.summary}</p>
+                                </div>
+                              )}
+
+                              {/* Speaking time breakdown */}
+                              {conversationDetail.transcript.length > 0 && (() => {
+                                const agentLines = conversationDetail.transcript.filter(l => l.role === "agent");
+                                const customerLines = conversationDetail.transcript.filter(l => l.role === "customer");
+                                const agentPct = conversationDetail.transcript.length > 0
+                                  ? Math.round((agentLines.length / conversationDetail.transcript.filter(l => l.role !== "system").length) * 100)
+                                  : 0;
+                                return (
+                                  <div className="bg-surface-light rounded-lg p-2.5 space-y-1.5">
+                                    <p className="text-[8px] text-muted uppercase tracking-wider">Speaking Time</p>
+                                    <div className="flex items-center gap-2">
+                                      <div className="flex-1 h-1.5 bg-[rgba(0,0,0,0.04)] rounded-full overflow-hidden">
+                                        <div className="h-full bg-[#2563EB] rounded-full" style={{ width: `${agentPct}%` }} />
+                                      </div>
+                                      <span className="text-[8px] text-[#2563EB]">{agentPct}% AI</span>
+                                    </div>
+                                    <div className="flex justify-between text-[8px] text-muted">
+                                      <span><Bot size={7} className="inline mr-0.5 text-[#2563EB]" /> Agent: {agentLines.length} turns</span>
+                                      <span><User size={7} className="inline mr-0.5 text-blue-400" /> Customer: {customerLines.length} turns</span>
+                                    </div>
+                                  </div>
+                                );
+                              })()}
+
+                              {/* Transcript chat bubbles */}
+                              <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                                {conversationDetail.transcript.map((line, i) => {
+                                  if (line.role === "system") {
+                                    return (
+                                      <div key={i} className="text-center">
+                                        <span className="text-[8px] text-muted italic px-2 py-0.5 rounded bg-[rgba(0,0,0,0.04)]">
+                                          {line.timestamp !== undefined ? `[${formatTimestamp(line.timestamp)}] ` : ""}{line.message}
+                                        </span>
+                                      </div>
+                                    );
+                                  }
+                                  return (
+                                    <div key={i} className={`flex ${line.role === "agent" ? "justify-start" : "justify-end"}`}>
+                                      <div className={`max-w-[85%] rounded-xl px-3 py-2 ${
+                                        line.role === "agent"
+                                          ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.1)] rounded-tl-sm"
+                                          : "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.08)] rounded-tr-sm"
+                                      }`}>
+                                        <div className="flex items-center gap-1 mb-0.5">
+                                          {line.role === "agent" ? <Bot size={8} className="text-[#2563EB]" /> : <User size={8} className="text-blue-400" />}
+                                          <span className={`text-[8px] font-medium ${line.role === "agent" ? "text-[#2563EB]" : "text-blue-400"}`}>
+                                            {line.role === "agent" ? "AI Agent" : "Customer"}
+                                          </span>
+                                          {line.timestamp !== undefined && (
+                                            <span className="ml-auto text-[7px] text-muted font-mono">{formatTimestamp(line.timestamp)}</span>
+                                          )}
+                                        </div>
+                                        <p className="text-[10px] leading-relaxed">{line.message}</p>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                                {conversationDetail.transcript.length === 0 && (
+                                  <p className="text-[10px] text-muted text-center py-4">No transcript available</p>
+                                )}
+                              </div>
+                            </>
+                          ) : (
+                            <div className="text-center py-6">
+                              <PhoneCall size={20} className="mx-auto text-muted mb-2" />
+                              <p className="text-[10px] text-muted">No transcript data available</p>
+                              <p className="text-[8px] text-muted mt-1">Transcript may still be processing</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* -- EMAIL CONTENT -- */}
+                      {detailEntry.platform === "email" && (
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <Mail size={14} className="text-[#2563EB]" />
+                            <h4 className="text-xs font-semibold">Email Content</h4>
+                          </div>
+
+                          {/* Sent message */}
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-1.5 text-[9px] text-muted">
+                              <ArrowRight size={9} className="text-[#2563EB]" /> <span className="font-medium text-[#2563EB]">Sent</span>
+                              <span className="ml-auto">{detailEntry.sent_at ? new Date(detailEntry.sent_at).toLocaleString() : ""}</span>
+                            </div>
+                            <div className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg p-3">
+                              {detailEntry.message_text?.startsWith("Subject:") && (
+                                <p className="text-[10px] font-semibold mb-2 pb-2 border-b border-[rgba(37,99,235,0.1)]">
+                                  {detailEntry.message_text.split("\n")[0]}
+                                </p>
+                              )}
+                              <p className="text-[10px] whitespace-pre-wrap leading-relaxed">
+                                {detailEntry.message_text?.startsWith("Subject:")
+                                  ? detailEntry.message_text.split("\n").slice(2).join("\n")
+                                  : detailEntry.message_text}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Reply */}
+                          {detailEntry.reply_text && (
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-1.5 text-[9px] text-muted">
+                                <ArrowRight size={9} className="text-green-400 rotate-180" /> <span className="font-medium text-green-400">Reply</span>
+                                <span className="ml-auto">{detailEntry.replied_at ? new Date(detailEntry.replied_at).toLocaleString() : ""}</span>
+                              </div>
+                              <div className="bg-green-400/[0.03] border border-green-400/10 rounded-lg p-3">
+                                <p className="text-[10px] whitespace-pre-wrap leading-relaxed">{detailEntry.reply_text}</p>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Thread history */}
+                          {threadEntries.length > 0 && (
+                            <div className="space-y-2 border-t border-border pt-3">
+                              <div className="flex items-center gap-1.5 text-[9px] text-muted">
+                                <MessageSquare size={9} /> <span className="uppercase tracking-wider">Thread History ({threadEntries.length})</span>
+                              </div>
+                              <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                                {[...threadEntries]
+                                  .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+                                  .map(te => (
+                                    <div key={te.id} className="bg-surface-light border border-border rounded-lg p-2.5 space-y-1.5">
+                                      <div className="flex items-center justify-between text-[8px] text-muted">
+                                        <span className="flex items-center gap-1">
+                                          <ArrowRight size={8} className="text-[#2563EB]" />
+                                          <span className="font-medium text-[#2563EB]">Sent</span>
+                                        </span>
+                                        <span className={`px-1.5 py-0.5 rounded-full ${STATUS_STYLE[te.status] || "bg-[rgba(0,0,0,0.04)] text-muted"}`}>{te.status}</span>
+                                        <span>{new Date(te.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+                                      </div>
+                                      {te.message_text?.startsWith("Subject:") && (
+                                        <p className="text-[9px] font-semibold text-muted">{te.message_text.split("\n")[0]}</p>
+                                      )}
+                                      <p className="text-[9px] text-muted line-clamp-2">
+                                        {te.message_text?.startsWith("Subject:")
+                                          ? te.message_text.split("\n").slice(2).join(" ").substring(0, 150)
+                                          : te.message_text?.substring(0, 150)}
+                                      </p>
+                                      {te.reply_text && (
+                                        <div className="bg-green-400/[0.03] border border-green-400/10 rounded p-1.5">
+                                          <p className="text-[8px] font-medium text-green-400 mb-0.5">Reply</p>
+                                          <p className="text-[9px] text-muted line-clamp-2">{te.reply_text.substring(0, 120)}</p>
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* -- SMS / DM CONTENT -- */}
+                      {(detailEntry.platform === "sms" || detailEntry.platform.includes("dm") || detailEntry.platform === "instagram" || detailEntry.platform === "facebook" || detailEntry.platform === "linkedin" || detailEntry.platform === "tiktok") && (
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            {detailEntry.platform === "sms" ? <Phone size={14} className="text-green-400" /> : <MessageSquare size={14} className="text-blue-400" />}
+                            <h4 className="text-xs font-semibold">{detailEntry.platform === "sms" ? "SMS" : "DM"} Conversation</h4>
+                          </div>
+
+                          {/* Outbound message */}
+                          <div className="flex justify-end">
+                            <div className="max-w-[85%] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.1)] rounded-xl rounded-tr-sm px-3 py-2">
+                              <div className="flex items-center gap-1 mb-0.5">
+                                <Bot size={8} className="text-[#2563EB]" />
+                                <span className="text-[8px] font-medium text-[#2563EB]">You</span>
+                                <span className="text-[7px] text-muted ml-auto">
+                                  {detailEntry.sent_at ? new Date(detailEntry.sent_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : ""}
+                                </span>
+                              </div>
+                              <p className="text-[10px] leading-relaxed">{detailEntry.message_text}</p>
+                            </div>
+                          </div>
+
+                          {/* Reply */}
+                          {detailEntry.reply_text && (
+                            <div className="flex justify-start">
+                              <div className="max-w-[85%] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.08)] rounded-xl rounded-tl-sm px-3 py-2">
+                                <div className="flex items-center gap-1 mb-0.5">
+                                  <User size={8} className="text-blue-400" />
+                                  <span className="text-[8px] font-medium text-blue-400">{detailEntry.business_name}</span>
+                                  <span className="text-[7px] text-muted ml-auto">
+                                    {detailEntry.replied_at ? new Date(detailEntry.replied_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : ""}
+                                  </span>
+                                </div>
+                                <p className="text-[10px] leading-relaxed">{detailEntry.reply_text}</p>
+                              </div>
+                            </div>
+                          )}
+
+                          {!detailEntry.reply_text && (
+                            <p className="text-[10px] text-muted text-center py-3">No reply received yet</p>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Metadata */}
+                      {detailEntry.metadata && Object.keys(detailEntry.metadata).length > 0 && (
+                        <div className="border-t border-border pt-3">
+                          <p className="text-[9px] text-muted uppercase tracking-wider mb-2">Metadata</p>
+                          <div className="space-y-1">
+                            {Object.entries(detailEntry.metadata).map(([key, val]) => (
+                              <div key={key} className="flex items-center justify-between text-[10px]">
+                                <span className="text-muted">{key}</span>
+                                <span className="font-mono text-[9px]">{String(val).substring(0, 40)}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            )}{/* ---------- ANALYTICS TAB ---------- */}{tab === "analytics" && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }}>
+                    <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+                    <div className="p-5">
+                    <h3 className="text-sm font-semibold mb-3">Volume by Platform</h3>
+                    <div className="space-y-3">
+                      {Object.entries(stats.byPlatform).sort(([,a],[,b]) => b - a).map(([platform, count]) => {
+                        const pct = stats.total > 0 ? (count / stats.total) * 100 : 0;
+                        return (
+                          <div key={platform}>
+                            <div className="flex items-center justify-between text-[10px] mb-1">
+                              <span className="flex items-center gap-1.5 capitalize">{PLATFORM_ICON[platform] || <Mail size={12} />} {platform}</span>
+                              <span className="font-bold">{count} ({pct.toFixed(0)}%)</span>
+                            </div>
+                            <div className="w-full bg-surface-light rounded-full h-2">
+                              <div className="bg-[#2563EB] rounded-full h-2 transition-all" style={{ width: `${Math.max(pct, 2)}%` }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {Object.keys(stats.byPlatform).length === 0 && (
+                        <p className="text-[10px] text-muted text-center py-4">No data yet</p>
+                      )}
+                    </div>
+                    </div>
+                  </motion.div>
+                  <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }}>
+                    <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+                    <div className="p-5">
+                    <h3 className="text-sm font-semibold mb-3">Status Breakdown</h3>
+                    <div className="space-y-3">
+                      {[
+                        { label: "Sent / Delivered", value: stats.sent, color: "bg-blue-400", pct: stats.total > 0 ? (stats.sent / stats.total) * 100 : 0 },
+                        { label: "Replied", value: stats.replied, color: "bg-green-400", pct: stats.total > 0 ? (stats.replied / stats.total) * 100 : 0 },
+                        { label: "Failed / Bounced", value: stats.failed, color: "bg-red-400", pct: stats.total > 0 ? (stats.failed / stats.total) * 100 : 0 },
+                      ].map(s => (
+                        <div key={s.label}>
+                          <div className="flex items-center justify-between text-[10px] mb-1">
+                            <span>{s.label}</span>
+                            <span className="font-bold">{s.value} ({s.pct.toFixed(0)}%)</span>
+                          </div>
+                          <div className="w-full bg-surface-light rounded-full h-2">
+                            <div className={`${s.color} rounded-full h-2 transition-all`} style={{ width: `${Math.max(s.pct, 1)}%` }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    </div>
+                  </motion.div>
+                </div>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                  {[
+                    { icon: <ThumbsUp size={20} className="mx-auto mb-2 text-green-400" />, value: stats.replied, label: "Total Replies", color: "text-green-400" },
+                    { icon: <BarChart3 size={20} className="mx-auto mb-2 text-[#2563EB]" />, value: `${replyRate}%`, label: "Reply Rate", color: "text-[#2563EB]" },
+                    { icon: <ThumbsDown size={20} className="mx-auto mb-2 text-red-400" />, value: stats.failed, label: "Failed/Bounced", color: "text-red-400" },
+                    { icon: <Calendar size={20} className="mx-auto mb-2 text-blue-400" />, value: stats.total, label: "All Time Total", color: "text-blue-400" },
+                  ].map((tile, i) => (
+                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 + i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }}>
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+                      <div className="p-4">
+                        {tile.icon}
+                        <p className={`text-xl font-bold ${tile.color}`}>{tile.value}</p>
+                        <p className="text-[10px] text-muted">{tile.label}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}{/* ---------- PROVISIONING TAB ---------- */}{tab === "provisioning" && (
+              <div className="space-y-6">
+                {/* Active Phone Numbers */}
+                <div className="card space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold flex items-center gap-2"><Phone size={14} className="text-[#2563EB]" /> Active Phone Numbers</h3>
+                    <button onClick={fetchProvisionedNumbers} className="btn-secondary text-xs flex items-center gap-1">
+                      <RefreshCw size={10} className={provLoading ? "animate-spin" : ""} /> Refresh
+                    </button>
+                  </div>
+
+                  {provLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 size={16} className="animate-spin text-[#2563EB]" />
+                    </div>
+                  ) : provNumbers.length === 0 ? (
+                    <div className="text-center py-8 bg-surface-light rounded-xl">
+                      <Phone size={24} className="mx-auto text-muted mb-2" />
+                      <p className="text-xs text-muted">No phone numbers provisioned yet</p>
+                      <p className="text-[10px] text-muted mt-1">Buy a Twilio number below to start making calls & sending SMS</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {provNumbers.map((num, i) => (
+                        <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
+                          <div className="w-8 h-8 rounded-lg bg-green-400/10 flex items-center justify-center">
+                            <Phone size={14} className="text-green-400" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold font-mono">{num.phone_number}</p>
+                            <p className="text-[9px] text-muted">{num.client_name || "System"}</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {num.agent_id && (
+                              <span className="text-[8px] px-2 py-0.5 rounded-full bg-emerald-400/10 text-emerald-400 flex items-center gap-1">
+                                <Bot size={8} /> AI Agent
+                              </span>
+                            )}
+                            <span className="text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
+                              <Wifi size={8} /> Active
+                            </span>
+                            <button onClick={() => copyText(num.phone_number)} className="p-1 hover:bg-[rgba(0,0,0,0.03)] rounded">
+                              <Copy size={10} className="text-muted" />
+                            </button>
+                          </div>
+                        </div>
                       ))}
                     </div>
                   )}
                 </div>
-                <button onClick={() => handleBulkOutreach("call")} disabled={bulkLoading}
-                  className="btn-secondary text-xs flex items-center gap-1.5 px-3 py-1.5">
-                  <PhoneCall size={12} /> Call
-                </button>
-                <button onClick={() => handleBulkOutreach("sms")} disabled={bulkLoading}
-                  className="btn-secondary text-xs flex items-center gap-1.5 px-3 py-1.5">
-                  <Phone size={12} /> SMS
-                </button>
-                <button onClick={handleBulkDelete} disabled={bulkLoading}
-                  className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20">
-                  <Trash2 size={12} /> Delete
-                </button>
-                <button onClick={() => setSelectedIds(new Set())}
-                  className="text-xs text-muted hover:text-foreground px-2 py-1.5">
-                  <X size={12} />
-                </button>
-                {bulkLoading && <Loader2 size={14} className="animate-spin text-[#2563EB]" />}
-              </div>
-            )}
 
-            {/* Entries */}
-            {loading ? (
-              <div className="flex items-center justify-center py-16">
-                <Loader2 size={20} className="animate-spin text-[#2563EB]" />
-                <span className="ml-2 text-xs text-muted">Loading outreach data...</span>
-              </div>
-            ) : entries.length === 0 ? (
-              <EmptyState
-                type="no-campaigns"
-                title="No outreach entries found"
-                description="Send emails, SMS, or calls from the CRM to see them here."
-              />
-            ) : viewMode === "compact" ? (
-              /* -- Compact table view -- */
-              <div className="card overflow-hidden p-0">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-border text-[9px] text-muted uppercase tracking-wider">
-                      <th className="p-2.5 w-8">
-                        <button onClick={toggleAll} className={`w-4 h-4 rounded border flex items-center justify-center ${
-                          allSelected ? "bg-[#2563EB] border-[#2563EB]" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(37,99,235,0.25)]"
-                        }`}>{allSelected && <Check size={10} className="text-black" />}</button>
-                      </th>
-                      <th className="p-2.5 text-left w-8">Ch</th>
-                      <th className="p-2.5 text-left">Business</th>
-                      <th className="p-2.5 text-left">Recipient</th>
-                      <th className="p-2.5 text-left">Message Preview</th>
-                      <th className="p-2.5 text-center">Status</th>
-                      <th className="p-2.5 text-center">Reply</th>
-                      <th className="p-2.5 text-right">Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {entries.map(entry => {
-                      const isSelected = selectedIds.has(entry.id);
-                      const isActive = detailEntry?.id === entry.id;
-                      const date = new Date(entry.created_at);
-                      const hasReply = !!entry.reply_text;
-                      return (
-                        <tr key={entry.id}
-                          onClick={() => openDetail(entry)}
-                          className={`border-b border-border/50 text-[11px] transition-colors cursor-pointer ${
-                            isActive ? "bg-[rgba(37,99,235,0.05)] border-l-2 border-l-[#2563EB]" :
-                            isSelected ? "bg-[rgba(37,99,235,0.05)]" : "hover:bg-[rgba(0,0,0,0.04)]"
-                          }`}>
-                          <td className="p-2.5" onClick={e => e.stopPropagation()}>
-                            <button onClick={() => toggleOne(entry.id)} className={`w-4 h-4 rounded border flex items-center justify-center ${
-                              isSelected ? "bg-[#2563EB] border-[#2563EB]" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(37,99,235,0.25)]"
-                            }`}>{isSelected && <Check size={10} className="text-black" />}</button>
-                          </td>
-                          <td className="p-2.5">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-muted" />}</td>
-                          <td className="p-2.5 font-medium max-w-[140px] truncate">
-                            <span className="flex items-center gap-1.5">
-                              <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${getSentimentColor(entry.status)}`} />
-                              {entry.business_name || "�"}
-                            </span>
-                          </td>
-                          <td className="p-2.5 text-muted font-mono text-[10px] max-w-[120px] truncate">{entry.recipient_handle || "�"}</td>
-                          <td className="p-2.5 text-muted max-w-[220px] truncate">
-                            {entry.platform === "call" ? (
-                              <span className="flex items-center gap-1"><PhoneCall size={10} className="text-emerald-400" /> AI Call � click for transcript</span>
-                            ) : entry.message_text?.substring(0, 80) || "�"}
-                          </td>
-                          <td className="p-2.5 text-center">
-                            <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-[rgba(0,0,0,0.04)] text-muted"}`}>
-                              {entry.status}
-                            </span>
-                          </td>
-                          <td className="p-2.5 text-center">
-                            {hasReply ? (
-                              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-green-400/10 text-green-400">Yes</span>
-                            ) : (
-                              <span className="text-[9px] text-muted">�</span>
-                            )}
-                          </td>
-                          <td className="p-2.5 text-right text-[10px] text-muted whitespace-nowrap">
-                            {date.toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
-                            <span className="ml-1 opacity-50">{date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</span>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              /* -- Detailed card view -- */
-              <div className="space-y-2">
-                {entries.map(entry => {
-                  const isSelected = selectedIds.has(entry.id);
-                  const isActive = detailEntry?.id === entry.id;
-                  const date = new Date(entry.created_at);
-                  return (
-                    <div key={entry.id}
-                      onClick={() => openDetail(entry)}
-                      className={`p-3 rounded-xl border transition-all cursor-pointer ${
-                        isActive ? "bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.25)]" :
-                        isSelected ? "bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.2)]" :
-                        entry.status === "replied" || entry.status === "interested" ? "bg-green-400/[0.02] border-green-400/10" :
-                        entry.status === "failed" || entry.status === "bounced" ? "bg-red-400/[0.02] border-red-400/10" :
-                        "bg-surface-light border-border hover:border-[rgba(0,0,0,0.08)]"
-                      }`}>
-                      <div className="flex items-center gap-3">
-                        <button onClick={e => { e.stopPropagation(); toggleOne(entry.id); }} className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center ${
-                          isSelected ? "bg-[#2563EB] border-[#2563EB]" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(37,99,235,0.25)]"
-                        }`}>{isSelected && <Check size={10} className="text-black" />}</button>
+                {/* Buy New Number */}
+                <div className="card space-y-4">
+                  <h3 className="text-sm font-semibold flex items-center gap-2"><Plus size={14} className="text-[#2563EB]" /> Buy Phone Number</h3>
+                  <p className="text-[10px] text-muted">Purchase a Twilio phone number for outbound SMS & AI calls. Numbers are auto-linked to ElevenLabs for AI calling.</p>
 
-                        <div className="flex-shrink-0">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-muted" />}</div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[10px] text-muted mb-1 block">Client</label>
+                      <select value={provClientId} onChange={e => setProvClientId(e.target.value)}
+                        className="input w-full text-xs">
+                        <option value="">Select client...</option>
+                        {clients.map(c => (
+                          <option key={c.id} value={c.id}>{c.business_name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-muted mb-1 block">Area Code</label>
+                      <div className="flex gap-2">
+                        <input value={areaCode} onChange={e => setAreaCode(e.target.value.replace(/\D/g, "").slice(0, 3))}
+                          placeholder="305"
+                          className="input flex-1 text-xs font-mono"
+                          maxLength={3} />
+                        <button onClick={searchAvailableNumbers} disabled={searchingNumbers || !areaCode}
+                          className="btn-primary text-xs flex items-center gap-1 px-4">
+                          {searchingNumbers ? <Loader2 size={12} className="animate-spin" /> : <Search size={12} />} Search
+                        </button>
+                      </div>
+                    </div>
+                  </div>
 
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className={`w-2 h-2 rounded-full flex-shrink-0 ${getSentimentColor(entry.status)}`} />
-                            <p className="text-xs font-medium truncate">{entry.business_name || "Unknown"}</p>
-                            <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted capitalize">{entry.platform}</span>
-                            {entry.reply_text && <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-green-400/10 text-green-400">replied</span>}
+                  {/* Available numbers */}
+                  {availableNumbers.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-[10px] text-muted">{availableNumbers.length} numbers available:</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[300px] overflow-y-auto">
+                        {availableNumbers.map((num, i) => (
+                          <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg bg-surface-light border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
+                            <PhoneForwarded size={12} className="text-green-400 flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-mono font-semibold">{num.phone}</p>
+                              <p className="text-[9px] text-muted truncate">{num.locality}{num.locality && num.region ? ", " : ""}{num.region}</p>
+                            </div>
+                            <button onClick={() => buyNumber(num.phone)} disabled={buyingNumber === num.phone || !provClientId}
+                              className="text-[9px] px-3 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#2563EB]/90 disabled:opacity-30 flex items-center gap-1">
+                              {buyingNumber === num.phone ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />} Buy
+                            </button>
                           </div>
-                          <p className="text-[10px] text-muted truncate mt-0.5">
-                            <span className="font-mono">{entry.recipient_handle}</span>
-                            <span className="mx-1.5 opacity-30">�</span>
-                            {entry.platform === "call" ? "AI Call � click for transcript" : entry.message_text?.substring(0, 100)}
-                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Email Configuration */}
+                <div className="card space-y-4">
+                  <h3 className="text-sm font-semibold flex items-center gap-2"><Mail size={14} className="text-[#2563EB]" /> Email Configuration</h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {/* Resend status */}
+                    <div className="p-3 rounded-xl bg-surface-light border border-border">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-6 h-6 rounded bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                          <Mail size={12} className="text-blue-400" />
                         </div>
-
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-[rgba(0,0,0,0.04)] text-muted"}`}>
-                            {entry.status}
-                          </span>
-                          <div className="text-right">
-                            <p className="text-[9px] text-muted">{date.toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}</p>
-                            <p className="text-[8px] text-muted opacity-60">{date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</p>
-                          </div>
+                        <div>
+                          <p className="text-xs font-semibold">Resend</p>
+                          <p className="text-[9px] text-muted">Transactional emails</p>
+                        </div>
+                        <span className="ml-auto text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
+                          <Shield size={7} /> Connected
+                        </span>
+                      </div>
+                      <div className="space-y-1 text-[10px]">
+                        <div className="flex justify-between">
+                          <span className="text-muted">From</span>
+                          <span className="font-mono">noreply@shortstack.work</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted">Used for</span>
+                          <span>Cold outreach, notifications</span>
                         </div>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            )}
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between pt-2">
-                <p className="text-[10px] text-muted">
-                  Showing {(page - 1) * pageSize + 1}�{Math.min(page * pageSize, total)} of {total}
-                </p>
-                <div className="flex items-center gap-1">
-                  <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
-                    className="btn-secondary text-xs px-2.5 py-1.5 disabled:opacity-30">
-                    <ChevronLeft size={13} />
-                  </button>
-                  {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
-                    let pageNum: number;
-                    if (totalPages <= 7) pageNum = i + 1;
-                    else if (page <= 4) pageNum = i + 1;
-                    else if (page >= totalPages - 3) pageNum = totalPages - 6 + i;
-                    else pageNum = page - 3 + i;
-                    return (
-                      <button key={pageNum} onClick={() => setPage(pageNum)}
-                        className={`text-xs px-2.5 py-1.5 rounded-md min-w-[32px] ${
-                          page === pageNum ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground hover:bg-[rgba(0,0,0,0.03)]"
-                        }`}>{pageNum}</button>
-                    );
-                  })}
-                  <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}
-                    className="btn-secondary text-xs px-2.5 py-1.5 disabled:opacity-30">
-                    <ChevronRight size={13} />
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* -- DETAIL SIDE PANEL -- */}
-          {detailEntry && (
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full lg:w-[380px] flex-shrink-0 lg:sticky lg:top-4 lg:self-start">
-              <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-              <div className="p-5 space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto">
-                {/* Header */}
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
-                    {PLATFORM_ICON[detailEntry.platform] || <Mail size={16} />}
-                    <div>
-                      <h3 className="text-sm font-semibold">{detailEntry.business_name}</h3>
-                      <p className="text-[10px] text-muted font-mono">{detailEntry.recipient_handle}</p>
+                    {/* GHL status */}
+                    <div className="p-3 rounded-xl bg-surface-light border border-border">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-6 h-6 rounded bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                          <Globe size={12} className="text-[#2563EB]" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold">GoHighLevel</p>
+                          <p className="text-[9px] text-muted">CRM email & SMS</p>
+                        </div>
+                        <span className="ml-auto text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
+                          <Shield size={7} /> Connected
+                        </span>
+                      </div>
+                      <div className="space-y-1 text-[10px]">
+                        <div className="flex justify-between">
+                          <span className="text-muted">Used for</span>
+                          <span>Fallback email & SMS</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <button onClick={() => { setDetailEntry(null); setConversationDetail(null); }}
-                    className="text-muted hover:text-foreground"><X size={14} /></button>
-                </div>
 
-                {/* Meta */}
-                <div className="flex flex-wrap gap-2">
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full flex items-center gap-1 ${getSentimentColor(detailEntry.status).replace("bg-", "bg-").replace("-400", "-400/20")} border border-${getSentimentColor(detailEntry.status).replace("bg-", "").replace("-400", "-400/30")}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${getSentimentColor(detailEntry.status)}`} />
-                    <span className={STATUS_STYLE[detailEntry.status]?.split(" ")[1] || "text-muted"}>{detailEntry.status}</span>
-                  </span>
-                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-muted capitalize">{detailEntry.platform}</span>
-                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-muted">
-                    {new Date(detailEntry.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
-                  </span>
-                </div>
-
-                {/* Outcome tags */}
-                <div className="space-y-1.5">
-                  <div className="flex items-center gap-1 text-[9px] text-muted">
-                    <Tag size={9} /> <span>Mark outcome:</span>
+                  {/* Twilio status */}
+                  <div className="p-3 rounded-xl bg-surface-light border border-border">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-6 h-6 rounded bg-red-500/10 flex items-center justify-center">
+                        <Phone size={12} className="text-red-400" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold">Twilio</p>
+                        <p className="text-[9px] text-muted">SMS & voice calling</p>
+                      </div>
+                      <span className="ml-auto text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
+                        <Shield size={7} /> Connected
+                      </span>
+                    </div>
+                    <div className="space-y-1 text-[10px]">
+                      <div className="flex justify-between">
+                        <span className="text-muted">Numbers</span>
+                        <span>{provNumbers.length} provisioned</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted">Used for</span>
+                        <span>Outbound SMS, AI calls via ElevenLabs</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-1">
-                    {OUTCOME_TAGS.map(tag => (
-                      <button
-                        key={tag.status}
-                        onClick={() => updateEntryStatus(detailEntry.id, tag.status)}
-                        className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${
-                          detailEntry.status === tag.status
-                            ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB] font-medium"
-                            : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.06)] text-muted hover:border-[rgba(0,0,0,0.10)] hover:text-foreground"
-                        }`}
-                      >
-                        <span>{tag.emoji}</span> {tag.label}
+
+                  {/* ElevenLabs status */}
+                  <div className="p-3 rounded-xl bg-surface-light border border-border">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-6 h-6 rounded bg-emerald-500/10 flex items-center justify-center">
+                        <Bot size={12} className="text-emerald-400" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold">ElevenLabs</p>
+                        <p className="text-[9px] text-muted">AI voice agents</p>
+                      </div>
+                      <span className="ml-auto text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
+                        <Shield size={7} /> Connected
+                      </span>
+                    </div>
+                    <div className="space-y-1 text-[10px]">
+                      <div className="flex justify-between">
+                        <span className="text-muted">Used for</span>
+                        <span>AI cold calls, voice receptionist</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted">Linked to</span>
+                        <span>Twilio phone numbers</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}{/* ---------- CONFIG TAB ---------- */}{tab === "config" && (
+              <div className="space-y-5">
+
+                {/* -- Section 1: Lead Scraping -- */}
+                <div className="card space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold flex items-center gap-2">
+                      <Radar size={14} className="text-[#2563EB]" /> Lead Scraping Configuration
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      {scraperResult && (
+                        <span className="text-[10px] px-2 py-1 rounded-lg bg-green-400/10 text-green-400 border border-green-400/20 flex items-center gap-1">
+                          <CheckCircle size={10} /> {scraperResult.leads_found} found � {scraperResult.duplicates_skipped} skipped
+                        </span>
+                      )}
+                      <button onClick={runScraper} disabled={scraperRunning}
+                        className="btn-primary text-xs flex items-center gap-1.5 px-4">
+                        {scraperRunning ? <Loader2 size={12} className="animate-spin" /> : <Radar size={12} />}
+                        {scraperRunning ? "Running�" : "Run Scraper Now"}
                       </button>
+                    </div>
+                  </div>
+
+                  {/* Platforms to scrape */}
+                  <div>
+                    <p className="text-[10px] text-muted mb-2 uppercase tracking-wider">Platforms to scrape from</p>
+                    <div className="flex gap-2 flex-wrap">
+                      {[
+                        { id: "google_maps", label: "Google Maps", icon: <MapPin size={12} className="text-blue-400" /> },
+                        { id: "facebook", label: "Facebook", icon: <FacebookIcon size={12} /> },
+                        { id: "yelp", label: "Yelp", icon: <Star size={12} className="text-red-400" /> },
+                      ].map(pl => {
+                        const active = config.scrape_platforms.includes(pl.id);
+                        return (
+                          <button key={pl.id} onClick={() => toggleScrapePlatform(pl.id)}
+                            className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-all ${
+                              active ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
+                            }`}>
+                            {pl.icon} {pl.label}
+                            {active && <Check size={10} className="ml-0.5" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Niches */}
+                    <div>
+                      <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Niches / Industries</p>
+                      <div className="flex flex-wrap gap-1.5 mb-2 min-h-[36px] p-2 rounded-lg bg-surface-light border border-border">
+                        {config.scrape_niches.map((n: string) => (
+                          <span key={n} className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]">
+                            {n}
+                            <button onClick={() => removeTag("scrape_niches", n)} className="hover:text-white transition-colors ml-0.5">
+                              <X size={9} />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                      <input value={nicheInput} onChange={e => setNicheInput(e.target.value)}
+                        onKeyDown={e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag("scrape_niches", nicheInput); setNicheInput(""); } }}
+                        placeholder="Type a niche and press Enter�"
+                        aria-label="Add scrape niche"
+                        className="input w-full text-xs py-1.5" />
+                      <div className="flex flex-wrap gap-1 mt-1.5">
+                        {["Dentist","Med Spa","Plumber","HVAC","Roofing","Real Estate","Restaurant","Gym/Fitness","Salon/Barber","Auto Repair","Chiropractor","Lawyer","Accountant","Landscaping","Cleaning Services","Photography","Pet Services","Home Services"].filter((p: string) => !config.scrape_niches.includes(p)).slice(0, 10).map((preset: string) => (
+                          <button key={preset} onClick={() => addTag("scrape_niches", preset)}
+                            className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted hover:bg-[rgba(0,0,0,0.06)] hover:text-foreground transition-colors">
+                            + {preset}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Locations */}
+                    <div>
+                      <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Locations</p>
+                      <div className="flex flex-wrap gap-1.5 mb-2 min-h-[36px] p-2 rounded-lg bg-surface-light border border-border">
+                        {config.scrape_locations.map((loc: string) => (
+                          <span key={loc} className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-blue-400/10 text-blue-400 border border-blue-400/20">
+                            <MapPin size={8} /> {loc}
+                            <button onClick={() => removeTag("scrape_locations", loc)} className="hover:text-white transition-colors ml-0.5">
+                              <X size={9} />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                      <input value={locationInput} onChange={e => setLocationInput(e.target.value)}
+                        onKeyDown={e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag("scrape_locations", locationInput); setLocationInput(""); } }}
+                        placeholder="e.g. Miami, FL � press Enter�"
+                        className="input w-full text-xs py-1.5" />
+                    </div>
+                  </div>
+
+                  {/* Volume + Filters */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Volume per search</p>
+                      <div className="flex items-center gap-3">
+                        <input type="range" min={5} max={50} step={5} value={config.scrape_volume}
+                          onChange={e => setConfig(c => ({ ...c, scrape_volume: Number(e.target.value) }))}
+                          className="flex-1 accent-yellow-400" />
+                        <span className="text-xs font-bold w-8 text-center text-[#2563EB]">{config.scrape_volume}</span>
+                        <span className="text-[9px] text-muted">leads</span>
+                      </div>
+                      <p className="text-[9px] text-muted mt-1">Max 50 per niche/location combo</p>
+                    </div>
+
+                    <div>
+                      <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Filters</p>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-muted flex-1">Min Google rating</span>
+                          <input type="number" min={0} max={5} step={0.5} value={config.scrape_filters.min_rating}
+                            onChange={e => setConfig(c => ({ ...c, scrape_filters: { ...c.scrape_filters, min_rating: Number(e.target.value) } }))}
+                            className="input w-16 text-xs text-center py-1" />
+                          <Star size={10} className="text-yellow-400" />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-muted flex-1">Max reviews</span>
+                          <input type="number" min={0} max={10000} step={50} value={config.scrape_filters.max_reviews}
+                            onChange={e => setConfig(c => ({ ...c, scrape_filters: { ...c.scrape_filters, max_reviews: Number(e.target.value) } }))}
+                            className="input w-20 text-xs text-center py-1" />
+                        </div>
+                        {([
+                          { key: "require_phone" as const, label: "Require phone number" },
+                          { key: "require_website" as const, label: "Require website" },
+                        ] as { key: "require_phone" | "require_website"; label: string }[]).map(f => (
+                          <div key={f.key} className="flex items-center gap-2">
+                            <button onClick={() => setConfig(c => ({ ...c, scrape_filters: { ...c.scrape_filters, [f.key]: !c.scrape_filters[f.key] } }))}
+                              className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${config.scrape_filters[f.key] ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.06)]"}`}>
+                              <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${config.scrape_filters[f.key] ? "translate-x-3" : "translate-x-0"}`} />
+                            </button>
+                            <span className="text-[10px] text-muted">{f.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* -- Section 2: Daily Outreach Targets -- */}
+                <div className="card space-y-4">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <Sliders size={14} className="text-[#2563EB]" /> Daily Outreach Targets
+                  </h3>
+
+                  {/* Spam guard banner */}
+                  <div className={`flex items-center gap-3 p-2.5 rounded-lg border ${spamGuardEnabled ? "bg-green-400/[0.04] border-green-400/20" : "bg-orange-400/[0.04] border-orange-400/20"}`}>
+                    <Shield size={13} className={spamGuardEnabled ? "text-green-400" : "text-orange-400"} />
+                    <div className="flex-1">
+                      <p className="text-[10px] font-medium">Spam Guard is {spamGuardEnabled ? "ON" : "OFF"}</p>
+                      <p className="text-[9px] text-muted">{spamGuardEnabled ? "Hard caps are enforced � effective limits shown below" : "Limits will not be capped � enable in Settings for protection"}</p>
+                    </div>
+                    <a href="/dashboard/settings" className="text-[9px] text-[#2563EB] hover:underline flex items-center gap-0.5">
+                      <ExternalLink size={9} /> Settings
+                    </a>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {([
+                      { key: "email_daily_limit" as const, label: "Email", icon: <Mail size={12} className="text-[#2563EB]" />, max: 500, cap: 500 },
+                      { key: "sms_daily_limit" as const, label: "SMS", icon: <Phone size={12} className="text-green-400" />, max: 300, cap: 300 },
+                      { key: "calls_daily_limit" as const, label: "AI Calls", icon: <PhoneCall size={12} className="text-emerald-400" />, max: 100, cap: 100 },
+                    ] as { key: "email_daily_limit" | "sms_daily_limit" | "calls_daily_limit"; label: string; icon: React.ReactNode; max: number; cap: number }[]).map(ch => {
+                      const val = config[ch.key] as number;
+                      const effective = spamGuardEnabled ? Math.min(val, ch.cap) : val;
+                      return (
+                        <div key={ch.key} className="p-3 rounded-xl bg-surface-light border border-border space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="flex items-center gap-1.5 text-xs font-medium">{ch.icon} {ch.label}</span>
+                            <div className="flex items-center gap-1.5">
+                              <input type="number" min={0} max={ch.max} value={val}
+                                onChange={e => setConfig(c => ({ ...c, [ch.key]: Number(e.target.value) }))}
+                                className="input w-16 text-xs text-center py-1" />
+                              <span className="text-[9px] text-muted">/day</span>
+                            </div>
+                          </div>
+                          <input type="range" min={0} max={ch.max} value={val}
+                            onChange={e => setConfig(c => ({ ...c, [ch.key]: Number(e.target.value) }))}
+                            className="w-full accent-yellow-400" />
+                          {spamGuardEnabled && effective < val && (
+                            <p className="text-[9px] text-orange-400 flex items-center gap-1">
+                              <AlertTriangle size={9} /> Capped at {effective}/day by spam guard
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
+
+                    {/* DM per platform */}
+                    <div className="p-3 rounded-xl bg-surface-light border border-border space-y-2 md:col-span-2">
+                      <p className="text-[10px] text-muted uppercase tracking-wider mb-2">DM Limits per Platform</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {(["instagram", "linkedin", "facebook", "tiktok"] as const).map(p => {
+                          const plat = config.platforms[p] || { enabled: true, daily_limit: 20 };
+                          const dmVal = config.dm_daily_limits[p];
+                          return (
+                            <div key={p} className="flex items-center gap-2 py-1">
+                              <button onClick={() => setConfig(c => ({
+                                ...c,
+                                platforms: { ...c.platforms, [p]: { ...plat, enabled: !plat.enabled } }
+                              }))} className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${plat.enabled ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.06)]"}`}>
+                                <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${plat.enabled ? "translate-x-3" : "translate-x-0"}`} />
+                              </button>
+                              <span className="flex items-center gap-1 text-[10px] flex-1 capitalize">{PLATFORM_ICON[p]} {p}</span>
+                              <input type="number" min={0} max={50} value={dmVal}
+                                onChange={e => setConfig(c => ({ ...c, dm_daily_limits: { ...c.dm_daily_limits, [p]: Number(e.target.value) } }))}
+                                className="input w-14 text-xs text-center py-1" />
+                              <span className="text-[9px] text-muted">/day</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-1 border-t border-border">
+                    <span className="text-xs text-muted flex-1">Total daily target (all channels combined)</span>
+                    <input type="number" value={config.total_daily_target} min={0} max={1000}
+                      onChange={e => setConfig(c => ({ ...c, total_daily_target: Number(e.target.value) }))}
+                      className="input w-20 text-xs text-center py-1.5" />
+                    <span className="text-[9px] text-muted">/day</span>
+                  </div>
+                </div>
+
+                {/* -- Section 3: Schedule & Automation -- */}
+                <div className="card space-y-4">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <Calendar size={14} className="text-[#2563EB]" /> Schedule & Automation
+                  </h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[10px] text-muted mb-1.5 block uppercase tracking-wider">Daily start time</label>
+                      <input type="time" value={config.schedule_time}
+                        onChange={e => setConfig(c => ({ ...c, schedule_time: e.target.value }))}
+                        className="input w-full text-xs py-1.5" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-muted mb-1.5 block uppercase tracking-wider">Timezone</label>
+                      <select value={config.timezone} onChange={e => setConfig(c => ({ ...c, timezone: e.target.value }))}
+                        className="input w-full text-xs py-1.5">
+                        <option value="America/New_York">Eastern (ET)</option>
+                        <option value="America/Chicago">Central (CT)</option>
+                        <option value="America/Denver">Mountain (MT)</option>
+                        <option value="America/Los_Angeles">Pacific (PT)</option>
+                        <option value="America/Anchorage">Alaska (AKT)</option>
+                        <option value="Pacific/Honolulu">Hawaii (HT)</option>
+                        <option value="Europe/London">London (GMT)</option>
+                        <option value="Europe/Paris">Central Europe (CET)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-[10px] text-muted mb-2 uppercase tracking-wider">Message Style</p>
+                    <div className="flex gap-2 flex-wrap">
+                      {[
+                        { val: "professional", label: "Professional", desc: "Formal, business-focused" },
+                        { val: "friendly", label: "Friendly", desc: "Warm, approachable" },
+                        { val: "professional and friendly", label: "Balanced", desc: "Pro + friendly" },
+                        { val: "bold", label: "Bold", desc: "Direct, punchy" },
+                      ].map(s => (
+                        <button key={s.val} onClick={() => setConfig(c => ({ ...c, message_style: s.val }))}
+                          className={`text-left px-3 py-2 rounded-lg border transition-all ${
+                            config.message_style === s.val ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
+                          }`}>
+                          <p className="text-xs font-medium">{s.label}</p>
+                          <p className="text-[9px] opacity-70">{s.desc}</p>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <p className="text-[10px] text-muted uppercase tracking-wider mb-2">Automation Rules</p>
+                    {[
+                      { key: "auto_followup", label: "Auto follow-up sequence", desc: "Automatically send follow-ups on schedule" },
+                      { key: "followup_day_3", label: "Day 3 follow-up", desc: "Send a follow-up 3 days after initial message" },
+                      { key: "followup_day_7", label: "Day 7 follow-up", desc: "Send a follow-up 7 days after initial message" },
+                      { key: "exclude_contacted", label: "Exclude already contacted", desc: "Skip leads you have reached out to before" },
+                      { key: "pause_on_reply", label: "Pause sequence on reply", desc: "Stop automated follow-ups when prospect replies" },
+                    ].map(item => (
+                      <div key={item.key} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light hover:bg-[rgba(0,0,0,0.04)] transition-colors">
+                        <button onClick={() => setConfig(c => ({ ...c, [item.key]: !(c[item.key as keyof typeof c]) }))}
+                          className={`w-8 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${
+                            config[item.key as keyof typeof config] ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.06)]"
+                          }`}>
+                          <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${
+                            config[item.key as keyof typeof config] ? "translate-x-4" : "translate-x-0"
+                          }`} />
+                        </button>
+                        <div className="flex-1">
+                          <p className="text-xs font-medium">{item.label}</p>
+                          <p className="text-[9px] text-muted">{item.desc}</p>
+                        </div>
+                        <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
+                          config[item.key as keyof typeof config] ? "bg-green-400/10 text-green-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
+                        }`}>{config[item.key as keyof typeof config] ? "On" : "Off"}</span>
+                      </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Quick actions */}
-                <div className="flex gap-1">
-                  {detailEntry.recipient_handle && (
-                    <button onClick={() => copyText(detailEntry.recipient_handle)} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] flex items-center gap-1">
-                      <Copy size={9} /> Copy
-                    </button>
-                  )}
-                  {detailEntry.lead_id && (
-                    <a href={`/dashboard/crm?lead=${detailEntry.lead_id}`} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
-                      <ExternalLink size={9} /> View Lead
-                    </a>
-                  )}
-                </div>
+                {/* -- Section 4: Compliance & Safety -- */}
+                <div className="card space-y-4">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <Shield size={14} className="text-[#2563EB]" /> Compliance & Safety
+                  </h3>
 
-                {/* -- AI ANALYSIS -- */}
-                <AiAnalysisPanel entry={detailEntry} />
-
-                {/* -- CALL TRANSCRIPT -- */}
-                {detailEntry.platform === "call" && (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <PhoneCall size={14} className="text-emerald-400" />
-                      <h4 className="text-xs font-semibold">Call Transcript</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {/* Spam guard card */}
+                    <div className={`p-3 rounded-xl border ${spamGuardEnabled ? "bg-green-400/[0.04] border-green-400/20" : "bg-orange-400/[0.04] border-orange-400/20"}`}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${spamGuardEnabled ? "bg-green-400/10" : "bg-orange-400/10"}`}>
+                          <Shield size={13} className={spamGuardEnabled ? "text-green-400" : "text-orange-400"} />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs font-semibold">Spam Guard</p>
+                          <p className="text-[9px] text-muted">Rate-limit protection</p>
+                        </div>
+                        <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium ${spamGuardEnabled ? "bg-green-400/10 text-green-400" : "bg-orange-400/10 text-orange-400"}`}>
+                          {spamGuardEnabled ? "Active" : "Disabled"}
+                        </span>
+                      </div>
+                      <p className="text-[9px] text-muted mb-2">Controls maximum daily send limits to protect sender reputation.</p>
+                      <a href="/dashboard/settings" className="inline-flex items-center gap-1 text-[9px] text-[#2563EB] hover:underline">
+                        <ExternalLink size={9} /> Configure in Settings
+                      </a>
                     </div>
 
-                    {detailLoading ? (
-                      <div className="flex items-center justify-center py-8">
-                        <Loader2 size={16} className="animate-spin text-[#2563EB]" />
-                        <span className="ml-2 text-[10px] text-muted">Loading transcript...</span>
-                      </div>
-                    ) : conversationDetail ? (
-                      <>
-                        {/* Call stats */}
-                        <div className="grid grid-cols-3 gap-2">
-                          <div className="bg-surface-light rounded-lg p-2 text-center">
-                            <Clock size={10} className="mx-auto mb-1 text-muted" />
-                            <p className="text-[10px] font-bold">{formatDuration(conversationDetail.duration)}</p>
-                            <p className="text-[7px] text-muted">Duration</p>
-                          </div>
-                          <div className="bg-surface-light rounded-lg p-2 text-center">
-                            <Hash size={10} className="mx-auto mb-1 text-muted" />
-                            <p className="text-[10px] font-bold">{conversationDetail.transcript.length}</p>
-                            <p className="text-[7px] text-muted">Messages</p>
-                          </div>
-                          <div className="bg-surface-light rounded-lg p-2 text-center">
-                            <span className={`text-[10px] font-bold ${
-                              conversationDetail.outcome === "interested" ? "text-green-400" :
-                              conversationDetail.outcome === "not_interested" ? "text-red-400" : "text-muted"
-                            }`}>{conversationDetail.outcome}</span>
-                            <p className="text-[7px] text-muted">Outcome</p>
-                          </div>
+                    {/* Sender pool health */}
+                    <div className="p-3 rounded-xl bg-surface-light border border-border">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-7 h-7 rounded-lg bg-blue-400/10 flex items-center justify-center">
+                          <Activity size={13} className="text-blue-400" />
                         </div>
-
-                        {/* Summary */}
-                        {conversationDetail.summary && (
-                          <div className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg p-2.5">
-                            <p className="text-[9px] text-muted uppercase tracking-wider mb-1">AI Summary</p>
-                            <p className="text-[10px] leading-relaxed">{conversationDetail.summary}</p>
+                        <div className="flex-1">
+                          <p className="text-xs font-semibold">Sender Pool</p>
+                          <p className="text-[9px] text-muted">Email & SMS health</p>
+                        </div>
+                        {senderStats?.health && (
+                          <span className={`text-[9px] px-2 py-0.5 rounded-full capitalize ${
+                            senderStats.health === "good" ? "bg-green-400/10 text-green-400" :
+                            senderStats.health === "warning" ? "bg-orange-400/10 text-orange-400" :
+                            "bg-red-400/10 text-red-400"
+                          }`}>{senderStats.health}</span>
+                        )}
+                      </div>
+                      <div className="space-y-1.5">
+                        {senderStats ? (
+                          <>
+                            {senderStats.total_senders !== undefined && (
+                              <div className="flex justify-between text-[10px]">
+                                <span className="text-muted">Active senders</span>
+                                <span className="font-medium">{senderStats.total_senders}</span>
+                              </div>
+                            )}
+                            {senderStats.bounce_rate !== undefined && (
+                              <div className="flex justify-between text-[10px]">
+                                <span className="text-muted">Bounce rate</span>
+                                <span className={`font-medium ${(senderStats.bounce_rate ?? 0) > 5 ? "text-orange-400" : "text-green-400"}`}>
+                                  {(senderStats.bounce_rate ?? 0).toFixed(1)}%
+                                </span>
+                              </div>
+                            )}
+                            {senderStats.warmup_stage && (
+                              <div className="flex justify-between text-[10px]">
+                                <span className="text-muted">Warmup stage</span>
+                                <span className="px-1.5 py-0.5 rounded bg-blue-400/10 text-blue-400 text-[9px] capitalize">{senderStats.warmup_stage}</span>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="flex items-center gap-1.5 text-[9px] text-muted py-2">
+                            <Loader2 size={9} className="animate-spin" /> Loading sender stats�
                           </div>
                         )}
-
-                        {/* Speaking time breakdown */}
-                        {conversationDetail.transcript.length > 0 && (() => {
-                          const agentLines = conversationDetail.transcript.filter(l => l.role === "agent");
-                          const customerLines = conversationDetail.transcript.filter(l => l.role === "customer");
-                          const agentPct = conversationDetail.transcript.length > 0
-                            ? Math.round((agentLines.length / conversationDetail.transcript.filter(l => l.role !== "system").length) * 100)
-                            : 0;
-                          return (
-                            <div className="bg-surface-light rounded-lg p-2.5 space-y-1.5">
-                              <p className="text-[8px] text-muted uppercase tracking-wider">Speaking Time</p>
-                              <div className="flex items-center gap-2">
-                                <div className="flex-1 h-1.5 bg-[rgba(0,0,0,0.04)] rounded-full overflow-hidden">
-                                  <div className="h-full bg-[#2563EB] rounded-full" style={{ width: `${agentPct}%` }} />
-                                </div>
-                                <span className="text-[8px] text-[#2563EB]">{agentPct}% AI</span>
-                              </div>
-                              <div className="flex justify-between text-[8px] text-muted">
-                                <span><Bot size={7} className="inline mr-0.5 text-[#2563EB]" /> Agent: {agentLines.length} turns</span>
-                                <span><User size={7} className="inline mr-0.5 text-blue-400" /> Customer: {customerLines.length} turns</span>
-                              </div>
-                            </div>
-                          );
-                        })()}
-
-                        {/* Transcript chat bubbles */}
-                        <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                          {conversationDetail.transcript.map((line, i) => {
-                            if (line.role === "system") {
-                              return (
-                                <div key={i} className="text-center">
-                                  <span className="text-[8px] text-muted italic px-2 py-0.5 rounded bg-[rgba(0,0,0,0.04)]">
-                                    {line.timestamp !== undefined ? `[${formatTimestamp(line.timestamp)}] ` : ""}{line.message}
-                                  </span>
-                                </div>
-                              );
-                            }
-                            return (
-                              <div key={i} className={`flex ${line.role === "agent" ? "justify-start" : "justify-end"}`}>
-                                <div className={`max-w-[85%] rounded-xl px-3 py-2 ${
-                                  line.role === "agent"
-                                    ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.1)] rounded-tl-sm"
-                                    : "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.08)] rounded-tr-sm"
-                                }`}>
-                                  <div className="flex items-center gap-1 mb-0.5">
-                                    {line.role === "agent" ? <Bot size={8} className="text-[#2563EB]" /> : <User size={8} className="text-blue-400" />}
-                                    <span className={`text-[8px] font-medium ${line.role === "agent" ? "text-[#2563EB]" : "text-blue-400"}`}>
-                                      {line.role === "agent" ? "AI Agent" : "Customer"}
-                                    </span>
-                                    {line.timestamp !== undefined && (
-                                      <span className="ml-auto text-[7px] text-muted font-mono">{formatTimestamp(line.timestamp)}</span>
-                                    )}
-                                  </div>
-                                  <p className="text-[10px] leading-relaxed">{line.message}</p>
-                                </div>
-                              </div>
-                            );
-                          })}
-                          {conversationDetail.transcript.length === 0 && (
-                            <p className="text-[10px] text-muted text-center py-4">No transcript available</p>
-                          )}
-                        </div>
-                      </>
-                    ) : (
-                      <div className="text-center py-6">
-                        <PhoneCall size={20} className="mx-auto text-muted mb-2" />
-                        <p className="text-[10px] text-muted">No transcript data available</p>
-                        <p className="text-[8px] text-muted mt-1">Transcript may still be processing</p>
                       </div>
-                    )}
-                  </div>
-                )}
-
-                {/* -- EMAIL CONTENT -- */}
-                {detailEntry.platform === "email" && (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Mail size={14} className="text-[#2563EB]" />
-                      <h4 className="text-xs font-semibold">Email Content</h4>
-                    </div>
-
-                    {/* Sent message */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-1.5 text-[9px] text-muted">
-                        <ArrowRight size={9} className="text-[#2563EB]" /> <span className="font-medium text-[#2563EB]">Sent</span>
-                        <span className="ml-auto">{detailEntry.sent_at ? new Date(detailEntry.sent_at).toLocaleString() : ""}</span>
-                      </div>
-                      <div className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg p-3">
-                        {detailEntry.message_text?.startsWith("Subject:") && (
-                          <p className="text-[10px] font-semibold mb-2 pb-2 border-b border-[rgba(37,99,235,0.1)]">
-                            {detailEntry.message_text.split("\n")[0]}
-                          </p>
-                        )}
-                        <p className="text-[10px] whitespace-pre-wrap leading-relaxed">
-                          {detailEntry.message_text?.startsWith("Subject:")
-                            ? detailEntry.message_text.split("\n").slice(2).join("\n")
-                            : detailEntry.message_text}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Reply */}
-                    {detailEntry.reply_text && (
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-1.5 text-[9px] text-muted">
-                          <ArrowRight size={9} className="text-green-400 rotate-180" /> <span className="font-medium text-green-400">Reply</span>
-                          <span className="ml-auto">{detailEntry.replied_at ? new Date(detailEntry.replied_at).toLocaleString() : ""}</span>
-                        </div>
-                        <div className="bg-green-400/[0.03] border border-green-400/10 rounded-lg p-3">
-                          <p className="text-[10px] whitespace-pre-wrap leading-relaxed">{detailEntry.reply_text}</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Thread history */}
-                    {threadEntries.length > 0 && (
-                      <div className="space-y-2 border-t border-border pt-3">
-                        <div className="flex items-center gap-1.5 text-[9px] text-muted">
-                          <MessageSquare size={9} /> <span className="uppercase tracking-wider">Thread History ({threadEntries.length})</span>
-                        </div>
-                        <div className="space-y-2 max-h-[300px] overflow-y-auto">
-                          {[...threadEntries]
-                            .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-                            .map(te => (
-                              <div key={te.id} className="bg-surface-light border border-border rounded-lg p-2.5 space-y-1.5">
-                                <div className="flex items-center justify-between text-[8px] text-muted">
-                                  <span className="flex items-center gap-1">
-                                    <ArrowRight size={8} className="text-[#2563EB]" />
-                                    <span className="font-medium text-[#2563EB]">Sent</span>
-                                  </span>
-                                  <span className={`px-1.5 py-0.5 rounded-full ${STATUS_STYLE[te.status] || "bg-[rgba(0,0,0,0.04)] text-muted"}`}>{te.status}</span>
-                                  <span>{new Date(te.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
-                                </div>
-                                {te.message_text?.startsWith("Subject:") && (
-                                  <p className="text-[9px] font-semibold text-muted">{te.message_text.split("\n")[0]}</p>
-                                )}
-                                <p className="text-[9px] text-muted line-clamp-2">
-                                  {te.message_text?.startsWith("Subject:")
-                                    ? te.message_text.split("\n").slice(2).join(" ").substring(0, 150)
-                                    : te.message_text?.substring(0, 150)}
-                                </p>
-                                {te.reply_text && (
-                                  <div className="bg-green-400/[0.03] border border-green-400/10 rounded p-1.5">
-                                    <p className="text-[8px] font-medium text-green-400 mb-0.5">Reply</p>
-                                    <p className="text-[9px] text-muted line-clamp-2">{te.reply_text.substring(0, 120)}</p>
-                                  </div>
-                                )}
-                              </div>
-                            ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* -- SMS / DM CONTENT -- */}
-                {(detailEntry.platform === "sms" || detailEntry.platform.includes("dm") || detailEntry.platform === "instagram" || detailEntry.platform === "facebook" || detailEntry.platform === "linkedin" || detailEntry.platform === "tiktok") && (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      {detailEntry.platform === "sms" ? <Phone size={14} className="text-green-400" /> : <MessageSquare size={14} className="text-blue-400" />}
-                      <h4 className="text-xs font-semibold">{detailEntry.platform === "sms" ? "SMS" : "DM"} Conversation</h4>
-                    </div>
-
-                    {/* Outbound message */}
-                    <div className="flex justify-end">
-                      <div className="max-w-[85%] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.1)] rounded-xl rounded-tr-sm px-3 py-2">
-                        <div className="flex items-center gap-1 mb-0.5">
-                          <Bot size={8} className="text-[#2563EB]" />
-                          <span className="text-[8px] font-medium text-[#2563EB]">You</span>
-                          <span className="text-[7px] text-muted ml-auto">
-                            {detailEntry.sent_at ? new Date(detailEntry.sent_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : ""}
-                          </span>
-                        </div>
-                        <p className="text-[10px] leading-relaxed">{detailEntry.message_text}</p>
-                      </div>
-                    </div>
-
-                    {/* Reply */}
-                    {detailEntry.reply_text && (
-                      <div className="flex justify-start">
-                        <div className="max-w-[85%] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.08)] rounded-xl rounded-tl-sm px-3 py-2">
-                          <div className="flex items-center gap-1 mb-0.5">
-                            <User size={8} className="text-blue-400" />
-                            <span className="text-[8px] font-medium text-blue-400">{detailEntry.business_name}</span>
-                            <span className="text-[7px] text-muted ml-auto">
-                              {detailEntry.replied_at ? new Date(detailEntry.replied_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : ""}
-                            </span>
-                          </div>
-                          <p className="text-[10px] leading-relaxed">{detailEntry.reply_text}</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {!detailEntry.reply_text && (
-                      <p className="text-[10px] text-muted text-center py-3">No reply received yet</p>
-                    )}
-                  </div>
-                )}
-
-                {/* Metadata */}
-                {detailEntry.metadata && Object.keys(detailEntry.metadata).length > 0 && (
-                  <div className="border-t border-border pt-3">
-                    <p className="text-[9px] text-muted uppercase tracking-wider mb-2">Metadata</p>
-                    <div className="space-y-1">
-                      {Object.entries(detailEntry.metadata).map(([key, val]) => (
-                        <div key={key} className="flex items-center justify-between text-[10px]">
-                          <span className="text-muted">{key}</span>
-                          <span className="font-mono text-[9px]">{String(val).substring(0, 40)}</span>
-                        </div>
-                      ))}
                     </div>
                   </div>
-                )}
-              </div>
-              </div>
-            </motion.div>
-          )}
-        </div>
-      )}
 
-      {/* ---------- ANALYTICS TAB ---------- */}
-      {tab === "analytics" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }}>
-              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-              <div className="p-5">
-              <h3 className="text-sm font-semibold mb-3">Volume by Platform</h3>
-              <div className="space-y-3">
-                {Object.entries(stats.byPlatform).sort(([,a],[,b]) => b - a).map(([platform, count]) => {
-                  const pct = stats.total > 0 ? (count / stats.total) * 100 : 0;
-                  return (
-                    <div key={platform}>
-                      <div className="flex items-center justify-between text-[10px] mb-1">
-                        <span className="flex items-center gap-1.5 capitalize">{PLATFORM_ICON[platform] || <Mail size={12} />} {platform}</span>
-                        <span className="font-bold">{count} ({pct.toFixed(0)}%)</span>
+                  {/* Bounce rate health bar */}
+                  {senderStats?.bounce_rate !== undefined && (
+                    <div>
+                      <div className="flex justify-between text-[10px] mb-1">
+                        <span className="text-muted">Bounce rate health</span>
+                        <span className={(senderStats.bounce_rate ?? 0) > 5 ? "text-orange-400" : "text-green-400"}>
+                          {(senderStats.bounce_rate ?? 0).toFixed(1)}% � {(senderStats.bounce_rate ?? 0) < 2 ? "Excellent" : (senderStats.bounce_rate ?? 0) < 5 ? "Good" : (senderStats.bounce_rate ?? 0) < 10 ? "Warning" : "Critical"}
+                        </span>
                       </div>
                       <div className="w-full bg-surface-light rounded-full h-2">
-                        <div className="bg-[#2563EB] rounded-full h-2 transition-all" style={{ width: `${Math.max(pct, 2)}%` }} />
+                        <div className={`h-2 rounded-full transition-all ${
+                          (senderStats.bounce_rate ?? 0) < 2 ? "bg-green-400" :
+                          (senderStats.bounce_rate ?? 0) < 5 ? "bg-yellow-400" :
+                          (senderStats.bounce_rate ?? 0) < 10 ? "bg-orange-400" : "bg-red-400"
+                        }`} style={{ width: `${Math.min((senderStats.bounce_rate ?? 0) * 5, 100)}%` }} />
+                      </div>
+                      <div className="flex justify-between text-[8px] text-muted mt-0.5">
+                        <span>0% � ideal</span>
+                        <span>5% � warning</span>
+                        <span>10%+ � critical</span>
                       </div>
                     </div>
-                  );
-                })}
-                {Object.keys(stats.byPlatform).length === 0 && (
-                  <p className="text-[10px] text-muted text-center py-4">No data yet</p>
-                )}
-              </div>
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }}>
-              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-              <div className="p-5">
-              <h3 className="text-sm font-semibold mb-3">Status Breakdown</h3>
-              <div className="space-y-3">
-                {[
-                  { label: "Sent / Delivered", value: stats.sent, color: "bg-blue-400", pct: stats.total > 0 ? (stats.sent / stats.total) * 100 : 0 },
-                  { label: "Replied", value: stats.replied, color: "bg-green-400", pct: stats.total > 0 ? (stats.replied / stats.total) * 100 : 0 },
-                  { label: "Failed / Bounced", value: stats.failed, color: "bg-red-400", pct: stats.total > 0 ? (stats.failed / stats.total) * 100 : 0 },
-                ].map(s => (
-                  <div key={s.label}>
-                    <div className="flex items-center justify-between text-[10px] mb-1">
-                      <span>{s.label}</span>
-                      <span className="font-bold">{s.value} ({s.pct.toFixed(0)}%)</span>
+                  )}
+
+                  {!senderStats && (
+                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)]">
+                      <Building2 size={12} className="text-muted" />
+                      <p className="text-[10px] text-muted">Sender stats will appear here once the API is connected.</p>
                     </div>
-                    <div className="w-full bg-surface-light rounded-full h-2">
-                      <div className={`${s.color} rounded-full h-2 transition-all`} style={{ width: `${Math.max(s.pct, 1)}%` }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              </div>
-            </motion.div>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            {[
-              { icon: <ThumbsUp size={20} className="mx-auto mb-2 text-green-400" />, value: stats.replied, label: "Total Replies", color: "text-green-400" },
-              { icon: <BarChart3 size={20} className="mx-auto mb-2 text-[#2563EB]" />, value: `${replyRate}%`, label: "Reply Rate", color: "text-[#2563EB]" },
-              { icon: <ThumbsDown size={20} className="mx-auto mb-2 text-red-400" />, value: stats.failed, label: "Failed/Bounced", color: "text-red-400" },
-              { icon: <Calendar size={20} className="mx-auto mb-2 text-blue-400" />, value: stats.total, label: "All Time Total", color: "text-blue-400" },
-            ].map((tile, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 + i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }}>
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-                <div className="p-4">
-                  {tile.icon}
-                  <p className={`text-xl font-bold ${tile.color}`}>{tile.value}</p>
-                  <p className="text-[10px] text-muted">{tile.label}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ---------- PROVISIONING TAB ---------- */}
-      {tab === "provisioning" && (
-        <div className="space-y-6">
-          {/* Active Phone Numbers */}
-          <div className="card space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold flex items-center gap-2"><Phone size={14} className="text-[#2563EB]" /> Active Phone Numbers</h3>
-              <button onClick={fetchProvisionedNumbers} className="btn-secondary text-xs flex items-center gap-1">
-                <RefreshCw size={10} className={provLoading ? "animate-spin" : ""} /> Refresh
-              </button>
-            </div>
-
-            {provLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 size={16} className="animate-spin text-[#2563EB]" />
-              </div>
-            ) : provNumbers.length === 0 ? (
-              <div className="text-center py-8 bg-surface-light rounded-xl">
-                <Phone size={24} className="mx-auto text-muted mb-2" />
-                <p className="text-xs text-muted">No phone numbers provisioned yet</p>
-                <p className="text-[10px] text-muted mt-1">Buy a Twilio number below to start making calls & sending SMS</p>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {provNumbers.map((num, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
-                    <div className="w-8 h-8 rounded-lg bg-green-400/10 flex items-center justify-center">
-                      <Phone size={14} className="text-green-400" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs font-semibold font-mono">{num.phone_number}</p>
-                      <p className="text-[9px] text-muted">{num.client_name || "System"}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {num.agent_id && (
-                        <span className="text-[8px] px-2 py-0.5 rounded-full bg-emerald-400/10 text-emerald-400 flex items-center gap-1">
-                          <Bot size={8} /> AI Agent
-                        </span>
-                      )}
-                      <span className="text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
-                        <Wifi size={8} /> Active
-                      </span>
-                      <button onClick={() => copyText(num.phone_number)} className="p-1 hover:bg-[rgba(0,0,0,0.03)] rounded">
-                        <Copy size={10} className="text-muted" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Buy New Number */}
-          <div className="card space-y-4">
-            <h3 className="text-sm font-semibold flex items-center gap-2"><Plus size={14} className="text-[#2563EB]" /> Buy Phone Number</h3>
-            <p className="text-[10px] text-muted">Purchase a Twilio phone number for outbound SMS & AI calls. Numbers are auto-linked to ElevenLabs for AI calling.</p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <label className="text-[10px] text-muted mb-1 block">Client</label>
-                <select value={provClientId} onChange={e => setProvClientId(e.target.value)}
-                  className="input w-full text-xs">
-                  <option value="">Select client...</option>
-                  {clients.map(c => (
-                    <option key={c.id} value={c.id}>{c.business_name}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="text-[10px] text-muted mb-1 block">Area Code</label>
-                <div className="flex gap-2">
-                  <input value={areaCode} onChange={e => setAreaCode(e.target.value.replace(/\D/g, "").slice(0, 3))}
-                    placeholder="305"
-                    className="input flex-1 text-xs font-mono"
-                    maxLength={3} />
-                  <button onClick={searchAvailableNumbers} disabled={searchingNumbers || !areaCode}
-                    className="btn-primary text-xs flex items-center gap-1 px-4">
-                    {searchingNumbers ? <Loader2 size={12} className="animate-spin" /> : <Search size={12} />} Search
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Available numbers */}
-            {availableNumbers.length > 0 && (
-              <div className="space-y-2">
-                <p className="text-[10px] text-muted">{availableNumbers.length} numbers available:</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[300px] overflow-y-auto">
-                  {availableNumbers.map((num, i) => (
-                    <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg bg-surface-light border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
-                      <PhoneForwarded size={12} className="text-green-400 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-mono font-semibold">{num.phone}</p>
-                        <p className="text-[9px] text-muted truncate">{num.locality}{num.locality && num.region ? ", " : ""}{num.region}</p>
-                      </div>
-                      <button onClick={() => buyNumber(num.phone)} disabled={buyingNumber === num.phone || !provClientId}
-                        className="text-[9px] px-3 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#2563EB]/90 disabled:opacity-30 flex items-center gap-1">
-                        {buyingNumber === num.phone ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />} Buy
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Email Configuration */}
-          <div className="card space-y-4">
-            <h3 className="text-sm font-semibold flex items-center gap-2"><Mail size={14} className="text-[#2563EB]" /> Email Configuration</h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {/* Resend status */}
-              <div className="p-3 rounded-xl bg-surface-light border border-border">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-6 h-6 rounded bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
-                    <Mail size={12} className="text-blue-400" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold">Resend</p>
-                    <p className="text-[9px] text-muted">Transactional emails</p>
-                  </div>
-                  <span className="ml-auto text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
-                    <Shield size={7} /> Connected
-                  </span>
-                </div>
-                <div className="space-y-1 text-[10px]">
-                  <div className="flex justify-between">
-                    <span className="text-muted">From</span>
-                    <span className="font-mono">noreply@shortstack.work</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted">Used for</span>
-                    <span>Cold outreach, notifications</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* GHL status */}
-              <div className="p-3 rounded-xl bg-surface-light border border-border">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-6 h-6 rounded bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
-                    <Globe size={12} className="text-[#2563EB]" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold">GoHighLevel</p>
-                    <p className="text-[9px] text-muted">CRM email & SMS</p>
-                  </div>
-                  <span className="ml-auto text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
-                    <Shield size={7} /> Connected
-                  </span>
-                </div>
-                <div className="space-y-1 text-[10px]">
-                  <div className="flex justify-between">
-                    <span className="text-muted">Used for</span>
-                    <span>Fallback email & SMS</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Twilio status */}
-            <div className="p-3 rounded-xl bg-surface-light border border-border">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded bg-red-500/10 flex items-center justify-center">
-                  <Phone size={12} className="text-red-400" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold">Twilio</p>
-                  <p className="text-[9px] text-muted">SMS & voice calling</p>
-                </div>
-                <span className="ml-auto text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
-                  <Shield size={7} /> Connected
-                </span>
-              </div>
-              <div className="space-y-1 text-[10px]">
-                <div className="flex justify-between">
-                  <span className="text-muted">Numbers</span>
-                  <span>{provNumbers.length} provisioned</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted">Used for</span>
-                  <span>Outbound SMS, AI calls via ElevenLabs</span>
-                </div>
-              </div>
-            </div>
-
-            {/* ElevenLabs status */}
-            <div className="p-3 rounded-xl bg-surface-light border border-border">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded bg-emerald-500/10 flex items-center justify-center">
-                  <Bot size={12} className="text-emerald-400" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold">ElevenLabs</p>
-                  <p className="text-[9px] text-muted">AI voice agents</p>
-                </div>
-                <span className="ml-auto text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
-                  <Shield size={7} /> Connected
-                </span>
-              </div>
-              <div className="space-y-1 text-[10px]">
-                <div className="flex justify-between">
-                  <span className="text-muted">Used for</span>
-                  <span>AI cold calls, voice receptionist</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted">Linked to</span>
-                  <span>Twilio phone numbers</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ---------- CONFIG TAB ---------- */}
-      {tab === "config" && (
-        <div className="space-y-5">
-
-          {/* -- Section 1: Lead Scraping -- */}
-          <div className="card space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold flex items-center gap-2">
-                <Radar size={14} className="text-[#2563EB]" /> Lead Scraping Configuration
-              </h3>
-              <div className="flex items-center gap-2">
-                {scraperResult && (
-                  <span className="text-[10px] px-2 py-1 rounded-lg bg-green-400/10 text-green-400 border border-green-400/20 flex items-center gap-1">
-                    <CheckCircle size={10} /> {scraperResult.leads_found} found � {scraperResult.duplicates_skipped} skipped
-                  </span>
-                )}
-                <button onClick={runScraper} disabled={scraperRunning}
-                  className="btn-primary text-xs flex items-center gap-1.5 px-4">
-                  {scraperRunning ? <Loader2 size={12} className="animate-spin" /> : <Radar size={12} />}
-                  {scraperRunning ? "Running�" : "Run Scraper Now"}
-                </button>
-              </div>
-            </div>
-
-            {/* Platforms to scrape */}
-            <div>
-              <p className="text-[10px] text-muted mb-2 uppercase tracking-wider">Platforms to scrape from</p>
-              <div className="flex gap-2 flex-wrap">
-                {[
-                  { id: "google_maps", label: "Google Maps", icon: <MapPin size={12} className="text-blue-400" /> },
-                  { id: "facebook", label: "Facebook", icon: <FacebookIcon size={12} /> },
-                  { id: "yelp", label: "Yelp", icon: <Star size={12} className="text-red-400" /> },
-                ].map(pl => {
-                  const active = config.scrape_platforms.includes(pl.id);
-                  return (
-                    <button key={pl.id} onClick={() => toggleScrapePlatform(pl.id)}
-                      className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-all ${
-                        active ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
-                      }`}>
-                      {pl.icon} {pl.label}
-                      {active && <Check size={10} className="ml-0.5" />}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Niches */}
-              <div>
-                <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Niches / Industries</p>
-                <div className="flex flex-wrap gap-1.5 mb-2 min-h-[36px] p-2 rounded-lg bg-surface-light border border-border">
-                  {config.scrape_niches.map((n: string) => (
-                    <span key={n} className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]">
-                      {n}
-                      <button onClick={() => removeTag("scrape_niches", n)} className="hover:text-white transition-colors ml-0.5">
-                        <X size={9} />
-                      </button>
-                    </span>
-                  ))}
-                </div>
-                <input value={nicheInput} onChange={e => setNicheInput(e.target.value)}
-                  onKeyDown={e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag("scrape_niches", nicheInput); setNicheInput(""); } }}
-                  placeholder="Type a niche and press Enter�"
-                  aria-label="Add scrape niche"
-                  className="input w-full text-xs py-1.5" />
-                <div className="flex flex-wrap gap-1 mt-1.5">
-                  {["Dentist","Med Spa","Plumber","HVAC","Roofing","Real Estate","Restaurant","Gym/Fitness","Salon/Barber","Auto Repair","Chiropractor","Lawyer","Accountant","Landscaping","Cleaning Services","Photography","Pet Services","Home Services"].filter((p: string) => !config.scrape_niches.includes(p)).slice(0, 10).map((preset: string) => (
-                    <button key={preset} onClick={() => addTag("scrape_niches", preset)}
-                      className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted hover:bg-[rgba(0,0,0,0.06)] hover:text-foreground transition-colors">
-                      + {preset}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Locations */}
-              <div>
-                <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Locations</p>
-                <div className="flex flex-wrap gap-1.5 mb-2 min-h-[36px] p-2 rounded-lg bg-surface-light border border-border">
-                  {config.scrape_locations.map((loc: string) => (
-                    <span key={loc} className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-blue-400/10 text-blue-400 border border-blue-400/20">
-                      <MapPin size={8} /> {loc}
-                      <button onClick={() => removeTag("scrape_locations", loc)} className="hover:text-white transition-colors ml-0.5">
-                        <X size={9} />
-                      </button>
-                    </span>
-                  ))}
-                </div>
-                <input value={locationInput} onChange={e => setLocationInput(e.target.value)}
-                  onKeyDown={e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag("scrape_locations", locationInput); setLocationInput(""); } }}
-                  placeholder="e.g. Miami, FL � press Enter�"
-                  className="input w-full text-xs py-1.5" />
-              </div>
-            </div>
-
-            {/* Volume + Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Volume per search</p>
-                <div className="flex items-center gap-3">
-                  <input type="range" min={5} max={50} step={5} value={config.scrape_volume}
-                    onChange={e => setConfig(c => ({ ...c, scrape_volume: Number(e.target.value) }))}
-                    className="flex-1 accent-yellow-400" />
-                  <span className="text-xs font-bold w-8 text-center text-[#2563EB]">{config.scrape_volume}</span>
-                  <span className="text-[9px] text-muted">leads</span>
-                </div>
-                <p className="text-[9px] text-muted mt-1">Max 50 per niche/location combo</p>
-              </div>
-
-              <div>
-                <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Filters</p>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-muted flex-1">Min Google rating</span>
-                    <input type="number" min={0} max={5} step={0.5} value={config.scrape_filters.min_rating}
-                      onChange={e => setConfig(c => ({ ...c, scrape_filters: { ...c.scrape_filters, min_rating: Number(e.target.value) } }))}
-                      className="input w-16 text-xs text-center py-1" />
-                    <Star size={10} className="text-yellow-400" />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-muted flex-1">Max reviews</span>
-                    <input type="number" min={0} max={10000} step={50} value={config.scrape_filters.max_reviews}
-                      onChange={e => setConfig(c => ({ ...c, scrape_filters: { ...c.scrape_filters, max_reviews: Number(e.target.value) } }))}
-                      className="input w-20 text-xs text-center py-1" />
-                  </div>
-                  {([
-                    { key: "require_phone" as const, label: "Require phone number" },
-                    { key: "require_website" as const, label: "Require website" },
-                  ] as { key: "require_phone" | "require_website"; label: string }[]).map(f => (
-                    <div key={f.key} className="flex items-center gap-2">
-                      <button onClick={() => setConfig(c => ({ ...c, scrape_filters: { ...c.scrape_filters, [f.key]: !c.scrape_filters[f.key] } }))}
-                        className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${config.scrape_filters[f.key] ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.06)]"}`}>
-                        <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${config.scrape_filters[f.key] ? "translate-x-3" : "translate-x-0"}`} />
-                      </button>
-                      <span className="text-[10px] text-muted">{f.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* -- Section 2: Daily Outreach Targets -- */}
-          <div className="card space-y-4">
-            <h3 className="text-sm font-semibold flex items-center gap-2">
-              <Sliders size={14} className="text-[#2563EB]" /> Daily Outreach Targets
-            </h3>
-
-            {/* Spam guard banner */}
-            <div className={`flex items-center gap-3 p-2.5 rounded-lg border ${spamGuardEnabled ? "bg-green-400/[0.04] border-green-400/20" : "bg-orange-400/[0.04] border-orange-400/20"}`}>
-              <Shield size={13} className={spamGuardEnabled ? "text-green-400" : "text-orange-400"} />
-              <div className="flex-1">
-                <p className="text-[10px] font-medium">Spam Guard is {spamGuardEnabled ? "ON" : "OFF"}</p>
-                <p className="text-[9px] text-muted">{spamGuardEnabled ? "Hard caps are enforced � effective limits shown below" : "Limits will not be capped � enable in Settings for protection"}</p>
-              </div>
-              <a href="/dashboard/settings" className="text-[9px] text-[#2563EB] hover:underline flex items-center gap-0.5">
-                <ExternalLink size={9} /> Settings
-              </a>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {([
-                { key: "email_daily_limit" as const, label: "Email", icon: <Mail size={12} className="text-[#2563EB]" />, max: 500, cap: 500 },
-                { key: "sms_daily_limit" as const, label: "SMS", icon: <Phone size={12} className="text-green-400" />, max: 300, cap: 300 },
-                { key: "calls_daily_limit" as const, label: "AI Calls", icon: <PhoneCall size={12} className="text-emerald-400" />, max: 100, cap: 100 },
-              ] as { key: "email_daily_limit" | "sms_daily_limit" | "calls_daily_limit"; label: string; icon: React.ReactNode; max: number; cap: number }[]).map(ch => {
-                const val = config[ch.key] as number;
-                const effective = spamGuardEnabled ? Math.min(val, ch.cap) : val;
-                return (
-                  <div key={ch.key} className="p-3 rounded-xl bg-surface-light border border-border space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1.5 text-xs font-medium">{ch.icon} {ch.label}</span>
-                      <div className="flex items-center gap-1.5">
-                        <input type="number" min={0} max={ch.max} value={val}
-                          onChange={e => setConfig(c => ({ ...c, [ch.key]: Number(e.target.value) }))}
-                          className="input w-16 text-xs text-center py-1" />
-                        <span className="text-[9px] text-muted">/day</span>
-                      </div>
-                    </div>
-                    <input type="range" min={0} max={ch.max} value={val}
-                      onChange={e => setConfig(c => ({ ...c, [ch.key]: Number(e.target.value) }))}
-                      className="w-full accent-yellow-400" />
-                    {spamGuardEnabled && effective < val && (
-                      <p className="text-[9px] text-orange-400 flex items-center gap-1">
-                        <AlertTriangle size={9} /> Capped at {effective}/day by spam guard
-                      </p>
-                    )}
-                  </div>
-                );
-              })}
-
-              {/* DM per platform */}
-              <div className="p-3 rounded-xl bg-surface-light border border-border space-y-2 md:col-span-2">
-                <p className="text-[10px] text-muted uppercase tracking-wider mb-2">DM Limits per Platform</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {(["instagram", "linkedin", "facebook", "tiktok"] as const).map(p => {
-                    const plat = config.platforms[p] || { enabled: true, daily_limit: 20 };
-                    const dmVal = config.dm_daily_limits[p];
-                    return (
-                      <div key={p} className="flex items-center gap-2 py-1">
-                        <button onClick={() => setConfig(c => ({
-                          ...c,
-                          platforms: { ...c.platforms, [p]: { ...plat, enabled: !plat.enabled } }
-                        }))} className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${plat.enabled ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.06)]"}`}>
-                          <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${plat.enabled ? "translate-x-3" : "translate-x-0"}`} />
-                        </button>
-                        <span className="flex items-center gap-1 text-[10px] flex-1 capitalize">{PLATFORM_ICON[p]} {p}</span>
-                        <input type="number" min={0} max={50} value={dmVal}
-                          onChange={e => setConfig(c => ({ ...c, dm_daily_limits: { ...c.dm_daily_limits, [p]: Number(e.target.value) } }))}
-                          className="input w-14 text-xs text-center py-1" />
-                        <span className="text-[9px] text-muted">/day</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 pt-1 border-t border-border">
-              <span className="text-xs text-muted flex-1">Total daily target (all channels combined)</span>
-              <input type="number" value={config.total_daily_target} min={0} max={1000}
-                onChange={e => setConfig(c => ({ ...c, total_daily_target: Number(e.target.value) }))}
-                className="input w-20 text-xs text-center py-1.5" />
-              <span className="text-[9px] text-muted">/day</span>
-            </div>
-          </div>
-
-          {/* -- Section 3: Schedule & Automation -- */}
-          <div className="card space-y-4">
-            <h3 className="text-sm font-semibold flex items-center gap-2">
-              <Calendar size={14} className="text-[#2563EB]" /> Schedule & Automation
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-[10px] text-muted mb-1.5 block uppercase tracking-wider">Daily start time</label>
-                <input type="time" value={config.schedule_time}
-                  onChange={e => setConfig(c => ({ ...c, schedule_time: e.target.value }))}
-                  className="input w-full text-xs py-1.5" />
-              </div>
-              <div>
-                <label className="text-[10px] text-muted mb-1.5 block uppercase tracking-wider">Timezone</label>
-                <select value={config.timezone} onChange={e => setConfig(c => ({ ...c, timezone: e.target.value }))}
-                  className="input w-full text-xs py-1.5">
-                  <option value="America/New_York">Eastern (ET)</option>
-                  <option value="America/Chicago">Central (CT)</option>
-                  <option value="America/Denver">Mountain (MT)</option>
-                  <option value="America/Los_Angeles">Pacific (PT)</option>
-                  <option value="America/Anchorage">Alaska (AKT)</option>
-                  <option value="Pacific/Honolulu">Hawaii (HT)</option>
-                  <option value="Europe/London">London (GMT)</option>
-                  <option value="Europe/Paris">Central Europe (CET)</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-[10px] text-muted mb-2 uppercase tracking-wider">Message Style</p>
-              <div className="flex gap-2 flex-wrap">
-                {[
-                  { val: "professional", label: "Professional", desc: "Formal, business-focused" },
-                  { val: "friendly", label: "Friendly", desc: "Warm, approachable" },
-                  { val: "professional and friendly", label: "Balanced", desc: "Pro + friendly" },
-                  { val: "bold", label: "Bold", desc: "Direct, punchy" },
-                ].map(s => (
-                  <button key={s.val} onClick={() => setConfig(c => ({ ...c, message_style: s.val }))}
-                    className={`text-left px-3 py-2 rounded-lg border transition-all ${
-                      config.message_style === s.val ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]" : "text-muted border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
-                    }`}>
-                    <p className="text-xs font-medium">{s.label}</p>
-                    <p className="text-[9px] opacity-70">{s.desc}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <p className="text-[10px] text-muted uppercase tracking-wider mb-2">Automation Rules</p>
-              {[
-                { key: "auto_followup", label: "Auto follow-up sequence", desc: "Automatically send follow-ups on schedule" },
-                { key: "followup_day_3", label: "Day 3 follow-up", desc: "Send a follow-up 3 days after initial message" },
-                { key: "followup_day_7", label: "Day 7 follow-up", desc: "Send a follow-up 7 days after initial message" },
-                { key: "exclude_contacted", label: "Exclude already contacted", desc: "Skip leads you have reached out to before" },
-                { key: "pause_on_reply", label: "Pause sequence on reply", desc: "Stop automated follow-ups when prospect replies" },
-              ].map(item => (
-                <div key={item.key} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light hover:bg-[rgba(0,0,0,0.04)] transition-colors">
-                  <button onClick={() => setConfig(c => ({ ...c, [item.key]: !(c[item.key as keyof typeof c]) }))}
-                    className={`w-8 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${
-                      config[item.key as keyof typeof config] ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.06)]"
-                    }`}>
-                    <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${
-                      config[item.key as keyof typeof config] ? "translate-x-4" : "translate-x-0"
-                    }`} />
-                  </button>
-                  <div className="flex-1">
-                    <p className="text-xs font-medium">{item.label}</p>
-                    <p className="text-[9px] text-muted">{item.desc}</p>
-                  </div>
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
-                    config[item.key as keyof typeof config] ? "bg-green-400/10 text-green-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
-                  }`}>{config[item.key as keyof typeof config] ? "On" : "Off"}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* -- Section 4: Compliance & Safety -- */}
-          <div className="card space-y-4">
-            <h3 className="text-sm font-semibold flex items-center gap-2">
-              <Shield size={14} className="text-[#2563EB]" /> Compliance & Safety
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {/* Spam guard card */}
-              <div className={`p-3 rounded-xl border ${spamGuardEnabled ? "bg-green-400/[0.04] border-green-400/20" : "bg-orange-400/[0.04] border-orange-400/20"}`}>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${spamGuardEnabled ? "bg-green-400/10" : "bg-orange-400/10"}`}>
-                    <Shield size={13} className={spamGuardEnabled ? "text-green-400" : "text-orange-400"} />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs font-semibold">Spam Guard</p>
-                    <p className="text-[9px] text-muted">Rate-limit protection</p>
-                  </div>
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium ${spamGuardEnabled ? "bg-green-400/10 text-green-400" : "bg-orange-400/10 text-orange-400"}`}>
-                    {spamGuardEnabled ? "Active" : "Disabled"}
-                  </span>
-                </div>
-                <p className="text-[9px] text-muted mb-2">Controls maximum daily send limits to protect sender reputation.</p>
-                <a href="/dashboard/settings" className="inline-flex items-center gap-1 text-[9px] text-[#2563EB] hover:underline">
-                  <ExternalLink size={9} /> Configure in Settings
-                </a>
-              </div>
-
-              {/* Sender pool health */}
-              <div className="p-3 rounded-xl bg-surface-light border border-border">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-7 h-7 rounded-lg bg-blue-400/10 flex items-center justify-center">
-                    <Activity size={13} className="text-blue-400" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs font-semibold">Sender Pool</p>
-                    <p className="text-[9px] text-muted">Email & SMS health</p>
-                  </div>
-                  {senderStats?.health && (
-                    <span className={`text-[9px] px-2 py-0.5 rounded-full capitalize ${
-                      senderStats.health === "good" ? "bg-green-400/10 text-green-400" :
-                      senderStats.health === "warning" ? "bg-orange-400/10 text-orange-400" :
-                      "bg-red-400/10 text-red-400"
-                    }`}>{senderStats.health}</span>
                   )}
                 </div>
-                <div className="space-y-1.5">
-                  {senderStats ? (
+
+                {/* Scheduled Runs */}
+                <div className="card p-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <CalendarRange size={14} className="text-[#2563EB]" />
+                    <h3 className="text-xs font-semibold">Scheduled Runs</h3>
+                  </div>
+
+                  {autoRunConfig ? (
                     <>
-                      {senderStats.total_senders !== undefined && (
-                        <div className="flex justify-between text-[10px]">
-                          <span className="text-muted">Active senders</span>
-                          <span className="font-medium">{senderStats.total_senders}</span>
-                        </div>
-                      )}
-                      {senderStats.bounce_rate !== undefined && (
-                        <div className="flex justify-between text-[10px]">
-                          <span className="text-muted">Bounce rate</span>
-                          <span className={`font-medium ${(senderStats.bounce_rate ?? 0) > 5 ? "text-orange-400" : "text-green-400"}`}>
-                            {(senderStats.bounce_rate ?? 0).toFixed(1)}%
-                          </span>
-                        </div>
-                      )}
-                      {senderStats.warmup_stage && (
-                        <div className="flex justify-between text-[10px]">
-                          <span className="text-muted">Warmup stage</span>
-                          <span className="px-1.5 py-0.5 rounded bg-blue-400/10 text-blue-400 text-[9px] capitalize">{senderStats.warmup_stage}</span>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="flex items-center gap-1.5 text-[9px] text-muted py-2">
-                      <Loader2 size={9} className="animate-spin" /> Loading sender stats�
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+                      {/* Status row */}
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <span className={`text-[9px] font-medium px-2 py-0.5 rounded-full ${
+                          autoRunConfig.enabled
+                            ? "bg-green-400/10 text-green-400"
+                            : "bg-red-400/10 text-red-400"
+                        }`}>
+                          {autoRunConfig.enabled ? "Enabled" : "Disabled"}
+                        </span>
+                        <span className="flex items-center gap-1 text-[10px] text-muted">
+                          <Clock size={10} /> {autoRunConfig.time}
+                        </span>
+                        <span className="flex items-center gap-1 text-[10px] text-muted">
+                          {autoRunConfig.days.map(d => d.charAt(0).toUpperCase() + d.slice(1, 3)).join(", ")}
+                        </span>
+                      </div>
 
-            {/* Bounce rate health bar */}
-            {senderStats?.bounce_rate !== undefined && (
-              <div>
-                <div className="flex justify-between text-[10px] mb-1">
-                  <span className="text-muted">Bounce rate health</span>
-                  <span className={(senderStats.bounce_rate ?? 0) > 5 ? "text-orange-400" : "text-green-400"}>
-                    {(senderStats.bounce_rate ?? 0).toFixed(1)}% � {(senderStats.bounce_rate ?? 0) < 2 ? "Excellent" : (senderStats.bounce_rate ?? 0) < 5 ? "Good" : (senderStats.bounce_rate ?? 0) < 10 ? "Warning" : "Critical"}
-                  </span>
-                </div>
-                <div className="w-full bg-surface-light rounded-full h-2">
-                  <div className={`h-2 rounded-full transition-all ${
-                    (senderStats.bounce_rate ?? 0) < 2 ? "bg-green-400" :
-                    (senderStats.bounce_rate ?? 0) < 5 ? "bg-yellow-400" :
-                    (senderStats.bounce_rate ?? 0) < 10 ? "bg-orange-400" : "bg-red-400"
-                  }`} style={{ width: `${Math.min((senderStats.bounce_rate ?? 0) * 5, 100)}%` }} />
-                </div>
-                <div className="flex justify-between text-[8px] text-muted mt-0.5">
-                  <span>0% � ideal</span>
-                  <span>5% � warning</span>
-                  <span>10%+ � critical</span>
-                </div>
-              </div>
-            )}
+                      {/* Mini calendar */}
+                      {(() => {
+                        const DAY_MAP: Record<number, string> = { 0: "sun", 1: "mon", 2: "tue", 3: "wed", 4: "thu", 5: "fri", 6: "sat" };
+                        const today = new Date();
+                        const year = today.getFullYear();
+                        const month = today.getMonth();
+                        const firstDay = new Date(year, month, 1);
+                        const daysInMonth = new Date(year, month + 1, 0).getDate();
+                        // Monday-based offset: 0=Mon ... 6=Sun
+                        const startOffset = (firstDay.getDay() + 6) % 7;
+                        const todayDate = today.getDate();
 
-            {!senderStats && (
-              <div className="flex items-center gap-2 p-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)]">
-                <Building2 size={12} className="text-muted" />
-                <p className="text-[10px] text-muted">Sender stats will appear here once the API is connected.</p>
-              </div>
-            )}
-          </div>
+                        const isScheduled = (day: number) => {
+                          const d = new Date(year, month, day);
+                          return autoRunConfig.enabled && autoRunConfig.days.includes(DAY_MAP[d.getDay()]);
+                        };
 
-          {/* Scheduled Runs */}
-          <div className="card p-4 space-y-3">
-            <div className="flex items-center gap-2">
-              <CalendarRange size={14} className="text-[#2563EB]" />
-              <h3 className="text-xs font-semibold">Scheduled Runs</h3>
-            </div>
+                        const isPast = (day: number) => {
+                          const d = new Date(year, month, day);
+                          d.setHours(23, 59, 59);
+                          return d < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                        };
 
-            {autoRunConfig ? (
-              <>
-                {/* Status row */}
-                <div className="flex items-center gap-3 flex-wrap">
-                  <span className={`text-[9px] font-medium px-2 py-0.5 rounded-full ${
-                    autoRunConfig.enabled
-                      ? "bg-green-400/10 text-green-400"
-                      : "bg-red-400/10 text-red-400"
-                  }`}>
-                    {autoRunConfig.enabled ? "Enabled" : "Disabled"}
-                  </span>
-                  <span className="flex items-center gap-1 text-[10px] text-muted">
-                    <Clock size={10} /> {autoRunConfig.time}
-                  </span>
-                  <span className="flex items-center gap-1 text-[10px] text-muted">
-                    {autoRunConfig.days.map(d => d.charAt(0).toUpperCase() + d.slice(1, 3)).join(", ")}
-                  </span>
-                </div>
-
-                {/* Mini calendar */}
-                {(() => {
-                  const DAY_MAP: Record<number, string> = { 0: "sun", 1: "mon", 2: "tue", 3: "wed", 4: "thu", 5: "fri", 6: "sat" };
-                  const today = new Date();
-                  const year = today.getFullYear();
-                  const month = today.getMonth();
-                  const firstDay = new Date(year, month, 1);
-                  const daysInMonth = new Date(year, month + 1, 0).getDate();
-                  // Monday-based offset: 0=Mon ... 6=Sun
-                  const startOffset = (firstDay.getDay() + 6) % 7;
-                  const todayDate = today.getDate();
-
-                  const isScheduled = (day: number) => {
-                    const d = new Date(year, month, day);
-                    return autoRunConfig.enabled && autoRunConfig.days.includes(DAY_MAP[d.getDay()]);
-                  };
-
-                  const isPast = (day: number) => {
-                    const d = new Date(year, month, day);
-                    d.setHours(23, 59, 59);
-                    return d < new Date(today.getFullYear(), today.getMonth(), today.getDate());
-                  };
-
-                  // Next run calculation
-                  let nextRunDate: Date | null = null;
-                  if (autoRunConfig.enabled) {
-                    const check = new Date(today);
-                    for (let i = 0; i < 60; i++) {
-                      check.setDate(check.getDate() + (i === 0 ? 0 : 1));
-                      if (i === 0) {
-                        // Today: only count if the scheduled time hasn't passed
-                        const [hh, mm] = autoRunConfig.time.split(":").map(Number);
-                        if (today.getHours() > hh || (today.getHours() === hh && today.getMinutes() >= mm)) {
-                          continue;
+                        // Next run calculation
+                        let nextRunDate: Date | null = null;
+                        if (autoRunConfig.enabled) {
+                          const check = new Date(today);
+                          for (let i = 0; i < 60; i++) {
+                            check.setDate(check.getDate() + (i === 0 ? 0 : 1));
+                            if (i === 0) {
+                              // Today: only count if the scheduled time hasn't passed
+                              const [hh, mm] = autoRunConfig.time.split(":").map(Number);
+                              if (today.getHours() > hh || (today.getHours() === hh && today.getMinutes() >= mm)) {
+                                continue;
+                              }
+                            }
+                            if (autoRunConfig.days.includes(DAY_MAP[check.getDay()])) {
+                              nextRunDate = new Date(check);
+                              break;
+                            }
+                          }
                         }
-                      }
-                      if (autoRunConfig.days.includes(DAY_MAP[check.getDay()])) {
-                        nextRunDate = new Date(check);
-                        break;
-                      }
-                    }
-                  }
 
-                  // Remaining runs this month
-                  let runsRemaining = 0;
-                  for (let d = todayDate; d <= daysInMonth; d++) {
-                    if (isScheduled(d) && !isPast(d)) runsRemaining++;
-                  }
+                        // Remaining runs this month
+                        let runsRemaining = 0;
+                        for (let d = todayDate; d <= daysInMonth; d++) {
+                          if (isScheduled(d) && !isPast(d)) runsRemaining++;
+                        }
 
-                  const dayLabels = ["M", "T", "W", "T", "F", "S", "S"];
-                  const cells: (number | null)[] = [];
-                  for (let i = 0; i < startOffset; i++) cells.push(null);
-                  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
-                  while (cells.length % 7 !== 0) cells.push(null);
+                        const dayLabels = ["M", "T", "W", "T", "F", "S", "S"];
+                        const cells: (number | null)[] = [];
+                        for (let i = 0; i < startOffset; i++) cells.push(null);
+                        for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+                        while (cells.length % 7 !== 0) cells.push(null);
 
-                  const weekdayFmt = new Intl.DateTimeFormat("en-US", { weekday: "short" });
-                  const monthFmt = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
+                        const weekdayFmt = new Intl.DateTimeFormat("en-US", { weekday: "short" });
+                        const monthFmt = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
 
-                  return (
-                    <div className="space-y-2">
-                      <p className="text-[10px] text-muted font-medium">{monthFmt.format(firstDay)}</p>
-                      <div className="rounded-lg border border-border bg-surface-light p-2">
-                        {/* Day name headers */}
-                        <div className="grid grid-cols-7 gap-0.5 mb-1">
-                          {dayLabels.map((l, i) => (
-                            <div key={i} className="text-center text-[8px] text-muted font-medium py-0.5">
-                              {l}
-                            </div>
-                          ))}
-                        </div>
-                        {/* Day cells */}
-                        <div className="grid grid-cols-7 gap-0.5">
-                          {cells.map((day, i) => (
-                            <div key={i} className={`relative flex flex-col items-center justify-center h-6 rounded text-[9px]
+                        return (
+                          <div className="space-y-2">
+                            <p className="text-[10px] text-muted font-medium">{monthFmt.format(firstDay)}</p>
+                            <div className="rounded-lg border border-border bg-surface-light p-2">
+                              {/* Day name headers */}
+                              <div className="grid grid-cols-7 gap-0.5 mb-1">
+                                {dayLabels.map((l, i) => (
+                                  <div key={i} className="text-center text-[8px] text-muted font-medium py-0.5">
+                                    {l}
+                                  </div>
+                                ))}
+                              </div>
+                              {/* Day cells */}
+                              <div className="grid grid-cols-7 gap-0.5">
+                                {cells.map((day, i) => (
+                                  <div key={i} className={`relative flex flex-col items-center justify-center h-6 rounded text-[9px]
                               ${!day ? "" : ""}
                               ${day && isPast(day) ? "text-[#9CA3AF]" : "text-[#6B7280]"}
                               ${day === todayDate ? "ring-1 ring-[rgba(37,99,235,0.6)] bg-[rgba(37,99,235,0.08)] font-bold text-[#2563EB]" : ""}
                             `}>
-                              {day && <span>{day}</span>}
-                              {day && isScheduled(day) && !isPast(day) && (
-                                <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-[#2563EB]" />
-                              )}
-                              {day && isScheduled(day) && isPast(day) && (
-                                <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-[rgba(0,0,0,0.06)]" />
-                              )}
+                                    {day && <span>{day}</span>}
+                                    {day && isScheduled(day) && !isPast(day) && (
+                                      <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-[#2563EB]" />
+                                    )}
+                                    {day && isScheduled(day) && isPast(day) && (
+                                      <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-[rgba(0,0,0,0.06)]" />
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
                             </div>
-                          ))}
-                        </div>
-                      </div>
 
-                      {/* Summary row */}
-                      <div className="flex items-center justify-between text-[10px]">
-                        <span className="text-muted">
-                          {nextRunDate ? (
-                            <>Next run: <span className="text-[#2563EB] font-medium">
-                              {weekdayFmt.format(nextRunDate)}, {nextRunDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })} at {autoRunConfig.time}
-                            </span></>
-                          ) : (
-                            <span className="text-muted">No upcoming runs</span>
-                          )}
-                        </span>
-                        <span className="text-muted">{runsRemaining} run{runsRemaining !== 1 ? "s" : ""} remaining this month</span>
-                      </div>
+                            {/* Summary row */}
+                            <div className="flex items-center justify-between text-[10px]">
+                              <span className="text-muted">
+                                {nextRunDate ? (
+                                  <>Next run: <span className="text-[#2563EB] font-medium">
+                                    {weekdayFmt.format(nextRunDate)}, {nextRunDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })} at {autoRunConfig.time}
+                                  </span></>
+                                ) : (
+                                  <span className="text-muted">No upcoming runs</span>
+                                )}
+                              </span>
+                              <span className="text-muted">{runsRemaining} run{runsRemaining !== 1 ? "s" : ""} remaining this month</span>
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </>
+                  ) : (
+                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)]">
+                      <Radar size={12} className="text-muted animate-pulse" />
+                      <p className="text-[10px] text-muted">Loading auto-run schedule...</p>
                     </div>
-                  );
-                })()}
-              </>
-            ) : (
-              <div className="flex items-center gap-2 p-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)]">
-                <Radar size={12} className="text-muted animate-pulse" />
-                <p className="text-[10px] text-muted">Loading auto-run schedule...</p>
-              </div>
-            )}
-          </div>
+                  )}
+                </div>
 
-          {/* Save footer */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-surface-light border border-border">
-            <div>
-              <p className="text-xs font-medium">Save all configuration</p>
-              <p className="text-[9px] text-muted">Changes apply to the next scheduled outreach run</p>
-            </div>
-            <button onClick={saveConfig} disabled={configSaving}
-              className="btn-primary text-xs flex items-center gap-1.5 px-5">
-              {configSaving ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle size={12} />}
-              {configSaving ? "Saving�" : "Save Configuration"}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+                {/* Save footer */}
+                <div className="flex items-center justify-between p-4 rounded-xl bg-surface-light border border-border">
+                  <div>
+                    <p className="text-xs font-medium">Save all configuration</p>
+                    <p className="text-[9px] text-muted">Changes apply to the next scheduled outreach run</p>
+                  </div>
+                  <button onClick={saveConfig} disabled={configSaving}
+                    className="btn-primary text-xs flex items-center gap-1.5 px-5">
+                    {configSaving ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle size={12} />}
+                    {configSaving ? "Saving�" : "Save Configuration"}
+                  </button>
+                </div>
+              </div>
+            )}</MotionPage>
   );
 }
 

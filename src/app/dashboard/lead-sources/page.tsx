@@ -9,6 +9,7 @@ const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #256
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface LeadSource {
   id: string;
@@ -152,145 +153,137 @@ export default function LeadSourcesPage() {
     .map((s, i) => ({ id: s.id, label: s.source_name, value: s.total_leads_attributed, color: SLICE_COLORS[i % SLICE_COLORS.length] }));
 
   return (
-    <div className="space-y-6">
-      <PageHero
-        eyebrow="SOURCE TRACKING"
-        title="Lead Sources"
-        subtitle="Track where every lead comes from and what each source is worth."
-        icon={<Filter size={22} />}
-        gradient="gold"
-        actions={
-          <button onClick={() => setShowCreate((v) => !v)}
-            className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
-            <Plus size={16} /> Add Source
-          </button>
-        }
-      />
-
-      {pieSlices.length > 0 && <PieChart slices={pieSlices} />}
-
-      {showCreate && (
-        <motion.div className="bg-white border border-black/[0.06] rounded-xl p-5 space-y-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-          <p className="font-semibold text-[#111827] text-sm">New Source</p>
-          <div className="flex flex-wrap gap-3">
-            <input className="input flex-1 min-w-[160px] text-sm" placeholder="Source name (e.g. Google Ads)"
-              value={form.source_name} onChange={(e) => setForm({ ...form, source_name: e.target.value })}
-              onKeyDown={(e) => e.key === "Enter" && handleCreate()} autoFocus />
-            <select className="input w-40 text-sm" value={form.attribution_model}
-              onChange={(e) => setForm({ ...form, attribution_model: e.target.value })}>
-              {ATTRIBUTION_MODELS.map((m) => <option key={m} value={m}>{m.replace("_", " ")}</option>)}
-            </select>
-          </div>
-          <div className="flex flex-wrap gap-2 items-center">
-            <span className="text-xs text-[#6B7280]">Icon:</span>
-            {ICON_OPTIONS.map((ic) => (
-              <button key={ic} type="button" onClick={() => setForm({ ...form, icon: ic })}
-                className={`text-lg p-1 rounded ${form.icon === ic ? "bg-[rgba(37,99,235,0.14)]" : "hover:bg-black/[0.04]"}`}>{ic}</button>
-            ))}
-          </div>
-          <input className="input w-full text-sm" placeholder="Description (optional)"
-            value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-          <div className="flex gap-2">
-            <button onClick={handleCreate} disabled={saving || !form.source_name.trim()}
-              className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
-              {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Save
-            </button>
-            <button onClick={() => setShowCreate(false)}
-              className="btn-ghost flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg">
-              <X size={13} /> Cancel
-            </button>
-          </div>
-        </motion.div>
-      )}
-
-      {loading ? <TableSkeleton rows={5} /> : sources.length === 0 ? (
-        <motion.div className="bg-white border border-black/[0.06] rounded-xl p-12 flex flex-col items-center gap-4 text-center" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-          <Filter size={40} className="text-[#9CA3AF]" />
-          <p className="text-[#111827] font-semibold">No lead sources yet</p>
-          <p className="text-[#6B7280] text-sm max-w-xs">Add your first source to start tracking where leads originate.</p>
-          <button onClick={() => setShowCreate(true)}
-            className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
-            <Plus size={15} /> Add first source
-          </button>
-        </motion.div>
-      ) : (
-        <motion.div className="bg-white border border-black/[0.06] rounded-xl overflow-hidden" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-black/[0.06] text-[#6B7280] text-xs">
-                <th className="text-left px-4 py-3 font-medium">Source</th>
-                <th className="text-left px-4 py-3 font-medium hidden sm:table-cell">Attribution</th>
-                <th className="text-right px-4 py-3 font-medium hidden md:table-cell">Leads</th>
-                <th className="text-right px-4 py-3 font-medium hidden md:table-cell">Revenue</th>
-                <th className="px-4 py-3 w-16" />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-black/[0.04]">
-              {sources.map((s) =>
-                editId === s.id ? (
-                  <tr key={s.id} className="bg-[rgba(37,99,235,0.04)]">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <select className="input text-sm h-8 w-12 px-1"
-                          value={editForm.icon} onChange={(e) => setEditForm({ ...editForm, icon: e.target.value })}>
-                          {ICON_OPTIONS.map((ic) => <option key={ic} value={ic}>{ic}</option>)}
-                        </select>
-                        <input className="input text-sm h-8 flex-1" value={editForm.source_name}
-                          onChange={(e) => setEditForm({ ...editForm, source_name: e.target.value })} autoFocus />
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 hidden sm:table-cell">
-                      <select className="input text-sm h-8 w-32"
-                        value={editForm.attribution_model}
-                        onChange={(e) => setEditForm({ ...editForm, attribution_model: e.target.value })}>
-                        {ATTRIBUTION_MODELS.map((m) => <option key={m} value={m}>{m.replace("_", " ")}</option>)}
-                      </select>
-                    </td>
-                    <td className="px-4 py-3 hidden md:table-cell" />
-                    <td className="px-4 py-3 hidden md:table-cell" />
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1">
-                        <button onClick={() => handleUpdate(s.id)} disabled={saving}
-                          className="p-1.5 rounded hover:bg-green-100 text-green-700">
-                          {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
-                        </button>
-                        <button onClick={() => setEditId(null)} className="p-1.5 rounded hover:bg-black/[0.04] text-[#6B7280]">
-                          <X size={13} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  <tr key={s.id} className="hover:bg-black/[0.02] transition-colors group">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">{s.icon ?? "🔍"}</span>
-                        <span className="text-[#111827] font-medium">{s.source_name}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-[#6B7280] hidden sm:table-cell text-xs">
-                      {(s.attribution_model ?? "last_touch").replace("_", " ")}
-                    </td>
-                    <td className="px-4 py-3 text-right text-[#374151] hidden md:table-cell">{s.total_leads_attributed}</td>
-                    <td className="px-4 py-3 text-right text-[#6B7280] hidden md:table-cell">{s.total_revenue_cents ? fmt(s.total_revenue_cents) : "—"}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => startEdit(s)} className="p-1.5 rounded hover:bg-black/[0.04] text-[#6B7280] hover:text-[#111827]">
-                          <Pencil size={13} />
-                        </button>
-                        <button onClick={() => handleDelete(s.id)} disabled={deleting === s.id}
-                          className="p-1.5 rounded hover:bg-red-50 text-[#6B7280] hover:text-red-700">
-                          {deleting === s.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </table>
-        </motion.div>
-      )}
-    </div>
+    <MotionPage className="space-y-6"><PageHero
+              eyebrow="SOURCE TRACKING"
+              title="Lead Sources"
+              subtitle="Track where every lead comes from and what each source is worth."
+              icon={<Filter size={22} />}
+              gradient="gold"
+              actions={
+                <button onClick={() => setShowCreate((v) => !v)}
+                  className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
+                  <Plus size={16} /> Add Source
+                </button>
+              }
+            />{pieSlices.length > 0 && <PieChart slices={pieSlices} />}{showCreate && (
+              <motion.div className="bg-white border border-black/[0.06] rounded-xl p-5 space-y-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                <p className="font-semibold text-[#111827] text-sm">New Source</p>
+                <div className="flex flex-wrap gap-3">
+                  <input className="input flex-1 min-w-[160px] text-sm" placeholder="Source name (e.g. Google Ads)"
+                    value={form.source_name} onChange={(e) => setForm({ ...form, source_name: e.target.value })}
+                    onKeyDown={(e) => e.key === "Enter" && handleCreate()} autoFocus />
+                  <select className="input w-40 text-sm" value={form.attribution_model}
+                    onChange={(e) => setForm({ ...form, attribution_model: e.target.value })}>
+                    {ATTRIBUTION_MODELS.map((m) => <option key={m} value={m}>{m.replace("_", " ")}</option>)}
+                  </select>
+                </div>
+                <div className="flex flex-wrap gap-2 items-center">
+                  <span className="text-xs text-[#6B7280]">Icon:</span>
+                  {ICON_OPTIONS.map((ic) => (
+                    <button key={ic} type="button" onClick={() => setForm({ ...form, icon: ic })}
+                      className={`text-lg p-1 rounded ${form.icon === ic ? "bg-[rgba(37,99,235,0.14)]" : "hover:bg-black/[0.04]"}`}>{ic}</button>
+                  ))}
+                </div>
+                <input className="input w-full text-sm" placeholder="Description (optional)"
+                  value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+                <div className="flex gap-2">
+                  <button onClick={handleCreate} disabled={saving || !form.source_name.trim()}
+                    className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
+                    {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Save
+                  </button>
+                  <button onClick={() => setShowCreate(false)}
+                    className="btn-ghost flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg">
+                    <X size={13} /> Cancel
+                  </button>
+                </div>
+              </motion.div>
+            )}{loading ? <TableSkeleton rows={5} /> : sources.length === 0 ? (
+              <motion.div className="bg-white border border-black/[0.06] rounded-xl p-12 flex flex-col items-center gap-4 text-center" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                <Filter size={40} className="text-[#9CA3AF]" />
+                <p className="text-[#111827] font-semibold">No lead sources yet</p>
+                <p className="text-[#6B7280] text-sm max-w-xs">Add your first source to start tracking where leads originate.</p>
+                <button onClick={() => setShowCreate(true)}
+                  className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
+                  <Plus size={15} /> Add first source
+                </button>
+              </motion.div>
+            ) : (
+              <motion.div className="bg-white border border-black/[0.06] rounded-xl overflow-hidden" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-black/[0.06] text-[#6B7280] text-xs">
+                      <th className="text-left px-4 py-3 font-medium">Source</th>
+                      <th className="text-left px-4 py-3 font-medium hidden sm:table-cell">Attribution</th>
+                      <th className="text-right px-4 py-3 font-medium hidden md:table-cell">Leads</th>
+                      <th className="text-right px-4 py-3 font-medium hidden md:table-cell">Revenue</th>
+                      <th className="px-4 py-3 w-16" />
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-black/[0.04]">
+                    {sources.map((s) =>
+                      editId === s.id ? (
+                        <tr key={s.id} className="bg-[rgba(37,99,235,0.04)]">
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-2">
+                              <select className="input text-sm h-8 w-12 px-1"
+                                value={editForm.icon} onChange={(e) => setEditForm({ ...editForm, icon: e.target.value })}>
+                                {ICON_OPTIONS.map((ic) => <option key={ic} value={ic}>{ic}</option>)}
+                              </select>
+                              <input className="input text-sm h-8 flex-1" value={editForm.source_name}
+                                onChange={(e) => setEditForm({ ...editForm, source_name: e.target.value })} autoFocus />
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 hidden sm:table-cell">
+                            <select className="input text-sm h-8 w-32"
+                              value={editForm.attribution_model}
+                              onChange={(e) => setEditForm({ ...editForm, attribution_model: e.target.value })}>
+                              {ATTRIBUTION_MODELS.map((m) => <option key={m} value={m}>{m.replace("_", " ")}</option>)}
+                            </select>
+                          </td>
+                          <td className="px-4 py-3 hidden md:table-cell" />
+                          <td className="px-4 py-3 hidden md:table-cell" />
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-1">
+                              <button onClick={() => handleUpdate(s.id)} disabled={saving}
+                                className="p-1.5 rounded hover:bg-green-100 text-green-700">
+                                {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
+                              </button>
+                              <button onClick={() => setEditId(null)} className="p-1.5 rounded hover:bg-black/[0.04] text-[#6B7280]">
+                                <X size={13} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ) : (
+                        <tr key={s.id} className="hover:bg-black/[0.02] transition-colors group">
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">{s.icon ?? "🔍"}</span>
+                              <span className="text-[#111827] font-medium">{s.source_name}</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 text-[#6B7280] hidden sm:table-cell text-xs">
+                            {(s.attribution_model ?? "last_touch").replace("_", " ")}
+                          </td>
+                          <td className="px-4 py-3 text-right text-[#374151] hidden md:table-cell">{s.total_leads_attributed}</td>
+                          <td className="px-4 py-3 text-right text-[#6B7280] hidden md:table-cell">{s.total_revenue_cents ? fmt(s.total_revenue_cents) : "—"}</td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button onClick={() => startEdit(s)} className="p-1.5 rounded hover:bg-black/[0.04] text-[#6B7280] hover:text-[#111827]">
+                                <Pencil size={13} />
+                              </button>
+                              <button onClick={() => handleDelete(s.id)} disabled={deleting === s.id}
+                                className="p-1.5 rounded hover:bg-red-50 text-[#6B7280] hover:text-red-700">
+                                {deleting === s.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    )}
+                  </tbody>
+                </table>
+              </motion.div>
+            )}</MotionPage>
   );
 }

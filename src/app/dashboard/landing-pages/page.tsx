@@ -20,6 +20,7 @@ import PageAI from "@/components/page-ai";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /* ------------------------------------------------------------------
    TYPES
@@ -664,24 +665,19 @@ export default function LandingPagesPage() {
       : { backgroundColor: scheme.bg };
 
     return (
-      <div className="rounded-xl border border-border overflow-hidden">
-        {/* Browser chrome */}
-        <div className="flex items-center gap-2 px-4 py-2.5 bg-[#1a1a2e] border-b border-border">
-          <div className="flex gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-red-500/80" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-            <div className="w-3 h-3 rounded-full bg-green-500/80" />
-          </div>
-          <div className="flex-1 mx-4">
-            <div className="bg-[#0d0d1a] rounded-md px-3 py-1 text-xs text-muted flex items-center gap-2">
-              <Shield className="w-3 h-3 text-green-400" />
-              {bizInfo.name ? `${bizInfo.name.toLowerCase().replace(/\s+/g, "")}.com` : "yoursite.com"}
-            </div>
-          </div>
-        </div>
-
-        {/* Page content */}
-        <div
+      <MotionPage className="rounded-xl border border-border overflow-hidden">{/* Browser chrome */}<div className="flex items-center gap-2 px-4 py-2.5 bg-[#1a1a2e] border-b border-border">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                    <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                    <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                  </div>
+                  <div className="flex-1 mx-4">
+                    <div className="bg-[#0d0d1a] rounded-md px-3 py-1 text-xs text-muted flex items-center gap-2">
+                      <Shield className="w-3 h-3 text-green-400" />
+                      {bizInfo.name ? `${bizInfo.name.toLowerCase().replace(/\s+/g, "")}.com` : "yoursite.com"}
+                    </div>
+                  </div>
+                </div>{/* Page content */}<div
           ref={previewRef}
           className="overflow-y-auto max-h-[600px] text-sm"
           style={{ ...bgStyle, color: scheme.text }}
@@ -814,8 +810,7 @@ export default function LandingPagesPage() {
               default: return null;
             }
           })}
-        </div>
-      </div>
+        </div></MotionPage>
     );
   };
 

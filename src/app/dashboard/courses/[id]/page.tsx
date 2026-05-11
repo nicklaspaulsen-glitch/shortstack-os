@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // ─────────────────────────────────────────
 // Types
@@ -349,9 +350,7 @@ export default function CourseBuilderPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-24">
-        <Loader2 size={32} className="text-[#2563EB] animate-spin" />
-      </div>
+      <MotionPage className="flex items-center justify-center py-24"><Loader2 size={32} className="text-[#2563EB] animate-spin" /></MotionPage>
     );
   }
 

@@ -7,6 +7,7 @@ import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface LineItem {
   description: string;
@@ -251,161 +252,153 @@ export default function InvoiceTemplatesPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {preview && <PreviewModal template={preview} onClose={() => setPreview(null)} />}
-
-      <PageHero
-        title="Invoice Templates"
-        eyebrow="INVOICE TEMPLATES"
-        subtitle="Branded, reusable invoice layouts ready for any client or project."
-        icon={<ReceiptText size={22} />}
-        gradient="gold"
-        actions={
-          <button onClick={() => setShowCreate((v) => !v)}
-            className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
-            <Plus size={16} /> New Template
-          </button>
-        }
-      />
-
-      {showCreate && (
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-5 space-y-4"
-        >
-          <p className="font-semibold text-[#111827] text-sm">New Template</p>
-          <div className="flex flex-wrap gap-3">
-            <input className="input flex-1 min-w-[180px] text-sm" placeholder="Template name"
-              value={createForm.name} onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })} autoFocus />
-            <input className="input w-24 text-sm" placeholder="Tax %" type="number" min={0} max={100}
-              value={createForm.tax_rate} onChange={(e) => setCreateForm({ ...createForm, tax_rate: e.target.value })} />
-          </div>
-          <div>
-            <p className="text-xs text-muted mb-2">Line Items</p>
-            <LineItemsEditor items={createForm.line_items}
-              onChange={(items) => setCreateForm({ ...createForm, line_items: items })} />
-          </div>
-          <textarea className="input w-full text-sm h-16 resize-none" placeholder="Notes / payment terms (optional)"
-            value={createForm.notes} onChange={(e) => setCreateForm({ ...createForm, notes: e.target.value })} />
-          <label className="flex items-center gap-2 text-sm text-muted cursor-pointer">
-            <input type="checkbox" checked={createForm.is_default}
-              onChange={(e) => setCreateForm({ ...createForm, is_default: e.target.checked })}
-              className="accent-yellow-400" />
-            Set as default template
-          </label>
-          <div className="flex gap-2">
-            <button onClick={handleCreate} disabled={saving || !createForm.name.trim()}
-              className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
-              {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Save
-            </button>
-            <button onClick={() => setShowCreate(false)}
-              className="btn-ghost flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg">
-              <X size={13} /> Cancel
-            </button>
-          </div>
-        </motion.div>
-      )}
-
-      {loading ? <TableSkeleton rows={4} /> : templates.length === 0 ? (
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-12 flex flex-col items-center gap-4 text-center"
-        >
-          <ReceiptText size={40} className="text-muted opacity-30" />
-          <p className="text-[#111827] font-semibold">No invoice templates yet</p>
-          <p className="text-muted text-sm max-w-xs">Create reusable templates to spin up invoices in seconds.</p>
-          <button onClick={() => setShowCreate(true)}
-            className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
-            <Plus size={15} /> Create first template
-          </button>
-        </motion.div>
-      ) : (
-        <div className="space-y-3">
-          {templates.map((t, idx) =>
-            editId === t.id ? (
+    <MotionPage className="space-y-6">{preview && <PreviewModal template={preview} onClose={() => setPreview(null)} />}<PageHero
+              title="Invoice Templates"
+              eyebrow="INVOICE TEMPLATES"
+              subtitle="Branded, reusable invoice layouts ready for any client or project."
+              icon={<ReceiptText size={22} />}
+              gradient="gold"
+              actions={
+                <button onClick={() => setShowCreate((v) => !v)}
+                  className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
+                  <Plus size={16} /> New Template
+                </button>
+              }
+            />{showCreate && (
               <motion.div
-                key={t.id}
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-5 space-y-4"
               >
-                <p className="font-semibold text-[#111827] text-sm">Edit Template</p>
+                <p className="font-semibold text-[#111827] text-sm">New Template</p>
                 <div className="flex flex-wrap gap-3">
                   <input className="input flex-1 min-w-[180px] text-sm" placeholder="Template name"
-                    value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} autoFocus />
+                    value={createForm.name} onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })} autoFocus />
                   <input className="input w-24 text-sm" placeholder="Tax %" type="number" min={0} max={100}
-                    value={editForm.tax_rate} onChange={(e) => setEditForm({ ...editForm, tax_rate: e.target.value })} />
+                    value={createForm.tax_rate} onChange={(e) => setCreateForm({ ...createForm, tax_rate: e.target.value })} />
                 </div>
                 <div>
                   <p className="text-xs text-muted mb-2">Line Items</p>
-                  <LineItemsEditor items={editForm.line_items}
-                    onChange={(items) => setEditForm({ ...editForm, line_items: items })} />
+                  <LineItemsEditor items={createForm.line_items}
+                    onChange={(items) => setCreateForm({ ...createForm, line_items: items })} />
                 </div>
-                <textarea className="input w-full text-sm h-16 resize-none" placeholder="Notes"
-                  value={editForm.notes} onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })} />
+                <textarea className="input w-full text-sm h-16 resize-none" placeholder="Notes / payment terms (optional)"
+                  value={createForm.notes} onChange={(e) => setCreateForm({ ...createForm, notes: e.target.value })} />
                 <label className="flex items-center gap-2 text-sm text-muted cursor-pointer">
-                  <input type="checkbox" checked={editForm.is_default}
-                    onChange={(e) => setEditForm({ ...editForm, is_default: e.target.checked })}
+                  <input type="checkbox" checked={createForm.is_default}
+                    onChange={(e) => setCreateForm({ ...createForm, is_default: e.target.checked })}
                     className="accent-yellow-400" />
-                  Default template
+                  Set as default template
                 </label>
                 <div className="flex gap-2">
-                  <button onClick={() => handleUpdate(t.id)} disabled={saving || !editForm.name.trim()}
+                  <button onClick={handleCreate} disabled={saving || !createForm.name.trim()}
                     className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
                     {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Save
                   </button>
-                  <button onClick={() => setEditId(null)}
+                  <button onClick={() => setShowCreate(false)}
                     className="btn-ghost flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg">
                     <X size={13} /> Cancel
                   </button>
                 </div>
               </motion.div>
-            ) : (
+            )}{loading ? <TableSkeleton rows={4} /> : templates.length === 0 ? (
               <motion.div
-                key={t.id}
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.04 }}
-                whileHover={{ y: -2, scale: 1.005 }}
-                className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-4 flex items-center gap-4 group relative overflow-hidden"
+                className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-12 flex flex-col items-center gap-4 text-center"
               >
-                <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0", position: "absolute", left: 0, right: 0, top: 0 }} />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="text-[#111827] font-medium truncate">{t.name}</p>
-                    {t.is_default && (
-                      <span className="flex items-center gap-1 text-[10px] bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] px-1.5 py-0.5 rounded-full shrink-0">
-                        <Star size={9} /> Default
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[#6B7280] text-xs mt-0.5">
-                    {t.line_items.length} line item{t.line_items.length !== 1 ? "s" : ""} ·{" "}
-                    Total: {fmt(calcSubtotal(t.line_items) * (1 + (t.tax_rate ?? 0) / 100))}
-                    {t.tax_rate ? ` (incl. ${t.tax_rate}% tax)` : ""}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                  <button onClick={() => setPreview(t)}
-                    className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#111827]" title="Preview">
-                    <Eye size={14} />
-                  </button>
-                  <button onClick={() => { setEditId(t.id); setEditForm(templateToForm(t)); }}
-                    className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#111827]" title="Edit">
-                    <Pencil size={14} />
-                  </button>
-                  <button onClick={() => handleDelete(t.id)} disabled={deleting === t.id}
-                    className="p-1.5 rounded hover:bg-rose-50 text-muted hover:text-rose-700" title="Delete">
-                    {deleting === t.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
-                  </button>
-                </div>
+                <ReceiptText size={40} className="text-muted opacity-30" />
+                <p className="text-[#111827] font-semibold">No invoice templates yet</p>
+                <p className="text-muted text-sm max-w-xs">Create reusable templates to spin up invoices in seconds.</p>
+                <button onClick={() => setShowCreate(true)}
+                  className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
+                  <Plus size={15} /> Create first template
+                </button>
               </motion.div>
-            )
-          )}
-        </div>
-      )}
-    </div>
+            ) : (
+              <div className="space-y-3">
+                {templates.map((t, idx) =>
+                  editId === t.id ? (
+                    <motion.div
+                      key={t.id}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-5 space-y-4"
+                    >
+                      <p className="font-semibold text-[#111827] text-sm">Edit Template</p>
+                      <div className="flex flex-wrap gap-3">
+                        <input className="input flex-1 min-w-[180px] text-sm" placeholder="Template name"
+                          value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} autoFocus />
+                        <input className="input w-24 text-sm" placeholder="Tax %" type="number" min={0} max={100}
+                          value={editForm.tax_rate} onChange={(e) => setEditForm({ ...editForm, tax_rate: e.target.value })} />
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted mb-2">Line Items</p>
+                        <LineItemsEditor items={editForm.line_items}
+                          onChange={(items) => setEditForm({ ...editForm, line_items: items })} />
+                      </div>
+                      <textarea className="input w-full text-sm h-16 resize-none" placeholder="Notes"
+                        value={editForm.notes} onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })} />
+                      <label className="flex items-center gap-2 text-sm text-muted cursor-pointer">
+                        <input type="checkbox" checked={editForm.is_default}
+                          onChange={(e) => setEditForm({ ...editForm, is_default: e.target.checked })}
+                          className="accent-yellow-400" />
+                        Default template
+                      </label>
+                      <div className="flex gap-2">
+                        <button onClick={() => handleUpdate(t.id)} disabled={saving || !editForm.name.trim()}
+                          className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
+                          {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Save
+                        </button>
+                        <button onClick={() => setEditId(null)}
+                          className="btn-ghost flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg">
+                          <X size={13} /> Cancel
+                        </button>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key={t.id}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.04 }}
+                      whileHover={{ y: -2, scale: 1.005 }}
+                      className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-4 flex items-center gap-4 group relative overflow-hidden"
+                    >
+                      <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0", position: "absolute", left: 0, right: 0, top: 0 }} />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="text-[#111827] font-medium truncate">{t.name}</p>
+                          {t.is_default && (
+                            <span className="flex items-center gap-1 text-[10px] bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] px-1.5 py-0.5 rounded-full shrink-0">
+                              <Star size={9} /> Default
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[#6B7280] text-xs mt-0.5">
+                          {t.line_items.length} line item{t.line_items.length !== 1 ? "s" : ""} ·{" "}
+                          Total: {fmt(calcSubtotal(t.line_items) * (1 + (t.tax_rate ?? 0) / 100))}
+                          {t.tax_rate ? ` (incl. ${t.tax_rate}% tax)` : ""}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                        <button onClick={() => setPreview(t)}
+                          className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#111827]" title="Preview">
+                          <Eye size={14} />
+                        </button>
+                        <button onClick={() => { setEditId(t.id); setEditForm(templateToForm(t)); }}
+                          className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#111827]" title="Edit">
+                          <Pencil size={14} />
+                        </button>
+                        <button onClick={() => handleDelete(t.id)} disabled={deleting === t.id}
+                          className="p-1.5 rounded hover:bg-rose-50 text-muted hover:text-rose-700" title="Delete">
+                          {deleting === t.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                        </button>
+                      </div>
+                    </motion.div>
+                  )
+                )}
+              </div>
+            )}</MotionPage>
   );
 }

@@ -8,6 +8,7 @@ import {
   RefreshCw, Shield, Globe,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { MotionPage } from "@/components/motion/motion-page";
 
 interface SocialAccount {
   id: string;
@@ -170,9 +171,7 @@ export default function ClientSocialsPage() {
 
   if (loading) {
     return (
-      <div className="p-6 flex items-center justify-center min-h-[60vh]">
-        <Loader size={20} className="animate-spin text-muted" />
-      </div>
+      <MotionPage className="p-6 flex items-center justify-center min-h-[60vh]"><Loader size={20} className="animate-spin text-muted" /></MotionPage>
     );
   }
 

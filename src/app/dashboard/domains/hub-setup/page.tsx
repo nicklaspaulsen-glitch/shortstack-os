@@ -8,6 +8,7 @@ import {
   Loader, Sparkles, ChevronRight, ShieldCheck, Info,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 /**
  * Domain-as-Hub setup wizard.
@@ -271,8 +272,10 @@ function HubSetupInner() {
 
 export default function HubSetupPage() {
   return (
-    <Suspense fallback={<div className="p-6 text-muted text-sm">Loading…</div>}>
-      <HubSetupInner />
-    </Suspense>
+    <MotionPage>
+            <Suspense fallback={<div className="p-6 text-muted text-sm">Loading…</div>}>
+            <HubSetupInner />
+          </Suspense>
+          </MotionPage>
   );
 }
