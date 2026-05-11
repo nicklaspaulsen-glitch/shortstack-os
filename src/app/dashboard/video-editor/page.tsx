@@ -3372,13 +3372,13 @@ export default function VideoEditorPage() {
           from { transform: scaleY(0.4); }
           to   { transform: scaleY(1.0); }
         }
-      `}</style>{/* Higgsfield-style slim header */}<div className="flex items-center gap-3 px-5 py-3 border-b border-[rgba(0,0,0,0.08)] bg-[#FAFAFB] -mx-4 sm:-mx-6 mb-4">
-              <div className="w-7 h-7 rounded-xl bg-[rgba(0,0,0,0.06)] flex items-center justify-center shrink-0">
-                <Film size={13} className="text-[#1D4ED8]" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h1 className="text-sm font-semibold text-[#0A0A0B] leading-tight">Video Editor</h1>
-                <p className="text-[9px] text-[#71717A]">AI writes the script � GPU renders the cuts</p>
+      `}</style>{/* Video Editor command strip (slim editorial header, no PageHero) */}
+            <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+              <div className="min-w-0">
+                <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+                  Visual Production
+                </p>
+                <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">Video Editor</h1>
               </div>
               <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             </div>{/* Guided Mode � 5-step "4-year-old friendly" flow */}{!advancedMode && (

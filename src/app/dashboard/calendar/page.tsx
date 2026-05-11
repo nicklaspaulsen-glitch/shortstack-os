@@ -34,8 +34,8 @@ interface CalEvent {
 }
 
 const CATEGORY_CONFIG: Record<EventCategory, { label: string; color: string; bg: string }> = {
-  meeting: { label: "Meeting", color: "text-blue-400", bg: "bg-blue-400/10" },
-  deadline: { label: "Deadline", color: "text-red-400", bg: "bg-red-400/10" },
+  meeting: { label: "Meeting", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]" },
+  deadline: { label: "Deadline", color: "text-[#dc2626]", bg: "bg-[rgba(220,38,38,0.08)]" },
   content: { label: "Content", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]" },
   call: { label: "Call", color: "text-emerald-400", bg: "bg-emerald-400/10" },
 };
