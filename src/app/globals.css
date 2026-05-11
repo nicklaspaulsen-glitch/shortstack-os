@@ -279,45 +279,44 @@ a[role="button"]:hover,
 /* ═══════════ DARK THEME OVERRIDES ═══════════
  * Active when ThemeProvider sets data-theme="dark" (or .theme-dark).
  * Flips every --color-* + --bg-* + --border-* + --text-* var to the
- * pure-leaning black palette. Indigo accent shifts slightly brighter
- * (from #CC2424 to #FF4444) for contrast on dark surfaces.
+ * deep-navy palette. Blue accent for vibrant contrast on dark surfaces.
  *
  * NOTE: this block lives next to the [data-theme="light"] block at
  * the bottom of the file. The user is in light mode by default so
  * this :root selector is the dark override, not the dark default. */
 :root[data-theme="dark"],
 .theme-dark {
-  --color-background: #0A0A0D;
-  --color-surface: #111114;
-  --color-surface-light: #19191D;
-  --color-border: #28282E;
-  --color-accent: #FF2D2D;
+  /* Deep blue-navy base — not pure black, gives glass panels visible depth */
+  --color-background: #0D1120;
+  --color-surface: #131827;
+  --color-surface-light: #1C2338;
+  --color-border: #2A3350;
+  --color-accent: #3B82F6;
   --color-text: #F0F0F4;
   --color-muted: #A8A8B2;
   --color-foreground: #F0F0F4;
-  --color-background-rgb: 10 10 13;
-  --color-surface-rgb: 17 17 20;
-  --color-surface-light-rgb: 25 25 29;
-  --color-border-rgb: 40 40 46;
-  --color-accent-rgb: 255 45 45;
+  --color-background-rgb: 13 17 32;
+  --color-surface-rgb: 19 24 39;
+  --color-surface-light-rgb: 28 35 56;
+  --color-border-rgb: 42 51 80;
+  --color-accent-rgb: 59 130 246;
   --color-text-rgb: 240 240 244;
   --color-muted-rgb: 168 168 178;
 
-  /* Surface hierarchy — base is a warm-charcoal grey (not pure black)
-     so glass panels visibly float above it with their drop shadows.
-     The gap between base and surface-1 creates the "depth channel". */
-  --bg-base: #0A0A0D;
-  --bg-surface-1: #111114;
-  --bg-surface-2: #19191D;
-  --bg-surface-3: #28282E;
-  --bg-base-rgb: 10 10 13;
-  --bg-surface-1-rgb: 17 17 20;
-  --bg-surface-2-rgb: 25 25 29;
-  --bg-surface-3-rgb: 40 40 46;
+  /* Surface hierarchy — deep navy base so glass panels float visibly.
+     The gap between base (#0D1120) and surface-1 (#131827) is the depth channel. */
+  --bg-base: #0D1120;
+  --bg-surface-1: #131827;
+  --bg-surface-2: #1C2338;
+  --bg-surface-3: #2A3350;
+  --bg-base-rgb: 13 17 32;
+  --bg-surface-1-rgb: 19 24 39;
+  --bg-surface-2-rgb: 28 35 56;
+  --bg-surface-3-rgb: 42 51 80;
 
-  /* Dark theme: white-tinted borders for prism split look */
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-strong: rgba(255, 255, 255, 0.16);
+  /* Dark theme: blue-tinted borders for glass look */
+  --border-subtle: rgba(99, 146, 255, 0.10);
+  --border-strong: rgba(99, 146, 255, 0.22);
 
   --text-primary: #F0F0F4;
   --text-secondary: #A8A8B2;
@@ -326,24 +325,25 @@ a[role="button"]:hover,
   --text-secondary-rgb: 168 168 178;
   --text-muted-rgb: 74 74 90;
 
-  /* Dark theme accent — prism red for vibrant contrast on OLED black */
-  --brand-accent: #FF2D2D;
-  --brand-accent-soft: #FF6B6B;
-  --brand-accent-dim: #CC2424;
-  --brand-accent-glow: rgba(255, 45, 45, 0.4);
-  --brand-accent-rgb: 255 45 45;
+  /* Dark theme accent — brand blue for vibrant contrast on deep navy */
+  --brand-accent: #3B82F6;
+  --brand-accent-soft: #60A5FA;
+  --brand-accent-dim: #2563EB;
+  --brand-accent-glow: rgba(59, 130, 246, 0.35);
+  --brand-accent-rgb: 59 130 246;
 
-  --brand-lime: #FF2D2D;
-  --brand-lime-soft: #FF6B6B;
-  --brand-lime-dim: #CC2424;
-  --brand-lime-glow: rgba(255, 45, 45, 0.4);
-  --brand-lime-rgb: 255 45 45;
-  --brand-indigo: #FF2D2D;
-  --brand-indigo-rgb: 255 45 45;
+  --brand-lime: #3B82F6;
+  --brand-lime-soft: #60A5FA;
+  --brand-lime-dim: #2563EB;
+  --brand-lime-glow: rgba(59, 130, 246, 0.35);
+  --brand-lime-rgb: 59 130 246;
+  --brand-lime-soft-rgb: 96 165 250;
+  --brand-indigo: #3B82F6;
+  --brand-indigo-rgb: 59 130 246;
 
-  /* Dark theme card shadows — window-glass depth with multi-layer stack */
-  --card-shadow: 0 1px 2px rgba(0,0,0,0.25), 0 4px 16px -4px rgba(0,0,0,0.30), 0 12px 40px -8px rgba(0,0,0,0.40);
-  --card-shadow-hover: 0 2px 4px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.25), 0 20px 48px -12px rgba(0,0,0,0.5), 0 0 32px -8px rgba(255,45,45,0.06);
+  /* Dark theme card shadows — glass depth with blue ambient glow */
+  --card-shadow: 0 1px 2px rgba(0,0,0,0.35), 0 4px 16px -4px rgba(0,0,0,0.40), 0 12px 40px -8px rgba(0,0,0,0.50);
+  --card-shadow-hover: 0 2px 4px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.30), 0 20px 48px -12px rgba(0,0,0,0.55), 0 0 32px -8px rgba(59,130,246,0.12);
 }
 
 /* ═══════════ LIGHT THEME OVERRIDES (kept for parity / explicit selector) ═══════════
@@ -1764,6 +1764,23 @@ body {
     0 32px 72px -16px rgba(0,0,0,0.6),
     0 0 0 1px rgba(255,45,45,0.1),
     0 0 56px -12px rgba(255,45,45,0.12);
+}
+
+/* ── Floating pill top-navbar — dark theme override ── */
+/* The light-theme inline style is set directly in layout.tsx.
+   Dark theme overrides it via CSS specificity so no JS theme-
+   detection is needed. */
+:root[data-theme="dark"] .floating-nav-pill,
+.theme-dark .floating-nav-pill {
+  background: rgba(19, 24, 39, 0.82) !important;
+  backdrop-filter: blur(40px) saturate(1.6) brightness(0.96) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(1.6) brightness(0.96) !important;
+  border: 1px solid rgba(99, 146, 255, 0.14) !important;
+  border-top-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.28),
+    0 2px 8px rgba(0,0,0,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.06) !important;
 }
 
 /* ═══════════ PREMIUM MOTION MATERIALS ═══════════

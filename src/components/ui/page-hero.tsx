@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { tokens } from "@/lib/brand/tokens";
-import Stack3D from "@/components/brand/stack-3d";
+import BrainMark from "@/components/brand/brain-mark";
 import PageHero3D, { type PageHero3DTheme } from "@/components/brand/page-hero-3d";
 
 /**
@@ -512,7 +512,7 @@ export default function PageHero({
               never overlaps action buttons on small viewports. */}
           {showStack3D && (
             <div className="hidden md:block shrink-0">
-              <Stack3D size={variant === "hero" ? "md" : "sm"} />
+              <BrainMark size={variant === "hero" ? "md" : "sm"} />
             </div>
           )}
         </motion.div>

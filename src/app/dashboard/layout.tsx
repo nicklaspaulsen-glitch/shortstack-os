@@ -381,13 +381,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         )}
 
         <main id="main" className="flex-1 lg:ml-56 min-w-0 overflow-x-hidden">
-          {/* Header */}
-          <div className="sticky top-0 z-30 border-b border-[rgba(0,0,0,0.08)] electron-drag topbar-shadow"
+          {/* Floating glass pill header — fixed, detached from sidebar */}
+          <div className="fixed z-40 electron-drag top-3 left-3 right-3 lg:left-[240px] rounded-2xl overflow-hidden floating-nav-pill"
             style={{
-              background: "rgba(255,255,255,0.92)",
-              backdropFilter: "blur(24px) saturate(1.5)",
-              WebkitBackdropFilter: "blur(24px) saturate(1.5)",
-              boxShadow: "0 1px 0 rgba(0,0,0,0.08)",
+              background: "rgba(255,255,255,0.78)",
+              backdropFilter: "blur(40px) saturate(1.8) brightness(1.02)",
+              WebkitBackdropFilter: "blur(40px) saturate(1.8) brightness(1.02)",
+              border: "1px solid rgba(255,255,255,0.72)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.92)",
             }}>
             <div className="flex items-center justify-between px-5 lg:px-6 h-12">
               {/* Left — mobile menu */}
@@ -445,6 +446,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             </div>
           </div>
+
+          {/* Spacer — compensates for the fixed floating header (h-12 + top-3 gap) */}
+          <div className="h-[60px]" aria-hidden="true" />
 
           {/* Managed client banner */}
           <ManagedClientBanner />

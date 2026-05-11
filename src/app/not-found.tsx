@@ -1,6 +1,6 @@
 ﻿import Link from "next/link";
 import { ArrowLeft, Mail } from "lucide-react";
-import Stack3D from "@/components/brand/stack-3d";
+import BrainMark from "@/components/brand/brain-mark";
 
 /**
  * 404 — editorial dead-end. Massive Bodoni Moda numerals, a centered Stack
@@ -39,7 +39,7 @@ export default function NotFound() {
       <div className="relative z-10 text-center max-w-2xl">
         {/* Mark */}
         <div className="flex justify-center mb-6 animate-fade-in-foundation">
-          <Stack3D size="md" rotating />
+          <BrainMark size="md" glowing />
         </div>
 
         {/* Massive editorial 404 */}

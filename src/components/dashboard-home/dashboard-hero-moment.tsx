@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { tokens, themeTokens } from "@/lib/brand/tokens";
-import Stack3D from "@/components/brand/stack-3d";
+import BrainMark from "@/components/brand/brain-mark";
 import type { HeroBlock } from "./types";
 
 /**
@@ -134,9 +134,9 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
         </div>
       </div>
 
-      {/* Floating Stack3D mark — hidden on small screens to keep the headline readable */}
+      {/* Floating brain mark — hidden on small screens to keep the headline readable */}
       <div className="hidden lg:flex relative z-10 items-center justify-center pr-8 shrink-0">
-        <Stack3D size="md" rotating />
+        <BrainMark size="md" glowing />
       </div>
     </motion.section>
   );

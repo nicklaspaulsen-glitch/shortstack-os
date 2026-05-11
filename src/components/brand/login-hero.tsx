@@ -16,7 +16,7 @@
  */
 
 import { useEffect, useState } from "react";
-import Stack3D from "@/components/brand/stack-3d";
+import BrainMark from "@/components/brand/brain-mark";
 
 const STAT_LINES: ReadonlyArray<string> = [
   "12,847 leads scored today",
@@ -72,9 +72,9 @@ export default function LoginHero() {
         }}
       />
 
-      {/* Top — Stack 3D mark */}
+      {/* Top — Brain mark */}
       <div className="relative z-10 animate-fade-in-foundation">
-        <Stack3D size="lg" rotating />
+        <BrainMark size="lg" glowing />
       </div>
 
       {/* Middle — eyebrow + headline + subhead */}

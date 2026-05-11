@@ -17,7 +17,7 @@
  */
 
 import { useEffect, useState } from "react";
-import Stack3D from "@/components/brand/stack-3d";
+import BrainMark from "@/components/brand/brain-mark";
 
 interface LoadingMarkProps {
   /** Override the default "loading…" caption. Pass null to hide. */
@@ -47,7 +47,7 @@ export default function LoadingMark({
   className = "",
 }: LoadingMarkProps) {
   const reduceMotion = useReducedMotion();
-  const stackSize = size === "sm" ? "sm" : "md";
+  const brainSize = size === "sm" ? "sm" : "md";
 
   if (reduceMotion) {
     // Reduced-motion: dot pulse only. No rotation, no transforms.
@@ -87,7 +87,7 @@ export default function LoadingMark({
             animation: "limePulse 2.4s ease-in-out infinite",
           }}
         />
-        <Stack3D size={stackSize} rotating />
+        <BrainMark size={brainSize} glowing />
       </div>
       {label !== null && (
         <span className="font-editorial text-[13px] text-text-muted lowercase tracking-wide">
