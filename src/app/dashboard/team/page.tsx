@@ -281,7 +281,7 @@ export default function TeamPage() {
                   <p className={`text-[10px] ${stat.subColor ?? "text-muted"}`}>{stat.sub}</p>
                 </PrismPanel>
               ))}
-            </div>{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+            </div>{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
@@ -386,7 +386,7 @@ export default function TeamPage() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="rounded-xl p-4 space-y-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+                      className="rounded-xl p-4 space-y-4 border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -438,7 +438,7 @@ export default function TeamPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                className="rounded-xl overflow-x-auto p-4 border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+                className="rounded-xl overflow-x-auto p-4 border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-sm font-bold flex items-center gap-2"><Shield size={14} className="text-[#2563EB]" /> Role Permissions Matrix</h2>

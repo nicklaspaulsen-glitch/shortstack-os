@@ -177,7 +177,7 @@ export default function InvoicesPage() {
                   <p className="text-[9px] text-muted">{stat.label}</p>
                 </PrismPanel>
               ))}
-            </div>{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+            </div>{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
@@ -192,7 +192,7 @@ export default function InvoicesPage() {
                     <input
                       value={search}
                       onChange={e => setSearch(e.target.value)}
-                      className="rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-[rgba(0,0,0,0.08)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+                      className="rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-[rgba(255,255,255,0.70)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
                       placeholder="Search invoices..."
                       aria-label="Search invoices"
                     />
@@ -454,7 +454,7 @@ export default function InvoicesPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.05 }}
-                      className="rounded-xl p-4 flex items-center justify-between border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+                      className="rounded-xl p-4 flex items-center justify-between border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
                     >
                       <div className="flex items-center gap-3">
                         <RefreshCw size={14} className="text-[#2563EB]" />
@@ -503,7 +503,7 @@ export default function InvoicesPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: i * 0.05 }}
-                      className={`rounded-xl p-4 flex items-center justify-between border border-[rgba(0,0,0,0.08)] ${!reminder.enabled ? "opacity-50" : ""}`} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+                      className={`rounded-xl p-4 flex items-center justify-between border border-[rgba(255,255,255,0.70)] ${!reminder.enabled ? "opacity-50" : ""}`} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${i < 2 ? "bg-amber-50" : i < 4 ? "bg-orange-50" : "bg-rose-50"}`}>
@@ -562,7 +562,7 @@ export default function InvoicesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -3 }}
-                      className="rounded-xl p-4 cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+                      className="rounded-xl p-4 cursor-pointer border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
                     >
                       <div className="flex items-center gap-3 mb-2">
                         <div className="w-10 h-10 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
@@ -604,7 +604,7 @@ export default function InvoicesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: i * 0.06 }}
                       whileHover={{ y: -2 }}
-                      className="rounded-xl text-center p-3 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+                      className="rounded-xl text-center p-3 overflow-hidden border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
                     >
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                       <p className="text-[9px] text-muted uppercase mb-1">{bucket.range}</p>
@@ -669,7 +669,7 @@ export default function InvoicesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -2 }}
-                      className="rounded-xl text-center p-5 overflow-hidden border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+                      className="rounded-xl text-center p-5 overflow-hidden border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
                     >
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                       <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>

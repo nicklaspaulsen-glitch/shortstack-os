@@ -638,7 +638,7 @@ export default function AnalyticsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-4">
 
             {/* Lead velocity area chart */}
-            <div className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+            <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Acquisition</p>
@@ -678,7 +678,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Lead sources */}
-            <div className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+            <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Channels</p>
               <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Lead Sources</h2>
               {leadsBySource.length === 0 ? (
@@ -722,7 +722,7 @@ export default function AnalyticsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-4">
 
             {/* Conversion funnel */}
-            <div className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+            <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Sales Pipeline</p>
               <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Conversion Funnel</h2>
               <div className="space-y-3">
@@ -777,7 +777,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Outreach performance */}
-            <div className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+            <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Engagement</p>
               <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-4">Outreach Performance</h2>
               {outreachByDay.length === 0 ? (
@@ -816,7 +816,7 @@ export default function AnalyticsPage() {
 
             {/* Top industries */}
             <motion.div
-              className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5"
+              className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5"
               style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -909,7 +909,7 @@ export default function AnalyticsPage() {
 
             {/* Benchmarks */}
             <motion.div
-              className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5"
+              className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5"
               style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -965,7 +965,7 @@ export default function AnalyticsPage() {
 
           {/* -- Zone 5: Scorecard strip (prism glass, staggered entrance) -- */}
           <motion.div
-            className="relative rounded-xl border border-[rgba(0,0,0,0.08)] overflow-hidden"
+            className="relative rounded-xl border border-[rgba(255,255,255,0.70)] overflow-hidden"
             style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)" }}
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1010,7 +1010,7 @@ export default function AnalyticsPage() {
           </motion.div>
 
           {/* -- Zone 6: Real-time activity feed ---------------------------- */}
-          <div className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+          <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Live Stream</p>
