@@ -14,7 +14,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
 import Link from "next/link";
-import PageHero from "@/components/ui/page-hero";
 import { ALLOWED_CSV, buildAccept, validateFile } from "@/lib/file-types";
 import { motion } from "framer-motion";
 import { PrismPanel } from "@/components/prism";
@@ -798,29 +797,37 @@ export default function LeadEnginePage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-4">{/* Modals */}{showImportModal && <ImportCSVModal onClose={() => setShowImportModal(false)} onSuccess={fetchLeads} />}{showAddModal && <AddLeadModal onClose={() => setShowAddModal(false)} onSuccess={fetchLeads} />}{/* Header */}<PageHero
-              eyebrow="CONTACT HQ"
-              icon={<Zap size={28} />}
-              title="Lead Engine"
-              subtitle="Automated lead scoring, routing, enrichment & nurture � build and convert your pipeline."
-              gradient="gold"
-              actions={
-                <>
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <button onClick={() => setShowImportModal(true)} aria-label="Import leads from CSV" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5"><Upload size={12} /> Import CSV</button>
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <button onClick={handleExport} disabled={exporting} aria-label="Export leads to CSV" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5 disabled:opacity-50">
-                      {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
-                      {exporting ? "Exporting..." : "Export"}
-                    </button>
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <button onClick={() => setShowAddModal(true)} className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.08)] border border-[rgba(0,0,0,0.12)] text-[#0A0A0B] text-xs font-semibold hover:bg-[rgba(0,0,0,0.12)] transition-all flex items-center gap-1.5"><UserPlus size={12} /> Add Lead</button>
-                  </motion.div>
-                </>
-              }
-            />{/* Stats � collapsible (state persists) */}<CollapsibleStats
+    <MotionPage className="fade-in space-y-4">{/* Modals */}{showImportModal && <ImportCSVModal onClose={() => setShowImportModal(false)} onSuccess={fetchLeads} />}{showAddModal && <AddLeadModal onClose={() => setShowAddModal(false)} onSuccess={fetchLeads} />}{/* Header */}{/* -- Leads command strip (slim editorial header, no PageHero) -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0 flex items-center gap-3">
+          <div>
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+              Contact HQ
+            </p>
+            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+              Lead Engine
+            </h1>
+          </div>
+          {totalCount > 0 && (
+            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[#1D4ED8]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
+              {totalCount.toLocaleString()} lead{totalCount !== 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <button onClick={() => setShowImportModal(true)} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.03)] text-xs font-medium text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.06)] transition-colors">
+            <Upload size={12} /> Import
+          </button>
+          <button onClick={handleExport} disabled={exporting} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.03)] text-xs font-medium text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.06)] transition-colors disabled:opacity-40">
+            {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
+            {exporting ? "…" : "Export"}
+          </button>
+          <button onClick={() => setShowAddModal(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8]/90 transition-all">
+            <UserPlus size={12} /> Add Lead
+          </button>
+        </div>
+      </div>{/* Stats � collapsible (state persists) */}<CollapsibleStats
               storageKey="leads"
               icon={<BarChart3 size={14} className="text-[#2563EB]" />}
               title="Lead Stats"

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/platform-icons";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
-import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { PrismPanel } from "@/components/prism";
 import { useQuotaWall } from "@/components/billing/quota-wall";
@@ -760,21 +759,27 @@ export default function OutreachHubPage() {
 
   return (
     <MotionPage className="fade-in space-y-4"><ErrorBoundary section="Outreach Hub">
-            {/* -- Hero Header -- */}
-            <PageHero
-              eyebrow="OUTREACH COMMAND"
-              icon={<Send size={22} />}
-              title="Outreach Hub"
-              subtitle="Build targeted outreach campaigns across email, SMS, calls & DMs � target B2B or B2C leads by industry, niche, and location."
-              gradient="gold"
-              actions={
-                <button onClick={handleSave} disabled={saving}
-                  className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all disabled:opacity-40">
+            {/* -- Outreach Hub command strip (slim editorial header, no PageHero) -- */}
+            <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+              <div className="min-w-0">
+                <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+                  Outreach Command
+                </p>
+                <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+                  Outreach Hub
+                </h1>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8]/90 transition-all disabled:opacity-40"
+                >
                   {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
                   Save All
                 </button>
-              }
-            />
+              </div>
+            </div>
 
             {/* -- How Outreach Works (collapsible explainer) -- */}
             <div className="card border-blue-400/20 bg-gradient-to-br from-blue-500/5 via-surface to-surface">

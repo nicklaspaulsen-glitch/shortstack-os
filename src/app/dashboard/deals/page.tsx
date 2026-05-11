@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -183,20 +182,33 @@ export default function DealsPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-3"><PageHero
-              icon={<CreditCard size={28} />}
-              eyebrow="DEAL PIPELINE"
-              title="Deals Pipeline"
-              subtitle="Track deals from prospect to close with AI scoring, drag-drop kanban, revenue forecasting, and commission tracking."
-              gradient="gold"
-              actions={
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
-                  <button onClick={() => setShowCreateModal(!showCreateModal)} className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.08)] border border-[rgba(0,0,0,0.12)] text-[#0A0A0B] text-xs font-semibold hover:bg-[rgba(0,0,0,0.12)] transition-all flex items-center gap-1.5">
-                    <Plus size={12} /> New Deal
-                  </button>
-                </motion.div>
-              }
-            />{/* Stats Row � collapsible (state persists) */}<CollapsibleStats
+    <MotionPage className="fade-in space-y-3">{/* -- Deals command strip (slim editorial header, no PageHero) -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0 flex items-center gap-3">
+          <div>
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+              Deal Pipeline
+            </p>
+            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+              Deals Pipeline
+            </h1>
+          </div>
+          {deals.length > 0 && (
+            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[#1D4ED8]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
+              {deals.length} deal{deals.length !== 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={() => setShowCreateModal(!showCreateModal)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8]/90 transition-all"
+          >
+            <Plus size={13} /> New Deal
+          </button>
+        </div>
+      </div>{/* Stats Row � collapsible (state persists) */}<CollapsibleStats
               storageKey="deals"
               icon={<BarChart3 size={14} className="text-[#2563EB]" />}
               title="Deal Stats"
