@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* ── Types ── */
@@ -121,21 +120,23 @@ export default function GenerationsPage() {
   const hasMore = page * limit < total;
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<Sparkles size={28} />}
-              title="Generations"
-              eyebrow="GENERATIONS"
-              subtitle="Everything you've created, organized by category."
-              gradient="sunset"
-              actions={
-                <button
-                  onClick={fetchGenerations}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-medium hover:bg-black/15 transition-all"
-                >
-                  <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
-                </button>
-              }
-            />{/* Stats Strip */}<div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+    <MotionPage className="fade-in space-y-5">{/* -- Generations command strip (slim editorial header, no PageHero) -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+            Content Output
+          </p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+            Generations
+          </h1>
+        </div>
+        <button
+          onClick={fetchGenerations}
+          className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all"
+        >
+          <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
+        </button>
+      </div>{/* Stats Strip */}<div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
               {[
                 { label: "Total Items",  value: total,            icon: <Layers size={14} />,      color: "text-[#2563EB]" },
                 { label: "This Week",    value: thisWeekCount,    icon: <TrendingUp size={14} />,  color: "text-emerald-400" },

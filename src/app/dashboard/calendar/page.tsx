@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -8,7 +8,6 @@ import {
   Users,
   Repeat, Eye, Star, AlertCircle, Loader2
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { GoogleIcon, OutlookIcon } from "@/components/ui/platform-icons";
@@ -305,25 +304,25 @@ export default function CalendarPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* Hero Header */}<PageHero
-              eyebrow="TIME COMMAND"
-              icon={<Calendar size={22} />}
-              title="Calendar"
-              subtitle="Schedule appointments, calls, and meetings. Sync with Google or Outlook � AI detects conflicts automatically."
-              gradient="blue"
-              actions={
-                <>
-                  <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all flex items-center gap-1.5">
-                    <Filter size={12} /> Filters
-                  </button>
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] text-[#0A0A0B] text-xs font-semibold hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5">
-                      <Plus size={12} /> New Event
-                    </button>
-                  </motion.div>
-                </>
-              }
-            />{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
+    <MotionPage className="fade-in space-y-5">{/* -- Calendar command strip (slim editorial header, no PageHero) -- */}
+          <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+            <div className="min-w-0">
+              <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+                Time Command
+              </p>
+              <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+                Calendar
+              </h1>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all flex items-center gap-1.5">
+                <Filter size={12} /> Filters
+              </button>
+              <button onClick={() => setShowCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all">
+                <Plus size={12} /> New Event
+              </button>
+            </div>
+          </div>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${

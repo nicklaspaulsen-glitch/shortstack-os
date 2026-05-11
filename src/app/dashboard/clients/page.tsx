@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -24,7 +24,6 @@ import { staggerContainerFast, fadeUp } from "@/lib/motion-variants";
 
 import CollapsibleStats from "@/components/ui/collapsible-stats";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // --- Types for new features ---
@@ -658,56 +657,58 @@ export default function ClientsPage() {
 
   return (
     <MotionPage className="space-y-4">
-      <PageHero
-        variant="editorial"
-        title="Clients"
-        subtitle={
-          callerRole === "admin" || callerRole === "founder"
-            ? scope === "all" ? `${clients.length} clients across the platform` : "Your agency clients"
-            : "Accounts � Contracts � Invoices"
-        }
-        eyebrow="Client Management"
-        icon={<Users size={16} />}
-        actions={
-          <>
-            {clients.length > 0 && (
-              <div className="hidden sm:flex items-center gap-1.5">
-                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[10px] font-medium text-[#1D4ED8]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#1D4ED8] animate-pulse" />
-                  {clients.length}
+      {/* -- Clients command strip (slim editorial header, no PageHero) -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0 flex items-center gap-3">
+          <div>
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">
+              Client Management
+            </p>
+            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">
+              Clients
+            </h1>
+          </div>
+          {/* Live count + MRR badges beside the title */}
+          {clients.length > 0 && (
+            <div className="hidden sm:flex items-center gap-1.5 ml-1">
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[10px] font-medium text-[#1D4ED8]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#1D4ED8] animate-pulse" />
+                {clients.length}
+              </span>
+              {totalMRR > 0 && (
+                <span className="px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[10px] font-medium text-[#52525B]">
+                  {formatCurrency(totalMRR)}
                 </span>
-                {totalMRR > 0 && (
-                  <span className="px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[10px] font-medium text-[#52525B]">
-                    {formatCurrency(totalMRR)}
-                  </span>
-                )}
-              </div>
-            )}
-            {(callerRole === "admin" || callerRole === "founder") && (
-              <div className="flex items-center bg-[#F2F2F4] border border-[rgba(0,0,0,0.08)] rounded-lg p-0.5">
-                <button
-                  onClick={() => setScope("all")}
-                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                    scope === "all" ? "bg-[#1D4ED8] text-white" : "text-[#52525B] hover:text-[#0A0A0B]"
-                  }`}
-                >All</button>
-                <button
-                  onClick={() => setScope("mine")}
-                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                    scope === "mine" ? "bg-[#1D4ED8] text-white" : "text-[#52525B] hover:text-[#0A0A0B]"
-                  }`}
-                >Mine</button>
-              </div>
-            )}
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all"
-            >
-              <Plus size={13} /> Add Client
-            </button>
-          </>
-        }
-      />
+              )}
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Scope toggle — admin/founder only */}
+          {(callerRole === "admin" || callerRole === "founder") && (
+            <div className="flex items-center bg-[#F2F2F4] border border-[rgba(0,0,0,0.08)] rounded-lg p-0.5">
+              <button
+                onClick={() => setScope("all")}
+                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                  scope === "all" ? "bg-[#1D4ED8] text-white" : "text-[#52525B] hover:text-[#0A0A0B]"
+                }`}
+              >All</button>
+              <button
+                onClick={() => setScope("mine")}
+                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                  scope === "mine" ? "bg-[#1D4ED8] text-white" : "text-[#52525B] hover:text-[#0A0A0B]"
+                }`}
+              >Mine</button>
+            </div>
+          )}
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all"
+          >
+            <Plus size={13} /> Add Client
+          </button>
+        </div>
+      </div>
 
       {/* Clients command strip � MRR focal left, 3 stats inline right */}
       {clients.length > 0 && (

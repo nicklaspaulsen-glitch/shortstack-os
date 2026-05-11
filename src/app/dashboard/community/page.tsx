@@ -10,7 +10,6 @@ import {
   Flame, Trophy, Star, Target, Zap,
   ExternalLink, Link2, Gift, FileText, Video, MapPin, X,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -756,18 +755,20 @@ export default function CommunityPage() {
   const xpPct = Math.round((MY_STATS.xpCurrent / MY_STATS.xpNeeded) * 100);
 
   return (
-    <MotionPage className="fade-in space-y-5 max-w-[900px] mx-auto"><PageHero
-              eyebrow="COMMUNITY"
-              icon={<Users size={28} />}
-              title="Community"
-              subtitle="Connect with other agency owners — share wins, ask questions, discover resources, and RSVP to live events."
-              gradient="purple"
-              actions={
-                <button onClick={() => openQuickAction("new-post")} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
-                  <Plus size={14} /> New Post
-                </button>
-              }
-            />{/* Gamification Bar -- Your Stats */}<div className="glass rounded-xl p-4 border-[rgba(37,99,235,0.1)]">
+    <MotionPage className="fade-in space-y-5 max-w-[900px] mx-auto">{/* -- Community command strip (slim editorial header, no PageHero) -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+            Agency Network
+          </p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+            Community
+          </h1>
+        </div>
+        <button onClick={() => openQuickAction("new-post")} className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all">
+          <Plus size={14} /> New Post
+        </button>
+      </div>{/* Gamification Bar -- Your Stats */}<div className="glass rounded-xl p-4 border-[rgba(37,99,235,0.1)]">
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-sm font-bold text-[#2563EB]">

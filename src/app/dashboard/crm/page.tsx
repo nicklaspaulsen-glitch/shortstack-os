@@ -20,7 +20,6 @@ import {
   Bell, PhoneCall, MessageCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import PageAI from "@/components/page-ai";
 import { InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon } from "@/components/ui/platform-icons";
 import ErrorBoundary from "@/components/error-boundary";
@@ -890,13 +889,23 @@ export default function CRMPage() {
 
   return (
     <MotionPage className="fade-in space-y-3"><ErrorBoundary section="CRM">
-            <PageHero
-              eyebrow="RELATIONSHIP ENGINE"
-              icon={<Users size={22} />}
-              title="CRM"
-              subtitle="Your full contact database � track leads, log activity, score prospects, and close deals with AI-powered enrichment and bulk actions."
-              gradient="blue"
-            />
+            {/* -- CRM command strip (slim editorial header, no PageHero) -- */}
+            <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+              <div className="min-w-0">
+                <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+                  Relationship Engine
+                </p>
+                <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+                  CRM
+                </h1>
+              </div>
+              {stats.total > 0 && (
+                <span className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[10px] font-medium text-[#1D4ED8]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1D4ED8] animate-pulse" />
+                  {stats.total} leads
+                </span>
+              )}
+            </div>
             {/* -- Stats Dashboard -- */}
             <div className="card p-0 overflow-hidden">
               <button onClick={() => setStatsCollapsed(!statsCollapsed)}
