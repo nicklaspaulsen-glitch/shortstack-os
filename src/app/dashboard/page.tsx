@@ -20,21 +20,18 @@ import type { BentoData } from "@/components/dashboard-home/types";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /**
- * Dashboard home � the editorial-bento redesign (Phase 2B).
+ * Dashboard home — Phase 3 command center.
  *
- * Above the bento grid:
- *   - UsageNudgeBanner (Starter only, >70% usage)
- *   - DashboardHeroStrip � slim editorial header with greeting + clock + micro-stats
- *   - DowntimeBanner � alerts when an integration is down
+ * Layout order (bento IS the hero):
+ *   1. UsageNudgeBanner + DowntimeBanner  — critical alerts, slim
+ *   2. DashboardHeroStrip                  — slim editorial header, no PageHero
+ *   3. BentoGrid                           — immediately in viewport on load
+ *   4. OnboardingChecklist                 — below bento (veterans scroll past)
+ *   5. TrinityOrb + TrinityHero3D + AgentOfficeTile — below fold, on scroll
+ *   6. AiRecommender + RecentGenerations   — deep below fold
  *
- * The bento grid (8 tiles) is the centerpiece. Trinity orb + the
- * AI recommender sit below it for users who want to take action.
- *
- * Data wiring: client-side fetch from `/api/dashboard-bento` (RLS-gated
- * server route). The original `/api/dashboard-data` is left intact � it
- * powers the deeper stats/pipeline/agent panels we removed from the home
- * (those still exist on `/dashboard/leads`, `/dashboard/agent-supervisor`,
- * etc.) so no wiring is broken downstream.
+ * Data wiring: client-side fetch from /api/dashboard-bento (RLS-gated).
+ * The original /api/dashboard-data powers deeper stat panels on sub-routes.
  */
 
 // Lazy below-the-fold components
@@ -50,8 +47,6 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   // Show success toast after Stripe checkout redirect.
-  // The webhook activates the plan server-side; refreshProfile() pulls the
-  // fresh plan_tier so gated features unlock immediately.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
@@ -65,12 +60,11 @@ export default function DashboardPage() {
       window.history.replaceState({}, "", "/dashboard");
       return () => clearTimeout(t);
     }
-  // refreshProfile is stable per-context � no need to re-run on identity change.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // refreshProfile is stable per-context
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Fetch bento data on mount. Safety timeout clears the loading state if
-  // the API hangs (degraded networks, RLS misconfigured, etc.).
+  // Fetch bento data. Safety timeout releases loading after 8s.
   useEffect(() => {
     let cancelled = false;
     const fetchBento = async () => {
@@ -95,60 +89,45 @@ export default function DashboardPage() {
     };
   }, []);
 
-  // Client portal users get a different shell. Keep the existing client view
-  // intact � only the agency owner home is redesigned in this phase.
+  // Client portal: separate shell
   if (profile?.role === "client") {
-    return <MotionPage>
-                 <ClientDashboard />
-               </MotionPage>;
+    return (
+      <MotionPage>
+        <ClientDashboard />
+      </MotionPage>
+    );
   }
 
   if (loading) return <PageSkeleton />;
 
   const firstName = profile?.nickname?.split(" ")[0] || profile?.full_name?.split(" ")[0];
-
-  // Defensive fallback: the API failed and we have no data. Still render the
-  // hero + Trinity orb so the page isn't a blank surface.
   const microStats = bento?.microStats ?? { calls: 0, leads: 0, hot: 0 };
 
   return (
     <div className="fade-in space-y-4 max-w-[1400px] mx-auto">
+      {/* Critical alert banners — kept at absolute top */}
       <UsageNudgeBanner planTier={profile?.plan_tier} />
-
-      {/* Getting-started checklist � shown to new users until all 5 items
-          are complete OR the user dismisses it. Hides itself via localStorage
-          (14-day auto-expire). completedFromApi can be wired to real data
-          once the dashboard-bento API surface exposes setup flags. */}
-      <OnboardingChecklist />
-
-      <DashboardHeroStrip firstName={firstName} microStats={microStats} />
-
       <DowntimeBanner />
 
-      {/* Trinity 3D speaking hero � replaces the orb for the new
-          monochrome direction. R3F crystal lazy-loads + lip-syncs
-          to AI suggestions piped from /api/ai/suggest-topics. */}
-      <TrinityHero3D greeting={firstName} suggestionSurface="script_lab" />
+      {/* Slim editorial command header — no PageHero. The bento IS the hero. */}
+      <DashboardHeroStrip firstName={firstName} microStats={microStats} />
 
-      {/* Agent Office preview � smooth premium tile (replaces the
-          pixelated PixiJS preview that used to live here). Each agent
-          gets a circular disc + name + role. Live pulse rings when
-          the agent has recent activity. Links into the full office
-          page for the live PixiJS experience. */}
-      <AgentOfficeTile />
-
-      {/* Legacy ask-anything orb stays available below the hero � keeps
-          the chat-prompt entry point that some users rely on. */}
-      <TrinityOrb firstName={firstName} />
-
-      {/* The bento grid */}
+      {/* Bento grid — first major content block, immediately visible on load */}
       {bento ? (
         <BentoGrid data={bento} />
       ) : (
         <BentoFallback />
       )}
 
-      {/* Below-the-fold AI helpers � kept from the previous dashboard */}
+      {/* Onboarding checklist — below bento so it doesn't push data off-screen
+          on repeat visits. New users will scroll down; veterans skip it. */}
+      <OnboardingChecklist />
+
+      {/* Below-the-fold enhancers — discoverable on scroll, not blocking data */}
+      <TrinityOrb firstName={firstName} />
+      <TrinityHero3D greeting={firstName} suggestionSurface="script_lab" />
+      <AgentOfficeTile />
+
       <AiRecommender />
       <RecentGenerations />
 
@@ -159,9 +138,7 @@ export default function DashboardPage() {
 }
 
 /**
- * Pre-warm the route cache for likely navigation targets � keeps the bento
- * "View ?" links instant. Wrapped as a no-render component so the prefetch
- * effect runs after the bento mounts.
+ * Pre-warm the route cache for likely navigation targets.
  */
 function RouterPrefetch({ router }: { router: ReturnType<typeof useRouter> }) {
   useEffect(() => {
@@ -177,7 +154,7 @@ function RouterPrefetch({ router }: { router: ReturnType<typeof useRouter> }) {
       try {
         router.prefetch(t);
       } catch {
-        // prefetch is best-effort; ignore failures
+        // prefetch is best-effort
       }
     }
   }, [router]);
@@ -185,19 +162,24 @@ function RouterPrefetch({ router }: { router: ReturnType<typeof useRouter> }) {
 }
 
 /**
- * Render a friendly fallback when the bento API failed entirely. Surfaces
- * the brand mark, a one-line editorial copy, and a primary CTA � matches
- * the per-tile empty-state design language so the page never feels broken.
+ * Friendly fallback when the bento API failed entirely.
  */
 function BentoFallback() {
   return (
-    <div className="rounded-xl border border-[rgba(0,0,0,0.08)] p-12 flex flex-col items-center justify-center text-center gap-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)" }}>
-      <p className="font-editorial text-base text-[#52525B] max-w-md">
+    <div
+      className="rounded-xl border border-border-subtle p-12 flex flex-col items-center justify-center text-center gap-4"
+      style={{
+        background: "rgba(255,255,255,0.88)",
+        backdropFilter: "blur(16px) saturate(1.5)",
+        WebkitBackdropFilter: "blur(16px) saturate(1.5)",
+      }}
+    >
+      <p className="font-editorial text-base text-text-secondary max-w-md">
         Couldn&apos;t reach the dashboard service. Refresh the page or check the system status if this keeps happening.
       </p>
       <Link
         href="/dashboard/monitor"
-        className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[var(--brand-accent)] text-white"
+        className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-brand-accent text-white"
       >
         Check system status
       </Link>
@@ -206,9 +188,8 @@ function BentoFallback() {
 }
 
 /**
- * ClientDashboard � unchanged from the previous home. Client portal users
- * see a simpler "your services" surface. The agency-owner redesign doesn't
- * touch this view; portal pages have their own design language.
+ * ClientDashboard — client portal users see a simpler "your services" surface.
+ * The agency-owner redesign doesn't touch this view.
  */
 function ClientDashboard() {
   const { profile } = useAuth();
@@ -218,14 +199,15 @@ function ClientDashboard() {
   return (
     <div className="fade-in space-y-6 max-w-[1000px] mx-auto">
       <div className="relative inline-block">
-        <h1 className="font-display text-3xl font-bold tracking-tight">Welcome, {profile?.full_name}</h1>
-        {/* Blue underline accent */}
+        <h1 className="font-display text-3xl font-bold tracking-tight">
+          Welcome, {profile?.full_name}
+        </h1>
         <div
           className="h-[2px] mt-1 rounded-full"
           style={{ background: "linear-gradient(90deg, var(--brand-accent, #2563EB) 0%, transparent 70%)" }}
           aria-hidden
         />
-        <p className="text-sm text-muted mt-1.5">Your client portal</p>
+        <p className="text-sm text-text-muted mt-1.5">Your client portal</p>
       </div>
 
       <TrinityOrb
@@ -240,12 +222,14 @@ function ClientDashboard() {
       />
 
       <div>
-        <p className="text-xs font-medium uppercase tracking-widest text-muted mb-3">Quick access</p>
+        <p className="text-xs font-medium uppercase tracking-widest text-text-muted mb-3">
+          Quick access
+        </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "My Services", icon: <Briefcase size={22} />, color: "text-[var(--brand-accent)]", route: "/dashboard/portal" },
+            { label: "My Services", icon: <Briefcase size={22} />, color: "text-brand-accent", route: "/dashboard/portal" },
             { label: "Invoices", icon: <FileText size={22} />, color: "text-info", route: "/dashboard/portal/billing" },
-            { label: "Content", icon: <Sparkles size={22} />, color: "text-[var(--brand-accent-soft)]", route: "/dashboard/portal/content" },
+            { label: "Content", icon: <Sparkles size={22} />, color: "text-brand-accent", route: "/dashboard/portal/content" },
             { label: "Contact Us", icon: <Send size={22} />, color: "text-success", route: "/dashboard/portal/support" },
           ].map((item, i) => (
             <button
