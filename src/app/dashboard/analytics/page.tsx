@@ -595,9 +595,11 @@ export default function AnalyticsPage() {
                 {/* Support stats strip � 3 remaining */}
                 <div className="flex flex-1 grid-cols-3 md:pl-6">
                   {[
-                    { label: "DMs Sent", value: stats.dmsSent.toLocaleString(), sub: `${replyRate}% reply rate`, subOk: replyRate >= 5 },
-                    { label: "Calls Booked", value: stats.callsBooked.toLocaleString(), sub: "this period", subOk: true },
-                    { label: "Deals Won", value: stats.totalDeals.toLocaleString(), sub: `${formatCurrency(stats.dealValue)} closed`, subOk: true },
+                    { label: "DMs Sent", value: stats.dmsSent.toLocaleString(), sub: `${replyRate}% reply rate`, subOk: replyRate >= 5,
+                      sparkData: outreachByDay.length > 1 ? outreachByDay.slice(-10).map(d => d.sent) : undefined },
+                    { label: "Calls Booked", value: stats.callsBooked.toLocaleString(), sub: "this period", subOk: true, sparkData: undefined },
+                    { label: "Deals Won", value: stats.totalDeals.toLocaleString(), sub: `${formatCurrency(stats.dealValue)} closed`, subOk: true,
+                      sparkData: revenueByMonth.length > 1 ? revenueByMonth.slice(-8).map(r => r.deals) : undefined },
                   ].map((stat, i) => (
                     <motion.div
                       key={stat.label}
@@ -607,9 +609,14 @@ export default function AnalyticsPage() {
                       transition={{ duration: 0.38, delay: 0.22 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <p className="text-xs text-[#52525B] uppercase tracking-widest font-normal">{stat.label}</p>
-                      <p className="font-display text-xl font-semibold tracking-[-0.03em] mt-1 text-[#0A0A0B]" style={{ fontVariantNumeric: "tabular-nums" }}>
-                        {stat.value}
-                      </p>
+                      <div className="flex items-end justify-between gap-2 mt-1">
+                        <p className="font-display text-xl font-semibold tracking-[-0.03em] text-[#0A0A0B]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                          {stat.value}
+                        </p>
+                        {stat.sparkData && stat.sparkData.length > 1 && (
+                          <Sparkline values={stat.sparkData} color="#3B82F6" id={`z1s-${i}`} width={44} height={18} />
+                        )}
+                      </div>
                       <p className="text-[10px] mt-0.5" style={{ color: stat.subOk ? "#52525B" : "#F26063" }}>{stat.sub}</p>
                     </motion.div>
                   ))}
@@ -635,7 +642,12 @@ export default function AnalyticsPage() {
           </motion.div>
 
           {/* -- Zone 2: Lead velocity + Lead sources ----------------------- */}
-          <div className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-4">
+          <motion.div
+            className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-4"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.44, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+          >
 
             {/* Lead velocity area chart */}
             <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
@@ -716,10 +728,15 @@ export default function AnalyticsPage() {
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* -- Zone 3: Funnel + Outreach ----------------------------------- */}
-          <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-4">
+          <motion.div
+            className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-4"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.44, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+          >
 
             {/* Conversion funnel */}
             <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
@@ -809,7 +826,7 @@ export default function AnalyticsPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* -- Zone 4: Industries + Goals + Benchmarks (bento asymmetric) -- */}
           <div className="grid grid-cols-1 lg:grid-cols-[4fr_5fr_7fr] gap-4 items-start">
@@ -982,7 +999,7 @@ export default function AnalyticsPage() {
                 { label: "Reply Rate", value: `${replyRate}%`, sub: `${stats.dmsSent.toLocaleString()} DMs sent`, color: "#3B82F6",
                   sparkData: outreachByDay.slice(-10).map(d => d.replies) },
                 { label: "Active Clients", value: String(stats.activeClients), sub: `${formatCurrency(stats.totalMRR)} MRR`, color: "#1D4ED8",
-                  sparkData: undefined },
+                  sparkData: revenueByMonth.length > 1 ? revenueByMonth.map(r => r.mrr) : undefined },
               ].map((cell, i) => (
                 <motion.div
                   key={cell.label}
