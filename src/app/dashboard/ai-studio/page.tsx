@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,6 @@ import SafeThumb from "@/components/safe-thumb";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
-import PageHero from "@/components/ui/page-hero";
 
 
 // -- Types --------------------------------------------------------
@@ -139,39 +138,46 @@ export default function AIStudioPage() {
   return (
     <MotionPage className="p-0">
 
-      <PageHero
-        variant="editorial"
-        title="AI Studio"
-        subtitle="Creative Suite � 9 tools"
-        eyebrow="Generative Media"
-        icon={<Layers size={16} />}
-        actions={
-          <>
-            {history.length > 0 && (
-              <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#1D4ED8]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
-                {history.filter(j => j.status === "completed").length} done
-              </span>
-            )}
-            <span className="hidden md:flex items-center gap-1 text-[10px] text-[#71717A] px-2.5 py-1 rounded-md bg-[rgba(0,0,0,0.02)] border border-[rgba(0,0,0,0.06)]">
-              {TOOLS.find(t => t.id === activeTool)?.name ?? "�"}
+      {/* -- AI Studio command strip (slim editorial header, no PageHero) -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0 flex items-center gap-3">
+          <div>
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+              Generative Media
+            </p>
+            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+              AI Studio
+            </h1>
+          </div>
+          <span className="hidden sm:flex items-center gap-1 text-[10px] font-medium px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#52525B]">
+            {TOOLS.length} tools
+          </span>
+          {history.length > 0 && (
+            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[#1D4ED8]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
+              {history.filter(j => j.status === "completed").length} done
             </span>
-            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-            {advancedMode && (
-              <button
-                onClick={() => {
-                  setActiveTool("image-gen");
-                  setCreationWizardOpen(true);
-                }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-xs font-bold hover:bg-[#1D4ED8] transition-all"
-              >
-                <Sparkles size={13} />
-                New with AI
-              </button>
-            )}
-          </>
-        }
-      />
+          )}
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="hidden md:flex items-center gap-1 text-[10px] text-[#71717A] px-2.5 py-1 rounded-md bg-[rgba(0,0,0,0.02)] border border-[rgba(0,0,0,0.06)]">
+            {TOOLS.find(t => t.id === activeTool)?.name ?? "Select tool"}
+          </span>
+          <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+          {advancedMode && (
+            <button
+              onClick={() => {
+                setActiveTool("image-gen");
+                setCreationWizardOpen(true);
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-xs font-bold hover:bg-[#1D4ED8] transition-all"
+            >
+              <Sparkles size={13} />
+              New with AI
+            </button>
+          )}
+        </div>
+      </div>
 
       {/* -- GUIDED MODE ------------------------------------------- */}
       {!advancedMode && (
