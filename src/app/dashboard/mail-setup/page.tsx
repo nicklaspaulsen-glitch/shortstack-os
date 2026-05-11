@@ -32,7 +32,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import MailboxPlanner from "@/components/mail-setup/mailbox-planner";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -206,12 +205,13 @@ export default function MailSetupPage() {
   );
 
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground"><PageHero
-              title="Mail Setup"
-              eyebrow="MAIL SETUP"
-              subtitle="Send email from your own branded subdomain (mail.yourdomain.com) so it lands in the inbox, not spam."
-              icon={<Mail size={20} />}
-            /><div className="mx-auto max-w-5xl px-6 pb-10 space-y-6">
+    <MotionPage className="min-h-screen bg-background text-foreground">{/* -- Mail Setup command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">MAIL SETUP</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Mail Setup</h1>
+      </div>
+    </div><div className="mx-auto max-w-5xl px-6 pb-10 space-y-6">
               {/* Mailbox Planner — GHL-style mailbox catalog with cost preview.
                   Per Apr 26 user ask: "showing which mails there is out there
                   and forming out details to get the thing they want and what

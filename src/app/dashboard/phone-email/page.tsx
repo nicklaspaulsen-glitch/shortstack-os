@@ -9,7 +9,6 @@ import {
   BarChart3, Users
 } from "lucide-react";
 import PageAI from "@/components/page-ai";
-import PageHero from "@/components/ui/page-hero";
 import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -486,13 +485,13 @@ export default function PhoneEmailPage() {
   const clientsWithoutPhone = clients.filter(c => !c.twilio_phone_number);
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<Phone size={28} />}
-              title="Sender Management"
-              eyebrow="PHONE & EMAIL"
-              subtitle="Phone & email sender pool with smart rotation."
-              gradient="gold"
-            />{/* ════════════════════ ROTATION STATS CARD ════════════════════ */}<div className="glass rounded-xl p-4 space-y-3">
+    <MotionPage className="fade-in space-y-5">{/* -- Sender Management command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">PHONE & EMAIL</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Sender Management</h1>
+      </div>
+    </div>{/* ════════════════════ ROTATION STATS CARD ════════════════════ */}<div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Activity size={14} className="text-[#2563EB]" />

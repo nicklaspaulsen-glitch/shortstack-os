@@ -5,7 +5,6 @@ import { Users, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { useAppStore } from "@/lib/store";
-import PageHero from "@/components/ui/page-hero";
 import ClientRoomCanvas from "@/components/agent-room/client-room-canvas";
 import { PageLoading } from "@/components/ui/loading";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -82,12 +81,13 @@ export default function PortalAgencyRoomPage() {
     // brand-new client account that isn't yet linked to a `clients` row.
     return (
       <div className="fade-in space-y-5 p-6">
-        <PageHero
-          icon={<Users size={28} />}
-          title="Your Agency Room"
-          subtitle="Live view of every agent working on your project."
-          gradient="gold"
-        />
+        {/* -- Your Agency Room command strip -- */}
+        <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+          <div className="min-w-0">
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">YOUR AGENCY ROOM</p>
+            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Your Agency Room</h1>
+          </div>
+        </div>
         <div className="border border-black/[0.06] bg-white p-8 text-center">
           <Sparkles className="mx-auto mb-3 text-[#2563EB]/60" size={32} />
           <h2 className="text-base font-semibold mb-1">Your room isn&apos;t set up yet</h2>
@@ -103,12 +103,13 @@ export default function PortalAgencyRoomPage() {
 
   return (
     <div className="fade-in space-y-5 p-6">
-      <PageHero
-        icon={<Users size={28} />}
-        title="Your Agency Room"
-        subtitle="Live view of every agent working on your project — their zones, status, and last actions."
-        gradient="gold"
-      />
+      {/* -- Your Agency Room command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">YOUR AGENCY ROOM</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Your Agency Room</h1>
+        </div>
+      </div>
       <ClientRoomCanvas
         clientId={client.id}
         clientName={client.business_name}

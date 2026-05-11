@@ -6,7 +6,6 @@ import {
   Tag, Plus, Pencil, Trash2, Check, X, Loader2,
   Users, Sparkles, GitMerge, ExternalLink,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { PrismPanel } from "@/components/prism";
 import { createClient } from "@/lib/supabase/client";
@@ -227,14 +226,14 @@ export default function TagsPage() {
   }
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              eyebrow="TAG MANAGER"
-              title="Tag Manager"
-              subtitle="Unified tag namespace across leads, clients, deals, and content."
-              icon={<Tag size={22} />}
-              gradient="blue"
-              actions={
-                <div className="flex items-center gap-2">
+    <MotionPage className="space-y-6">{/* -- Tag Manager command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">TAG MANAGER</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Tag Manager</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2">
                   <button onClick={handleBulkDeleteUnused} disabled={bulkBusy}
                     className="btn-ghost flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg disabled:opacity-50"
                     title="Remove every tag that has zero usages">
@@ -245,8 +244,8 @@ export default function TagsPage() {
                     <Plus size={16} /> New Tag
                   </button>
                 </div>
-              }
-            />{/* Bulk-action bar — appears when at least one tag is selected */}{selected.size > 0 && (
+      </div>
+    </div>{/* Bulk-action bar — appears when at least one tag is selected */}{selected.size > 0 && (
               <PrismPanel padding="p-3" border="strong" className="flex items-center justify-between gap-3">
                 <p className="text-xs text-[#6B7280]">
                   <span className="font-semibold text-[#374151]">{selected.size}</span> tag{selected.size === 1 ? "" : "s"} selected

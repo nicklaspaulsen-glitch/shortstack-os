@@ -13,7 +13,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Sparkles, Wand2, Type, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
@@ -117,14 +116,14 @@ export default function VoiceProfileSettingsPage() {
   }
 
   return (
-    <MotionPage className="p-6 space-y-6 max-w-5xl mx-auto"><PageHero
-              title="Voice Profile"
-              eyebrow="VOICE PROFILE"
-              subtitle="Teach Trinity how YOU write. Every AI message is rewritten to sound like you - not like a template. Captured automatically from sent emails, SMS, DMs, and meeting transcripts."
-              icon={<Sparkles size={22} />}
-              gradient="purple"
-              actions={
-                <button
+    <MotionPage className="p-6 space-y-6 max-w-5xl mx-auto">{/* -- Voice Profile command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">VOICE PROFILE</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Voice Profile</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   onClick={handleRecompute}
                   disabled={busy || loading}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-white text-zinc-900 hover:bg-zinc-100 disabled:opacity-50 transition-colors"
@@ -132,8 +131,8 @@ export default function VoiceProfileSettingsPage() {
                   <RefreshCw size={15} className={busy ? "animate-spin" : ""} />
                   Recompute
                 </button>
-              }
-            />{loading ? (
+      </div>
+    </div>{loading ? (
               <div className="h-48 rounded-xl bg-black/4 animate-pulse" />
             ) : (
               <>

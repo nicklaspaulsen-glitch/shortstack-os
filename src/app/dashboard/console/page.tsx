@@ -21,7 +21,6 @@
 
 import { redirect } from "next/navigation";
 import { Terminal } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import EnvPanel from "@/components/admin/console/EnvPanel";
 import SelfTestHistory from "@/components/admin/console/SelfTestHistory";
@@ -320,14 +319,13 @@ export default async function AdminConsolePage() {
   const cronEntries = buildCronEntries();
 
   return (
-    <MotionPage className="fade-in max-w-6xl mx-auto space-y-5"><PageHero
-              icon={<Terminal size={26} />}
-              title="Admin Console"
-              subtitle="Internal dev-tools dashboard — env vars, DB health, errors, webhooks, and cron jobs."
-              gradient="blue"
-              eyebrow="Admin · /dashboard/console"
-              sparkles={false}
-            />{/* Row 1: Env-var presence + Self-test history */}<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <MotionPage className="fade-in max-w-6xl mx-auto space-y-5">{/* -- Admin Console command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Admin · /dashboard/console</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Admin Console</h1>
+      </div>
+    </div>{/* Row 1: Env-var presence + Self-test history */}<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <EnvPanel items={envItems} />
               <SelfTestHistory runs={selfTestRuns} />
             </div>{/* Row 2: DB row counts + Webhook dedup health */}<div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Megaphone, Calendar, Sparkles, Lightbulb, BarChart3, Users } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { useAuth } from "@/lib/auth-context";
 import Tab1Calendar from "./components/Tab1Calendar";
 import Tab2AIUpload from "./components/Tab2AIUpload";
@@ -34,13 +33,13 @@ export default function SocialStudioPage() {
   const [tab, setTab] = useState<StudioTab>("calendar");
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              title="Social Studio"
-              subtitle="Plan, post, and grow across every platform"
-              gradient="gold"
-              icon={<Megaphone size={20} />}
-              eyebrow="POST STUDIO"
-            /><div className="glass rounded-xl p-1 flex flex-wrap gap-1">
+    <MotionPage className="space-y-6">{/* -- Social Studio command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">POST STUDIO</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Social Studio</h1>
+      </div>
+    </div><div className="glass rounded-xl p-1 flex flex-wrap gap-1">
               {TABS.map((t, index) => {
                 const active = tab === t.key;
                 return (

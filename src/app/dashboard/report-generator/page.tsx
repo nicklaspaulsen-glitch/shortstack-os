@@ -18,7 +18,6 @@ import {
   History,
   RefreshCw,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { Wizard, type WizardStepDef } from "@/components/ui/wizard";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -440,21 +439,21 @@ export default function ReportGeneratorPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6 fade-in">
-      <PageHero
-        eyebrow="REPORT BUILDER"
-        icon={<FileBarChart size={22} />}
-        title="Report Generator"
-        subtitle="Professional, white-labeled PDF reports for your clients — built from real data in your workspace."
-        gradient="blue"
-        actions={
+      {/* -- Report Generator command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">REPORT BUILDER</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Report Generator</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => { fetchClients(); fetchHistory(); }}
             className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all"
           >
             <RefreshCw size={12} /> Refresh
           </button>
-        }
-      />
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} className="lg:col-span-2 glass rounded-xl overflow-hidden">

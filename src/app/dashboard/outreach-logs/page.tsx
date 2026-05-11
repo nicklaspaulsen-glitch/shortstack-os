@@ -17,7 +17,6 @@ import {
   XTwitterIcon,
 } from "@/components/ui/platform-icons";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { motion } from "framer-motion";
 import { PrismPanel } from "@/components/prism";
@@ -536,13 +535,13 @@ export default function OutreachLogsPage() {
   const bookRate = stats.total > 0 ? ((bookedCount / stats.total) * 100).toFixed(1) : "0";
 
   return (
-    <MotionPage className="fade-in space-y-4">{/* Hero Header */}<PageHero
-              eyebrow="OUTREACH HISTORY"
-              icon={<Send size={22} />}
-              title="Outreach Logs"
-              subtitle="Full communication history � calls, emails, SMS, DMs with transcripts & details."
-              gradient="blue"
-            /><div className="flex items-center justify-end">
+    <MotionPage className="fade-in space-y-4">{/* Hero Header */}{/* -- Outreach Logs command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">OUTREACH HISTORY</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Outreach Logs</h1>
+      </div>
+    </div><div className="flex items-center justify-end">
               <div className="flex gap-2">
                 <button onClick={() => fetchEntries()} className="btn-secondary text-xs flex items-center gap-1.5">
                   <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh

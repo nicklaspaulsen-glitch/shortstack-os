@@ -10,7 +10,6 @@ import {
   Users, Zap, Bot, Globe, CreditCard, Settings,
   MessageSquare, Mail, Loader, Crown, Monitor
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface Step {
@@ -136,12 +135,13 @@ export default function GettingStartedPage() {
   const progress = Math.round((completed.size / STEPS.length) * 100);
 
   return (
-    <MotionPage className="fade-in space-y-5 max-w-2xl"><PageHero
-              icon={<Rocket size={22} />}
-              title="Getting Started"
-              subtitle="Complete these steps to set up your agency OS."
-              gradient="gold"
-            />{/* Progress */}<motion.div
+    <MotionPage className="fade-in space-y-5 max-w-2xl">{/* -- Getting Started command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">GETTING STARTED</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Getting Started</h1>
+      </div>
+    </div>{/* Progress */}<motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}

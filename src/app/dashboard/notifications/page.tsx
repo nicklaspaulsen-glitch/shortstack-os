@@ -14,7 +14,6 @@ import {
   CheckCircle2, Eye, ExternalLink, Loader, RefreshCw,
   Info, XCircle, ChevronRight, Filter, Check,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* -- Types -- */
@@ -297,14 +296,14 @@ export default function NotificationsPage() {
 
   /* -- Render -- */
   return (
-    <MotionPage className="fade-in space-y-6"><PageHero
-              icon={<Bell size={28} />}
-              title="Notifications"
-              eyebrow="NOTIFICATIONS"
-              subtitle="Stay informed about tasks, leads & events."
-              gradient="sunset"
-              actions={
-                <>
+    <MotionPage className="fade-in space-y-6">{/* -- Notifications command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">NOTIFICATIONS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Notifications</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <>
                   {unreadCount > 0 && (
                     <span className="text-[10px] font-medium text-[#0A0A0B] bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] px-2.5 py-1 rounded-full">
                       {unreadCount} unread
@@ -330,8 +329,8 @@ export default function NotificationsPage() {
                     </motion.div>
                   )}
                 </>
-              }
-            />{/* --- Search + Filter Tabs --- */}<div className="space-y-3">
+      </div>
+    </div>{/* --- Search + Filter Tabs --- */}<div className="space-y-3">
               {/* Search */}
               <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />

@@ -25,7 +25,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/ui/empty-state";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -124,13 +123,13 @@ export default function ProposalsPage() {
   }, [proposals]);
 
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground"><PageHero
-              title="Proposals"
-              eyebrow="PROPOSAL STUDIO"
-              subtitle="Send branded proposals to prospects — track draft, sent, and signed status in one place."
-              icon={<FileCheck size={20} />}
-              gradient="purple"
-            /><div className="mx-auto max-w-5xl space-y-5 px-6 pb-10 pt-5">
+    <MotionPage className="min-h-screen bg-background text-foreground">{/* -- Proposals command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">PROPOSAL STUDIO</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Proposals</h1>
+      </div>
+    </div><div className="mx-auto max-w-5xl space-y-5 px-6 pb-10 pt-5">
               {/* Beta banner */}
               <div className="rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-4 py-3 text-[12px] text-[#2563EB]">
                 <span className="font-semibold">Beta:</span> proposals are stored locally on this

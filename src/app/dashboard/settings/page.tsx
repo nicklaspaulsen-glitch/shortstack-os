@@ -25,7 +25,6 @@ import {
   Zap,
 } from "lucide-react";
 
-import PageHero from "@/components/ui/page-hero";
 import SettingsCard from "@/components/settings/settings-card";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
@@ -133,13 +132,13 @@ export default function SettingsIndexPage() {
   }, [profile?.id, profile?.plan_tier]);
 
   return (
-    <MotionPage className="fade-in space-y-6 max-w-[1200px] mx-auto"><PageHero
-              variant="default"
-              gradient="purple"
-              eyebrow="Configuration"
-              title="Settings"
-              subtitle="Configure your workspace, your brand, and the integrations that power ShortStack."
-            /><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <MotionPage className="fade-in space-y-6 max-w-[1200px] mx-auto">{/* -- Settings command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Configuration</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Settings</h1>
+      </div>
+    </div><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <SettingsCard
                 index={0}
                 href="/dashboard/profile"

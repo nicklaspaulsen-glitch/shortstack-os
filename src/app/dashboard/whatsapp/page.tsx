@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import {
   MessageCircle, Plus, Send, Clock, CheckCircle2, XCircle, Loader2,
   Users, AlertCircle, Calendar, X, ChevronDown, Phone, Inbox,
@@ -221,13 +220,13 @@ export default function WhatsAppPage() {
 
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-4xl mx-auto">
-      <PageHero
-        eyebrow="WHATSAPP CHANNEL"
-        title="WhatsApp Campaigns"
-        subtitle="Send templated WhatsApp messages to your clients� schedule or send now."
-        icon={<MessageCircle className="w-6 h-6" />}
-        gradient="gold"
-        actions={
+      {/* -- WhatsApp Campaigns command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">WHATSAPP CHANNEL</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">WhatsApp Campaigns</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => setShowCompose(true)}
             className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#25D366] hover:bg-[#20b858] text-white transition-all"
@@ -235,8 +234,8 @@ export default function WhatsAppPage() {
             <Plus className="w-4 h-4" />
             New Campaign
           </button>
-        }
-      />
+        </div>
+      </div>
 
       {/* Compose modal */}
       {showCompose && (

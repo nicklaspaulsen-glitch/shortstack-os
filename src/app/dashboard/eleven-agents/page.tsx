@@ -8,7 +8,6 @@ import {
   TrendingUp, Calendar, Shield, ArrowRight, Copy
 } from "lucide-react";
 import { motion } from "framer-motion";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* ── Types ── */
@@ -254,19 +253,19 @@ export default function ElevenAgentsPage() {
   }
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              eyebrow="VOICE AGENTS"
-              icon={<Phone size={28} />}
-              title="ElevenAgents"
-              subtitle="AI voice agents for cold calls & inbound."
-              gradient="gold"
-              actions={
-                <button onClick={() => { loadAgents(); loadVoices(); }} disabled={apiLoading}
+    <MotionPage className="fade-in space-y-5">{/* -- ElevenAgents command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">VOICE AGENTS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">ElevenAgents</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button onClick={() => { loadAgents(); loadVoices(); }} disabled={apiLoading}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/10 border border-border text-foreground text-xs font-medium hover:bg-black/15 transition-all disabled:opacity-50">
                   <RefreshCw size={12} className={apiLoading ? "animate-spin" : ""} /> {apiLoading ? "Loading..." : "Refresh"}
                 </button>
-              }
-            />{/* Stats Strip */}<div className="grid grid-cols-6 gap-3">
+      </div>
+    </div>{/* Stats Strip */}<div className="grid grid-cols-6 gap-3">
               {[
                 { label: "Calls Today", value: totalCallsToday, color: "text-[#2563EB]" },
                 { label: "Qualified", value: qualifiedCalls, color: "text-green-700" },

@@ -8,7 +8,6 @@
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import Link from "next/link";
 import { Activity, DollarSign, Zap, FlaskConical, Shield } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -57,12 +56,13 @@ export default function AdminIndexPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <PageHero
-        title="Admin"
-        subtitle="Founder &amp; admin tools — usage, costs, traces, and system health."
-        icon={<Zap className="w-5 h-5" />}
-        gradient="gold"
-      />
+      {/* -- Admin command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">ADMIN</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Admin</h1>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
         {ADMIN_LINKS.map(({ href, icon: Icon, title, description }, index) => (

@@ -29,7 +29,6 @@ import {
   PieChart,
   Plug,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -97,17 +96,13 @@ export default function AdsManagerPage() {
   const activeTab = TABS.find((t) => t.id === tab);
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              title="Ads Manager"
-              subtitle="One dashboard for Meta, Google, and TikTok ads — with AI-driven budget reallocation."
-              icon={<Megaphone size={20} />}
-              gradient="blue"
-              eyebrow={
-                <span className="inline-flex items-center gap-1 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[#2563EB]">
-                  Cross-platform · AI-optimised
-                </span>
-              }
-            />{/* Tabs */}<PrismPanel padding="px-2 py-1" className="flex flex-wrap gap-1">
+    <MotionPage className="space-y-6">{/* -- Ads Manager command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">ADS MANAGER</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Ads Manager</h1>
+      </div>
+    </div>{/* Tabs */}<PrismPanel padding="px-2 py-1" className="flex flex-wrap gap-1">
               {TABS.map((t, i) => {
                 const Icon = t.icon;
                 const isActive = t.id === tab;

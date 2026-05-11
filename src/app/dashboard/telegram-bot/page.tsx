@@ -10,7 +10,6 @@ import {
   Calendar, BarChart3, Activity, CheckCircle2, XCircle,
   Copy, Sparkles, MessageCircle, Filter
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/ui/empty-state";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
@@ -483,14 +482,14 @@ export default function TelegramBotPage() {
   // ─── Render ──────────────────────────────────────────────────────────────
 
   return (
-    <MotionPage className="space-y-6 animate-fade-in"><PageHero
-              eyebrow="TELEGRAM BOT"
-              icon={<TelegramIcon size={28} />}
-              title="Telegram Bot"
-              subtitle="Manage what your bot sends you and when."
-              gradient="gold"
-              actions={
-                <>
+    <MotionPage className="space-y-6 animate-fade-in">{/* -- Telegram Bot command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">TELEGRAM BOT</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Telegram Bot</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <>
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${botConnected ? "bg-emerald-500/30 text-white border border-emerald-300/40" : "bg-red-500/20 text-white border border-red-300/30"}`}>
                     {botConnected ? <Wifi size={12} /> : <WifiOff size={12} />}
                     {botConnected === null ? "Checking..." : botConnected ? "Connected" : "Disconnected"}
@@ -504,8 +503,8 @@ export default function TelegramBotPage() {
                     {activeCount} active / {pausedCount} paused
                   </span>
                 </>
-              }
-            />{/* Tab Bar */}<div className="flex gap-1 glass rounded-xl p-1 overflow-x-auto">
+      </div>
+    </div>{/* Tab Bar */}<div className="flex gap-1 glass rounded-xl p-1 overflow-x-auto">
               {TABS.map(t => (
                 <button
                   key={t.key}

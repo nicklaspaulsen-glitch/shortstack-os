@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import {
   GitBranch, ChevronRight, ChevronLeft, Sparkles, Users, Video,
@@ -156,12 +155,13 @@ export default function NewFunnelPage() {
   }
 
   return (
-    <MotionPage className="p-6 space-y-6 max-w-4xl mx-auto"><PageHero
-              title="New Funnel"
-              subtitle="Pick a template to get started in seconds, or build from scratch."
-              icon={<GitBranch size={22} />}
-              gradient="purple"
-            />{/* Step indicator */}<div className="flex items-center gap-2">
+    <MotionPage className="p-6 space-y-6 max-w-4xl mx-auto">{/* -- New Funnel command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">NEW FUNNEL</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">New Funnel</h1>
+      </div>
+    </div>{/* Step indicator */}<div className="flex items-center gap-2">
               {[
                 { n: 1, label: "Name & Template" },
                 { n: 2, label: "Review & Create" },

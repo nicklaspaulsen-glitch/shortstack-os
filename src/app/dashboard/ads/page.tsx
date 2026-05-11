@@ -15,7 +15,6 @@ import {
   Copy, Wand2, Loader, Pause, Play,
   Megaphone, RefreshCw, Zap,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { PRISM_GLASS, PRISM_GLASS_STRONG, PRISM_BORDERS } from "@/components/prism/constants";
 import {
   Image as ImageIcon, Type, Globe,
@@ -371,13 +370,13 @@ export default function AdsPage() {
 
   return (
     <div className="fade-in space-y-6 max-w-[1400px] mx-auto">
-      <PageHero
-        eyebrow="AD INTELLIGENCE"
-        icon={<Megaphone size={28} />}
-        title="Ads Center"
-        subtitle="Manage Meta, Google & TikTok campaigns with AI."
-        gradient="sunset"
-        actions={
+      {/* -- Ads Center command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AD INTELLIGENCE</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Ads Center</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <>
             <button onClick={fetchData} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
               <RefreshCw size={12} /> Sync
@@ -386,8 +385,8 @@ export default function AdsPage() {
               <Plus size={12} /> New Campaign
             </button>
           </>
-        }
-      />
+        </div>
+      </div>
 
       {/* Tabs + Filters */}
       <div className="flex items-center justify-between flex-wrap gap-3">

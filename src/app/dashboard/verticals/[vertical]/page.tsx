@@ -23,7 +23,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface ModuleItem {
@@ -262,11 +261,13 @@ export default function VerticalDetailPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <MotionPage><PageHero
-                  title="Loading vertical…"
-                  icon={<Briefcase size={28} />}
-                  gradient="gold"
-                /><div className="max-w-5xl mx-auto px-6 py-10">
+      <MotionPage>{/* -- Loading vertical… command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">LOADING VERTICAL…</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Loading vertical…</h1>
+        </div>
+      </div><div className="max-w-5xl mx-auto px-6 py-10">
                   <div className="rounded-xl bg-[rgba(0,0,0,0.04)] h-96 animate-pulse" />
                 </div></MotionPage>
     );
@@ -276,21 +277,13 @@ export default function VerticalDetailPage({ params }: PageProps) {
 
   return (
     <div>
-      <PageHero
-        title={data.template.display_name}
-        subtitle={data.template.description}
-        icon={<Briefcase size={28} />}
-        gradient={data.template.accent}
-        eyebrow={
-          <Link
-            href="/dashboard/verticals"
-            className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase opacity-90 hover:opacity-100"
-          >
-            <ArrowLeft size={12} />
-            Back to verticals
-          </Link>
-        }
-      />
+      {/* -- data.template.display_name command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">DATA.TEMPLATE.DISPLAY_NAME</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">{data.template.display_name}</h1>
+        </div>
+      </div>
 
       <div className="max-w-5xl mx-auto px-6 py-10 space-y-10">
         {/* Module selection */}

@@ -18,7 +18,6 @@ import {
   AlertTriangle, Zap, TrendingUp, Shield, Layers, Loader,
   ThumbsUp, GitBranch, Star, ChevronRight, X
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -538,33 +537,33 @@ export default function ContentPage() {
 
   if (loading && tab === "scripts") return (
     <div className="space-y-4">
-      <PageHero
-        icon={<Sparkles size={22} />}
-        eyebrow="CONTENT STUDIO"
-        title="Content Studio"
-        subtitle="Scripts, publishing queue, and your personal brand content."
-        gradient="purple"
-      />
+      {/* -- Content Studio command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">CONTENT STUDIO</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Content Studio</h1>
+        </div>
+      </div>
       <TableSkeleton rows={6} />
     </div>
   );
 
   return (
     <MotionPage className="space-y-6">
-      <PageHero
-        icon={<Sparkles size={22} />}
-        eyebrow="CONTENT STUDIO"
-        title="Content AI Agent"
-        subtitle="Scripts, requests, publishing & personal brand."
-        gradient="purple"
-        actions={
+      {/* -- Content AI Agent command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">CONTENT STUDIO</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Content AI Agent</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <button onClick={() => setShowGenerateModal(true)} className="btn-primary flex items-center gap-2">
               <Sparkles size={16} /> Generate Script
             </button>
           </motion.div>
-        }
-      />
+        </div>
+      </div>
 
       {/* ── Drop & Go ───────────────────────────────────────────── */}
       <div className="glass-indigo rounded-xl p-4 border border-[rgba(37,99,235,0.25)] bg-gradient-to-br from-[rgba(37,99,235,0.05)] to-transparent">

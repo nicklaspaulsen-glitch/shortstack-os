@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Phone, MessageCircle, Send } from "lucide-react";
 import { motion } from "framer-motion";
-import PageHero from "@/components/ui/page-hero";
 import DialerTab from "./_components/DialerTab";
 import SMSConsoleTab from "./_components/SMSConsoleTab";
 import DMComposerTab from "./_components/DMComposerTab";
@@ -25,13 +24,13 @@ export default function DialerPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Power Dialer");
 
   return (
-    <MotionPage className="min-h-screen pb-12 bg-[#F3F6FA]"><PageHero
-              eyebrow="AI DIALER"
-              title="Dialer"
-              subtitle="Power dialer, manual SMS, and direct messaging — closes the GHL Voice gap."
-              gradient="sunset"
-              icon={<Phone size={28} />}
-            /><div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
+    <MotionPage className="min-h-screen pb-12 bg-[#F3F6FA]">{/* -- Dialer command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AI DIALER</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Dialer</h1>
+      </div>
+    </div><div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
               <div className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl overflow-hidden">
                 <div className="border-b border-[rgba(0,0,0,0.08)]">
                   <nav className="flex gap-1 overflow-x-auto px-2" aria-label="Dialer tabs">

@@ -3,7 +3,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import {
@@ -113,14 +112,14 @@ export default function AutomationsPage() {
   const activeCount = workflows.filter(w => w.active).length;
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              title="Automations"
-              subtitle="View and manage your workflow automations. Enable, pause, and jump to the builder."
-              icon={<Zap size={22} />}
-              gradient="gold"
-              eyebrow="AUTOMATION ENGINE"
-              actions={
-                <div className="flex items-center gap-2">
+    <MotionPage className="space-y-6">{/* -- Automations command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AUTOMATION ENGINE</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Automations</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2">
                   <Link
                     href="/dashboard/automations/library"
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors border border-[rgba(37,99,235,0.25)]"
@@ -136,8 +135,8 @@ export default function AutomationsPage() {
                     </Link>
                   </motion.div>
                 </div>
-              }
-            />{/* Stats bar */}<div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      </div>
+    </div>{/* Stats bar */}<div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { label: "Total", value: workflows.length, color: "text-[#0A0A0B]" },
                 { label: "Active", value: activeCount, color: "text-emerald-400" },

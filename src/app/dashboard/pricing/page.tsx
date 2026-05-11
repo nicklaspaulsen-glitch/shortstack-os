@@ -11,7 +11,6 @@ import {
 import { PLAN_TIERS, formatBytes, type PlanTier } from "@/lib/plan-config";
 import { LIMITS_BY_TIER } from "@/lib/plan-limits";
 import { formatLimit, getTierFeatures } from "@/lib/plan-display";
-import PageHero from "@/components/ui/page-hero";
 import { CreditCard } from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -115,14 +114,14 @@ export default function PricingPage() {
   }
 
   return (
-    <MotionPage className="fade-in max-w-7xl mx-auto space-y-8"><PageHero
-              icon={<CreditCard size={28} />}
-              title="Choose Your Plan"
-              subtitle="Simple, transparent pricing — scale anytime."
-              gradient="sunset"
-              eyebrow="Plans"
-              actions={
-                <div className="flex items-center justify-center gap-3">
+    <MotionPage className="fade-in max-w-7xl mx-auto space-y-8">{/* -- Choose Your Plan command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Plans</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Choose Your Plan</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center justify-center gap-3">
                   <span className={`text-xs font-medium ${!annual ? "text-white" : "text-muted"}`}>Monthly</span>
                   <button
                     onClick={() => setAnnual(!annual)}
@@ -134,8 +133,8 @@ export default function PricingPage() {
                     Annual <span className="text-foreground text-[10px]">Save 20%</span>
                   </span>
                 </div>
-              }
-            />{/* Plans grid */}<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      </div>
+    </div>{/* Plans grid */}<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {PLANS.map((plan, i) => {
                 const monthlyPrice = annual ? Math.round(plan.price * 0.8) : plan.price;
                 const isCurrentPlan = currentPlan === plan.key;

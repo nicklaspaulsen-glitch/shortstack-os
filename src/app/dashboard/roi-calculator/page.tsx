@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import {
   Calculator, Save, Trash2, Loader,
@@ -176,13 +175,13 @@ export default function RoiCalculatorPage() {
   ];
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              eyebrow="ROI CALCULATOR"
-              title="ROI Calculator"
-              subtitle="Prove the value of your marketing spend with scenario-based ROI math."
-              icon={<Calculator size={22} />}
-              gradient="gold"
-            /><div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <MotionPage className="space-y-6">{/* -- ROI Calculator command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">ROI CALCULATOR</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">ROI Calculator</h1>
+      </div>
+    </div><div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Inputs column */}
               <motion.div
                 initial={{ opacity: 0, y: 16 }}

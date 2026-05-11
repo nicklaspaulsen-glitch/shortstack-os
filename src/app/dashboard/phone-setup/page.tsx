@@ -36,7 +36,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import PlanPickerCard from "@/components/phone-setup/plan-picker-card";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -288,13 +287,14 @@ export default function PhoneSetupPage() {
   const planTierLabel = usage?.plan_tier || "Starter";
 
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground"><PageHero
-              title="Phone Setup"
-              eyebrow="PHONE SETUP"
-              subtitle="Buy a Twilio phone number for your client. AI receptionist + SMS + voice — all wired in one click."
-              icon={<Phone size={20} />}
-              actions={
-                usage ? (
+    <MotionPage className="min-h-screen bg-background text-foreground">{/* -- Phone Setup command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">PHONE SETUP</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Phone Setup</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        usage ? (
                   <div className="flex items-center gap-1.5 rounded-lg border border-border bg-black/5 px-2.5 py-1.5 text-[10px] text-foreground">
                     <Phone size={11} />
                     <span>
@@ -304,8 +304,8 @@ export default function PhoneSetupPage() {
                     </span>
                   </div>
                 ) : undefined
-              }
-            /><div className="mx-auto max-w-4xl px-6 pb-10 pt-4 space-y-4">
+      </div>
+    </div><div className="mx-auto max-w-4xl px-6 pb-10 pt-4 space-y-4">
               {/* Plan picker card — GHL-style plan summary + per-number cost
                   preview. Per Apr 26 user ask: "what they have to pay for it
                   and how to set everything up". Sits above the existing

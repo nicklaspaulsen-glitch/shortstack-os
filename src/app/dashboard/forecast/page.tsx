@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, type Variants } from "framer-motion";
 import { TrendingUp, Loader2, AlertCircle } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { PrismPanel } from "@/components/prism";
 import { createClient } from "@/lib/supabase/client";
@@ -149,13 +148,13 @@ export default function ForecastPage() {
   const wonTotal = deals.filter((d) => d.stage === "closed_won").reduce((s, d) => s + d.value, 0);
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              title="Revenue Forecast"
-              eyebrow="REVENUE FORECAST"
-              subtitle="Weighted pipeline by close date � next 6 months."
-              icon={<TrendingUp size={22} />}
-              gradient="gold"
-            />{loading ? <TableSkeleton rows={8} /> : error ? (
+    <MotionPage className="space-y-6">{/* -- Revenue Forecast command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">REVENUE FORECAST</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Revenue Forecast</h1>
+      </div>
+    </div>{loading ? <TableSkeleton rows={8} /> : error ? (
               <PrismPanel padding="p-8" className="flex flex-col items-center gap-3 text-center">
                 <AlertCircle size={32} className="text-red-700" />
                 <p className="text-[#0A0A0B] font-semibold">Failed to load deals</p>

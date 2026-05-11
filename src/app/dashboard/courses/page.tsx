@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { BookOpen, Plus, Users, DollarSign, Eye, EyeOff, Trash2, Pencil, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import Link from "next/link";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -111,22 +110,22 @@ export default function CoursesPage() {
   const filtered = courses.filter(c => filter === "all" || c.status === filter);
 
   return (
-    <MotionPage className="min-h-screen bg-[#FAFAFB]"><PageHero
-              eyebrow="COURSES"
-              title="Courses"
-              subtitle="Build and sell membership courses. Your students access them at their portal."
-              icon={<BookOpen size={28} />}
-              gradient="purple"
-              actions={
-                <button
+    <MotionPage className="min-h-screen bg-[#FAFAFB]">{/* -- Courses command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">COURSES</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Courses</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   onClick={() => setShowCreate(true)}
                   className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
                 >
                   <Plus size={16} />
                   New Course
                 </button>
-              }
-            /><div className="max-w-7xl mx-auto px-6 py-8">
+      </div>
+    </div><div className="max-w-7xl mx-auto px-6 py-8">
               {/* Filter tabs */}
               <div className="flex gap-2 mb-6">
                 {(["all", "published", "draft"] as Filter[]).map(f => (

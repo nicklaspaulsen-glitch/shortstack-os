@@ -42,7 +42,6 @@ import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, type PlanTier } from "@/lib/plan-config";
 import { LIMITS_BY_TIER, normalizePlanTier } from "@/lib/plan-limits";
 import { formatLimit, getTierFeatures } from "@/lib/plan-display";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // ── Plan order (low → high) for "upgrade path" gating ────────────────────────
@@ -157,14 +156,14 @@ export default function UpgradePage() {
   }
 
   return (
-    <MotionPage className="fade-in max-w-7xl mx-auto space-y-8"><PageHero
-              icon={<Crown size={22} />}
-              eyebrow="Plans"
-              title="Upgrade your plan"
-              subtitle="Scale your agency with higher limits, white-label, and more AI power."
-              gradient="blue"
-              actions={
-                <div className="flex items-center gap-2 bg-black/5 border border-border rounded-xl p-1">
+    <MotionPage className="fade-in max-w-7xl mx-auto space-y-8">{/* -- Upgrade your plan command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Plans</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Upgrade your plan</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 bg-black/5 border border-border rounded-xl p-1">
                   <button
                     onClick={() => setBillingCycle("monthly")}
                     className={`px-3 py-1 rounded-lg text-[11px] font-medium transition-all ${
@@ -189,8 +188,8 @@ export default function UpgradePage() {
                     </span>
                   </button>
                 </div>
-              }
-            />{/* ─── Plan cards grid ───────────────────────────────────────── */}<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      </div>
+    </div>{/* ─── Plan cards grid ───────────────────────────────────────── */}<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {PLAN_ORDER.map((tier, i) => {
                 const config = PLAN_TIERS[tier];
                 const isCurrent = tier === currentTier;

@@ -15,7 +15,6 @@ import {
   Flame, LayoutGrid, PieChart,
   Target as TargetIcon,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
@@ -259,18 +258,18 @@ export default function CompetitiveMonitorPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-6"><PageHero
-              icon={<TargetIcon size={28} />}
-              title="Competitive Monitor"
-              eyebrow="COMPETITIVE INTEL"
-              subtitle="Track competitor changes, pricing & features."
-              gradient="sunset"
-              actions={
-                <button onClick={() => setShowAddForm(!showAddForm)} className="flex items-center gap-2 px-4 py-2 bg-black/10 border border-black/20 text-[#0A0A0B] rounded-lg hover:bg-black/15 transition text-sm font-medium">
+    <MotionPage className="fade-in space-y-6">{/* -- Competitive Monitor command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">COMPETITIVE INTEL</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Competitive Monitor</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button onClick={() => setShowAddForm(!showAddForm)} className="flex items-center gap-2 px-4 py-2 bg-black/10 border border-black/20 text-[#0A0A0B] rounded-lg hover:bg-black/15 transition text-sm font-medium">
                   <Plus className="w-4 h-4" /> Add Competitor
                 </button>
-              }
-            />{/* --- Stats Row --- */}<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      </div>
+    </div>{/* --- Stats Row --- */}<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { icon: <Target className="w-3.5 h-3.5" />, label: "Monitoring", value: activeCompetitors, sub: `${competitors.length} total competitors`, color: "text-[#2563EB]", bar: "from-indigo-500 to-violet-400" },
                 { icon: <Activity className="w-3.5 h-3.5" />, label: "Changes (7d)", value: totalChanges, sub: "across all competitors", color: "text-[#0A0A0B]", bar: "from-indigo-500 to-blue-400" },

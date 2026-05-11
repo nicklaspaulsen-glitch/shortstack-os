@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import Modal from "@/components/ui/modal";
 import StatusBadge from "@/components/ui/status-badge";
-import PageHero from "@/components/ui/page-hero";
 import { CardSkeleton } from "@/components/ui/skeleton";
 import { formatRelativeTime } from "@/lib/utils";
 import {
@@ -353,14 +352,14 @@ export default function WorkflowsPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-3"><PageHero
-              icon={<Zap size={28} />}
-              title="Workflows"
-              subtitle="AI agent automation — describe & run."
-              gradient="sunset"
-              eyebrow="WORKFLOWS"
-              actions={
-                <>
+    <MotionPage className="fade-in space-y-3">{/* -- Workflows command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">WORKFLOWS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Workflows</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <button onClick={() => setShowAiGen(true)} className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-semibold hover:shadow-lg transition-all flex items-center gap-1.5">
                       <Sparkles size={13} /> Generate with AI
@@ -379,8 +378,8 @@ export default function WorkflowsPage() {
                     </button>
                   </motion.div>
                 </>
-              }
-            />{/* AI Generator Modal */}<AiWorkflowGenModal open={showAiGen} onClose={() => setShowAiGen(false)} />{/* AI Workflow Hero — natural-language workflow designer at the top.
+      </div>
+    </div>{/* AI Generator Modal */}<AiWorkflowGenModal open={showAiGen} onClose={() => setShowAiGen(false)} />{/* AI Workflow Hero — natural-language workflow designer at the top.
                 Per Apr 26 ask: "massively improve workflows tab to have more
                 options like GHL and features and AI stuff". The Hero replaces
                 a hidden "Generate with AI" button with a hero panel that

@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import { Copy, Phone, Building2, CheckCircle, Loader2, RefreshCw, AlertTriangle } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -145,14 +144,14 @@ export default function DedupPage() {
   const pendingGroups = groups.filter(g => !merged.has(g.key));
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              title="Lead Deduplication"
-              eyebrow="DEDUPLICATION"
-              subtitle="Finds leads sharing the same phone or business name — preview, then merge."
-              icon={<Copy className="w-6 h-6" />}
-              gradient="gold"
-              actions={
-                <button
+    <MotionPage className="space-y-6">{/* -- Lead Deduplication command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">DEDUPLICATION</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Lead Deduplication</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   onClick={load}
                   disabled={loading}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm transition-colors border border-border disabled:opacity-50"
@@ -160,8 +159,8 @@ export default function DedupPage() {
                   <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
                   Re-scan
                 </button>
-              }
-            />{/* Summary */}<div className="grid grid-cols-3 gap-3">
+      </div>
+    </div>{/* Summary */}<div className="grid grid-cols-3 gap-3">
               {[
                 { value: leads.length.toLocaleString(), label: "Leads scanned", color: "text-foreground" },
                 { value: pendingGroups.length, label: "Duplicate groups", color: pendingGroups.length > 0 ? "text-amber-700" : "text-emerald-700" },

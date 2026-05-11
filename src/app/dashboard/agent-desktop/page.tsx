@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import { Monitor, RefreshCw, Activity, AlertTriangle, CheckCircle, XCircle, Clock } from "lucide-react";
 import Link from "next/link";
 import { getPlatformIcon } from "@/components/ui/platform-icons";
@@ -85,21 +84,22 @@ export default function AgentDesktopPage() {
   };
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              title="Agent Desktop"
-              subtitle="All deployed AI agents and integrations — status, heartbeat, and controls."
-              icon={<Monitor className="w-6 h-6" />}
-              gradient="gold"
-              actions={
-                <button
+    <MotionPage className="space-y-6">{/* -- Agent Desktop command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AGENT DESKTOP</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Agent Desktop</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   onClick={load}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm transition-colors border border-border"
                 >
                   <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
                   Refresh
                 </button>
-              }
-            />{/* Summary bar */}<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      </div>
+    </div>{/* Summary bar */}<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { label: "Healthy", count: counts.healthy, cls: "text-emerald-400" },
                 { label: "Degraded", count: counts.degraded, cls: "text-[#2563EB]" },

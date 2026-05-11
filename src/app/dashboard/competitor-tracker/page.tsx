@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
 import {
@@ -184,21 +183,21 @@ export default function CompetitorTrackerPage() {
   }
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              eyebrow="COMPETITOR INTEL"
-              title="Competitor Tracker"
-              subtitle="Monitor competitor homepages for changes and track their positioning."
-              icon={<Crosshair size={22} />}
-              gradient="purple"
-              actions={
-                <button
+    <MotionPage className="space-y-6">{/* -- Competitor Tracker command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">COMPETITOR INTEL</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Competitor Tracker</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   onClick={openCreate}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm font-medium transition-colors border border-border"
                 >
                   <Plus size={15} /> Add Competitor
                 </button>
-              }
-            />{loading ? (
+      </div>
+    </div>{loading ? (
               <div className="space-y-3">
                 {[1, 2, 3].map(i => (
                   <div key={i} className="h-24 rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] animate-pulse" />

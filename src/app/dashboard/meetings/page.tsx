@@ -15,7 +15,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -146,21 +145,21 @@ export default function MeetingsPage() {
   }
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<Mic size={22} />}
-              title="Meetings"
-              eyebrow="MEETINGS"
-              subtitle={`${meetings.length} recorded — transcripts, action items, and decisions on every call.`}
-              gradient="blue"
-              actions={
-                <Link
+    <MotionPage className="fade-in space-y-5">{/* -- Meetings command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">MEETINGS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Meetings</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <Link
                   href="/dashboard/meetings/new"
                   className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all"
                 >
                   <Upload size={12} /> Upload audio
                 </Link>
-              }
-            />{/* Killer-feature banner */}<motion.div
+      </div>
+    </div>{/* Killer-feature banner */}<motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}

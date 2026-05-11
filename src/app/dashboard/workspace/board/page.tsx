@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Kanban, Plus, Filter } from "lucide-react";
 import { motion } from "framer-motion";
-import PageHero from "@/components/ui/page-hero";
 import { createBrowserClient } from "@supabase/ssr";
 import {
   TASK_STATUSES,
@@ -417,14 +416,14 @@ export default function WorkspaceBoardPage() {
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <MotionPage className="px-4 sm:px-6 lg:px-8 py-6 max-w-[1600px] mx-auto space-y-6"><PageHero
-              title="Board"
-              subtitle="Drag tasks across columns. Drop in clients, assign teammates, and ship together."
-              gradient="purple"
-              icon={<Kanban size={20} />}
-              eyebrow="Workspace"
-              actions={
-                <div className="flex items-center gap-2">
+    <MotionPage className="px-4 sm:px-6 lg:px-8 py-6 max-w-[1600px] mx-auto space-y-6">{/* -- Board command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Workspace</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Board</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2">
                   <motion.button
                     type="button"
                     whileHover={{ scale: 1.04 }}
@@ -447,8 +446,8 @@ export default function WorkspaceBoardPage() {
                     <Plus size={14} /> New task
                   </motion.button>
                 </div>
-              }
-            />{/* View bar */}<div className="flex items-center justify-between gap-3 flex-wrap">
+      </div>
+    </div>{/* View bar */}<div className="flex items-center justify-between gap-3 flex-wrap">
               <div className="inline-flex items-center gap-1 p-1 rounded-lg bg-surface-light border border-border">
                 {(
                   [

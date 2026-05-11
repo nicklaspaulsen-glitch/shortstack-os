@@ -14,7 +14,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { PLAN_TIERS, type PlanTier } from "@/lib/plan-config";
-import PageHero from "@/components/ui/page-hero";
 import SoloOnboardingWizard from "@/components/onboarding/solo-onboarding-wizard";
 import { USER_TYPES, UserType } from "@/lib/user-types";
 import toast from "react-hot-toast";
@@ -453,12 +452,13 @@ export default function OnboardPage() {
   // Step 0: User type selector (shown first for everyone)
   if (!userType) {
     return (
-      <MotionPage className="fade-in space-y-6"><PageHero
-                  icon={<Sparkles size={28} />}
-                  title="Welcome to Trinity"
-                  subtitle="Tell us who you are — we'll set up your workspace."
-                  gradient="gold"
-                /><div className="glass rounded-xl p-6">
+      <MotionPage className="fade-in space-y-6">{/* -- Welcome to Trinity command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">WELCOME TO TRINITY</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Welcome to Trinity</h1>
+        </div>
+      </div><div className="glass rounded-xl p-6">
                   <div className="text-center mb-6">
                     <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
                     <p className="text-sm text-muted">Pick one — you can change it later in Settings.</p>
@@ -488,12 +488,13 @@ export default function OnboardPage() {
     if (soloComplete && soloSummary) {
       return (
         <div className="fade-in space-y-6">
-          <PageHero
-            icon={<CheckCircle2 size={28} />}
-            title="You're all set!"
-            subtitle={`Trinity has been personalized for your ${soloSummary.label} business.`}
-            gradient="gold"
-          />
+          {/* -- You're all set! command strip -- */}
+          <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+            <div className="min-w-0">
+              <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">YOU'RE ALL SET!</p>
+              <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">You're all set!</h1>
+            </div>
+          </div>
           <div className="glass rounded-xl p-10 text-center space-y-5">
             <div className="w-20 h-20 mx-auto bg-[rgba(37,99,235,0.08)] rounded-full flex items-center justify-center">
               <CheckCircle2 size={40} className="text-[#2563EB]" />
@@ -524,20 +525,21 @@ export default function OnboardPage() {
     }
     return (
       <div className="fade-in space-y-6">
-        <PageHero
-          icon={<Sparkles size={28} />}
-          title={`Let's set up your ${selectedTypeMeta?.label || "workspace"}`}
-          subtitle="A few quick questions and we'll personalize everything."
-          gradient="gold"
-          actions={
+        {/* -- Onboard command strip -- */}
+        <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+          <div className="min-w-0">
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">GETTING STARTED</p>
+            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">{`Let's set up your ${selectedTypeMeta?.label || "workspace"}`}</h1>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setUserType(null)}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border bg-black/5 text-foreground hover:bg-black/10 transition-all"
             >
               <ArrowLeft size={12} /> Change type
             </button>
-          }
-        />
+          </div>
+        </div>
         <SoloOnboardingWizard
           initialUserType={userType}
           onComplete={persistSoloFinish}
@@ -553,12 +555,13 @@ export default function OnboardPage() {
 
   return (
     <div className="fade-in space-y-6">
-      <PageHero
-        icon={<Sparkles size={28} />}
-        title="Client Onboarding Wizard"
-        subtitle="Step-by-step setup for new clients."
-        gradient="gold"
-        actions={
+      {/* -- Client Onboarding Wizard command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">CLIENT ONBOARDING WIZARD</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Client Onboarding Wizard</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <>
             <button
               onClick={() => setUserType(null)}
@@ -576,8 +579,8 @@ export default function OnboardPage() {
               </span>
             )}
           </>
-        }
-      />
+        </div>
+      </div>
 
       {/* Mode Toggle: Full Wizard vs Quick Add */}
       <div className="flex items-center gap-1 p-1 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] w-fit">

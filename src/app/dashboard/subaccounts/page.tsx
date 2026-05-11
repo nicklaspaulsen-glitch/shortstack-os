@@ -7,7 +7,6 @@ import {
   Users, DollarSign, CheckCircle2, AlertCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -136,22 +135,22 @@ export default function SubaccountsPage() {
   };
 
   return (
-    <MotionPage className="flex flex-col gap-6 p-4 sm:p-6 max-w-7xl mx-auto"><PageHero
-              title="Subaccounts"
-              eyebrow="SUB-ACCOUNTS"
-              subtitle="Resell ShortStack to your clients under your own brand. Each subaccount is a separate billable seat."
-              icon={<Building2 className="w-6 h-6" />}
-              gradient="purple"
-              actions={
-                <button
+    <MotionPage className="flex flex-col gap-6 p-4 sm:p-6 max-w-7xl mx-auto">{/* -- Subaccounts command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">SUB-ACCOUNTS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Subaccounts</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   onClick={() => setShowInvite(true)}
                   className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all"
                 >
                   <Plus className="w-4 h-4" />
                   Invite Subaccount
                 </button>
-              }
-            /><div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      </div>
+    </div><div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { label: "Total Subaccounts", value: stats.total, icon: <Users className="w-4 h-4" /> },
                 { label: "Active", value: stats.active, icon: <CheckCircle2 className="w-4 h-4" /> },

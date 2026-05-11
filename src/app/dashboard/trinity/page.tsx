@@ -7,7 +7,6 @@ import {
   BarChart3, Shield, ArrowRight,
   Layers, Star, Eye
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface ChatMessage {
@@ -173,13 +172,13 @@ export default function TrinityPage() {
     : 0;
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<Bot size={22} />}
-              title="Trinity AI"
-              subtitle="Trinity autonomous AI agent — chat, orchestrate, and monitor."
-              gradient="blue"
-              eyebrow="TRINITY AI"
-            />{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
+    <MotionPage className="fade-in space-y-5">{/* -- Trinity AI command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">TRINITY AI</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Trinity AI</h1>
+      </div>
+    </div>{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
               {TABS.map(t => (
                 <button key={t} onClick={() => setTab(t)}
                   className={`px-3 py-1.5 rounded-lg text-[10px] font-medium whitespace-nowrap transition-all ${

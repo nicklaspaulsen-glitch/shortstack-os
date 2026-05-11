@@ -18,7 +18,6 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* -- Types -- */
@@ -531,13 +530,13 @@ export default function InboxPage() {
     <div className="fade-in h-[calc(100vh-4rem)] flex flex-col max-w-[1400px] w-full mx-auto overflow-x-hidden">
       {/* Header */}
       <div className="px-4 md:px-6 pt-4 md:pt-6 pb-3 space-y-4 shrink-0 min-w-0">
-        <PageHero
-          icon={<Inbox size={28} />}
-          title="Inbox"
-          eyebrow="INBOX"
-          subtitle="All your generated content, scripts & exports."
-          gradient="blue"
-          actions={
+        {/* -- Inbox command strip -- */}
+        <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+          <div className="min-w-0">
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">INBOX</p>
+            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Inbox</h1>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
             <>
               <div className="flex items-center gap-0.5 bg-black/5 rounded-lg p-0.5">
                 <button
@@ -562,8 +561,8 @@ export default function InboxPage() {
                 </button>
               )}
             </>
-          }
-        />
+          </div>
+        </div>
 
         {/* Stats � inbox view only */}
         {view === "inbox" && (

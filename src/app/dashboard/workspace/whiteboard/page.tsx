@@ -14,7 +14,6 @@ import {
   Eye,
   ExternalLink,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/empty-state";
 import type {
   WhiteboardSnapshot,
@@ -205,22 +204,22 @@ export default function WhiteboardPage() {
   );
 
   return (
-    <MotionPage className="space-y-6 pb-12"><PageHero
-              title="Workspace Whiteboard"
-              subtitle="Live production board — every render, post, deal, and task across every client, in real time."
-              gradient="sunset"
-              icon={<LayoutGrid size={22} />}
-              eyebrow="Workspace"
-              actions={
-                <div className="flex items-center gap-2 text-xs text-[#374151]">
+    <MotionPage className="space-y-6 pb-12">{/* -- Workspace Whiteboard command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Workspace</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Workspace Whiteboard</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 text-xs text-[#374151]">
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
                   </span>
                   <span>Updated {snapshot ? timeAgo(snapshot.generated_at) : "…"}</span>
                 </div>
-              }
-            />{/* Online now strip */}<PresenceStrip users={snapshot?.active_users ?? []} loading={loading} />{error && !snapshot && (
+      </div>
+    </div>{/* Online now strip */}<PresenceStrip users={snapshot?.active_users ?? []} loading={loading} />{error && !snapshot && (
               <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-700">
                 Couldn&apos;t load the whiteboard: {error}
               </div>

@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useDesignStore, makeEmptyDoc } from "@/lib/design/store";
 import type { DesignRow } from "@/lib/design/types";
-import PageHero from "@/components/ui/page-hero";
 import TopBar from "@/components/design-studio/TopBar";
 import LeftRail from "@/components/design-studio/LeftRail";
 import Canvas from "@/components/design-studio/Canvas";
@@ -120,13 +119,13 @@ export default function DesignStudioPage() {
   // No design loaded � show picker
   if (!designId && !design) {
     return (
-      <MotionPage className="min-h-screen flex flex-col bg-[#FAFAFB]"><PageHero
-                  eyebrow="DESIGN STUDIO"
-                  title="Design Studio"
-                  subtitle="Create on-brand visuals with AI� text, shapes, images, templates."
-                  icon={<PenTool size={24} />}
-                  gradient="purple"
-                /><div className="flex-1 p-8">
+      <MotionPage className="min-h-screen flex flex-col bg-[#FAFAFB]">{/* -- Design Studio command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">DESIGN STUDIO</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Design Studio</h1>
+        </div>
+      </div><div className="flex-1 p-8">
                   <div className="max-w-3xl mx-auto">
                     <div className="flex items-center justify-between mb-6">
                       <h2 className="text-lg font-semibold text-[#0A0A0B]">New Design</h2>

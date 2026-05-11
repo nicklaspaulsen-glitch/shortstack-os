@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import { LayoutTemplate } from "lucide-react";
 import PageAI from "@/components/page-ai";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
@@ -994,13 +993,13 @@ export default function LandingPagesPage() {
 
   return (
     <div className="fade-in min-h-screen p-6 max-w-[1400px] mx-auto space-y-6">
-      <PageHero
-        icon={<LayoutTemplate size={28} />}
-        title="AI Landing Page Generator"
-        eyebrow="LANDING PAGES"
-        subtitle="High-converting pages with AI-powered content."
-        gradient="gold"
-        actions={
+      {/* -- AI Landing Page Generator command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">LANDING PAGES</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">AI Landing Page Generator</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             {advancedMode && (
@@ -1009,8 +1008,8 @@ export default function LandingPagesPage() {
               </button>
             )}
           </>
-        }
-      />
+        </div>
+      </div>
 
       {/* Guided Mode � 4-step AI landing page builder */}
       {!advancedMode && (

@@ -13,7 +13,6 @@ import {
 import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
-import PageHero from "@/components/ui/page-hero";
 import {
   InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon,
 } from "@/components/ui/platform-icons";
@@ -528,14 +527,14 @@ export default function DMControllerPage() {
   /* ------------------------------------------------------------------ */
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<Send size={28} />}
-              title="DM Controller"
-              subtitle="Multi-platform cold DM command center · AI-assisted · Compliance-safe."
-              gradient="blue"
-              eyebrow={<><CircleDot size={9} className={cn("inline mr-1.5", running ? "text-green-400 animate-pulse" : "text-muted")} />{running ? "Running" : "Idle"}</>}
-              actions={
-                <div className="flex items-center gap-2">
+    <MotionPage className="fade-in space-y-5">{/* -- DM Controller command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">DM CONTROLLER</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">DM Controller</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2">
                   <div className={cn(
                     "flex items-center gap-1.5 text-[10px] border px-2.5 py-1 rounded-md",
                     running ? "bg-green-400/10 border-green-400/30 text-green-400" :
@@ -550,8 +549,8 @@ export default function DMControllerPage() {
                     </button>
                   )}
                 </div>
-              }
-            />{/* Stat strip */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+      </div>
+    </div>{/* Stat strip */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
               <StatTile label="Total Sent"           value={totalSent.toLocaleString()}    icon={<Send size={12} />}           tone="blue"   index={0} />
               <StatTile label="Reply Rate"           value={`${replyRate}%`}               icon={<MessageSquare size={12} />}  tone="green"  index={1} />
               <StatTile label="Positive Replies"     value={`${positiveReplyRate}%`}       icon={<ThumbsUp size={12} />}       tone="blue"   index={2} />

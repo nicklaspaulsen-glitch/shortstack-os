@@ -9,7 +9,6 @@ import {
   Settings, ChevronRight,
   ClipboardList, Loader2,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -174,14 +173,14 @@ export default function ActivityLogPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<ClipboardList size={28} />}
-              title="Activity Log"
-              eyebrow="ACTIVITY LOG"
-              subtitle={`${logs.length} events across your agency.`}
-              gradient="purple"
-              actions={
-                <>
+    <MotionPage className="fade-in space-y-5">{/* -- Activity Log command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">ACTIVITY LOG</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Activity Log</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <>
                   <button onClick={() => setIsLive(!isLive)} className={`flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg border ${isLive ? "border-border bg-black/10 text-foreground" : "border-border bg-black/5 text-muted"}`}>
                     <div className={`w-2 h-2 rounded-full ${isLive ? "bg-emerald-300 animate-pulse" : "bg-black/20"}`} />
                     {isLive ? "Live" : "Paused"}
@@ -200,8 +199,8 @@ export default function ActivityLogPage() {
                     }}
                     className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"><Download size={12} /> Export Log</button>
                 </>
-              }
-            />{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+      </div>
+    </div>{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
               {[
                 { value: logs.length, label: "Total Events", color: "" },
                 { value: logs.filter(l => l.timestamp.startsWith(new Date().toISOString().slice(0, 10))).length, label: "Today", color: "text-[#2563EB]" },

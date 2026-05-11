@@ -8,7 +8,6 @@ import {
   MessageSquare, CheckCircle2, AlertCircle, Lock, Sparkles,
   BarChart3, Filter, ExternalLink,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/ui/empty-state";
 import { PresetEditExamplePanel } from "@/components/ui/preset-edit-example-panel";
 import toast from "react-hot-toast";
@@ -368,14 +367,14 @@ export default function TelegramPresetsPage() {
   // ─── Render ────────────────────────────────────────────────────────────
 
   return (
-    <MotionPage className="space-y-6 animate-fade-in"><PageHero
-              icon={<TelegramIcon size={28} />}
-              title="Telegram Presets"
-              eyebrow="TELEGRAM PRESETS"
-              subtitle="300 ready-to-send messages across 14 categories. Fork, edit, and send to any chat."
-              gradient="blue"
-              actions={
-                <>
+    <MotionPage className="space-y-6 animate-fade-in">{/* -- Telegram Presets command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">TELEGRAM PRESETS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Telegram Presets</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <>
                   <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full">
                     {stats.total} total
                   </span>
@@ -394,8 +393,8 @@ export default function TelegramPresetsPage() {
                     </span>
                   )}
                 </>
-              }
-            />{/* Top controls: search + scope + new */}<div className="flex items-center gap-3 flex-wrap">
+      </div>
+    </div>{/* Top controls: search + scope + new */}<div className="flex items-center gap-3 flex-wrap">
               <div className="relative flex-1 min-w-[260px]">
                 <Search
                   size={14}

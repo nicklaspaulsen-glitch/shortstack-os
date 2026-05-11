@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
 import {
@@ -181,21 +180,21 @@ export default function SurveysPage() {
   }
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              title="Surveys"
-              eyebrow="SURVEYS"
-              subtitle="Build feedback surveys, share links, and track responses."
-              icon={<ClipboardCheck size={22} />}
-              gradient="sunset"
-              actions={
-                <button
+    <MotionPage className="space-y-6">{/* -- Surveys command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">SURVEYS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Surveys</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   onClick={openCreate}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors border border-[rgba(37,99,235,0.25)]"
                 >
                   <Plus size={15} /> New Survey
                 </button>
-              }
-            />{/* Tabs */}<div className="flex gap-1 border-b border-[rgba(0,0,0,0.08)]">
+      </div>
+    </div>{/* Tabs */}<div className="flex gap-1 border-b border-[rgba(0,0,0,0.08)]">
               {(["surveys", "responses"] as const).map(t => (
                 <button
                   key={t}

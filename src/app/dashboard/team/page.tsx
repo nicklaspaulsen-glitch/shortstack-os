@@ -12,7 +12,6 @@ import {
   AlertTriangle,
   UsersRound,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -258,14 +257,14 @@ export default function TeamPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<UsersRound size={28} />}
-              eyebrow="TEAM HQ"
-              title="Team"
-              subtitle={`${members.length} members � ${onlineCount} online`}
-              gradient="gold"
-              actions={
-                <motion.button
+    <MotionPage className="fade-in space-y-5">{/* -- Team command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">TEAM HQ</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Team</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <motion.button
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setShowInvite(true)}
@@ -273,8 +272,8 @@ export default function TeamPage() {
                 >
                   <UserPlus size={12} /> Invite Member
                 </motion.button>
-              }
-            />{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+      </div>
+    </div>{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
               {STATS.map((stat, index) => (
                 <PrismPanel key={stat.label} rainbow padding="p-3" delay={index * 0.06}>
                   <div className="flex items-center gap-1.5 mb-1">{stat.icon}<p className="text-[10px] text-muted uppercase tracking-wider">{stat.label}</p></div>

@@ -32,7 +32,6 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, getPlanConfig, type PlanTier } from "@/lib/plan-config";
-import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -222,22 +221,22 @@ export default function BillingPage() {
   const nextRenewal = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
   return (
-    <MotionPage className="fade-in max-w-6xl mx-auto space-y-6"><PageHero
-              icon={<CreditCard size={22} />}
-              eyebrow="Billing"
-              title="Billing & Usage"
-              subtitle="Manage your subscription, top up tokens, and download invoices."
-              gradient="blue"
-              actions={
-                <Link
+    <MotionPage className="fade-in max-w-6xl mx-auto space-y-6">{/* -- Billing & Usage command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Billing</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Billing & Usage</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <Link
                   href="/dashboard/upgrade"
                   className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-black/10 border border-border text-foreground text-xs font-medium hover:bg-black/15 transition-colors"
                 >
                   <ArrowUpRight size={12} />
                   Upgrade plan
                 </Link>
-              }
-            />{/* --- Current plan hero --------------------------------------- */}<motion.div
+      </div>
+    </div>{/* --- Current plan hero --------------------------------------- */}<motion.div
               className=" border p-5 flex items-center justify-between gap-4 flex-wrap relative overflow-hidden"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}

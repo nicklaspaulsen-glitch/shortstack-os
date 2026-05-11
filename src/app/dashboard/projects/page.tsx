@@ -6,7 +6,6 @@ import {
   Kanban, Plus, Loader2, X, Trash2, Calendar, User, MessageSquare,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -476,21 +475,21 @@ export default function ProjectsPage() {
   const activeBoard = boards.find((b) => b.id === activeBoardId) ?? null;
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              eyebrow="PROJECTS"
-              icon={<Kanban size={28} />}
-              title="Projects"
-              subtitle="Kanban-style boards for every project. Drag tasks across columns, leave comments, ship work."
-              gradient="blue"
-              actions={
-                <button
+    <MotionPage className="fade-in space-y-5">{/* -- Projects command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">PROJECTS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Projects</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   onClick={() => setShowNewBoard(true)}
                   className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5"
                 >
                   <Plus size={12} /> New Board
                 </button>
-              }
-            />{/* ── Loading skeleton ─────────────────────────────── */}{loadingBoards && (
+      </div>
+    </div>{/* ── Loading skeleton ─────────────────────────────── */}{loadingBoards && (
               <div className="space-y-4">
                 <div className="flex gap-2">
                   <Skeleton className="h-9 w-28" />

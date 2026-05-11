@@ -6,7 +6,6 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface VoicemailTemplate {
@@ -136,14 +135,14 @@ export default function VoicemailDropPage() {
   }
 
   return (
-    <MotionPage className="flex flex-col gap-6 p-4 sm:p-6 max-w-4xl mx-auto"><PageHero
-              eyebrow="VOICEMAIL DROPS"
-              title="Voicemail Drop"
-              subtitle="Upload pre-recorded voicemails and drop them straight to a contact's inbox."
-              icon={<Voicemail className="w-6 h-6" />}
-              gradient="purple"
-              actions={
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+    <MotionPage className="flex flex-col gap-6 p-4 sm:p-6 max-w-4xl mx-auto">{/* -- Voicemail Drop command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">VOICEMAIL DROPS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Voicemail Drop</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <button
                     onClick={() => setShowUpload(true)}
                     className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-indigo-500 hover:bg-indigo-500/90 text-white transition-all"
@@ -152,8 +151,8 @@ export default function VoicemailDropPage() {
                     Upload
                   </button>
                 </motion.div>
-              }
-            />{/* Upload modal */}{showUpload && (
+      </div>
+    </div>{/* Upload modal */}{showUpload && (
               <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-4">
                 <motion.div
                   initial={{ opacity: 0, y: 24 }}

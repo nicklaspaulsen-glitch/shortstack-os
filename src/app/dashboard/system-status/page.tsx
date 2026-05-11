@@ -22,7 +22,6 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import type { LucideIcon } from "lucide-react";
 import {
   ShieldCheck,
@@ -192,13 +191,13 @@ export default function SystemStatusPage() {
 
   return (
     <div className="fade-in max-w-5xl mx-auto space-y-5">
-      <PageHero
-        icon={<ShieldCheck size={28} />}
-        title="System Status"
-        subtitle="Live health of every system Trinity depends on. Run this before launch."
-        gradient={bannerGradient}
-        eyebrow="Admin · Launch readiness"
-        actions={
+      {/* -- System Status command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Admin · Launch readiness</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">System Status</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center gap-2">
             <button
               onClick={runProbes}
@@ -218,8 +217,8 @@ export default function SystemStatusPage() {
               {refreshing ? "Checking…" : "Re-check"}
             </button>
           </div>
-        }
-      />
+        </div>
+      </div>
 
       {/* Launch-readiness verdict banner */}
       <div

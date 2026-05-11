@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Package, Plus, Pencil, Trash2, Check, X, Loader2, Copy, ToggleLeft, ToggleRight } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
@@ -193,19 +192,19 @@ export default function ServicesPage() {
   }
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              eyebrow="SERVICES"
-              title="Service Catalog"
-              subtitle="Define productized services once — attach them to proposals, invoices, and deals."
-              icon={<Package size={22} />}
-              gradient="gold"
-              actions={
-                <button onClick={() => setShowCreate((v) => !v)}
+    <MotionPage className="space-y-6">{/* -- Service Catalog command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">SERVICES</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Service Catalog</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button onClick={() => setShowCreate((v) => !v)}
                   className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
                   <Plus size={16} /> Add Service
                 </button>
-              }
-            />{showCreate && (
+      </div>
+    </div>{showCreate && (
               <div className="glass rounded-xl p-5">
                 <p className="font-semibold text-[#374151] text-sm mb-4">New Service</p>
                 <ServiceForm value={createForm} onChange={setCreateForm}

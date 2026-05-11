@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import EmptyState from "@/components/empty-state";
-import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import { BookOpen as BookOpenIcon } from "lucide-react";
 import { useAutoSave } from "@/lib/use-auto-save";
@@ -264,18 +263,18 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
   ];
 
   return (
-    <MotionPage className="fade-in space-y-6"><AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} /><PageHero
-              icon={<BookOpenIcon size={28} />}
-              eyebrow="BRAND VOICE"
-              title="Brand Voice Manager"
-              subtitle="Define & enforce brand voice for every client."
-              gradient="blue"
-              actions={
-                <button onClick={() => setShowNewProfile(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1">
+    <MotionPage className="fade-in space-y-6"><AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />{/* -- Brand Voice Manager command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">BRAND VOICE</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Brand Voice Manager</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button onClick={() => setShowNewProfile(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1">
                   <Plus size={14} /> New Profile
                 </button>
-              }
-            />{/* Auto-save footer with manual fallback */}{profiles.length > 0 && (
+      </div>
+    </div>{/* Auto-save footer with manual fallback */}{profiles.length > 0 && (
               <div className="flex items-center justify-between text-[10px] text-muted/70 px-1">
                 <span className="flex items-center gap-1">
                   <CheckCircle size={10} className="text-emerald-400/60" />

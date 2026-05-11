@@ -30,7 +30,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Plug, Sparkles, RefreshCw, ExternalLink, Key } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
 import ConnectModal from "@/components/integrations/connect-modal";
 import IntegrationCard, {
@@ -616,14 +615,14 @@ export default function IntegrationsHubPage() {
   // -- Render -----------------------------------------------------------
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<Plug size={28} />}
-              title="Integrations Hub"
-              subtitle="Connect your tools and let AI work across them. OAuth via Nango � Social via Zernio � API keys for the rest."
-              gradient="purple"
-              eyebrow="All your integrations"
-              actions={
-                <button
+    <MotionPage className="fade-in space-y-5">{/* -- Integrations Hub command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">All your integrations</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Integrations Hub</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   type="button"
                   onClick={() => {
                     setLoadingConnections(true);
@@ -639,8 +638,8 @@ export default function IntegrationsHubPage() {
                   />
                   <span className="font-medium">Refresh</span>
                 </button>
-              }
-            />{/* Hero stat tiles */}<div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      </div>
+    </div>{/* Hero stat tiles */}<div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               {[
                 { label: "Connected", value: connectedCount, icon: <Plug size={14} />, bar: "from-indigo-500 to-violet-500" },
                 { label: "Available", value: availableCount, icon: <Sparkles size={14} />, bar: "from-sky-500 to-indigo-500" },

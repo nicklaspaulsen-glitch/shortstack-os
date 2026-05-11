@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import {
   Palette, Globe, Mail, Image, ToggleLeft, ToggleRight, Save, Loader2,
   AlignLeft, CheckCircle2, Eye, EyeOff, RefreshCw, ShieldCheck, X,
@@ -223,13 +222,13 @@ export default function WhiteLabelPage() {
 
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-4xl mx-auto">
-      <PageHero
-        title="White Label"
-        eyebrow="WHITE LABEL"
-        subtitle="Brand ShortStack as your own product -- custom domain, logo, colors, Stripe Connect resell."
-        icon={<Palette className="w-6 h-6" />}
-        gradient="purple"
-        actions={
+      {/* -- White Label command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">WHITE LABEL</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">White Label</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowPreview(!showPreview)}
@@ -247,8 +246,8 @@ export default function WhiteLabelPage() {
               Save Settings
             </button>
           </div>
-        }
-      />
+        </div>
+      </div>
 
       {showPreview && (
         <div

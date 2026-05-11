@@ -4,7 +4,6 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
-import PageHero from "@/components/ui/page-hero";
 import {
   LayoutDashboard, Plus, Trash2, Loader2, Save, GripVertical,
   Users, DollarSign, TrendingUp, MessageSquare, Star, Phone, Activity,
@@ -196,13 +195,13 @@ export default function CustomDashboardPage() {
 
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6">
-      <PageHero
-        title="Custom Dashboard"
-        eyebrow="CUSTOM DASHBOARD"
-        subtitle="Drag widgets onto your personal dashboard� your key metrics, your layout."
-        icon={<LayoutDashboard className="w-6 h-6" />}
-        gradient="gold"
-        actions={
+      {/* -- Custom Dashboard command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">CUSTOM DASHBOARD</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Custom Dashboard</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center gap-2">
             <button
               onClick={resetLayout}
@@ -220,8 +219,8 @@ export default function CustomDashboardPage() {
               Save Layout
             </button>
           </div>
-        }
-      />
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Widget picker sidebar */}

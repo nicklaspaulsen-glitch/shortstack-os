@@ -10,7 +10,6 @@ import {
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // ─────────────────────────────────────────
@@ -366,12 +365,13 @@ export default function CourseBuilderPage() {
 
   return (
     <div className="flex flex-col">
-      <PageHero
-        title={course.title}
-        subtitle="Course Builder — modules, lessons, and settings"
-        icon={<BookOpen size={24} />}
-        gradient="purple"
-        actions={
+      {/* -- course.title command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">COURSE.TITLE</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">{course.title}</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center gap-2">
             {saving && <Loader2 size={14} className="text-[#9CA3AF] animate-spin" />}
             <Link
@@ -391,8 +391,8 @@ export default function CourseBuilderPage() {
               {course.status}
             </span>
           </div>
-        }
-      />
+        </div>
+      </div>
 
       <div className="flex flex-1 max-w-[1600px] mx-auto w-full px-4 py-6 gap-4">
         {/* ── LEFT: Module tree ── */}

@@ -19,7 +19,6 @@ import {
   Clock,
 } from "lucide-react";
 import Link from "next/link";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 const R2_BASE = process.env.NEXT_PUBLIC_R2_PUBLIC_URL ?? "";
@@ -210,24 +209,21 @@ export default function VoiceCloneDetailPage() {
   }, [cloneId, clone, router]);
 
   return (
-    <MotionPage className="min-h-screen pb-12"><PageHero
-              eyebrow="VOICE PROFILE"
-              title={clone?.label || "Voice clone"}
-              subtitle={
-                clone?.description ||
-                "Manage this clone's defaults, listen to renders, and review samples."
-              }
-              gradient="sunset"
-              icon={<Mic size={28} />}
-              actions={
-                <Link
+    <MotionPage className="min-h-screen pb-12">{/* -- clone?.label || Voice clone command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">VOICE PROFILE</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">{clone?.label || "Voice clone"}</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <Link
                   href="/dashboard/voice-studio"
                   className="flex items-center gap-2 rounded-lg border border-border bg-black/5 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-black/5"
                 >
                   <ArrowLeft size={12} /> Back to studio
                 </Link>
-              }
-            /><div className="mx-auto mt-6 max-w-5xl space-y-6 px-4 sm:px-6">
+      </div>
+    </div><div className="mx-auto mt-6 max-w-5xl space-y-6 px-4 sm:px-6">
               {error && (
                 <div className="flex items-start gap-3 rounded-lg border border-rose-500/30 bg-rose-50 p-4 text-sm text-rose-700">
                   <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />

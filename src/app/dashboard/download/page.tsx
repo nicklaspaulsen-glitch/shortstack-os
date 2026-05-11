@@ -19,7 +19,6 @@ import {
   AlertTriangle,
   Mail,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /**
@@ -153,14 +152,14 @@ export default function DownloadDesktopPage() {
   const isAvailable = Boolean(manifest?.available);
 
   return (
-    <MotionPage className="space-y-6 pb-10"><PageHero
-              eyebrow="Desktop App"
-              title="Download Trinity for Desktop"
-              subtitle="Work faster with a native app. Chrome browser built in, AI-assisted clicks, keyboard automation."
-              icon={<Download size={22} />}
-              gradient="gold"
-              actions={
-                <a
+    <MotionPage className="space-y-6 pb-10">{/* -- Download Trinity for Desktop command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Desktop App</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Download Trinity for Desktop</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <a
                   href={GH_RELEASES}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -168,8 +167,8 @@ export default function DownloadDesktopPage() {
                 >
                   View all releases <ExternalLink size={12} />
                 </a>
-              }
-            />{/* ── Unavailable banner (graceful fallback) ───────────────── */}{!loading && !isAvailable && (
+      </div>
+    </div>{/* ── Unavailable banner (graceful fallback) ───────────────── */}{!loading && !isAvailable && (
               <motion.div
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}

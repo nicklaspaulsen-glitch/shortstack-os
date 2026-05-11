@@ -35,7 +35,6 @@ import {
   Lock,
   Sparkles,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -381,36 +380,36 @@ export default function WorkspaceFilesPage() {
   const rootFolders = folderTree["root"] ?? [];
 
   return (
-    <MotionPage className="flex flex-col gap-6"><PageHero
-              title="Workspace files"
-              subtitle="Drive-style storage on Cloudflare R2 — briefs, thumbnails, videos, contracts, and brand assets in one place."
-              gradient="gold"
-              eyebrow="Workspace"
-              icon={<Sparkles size={20} />}
-              actions={
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setCreatingFolder((v) => !v)}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border text-foreground text-sm px-3 py-1.5 transition"
-                  >
-                    <FolderPlus size={14} /> New folder
-                  </button>
-                  <label className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-400/90 hover:bg-cyan-300 text-slate-900 text-sm font-medium px-3 py-1.5 cursor-pointer transition">
-                    <UploadIcon size={14} /> Upload
-                    <input
-                      type="file"
-                      multiple
-                      className="hidden"
-                      onChange={(e) => {
-                        if (e.target.files) void handleUpload(e.target.files);
-                        e.target.value = "";
-                      }}
-                    />
-                  </label>
-                </>
-              }
-            />{/* New-folder inline prompt */}{creatingFolder && (
+    <MotionPage className="flex flex-col gap-6">
+      {/* -- Workspace Files command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Workspace</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Workspace files</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => setCreatingFolder((v) => !v)}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border text-foreground text-sm px-3 py-1.5 transition"
+          >
+            <FolderPlus size={14} /> New folder
+          </button>
+          <label className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-400/90 hover:bg-cyan-300 text-slate-900 text-sm font-medium px-3 py-1.5 cursor-pointer transition">
+            <UploadIcon size={14} /> Upload
+            <input
+              type="file"
+              multiple
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files) void handleUpload(e.target.files);
+                e.target.value = "";
+              }}
+            />
+          </label>
+        </div>
+      </div>
+      {/* New-folder inline prompt */}{creatingFolder && (
               <div className="flex flex-wrap items-center gap-2 rounded-xl border border-black/[0.06] bg-black/[0.04] p-3">
                 <input
                   value={newFolderName}

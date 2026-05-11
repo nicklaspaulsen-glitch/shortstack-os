@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import {
   RefreshCw, CheckCircle2, Link2, Clock, ToggleLeft, ToggleRight,
   Loader2, ExternalLink, Unlink, AlertCircle,
@@ -111,13 +110,13 @@ export default function NotionSyncPage() {
 
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-3xl mx-auto">
-      <PageHero
-        title="Notion Sync"
-        eyebrow="NOTION SYNC"
-        subtitle="Two-way sync between your CRM, content library, and Notion databases."
-        icon={<RefreshCw className="w-6 h-6" />}
-        gradient="gold"
-      />
+      {/* -- Notion Sync command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">NOTION SYNC</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Notion Sync</h1>
+        </div>
+      </div>
 
       {connection ? (
         /* Connected state */

@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { StripeIcon, PayPalIcon, SquareIcon } from "@/components/ui/platform-icons";
-import PageHero from "@/components/ui/page-hero";
 import { PRISM_GLASS, PRISM_BORDERS } from "@/components/prism/constants";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { StatSkeleton } from "@/components/ui/skeleton";
@@ -477,13 +476,13 @@ export default function FinancialsPage() {
   const mostExpensive = subscriptions.reduce((m, s) => s.cost_monthly > (m?.cost_monthly || 0) ? s : m, null as typeof subscriptions[number] | null);
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* Hero Header */}<PageHero
-              eyebrow="FINANCIALS"
-              icon={<PiggyBank size={22} />}
-              title="Financials"
-              subtitle="Revenue, expenses, invoicing, and financial planning."
-              gradient="gold"
-            /><div className="flex items-center justify-end">
+    <MotionPage className="fade-in space-y-5">{/* Hero Header */}{/* -- Financials command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">FINANCIALS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Financials</h1>
+      </div>
+    </div><div className="flex items-center justify-end">
               <div className="flex gap-2">
                 {!stripeSynced ? (
                   <button onClick={() => toast("Connect Stripe in Settings > Integrations")} className="btn-secondary text-xs flex items-center gap-1.5">

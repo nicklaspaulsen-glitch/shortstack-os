@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import {
   GitBranch, Plus, Eye, TrendingUp, BarChart3, Search,
@@ -118,22 +117,22 @@ export default function FunnelsPage() {
   ];
 
   return (
-    <MotionPage className="p-6 space-y-6 max-w-7xl mx-auto"><PageHero
-              title="Funnels"
-              eyebrow="FUNNELS"
-              subtitle="Build multi-step conversion funnels and track drop-off at every stage."
-              icon={<GitBranch size={22} />}
-              gradient="purple"
-              actions={
-                <button
+    <MotionPage className="p-6 space-y-6 max-w-7xl mx-auto">{/* -- Funnels command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">FUNNELS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Funnels</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   onClick={() => router.push("/dashboard/funnels/new")}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-white text-zinc-900 hover:bg-zinc-100 transition-colors"
                 >
                   <Plus size={15} />
                   New Funnel
                 </button>
-              }
-            />{/* Tabs + Search */}<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      </div>
+    </div>{/* Tabs + Search */}<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="flex items-center gap-1 bg-black/[0.04] border border-black/[0.08] rounded-lg p-1">
                 {TABS.map((tab) => (
                   <button

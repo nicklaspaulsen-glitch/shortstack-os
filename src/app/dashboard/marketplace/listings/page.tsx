@@ -8,7 +8,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Store, Plus, Pause, Play, X, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import { useAuth } from "@/lib/auth-context";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -160,22 +159,22 @@ export default function ListingsPage() {
   };
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              eyebrow="MY LISTINGS"
-              icon={<Store size={28} />}
-              title="My Listings"
-              subtitle="Sell your services on the ShortStack marketplace."
-              gradient="blue"
-              actions={
-                <button
+    <MotionPage className="fade-in space-y-5">{/* -- My Listings command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">MY LISTINGS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">My Listings</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   onClick={() => setShowForm((v) => !v)}
                   className="flex items-center gap-2 rounded-lg border border-border bg-black/5 px-4 py-2 text-sm font-medium text-foreground transition hover:bg-black/10"
                 >
                   <Plus size={14} />
                   New listing
                 </button>
-              }
-            />{showForm && (
+      </div>
+    </div>{showForm && (
               <div className="rounded-xl border border-border bg-surface p-5">
                 <div className="mb-4 flex items-center justify-between">
                   <h2 className="text-sm font-semibold text-[#111827]">New service listing</h2>

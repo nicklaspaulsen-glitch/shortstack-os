@@ -8,7 +8,6 @@ import {
   CheckCircle, AlertTriangle, RefreshCw, Loader, Copy,
   ExternalLink, Sparkles, ShieldCheck, Info,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /**
@@ -145,18 +144,13 @@ export default function HubStatusPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <PageHero
-        icon={job.all_green ? <Sparkles size={28} /> : <Loader size={28} className="animate-spin" />}
-        title={job.all_green ? "Your brand is live" : `Provisioning ${job.domain}`}
-        subtitle={
-          job.all_green
-            ? `All services green on ${job.domain}. Share the URLs below.`
-            : job.any_failed
-              ? "Some sub-tasks need attention — retry below."
-              : `${pendingCount} service${pendingCount === 1 ? "" : "s"} still working…`
-        }
-        gradient={job.all_green ? "blue" : job.any_failed ? "sunset" : "ocean"}
-      />
+      {/* -- Hub Status command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">HUB STATUS</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">{job.all_green ? "Your brand is live" : `Provisioning ${job.domain}`}</h1>
+        </div>
+      </div>
 
       {/* 5 colored dots — the visual contract from the spec */}
       <div className="card">

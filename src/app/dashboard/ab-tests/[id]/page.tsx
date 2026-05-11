@@ -17,7 +17,6 @@ import {
   Clock,
   Pause,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface Variant {
@@ -139,12 +138,13 @@ export default function AbTestDetailPage() {
 
   return (
     <div className="p-6 space-y-5 max-w-6xl mx-auto">
-      <PageHero
-        title={test.name}
-        subtitle={`Surface: ${test.parent_type.replace(/_/g, " ")} · Started ${new Date(test.started_at).toLocaleDateString()}`}
-        icon={<FlaskConical size={22} />}
-        gradient="purple"
-        actions={
+      {/* -- test.name command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">TEST.NAME</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">{test.name}</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center gap-2">
             <button
               onClick={() => router.push("/dashboard/ab-tests")}
@@ -172,8 +172,8 @@ export default function AbTestDetailPage() {
               </button>
             )}
           </div>
-        }
-      />
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Tile label="Status" value={test.status} />

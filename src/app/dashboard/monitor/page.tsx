@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import { Activity, CheckCircle, AlertTriangle, XCircle, Clock, RefreshCw, Wifi } from "lucide-react";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -124,14 +123,14 @@ export default function MonitorPage() {
   }[overall];
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              title="System Monitor"
-              eyebrow="MONITOR"
-              subtitle="Live status board — auto-refreshes every 30 seconds."
-              icon={<Activity className="w-6 h-6" />}
-              gradient="gold"
-              actions={
-                <div className="flex items-center gap-3">
+    <MotionPage className="space-y-6">{/* -- System Monitor command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">MONITOR</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">System Monitor</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-3">
                   <span className="text-xs text-[#9CA3AF] tabular-nums">Next refresh in {countdown}s</span>
                   <button
                     onClick={load}
@@ -141,8 +140,8 @@ export default function MonitorPage() {
                     Refresh now
                   </button>
                 </div>
-              }
-            />{/* Overall status banner */}<motion.div
+      </div>
+    </div>{/* Overall status banner */}<motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}

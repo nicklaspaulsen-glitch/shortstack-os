@@ -23,7 +23,6 @@ import {
   Trash2,
   ArrowRight,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type ParentType = "landing_page" | "funnel_step" | "email";
@@ -149,22 +148,22 @@ export default function AbTestsPage() {
   }, [tests]);
 
   return (
-    <MotionPage className="p-6 space-y-6 max-w-7xl mx-auto"><PageHero
-              title="A/B Tests"
-              eyebrow="A/B TESTS"
-              subtitle="Run head-to-head experiments on landing pages, funnel steps, and emails. Pick the winner with confidence."
-              icon={<FlaskConical size={22} />}
-              gradient="purple"
-              actions={
-                <button
+    <MotionPage className="p-6 space-y-6 max-w-7xl mx-auto">{/* -- A/B Tests command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">A/B TESTS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">A/B Tests</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   onClick={() => setShowCreate(true)}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-white text-zinc-900 hover:bg-zinc-100 transition-colors"
                 >
                   <Plus size={15} />
                   New Test
                 </button>
-              }
-            /><div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      </div>
+    </div><div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               <SummaryTile label="Running" value={summary.running} icon={<Clock size={16} />} color="text-emerald-600" index={0} />
               <SummaryTile label="Completed" value={summary.completed} icon={<Trophy size={16} />} color="text-[#2563EB]" index={1} />
               <SummaryTile label="Total Lift" value={`+${summary.totalLift}%`} icon={<TrendingUp size={16} />} color="text-[#2563EB]" index={2} />

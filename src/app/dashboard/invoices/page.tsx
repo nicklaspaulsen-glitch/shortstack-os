@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
-import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -142,14 +141,14 @@ export default function InvoicesPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* Hero Header */}<PageHero
-              eyebrow="INVOICING"
-              icon={<CreditCard size={22} />}
-              title="Invoices"
-              subtitle={`${invoicesData.length} invoices � track payments, reminders, and recurring billing.`}
-              gradient="blue"
-              actions={
-                <div className="flex gap-2">
+    <MotionPage className="fade-in space-y-5">{/* Hero Header */}{/* -- Invoices command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">INVOICING</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Invoices</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex gap-2">
                   <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                     <Link
                       href="/dashboard/invoices/new"
@@ -167,8 +166,8 @@ export default function InvoicesPage() {
                     <Plus size={12} /> New Invoice
                   </motion.button>
                 </div>
-              }
-            />{/* Loading note */}{loading && (
+      </div>
+    </div>{/* Loading note */}{loading && (
               <p className="text-[11px] text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices�</p>
             )}{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {STATS.map((stat, index) => (

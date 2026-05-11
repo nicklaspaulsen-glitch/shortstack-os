@@ -25,7 +25,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/ui/empty-state";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -112,13 +111,13 @@ export default function ReviewsPage() {
   const [tab, setTab] = useState<"manager" | "requests">("manager");
 
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground"><PageHero
-              eyebrow="REVIEWS"
-              title="Reviews"
-              subtitle="Manage incoming reviews and auto-send review links after appointments."
-              icon={<Star size={20} />}
-              gradient="sunset"
-            />{/* Tab bar */}<div className="mx-auto max-w-5xl px-6 pt-5">
+    <MotionPage className="min-h-screen bg-background text-foreground">{/* -- Reviews command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">REVIEWS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Reviews</h1>
+      </div>
+    </div>{/* Tab bar */}<div className="mx-auto max-w-5xl px-6 pt-5">
               <div className="flex gap-1 border-b border-border/40 mb-6">
                 <button
                   onClick={() => setTab("manager")}

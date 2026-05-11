@@ -9,7 +9,6 @@ import {
   ArrowUpRight, ArrowDownRight, Target, Lightbulb, Calendar
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
-import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import { Heart as HeartIcon } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -157,13 +156,13 @@ export default function ClientHealthPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<HeartIcon size={28} />}
-              eyebrow="CLIENT HEALTH"
-              title="Client Health Monitor"
-              subtitle="Track satisfaction, task progress & health."
-              gradient="gold"
-            />{/* Summary cards */}<div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
+    <MotionPage className="fade-in space-y-5">{/* -- Client Health Monitor command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">CLIENT HEALTH</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Client Health Monitor</h1>
+      </div>
+    </div>{/* Summary cards */}<div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
               {[
                 { icon: <Activity size={14} className="text-[#2563EB]" />, label: "Avg Health", value: <span className={getHealthColor(avgHealth)}>{avgHealth}%</span>, extra: <div className="flex items-center gap-1 mt-1"><Clock size={10} className="text-muted" /><span className="text-[9px] text-muted">Live score</span></div> },
                 { icon: <DollarSign size={14} className="text-[#2563EB]" />, label: "Total MRR", value: `$${totalMRR.toLocaleString()}` },

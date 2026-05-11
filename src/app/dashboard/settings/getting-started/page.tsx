@@ -22,7 +22,6 @@ import {
   EyeOff,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // ── Types ────────────────────────────────────────────────────────────────
@@ -168,14 +167,14 @@ export default function GettingStartedSettingsPage() {
   }
 
   return (
-    <MotionPage className="min-h-screen pb-16"><PageHero
-              title="Getting Started doc"
-              subtitle="The public onboarding page your clients land on from your welcome email. Branded with your logo and color, no auth required."
-              gradient="purple"
-              icon={<BookOpen size={20} />}
-              eyebrow="Settings"
-              actions={
-                publicUrl ? (
+    <MotionPage className="min-h-screen pb-16">{/* -- Getting Started doc command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Settings</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Getting Started doc</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        publicUrl ? (
                   <a
                     href={publicUrl}
                     target="_blank"
@@ -185,8 +184,8 @@ export default function GettingStartedSettingsPage() {
                     <ExternalLink size={13} /> View public page
                   </a>
                 ) : null
-              }
-            /><div className="px-6 lg:px-10 mt-6 max-w-4xl">
+      </div>
+    </div><div className="px-6 lg:px-10 mt-6 max-w-4xl">
               {loading || !doc ? (
                 <div className="flex items-center justify-center py-24 text-text-secondary">
                   <Loader2 className="w-5 h-5 animate-spin mr-2" />

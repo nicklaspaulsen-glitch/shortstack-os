@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import {
   ArrowRight,
   Check,
@@ -129,13 +128,13 @@ export default function WorkflowLibraryPage() {
   }
 
   return (
-    <MotionPage className="min-h-screen bg-[#F3F6FA] text-[#111827]"><PageHero
-              title="Workflow Library"
-              subtitle="Battle-tested automations you can install in one click"
-              gradient="purple"
-              icon={<Sparkles size={20} />}
-              eyebrow="WORKFLOW LIBRARY"
-            /><div className="mx-auto max-w-6xl px-6 py-8">
+    <MotionPage className="min-h-screen bg-[#F3F6FA] text-[#111827]">{/* -- Workflow Library command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">WORKFLOW LIBRARY</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Workflow Library</h1>
+      </div>
+    </div><div className="mx-auto max-w-6xl px-6 py-8">
               {/* Filters */}
               <div className="mb-6 flex flex-wrap items-center gap-3">
                 <div className="relative flex-1 min-w-[240px]">

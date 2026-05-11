@@ -14,7 +14,6 @@ import {
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
-import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { trackGeneration } from "@/lib/track-generation";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
@@ -842,13 +841,13 @@ export default function EmailComposerPage() {
 
   return (
     <div className="fade-in space-y-5 p-6 max-w-7xl mx-auto">
-      <PageHero
-        icon={<Mail size={28} />}
-        title="Email Composer"
-        eyebrow="EMAIL COMPOSER"
-        subtitle="Emails that open and convert. AI drafts subject lines, bodies, and send times."
-        gradient="blue"
-        actions={
+      {/* -- Email Composer command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">EMAIL COMPOSER</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Email Composer</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             {advancedMode && (
@@ -886,8 +885,8 @@ export default function EmailComposerPage() {
               </>
             )}
           </>
-        }
-      />
+        </div>
+      </div>
 
       {/* Guided Mode � 3-step AI email drafter */}
       {!advancedMode && (

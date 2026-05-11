@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
-import PageHero from "@/components/ui/page-hero";
 import { Smartphone } from "lucide-react";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import { PrismPanel } from "@/components/prism";
@@ -143,14 +142,14 @@ export default function SMSTemplatesPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<Smartphone size={28} />}
-              title="SMS Templates"
-              eyebrow="SMS TEMPLATES"
-              subtitle={`${templates.length} templates with compliance & analytics.`}
-              gradient="gold"
-              actions={
-                <>
+    <MotionPage className="fade-in space-y-5">{/* -- SMS Templates command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">SMS TEMPLATES</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">SMS Templates</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <>
                   <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
                     <Sparkles size={12} /> Generate with AI
                   </button>
@@ -158,8 +157,8 @@ export default function SMSTemplatesPage() {
                     <Plus size={12} /> New
                   </button>
                 </>
-              }
-            />{/* ===== AI SMS GENERATOR MODAL ===== */}<Modal isOpen={showAiModal} onClose={() => { setShowAiModal(false); setAiVariants([]); }} title="Generate SMS with AI" size="xl">
+      </div>
+    </div>{/* ===== AI SMS GENERATOR MODAL ===== */}<Modal isOpen={showAiModal} onClose={() => { setShowAiModal(false); setAiVariants([]); }} title="Generate SMS with AI" size="xl">
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div>

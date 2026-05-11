@@ -30,7 +30,6 @@ import {
   Trash2,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -258,13 +257,13 @@ export default function AdminStatusPage() {
 
   return (
     <div className="space-y-6 pb-12">
-      <PageHero
-        title="System Status"
-        subtitle="Manage incidents shown on your public status page."
-        eyebrow="Admin"
-        gradient="blue"
-        icon={<ShieldCheck size={28} />}
-        actions={
+      {/* -- System Status command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Admin</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">System Status</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center gap-2">
             <a
               href={publicUrl}
@@ -289,8 +288,8 @@ export default function AdminStatusPage() {
               <Plus size={12} /> New incident
             </button>
           </div>
-        }
-      />
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard

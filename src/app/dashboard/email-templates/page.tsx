@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
-import PageHero from "@/components/ui/page-hero";
 import { MailPlus } from "lucide-react";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import { PrismPanel } from "@/components/prism";
@@ -186,18 +185,18 @@ export default function EmailTemplatesPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-6"><PageHero
-              icon={<MailPlus size={28} />}
-              title="Email Templates"
-              eyebrow="EMAIL TEMPLATES"
-              subtitle={`${TEMPLATES.length === 0 ? "No templates yet" : `${TEMPLATES.length} templates`} with AI generation.`}
-              gradient="blue"
-              actions={
-                <button className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+    <MotionPage className="fade-in space-y-6">{/* -- Email Templates command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">EMAIL TEMPLATES</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Email Templates</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
                   <Plus size={12} /> New Template
                 </button>
-              }
-            />{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+      </div>
+    </div>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${

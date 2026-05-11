@@ -15,7 +15,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { AlertTriangle, Download, ArrowLeftRight, Trash2 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 export default function DangerZonePage() {
@@ -69,13 +68,13 @@ export default function DangerZonePage() {
   }
 
   return (
-    <MotionPage className="space-y-6 max-w-3xl"><PageHero
-              variant="default"
-              gradient="sunset"
-              eyebrow="Settings"
-              title="Danger Zone"
-              subtitle="Irreversible account actions. Each one will pause for a confirmation step before anything is sent."
-            /><section className="card">
+    <MotionPage className="space-y-6 max-w-3xl">{/* -- Danger Zone command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Settings</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Danger Zone</h1>
+      </div>
+    </div><section className="card">
               <div className="flex items-start gap-4">
                 <div className="rounded-lg bg-surface-light p-2.5 text-text-secondary">
                   <Download size={18} />

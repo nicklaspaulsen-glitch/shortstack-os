@@ -13,7 +13,6 @@ import {
   ArrowUp, ArrowDown, Loader2,
   Newspaper, Wand2, FileText,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 
 const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
@@ -594,13 +593,13 @@ export default function NewsletterPage() {
   /* --------- RENDER --------- */
   return (
     <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Newspaper size={28} />}
-        title="Newsletter Builder"
-        eyebrow="NEWSLETTER"
-        subtitle="Design, preview & send newsletters."
-        gradient="sunset"
-        actions={
+      {/* -- Newsletter Builder command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">NEWSLETTER</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Newsletter Builder</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             {advancedMode && (
@@ -615,8 +614,8 @@ export default function NewsletterPage() {
               </>
             )}
           </>
-        }
-      />
+        </div>
+      </div>
 
       {/* Guided Mode � 3-step AI newsletter drafter */}
       {!advancedMode && (

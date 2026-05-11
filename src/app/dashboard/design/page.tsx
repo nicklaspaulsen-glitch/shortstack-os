@@ -22,7 +22,6 @@ import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import { PrismPanel } from "@/components/prism";
-import PageHero from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
@@ -854,13 +853,14 @@ export default function DesignStudioPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<PenTool size={28} />}
-              title="Design Studio"
-              subtitle="AI designs, palettes & batch generation."
-              gradient="gold"
-              actions={
-                <>
+    <MotionPage className="fade-in space-y-5">{/* -- Design Studio command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">DESIGN STUDIO</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Design Studio</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <>
                   <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
                   <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="text-xs py-1.5 px-2 min-w-[140px] rounded-lg bg-black/5 border border-border text-foreground">
                     <option value="" className="bg-surface">No client</option>
@@ -873,8 +873,8 @@ export default function DesignStudioPage() {
                     </a>
                   )}
                 </>
-              }
-            />{/* Guided Mode � 3-step AI design prompter */}{!advancedMode && (
+      </div>
+    </div>{/* Guided Mode � 3-step AI design prompter */}{!advancedMode && (
               <Wizard
                 steps={guidedSteps}
                 activeIdx={guidedStep}

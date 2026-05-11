@@ -11,7 +11,6 @@ import {
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import { VercelIcon, GoDaddyIcon } from "@/components/ui/platform-icons";
 import { computeMonthlyPrice, computeYearlyPrice } from "@/lib/domain-pricing";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -396,14 +395,14 @@ export default function DomainsPage() {
   const domainsOwned = domains.length;
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              eyebrow="DOMAINS"
-              icon={<Globe2 size={28} />}
-              title="Domains"
-              subtitle="Search, buy & manage domains via GoDaddy. Connect them to your Vercel deployments."
-              gradient="blue"
-              actions={
-                <div className="flex items-center gap-2">
+    <MotionPage className="fade-in space-y-5">{/* -- Domains command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">DOMAINS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Domains</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2">
                   {usage && (
                     <div className="flex items-center gap-1.5 text-[10px] text-foreground bg-black/5 border border-border px-2.5 py-1.5 rounded-lg">
                       <Globe size={11} />
@@ -420,8 +419,8 @@ export default function DomainsPage() {
                     <VercelIcon size={12} /> Vercel
                   </div>
                 </div>
-              }
-            />{/* Who-pays clarity banner — agencies pass domain costs to clients, so
+      </div>
+    </div>{/* Who-pays clarity banner — agencies pass domain costs to clients, so
                 make it unambiguous on a page where a miscommunication = a chargeback. */}<div className="flex flex-wrap items-start gap-2 rounded-xl border border-blue-500/25 bg-blue-500/5 p-3 text-[11px] text-blue-700">
               <Info size={13} className="mt-0.5 shrink-0 text-blue-600" />
               <div className="flex-1 min-w-0">

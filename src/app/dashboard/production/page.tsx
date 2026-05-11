@@ -10,7 +10,6 @@ import {
   Flag
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
-import PageHero from "@/components/ui/page-hero";
 import { Kanban } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -101,18 +100,18 @@ export default function ProductionPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              eyebrow="PRODUCTION"
-              icon={<Kanban size={28} />}
-              title="Content Production"
-              subtitle="Pipeline, assignments, reviews & approvals."
-              gradient="blue"
-              actions={
-                <button onClick={() => setShowSubmit(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+    <MotionPage className="fade-in space-y-5">{/* -- Content Production command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">PRODUCTION</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Content Production</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button onClick={() => setShowSubmit(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
                   <Plus size={12} /> New Request
                 </button>
-              }
-            />{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+      </div>
+    </div>{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
               {[
                 { value: items.length, label: "Total Items", color: "" },
                 { value: items.filter(i => i.status === "in_progress").length, label: "In Progress", color: "text-[#2563EB]" },

@@ -9,7 +9,6 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
@@ -621,14 +620,13 @@ export default function CarouselGeneratorPage() {
                   contentDirection: data.contentDirection,
                 });
               }}
-            /><PageHero
-              className="mb-6"
-              icon={<Layers size={28} />}
-              eyebrow="CAROUSEL BUILDER"
-              title="Carousel Generator"
-              subtitle="Create scroll-stopping Instagram & LinkedIn carousels."
-              gradient="blue"
-              actions={
+            />{/* -- Carousel Generator command strip -- */}
+            <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+              <div className="min-w-0">
+                <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">CAROUSEL BUILDER</p>
+                <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Carousel Generator</h1>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
                 <div className="flex flex-wrap items-center justify-end gap-2">
                   <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
                   {advancedMode && (
@@ -662,8 +660,8 @@ export default function CarouselGeneratorPage() {
                     </>
                   )}
                 </div>
-              }
-            />{/* Guided Mode � "4-year-old friendly" */}{!advancedMode && (
+              </div>
+            </div>{/* Guided Mode � "4-year-old friendly" */}{!advancedMode && (
               <Wizard
                 className="mb-6"
                 steps={[

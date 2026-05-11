@@ -11,7 +11,6 @@ import {
 import toast from "react-hot-toast";
 import EmptyState from "@/components/empty-state";
 import Modal from "@/components/ui/modal";
-import PageHero from "@/components/ui/page-hero";
 import { PRISM_GLASS, PRISM_BORDERS } from "@/components/prism/constants";
 import { ClipboardCheck } from "lucide-react";
 import {
@@ -367,14 +366,14 @@ export default function FormsPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<ClipboardCheck size={28} />}
-              title="Form Builder"
-              eyebrow="FORMS"
-              subtitle="Build lead capture forms with a drag-drop editor or AI — embed anywhere and see submissions flow directly into CRM."
-              gradient="gold"
-              actions={
-                <>
+    <MotionPage className="fade-in space-y-5">{/* -- Form Builder command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">FORMS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Form Builder</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <>
                   <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
                     <Sparkles size={12} /> Describe your form
                   </button>
@@ -382,8 +381,8 @@ export default function FormsPage() {
                     <button onClick={() => setActiveForm(null)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all">All Forms</button>
                   )}
                 </>
-              }
-            />{/* ===== AI FORM MODAL ===== */}<Modal isOpen={showAiModal} onClose={() => setShowAiModal(false)} title="Describe the form you need" size="lg">
+      </div>
+    </div>{/* ===== AI FORM MODAL ===== */}<Modal isOpen={showAiModal} onClose={() => setShowAiModal(false)} title="Describe the form you need" size="lg">
               <div className="space-y-3">
                 <div>
                   <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Natural-language description *</label>

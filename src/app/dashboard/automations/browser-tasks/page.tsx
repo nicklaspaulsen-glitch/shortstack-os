@@ -14,7 +14,6 @@ import {
   ChevronRight,
   Sparkles,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface BrowserTask {
@@ -145,17 +144,13 @@ export default function BrowserTasksPage() {
   }
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              title="AI Browser Tasks"
-              subtitle="Tell the agent what you want done. It drives a real browser to get it."
-              gradient="purple"
-              icon={<Bot size={28} />}
-              eyebrow={
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(0,0,0,0.06)] px-2.5 py-1 text-[11px] font-medium text-[#374151] backdrop-blur">
-                  <Sparkles size={11} /> Beta — Playwright + Claude
-                </span>
-              }
-            />{/* New task card */}<div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 backdrop-blur">
+    <MotionPage className="space-y-6">{/* -- AI Browser Tasks command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AI BROWSER TASKS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">AI Browser Tasks</h1>
+      </div>
+    </div>{/* New task card */}<div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 backdrop-blur">
               <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#374151]">
                 <Plus size={15} /> New task
               </div>

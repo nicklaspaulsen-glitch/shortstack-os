@@ -26,7 +26,6 @@
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { Sparkles, Activity, Users, Phone, Mail, BarChart3, Boxes, LayoutGrid } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { useAuth } from "@/lib/auth-context";
 import { AGENTS, AGENT_BY_KEY } from "@/lib/pixel-office/agents";
 import type { AgentAction } from "@/lib/pixel-office/event-mapper";
@@ -196,35 +195,34 @@ export default function AgentOfficePage() {
   if (!user) {
     return (
       <div className="fade-in space-y-5">
-        <PageHero
-          eyebrow="Live"
-          title="Agent Office"
-          subtitle="Sign in to watch your AI team work."
-          icon={<Sparkles size={26} />}
-          gradient="gold"
-        />
+        {/* -- Agent Office command strip -- */}
+        <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+          <div className="min-w-0">
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">LIVE</p>
+            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Agent Office</h1>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="fade-in space-y-5">
-      {/* Hero strip with stat tiles inline */}
-      <PageHero
-        eyebrow={
-          <span className="inline-flex items-center gap-1.5">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime-400/80" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-lime-400" />
+      {/* -- Agent Office command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime-400/80" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-lime-400" />
+              </span>
+              LIVE
             </span>
-            LIVE
-          </span>
-        }
-        title="Agent Office"
-        subtitle="A pixel-art view of your AI team. Each character is driven by real database events — when something happens, that agent walks over and works on it."
-        icon={<Sparkles size={26} />}
-        gradient="gold"
-        actions={
+          </p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Agent Office</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex flex-wrap items-center gap-2">
             {/* 2D / 3D toggle */}
             <div className="flex items-center rounded-lg border border-border bg-black/5 p-0.5">
@@ -245,39 +243,14 @@ export default function AgentOfficePage() {
                 3D
               </button>
             </div>
-            <StatTile
-              icon={<Phone size={11} />}
-              label="Calls today"
-              value={snapshot?.stats.callsToday ?? "—"}
-              accent="#5e5bff"
-            />
-            <StatTile
-              icon={<Users size={11} />}
-              label="Leads scored"
-              value={snapshot?.stats.leadsScored ?? "—"}
-              accent="#7fe5b8"
-            />
-            <StatTile
-              icon={<Mail size={11} />}
-              label="Emails sent"
-              value={snapshot?.stats.emailsSent ?? "—"}
-              accent="#ff8a4c"
-            />
-            <StatTile
-              icon={<Activity size={11} />}
-              label="Trinity actions"
-              value={snapshot?.stats.proposalsExecuted ?? "—"}
-              accent="#FF6B6B"
-            />
-            <StatTile
-              icon={<BarChart3 size={11} />}
-              label="Posts published"
-              value={snapshot?.stats.contentPosted ?? "—"}
-              accent="#ffc062"
-            />
+            <StatTile icon={<Phone size={11} />} label="Calls today" value={snapshot?.stats.callsToday ?? "—"} accent="#5e5bff" />
+            <StatTile icon={<Users size={11} />} label="Leads scored" value={snapshot?.stats.leadsScored ?? "—"} accent="#7fe5b8" />
+            <StatTile icon={<Mail size={11} />} label="Emails sent" value={snapshot?.stats.emailsSent ?? "—"} accent="#ff8a4c" />
+            <StatTile icon={<Activity size={11} />} label="Trinity actions" value={snapshot?.stats.proposalsExecuted ?? "—"} accent="#FF6B6B" />
+            <StatTile icon={<BarChart3 size={11} />} label="Posts published" value={snapshot?.stats.contentPosted ?? "—"} accent="#ffc062" />
           </div>
-        }
-      />
+        </div>
+      </div>
 
       {snapshotError && (
         <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-xs text-red-300">

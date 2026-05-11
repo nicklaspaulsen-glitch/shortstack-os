@@ -35,7 +35,6 @@ import {
 } from "lucide-react";
 
 import { motion } from "framer-motion";
-import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -201,13 +200,13 @@ export default function AffiliatesPage() {
   const totalPaidCents = affiliates.reduce((s, a) => s + (a.paid_cents ?? 0), 0);
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              title="Affiliate Program"
-              subtitle="Recruit affiliates, track referrals, and pay commissions automatically with Stripe Connect."
-              icon={<Award size={28} />}
-              gradient="purple"
-              eyebrow="Recurring revenue magnifier"
-            /><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    <MotionPage className="space-y-6">{/* -- Affiliate Program command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Recurring revenue magnifier</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Affiliate Program</h1>
+      </div>
+    </div><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {[
                 <StatCard key="programs" label="Programs" value={programs.length} icon={<Award size={14} />} />,
                 <StatCard key="affiliates" label="Affiliates" value={totalAffiliates} change={totalAffiliates > 0 ? `${approvedAffiliates} approved` : "Invite your first one"} changeType={approvedAffiliates > 0 ? "positive" : "neutral"} icon={<Users size={14} />} />,

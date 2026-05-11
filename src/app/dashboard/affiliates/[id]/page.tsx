@@ -22,7 +22,6 @@ import {
   Mail,
 } from "lucide-react";
 
-import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -193,13 +192,13 @@ export default function AffiliateDetailPage() {
         <ArrowLeft size={14} /> All affiliates
       </Link>
 
-      <PageHero
-        title={affiliate.name}
-        subtitle={affiliate.email}
-        icon={<Award size={28} />}
-        gradient="purple"
-        eyebrow={`Ref code: ${affiliate.ref_code}`}
-        actions={
+      {/* -- affiliate.name command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AFFILIATE.NAME</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">{affiliate.name}</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex gap-2">
             {affiliate.status === "pending" && (
               <button
@@ -229,8 +228,8 @@ export default function AffiliateDetailPage() {
               </button>
             )}
           </div>
-        }
-      />
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard

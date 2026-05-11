@@ -9,7 +9,6 @@ import {
   LogIn, Pencil, Trash2,
   Mail, UserPlus, AlertCircle, X, Copy
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -212,18 +211,18 @@ export default function AuditPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<Activity size={22} />}
-              title="Audit Log"
-              eyebrow="AUDIT LOG"
-              subtitle="Comprehensive log of all user actions in the system."
-              gradient="blue"
-              actions={
-                <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5">
+    <MotionPage className="fade-in space-y-5">{/* -- Audit Log command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AUDIT LOG</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Audit Log</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5">
                   <Download size={12} /> Export CSV
                 </button>
-              }
-            />{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+      </div>
+    </div>{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
               {[
                 { label: "Total Actions", value: stats.total, color: "text-[#2563EB]" },
                 { label: "Success Rate", value: `${stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0}%`, color: "text-emerald-400" },

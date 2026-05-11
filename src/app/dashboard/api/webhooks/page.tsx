@@ -13,7 +13,6 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface WebhookRow {
@@ -155,22 +154,22 @@ export default function WebhooksPage() {
   }
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<Webhook size={28} />}
-              title="Webhooks"
-              eyebrow="WEBHOOKS"
-              subtitle="Subscribe to events. We sign every payload with HMAC-SHA256 and retry with backoff."
-              gradient="blue"
-              actions={
-                <button
+    <MotionPage className="fade-in space-y-5">{/* -- Webhooks command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">WEBHOOKS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Webhooks</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
                   onClick={() => setShowCreate((v) => !v)}
                   className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-foreground border border-border hover:bg-black/15 transition-all flex items-center gap-1.5"
                 >
                   <Plus size={11} />
                   New Webhook
                 </button>
-              }
-            />{error && (
+      </div>
+    </div>{error && (
               <div className="card p-3 border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
                 <AlertTriangle size={13} />
                 <span>{error}</span>

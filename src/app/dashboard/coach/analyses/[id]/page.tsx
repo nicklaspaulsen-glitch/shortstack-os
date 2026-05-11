@@ -25,7 +25,6 @@ import {
   Mail,
   Sparkles,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface CoachInsight {
@@ -235,19 +234,13 @@ export default function CoachAnalysisDetail() {
         <ArrowLeft className="h-4 w-4" /> Back to coach
       </Link>
 
-      <PageHero
-        title={`Score ${analysis.overall_score ?? "—"}/100`}
-        subtitle={
-          analysis.source_type === "voice_call"
-            ? "Voice call analysis"
-            : analysis.source_type === "meeting"
-              ? "Meeting analysis"
-              : "Email-thread analysis"
-        }
-        gradient="gold"
-        icon={<Sparkles className="h-6 w-6" />}
-        eyebrow="AI Sales Coach"
-        actions={
+      {/* -- Score command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AI Sales Coach</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">{`Score ${analysis.overall_score ?? "—"}`}</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={() => window.alert("Email digest not yet wired to send — coming next.")}
@@ -256,8 +249,8 @@ export default function CoachAnalysisDetail() {
             <Mail className="h-3.5 w-3.5" />
             Email this analysis
           </button>
-        }
-      />
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6">
         {/* Transcript */}

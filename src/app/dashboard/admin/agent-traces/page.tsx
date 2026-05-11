@@ -23,7 +23,6 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import StatCard from "@/components/ui/stat-card";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -185,13 +184,13 @@ export default function AgentTracesDashboard() {
 
   return (
     <div className="space-y-6 pb-12">
-      <PageHero
-        title="Agent Traces"
-        subtitle="Every traced LLM call across ShortStack — latency, cost, errors. Click any row to open the full trace in Langfuse."
-        eyebrow="Admin"
-        gradient="purple"
-        icon={<Activity size={28} />}
-        actions={
+      {/* -- Agent Traces command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Admin</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Agent Traces</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={load}
             disabled={refreshing}
@@ -200,8 +199,8 @@ export default function AgentTracesDashboard() {
             <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
             Refresh
           </button>
-        }
-      />
+        </div>
+      </div>
 
       {/* Stat tiles (24h window) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

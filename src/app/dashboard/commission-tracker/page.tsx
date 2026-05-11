@@ -3,7 +3,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
 import {
@@ -190,14 +189,14 @@ export default function CommissionTrackerPage() {
   }
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              eyebrow="COMMISSIONS"
-              title="Commission Tracker"
-              subtitle="Track, approve, and pay sales commissions for your team."
-              icon={<DollarSign size={22} />}
-              gradient="gold"
-              actions={
-                <div className="flex items-center gap-2">
+    <MotionPage className="space-y-6">{/* -- Commission Tracker command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">COMMISSIONS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Commission Tracker</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2">
                   <button
                     onClick={() => downloadCSV(filtered)}
                     className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm transition-colors border border-border"
@@ -211,8 +210,8 @@ export default function CommissionTrackerPage() {
                     <Plus size={13} /> Add
                   </button>
                 </div>
-              }
-            />{/* Stat tiles */}<div className="grid grid-cols-3 gap-3">
+      </div>
+    </div>{/* Stat tiles */}<div className="grid grid-cols-3 gap-3">
               {[
                 { label: "Total", value: fmtUSD(totals.total), color: "text-[#374151]" },
                 { label: "Paid", value: fmtUSD(totals.paid), color: "text-emerald-400" },

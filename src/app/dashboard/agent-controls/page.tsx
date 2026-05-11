@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import { SlidersHorizontal, Save, Eye, Check, AlertCircle } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -89,14 +88,14 @@ export default function AgentControlsPage() {
   };
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              title="Agent Controls"
-              subtitle="Key/value configuration for agent behaviour — toggle, tune, save."
-              icon={<SlidersHorizontal className="w-6 h-6" />}
-              gradient="purple"
-              eyebrow="AGENT CONTROLS"
-              actions={
-                <div className="flex items-center gap-2">
+    <MotionPage className="space-y-6">{/* -- Agent Controls command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AGENT CONTROLS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Agent Controls</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2">
                   {changed.length > 0 && (
                     <button
                       onClick={() => setShowDiff(d => !d)}
@@ -115,8 +114,8 @@ export default function AgentControlsPage() {
                     {saving ? "Saving…" : saved ? "Saved!" : "Save changes"}
                   </button>
                 </div>
-              }
-            />{error && (
+      </div>
+    </div>{error && (
               <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-red-500/15 border border-red-500/30 text-red-400 text-sm">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 {error}

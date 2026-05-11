@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
-import PageHero from "@/components/ui/page-hero";
 import { NotionIcon, SlackIcon } from "@/components/ui/platform-icons";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -798,14 +797,13 @@ function WorkflowBuilderInner() {
 
   return (
     <div className="fade-in flex flex-col">
-      <PageHero
-        className="mb-3"
-        icon={<GitBranch size={28} />}
-        title="Workflow Builder"
-        subtitle="Build automations without code. Drag, drop, done."
-        gradient="purple"
-        eyebrow="FLOW BUILDER"
-      />
+      {/* -- Workflow Builder command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">FLOW BUILDER</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Workflow Builder</h1>
+        </div>
+      </div>
     <div className="flex flex-col h-[calc(100vh-14rem)]">
       {/* -- Top Toolbar -- */}
       <div className="shrink-0 h-11 border-b border-border glass flex items-center px-3 gap-2">

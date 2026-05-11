@@ -7,7 +7,6 @@ import {
   User, Save, Loader, Camera, Key, AtSign, Check, X, AlertCircle
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -145,13 +144,13 @@ export default function ProfilePage() {
   const avatarUrl = profile?.avatar_url;
 
   return (
-    <MotionPage className="fade-in space-y-5 max-w-2xl"><PageHero
-              icon={<User size={22} />}
-              eyebrow="YOUR PROFILE"
-              title="Profile"
-              subtitle="Manage your account and identity."
-              gradient="blue"
-            />{/* Avatar + Identity Card */}<motion.div
+    <MotionPage className="fade-in space-y-5 max-w-2xl">{/* -- Profile command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">YOUR PROFILE</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Profile</h1>
+      </div>
+    </div>{/* Avatar + Identity Card */}<motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0 * 0.06, duration: 0.4 }}

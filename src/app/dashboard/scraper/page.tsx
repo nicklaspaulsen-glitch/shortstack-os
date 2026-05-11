@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/platform-icons";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
-import PageHero from "@/components/ui/page-hero";
 import WebsiteScraper from "@/components/ui/website-scraper";
 import Modal from "@/components/ui/modal";
 import InlineSocialConnect from "@/components/inline-social-connect";
@@ -615,13 +614,13 @@ export default function ScraperPage() {
   return (
     <MotionPage className="fade-in space-y-4"><ErrorBoundary section="Lead Finder">
             {/* Hero Header */}
-            <PageHero
-              eyebrow="LEAD FINDER"
-              icon={<Search size={22} />}
-              title="Lead Finder"
-              subtitle="Find leads from any platform, any niche, any location."
-              gradient="blue"
-            />
+            {/* -- Lead Finder command strip -- */}
+            <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+              <div className="min-w-0">
+                <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">LEAD FINDER</p>
+                <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Lead Finder</h1>
+              </div>
+            </div>
             <div className="flex items-center justify-end">
               <div className="flex items-center gap-2">
                 {/* Auto-Run Daily Button */}

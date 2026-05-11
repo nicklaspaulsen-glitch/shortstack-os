@@ -9,7 +9,6 @@ import {
   ArrowUpRight, Sparkles, MessageSquare, Tag,
   Globe as GlobeIcon,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
@@ -80,18 +79,18 @@ export default function GoogleBusinessPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              eyebrow="GOOGLE BUSINESS"
-              icon={<GlobeIcon size={28} />}
-              title="Google Business"
-              subtitle="Listings, reviews, posts & local SEO."
-              gradient="blue"
-              actions={
-                <button className="px-3 py-1.5 rounded-lg border border-border bg-black/5 text-foreground text-xs hover:bg-black/10 transition-all flex items-center gap-1.5">
+    <MotionPage className="fade-in space-y-5">{/* -- Google Business command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">GOOGLE BUSINESS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Google Business</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button className="px-3 py-1.5 rounded-lg border border-border bg-black/5 text-foreground text-xs hover:bg-black/10 transition-all flex items-center gap-1.5">
                   <RefreshCw size={12} /> Refresh
                 </button>
-              }
-            />{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      </div>
+    </div>{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {[
                 { value: avgRating, label: <span className="flex items-center justify-center gap-0.5">{renderStars(Math.round(Number(avgRating)))} Avg</span>, color: "text-[#2563EB]" },
                 { value: reviews.length, label: "Total Reviews", color: "" },

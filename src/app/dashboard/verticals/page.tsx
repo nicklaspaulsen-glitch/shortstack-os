@@ -21,7 +21,6 @@ import {
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface VerticalSummary {
@@ -124,18 +123,13 @@ export default function VerticalsIndexPage() {
   }, []);
 
   return (
-    <MotionPage className="min-h-screen bg-[#FAFAFB]"><PageHero
-              title="Vertical Templates"
-              subtitle="Pre-configured ShortStack OS bundles for specific agency niches. Pick a vertical, choose modules, and we provision automations, content, scripts, and a course in your tenant — typically a 5-day onboarding compressed into 5 minutes."
-              icon={<Briefcase size={28} />}
-              gradient="gold"
-              eyebrow={
-                <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase opacity-90">
-                  <Sparkles size={12} />
-                  Niche-ready setup
-                </span>
-              }
-            /><div className="max-w-7xl mx-auto px-6 py-10">
+    <MotionPage className="min-h-screen bg-[#FAFAFB]">{/* -- Vertical Templates command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">VERTICAL TEMPLATES</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Vertical Templates</h1>
+      </div>
+    </div><div className="max-w-7xl mx-auto px-6 py-10">
               {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {Array.from({ length: 3 }).map((_, i) => (

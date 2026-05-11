@@ -18,7 +18,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import { Check, Copy, ExternalLink, LinkIcon, Lock, ArrowLeft } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -120,21 +119,21 @@ export default function PaymentLinksPage() {
 
   return (
     <div className="fade-in max-w-5xl mx-auto space-y-6">
-      <PageHero
-        icon={<LinkIcon size={28} />}
-        title="Stripe Payment Links"
-        subtitle="Hosted checkout URLs you can paste directly into emails, DMs, or proposals."
-        gradient="purple"
-        eyebrow="Admin"
-        actions={
+      {/* -- Stripe Payment Links command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Admin</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Stripe Payment Links</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => router.push("/dashboard/pricing")}
             className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/5 border border-border text-foreground hover:bg-black/10"
           >
             <ArrowLeft size={12} /> Pricing
           </button>
-        }
-      />
+        </div>
+      </div>
 
       <div className=" border border-border bg-surface p-4">
         <p className="text-[11px] text-muted leading-relaxed">

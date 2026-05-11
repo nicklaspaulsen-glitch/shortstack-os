@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import { Coffee, Users, MessageSquare, Calendar, FileText, BookOpen, Loader2, Sparkles } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -167,14 +166,14 @@ Be direct, specific, and action-oriented. No fluff.`;
   const dateStr = today.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
   return (
-    <MotionPage className="space-y-6"><PageHero
-              title="Daily Briefing"
-              eyebrow="DAILY BRIEFING"
-              subtitle={dateStr}
-              icon={<Coffee className="w-6 h-6" />}
-              gradient="sunset"
-              actions={
-                <motion.button
+    <MotionPage className="space-y-6">{/* -- Daily Briefing command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">DAILY BRIEFING</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Daily Briefing</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <motion.button
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={handleGenerateBriefing}
@@ -184,8 +183,8 @@ Be direct, specific, and action-oriented. No fluff.`;
                   {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                   {generating ? "Generating…" : "Generate AI briefing"}
                 </motion.button>
-              }
-            />{/* Stats cards */}<motion.div
+      </div>
+    </div>{/* Stats cards */}<motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"

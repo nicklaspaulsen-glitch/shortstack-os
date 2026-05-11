@@ -46,7 +46,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // ───────────────────────────────────────────────────────────────────
@@ -326,12 +325,13 @@ export default function TriggersPage() {
   }
 
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground"><PageHero
-              title="Triggers"
-              subtitle="Fire workflows automatically when real-world events happen. 12 event types, filter each with JSON config, see every run in history."
-              icon={<Zap size={20} />}
-              eyebrow="TRIGGER RULES"
-            /><div className="mx-auto max-w-5xl space-y-5 px-6 pb-10">
+    <MotionPage className="min-h-screen bg-background text-foreground">{/* -- Triggers command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">TRIGGER RULES</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Triggers</h1>
+      </div>
+    </div><div className="mx-auto max-w-5xl space-y-5 px-6 pb-10">
               {/* Top toolbar */}
               <div className="flex items-center justify-between">
                 <p className="text-sm text-muted">

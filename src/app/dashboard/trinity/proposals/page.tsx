@@ -25,7 +25,6 @@ import {
   History,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type Mode = "off" | "shadow" | "autopilot";
@@ -202,13 +201,13 @@ export default function TrinityProposalsPage() {
   };
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<Brain size={28} />}
-              title="Trinity Autonomous"
-              subtitle="Trinity proposes — and, in autopilot mode, acts on your behalf."
-              gradient="purple"
-              eyebrow="AI PROPOSALS"
-            />{/* Mode tiles */}<div className="grid gap-3 md:grid-cols-3">
+    <MotionPage className="fade-in space-y-5">{/* -- Trinity Autonomous command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AI PROPOSALS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Trinity Autonomous</h1>
+      </div>
+    </div>{/* Mode tiles */}<div className="grid gap-3 md:grid-cols-3">
               {MODE_TILES.map((t) => {
                 const active = settings?.mode === t.mode;
                 return (

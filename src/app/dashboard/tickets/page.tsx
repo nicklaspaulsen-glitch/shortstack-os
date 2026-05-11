@@ -21,7 +21,6 @@ import {
   Clock,
   Sparkles,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 const SUPPORT_EMAIL = "support@shortstack.work";
@@ -80,13 +79,13 @@ const ACCENT_STYLES: Record<string, { ring: string; iconBg: string; iconText: st
 
 export default function ContactSupportPage() {
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground"><PageHero
-              eyebrow="SUPPORT TICKETS"
-              title="Contact Support"
-              subtitle="Pick the channel that fits the question — every one is monitored by a real human."
-              icon={<LifeBuoy size={20} />}
-              gradient="blue"
-            /><div className="mx-auto max-w-5xl space-y-6 px-6 pb-12 pt-5">
+    <MotionPage className="min-h-screen bg-background text-foreground">{/* -- Contact Support command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">SUPPORT TICKETS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Contact Support</h1>
+      </div>
+    </div><div className="mx-auto max-w-5xl space-y-6 px-6 pb-12 pt-5">
               {/* Three support channels */}
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 {SUPPORT_CHANNELS.map((channel, i) => {

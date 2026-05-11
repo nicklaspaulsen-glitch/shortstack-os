@@ -8,7 +8,6 @@ import {
   CheckCircle, Search, FileText, Zap, Globe, Lock,
   Trash2, Eye, EyeOff, Activity, ToggleLeft, ToggleRight, RefreshCw
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* ── Types ── */
@@ -270,19 +269,19 @@ export default function ApiDocsPage() {
   const totalEndpoints = API_CATEGORIES.reduce((sum, cat) => sum + cat.endpoints.length, 0);
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<FileText size={28} />}
-              title="API Documentation"
-              eyebrow="API DOCS"
-              subtitle="Complete reference for the Trinity API."
-              gradient="gold"
-              actions={
-                <div className="flex items-center gap-2 text-[10px] text-white">
+    <MotionPage className="fade-in space-y-5">{/* -- API Documentation command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">API DOCS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">API Documentation</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 text-[10px] text-white">
                   <span className="px-2 py-1 bg-black/5 rounded border border-border">v2.4.0</span>
                   <span>{totalEndpoints} endpoints</span>
                 </div>
-              }
-            />{/* Stats Strip */}<div className="grid grid-cols-5 gap-3">
+      </div>
+    </div>{/* Stats Strip */}<div className="grid grid-cols-5 gap-3">
               {[
                 { label: "Endpoints", value: totalEndpoints, color: "text-[#2563EB]" },
                 { label: "Categories", value: API_CATEGORIES.length, color: "text-[#2563EB]" },

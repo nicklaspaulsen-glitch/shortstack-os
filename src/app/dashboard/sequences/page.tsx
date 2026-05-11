@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
-import PageHero from "@/components/ui/page-hero";
 import { ListOrdered } from "lucide-react";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -594,14 +593,14 @@ export default function SequencesPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              icon={<ListOrdered size={28} />}
-              eyebrow="SEQUENCE BUILDER"
-              title="Email Sequences"
-              subtitle="Multi-channel drip campaigns with AI & A/B testing."
-              gradient="purple"
-              actions={
-                <>
+    <MotionPage className="fade-in space-y-5">{/* -- Email Sequences command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">SEQUENCE BUILDER</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Email Sequences</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
                       <Sparkles size={12} /> Generate with AI
@@ -625,8 +624,8 @@ export default function SequencesPage() {
                     </button>
                   </motion.div>
                 </>
-              }
-            />{/* Recent activity panel � last 10 step executions from trinity_log */}<PrismPanel padding="p-4" className="overflow-hidden">
+      </div>
+    </div>{/* Recent activity panel � last 10 step executions from trinity_log */}<PrismPanel padding="p-4" className="overflow-hidden">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-xs font-semibold flex items-center gap-2">
                   <Activity size={12} className="text-[#2563EB]" /> Recent activity

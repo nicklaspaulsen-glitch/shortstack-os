@@ -6,7 +6,6 @@ import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, type PlanTier, isValidPlanTier } from "@/lib/plan-config";
 import Link from "next/link";
 import PageAI from "@/components/page-ai";
-import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import {
   Zap,
@@ -229,14 +228,14 @@ export default function UsagePage() {
   // ── Render ──────────────────────────────────────────────────────────────
 
   return (
-    <MotionPage className="fade-in p-6 max-w-5xl mx-auto space-y-5"><PageHero
-              eyebrow="USAGE & LIMITS"
-              icon={<Zap size={28} />}
-              title="Token Usage"
-              subtitle="Monitor AI consumption & manage balance."
-              gradient="purple"
-              actions={
-                <>
+    <MotionPage className="fade-in p-6 max-w-5xl mx-auto space-y-5">{/* -- Token Usage command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">USAGE & LIMITS</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Token Usage</h1>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <>
                   <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-black/10 text-foreground text-xs font-medium">
                     <Shield size={12} />
                     {planConfig.badge_label} Plan
@@ -250,8 +249,8 @@ export default function UsagePage() {
                     Refresh
                   </button>
                 </>
-              }
-            />{/* ── Stats Strip ── */}<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      </div>
+    </div>{/* ── Stats Strip ── */}<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { icon: <Activity size={10} />, label: "Tokens Used", value: loading ? null : fmt(used), sub: "this month" },
                 { icon: <Zap size={10} />, label: "Remaining", value: loading ? null : (isUnlimited ? "∞" : fmt(remaining)), sub: isUnlimited ? "unlimited" : `of ${fmtShort(effectiveLimit)}`, valueClass: isUnlimited ? "text-[#2563EB]" : remaining < effectiveLimit * 0.1 ? "text-red-400" : "text-foreground" },

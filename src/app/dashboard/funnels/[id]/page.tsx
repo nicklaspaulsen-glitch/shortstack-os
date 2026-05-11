@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import {
   GitBranch, Plus, Save, Globe, ArrowLeft, ChevronLeft, ChevronRight,
@@ -266,12 +265,13 @@ export default function FunnelCanvasPage() {
 
   return (
     <div className="p-6 space-y-5 max-w-7xl mx-auto">
-      <PageHero
-        title={funnel.name}
-        subtitle={funnel.description ?? "Funnel canvas — click a step to edit, arrow buttons to reorder."}
-        icon={<GitBranch size={22} />}
-        gradient="purple"
-        actions={
+      {/* -- funnel.name command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">FUNNEL.NAME</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">{funnel.name}</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center gap-2">
             <button
               onClick={() => router.push("/dashboard/funnels")}
@@ -295,8 +295,8 @@ export default function FunnelCanvasPage() {
               {publishing ? "…" : funnel.status === "published" ? "Unpublish" : "Publish"}
             </button>
           </div>
-        }
-      />
+        </div>
+      </div>
 
       {/* Tabs */}
       <div className="flex items-center gap-1 bg-black/[0.04] border border-black/[0.08] rounded-lg p-1 w-fit">

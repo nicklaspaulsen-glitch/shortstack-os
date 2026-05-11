@@ -7,7 +7,6 @@ import {
   Mail, Phone, Globe, LayoutDashboard, MessageSquare,
   Loader, Sparkles, ChevronRight, ShieldCheck, Info,
 } from "lucide-react";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /**
@@ -137,13 +136,13 @@ function HubSetupInner() {
 
   return (
     <div className="fade-in space-y-5">
-      <PageHero
-        eyebrow="HUB SETUP"
-        icon={<Sparkles size={28} />}
-        title="Launch your brand"
-        subtitle="One click provisions email, phone, website, portal, and chat — all on your new domain."
-        gradient="blue"
-      />
+      {/* -- Launch your brand command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">HUB SETUP</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Launch your brand</h1>
+        </div>
+      </div>
 
       {/* Domain input card — hidden if prefilled */}
       {!prefillDomain && (

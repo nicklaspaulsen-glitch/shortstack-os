@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import {
@@ -120,13 +119,13 @@ export default function ClientReportsPage() {
 
   if (!tableExists) {
     return (
-      <MotionPage className="space-y-6"><PageHero
-                  title="Client Reports"
-                  eyebrow="CLIENT REPORTS"
-                  subtitle="View and resend generated PDF reports for each client."
-                  icon={<ClipboardList size={22} />}
-                  gradient="purple"
-                /><motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-12 text-center">
+      <MotionPage className="space-y-6">{/* -- Client Reports command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">CLIENT REPORTS</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Client Reports</h1>
+        </div>
+      </div><motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-12 text-center">
                   <FileText size={40} className="mx-auto mb-4 text-[#9CA3AF]" />
                   <p className="text-[#6B7280] mb-2">No reports generated yet.</p>
                   <p className="text-[#9CA3AF] text-sm mb-6">
@@ -144,21 +143,21 @@ export default function ClientReportsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHero
-        title="Client Reports"
-        eyebrow="CLIENT REPORTS"
-        subtitle="View and resend generated PDF reports for each client."
-        icon={<ClipboardList size={22} />}
-        gradient="purple"
-        actions={
+      {/* -- Client Reports command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">CLIENT REPORTS</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Client Reports</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <Link
             href="/dashboard/report-generator"
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-white text-sm font-medium transition-colors border border-border"
           >
             <FileText size={14} /> Generate Report
           </Link>
-        }
-      />
+        </div>
+      </div>
 
       {loading ? (
         <div className="space-y-3">

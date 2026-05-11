@@ -61,7 +61,6 @@ function LinkedinIcon({ size = 14 }: { size?: number }) {
   );
 }
 import { motion } from "framer-motion";
-import PageHero from "@/components/ui/page-hero";
 import { COMMISSION_RATES } from "@/lib/referral-commission";
 import { PLAN_TIERS, getPlanConfig, type PlanTier } from "@/lib/plan-config";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -224,13 +223,13 @@ export default function ReferralsPage() {
   }, [me?.share_url]);
 
   return (
-    <MotionPage className="fade-in max-w-6xl mx-auto space-y-6"><PageHero
-              icon={<Gift size={22} />}
-              eyebrow="Affiliate program"
-              title="Referrals & commissions"
-              subtitle="Share your link. Earn 10–30% monthly commission for 12 months on every referral."
-              gradient="purple"
-            />{/* ─── Hero: code + share link + social buttons ──────────────── */}<motion.section
+    <MotionPage className="fade-in max-w-6xl mx-auto space-y-6">{/* -- Referrals & commissions command strip -- */}
+    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="min-w-0">
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Affiliate program</p>
+        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Referrals & commissions</h1>
+      </div>
+    </div>{/* ─── Hero: code + share link + social buttons ──────────────── */}<motion.section
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
