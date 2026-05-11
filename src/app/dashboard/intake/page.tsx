@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import Modal from "@/components/ui/modal";
 import { createClient as createClientSupabase } from "@/lib/supabase/client";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -55,7 +54,7 @@ interface Submission {
 // --- Score badge --------------------------------------------------------------
 
 function ScoreBadge({ score }: { score: number | null }) {
-  if (score === null) return <span className="text-[rgba(0,0,0,0.3)] text-xs">�</span>;
+  if (score === null) return <span className="text-[rgba(0,0,0,0.3)] text-xs">ï¿½</span>;
   const color =
     score >= 80 ? "#22c55e" :
     score >= 50 ? "#f59e0b" :
@@ -243,12 +242,13 @@ export default function IntakePage() {
   // --- Render -----------------------------------------------------------------
 
   return (
-    <MotionPage className="flex flex-col h-full min-h-screen bg-[#FAFAFB]"><PageHero
-              icon={<Zap size={18} className="text-[#2563EB]" />}
-              title="Intake Forms"
-              subtitle="AI-powered lead qualification forms you can embed anywhere"
-              gradient="blue"
-            /><div className="flex-1 p-4 md:p-6 max-w-6xl mx-auto w-full">
+    <MotionPage className="flex flex-col h-full min-h-screen bg-[#FAFAFB]">{/* -- Intake Forms command strip -- */}
+              <div className="flex items-center gap-4 px-4 py-3 sm:py-4 border-b border-border-subtle">
+                <div className="min-w-0">
+                  <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Intake</p>
+                  <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Intake Forms</h1>
+                </div>
+              </div><div className="flex-1 p-4 md:p-6 max-w-6xl mx-auto w-full">
               {/* Tabs */}
               <div className="flex items-center gap-1 mb-6">
                 {(["forms", "submissions"] as const).map((tab) => (
@@ -339,7 +339,7 @@ export default function IntakePage() {
                               <div className="flex-1 min-w-0">
                                 <h3 className="text-sm font-semibold text-[rgba(0,0,0,0.85)] truncate">{form.name}</h3>
                                 <p className="text-[10px] text-[rgba(0,0,0,0.35)] mt-0.5">
-                                  {form.fields.length} fields � {form.ai_qualification ? "AI scoring on" : "No AI"}
+                                  {form.fields.length} fields ï¿½ {form.ai_qualification ? "AI scoring on" : "No AI"}
                                 </p>
                               </div>
                               <button
@@ -461,7 +461,7 @@ export default function IntakePage() {
                               </div>
                               <p className="text-[10px] text-[rgba(0,0,0,0.35)] mt-0.5">
                                 {new Date(sub.created_at).toLocaleDateString()}
-                                {sub.ai_summary && ` � ${sub.ai_summary.slice(0, 80)}�`}
+                                {sub.ai_summary && ` ï¿½ ${sub.ai_summary.slice(0, 80)}ï¿½`}
                               </p>
                             </div>
                             <div className="flex items-center gap-2 flex-shrink-0">
@@ -537,12 +537,12 @@ export default function IntakePage() {
 
                   {bAI && (
                     <div className="space-y-1.5">
-                      <label className="text-xs text-[rgba(0,0,0,0.5)]">Custom AI prompt (optional � leave blank to use default)</label>
+                      <label className="text-xs text-[rgba(0,0,0,0.5)]">Custom AI prompt (optional ï¿½ leave blank to use default)</label>
                       <textarea
                         value={bPrompt}
                         onChange={(e) => setBPrompt(e.target.value)}
                         rows={3}
-                        placeholder="You are an expert lead qualifier for [your business]�"
+                        placeholder="You are an expert lead qualifier for [your business]ï¿½"
                         className="w-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-xs text-[rgba(0,0,0,0.65)] placeholder:text-[rgba(0,0,0,0.25)] outline-none focus:border-[#2563EB]/50 resize-none font-mono"
                       />
                     </div>

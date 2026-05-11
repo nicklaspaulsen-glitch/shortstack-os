@@ -10,7 +10,6 @@ import {
   CheckCircle, Star, Zap, BookOpen, X, Plus
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import { Pen } from "lucide-react";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
@@ -25,15 +24,15 @@ import { MotionPage } from "@/components/motion/motion-page";
 // produces, rendered on a gradient background (no image required).
 const COPYWRITER_PREVIEW_FALLBACK: RollingPreviewItem[] = [
   { id: "c1", tag: "Email Subject", title: "Your cart misses you", text: "A 3-line reminder that lifts recovery revenue by 18-24% vs. generic 'You forgot something'." },
-  { id: "c2", tag: "Ad Headline", title: "Stop losing leads to slow replies", text: "Facebook ad copy for a CRM � 3 hooks, 2 proof points, one CTA. 1.8x CTR." },
+  { id: "c2", tag: "Ad Headline", title: "Stop losing leads to slow replies", text: "Facebook ad copy for a CRM ï¿½ 3 hooks, 2 proof points, one CTA. 1.8x CTR." },
   { id: "c3", tag: "Landing Hero", title: "Ship 10x faster. Without the burnout.", text: "Above-the-fold headline + subhead + social proof line for a dev-tools SaaS." },
   { id: "c4", tag: "Cold Email", title: "Quick question about {Company}", text: "12-line outbound email that warms cold prospects using the PAS framework." },
   { id: "c5", tag: "Blog Intro", title: "Why nobody reads your blog (and the 4-line fix)", text: "Hook-first intro that drops bounce rate by 30% on the first scroll fold." },
   { id: "c6", tag: "Product Desc", title: "Engineered for the long haul", text: "80-word Shopify product description in a premium, confident tone. Feature ? benefit ? proof." },
-  { id: "c7", tag: "Social Post", title: "I stopped doing this. Revenue went up.", text: "LinkedIn storytelling post � hook + 3 beats + CTA. Avg. 40k impressions." },
+  { id: "c7", tag: "Social Post", title: "I stopped doing this. Revenue went up.", text: "LinkedIn storytelling post ï¿½ hook + 3 beats + CTA. Avg. 40k impressions." },
   { id: "c8", tag: "Ad Headline", title: "Your competitors are already doing this", text: "Urgency-driven Meta ad angle for B2B SaaS. Short. Punchy. Converts." },
   { id: "c9", tag: "Email Subject", title: "Open this before Friday", text: "6-word subject line that beat the control by 41% in an A/B test." },
-  { id: "c10", tag: "Landing CTA", title: "Start free � keep it forever", text: "Zero-friction CTA copy + reassurance line for self-serve SaaS checkout." },
+  { id: "c10", tag: "Landing CTA", title: "Start free ï¿½ keep it forever", text: "Zero-friction CTA copy + reassurance line for self-serve SaaS checkout." },
   { id: "c11", tag: "Sales Page", title: "The last tool you'll need for X", text: "Long-form sales page skeleton: problem, agitate, solve, proof, offer, close." },
   { id: "c12", tag: "Push Notif", title: "You're 1 step away from $500", text: "80-char push notification copy proven to reopen dormant users within 24h." },
 ];
@@ -481,7 +480,7 @@ export default function CopywriterPage() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [savedItems, setSavedItems] = useState<Set<string>>(new Set());
 
-  // Creation wizard state (legacy modal � kept for power users)
+  // Creation wizard state (legacy modal ï¿½ kept for power users)
   const [wizardOpen, setWizardOpen] = useState(false);
 
   // Guided Mode (in-page wizard) ? Advanced Mode (original controls)
@@ -559,7 +558,7 @@ export default function CopywriterPage() {
       // can keep working. Previously this was fully silent which made
       // outages look like success.
       const msg = err instanceof Error ? err.message : "Network error";
-      toast.error(`AI request failed (${msg}) � showing sample content`);
+      toast.error(`AI request failed (${msg}) ï¿½ showing sample content`);
       await new Promise(r => setTimeout(r, 2000));
       const mockContent = generateMockContent(contentType, topic, tone, audience, keywords, wordCount);
       setOutput(mockContent);
@@ -629,7 +628,7 @@ export default function CopywriterPage() {
     {
       id: "type",
       title: "What are you writing?",
-      description: "Pick the format � we'll tailor the writing style.",
+      description: "Pick the format ï¿½ we'll tailor the writing style.",
       icon: <FileText size={18} />,
       component: (
         <ChoiceCards
@@ -653,7 +652,7 @@ export default function CopywriterPage() {
     {
       id: "topic",
       title: "What's it about?",
-      description: "A single sentence is fine. Be specific � \"morning skincare routine for oily skin\" beats \"skincare\".",
+      description: "A single sentence is fine. Be specific ï¿½ \"morning skincare routine for oily skin\" beats \"skincare\".",
       icon: <Sparkles size={18} />,
       canProceed: topic.trim().length > 0,
       component: (
@@ -700,7 +699,7 @@ export default function CopywriterPage() {
     {
       id: "tone",
       title: "Pick a voice",
-      description: "This controls the vibe � formal vs. playful, calm vs. punchy.",
+      description: "This controls the vibe ï¿½ formal vs. playful, calm vs. punchy.",
       icon: <Type size={18} />,
       component: (
         <ChoiceCards
@@ -736,7 +735,7 @@ export default function CopywriterPage() {
             <div className="flex items-center gap-2">
               <activeType.icon size={16} style={{ color: activeType.color }} />
               <p className="text-sm font-semibold">{activeType.label}</p>
-              <span className="text-[10px] text-muted">� {tone} tone</span>
+              <span className="text-[10px] text-muted">ï¿½ {tone} tone</span>
             </div>
             <p className="text-sm leading-relaxed">{topic || <span className="text-muted italic">(no topic yet)</span>}</p>
             {audience && (
@@ -774,7 +773,7 @@ export default function CopywriterPage() {
     {
       id: "topic",
       title: "What's your topic or product?",
-      description: "One or two sentences is plenty � the more specific, the better.",
+      description: "One or two sentences is plenty ï¿½ the more specific, the better.",
       icon: <Sparkles size={16} />,
       field: {
         type: "text",
@@ -809,7 +808,7 @@ export default function CopywriterPage() {
               body: JSON.stringify({ text: seed, type: "content" }),
             });
             if (!res.ok) {
-              toast.error("Couldn't generate a topic � try again");
+              toast.error("Couldn't generate a topic ï¿½ try again");
               return {};
             }
             const data = await res.json();
@@ -821,7 +820,7 @@ export default function CopywriterPage() {
             toast.success("Topic suggested");
             return { topic: enhanced };
           } catch {
-            toast.error("Network error � topic unchanged");
+            toast.error("Network error ï¿½ topic unchanged");
             return {};
           }
         },
@@ -899,7 +898,7 @@ export default function CopywriterPage() {
             toast.success("Keywords generated");
             return { keywords: enhanced };
           } catch {
-            toast.error("Network error � keywords unchanged");
+            toast.error("Network error ï¿½ keywords unchanged");
             return {};
           }
         },
@@ -1023,7 +1022,7 @@ export default function CopywriterPage() {
       // Surface the error so outages don't look like silent success; still
       // fall back to sample content so the user can continue.
       const msg = err instanceof Error ? err.message : "Network error";
-      toast.error(`AI request failed (${msg}) � showing sample content`);
+      toast.error(`AI request failed (${msg}) ï¿½ showing sample content`);
       await new Promise(r => setTimeout(r, 1200));
       const mockContent = generateMockContent(chosenType, chosenTopic, chosenTone, audience, chosenKeywords, wc);
       setOutput(mockContent);
@@ -1051,68 +1050,55 @@ export default function CopywriterPage() {
   }, [audience]);
 
   return (
-    <MotionPage className="p-6 max-w-7xl mx-auto fade-in space-y-6"><PageHero
-              className="mb-6"
-              icon={<Pen size={28} />}
-              eyebrow="COPY ENGINE"
-              title="AI Copywriter"
-              subtitle="Blog posts, emails, social � copy that converts, in seconds."
-              gradient="purple"
-              actions={
-                <>
-                  <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-                  {advancedMode && (
-                    <>
-                      <button
-                        onClick={() => setWizardOpen(true)}
-                        className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white shadow-lg shadow-[rgba(37,99,235,0.25)] hover:shadow-[rgba(37,99,235,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all"
-                      >
-                        <Sparkles size={13} className="animate-pulse" />
-                        New with AI
-                        <span className="ml-1 text-[8px] uppercase bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
-                      </button>
-                      <button
-                        onClick={() => {
-                          setOutput("");
-                          setTopic("");
-                          setKeywords("");
-                          toast.success("Blank canvas ready");
-                        }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-transparent border border-border text-foreground hover:bg-black/5 transition-all"
-                      >
-                        <Plus size={13} />
-                        Blank
-                      </button>
-                      <button
-                        onClick={() => setShowTemplates(!showTemplates)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/10 transition-all"
-                      >
-                        <Layers size={13} />
-                        Templates
-                      </button>
-                      <button
-                        onClick={() => setShowHistory(!showHistory)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/10 transition-all"
-                      >
-                        <Clock size={13} />
-                        History
-                        {history.length > 0 && (
-                          <span className="ml-1 text-[9px] bg-black/10 text-foreground px-1.5 py-0.5 rounded-full font-semibold">
-                            {history.length}
-                          </span>
-                        )}
-                      </button>
-                    </>
-                  )}
-                </>
-              }
-            />{/* Guided Mode � the "4-year-old friendly" path */}{!advancedMode && (
+    <MotionPage className="p-6 max-w-7xl mx-auto fade-in space-y-6">{/* -- AI Copywriter command strip -- */}
+            <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4 mb-6">
+              <div className="min-w-0">
+                <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Copy Engine</p>
+                <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">AI Copywriter</h1>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+                {advancedMode && (
+                  <>
+                    <button
+                      onClick={() => setWizardOpen(true)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-[#2563EB] text-white hover:bg-[#1D4ED8] active:scale-[0.98] transition-all"
+                    >
+                      <Sparkles size={13} />
+                      New with AI
+                    </button>
+                    <button
+                      onClick={() => { setOutput(""); setTopic(""); setKeywords(""); toast.success("Blank canvas ready"); }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-foreground hover:bg-black/5 transition-all"
+                    >
+                      <Plus size={13} /> Blank
+                    </button>
+                    <button
+                      onClick={() => setShowTemplates(!showTemplates)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/10 transition-all"
+                    >
+                      <Layers size={13} /> Templates
+                    </button>
+                    <button
+                      onClick={() => setShowHistory(!showHistory)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/10 transition-all"
+                    >
+                      <Clock size={13} /> History
+                      {history.length > 0 && (
+                        <span className="ml-1 text-[9px] bg-black/10 px-1.5 py-0.5 rounded-full font-semibold">{history.length}</span>
+                      )}
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+            {/* Guided Mode ï¿½ the "4-year-old friendly" path */}{!advancedMode && (
               <Wizard
                 className="mb-6"
                 steps={guidedSteps}
                 activeIdx={guidedStep}
                 onStepChange={setGuidedStep}
-                finishLabel={generating ? "Writing�" : "Generate copy"}
+                finishLabel={generating ? "Writingï¿½" : "Generate copy"}
                 busy={generating}
                 onFinish={async () => {
                   await handleGenerate();
@@ -1164,7 +1150,7 @@ export default function CopywriterPage() {
                     Every angle, every tone, every funnel stage
                   </h3>
                   <p className="text-xs text-muted max-w-md mx-auto mt-1">
-                    Subject lines, ad headlines, landing heros � pick a template or
+                    Subject lines, ad headlines, landing heros ï¿½ pick a template or
                     start blank. ShortStack writes in your brand voice automatically.
                   </p>
                 </div>
@@ -1172,7 +1158,7 @@ export default function CopywriterPage() {
             )}{/* Creation Wizard */}<CreationWizard
               open={wizardOpen}
               title="Create with AI"
-              subtitle="5 quick steps � we handle the rest"
+              subtitle="5 quick steps ï¿½ we handle the rest"
               icon={<Wand2 size={18} />}
               submitLabel="Generate Content"
               steps={wizardSteps}

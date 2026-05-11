@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import Modal from "@/components/ui/modal";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { DotsPulse } from "@/components/ui/loaders";
@@ -88,9 +87,9 @@ function formatNum(n: number | undefined): string {
 }
 
 function formatDate(iso: string | null): string {
-  if (!iso) return "�";
+  if (!iso) return "ï¿½";
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "�";
+  if (Number.isNaN(d.getTime())) return "ï¿½";
   return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }
 
@@ -171,8 +170,8 @@ export default function ContentPlanPage() {
   const [wizardPlatforms, setWizardPlatforms] = useState<string[]>(["instagram", "tiktok", "linkedin"]);
   const [wizardGenerating, setWizardGenerating] = useState(false);
 
-  // Load clients for the Guided-mode picker (best effort � empty list is OK).
-  // Deferred to idle time � the wizard picker is hidden in the default advanced
+  // Load clients for the Guided-mode picker (best effort ï¿½ empty list is OK).
+  // Deferred to idle time ï¿½ the wizard picker is hidden in the default advanced
   // view, so delaying this past first paint is safe.
   useEffect(() => {
     const load = () => {
@@ -204,7 +203,7 @@ export default function ContentPlanPage() {
       if (platformFilter !== "all") params.set("platform", platformFilter);
       const res = await fetch(`/api/content-plan?${params.toString()}`);
       // 403 "Profile not found" and other non-ok responses are legit "empty state"
-      // situations for fresh accounts � treat them as empty, not errors. The
+      // situations for fresh accounts ï¿½ treat them as empty, not errors. The
       // empty-state UI already tells the user how to get started.
       if (!res.ok) {
         console.warn(`[content-plan] loadPosts: HTTP ${res.status}`);
@@ -215,7 +214,7 @@ export default function ContentPlanPage() {
       setPosts(data.posts || []);
     } catch (e) {
       // Only genuine network/parse failures land here. Log for debugging but
-      // don't surface a toast � the empty state is a better UX.
+      // don't surface a toast ï¿½ the empty state is a better UX.
       console.warn("[content-plan] loadPosts failed:", e);
       setPosts([]);
     } finally {
@@ -239,7 +238,7 @@ export default function ContentPlanPage() {
   }, []);
 
   useEffect(() => { loadPosts(); }, [loadPosts]);
-  // Defer insights � they feed the AI sidebar below the fold. Letting the posts
+  // Defer insights ï¿½ they feed the AI sidebar below the fold. Letting the posts
   // grid render first is a much faster perceived paint.
   useEffect(() => {
     const run = () => { loadInsights(); };
@@ -284,7 +283,7 @@ export default function ContentPlanPage() {
       } else {
         // reschedule/regenerate/analyze aren't wired to APIs yet; be honest
         // rather than fake success.
-        toast(`${names[action]} bulk action is coming soon � open individual posts for now`, { id: "bulk", icon: "??" });
+        toast(`${names[action]} bulk action is coming soon ï¿½ open individual posts for now`, { id: "bulk", icon: "??" });
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : `${names[action]} failed`, { id: "bulk" });
@@ -379,7 +378,7 @@ export default function ContentPlanPage() {
     {
       id: "goal",
       title: "What's the goal + how long?",
-      description: "Pick the outcome you want � we'll shape the mix of hooks, CTAs, and formats to match.",
+      description: "Pick the outcome you want ï¿½ we'll shape the mix of hooks, CTAs, and formats to match.",
       icon: <Target size={18} />,
       component: (
         <div className="space-y-4">
@@ -446,7 +445,7 @@ export default function ContentPlanPage() {
               onChange={e => setWizardPostsPerWeek(parseInt(e.target.value, 10) || 3)}
               className="w-full accent-blue-600"
             />
-            <p className="text-[11px] text-muted mt-1">{wizardPostsPerWeek}� per week</p>
+            <p className="text-[11px] text-muted mt-1">{wizardPostsPerWeek}ï¿½ per week</p>
           </div>
           <div>
             <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Platforms</p>
@@ -488,10 +487,10 @@ export default function ContentPlanPage() {
           <div className="flex items-center gap-2 text-sm">
             <Target size={14} className="text-[#2563EB]" />
             <span className="font-semibold capitalize">{wizardGoal}</span>
-            <span className="text-muted">�</span>
+            <span className="text-muted">ï¿½</span>
             <span>{wizardDuration === 7 ? "1 week" : wizardDuration === 30 ? "1 month" : "1 quarter"}</span>
-            <span className="text-muted">�</span>
-            <span>{wizardPostsPerWeek}� per week</span>
+            <span className="text-muted">ï¿½</span>
+            <span>{wizardPostsPerWeek}ï¿½ per week</span>
           </div>
           <div className="text-[11px] text-muted">
             Platforms: <span className="text-foreground capitalize">{wizardPlatforms.join(", ") || "(none)"}</span>
@@ -500,7 +499,7 @@ export default function ContentPlanPage() {
             <div className="text-[11px] text-muted">
               Client:{" "}
               <span className="text-foreground">
-                {clients.find(c => c.id === wizardClientId)?.business_name || "�"}
+                {clients.find(c => c.id === wizardClientId)?.business_name || "ï¿½"}
               </span>
             </div>
           )}
@@ -529,34 +528,31 @@ export default function ContentPlanPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Calendar size={22} />}
-        eyebrow="EDITORIAL CALENDAR"
-        title="Content Plan"
-        subtitle="All your content across every platform, in one view."
-        gradient="purple"
-        actions={
-          <>
-            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-            {advancedMode && (
-              <button
-                onClick={() => { loadPosts(); loadInsights(); }}
-                className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-black/15 text-[#0A0A0B] font-medium hover:bg-black/15 transition-all"
-              >
-                <RefreshCw size={12} /> Refresh
-              </button>
-            )}
-          </>
-        }
-      />
-
-      {/* Guided Mode � the 3-step content plan builder */}
+      {/* -- Content Plan command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Editorial Calendar</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Content Plan</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+          {advancedMode && (
+            <button
+              onClick={() => { loadPosts(); loadInsights(); }}
+              className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#52525B] font-medium hover:bg-[rgba(0,0,0,0.08)] transition-all"
+            >
+              <RefreshCw size={12} /> Refresh
+            </button>
+          )}
+        </div>
+      </div>
+      {/* Guided Mode ï¿½ the 3-step content plan builder */}
       {!advancedMode && (
         <Wizard
           steps={guidedSteps}
           activeIdx={guidedStep}
           onStepChange={setGuidedStep}
-          finishLabel={wizardGenerating ? "Generating�" : "Generate content plan"}
+          finishLabel={wizardGenerating ? "Generatingï¿½" : "Generate content plan"}
           busy={wizardGenerating}
           onFinish={handleGuidedGenerate}
           onCancel={() => setAdvancedMode(true)}
@@ -925,7 +921,7 @@ function PostGrid({
           {/* Date */}
           <p className="text-[10px] text-muted mb-2 flex items-center gap-1.5">
             <Calendar size={9} />
-            {p.posted_at ? `Posted ${formatDate(p.posted_at)}` : p.scheduled_at ? `Scheduled ${formatDate(p.scheduled_at)} � ${formatTime(p.scheduled_at)}` : "No date"}
+            {p.posted_at ? `Posted ${formatDate(p.posted_at)}` : p.scheduled_at ? `Scheduled ${formatDate(p.scheduled_at)} ï¿½ ${formatTime(p.scheduled_at)}` : "No date"}
           </p>
 
           {/* Engagement */}
@@ -1018,7 +1014,7 @@ function PostList({
                   </span>
                 </td>
                 <td className="py-2 px-3 text-muted">
-                  {p.posted_at ? formatDate(p.posted_at) : p.scheduled_at ? formatDate(p.scheduled_at) : "�"}
+                  {p.posted_at ? formatDate(p.posted_at) : p.scheduled_at ? formatDate(p.scheduled_at) : "ï¿½"}
                 </td>
                 <td className="py-2 px-3 text-muted">{formatNum(p.likes)}</td>
                 <td className="py-2 px-3 text-muted">{formatNum(p.comments)}</td>
@@ -1027,7 +1023,7 @@ function PostList({
                   {insightMap[p.id] ? (
                     <span className="text-[10px] text-[#2563EB] line-clamp-2">{insightMap[p.id]}</span>
                   ) : (
-                    <span className="text-[10px] text-muted/50">�</span>
+                    <span className="text-[10px] text-muted/50">ï¿½</span>
                   )}
                 </td>
               </motion.tr>
@@ -1318,12 +1314,12 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
           )}
         </div>
 
-        {/* Actions � per-post actions are still being wired to dedicated API
+        {/* Actions ï¿½ per-post actions are still being wired to dedicated API
             routes; for now, surface a friendly "coming soon" instead of
             silently doing nothing on click. */}
         <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/50">
           <button
-            onClick={() => toast("Edit-in-modal is coming soon � open the post page to edit", { icon: "??" })}
+            onClick={() => toast("Edit-in-modal is coming soon ï¿½ open the post page to edit", { icon: "??" })}
             className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
           >
             <Edit3 size={11} /> Edit
@@ -1354,7 +1350,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
             <Sparkles size={11} /> Improve with AI
           </button>
           <button
-            onClick={() => toast("Delete-from-modal is coming soon � use bulk delete for now", { icon: "??" })}
+            onClick={() => toast("Delete-from-modal is coming soon ï¿½ use bulk delete for now", { icon: "??" })}
             className="ml-auto text-[11px] py-1.5 px-3 rounded-lg bg-red-400/10 text-red-400 border border-red-400/20 hover:bg-red-400/20 flex items-center gap-1.5"
           >
             <Trash2 size={11} /> Delete

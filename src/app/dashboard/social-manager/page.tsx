@@ -27,7 +27,6 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import Modal from "@/components/ui/modal";
-import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
@@ -204,7 +203,7 @@ export default function SocialManagerPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // client_id is optional � if null, connects at agency level
+          // client_id is optional ï¿½ if null, connects at agency level
           client_id: selectedClient || null,
           platform,
           action: "zernio_oauth",
@@ -401,14 +400,13 @@ export default function SocialManagerPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Hero Header */}
-      <PageHero
-        icon={<Share2 size={22} />}
-        eyebrow="SOCIAL COMMAND"
-        title="Social Manager"
-        subtitle="Post to every platform at once � AI plans the calendar, writes captions, and schedules everything. You just approve."
-        gradient="purple"
-      />
+      {/* -- Social Manager command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Social Command</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Social Manager</h1>
+        </div>
+      </div>
       <div className="flex items-center justify-end flex-wrap gap-3">
         <div className="flex items-center gap-2">
           {/* Client selector */}
@@ -463,7 +461,7 @@ export default function SocialManagerPage() {
         </div>
       )}
 
-      {/* Connect Accounts Section � shown when no accounts connected */}
+      {/* Connect Accounts Section ï¿½ shown when no accounts connected */}
       {currentClient && connectedAccounts.filter(a => a.is_active).length === 0 && (
         <PrismPanel rainbow glow padding="p-0" className="relative overflow-hidden">
           <div className="absolute inset-0 bg-mesh opacity-20" />
@@ -836,7 +834,7 @@ export default function SocialManagerPage() {
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold">Content Calendar � This Week</h2>
+              <h2 className="text-sm font-semibold">Content Calendar ï¿½ This Week</h2>
               <button onClick={generateWeek} disabled={generating}
                 className="btn-primary text-xs flex items-center gap-1.5">
                 {generating ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
@@ -1075,7 +1073,7 @@ export default function SocialManagerPage() {
                 {PLATFORM_ICONS[post.platform] || <Globe size={14} />}
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">{post.title}</p>
-                  <p className="text-[9px] text-muted">{post.scheduled_at ? formatRelativeTime(post.scheduled_at) : ""} � {post.platform}</p>
+                  <p className="text-[9px] text-muted">{post.scheduled_at ? formatRelativeTime(post.scheduled_at) : ""} ï¿½ {post.platform}</p>
                 </div>
                 <StatusBadge status="published" />
               </motion.div>
@@ -1364,7 +1362,7 @@ export default function SocialManagerPage() {
                   setTimeout(() => {
                     setAbVariants({
                       a: `Ever wished your skin could just... glow? Introducing our new organic line that makes it happen. No filters needed.\n\nTap the link in bio to discover your perfect match.\n\n#skincare #organic #glowup`,
-                      b: `We spent 2 years perfecting this formula.\n\nThe result? Skincare that actually works � backed by science, powered by nature.\n\n3 products. Zero compromises. Available now.\n\nLink in bio to shop the collection.`,
+                      b: `We spent 2 years perfecting this formula.\n\nThe result? Skincare that actually works ï¿½ backed by science, powered by nature.\n\n3 products. Zero compromises. Available now.\n\nLink in bio to shop the collection.`,
                     });
                     setGeneratingAB(false);
                   }, 1500);
@@ -1425,7 +1423,7 @@ export default function SocialManagerPage() {
                         score > 80 ? "Strong emotional hook detected" : "Consider adding a stronger hook",
                         viralInput.includes("?") ? "Question format encourages engagement" : "Try adding a question to boost comments",
                         viralInput.length > 100 ? "Good content length for storytelling" : "Longer captions tend to get more saves",
-                        viralInput.includes("#") ? "Hashtags detected � good for reach" : "Add 5-10 relevant hashtags for discovery",
+                        viralInput.includes("#") ? "Hashtags detected ï¿½ good for reach" : "Add 5-10 relevant hashtags for discovery",
                         "Trending topic alignment: moderate",
                         score > 70 ? "Strong share potential" : "Add a relatable angle to boost shares",
                       ],
@@ -2093,7 +2091,7 @@ export default function SocialManagerPage() {
                       {contentPillars.filter(p => p.actual > p.target).map(p => (
                         <li key={p.name} className="text-[9px] text-muted flex items-start gap-1.5">
                           <Check size={9} className="text-success mt-0.5 shrink-0" />
-                          <span><strong>{p.name}</strong> is {p.actual - p.target}% above target � consider rebalancing</span>
+                          <span><strong>{p.name}</strong> is {p.actual - p.target}% above target ï¿½ consider rebalancing</span>
                         </li>
                       ))}
                     </ul>
@@ -2425,7 +2423,7 @@ export default function SocialManagerPage() {
         </div>
       )}
 
-      {/* 17. Content Calendar Export � add to calendar tab area */}
+      {/* 17. Content Calendar Export ï¿½ add to calendar tab area */}
       {tab === "calendar" && (
         <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(16px) saturate(1.5)", WebkitBackdropFilter: "blur(16px) saturate(1.5)", border: "1px solid rgba(0,0,0,0.10)" }}>
           <div className="flex items-center gap-2 mb-3">

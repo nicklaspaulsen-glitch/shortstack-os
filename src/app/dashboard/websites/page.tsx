@@ -15,7 +15,6 @@ import {
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { VercelIcon, GoDaddyIcon } from "@/components/ui/platform-icons";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -404,7 +403,7 @@ export default function WebsitesPage() {
         type: "choice-cards",
         key: "business_type",
         options: [
-          { value: "local_service", label: "Local Service", description: "HVAC, plumbing, dental�", icon: <Home size={14} />, preview: "bg-gradient-to-br from-sky-500/40 to-cyan-500/40" },
+          { value: "local_service", label: "Local Service", description: "HVAC, plumbing, dentalï¿½", icon: <Home size={14} />, preview: "bg-gradient-to-br from-sky-500/40 to-cyan-500/40" },
           { value: "ecommerce", label: "E-commerce", description: "Online store", icon: <ShoppingBag size={14} />, preview: "bg-gradient-to-br from-pink-500/40 to-rose-500/40" },
           { value: "saas", label: "SaaS", description: "Software product", icon: <MonitorSmartphone size={14} />, preview: "bg-gradient-to-br from-blue-500/40 to-indigo-500/40" },
           { value: "portfolio", label: "Portfolio", description: "Creative showcase", icon: <Camera size={14} />, preview: "bg-gradient-to-br from-orange-500/40 to-amber-500/40" },
@@ -647,7 +646,7 @@ export default function WebsitesPage() {
         return;
       }
 
-      toast.success("Website generated! Deploying demo�");
+      toast.success("Website generated! Deploying demoï¿½");
       // Auto-deploy to free demo subdomain
       await deployDemo(out.project_id);
       await loadData();
@@ -660,9 +659,9 @@ export default function WebsitesPage() {
         const wp = row as WebsiteProject;
         setActive(wp);
         setWizardOpen(false);
-        // Let the user SEE the demo first � they open pricing when ready
+        // Let the user SEE the demo first ï¿½ they open pricing when ready
         toast.success(
-          "Your demo is live! Try it out � go live when you're ready.",
+          "Your demo is live! Try it out ï¿½ go live when you're ready.",
           { duration: 6000 },
         );
       }
@@ -688,7 +687,7 @@ export default function WebsitesPage() {
       const out = await res.json();
       toast.dismiss("regen");
       if (out.success) {
-        toast.success("Regenerated � redeploying demo�");
+        toast.success("Regenerated ï¿½ redeploying demoï¿½");
         await deployDemo(project.id);
         const { data: row } = await supabase.from("website_projects").select("*").eq("id", project.id).single();
         if (row) setActive(row as WebsiteProject);
@@ -705,7 +704,7 @@ export default function WebsitesPage() {
 
   async function deploy(project: WebsiteProject) {
     setDeploying(true);
-    toast.loading("Deploying to Vercel�", { id: "dep" });
+    toast.loading("Deploying to Vercelï¿½", { id: "dep" });
     try {
       const res = await fetch("/api/websites/deploy", {
         method: "POST",
@@ -745,7 +744,7 @@ export default function WebsitesPage() {
     }
     try {
       await navigator.clipboard.writeText(url);
-      toast.success("Demo URL copied � share with your client!");
+      toast.success("Demo URL copied ï¿½ share with your client!");
     } catch {
       toast.error("Failed to copy");
     }
@@ -753,7 +752,7 @@ export default function WebsitesPage() {
 
   async function extendDemo(p: WebsiteProject) {
     if (!confirm("Extend demo by 7 days for $2?")) return;
-    toast.loading("Extending demo�", { id: "ext" });
+    toast.loading("Extending demoï¿½", { id: "ext" });
     try {
       const res = await fetch(`/api/websites/${p.id}/extend-demo`, { method: "POST" });
       const out = await res.json();
@@ -846,28 +845,27 @@ export default function WebsitesPage() {
   const indexHtml = active?.generated_files?.["index.html"] || "";
 
   return (
-    <MotionPage className="fade-in space-y-5"><PageHero
-              eyebrow="WEBSITES"
-              icon={<Globe size={28} />}
-              title="Websites that convert"
-              subtitle="Pick a niche. Get a high-converting client site live in 3 minutes &mdash; proven to convert at 4-6%."
-              gradient="sunset"
-              actions={
-                <>
-                  <div className="flex items-center gap-1.5 text-[10px] text-black/65 bg-black/8 border border-black/15 px-2 py-1 rounded-lg">
-                    <VercelIcon size={12} /> Vercel
-                    <span className="opacity-40">&middot;</span>
-                    <GoDaddyIcon size={12} /> GoDaddy
-                  </div>
-                  <button
-                    onClick={startBlank}
-                    className="text-xs px-3 py-2 rounded-lg border border-black/20 text-[#0A0A0B] hover:bg-black/8 hover:border-black/30 flex items-center gap-1.5"
-                  >
-                    <Plus size={13} /> Build from scratch
-                  </button>
-                </>
-              }
-            />{/* Social proof strip */}<div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border bg-gradient-to-r from-amber-500/[0.04] via-transparent to-emerald-500/[0.04]">
+    <MotionPage className="fade-in space-y-5">{/* -- Websites command strip -- */}
+            <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+              <div className="min-w-0">
+                <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Websites</p>
+                <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Sites That Convert</h1>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-1.5 text-[10px] text-black/65 bg-black/[0.06] border border-black/[0.12] px-2 py-1 rounded-lg">
+                  <VercelIcon size={12} /> Vercel
+                  <span className="opacity-40">&middot;</span>
+                  <GoDaddyIcon size={12} /> GoDaddy
+                </div>
+                <button
+                  onClick={startBlank}
+                  className="text-xs px-3 py-1.5 rounded-lg bg-[#2563EB] text-white hover:bg-[#1D4ED8] flex items-center gap-1.5 font-medium transition-all"
+                >
+                  <Plus size={13} /> New Site
+                </button>
+              </div>
+            </div>
+            {/* Social proof strip */}<div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border bg-gradient-to-r from-amber-500/[0.04] via-transparent to-emerald-500/[0.04]">
               <div className="flex items-center gap-4 flex-wrap">
                 <div className="flex items-center gap-1.5 text-[11px] text-foreground/90">
                   <TrendingUp size={12} className="text-emerald-400" />
@@ -928,7 +926,7 @@ export default function WebsitesPage() {
                 </button>
               </div>
 
-              {/* Niche filter tabs � spring indicator via layoutId */}
+              {/* Niche filter tabs ï¿½ spring indicator via layoutId */}
               <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter templates by niche">
                 {NICHE_FILTERS.map((niche) => {
                   const filterKey = niche === "All" ? "all" : niche;
@@ -982,13 +980,13 @@ export default function WebsitesPage() {
                         <TrendingUp size={9} /> {t.cvr}
                       </span>
 
-                      {/* Bottom overlay content � hidden when wireframe preview is shown */}
+                      {/* Bottom overlay content ï¿½ hidden when wireframe preview is shown */}
                       <div className="absolute bottom-0 left-0 right-0 p-3 transition-opacity duration-200 group-hover:opacity-0">
                         <p className="text-[13px] font-bold text-white drop-shadow-sm">{t.name}</p>
                         <p className="text-[10px] text-foreground mt-0.5 line-clamp-2">{t.tagline}</p>
                       </div>
 
-                      {/* Wireframe mini-preview � slides up from bottom on hover */}
+                      {/* Wireframe mini-preview ï¿½ slides up from bottom on hover */}
                       <div className="absolute inset-x-0 bottom-0 h-[72%] translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out pointer-events-none">
                         <div className="absolute inset-0 bg-black/88 backdrop-blur-sm" />
                         <div className="relative h-full flex flex-col p-2.5 gap-2">
@@ -1045,7 +1043,7 @@ export default function WebsitesPage() {
                   </button>
                 ))}
               </div>
-            </div>{/* Demo-ready banner � shown while demo is live and not yet subscribed */}{active && effectiveStatus(active) === "preview" && (
+            </div>{/* Demo-ready banner ï¿½ shown while demo is live and not yet subscribed */}{active && effectiveStatus(active) === "preview" && (
               <div className="card p-4 bg-gradient-to-br from-emerald-500/[0.06] to-transparent border-emerald-500/30 fade-in">
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
@@ -1267,7 +1265,7 @@ export default function WebsitesPage() {
                           <div>
                             <p className="text-xs font-semibold truncate">{p.name}</p>
                             <p className="text-[9px] text-muted truncate">
-                              {clientName ? `${clientName} � ` : ""}
+                              {clientName ? `${clientName} ï¿½ ` : ""}
                               {p.industry || p.template_style || "uncategorized"}
                             </p>
                           </div>
@@ -1353,7 +1351,7 @@ export default function WebsitesPage() {
             </div>{/* How it works */}<div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {[
                 { icon: <Layout size={12} />, title: "1. Pick a niche", body: "Nine battle-tested templates, each one prewired for the conversion pattern that niche responds to." },
-                { icon: <Rocket size={12} />, title: "2. Share the demo", body: "Auto-deployed to a live URL in under 3 minutes. Send it to your client � free for 14 days, no card." },
+                { icon: <Rocket size={12} />, title: "2. Share the demo", body: "Auto-deployed to a live URL in under 3 minutes. Send it to your client ï¿½ free for 14 days, no card." },
                 { icon: <DollarSign size={12} />, title: "3. Go live, get paid", body: "Connect a domain and subscribe. Transparent monthly pricing based on what's actually in the site." },
               ].map((item, index) => (
                 <motion.div
@@ -1442,7 +1440,7 @@ function PricingModal({
             <h2 className="text-base font-bold flex items-center gap-2">
               <Rocket size={16} className="text-[#2563EB]" /> Your Website is Ready!
             </h2>
-            <p className="text-[11px] text-muted">{project.name} � pick a plan to go live.</p>
+            <p className="text-[11px] text-muted">{project.name} ï¿½ pick a plan to go live.</p>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-black/5"><X size={14} /></button>
         </div>
@@ -1470,14 +1468,14 @@ function PricingModal({
                   <Loader size={20} className="animate-spin" />
                 ) : (
                   <>
-                    <span className="text-3xl font-bold">${display ?? "�"}</span>
+                    <span className="text-3xl font-bold">${display ?? "ï¿½"}</span>
                     <span className="text-xs opacity-90">{cyclePer}</span>
                   </>
                 )}
               </div>
               {billingCycle === "yearly" && quote && (
                 <p className="text-[10px] opacity-90 mt-1">
-                  Save 17% � equiv ${(quote.yearly_price / 12).toFixed(2)}/mo
+                  Save 17% ï¿½ equiv ${(quote.yearly_price / 12).toFixed(2)}/mo
                 </p>
               )}
             </div>
@@ -1509,7 +1507,7 @@ function PricingModal({
                   </div>
                 ))}
                 {!quote?.breakdown?.length && !quoteLoading && (
-                  <p className="text-[11px] text-muted">Calculating�</p>
+                  <p className="text-[11px] text-muted">Calculatingï¿½</p>
                 )}
               </div>
             </div>
@@ -1550,7 +1548,7 @@ function PricingModal({
                 className="w-full text-xs px-4 py-3 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
                 {subscribing ? <Loader size={12} className="animate-spin" /> : <Rocket size={12} />}
-                Go Live � ${display}{cyclePer}
+                Go Live ï¿½ ${display}{cyclePer}
               </button>
               <button
                 onClick={onClose}

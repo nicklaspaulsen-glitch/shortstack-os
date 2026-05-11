@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -17,7 +17,6 @@ import {
   Flame, ExternalLink, Users as UsersIcon, Activity, Repeat
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
@@ -1277,30 +1276,27 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
 
   return (
     <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Sparkles size={28} />}
-        eyebrow="SCRIPT STUDIO"
-        title="Script Lab"
-        subtitle="AI scripts with viral research & frameworks."
-        gradient="gold"
-        actions={
-          <>
-            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-            <select value={selectedClient} onChange={e => {
-              setSelectedClient(e.target.value);
-              const client = clients.find(c => c.id === e.target.value);
-              if (client?.industry) {
-                const matchedPreset = Object.keys(TOPIC_PRESETS).find(k => client.industry.toLowerCase().includes(k));
-                if (matchedPreset) setConfig(prev => ({ ...prev, industry_preset: matchedPreset }));
-              }
-            }} className="text-xs py-1.5 px-2 min-w-[160px] rounded-lg bg-black/5 border border-border text-foreground">
-              <option value="" className="bg-surface">No client</option>
-              {clients.map(c => <option key={c.id} value={c.id} className="bg-surface">{c.business_name}</option>)}
-            </select>
-          </>
-        }
-      />
-
+      {/* -- Script Lab command strip -- */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Script Studio</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Script Lab</h1>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+          <select value={selectedClient} onChange={e => {
+            setSelectedClient(e.target.value);
+            const client = clients.find(c => c.id === e.target.value);
+            if (client?.industry) {
+              const matchedPreset = Object.keys(TOPIC_PRESETS).find(k => client.industry.toLowerCase().includes(k));
+              if (matchedPreset) setConfig(prev => ({ ...prev, industry_preset: matchedPreset }));
+            }
+          }} className="text-xs py-1.5 px-2 min-w-[160px] rounded-lg bg-black/5 border border-border text-foreground">
+            <option value="" className="bg-surface">No client</option>
+            {clients.map(c => <option key={c.id} value={c.id} className="bg-surface">{c.business_name}</option>)}
+          </select>
+        </div>
+      </div>
       {/* Guided Mode � "4-year-old friendly" flow */}
       {!advancedMode && (
         <>

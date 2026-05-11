@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
-import PageHero from "@/components/ui/page-hero";
 import { PrismPanel } from "@/components/prism";
 import WebsiteScraper from "@/components/ui/website-scraper";
 import { useAutoSave } from "@/lib/use-auto-save";
@@ -148,7 +147,7 @@ export default function BrandKitPage() {
       }
     } catch (err) {
       console.error("Brand scrape failed:", err);
-      toast.error("Network error � check the URL and try again");
+      toast.error("Network error ï¿½ check the URL and try again");
     }
     setLoading(false);
   }
@@ -218,7 +217,7 @@ export default function BrandKitPage() {
 
     lines.push("}");
 
-    const css = `/* Brand Kit � ${brand.siteName || "Extracted Brand"} */\n/* Generated ${new Date().toISOString()} */\n\n${lines.join("\n")}\n`;
+    const css = `/* Brand Kit ï¿½ ${brand.siteName || "Extracted Brand"} */\n/* Generated ${new Date().toISOString()} */\n\n${lines.join("\n")}\n`;
     const blob = new Blob([css], { type: "text/css" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -232,7 +231,7 @@ export default function BrandKitPage() {
   function copyBrandSummary() {
     if (!brand) return;
     const parts: string[] = [];
-    parts.push(`BRAND KIT � ${brand.siteName || "Unknown"}`);
+    parts.push(`BRAND KIT ï¿½ ${brand.siteName || "Unknown"}`);
     parts.push("=".repeat(40));
 
     if (brand.description) {
@@ -281,72 +280,49 @@ export default function BrandKitPage() {
   ];
 
   return (
-    <MotionPage className="fade-in p-6 max-w-7xl mx-auto space-y-6"><AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} /><PageHero
-              icon={<Palette size={28} />}
-              eyebrow="BRAND KIT"
-              title="Brand Kit"
-              subtitle="Build your agency's brand identity � extract colors, fonts & logos from any URL, then auto-apply them across all client assets."
-              gradient="purple"
-              actions={
-                brand ? (
-                  <>
+    <MotionPage className="fade-in p-6 max-w-7xl mx-auto space-y-6"><AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />{/* -- Brand Kit command strip -- */}
+              <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+                <div className="min-w-0">
+                  <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Brand Kit</p>
+                  <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Brand Kit</h1>
+                </div>
+                {brand && (
+                  <div className="flex items-center gap-2 shrink-0">
                     <div className="relative" ref={exportMenuRef}>
-                      <motion.button
-                        whileHover={{ scale: 1.04 }}
-                        whileTap={{ scale: 0.97 }}
+                      <button
                         onClick={() => setShowExportMenu((v) => !v)}
                         className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
                       >
-                        <Download size={13} /> Export Kit <ChevronDown size={12} className={`transition-transform ${showExportMenu ? "rotate-180" : ""}`} />
-                      </motion.button>
-
+                        <Download size={13} /> Export Kit
+                        <ChevronDown size={12} className={showExportMenu ? "rotate-180 transition-transform" : "transition-transform"} />
+                      </button>
                       {showExportMenu && (
                         <div className="absolute right-0 top-full mt-2 w-56 bg-surface border border-border/30 rounded-xl shadow-2xl z-50 py-1 overflow-hidden">
-                          <button
-                            onClick={exportAsJSON}
-                            className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors"
-                          >
+                          <button onClick={exportAsJSON} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors">
                             <Braces size={14} className="text-[#2563EB] shrink-0" />
-                            <div>
-                              <p className="font-medium">Export as JSON</p>
-                              <p className="text-[10px] text-muted">Full brand data file</p>
-                            </div>
+                            <div><p className="font-medium">Export as JSON</p><p className="text-[10px] text-muted">Full brand data file</p></div>
                           </button>
-                          <button
-                            onClick={copyBrandSummary}
-                            className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors"
-                          >
+                          <button onClick={copyBrandSummary} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors">
                             <ClipboardList size={14} className="text-[#2563EB] shrink-0" />
-                            <div>
-                              <p className="font-medium">Copy Brand Summary</p>
-                              <p className="text-[10px] text-muted">Formatted text to clipboard</p>
-                            </div>
+                            <div><p className="font-medium">Copy Brand Summary</p><p className="text-[10px] text-muted">Formatted text to clipboard</p></div>
                           </button>
-                          <button
-                            onClick={exportCSSVariables}
-                            className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors"
-                          >
+                          <button onClick={exportCSSVariables} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors">
                             <FileCode size={14} className="text-[#2563EB] shrink-0" />
-                            <div>
-                              <p className="font-medium">Export CSS Variables</p>
-                              <p className="text-[10px] text-muted">Colors &amp; fonts as CSS</p>
-                            </div>
+                            <div><p className="font-medium">Export CSS Variables</p><p className="text-[10px] text-muted">Colors &amp; fonts as CSS</p></div>
                           </button>
                         </div>
                       )}
                     </div>
-                    <motion.button
-                      whileHover={{ scale: 1.04 }}
-                      whileTap={{ scale: 0.97 }}
+                    <button
                       onClick={() => { setBrand(null); setUrl(""); setTab("extract"); if (typeof window !== "undefined") { localStorage.removeItem("ss_brand_kit_data"); localStorage.removeItem("ss_brand_kit_url"); } }}
                       className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
                     >
                       <RefreshCw size={13} /> New Scan
-                    </motion.button>
-                  </>
-                ) : null
-              }
-            />{/* Auto-save footer */}{(brand || url.trim()) && (
+                    </button>
+                  </div>
+                )}
+              </div>
+              {/* Auto-save footer */}{(brand || url.trim()) && (
               <div className="flex items-center justify-between text-[10px] text-muted/70 px-1">
                 <span className="flex items-center gap-1">
                   <Check size={10} className="text-emerald-400/60" />
@@ -865,7 +841,7 @@ export default function BrandKitPage() {
               </motion.div>
             )}<PageAI
               pageName="brand-kit"
-              context="Brand Kit page � extracts brand identity (colors, fonts, logos, imagery) from any website URL and generates on-brand content using presets."
+              context="Brand Kit page ï¿½ extracts brand identity (colors, fonts, logos, imagery) from any website URL and generates on-brand content using presets."
               suggestions={[
                 "What colors work best for social media ads?",
                 "Suggest font pairings for this brand",
