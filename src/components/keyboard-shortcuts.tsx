@@ -16,14 +16,16 @@ export default function KeyboardShortcuts() {
 
   const shortcuts: Shortcut[] = [
     // Navigation
-    { keys: "g d", label: "Go to Dashboard", action: () => router.push("/dashboard"), category: "Navigation" },
-    { keys: "g c", label: "Go to CRM", action: () => router.push("/dashboard/crm"), category: "Navigation" },
-    { keys: "g l", label: "Go to Lead Finder", action: () => router.push("/dashboard/scraper"), category: "Navigation" },
-    { keys: "g o", label: "Go to Outreach", action: () => router.push("/dashboard/outreach-hub"), category: "Navigation" },
-    { keys: "g m", label: "Go to Conversations", action: () => router.push("/dashboard/conversations"), category: "Navigation" },
-    { keys: "g a", label: "Go to Analytics", action: () => router.push("/dashboard/analytics"), category: "Navigation" },
-    { keys: "g s", label: "Go to Settings", action: () => router.push("/dashboard/settings"), category: "Navigation" },
-    { keys: "g h", label: "Go to Agent HQ", action: () => router.push("/dashboard/agent-supervisor"), category: "Navigation" },
+    { keys: "g d", label: "Go to Dashboard",     action: () => router.push("/dashboard"),                  category: "Navigation" },
+    { keys: "g c", label: "Go to Clients",        action: () => router.push("/dashboard/clients"),          category: "Navigation" },
+    { keys: "g i", label: "Go to Inbox",          action: () => router.push("/dashboard/inbox"),            category: "Navigation" },
+    { keys: "g a", label: "Go to Analytics",      action: () => router.push("/dashboard/analytics"),        category: "Navigation" },
+    { keys: "g k", label: "Go to CRM",            action: () => router.push("/dashboard/crm"),              category: "Navigation" },
+    { keys: "g l", label: "Go to Lead Finder",    action: () => router.push("/dashboard/scraper"),          category: "Navigation" },
+    { keys: "g o", label: "Go to Outreach",       action: () => router.push("/dashboard/outreach-hub"),     category: "Navigation" },
+    { keys: "g m", label: "Go to Conversations",  action: () => router.push("/dashboard/conversations"),    category: "Navigation" },
+    { keys: "g s", label: "Go to Settings",       action: () => router.push("/dashboard/settings"),         category: "Navigation" },
+    { keys: "g h", label: "Go to Agent HQ",       action: () => router.push("/dashboard/agent-supervisor"), category: "Navigation" },
 
     // Actions
     { keys: "n l", label: "New Lead (scraper)", action: () => router.push("/dashboard/scraper"), category: "Actions" },
@@ -96,27 +98,28 @@ export default function KeyboardShortcuts() {
     <div className="fixed inset-0 z-[9999]">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowHelp(false)} />
       <div className="relative max-w-md mx-auto mt-[15vh]">
-        <div className=" overflow-hidden fade-in bg-surface border border-border">
-          <div className="px-5 py-3 border-b border-border">
-            <h2 className="text-sm font-bold text-foreground">Keyboard Shortcuts</h2>
-            <p className="text-[10px] text-muted">Press <kbd className="px-1.5 py-0.5 rounded text-[9px] bg-surface-light">?</kbd> to toggle</p>
+        <div className="rounded-2xl overflow-hidden bg-white"
+          style={{ boxShadow: "0 24px 64px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.06)" }}>
+          <div className="px-5 py-4 border-b border-[rgba(0,0,0,0.08)]">
+            <h2 className="text-sm font-semibold text-[#111827]">Keyboard Shortcuts</h2>
+            <p className="text-[10px] text-[#6B7280] mt-0.5">Press <kbd className="px-1.5 py-0.5 rounded text-[9px] bg-[#F3F4F6] font-mono">?</kbd> to toggle</p>
           </div>
 
-          <div className="px-5 py-3 max-h-[400px] overflow-y-auto space-y-4">
+          <div className="px-5 py-4 max-h-[400px] overflow-y-auto space-y-5">
             {categories.map(cat => (
               <div key={cat}>
-                <p className="text-[9px] text-muted uppercase tracking-wider font-bold mb-2">{cat}</p>
-                <div className="space-y-1">
+                <p className="text-[9px] text-[#9CA3AF] uppercase tracking-[0.15em] font-bold mb-2">{cat}</p>
+                <div className="space-y-0.5">
                   {shortcuts.filter(s => s.category === cat).map(s => (
-                    <div key={s.keys} className="flex items-center justify-between py-1.5">
-                      <span className="text-xs text-muted">{s.label}</span>
-                      <div className="flex gap-1">
+                    <div key={s.keys} className="flex items-center justify-between py-1.5 px-1 rounded-lg hover:bg-[#F9FAFB] transition-colors">
+                      <span className="text-xs text-[#374151]">{s.label}</span>
+                      <div className="flex items-center gap-1">
                         {s.keys.split(" ").map((k, i) => (
-                          <span key={i}>
-                            <kbd className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-surface-light text-[#2563EB]">
+                          <span key={i} className="flex items-center gap-1">
+                            <kbd className="px-1.5 py-0.5 rounded-md text-[10px] font-mono bg-[#F3F4F6] text-[#2563EB] border border-[rgba(0,0,0,0.08)]">
                               {k}
                             </kbd>
-                            {i < s.keys.split(" ").length - 1 && <span className="text-muted mx-0.5">then</span>}
+                            {i < s.keys.split(" ").length - 1 && <span className="text-[#9CA3AF] text-[9px]">then</span>}
                           </span>
                         ))}
                       </div>
@@ -127,8 +130,8 @@ export default function KeyboardShortcuts() {
             ))}
           </div>
 
-          <div className="px-5 py-2 border-t border-border text-center">
-            <p className="text-[9px] text-muted">Press <kbd className="px-1 py-0.5 rounded text-[8px] bg-surface-light">Esc</kbd> to close</p>
+          <div className="px-5 py-3 border-t border-[rgba(0,0,0,0.06)] text-center">
+            <p className="text-[9px] text-[#9CA3AF]">Press <kbd className="px-1 py-0.5 rounded text-[8px] bg-[#F3F4F6] font-mono">Esc</kbd> to close</p>
           </div>
         </div>
       </div>
