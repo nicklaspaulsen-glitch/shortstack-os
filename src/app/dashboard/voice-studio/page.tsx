@@ -964,7 +964,6 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
 
   const category = (preset.consent_evidence?.category as string) || "preset";
   const gender = (preset.consent_evidence?.gender as string) || null;
-  const hasStoredPreview = !!(preset.consent_evidence?.preview_url);
   const lang = preset.language?.toUpperCase() || "EN";
 
   return (
@@ -1014,10 +1013,16 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         {preset.description && (
           <p className="mt-1 text-xs text-[#52525B] leading-relaxed">{preset.description}</p>
         )}
-        {!hasStoredPreview && !testUrl && !editMode && (
-          <div className="mt-3 flex flex-col items-center gap-1.5 py-2 rounded-lg border border-dashed border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.015)] group-hover:border-[rgba(37,99,235,0.30)] group-hover:bg-[rgba(37,99,235,0.04)] transition-colors duration-300">
-            {/* waveform bars — animate when hovering or testing */}
-            <div className="flex items-end justify-center gap-[2px] h-6 group-hover:opacity-80 opacity-25 transition-opacity duration-300" aria-hidden="true">
+        {!testUrl && !editMode && (
+          <button
+            type="button"
+            onClick={() => { if (!testing) onTest(); }}
+            disabled={testing}
+            aria-label={testing ? "Generating preview…" : "Click to preview this voice"}
+            className="mt-3 w-full flex flex-col items-center gap-1.5 py-3 rounded-lg border border-dashed border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.015)] hover:border-[rgba(37,99,235,0.30)] hover:bg-[rgba(37,99,235,0.04)] transition-colors duration-200 cursor-pointer disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2563EB]/40 group/play"
+          >
+            {/* waveform bars — animate when hovering or generating */}
+            <div className="flex items-end justify-center gap-[2px] h-6 opacity-30 group-hover/play:opacity-70 transition-opacity duration-200" aria-hidden="true">
               {[5, 9, 6, 13, 7, 11, 4, 14, 8, 10, 5, 12, 7, 9, 4].map((h, i) => (
                 <div
                   key={i}
@@ -1035,10 +1040,12 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 />
               ))}
             </div>
-            <span className="text-[10px] text-[#71717A] group-hover:text-[#1D4ED8] transition-colors duration-200">
-              Hover to preview
+            <span className="text-[10px] text-[#71717A] group-hover/play:text-[#1D4ED8] transition-colors duration-200 flex items-center gap-1">
+              {testing
+                ? <><Loader2 size={10} className="animate-spin" />{" "}Generating…</>
+                : <><Play size={10} />{" "}Click to preview</>}
             </span>
-          </div>
+          </button>
         )}
 
         {/* Edit test text */}
@@ -1086,27 +1093,33 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           </div>
         )}
 
+        {/* Audio player — shown above actions; kept visible while re-generating */}
+        {(testUrl || (testing && prevUrlRef.current)) && (
+          <div className="relative mt-3 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] p-2">
+            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+            <audio src={testUrl ?? prevUrlRef.current ?? ""} controls className="w-full" style={{ height: 32 }} />
+            {testing && (
+              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-[rgba(0,0,0,0.04)]">
+                <Loader2 size={16} className="animate-spin text-[#2563EB]" />
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Actions */}
         <div className="mt-3 flex items-center gap-2">
           <button
             type="button"
             onClick={onTest}
             disabled={testing}
-            className={[
-              "flex flex-1 items-center justify-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer",
-              // Pulse border when hover detected but audio not yet loading
-              isHovering && !testing && !testUrl
-                ? "border-[rgba(0,0,0,0.16)] bg-[rgba(0,0,0,0.04)] text-[#1D4ED8] animate-pulse"
-                : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.06)]",
-              "disabled:cursor-not-allowed disabled:opacity-40",
-            ].join(" ")}
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-3 py-1.5 text-xs font-medium text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.06)] transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
           >
             {testing ? (
               <Loader2 size={12} className="animate-spin" />
             ) : (
               <Play size={12} />
             )}
-            {testing ? "Generating�" : testUrl ? "Re-preview" : "Preview"}
+            {testing ? "Generating…" : testUrl ? "Re-generate" : "Preview"}
           </button>
 
           {/* Save to My Voices */}
@@ -1126,19 +1139,6 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             {saved ? "Saved" : "Use"}
           </button>
         </div>
-
-        {/* Audio player � kept visible while re-generating (prevUrlRef) */}
-        {(testUrl || (testing && prevUrlRef.current)) && (
-          <div className="relative mt-3 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] p-2">
-            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-            <audio src={testUrl ?? prevUrlRef.current ?? ""} controls className="w-full" style={{ height: 32 }} />
-            {testing && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-[rgba(0,0,0,0.04)]">
-                <Loader2 size={16} className="animate-spin text-[#2563EB]" />
-              </div>
-            )}
-          </div>
-        )}
         {error && <p className="mt-2 text-xs text-[#F26063]">{error}</p>}
       </div>
     </div>
