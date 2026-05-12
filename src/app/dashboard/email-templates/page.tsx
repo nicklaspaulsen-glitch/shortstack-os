@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import { MailPlus } from "lucide-react";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
-import { PrismPanel } from "@/components/prism";
+import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type AiTemplateType =
@@ -77,8 +77,6 @@ const categoryColors: Record<string, string> = {
   Sales: "bg-indigo-500/10 text-indigo-700",
   Retention: "bg-amber-500/10 text-amber-700",
 };
-
-const RAINBOW = "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)";
 
 export default function EmailTemplatesPage() {
   const [activeTab, setActiveTab] = useState<MainTab>("gallery");
@@ -241,7 +239,7 @@ export default function EmailTemplatesPage() {
                       onClick={() => openTemplate(template)}
                       className="rounded-xl overflow-hidden cursor-pointer group" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                     >
-                      <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+                      <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
                       <div className="p-4">
                         <div className="flex items-start justify-between mb-2">
                           <div className="min-w-0 flex-1">
@@ -366,7 +364,7 @@ export default function EmailTemplatesPage() {
                       transition={{ delay: i * 0.06, duration: 0.4 }}
                       className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                     >
-                      <div style={{ height: 3, background: RAINBOW }} />
+                      <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} />
                       <div className="p-3">
                         <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
                         <p className="text-sm font-bold">{stat.value}</p>

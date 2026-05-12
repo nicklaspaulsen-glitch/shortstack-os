@@ -59,7 +59,7 @@ function Accordion({
       >
         <div className="flex items-center gap-2.5">
           <span className="text-[#6F6D7A]">{icon}</span>
-          <span className="font-display text-sm font-semibold text-[#0A0A0B] tracking-[-0.01em]">{label}</span>
+          <span className="font-display text-sm font-semibold text-text-primary tracking-[-0.01em]">{label}</span>
           {badge}
         </div>
         {expanded
@@ -439,7 +439,7 @@ export default function AnalyticsPage() {
                 className={`px-2.5 py-1 text-[10px] rounded-md transition-colors duration-150 ${
                   dateRange === r
                     ? "bg-[#1D4ED8] text-white font-semibold"
-                    : "text-[#6F6D7A] hover:text-[#0A0A0B]"
+                    : "text-[#6F6D7A] hover:text-text-primary"
                 }`}
               >
                 {r}
@@ -449,7 +449,7 @@ export default function AnalyticsPage() {
           {/* Export */}
           <button
             onClick={handleExport}
-            className="flex items-center gap-1 text-[10px] text-[#71717A] hover:text-[#0A0A0B] transition-colors border border-[rgba(0,0,0,0.08)] px-2.5 py-1.5 rounded-md"
+            className="flex items-center gap-1 text-[10px] text-[#71717A] hover:text-text-primary transition-colors border border-[rgba(0,0,0,0.08)] px-2.5 py-1.5 rounded-md"
             title="Export report as JSON"
           >
             <Download size={11} />
@@ -578,7 +578,7 @@ export default function AnalyticsPage() {
                 >
                   <p className="text-xs text-[#52525B] uppercase tracking-widest font-normal">Total Leads</p>
                   <p
-                    className="font-display text-4xl font-bold tracking-[-0.04em] mt-1 text-[#0A0A0B]"
+                    className="font-display text-4xl font-bold tracking-[-0.04em] mt-1 text-text-primary"
                     style={{ fontVariantNumeric: "tabular-nums" }}
                   >
                     {stats.totalLeads.toLocaleString()}
@@ -610,7 +610,7 @@ export default function AnalyticsPage() {
                     >
                       <p className="text-xs text-[#52525B] uppercase tracking-widest font-normal">{stat.label}</p>
                       <div className="flex items-end justify-between gap-2 mt-1">
-                        <p className="font-display text-xl font-semibold tracking-[-0.03em] text-[#0A0A0B]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                        <p className="font-display text-xl font-semibold tracking-[-0.03em] text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {stat.value}
                         </p>
                         {stat.sparkData && stat.sparkData.length > 1 && (
@@ -654,7 +654,7 @@ export default function AnalyticsPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Acquisition</p>
-                  <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5">
+                  <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5">
                     Lead Velocity
                     <span className="ml-2 text-[10px] font-normal text-[#4F4D58]">� {dateRange === "custom" ? "Custom" : dateRange}</span>
                   </h2>
@@ -669,7 +669,7 @@ export default function AnalyticsPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={leadsByDay} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
                       <defs>
-                        <linearGradient id="limeAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                        <linearGradient id="blueAreaGrad" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="0%" stopColor="#2563EB" stopOpacity={0.15} />
                           <stop offset="85%" stopColor="#2563EB" stopOpacity={0} />
                         </linearGradient>
@@ -681,7 +681,7 @@ export default function AnalyticsPage() {
                       <Area
                         type="monotone" dataKey="count" name="Leads"
                         stroke="#2563EB" strokeWidth={1.5}
-                        fill="url(#limeAreaGrad)"
+                        fill="url(#blueAreaGrad)"
                       />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -692,7 +692,7 @@ export default function AnalyticsPage() {
             {/* Lead sources */}
             <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Channels</p>
-              <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Lead Sources</h2>
+              <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Lead Sources</h2>
               {leadsBySource.length === 0 ? (
                 <div className="flex items-center justify-center h-40 text-[11px] text-[#4F4D58]">
                   No source data yet
@@ -717,7 +717,7 @@ export default function AnalyticsPage() {
                           />
                         </div>
                         <span
-                          className="text-[10px] font-bold text-[#0A0A0B] w-5 text-right shrink-0"
+                          className="text-[10px] font-bold text-text-primary w-5 text-right shrink-0"
                           style={{ fontVariantNumeric: "tabular-nums" }}
                         >
                           {s.count}
@@ -741,7 +741,7 @@ export default function AnalyticsPage() {
             {/* Conversion funnel */}
             <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Sales Pipeline</p>
-              <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Conversion Funnel</h2>
+              <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Conversion Funnel</h2>
               <div className="space-y-3">
                 {funnelData.map((stage, i) => {
                   const maxVal = funnelData[0].value;
@@ -755,7 +755,7 @@ export default function AnalyticsPage() {
                         <span className="text-[10px] text-[#9F9DAA]">{stage.name}</span>
                         <div className="flex items-center gap-2.5">
                           <span
-                            className="text-[11px] font-bold text-[#0A0A0B]"
+                            className="text-[11px] font-bold text-text-primary"
                             style={{ fontVariantNumeric: "tabular-nums" }}
                           >
                             {stage.value.toLocaleString()}
@@ -783,7 +783,7 @@ export default function AnalyticsPage() {
               <div className="mt-5 pt-4 border-t border-[rgba(0,0,0,0.08)] flex items-baseline justify-between">
                 <span className="text-[10px] text-[#6F6D7A]">Overall conversion</span>
                 <span
-                  className="font-display text-xl font-bold text-[#0A0A0B] tracking-[-0.02em]"
+                  className="font-display text-xl font-bold text-text-primary tracking-[-0.02em]"
                   style={{ fontVariantNumeric: "tabular-nums" }}
                 >
                   {funnelData[0].value > 0
@@ -796,7 +796,7 @@ export default function AnalyticsPage() {
             {/* Outreach performance */}
             <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Engagement</p>
-              <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-4">Outreach Performance</h2>
+              <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-4">Outreach Performance</h2>
               {outreachByDay.length === 0 ? (
                 <div className="h-48 flex items-center justify-center text-[11px] text-[#4F4D58]">
                   No outreach data for this period
@@ -840,7 +840,7 @@ export default function AnalyticsPage() {
               transition={{ duration: 0.44, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
             >
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Verticals</p>
-              <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Top Industries</h2>
+              <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Top Industries</h2>
               {leadsByIndustry.length === 0 ? (
                 <p className="text-[11px] text-[#4F4D58] py-4">No industry data yet</p>
               ) : (
@@ -868,7 +868,7 @@ export default function AnalyticsPage() {
                           />
                         </div>
                         <span
-                          className="text-[10px] font-bold text-[#0A0A0B] w-4 shrink-0 text-right"
+                          className="text-[10px] font-bold text-text-primary w-4 shrink-0 text-right"
                           style={{ fontVariantNumeric: "tabular-nums" }}
                         >
                           {ind.count}
@@ -893,7 +893,7 @@ export default function AnalyticsPage() {
             >
               {/* No pseudo accent div needed � top border handles it */}
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Progress</p>
-              <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Monthly Goals</h2>
+              <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Monthly Goals</h2>
               <div className="space-y-3.5">
                 {goals.map(goal => {
                   const pct = goal.target > 0 ? Math.min((goal.current / goal.target) * 100, 100) : 0;
@@ -933,7 +933,7 @@ export default function AnalyticsPage() {
               transition={{ duration: 0.44, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
             >
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">vs Industry</p>
-              <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5 mb-5">Benchmarks</h2>
+              <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Benchmarks</h2>
               <div className="space-y-3">
                 {benchmarks.map(b => {
                   const isAbove = b.yours >= b.industry;
@@ -1031,7 +1031,7 @@ export default function AnalyticsPage() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Live Stream</p>
-                <h2 className="font-display text-[15px] font-semibold text-[#0A0A0B] tracking-[-0.02em] mt-0.5">
+                <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5">
                   Real-time Activity
                 </h2>
               </div>
@@ -1129,7 +1129,7 @@ export default function AnalyticsPage() {
                         >
                           <p className="text-[9px] text-[#6F6D7A] uppercase tracking-wider">{f.month}</p>
                           <p
-                            className="font-display text-lg font-bold text-[#0A0A0B] mt-1"
+                            className="font-display text-lg font-bold text-text-primary mt-1"
                             style={{ fontVariantNumeric: "tabular-nums" }}
                           >
                             {formatCurrency(f.projected)}
@@ -1181,7 +1181,7 @@ export default function AnalyticsPage() {
                   ) : platformROI.map(p => (
                     <tr key={p.platform} className="border-b border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.04)] transition-colors group">
 
-                      <td className="py-3 font-medium text-[#0A0A0B]">{p.platform}</td>
+                      <td className="py-3 font-medium text-text-primary">{p.platform}</td>
                       <td className="py-3 text-right text-[#9F9DAA]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.spend)}</td>
                       <td className="py-3 text-right text-[#3B82F6] font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.revenue)}</td>
                       <td className="py-3 text-right">
@@ -1219,7 +1219,7 @@ export default function AnalyticsPage() {
                 <div key={client.name} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
                   <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F26063]" : client.risk === "medium" ? "bg-[#3B82F6]" : "bg-[rgba(0,0,0,0.2)]"}`} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-[#0A0A0B] truncate">{client.name}</p>
+                    <p className="text-xs font-medium text-text-primary truncate">{client.name}</p>
                     <p className="text-[9px] text-[#6F6D7A]">{client.reason}</p>
                   </div>
                   <span
@@ -1265,14 +1265,14 @@ export default function AnalyticsPage() {
                     const growth = row.last > 0 ? Math.round(((row.current - row.last) / row.last) * 100) : 0;
                     return (
                       <tr key={row.label} className="border-b border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.04)] transition-colors">
-                        <td className="py-3 font-medium text-[#0A0A0B]">{row.label}</td>
+                        <td className="py-3 font-medium text-text-primary">{row.label}</td>
                         <td className="py-3 text-right text-[#4F4D58]" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {row.isCurrency ? formatCurrency(row.three) : row.three}
                         </td>
                         <td className="py-3 text-right text-[#9F9DAA]" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {row.isCurrency ? formatCurrency(row.last) : row.last}
                         </td>
-                        <td className="py-3 text-right font-bold text-[#0A0A0B]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                        <td className="py-3 text-right font-bold text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {row.isCurrency ? formatCurrency(row.current) : row.current}
                         </td>
                         <td className="py-3 text-right">
@@ -1315,7 +1315,7 @@ export default function AnalyticsPage() {
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <p className="text-xs font-medium text-[#0A0A0B]">{member.name}</p>
+                      <p className="text-xs font-medium text-text-primary">{member.name}</p>
                       {i === 0 && <Star size={9} className="text-[#2563EB]" />}
                     </div>
                     <p className="text-[9px] text-[#6F6D7A]">{member.leads} leads � {member.deals} deals � {member.calls} calls</p>
@@ -1400,7 +1400,7 @@ export default function AnalyticsPage() {
                     {i + 1}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[11px] font-medium text-[#0A0A0B] truncate">{c.campaign}</p>
+                    <p className="text-[11px] font-medium text-text-primary truncate">{c.campaign}</p>
                     <p className="text-[9px] text-[#6F6D7A]">{c.conversions} conversions</p>
                   </div>
                   <div className="text-right shrink-0">
@@ -1435,7 +1435,7 @@ export default function AnalyticsPage() {
                   {clvData.map(tier => (
                     <div key={tier.name} className="p-3 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-medium text-[#0A0A0B]">{tier.name}</span>
+                        <span className="text-xs font-medium text-text-primary">{tier.name}</span>
                         <span className="text-[10px] text-[#6F6D7A]">{tier.count} clients</span>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
@@ -1445,7 +1445,7 @@ export default function AnalyticsPage() {
                         </div>
                         <div>
                           <p className="text-[9px] text-[#6F6D7A] uppercase">Avg Lifetime</p>
-                          <p className="text-sm font-bold text-[#0A0A0B]" style={{ fontVariantNumeric: "tabular-nums" }}>{tier.avgMonths} mo.</p>
+                          <p className="text-sm font-bold text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>{tier.avgMonths} mo.</p>
                         </div>
                       </div>
                     </div>
@@ -1479,7 +1479,7 @@ export default function AnalyticsPage() {
                         <span className="text-[10px] text-[#9F9DAA]">{s.service}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-mono font-medium text-[#0A0A0B]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(s.revenue)}</span>
+                        <span className="text-[10px] font-mono font-medium text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(s.revenue)}</span>
                         <span className="text-[9px] text-[#6F6D7A]">{s.clients} clients</span>
                       </div>
                     </div>

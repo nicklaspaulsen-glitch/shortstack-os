@@ -10,6 +10,7 @@ import {
   BarChart2, Edit2, Copy, Loader, ToggleLeft, X, Star,
   MessageSquare, CheckSquare
 } from "lucide-react";
+import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type QuestionType = "text" | "multiple_choice" | "rating" | "yes_no";
@@ -52,7 +53,7 @@ function newQuestion(): Question {
 }
 
 const RAINBOW_BAR = (
-  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+  <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
 );
 
 export default function SurveysPage() {

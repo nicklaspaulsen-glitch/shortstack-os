@@ -129,7 +129,7 @@ export default function AutomationsPage() {
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Link
                       href="/dashboard/workflow-builder"
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-sm font-medium transition-colors border border-[rgba(0,0,0,0.10)]"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.10)] text-text-primary text-sm font-medium transition-colors border border-[rgba(0,0,0,0.10)]"
                     >
                       <Plus size={15} /> New Automation
                     </Link>
@@ -138,7 +138,7 @@ export default function AutomationsPage() {
       </div>
     </div>{/* Stats bar */}<div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
-                { label: "Total", value: workflows.length, color: "text-[#0A0A0B]" },
+                { label: "Total", value: workflows.length, color: "text-text-primary" },
                 { label: "Active", value: activeCount, color: "text-emerald-400" },
                 { label: "Paused", value: workflows.length - activeCount, color: "text-[#2563EB]" },
               ].map((s, index) => (
@@ -150,7 +150,7 @@ export default function AutomationsPage() {
                   transition={{ duration: 0.22, delay: index * 0.06 }}
                   whileHover={{ y: -2 }}
                 >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)" }} />
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} />
                   <p className={`text-2xl font-bold ${s.color} mt-2`}>{s.value}</p>
                   <p className="text-xs text-[#71717A] mt-0.5">{s.label}</p>
                   <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: 'rgba(0,0,0,0.08)' }} />
@@ -162,7 +162,7 @@ export default function AutomationsPage() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search automations�"
-                className="w-full glass rounded-lg pl-8 pr-3 py-2 text-[#0A0A0B] text-sm focus:outline-none focus:border-indigo-500/50"
+                className="w-full glass rounded-lg pl-8 pr-3 py-2 text-text-primary text-sm focus:outline-none focus:border-indigo-500/50"
               />
             </div>{loading ? (
               <div className="space-y-3">
@@ -213,7 +213,7 @@ export default function AutomationsPage() {
                         {/* Name & meta */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-0.5">
-                            <span className="font-medium text-[#0A0A0B] text-sm truncate">
+                            <span className="font-medium text-text-primary text-sm truncate">
                               {w.name}
                             </span>
                             {/* Trigger chip */}
@@ -241,7 +241,7 @@ export default function AutomationsPage() {
                         <div className="flex items-center gap-2 shrink-0">
                           <Link
                             href={`/dashboard/workflows`}
-                            className="text-xs text-[#52525B] hover:text-[#0A0A0B] px-2 py-1 rounded border border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.16)] transition-colors"
+                            className="text-xs text-[#52525B] hover:text-text-primary px-2 py-1 rounded border border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.16)] transition-colors"
                           >
                             Edit
                           </Link>
@@ -271,7 +271,7 @@ export default function AutomationsPage() {
               </motion.div>
             )}{/* Footer hint */}<p className="text-xs text-[#71717A] text-center">
               To build advanced automations with branching logic, use the{" "}
-              <Link href="/dashboard/workflow-builder" className="text-[#52525B] hover:text-[#0A0A0B] underline underline-offset-2">
+              <Link href="/dashboard/workflow-builder" className="text-[#52525B] hover:text-text-primary underline underline-offset-2">
                 Workflow Builder
               </Link>
               .

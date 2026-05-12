@@ -9,9 +9,8 @@ import {
   ArrowUpRight, Sparkles, MessageSquare, Tag,
   Globe as GlobeIcon,
 } from "lucide-react";
+import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
-
-const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -99,7 +98,7 @@ export default function GoogleBusinessPage() {
                 { value: "—", label: "Actions Taken", color: "text-[#4285F4]" },
               ].map((tile, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass-md rounded-xl overflow-hidden">
-                  <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+                  <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
                   <div className="p-3 text-center">
                     <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
                     <p className="text-[10px] text-muted">{tile.label}</p>

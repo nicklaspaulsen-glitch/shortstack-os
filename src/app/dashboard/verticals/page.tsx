@@ -177,7 +177,7 @@ export default function VerticalsIndexPage() {
                           <Icon size={22} />
                         </div>
 
-                        <h2 className="text-xl font-semibold text-[#0A0A0B] mb-1">
+                        <h2 className="text-xl font-semibold text-text-primary mb-1">
                           {v.display_name}
                         </h2>
                         <p className="text-sm text-black/60 mb-5">{v.tagline}</p>
@@ -196,7 +196,7 @@ export default function VerticalsIndexPage() {
                           <span className="text-black/40">
                             Course: {v.counts.course_modules} modules · {v.counts.course_lessons} lessons
                           </span>
-                          <span className="inline-flex items-center gap-1 text-black/65 group-hover:text-[#0A0A0B]">
+                          <span className="inline-flex items-center gap-1 text-black/65 group-hover:text-text-primary">
                             Configure
                             <ArrowRight
                               size={14}
@@ -217,7 +217,7 @@ export default function VerticalsIndexPage() {
 function CountTile({ label, value }: { label: string; value: number }) {
   return (
     <div className="glass rounded-lg px-3 py-2">
-      <div className="text-lg font-semibold text-[#0A0A0B]">{value}</div>
+      <div className="text-lg font-semibold text-text-primary">{value}</div>
       <div className="text-[10px] uppercase tracking-wide text-black/50">{label}</div>
     </div>
   );

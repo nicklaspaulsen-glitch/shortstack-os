@@ -69,7 +69,7 @@ function WidgetCard({
         isDragOver ? "border-[rgba(37,99,235,0.60)] scale-[1.02]" : ""
       }`}
     >
-      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+      <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
       <div className="p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

@@ -390,7 +390,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           key={t.key}
                           onClick={() => setTab(t.key)}
                           className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-all ${
-                            tab === t.key ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted hover:text-[#0A0A0B]"
+                            tab === t.key ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted hover:text-text-primary"
                           }`}
                         >
                           {t.icon} {t.label}
@@ -424,7 +424,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                       key={p.key}
                                       onClick={() => applyPreset(p.key)}
                                       className={`w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-[rgba(0,0,0,0.04)] transition-colors ${
-                                        profile.preset === p.key ? "text-[#2563EB]" : "text-[#0A0A0B]"
+                                        profile.preset === p.key ? "text-[#2563EB]" : "text-text-primary"
                                       }`}
                                     >
                                       {p.icon} {p.label}

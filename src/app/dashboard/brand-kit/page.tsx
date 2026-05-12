@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
-import { PrismPanel } from "@/components/prism";
+import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import WebsiteScraper from "@/components/ui/website-scraper";
 import { useAutoSave } from "@/lib/use-auto-save";
 import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
@@ -45,8 +45,6 @@ const GENERATE_PRESETS = [
   { id: "ad-copy", label: "Ad Copy", icon: <MessageSquare size={16} />, desc: "Headlines and body copy matching brand voice" },
   { id: "landing-page", label: "Landing Page", icon: <Globe size={16} />, desc: "Wireframe mockup with extracted brand elements" },
 ];
-
-const RAINBOW = "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)";
 
 const containerVariants = {
   hidden: {},
@@ -444,7 +442,7 @@ export default function BrandKitPage() {
                     { icon: <Sparkles size={18} />, title: "4. Generate", desc: "Create on-brand content" },
                   ].map((step, i) => (
                     <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="rounded-xl p-4 text-center relative overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                      <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
+                      <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} className="absolute top-0 inset-x-0" />
                       <div className="w-10 h-10 mx-auto bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center text-[#2563EB] mb-2 mt-1">
                         {step.icon}
                       </div>
@@ -481,7 +479,7 @@ export default function BrandKitPage() {
                           whileHover={{ y: -2 }}
                           className="rounded-xl p-3 text-center relative overflow-hidden" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.16)" }}
                         >
-                          <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
+                          <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} className="absolute top-0 inset-x-0" />
                           <div className="text-[#2563EB] mx-auto mb-1 mt-1 flex justify-center">{icon}</div>
                           <p className="text-lg font-bold font-mono">{value}</p>
                           <p className="text-[9px] text-muted uppercase">{label}</p>

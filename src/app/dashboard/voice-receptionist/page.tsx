@@ -697,7 +697,7 @@ export default function VoiceReceptionistPage() {
                     >
                       <div
                         className="absolute top-0 left-0 right-0"
-                        style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }}
+                        style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }}
                       />
                       <div className="pt-2">
                         <StatCard

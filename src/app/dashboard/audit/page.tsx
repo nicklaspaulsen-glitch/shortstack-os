@@ -230,7 +230,7 @@ export default function AuditPage() {
                 { label: "Sensitive", value: stats.sensitive, color: "text-[#2563EB]" },
                 { label: "Alerts", value: stats.unresolvedAlerts, color: stats.unresolvedAlerts > 0 ? "text-red-400" : "text-emerald-400" },
               ].map((stat, i) => (
-                <PrismPanel key={stat.label} rainbow delay={i * 0.06} padding="p-3">
+                <PrismPanel key={stat.label} delay={i * 0.06} padding="p-3">
                   <div className="text-center">
                     <p className="text-[9px] text-muted uppercase">{stat.label}</p>
                     <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>

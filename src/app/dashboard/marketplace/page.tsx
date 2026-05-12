@@ -391,13 +391,13 @@ export default function MarketplacePage() {
               </div>
             </div>{/* ── Stats bar ── */}<div className="flex items-center gap-6 border-b border-border pb-4">
               <div className="text-sm text-muted">
-                <span className="font-semibold text-[#0A0A0B]">{filteredPlugins.length}</span> plugins found
+                <span className="font-semibold text-text-primary">{filteredPlugins.length}</span> plugins found
               </div>
               <div className="text-sm text-muted">
-                <span className="font-semibold text-[#0A0A0B]">{pluginCatalog.filter((p) => p.price === 0).length}</span> free
+                <span className="font-semibold text-text-primary">{pluginCatalog.filter((p) => p.price === 0).length}</span> free
               </div>
               <div className="text-sm text-muted">
-                <span className="font-semibold text-[#0A0A0B]">{pluginCatalog.filter((p) => p.verified).length}</span> verified
+                <span className="font-semibold text-text-primary">{pluginCatalog.filter((p) => p.verified).length}</span> verified
               </div>
             </div>{/* ── Plugin grid ── */}{viewTab === "browse" ? (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -728,7 +728,7 @@ export default function MarketplacePage() {
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <h2 className="text-lg font-bold text-[#0A0A0B]">{selectedPlugin.name}</h2>
+                            <h2 className="text-lg font-bold text-text-primary">{selectedPlugin.name}</h2>
                             {selectedPlugin.verified && (
                               <div className="flex items-center gap-0.5 rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5">
                                 <Shield size={10} className="text-[#2563EB]" />
@@ -748,7 +748,7 @@ export default function MarketplacePage() {
                       </div>
                       <button
                         onClick={() => setSelectedPlugin(null)}
-                        className="rounded-lg p-1.5 text-muted hover:bg-surface hover:text-[#0A0A0B] transition-colors"
+                        className="rounded-lg p-1.5 text-muted hover:bg-surface hover:text-text-primary transition-colors"
                       >
                         <X size={18} />
                       </button>
@@ -763,7 +763,7 @@ export default function MarketplacePage() {
                           className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
                             detailTab === tab
                               ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                              : "text-muted hover:text-[#0A0A0B]"
+                              : "text-muted hover:text-text-primary"
                           }`}
                         >
                           {tab}
@@ -1065,18 +1065,18 @@ export default function MarketplacePage() {
                       <Trash2 size={18} className="text-red-400" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-[#0A0A0B]">Uninstall Plugin</h3>
+                      <h3 className="text-sm font-bold text-text-primary">Uninstall Plugin</h3>
                       <p className="text-xs text-muted">This will remove all plugin data</p>
                     </div>
                   </div>
                   <p className="text-xs text-muted mb-4">
-                    Are you sure you want to uninstall <span className="text-[#0A0A0B] font-medium">{selectedPlugin.name}</span>?
+                    Are you sure you want to uninstall <span className="text-text-primary font-medium">{selectedPlugin.name}</span>?
                     All configuration and data will be permanently deleted.
                   </p>
                   <div className="flex justify-end gap-2">
                     <button
                       onClick={() => setConfirmUninstall(null)}
-                      className="rounded-lg border border-border px-4 py-2 text-xs text-muted hover:text-[#0A0A0B] transition-colors"
+                      className="rounded-lg border border-border px-4 py-2 text-xs text-muted hover:text-text-primary transition-colors"
                     >
                       Cancel
                     </button>

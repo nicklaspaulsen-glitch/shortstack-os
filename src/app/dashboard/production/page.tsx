@@ -126,7 +126,7 @@ export default function ProductionPage() {
                   transition={{ delay: index * 0.06, duration: 0.4 }}
                   className="glass rounded-xl p-3 text-center relative overflow-hidden"
                 >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} className="absolute top-0 inset-x-0" />
                   <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
                   <p className="text-[10px] text-muted">{stat.label}</p>
                 </motion.div>

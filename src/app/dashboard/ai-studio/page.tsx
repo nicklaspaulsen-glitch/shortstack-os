@@ -67,7 +67,7 @@ export default function AIStudioPage() {
   // Ref on the active-tool panel � used by the tile grid to scroll the
   // panel into view when the user picks a tile. Without this, clicks on
   // tiles look dead because the tool panel is rendered far below the
-  // grid (off-screen by ~600 px) and the active-tile gold border is
+  // grid (off-screen by ~600 px) and the active-tile blue border is
   // subtle, so users see "nothing happened" on click.
   const toolPanelRef = useRef<HTMLDivElement>(null);
   const [processing, setProcessing] = useState(false);
@@ -537,7 +537,7 @@ export default function AIStudioPage() {
                   </>
                 );
               })()}
-              {/* Lime tick � one chromatic moment per zone */}
+              {/* Blue tick — one chromatic moment per zone */}
               <div className="w-1 h-4 rounded-full bg-[#2563EB]/35 shrink-0" />
             </div>
 

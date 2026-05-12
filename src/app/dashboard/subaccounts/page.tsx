@@ -208,14 +208,14 @@ export default function SubaccountsPage() {
                         transition={{ delay: i * 0.04 }}
                       >
                         <td className="px-4 py-3">
-                          <p className="text-[#0A0A0B] font-medium">{sub.name}</p>
+                          <p className="text-text-primary font-medium">{sub.name}</p>
                           <p className="text-xs text-black/40 flex items-center gap-1 mt-0.5">
                             <Mail className="w-3 h-3" />
                             {sub.email}
                           </p>
                         </td>
                         <td className="px-4 py-3 text-black/65 capitalize">{sub.plan_tier}</td>
-                        <td className="px-4 py-3 text-[#0A0A0B]">{formatMrr(sub.monthly_amount_cents)}</td>
+                        <td className="px-4 py-3 text-text-primary">{formatMrr(sub.monthly_amount_cents)}</td>
                         <td className="px-4 py-3">
                           <span className={`inline-block px-2 py-0.5 rounded-md text-xs font-semibold capitalize ${STATUS_BADGE[sub.status]}`}>
                             {sub.status}
@@ -253,7 +253,7 @@ export default function SubaccountsPage() {
                   </button>
                   <div className="flex items-center gap-2 mb-1">
                     <Building2 className="w-5 h-5 text-[#2563EB]" />
-                    <h2 className="text-lg font-bold text-[#0A0A0B]">Invite Subaccount</h2>
+                    <h2 className="text-lg font-bold text-text-primary">Invite Subaccount</h2>
                   </div>
                   <p className="text-xs text-black/50 mb-5">
                     They will receive an email invite under your brand. Once they sign up, billing flows through your Stripe Connect account.
@@ -265,7 +265,7 @@ export default function SubaccountsPage() {
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
                         placeholder="Client Name"
-                        className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
+                        className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm focus:outline-none focus:border-[#1D4ED8]/50"
                       />
                     </div>
                     <div>
@@ -275,7 +275,7 @@ export default function SubaccountsPage() {
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
                         placeholder="client@theircompany.com"
-                        className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
+                        className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm focus:outline-none focus:border-[#1D4ED8]/50"
                       />
                     </div>
                     <div>
@@ -283,7 +283,7 @@ export default function SubaccountsPage() {
                       <select
                         value={form.plan_tier}
                         onChange={(e) => setForm({ ...form, plan_tier: e.target.value })}
-                        className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
+                        className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm focus:outline-none focus:border-[#1D4ED8]/50"
                       >
                         {PLAN_TIERS.map((t) => (
                           <option key={t.value} value={t.value} className="bg-white">
@@ -299,7 +299,7 @@ export default function SubaccountsPage() {
                         min={0}
                         value={form.monthly_amount_cents}
                         onChange={(e) => setForm({ ...form, monthly_amount_cents: Number(e.target.value) || 0 })}
-                        className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#1D4ED8]/50"
+                        className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm focus:outline-none focus:border-[#1D4ED8]/50"
                       />
                       <p className="text-xs text-black/40 mt-1">
                         e.g. 9900 = $99.00. This is what you charge the client. ShortStack base fee is deducted via Stripe Connect.
@@ -307,7 +307,7 @@ export default function SubaccountsPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 mt-5">
-                    <button onClick={() => setShowInvite(false)} className="flex-1 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/8 text-[#0A0A0B] text-sm font-medium">
+                    <button onClick={() => setShowInvite(false)} className="flex-1 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/8 text-text-primary text-sm font-medium">
                       Cancel
                     </button>
                     <button onClick={handleInvite} disabled={inviting} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#2563EB] hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60">

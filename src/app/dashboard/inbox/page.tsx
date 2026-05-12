@@ -609,7 +609,7 @@ export default function InboxPage() {
               </button>
             )}
           </div>
-          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${showFilters ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-[rgba(0,0,0,0.04)] text-muted hover:text-[#0A0A0B]"}`}>
+          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${showFilters ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-[rgba(0,0,0,0.04)] text-muted hover:text-text-primary"}`}>
             <SlidersHorizontal size={12} /> Filters
             {(filterStarred || filterUnread || filterPinned) && <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />}
           </button>
@@ -657,8 +657,8 @@ export default function InboxPage() {
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)]">
             <span className="text-xs text-[#2563EB] font-medium">{selectedIds.size} selected</span>
             <div className="flex items-center gap-1 ml-auto">
-              <button onClick={bulkMarkRead} className="px-2 py-1 text-[10px] rounded bg-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.08)] text-[#0A0A0B] transition-all">Mark Read</button>
-              <button onClick={bulkStar} className="px-2 py-1 text-[10px] rounded bg-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.08)] text-[#0A0A0B] transition-all">Star</button>
+              <button onClick={bulkMarkRead} className="px-2 py-1 text-[10px] rounded bg-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.08)] text-text-primary transition-all">Mark Read</button>
+              <button onClick={bulkStar} className="px-2 py-1 text-[10px] rounded bg-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.08)] text-text-primary transition-all">Star</button>
               <button onClick={bulkArchive} className="px-2 py-1 text-[10px] rounded bg-red-500/20 hover:bg-red-500/30 text-red-400 transition-all">Archive</button>
               <button onClick={() => setSelectedIds(new Set())} className="px-2 py-1 text-[10px] text-[#6B7280] hover:text-[#374151] transition-all">Cancel</button>
             </div>
@@ -789,7 +789,7 @@ export default function InboxPage() {
                       <div className="flex items-center gap-2 mb-0.5">
                         {item.pinned && <Pin size={10} className="text-[#2563EB] shrink-0" />}
                         {!item.read && <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] shrink-0" />}
-                        <span className={`text-xs truncate ${!item.read ? "font-semibold text-[#0A0A0B]" : "text-[rgba(0,0,0,0.65)]"}`}>
+                        <span className={`text-xs truncate ${!item.read ? "font-semibold text-text-primary" : "text-[rgba(0,0,0,0.65)]"}`}>
                           {item.title}
                         </span>
                       </div>
@@ -806,7 +806,7 @@ export default function InboxPage() {
                     <div className="shrink-0 text-right">
                       <p className="text-[10px] text-muted">{timeAgo(item.date)}</p>
                       <div className="flex items-center gap-0.5 mt-1 opacity-0 group-hover:opacity-100 transition-all">
-                        <button onClick={e => { e.stopPropagation(); togglePin(item.id); }} className="p-1 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#0A0A0B] transition-all" title={item.pinned ? "Unpin" : "Pin"}>
+                        <button onClick={e => { e.stopPropagation(); togglePin(item.id); }} className="p-1 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-text-primary transition-all" title={item.pinned ? "Unpin" : "Pin"}>
                           {item.pinned ? <PinOff size={10} /> : <Pin size={10} />}
                         </button>
                         <button onClick={e => { e.stopPropagation(); archiveItem(item.id); }} className="p-1 rounded hover:bg-[rgba(0,0,0,0.06)] text-[#6B7280] hover:text-red-600 transition-all" title="Archive">
@@ -833,7 +833,7 @@ export default function InboxPage() {
                   </span>
                   <span className="text-[10px] text-muted uppercase tracking-wider">{getCategoryConfig(selectedItem.type).label}</span>
                 </div>
-                <h2 className="text-sm font-bold text-[#0A0A0B] leading-snug">{selectedItem.title}</h2>
+                <h2 className="text-sm font-bold text-text-primary leading-snug">{selectedItem.title}</h2>
                 <div className="flex items-center gap-2 mt-1.5">
                   <StatusPill status={selectedItem.status} />
                   <span className="text-[10px] text-muted">{new Date(selectedItem.date).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</span>
@@ -957,7 +957,7 @@ export default function InboxPage() {
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-xs font-medium text-[#0A0A0B] truncate">{run.description}</span>
+                        <span className="text-xs font-medium text-text-primary truncate">{run.description}</span>
                         <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${statusColors[run.status] || "bg-[rgba(0,0,0,0.06)] text-muted"}`}>
                           {run.status === "running" && <Play size={8} className="mr-0.5" />}
                           {run.status}
@@ -1015,7 +1015,7 @@ export default function InboxPage() {
                     </p>
                   </div>
                 </div>
-                <h2 className="text-lg font-bold text-[#0A0A0B] leading-snug">{overlayItem.title}</h2>
+                <h2 className="text-lg font-bold text-text-primary leading-snug">{overlayItem.title}</h2>
                 <div className="flex items-center gap-2 mt-2">
                   <StatusPill status={overlayItem.status} />
                   {overlayItem.tags.map(t => (
@@ -1110,7 +1110,7 @@ export default function InboxPage() {
                   copyContent(overlayItem);
                   toast.success("Content copied � ready to forward");
                 }}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.65)] hover:text-[#0A0A0B] text-xs font-medium transition-all border border-[rgba(0,0,0,0.08)]"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.65)] hover:text-text-primary text-xs font-medium transition-all border border-[rgba(0,0,0,0.08)]"
               >
                 <Forward size={14} /> Forward
               </button>
@@ -1120,7 +1120,7 @@ export default function InboxPage() {
                   archiveItem(overlayItem.id);
                   closeOverlay();
                 }}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.65)] hover:text-[#0A0A0B] text-xs font-medium transition-all border border-[rgba(0,0,0,0.08)]"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.65)] hover:text-text-primary text-xs font-medium transition-all border border-[rgba(0,0,0,0.08)]"
               >
                 <Archive size={14} /> Archive
               </button>

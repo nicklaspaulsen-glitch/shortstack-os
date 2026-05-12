@@ -237,7 +237,7 @@ export default function TrinityPage() {
                     { label: "Errors", value: errorAgentCount, cls: errorAgentCount > 0 ? "text-red-400" : "text-emerald-400" },
                   ].map((s, i) => (
                     <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                      <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
                       <div className="p-3 text-center">
                         <p className="text-[9px] text-muted uppercase">{s.label}</p>
                         <p className={`text-xl font-bold ${s.cls}`}>{s.value}</p>
@@ -343,7 +343,7 @@ export default function TrinityPage() {
                       { label: "Per Task Avg", value: `$${perTaskAvg.toFixed(2)}`, cls: "text-foreground" },
                     ].map((s, i) => (
                       <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                        <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                        <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
                         <div className="p-3 text-center">
                           <p className="text-[9px] text-muted uppercase">{s.label}</p>
                           <p className={`text-xl font-bold ${s.cls}`}>{s.value}</p>
@@ -446,7 +446,7 @@ export default function TrinityPage() {
                       { label: "Monthly Cost", value: `$${costTotal.toFixed(2)}`, cls: "text-foreground" },
                     ].map((s, i) => (
                       <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass-md rounded-xl overflow-hidden">
-                        <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                        <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
                         <div className="p-3 text-center">
                           <p className={`text-xl font-bold ${s.cls}`}>{s.value}</p>
                           <p className="text-[9px] text-muted">{s.label}</p>

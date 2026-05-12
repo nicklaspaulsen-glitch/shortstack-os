@@ -46,7 +46,7 @@ const AgentScene3D = dynamic(
       <div className="flex aspect-video w-full items-center justify-center  border border-[rgba(0,0,0,0.08)] bg-[#FAFAFB]">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#FF2D2D]/30 border-t-[#FF2D2D]" />
-          <p className="text-xs font-medium text-[#0A0A0B]/40 tracking-widest uppercase">Loading 3D scene…</p>
+          <p className="text-xs font-medium text-text-primary/40 tracking-widest uppercase">Loading 3D scene…</p>
         </div>
       </div>
     ),
@@ -308,13 +308,13 @@ export default function AgentOfficePage() {
       {/* Legend strip below canvas */}
       <div className=" border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] p-3">
         <div className="mb-2 flex items-center justify-between px-1">
-          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#0A0A0B]/55">
+          <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-text-primary/55">
             Roster
           </div>
           {selectedAgentKey && (
             <button
               onClick={() => setSelectedAgentKey(null)}
-              className="text-[10px] text-[#0A0A0B]/45 underline hover:text-[#0A0A0B]"
+              className="text-[10px] text-text-primary/45 underline hover:text-text-primary"
             >
               clear selection
             </button>

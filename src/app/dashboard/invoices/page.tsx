@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
-import { PrismPanel } from "@/components/prism";
+import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type MainTab = "all" | "builder" | "recurring" | "reminders" | "templates" | "aging" | "revenue";
@@ -43,7 +43,7 @@ const formatCurrency = (amount: number, currency: string = "USD") => {
 
 const RAINBOW_BAR = {
   height: 3,
-  background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)",
+  background: PRISM_RAINBOW_GRADIENT,
 };
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
@@ -161,7 +161,7 @@ export default function InvoicesPage() {
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setActiveTab("builder")}
-                    className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all"
+                    className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-text-primary font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all"
                   >
                     <Plus size={12} /> New Invoice
                   </motion.button>
@@ -171,7 +171,7 @@ export default function InvoicesPage() {
               <p className="text-[11px] text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices�</p>
             )}{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {STATS.map((stat, index) => (
-                <PrismPanel key={stat.label} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
+                <PrismPanel key={stat.label} padding="p-3" className="text-center" delay={index * 0.06}>
                   <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
                   <p className="text-lg font-bold">{stat.value}</p>
                   <p className="text-[9px] text-muted">{stat.label}</p>
@@ -305,7 +305,7 @@ export default function InvoicesPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                   <div className="lg:col-span-2 space-y-3">
-                    <PrismPanel rainbow glow padding="p-4" className="space-y-3">
+                    <PrismPanel glow padding="p-4" className="space-y-3">
                       <h3 className="text-sm font-semibold">Invoice Builder</h3>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
@@ -384,7 +384,7 @@ export default function InvoicesPage() {
 
                   {/* Sidebar */}
                   <div className="space-y-3">
-                    <PrismPanel rainbow padding="p-4">
+                    <PrismPanel padding="p-4">
                       <h4 className="text-xs font-semibold mb-3">Invoice Summary</h4>
                       <div className="space-y-2 text-[10px]">
                         <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatCurrency(2497, selectedCurrency)}</span></div>
@@ -404,7 +404,7 @@ export default function InvoicesPage() {
                     </PrismPanel>
 
                     {/* Quick Invoice from Proposal */}
-                    <PrismPanel rainbow padding="p-4">
+                    <PrismPanel padding="p-4">
                       <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
                         <Zap size={12} className="text-[#2563EB]" /> Quick Invoice
                       </h4>
@@ -420,7 +420,7 @@ export default function InvoicesPage() {
                     </PrismPanel>
 
                     {/* Payment Link */}
-                    <PrismPanel rainbow padding="p-4">
+                    <PrismPanel padding="p-4">
                       <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
                         <CreditCard size={12} className="text-[#2563EB]" /> Payment Links
                       </h4>
@@ -480,7 +480,7 @@ export default function InvoicesPage() {
                     </motion.div>
                   ))}
                 </div>
-                <PrismPanel rainbow padding="p-4" className="text-center">
+                <PrismPanel padding="p-4" className="text-center">
                   <p className="text-sm font-bold text-[#1D4ED8]">{formatCurrency(recurringTotal)}/mo</p>
                   <p className="text-[10px] text-muted">Total monthly recurring revenue from invoices</p>
                 </PrismPanel>
@@ -521,7 +521,7 @@ export default function InvoicesPage() {
                   ))}
                 </div>
                 {/* Currently overdue */}
-                <PrismPanel rainbow padding="p-4">
+                <PrismPanel padding="p-4">
                   <h4 className="text-xs font-semibold mb-3 flex items-center gap-2 text-rose-700">
                     <AlertTriangle size={12} /> Currently Overdue
                   </h4>
@@ -613,7 +613,7 @@ export default function InvoicesPage() {
                     </motion.div>
                   ))}
                 </div>
-                <PrismPanel rainbow padding="p-0" className="overflow-hidden">
+                <PrismPanel padding="p-0" className="overflow-hidden">
                   <div className="p-3 border-b border-[rgba(0,0,0,0.08)]">
                     <h4 className="text-xs font-semibold">Invoice History</h4>
                   </div>
@@ -679,7 +679,7 @@ export default function InvoicesPage() {
                   ))}
                 </div>
                 {/* Monthly bar chart */}
-                <PrismPanel rainbow padding="p-4">
+                <PrismPanel padding="p-4">
                   <h4 className="text-xs font-semibold mb-3">Monthly Revenue</h4>
                   <div className="flex items-end gap-3 h-40">
                     {invoicesData.length === 0 ? (
@@ -701,7 +701,7 @@ export default function InvoicesPage() {
                   </div>
                 </PrismPanel>
                 {/* Collection rate */}
-                <PrismPanel rainbow padding="p-4">
+                <PrismPanel padding="p-4">
                   <h4 className="text-xs font-semibold mb-3">Collection Metrics</h4>
                   <div className="grid grid-cols-3 gap-3">
                     <div className="bg-surface-light rounded-lg p-3 text-center">

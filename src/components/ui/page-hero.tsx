@@ -307,7 +307,7 @@ export default function PageHero({
                 {eyebrow}
               </p>
             )}
-            <h1 className="font-display text-[clamp(1.1rem,0.95rem+0.5vw,1.4rem)] font-bold text-[#0A0A0B] leading-[1.1] tracking-[-0.025em] truncate">
+            <h1 className="font-display text-[clamp(1.1rem,0.95rem+0.5vw,1.4rem)] font-bold text-text-primary leading-[1.1] tracking-[-0.025em] truncate">
               {title}
             </h1>
             {subtitle && (

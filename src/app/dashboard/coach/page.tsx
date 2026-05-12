@@ -82,8 +82,6 @@ const SOURCE_ICONS = {
   email_thread: Mail,
 } as const;
 
-const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
-
 const containerVariants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.06 } },
@@ -234,7 +232,7 @@ export default function CoachPage() {
                   className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                     tab === t.id
                       ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
-                      : "text-black/60 hover:bg-black/5 hover:text-[#0A0A0B]"
+                      : "text-black/60 hover:bg-black/5 hover:text-text-primary"
                   }`}
                 >
                   {t.label}
@@ -258,7 +256,7 @@ export default function CoachPage() {
                 {data.analyses.length === 0 ? (
                   <div className="px-6 py-12 text-center text-black/60">
                     <Sparkles className="mx-auto mb-3 h-8 w-8 opacity-50" />
-                    <p className="text-base font-medium text-[#0A0A0B]">No analyses yet.</p>
+                    <p className="text-base font-medium text-text-primary">No analyses yet.</p>
                     <p className="mt-1 text-sm">
                       The coach runs hourly on new voice calls and meetings. Trigger one manually from a
                       call detail page.
@@ -280,7 +278,7 @@ export default function CoachPage() {
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium text-[#0A0A0B]">
+                              <span className="text-sm font-medium text-text-primary">
                                 {row.source_type === "voice_call"
                                   ? "Voice call"
                                   : row.source_type === "meeting"
@@ -331,7 +329,7 @@ export default function CoachPage() {
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="text-sm font-semibold text-[#0A0A0B]">
+                          <div className="text-sm font-semibold text-text-primary">
                             {bucket.repId === "__owner" ? "Unassigned" : bucket.repId.slice(0, 8)}
                           </div>
                           <div className="text-xs text-black/50">
@@ -382,7 +380,7 @@ export default function CoachPage() {
                       className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                         period === p.id
                           ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                          : "border-black/10 text-black/60 hover:border-black/15 hover:text-[#0A0A0B]"
+                          : "border-black/10 text-black/60 hover:border-black/15 hover:text-text-primary"
                       }`}
                     >
                       {p.label}
@@ -416,7 +414,7 @@ export default function CoachPage() {
                             className="text-black/65 hover:bg-[rgba(37,99,235,0.04)] transition-colors"
                           >
                             <td className="px-4 py-3 font-semibold text-black/60">{idx + 1}</td>
-                            <td className="px-4 py-3 text-[#0A0A0B]">
+                            <td className="px-4 py-3 text-text-primary">
                               {entry.rep_name || entry.rep_email || entry.rep_id.slice(0, 8)}
                             </td>
                             <td className="px-4 py-3 text-right text-black/65">

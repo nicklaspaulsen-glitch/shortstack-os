@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface MeetingRow {
@@ -31,8 +32,6 @@ interface MeetingRow {
   summary: string | null;
   created_at: string;
 }
-
-const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 function formatDuration(seconds: number | null): string {
   if (!seconds) return "—";
@@ -257,7 +256,7 @@ export default function MeetingsPage() {
                     whileHover={{ y: -4, scale: 1.01 }}
                     className="glass rounded-xl overflow-hidden"
                   >
-                    <div style={{ height: 3, background: RAINBOW }} />
+                    <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} />
                     <Link
                       href={`/dashboard/meetings/${m.id}`}
                       className="flex items-center justify-between p-4"

@@ -8,6 +8,7 @@ import {
   Calculator, Save, Trash2, Loader,
   TrendingUp, DollarSign, Target, Clock
 } from "lucide-react";
+import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface Inputs {
@@ -71,8 +72,6 @@ function fmtUSD(n: number | null | undefined): string {
 }
 
 const SENSITIVITY_OFFSETS = [-20, -10, 0, 10, 20];
-
-const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 export default function RoiCalculatorPage() {
   const supabase = createClient();
@@ -245,7 +244,7 @@ export default function RoiCalculatorPage() {
                       transition={{ delay: i * 0.06, duration: 0.4 }}
                       className="glass rounded-xl overflow-hidden"
                     >
-                      <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+                      <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
                       <div className="p-4">
                         <div className={`mb-2 ${c.color}`}>{c.icon}</div>
                         <p className={`text-xl font-bold ${c.color}`}>{c.value}</p>

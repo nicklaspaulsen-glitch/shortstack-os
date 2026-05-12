@@ -315,7 +315,7 @@ export default function CalendarPage() {
               </h1>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all flex items-center gap-1.5">
+              <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-text-primary text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all flex items-center gap-1.5">
                 <Filter size={12} /> Filters
               </button>
               <button onClick={() => setShowCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all">
@@ -555,7 +555,7 @@ export default function CalendarPage() {
             )}{/* Today's Agenda Tab */}{!loading && tab === "agenda" && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <div className="lg:col-span-2 space-y-3">
-                  <PrismPanel padding="p-4" rainbow>
+                  <PrismPanel padding="p-4">
                     <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-[#2563EB]" /> Today&apos;s Schedule</h2>
                     {todaysEvents.length === 0 ? (
                       <EmptyState
@@ -620,7 +620,7 @@ export default function CalendarPage() {
                             className="rounded-xl overflow-hidden relative"
                             style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
                           >
-                            <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)" }} className="absolute top-0 left-0 right-0" />
+                            <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} className="absolute top-0 left-0 right-0" />
                             <div className="flex justify-between text-xs p-2 pt-3">
                               <span className="text-muted">{stat.label}</span>
                               <span className={`font-bold ${stat.color}`}>{stat.value}</span>
@@ -649,7 +649,7 @@ export default function CalendarPage() {
               </div>
             )}{/* Deadlines Tab */}{!loading && tab === "deadlines" && (
               <div className="space-y-3">
-                <PrismPanel padding="p-4" rainbow>
+                <PrismPanel padding="p-4">
                   <h2 className="section-header flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Upcoming Deadlines</h2>
                   {upcomingDeadlines.length === 0 ? (
                     <p className="text-xs text-muted text-center py-8">No upcoming deadlines</p>

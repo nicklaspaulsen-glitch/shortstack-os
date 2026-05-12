@@ -12,7 +12,7 @@ import {
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import { ListOrdered } from "lucide-react";
-import { PrismPanel } from "@/components/prism";
+import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type MainTab = "builder" | "templates" | "analytics" | "enrollment" | "runs" | "settings";
@@ -87,8 +87,6 @@ interface ActivityItem {
   description?: string;
   status?: string;
 }
-
-const RAINBOW_BAR = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
 const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
@@ -980,7 +978,7 @@ export default function SequencesPage() {
                       whileHover={{ y: -2 }}
                       className="rounded-xl overflow-hidden relative p-4" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                     >
-                      <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
+                      <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: PRISM_RAINBOW_GRADIENT }} />
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <p className="text-xs font-semibold">{t.name}</p>
@@ -1023,7 +1021,7 @@ export default function SequencesPage() {
                       whileHover={{ y: -2 }}
                       className="rounded-xl overflow-hidden relative text-center p-3" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                     >
-                      <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: RAINBOW_BAR }} />
+                      <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: PRISM_RAINBOW_GRADIENT }} />
                       <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
                       <p className="text-[9px] text-muted">{stat.label}</p>
                     </motion.div>
@@ -1057,7 +1055,7 @@ export default function SequencesPage() {
                             <div><p className="font-bold text-[#2563EB]">{replyRate.toFixed(1)}%</p><p className="text-[8px] text-muted">Reply Rate</p></div>
                           </div>
                           <div className="w-full bg-surface rounded-full h-1.5 mt-2">
-                            <div className="rounded-full h-1.5" style={{ width: `${seq.enrolled > 0 ? (seq.completed / seq.enrolled) * 100 : 0}%`, background: RAINBOW_BAR }} />
+                            <div className="rounded-full h-1.5" style={{ width: `${seq.enrolled > 0 ? (seq.completed / seq.enrolled) * 100 : 0}%`, background: PRISM_RAINBOW_GRADIENT }} />
                           </div>
                         </motion.div>
                       );

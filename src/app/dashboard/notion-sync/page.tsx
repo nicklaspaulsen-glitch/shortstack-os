@@ -9,9 +9,8 @@ import {
   Loader2, ExternalLink, Unlink, AlertCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
-
-const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 // Notion icon (inline)
 const NotionIcon = () => (
@@ -252,7 +251,7 @@ export default function NotionSyncPage() {
               { icon: <Clock className="w-5 h-5" />, label: "Auto-sync", desc: "Background sync every 15 minutes" },
             ].map((f, fi) => (
               <motion.div key={f.label} className="glass-md rounded-xl overflow-hidden" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: fi * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
-                <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+                <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
                 <div className="p-4 flex flex-col gap-2">
                   <div className="text-[#2563EB]">{f.icon}</div>
                   <p className="text-sm font-semibold text-[#374151]">{f.label}</p>

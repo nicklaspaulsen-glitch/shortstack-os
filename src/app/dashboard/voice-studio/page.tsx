@@ -187,7 +187,7 @@ export default function VoiceStudioPage() {
               <button
                 type="button"
                 onClick={refresh}
-                className="flex items-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2.5 py-1.5 text-[11px] font-medium text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.06)] transition-colors duration-150"
+                className="flex items-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2.5 py-1.5 text-[11px] font-medium text-[#52525B] hover:text-text-primary hover:bg-[rgba(0,0,0,0.06)] transition-colors duration-150"
               >
                 <RefreshCw size={11} /> Refresh
               </button>
@@ -207,7 +207,7 @@ export default function VoiceStudioPage() {
                         className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
                           isActive
                             ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)]"
-                            : "text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.04)]"
+                            : "text-[#52525B] hover:text-text-primary hover:bg-[rgba(0,0,0,0.04)]"
                         }`}
                         aria-current={isActive ? "page" : undefined}
                       >
@@ -255,7 +255,7 @@ function MyVoicesTab({
       {clones.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] p-12 text-center">
           <Mic size={32} className="text-[#71717A]" />
-          <h3 className="mt-4 text-base font-medium text-[#0A0A0B]">
+          <h3 className="mt-4 text-base font-medium text-text-primary">
             No clones yet
           </h3>
           <p className="mt-1 max-w-sm text-sm text-[#52525B]">
@@ -373,14 +373,14 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
   return (
     <div className="relative rounded-xl overflow-hidden p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 16px -4px rgba(0,0,0,0.08), 0 0 48px -12px rgba(37,99,235,0.10)" }}>
       {/* Blue gradient top accent bar */}
-      <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, #2563EB, #3B82F6, #8B5CF6, #3B82F6, #2563EB)" }} />
+      <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} />
       <div className="flex items-start gap-4">
         <div className="rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] p-2.5">
           <Upload size={20} className="text-[#2563EB]" />
         </div>
         <div className="flex-1 space-y-4">
           <div>
-            <h3 className="text-base font-semibold text-[#0A0A0B]">Train a new clone</h3>
+            <h3 className="text-base font-semibold text-text-primary">Train a new clone</h3>
             <p className="mt-1 text-sm text-[#52525B]">
               Drop a clean 30 to 90 second sample. Free path uses your RunPod
               endpoint. ElevenLabs is the paid fallback when RunPod isn&apos;t
@@ -415,14 +415,14 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder="Label (e.g. 'My voice � natural')"
-              className="rounded-lg border border-[rgba(0,0,0,0.10)] bg-white px-3 py-2 text-sm text-[#0A0A0B] placeholder:text-[#71717A] focus:border-[rgba(0,0,0,0.25)] focus:outline-none"
+              className="rounded-lg border border-[rgba(0,0,0,0.10)] bg-white px-3 py-2 text-sm text-text-primary placeholder:text-[#71717A] focus:border-[rgba(0,0,0,0.25)] focus:outline-none"
             />
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Description (optional)"
-              className="rounded-lg border border-[rgba(0,0,0,0.10)] bg-white px-3 py-2 text-sm text-[#0A0A0B] placeholder:text-[#71717A] focus:border-[rgba(0,0,0,0.25)] focus:outline-none"
+              className="rounded-lg border border-[rgba(0,0,0,0.10)] bg-white px-3 py-2 text-sm text-text-primary placeholder:text-[#71717A] focus:border-[rgba(0,0,0,0.25)] focus:outline-none"
             />
           </div>
 
@@ -461,7 +461,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
                 value={signedBy}
                 onChange={(e) => setSignedBy(e.target.value)}
                 placeholder="Signed by (legal name)"
-                className="mt-2 w-full rounded-lg border border-[rgba(0,0,0,0.10)] bg-white px-3 py-2 text-sm text-[#0A0A0B] placeholder:text-[#71717A] focus:border-[rgba(0,0,0,0.25)] focus:outline-none"
+                className="mt-2 w-full rounded-lg border border-[rgba(0,0,0,0.10)] bg-white px-3 py-2 text-sm text-text-primary placeholder:text-[#71717A] focus:border-[rgba(0,0,0,0.25)] focus:outline-none"
               />
             )}
           </div>
@@ -571,7 +571,7 @@ function CloneRow({
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href={`/dashboard/voice-studio/${clone.id}`}
-              className="text-sm font-semibold text-[#0A0A0B] hover:text-[#1D4ED8] transition-colors"
+              className="text-sm font-semibold text-text-primary hover:text-[#1D4ED8] transition-colors"
             >
               {clone.label}
             </Link>
@@ -597,7 +597,7 @@ function CloneRow({
             type="button"
             onClick={onTest}
             disabled={testing || clone.status !== "ready"}
-            className="flex items-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-3 py-1.5 text-xs font-medium text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.06)] disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex items-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-[rgba(0,0,0,0.06)] disabled:cursor-not-allowed disabled:opacity-40"
           >
             {testing ? (
               <Loader2 size={12} className="animate-spin" />
@@ -760,7 +760,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] p-12 text-center">
         <Library size={28} className="text-[#71717A]" />
-        <h3 className="mt-3 text-base font-medium text-[#0A0A0B]">No presets yet</h3>
+        <h3 className="mt-3 text-base font-medium text-text-primary">No presets yet</h3>
         <p className="mt-1 max-w-sm text-sm text-[#52525B]">
           Preset voices are seeded automatically on first dashboard load. Hit the button below if none appeared.
         </p>
@@ -790,7 +790,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search presets�"
-            className="rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-[#0A0A0B] placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50"
+            className="rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-text-primary placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50"
             style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(20px) saturate(1.8)", WebkitBackdropFilter: "blur(20px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
           />
         </div>
@@ -806,7 +806,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                 "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
                 genderFilter === g
                   ? "border border-[rgba(0,0,0,0.16)] bg-[rgba(0,0,0,0.06)] text-[#1D4ED8]"
-                  : "border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.05)]",
+                  : "border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] text-[#52525B] hover:text-text-primary hover:bg-[rgba(0,0,0,0.05)]",
               ].join(" ")}
             >
               {g === "all" ? "All" : g.charAt(0).toUpperCase() + g.slice(1)}
@@ -1009,7 +1009,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         </div>
 
         {/* Info */}
-        <h3 className="mt-3 text-sm font-semibold text-[#0A0A0B]">{preset.label}</h3>
+        <h3 className="mt-3 text-sm font-semibold text-text-primary">{preset.label}</h3>
         {preset.description && (
           <p className="mt-1 text-xs text-[#52525B] leading-relaxed">{preset.description}</p>
         )}
@@ -1057,7 +1057,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               rows={3}
               maxLength={300}
               placeholder="Type what you want the voice to say�"
-              className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-xs text-[#0A0A0B] placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50 resize-none"
+              className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-xs text-text-primary placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50 resize-none"
             />
             <div className="flex items-center justify-between">
               <span className="text-[10px] text-[#71717A]">{testText.length}/300</span>
@@ -1112,7 +1112,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             type="button"
             onClick={onTest}
             disabled={testing}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-3 py-1.5 text-xs font-medium text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.06)] transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-[rgba(0,0,0,0.06)] transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
           >
             {testing ? (
               <Loader2 size={12} className="animate-spin" />
@@ -1132,7 +1132,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               "flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed",
               saved
                 ? "border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-[#1D4ED8]"
-                : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] text-[#52525B] hover:bg-[rgba(0,0,0,0.06)] hover:text-[#0A0A0B]",
+                : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] text-[#52525B] hover:bg-[rgba(0,0,0,0.06)] hover:text-text-primary",
             ].join(" ")}
           >
             {saving ? <Loader2 size={12} className="animate-spin" /> : saved ? <CheckCircle2 size={12} /> : <Sparkles size={12} />}
@@ -1155,7 +1155,7 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] p-12 text-center">
         <Headphones size={28} className="text-[#71717A]" />
-        <h3 className="mt-3 text-base font-medium text-[#0A0A0B]">No renders yet</h3>
+        <h3 className="mt-3 text-base font-medium text-text-primary">No renders yet</h3>
         <p className="mt-1 max-w-sm text-sm text-[#52525B]">
           Renders show up here once your clones synthesise audio for cold calls,
           voicemails, SMS, or DMs.
@@ -1179,7 +1179,7 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex-1 min-w-[200px]">
-                  <p className="text-sm text-[#0A0A0B]">{r.text_preview}</p>
+                  <p className="text-sm text-text-primary">{r.text_preview}</p>
                   <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-[#71717A]">
                     <span>
                       {new Date(r.rendered_at).toLocaleString(undefined, {
@@ -1202,7 +1202,7 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
                   <button
                     type="button"
                     onClick={() => setPlayingId(isOpen ? null : r.id)}
-                    className="flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-3 py-1.5 text-xs text-[#52525B] hover:bg-[rgba(0,0,0,0.06)] hover:text-[#0A0A0B] transition-colors duration-150 cursor-pointer"
+                    className="flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-3 py-1.5 text-xs text-[#52525B] hover:bg-[rgba(0,0,0,0.06)] hover:text-text-primary transition-colors duration-150 cursor-pointer"
                     aria-label={isOpen ? "Close audio player" : "Play render"}
                   >
                     {isOpen ? <Pause size={12} /> : <Play size={12} />}

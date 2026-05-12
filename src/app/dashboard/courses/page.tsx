@@ -134,8 +134,8 @@ export default function CoursesPage() {
                     onClick={() => setFilter(f)}
                     className={`px-4 py-1.5 rounded-full text-sm font-medium capitalize transition-colors ${
                       filter === f
-                        ? "bg-purple-600 text-[#0A0A0B]"
-                        : "bg-black/5 text-black/60 hover:text-[#0A0A0B] hover:bg-black/10"
+                        ? "bg-purple-600 text-text-primary"
+                        : "bg-black/5 text-black/60 hover:text-text-primary hover:bg-black/10"
                     }`}
                   >
                     {f}
@@ -172,7 +172,7 @@ export default function CoursesPage() {
             </div>{/* Create modal */}{showCreate && (
               <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                 <div className="glass  p-6 w-full max-w-md">
-                  <h2 className="text-lg font-semibold text-[#0A0A0B] mb-4">New Course</h2>
+                  <h2 className="text-lg font-semibold text-text-primary mb-4">New Course</h2>
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm text-black/60 mb-1">Title *</label>
@@ -180,7 +180,7 @@ export default function CoursesPage() {
                         value={newTitle}
                         onChange={e => setNewTitle(e.target.value)}
                         placeholder="e.g. 12-Week Fitness Program"
-                        className="w-full glass rounded-lg px-3 py-2 text-[#0A0A0B] placeholder-black/35 text-sm focus:outline-none focus:border-purple-500"
+                        className="w-full glass rounded-lg px-3 py-2 text-text-primary placeholder-black/35 text-sm focus:outline-none focus:border-purple-500"
                       />
                     </div>
                     <div>
@@ -190,7 +190,7 @@ export default function CoursesPage() {
                         onChange={e => setNewDescription(e.target.value)}
                         rows={2}
                         placeholder="Brief descriptionâ€¦"
-                        className="w-full glass rounded-lg px-3 py-2 text-[#0A0A0B] placeholder-black/35 text-sm focus:outline-none focus:border-purple-500 resize-none"
+                        className="w-full glass rounded-lg px-3 py-2 text-text-primary placeholder-black/35 text-sm focus:outline-none focus:border-purple-500 resize-none"
                       />
                     </div>
                     <div className="flex items-center gap-3">
@@ -211,7 +211,7 @@ export default function CoursesPage() {
                             value={newPrice}
                             onChange={e => setNewPrice(e.target.value)}
                             placeholder="0.00"
-                            className="w-24 glass rounded-lg px-2 py-1.5 text-[#0A0A0B] text-sm focus:outline-none focus:border-purple-500"
+                            className="w-24 glass rounded-lg px-2 py-1.5 text-text-primary text-sm focus:outline-none focus:border-purple-500"
                           />
                         </div>
                       )}
@@ -285,7 +285,7 @@ function CourseCard({
       </div>
 
       <div className="p-3">
-        <h3 className="font-medium text-[#0A0A0B] text-sm line-clamp-1 mb-1">{course.title}</h3>
+        <h3 className="font-medium text-text-primary text-sm line-clamp-1 mb-1">{course.title}</h3>
         {course.description && (
           <p className="text-xs text-black/40 line-clamp-2 mb-2">{course.description}</p>
         )}

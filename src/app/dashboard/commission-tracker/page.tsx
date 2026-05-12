@@ -9,6 +9,7 @@ import {
   DollarSign, Plus, Trash2, Download,
   Loader, CheckCircle, Clock, Search
 } from "lucide-react";
+import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type CommissionStatus = "pending" | "approved" | "paid";
@@ -55,7 +56,6 @@ const STATUS_CONFIG: Record<
   },
 };
 
-const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
 const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
@@ -224,7 +224,7 @@ export default function CommissionTrackerPage() {
                   transition={{ delay: i * 0.06 }}
                   className="glass rounded-xl overflow-hidden"
                 >
-                  <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+                  <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
                   <div className="p-4">
                     <p className="text-xs text-[#9CA3AF] uppercase tracking-wider mb-1">{tile.label}</p>
                     <p className={`text-xl font-bold ${tile.color}`}>{tile.value}</p>

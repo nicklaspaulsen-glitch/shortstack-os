@@ -6,6 +6,7 @@ import { ReceiptText, Plus, Pencil, Trash2, Check, X, Loader2, Eye, Star } from 
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
+import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface LineItem {
@@ -30,8 +31,6 @@ function fmt(n: number) {
 function calcSubtotal(items: LineItem[]) {
   return items.reduce((s, i) => s + i.qty * i.unit_price, 0);
 }
-
-const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 /** Inline invoice preview modal */
 function PreviewModal({ template, onClose }: { template: InvoiceTemplate; onClose: () => void }) {
@@ -364,7 +363,7 @@ export default function InvoiceTemplatesPage() {
                       whileHover={{ y: -2, scale: 1.005 }}
                       className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-4 flex items-center gap-4 group relative overflow-hidden"
                     >
-                      <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0", position: "absolute", left: 0, right: 0, top: 0 }} />
+                      <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0", position: "absolute", left: 0, right: 0, top: 0 }} />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <p className="text-[#111827] font-medium truncate">{t.name}</p>

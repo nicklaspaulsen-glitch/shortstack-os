@@ -13,8 +13,7 @@ import {
   ArrowUp, ArrowDown, Loader2,
   Newspaper, Wand2, FileText,
 } from "lucide-react";
-
-const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
+import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
@@ -1061,9 +1060,9 @@ export default function NewsletterPage() {
 
               {/* Email header bar */}
               <div className="p-4 border-b" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
-                <p className="text-sm font-semibold text-[#0A0A0B] mb-1">{subject || "No subject"}</p>
-                <p className="text-[10px] text-[#0A0A0B]/40">From: ShortStack &lt;hello@shortstack.work&gt;</p>
-                <p className="text-[10px] text-[#0A0A0B]/40">To: {selectedList?.label} ({selectedList?.count} recipients)</p>
+                <p className="text-sm font-semibold text-text-primary mb-1">{subject || "No subject"}</p>
+                <p className="text-[10px] text-text-primary/40">From: ShortStack &lt;hello@shortstack.work&gt;</p>
+                <p className="text-[10px] text-text-primary/40">To: {selectedList?.label} ({selectedList?.count} recipients)</p>
               </div>
 
               {/* Rendered newsletter */}
@@ -1156,7 +1155,7 @@ export default function NewsletterPage() {
               { value: PAST_NEWSLETTERS.reduce((s, n) => s + n.recipients, 0).toLocaleString(), label: "Total Recipients", color: "" },
             ].map((tile, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass-md rounded-xl overflow-hidden">
-                <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+                <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
                 <div className="text-center p-4">
                   <p className={`text-2xl font-bold ${tile.color}`}>{tile.value}</p>
                   <p className="text-[9px] text-muted uppercase tracking-wider mt-1">{tile.label}</p>

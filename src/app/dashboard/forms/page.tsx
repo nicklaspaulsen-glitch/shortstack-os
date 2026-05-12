@@ -432,7 +432,7 @@ export default function FormsPage() {
                   transition={{ delay: i * 0.06, duration: 0.4 }}
                   className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                 >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} />
                   <div className="p-3 text-center">
                     <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
                     <p className="text-[10px] text-muted">{tile.label}</p>

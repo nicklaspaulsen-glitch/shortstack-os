@@ -3,6 +3,7 @@ export type { PrismTile } from "./prism-stat-strip";
 export { default as PrismPanel } from "./prism-panel";
 export { default as PrismSection } from "./prism-section";
 export {
+  PRISM_ACCENT,
   PRISM_RED,
   PRISM_ACCENTS,
   PRISM_TILES,

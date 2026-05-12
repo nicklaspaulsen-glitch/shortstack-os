@@ -1064,7 +1064,6 @@ export default function ContentPage() {
                 ].map((stat, index) => (
                   <PrismPanel
                     key={stat.label}
-                    rainbow
                     padding="pt-1 px-0 pb-0"
                     delay={index * 0.06}
                   >
@@ -1315,7 +1314,6 @@ export default function ContentPage() {
                 ].map(stat => (
                   <PrismPanel
                     key={stat.label}
-                    rainbow
                     padding="p-4"
                     className="text-center"
                   >
@@ -1388,7 +1386,6 @@ export default function ContentPage() {
                       ].map((tile, index) => (
                         <PrismPanel
                           key={tile.label}
-                          rainbow
                           padding="p-3"
                           className="text-center"
                           delay={index * 0.06}

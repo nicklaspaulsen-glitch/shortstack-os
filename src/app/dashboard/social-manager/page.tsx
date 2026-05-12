@@ -463,7 +463,7 @@ export default function SocialManagerPage() {
 
       {/* Connect Accounts Section ï¿½ shown when no accounts connected */}
       {currentClient && connectedAccounts.filter(a => a.is_active).length === 0 && (
-        <PrismPanel rainbow glow padding="p-0" className="relative overflow-hidden">
+        <PrismPanel glow padding="p-0" className="relative overflow-hidden">
           <div className="absolute inset-0 bg-mesh opacity-20" />
           <div className="relative text-center py-6 px-6">
             <div className="w-12 h-12 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center mx-auto mb-3">

@@ -290,7 +290,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
             )}
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-[#0A0A0B]">
+            <h2 className="text-sm font-semibold text-text-primary">
               Connect {integration.name}
             </h2>
             <p className="text-[11px] text-[#52525B]">
@@ -303,7 +303,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
           <div className="space-y-3 text-[12px] text-[#52525B]">
             <p>
               {integration.name} accounts are managed through{" "}
-              <strong className="text-[#0A0A0B]">Zernio</strong>. Connect your
+              <strong className="text-text-primary">Zernio</strong>. Connect your
               account there � ShortStack will automatically detect it.
             </p>
             <ol className="list-decimal list-inside space-y-1.5 pl-1">
@@ -361,7 +361,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 text-[11px] font-medium px-3 py-2 rounded-lg border border-[rgba(0,0,0,0.08)] text-[#52525B] hover:text-[#0A0A0B] transition-colors"
+            className="flex-1 text-[11px] font-medium px-3 py-2 rounded-lg border border-[rgba(0,0,0,0.08)] text-[#52525B] hover:text-text-primary transition-colors"
           >
             Close
           </button>

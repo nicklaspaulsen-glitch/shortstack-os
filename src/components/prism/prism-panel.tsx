@@ -16,7 +16,7 @@ import {
  * PrismPanel — the prism split glass container.
  *
  * Sharp corners (zero border-radius), white-tinted glass,
- * red accent rainbow bar, 3D perspective tilt on hover.
+ * blue accent bar, 3D perspective tilt on hover.
  *
  * Reference: _design-previews/93-prism-dashboard.html
  */

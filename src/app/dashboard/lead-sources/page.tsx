@@ -3,8 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Filter, Plus, Pencil, Trash2, Check, X, Loader2 } from "lucide-react";
-
-const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";

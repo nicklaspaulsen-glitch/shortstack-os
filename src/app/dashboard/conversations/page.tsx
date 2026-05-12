@@ -385,7 +385,7 @@ export default function ConversationsPage() {
   const selected = conversations.find((c) => c.id === selectedId) || null;
 
   return (
-    <MotionPage className="flex h-[calc(100vh-4rem)] bg-[#FAFAFB] text-[#0A0A0B]">{/* -- LEFT: conversation list � hidden on mobile when viewing a thread -- */}<aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-[rgba(0,0,0,0.08)] flex-col`}>
+    <MotionPage className="flex h-[calc(100vh-4rem)] bg-[#FAFAFB] text-text-primary">{/* -- LEFT: conversation list � hidden on mobile when viewing a thread -- */}<aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-[rgba(0,0,0,0.08)] flex-col`}>
               <div className="p-4 border-b border-[rgba(0,0,0,0.08)]">
                 <h1 className="text-lg font-semibold mb-3 flex items-center gap-2">
                   <Inbox size={18} className="text-indigo-400" />
@@ -689,7 +689,7 @@ function MessageBubble({ m }: { m: Message }) {
       <div
         className={`max-w-[70%]  px-4 py-2.5 text-sm leading-relaxed ${
           inbound
-            ? "bg-[#F2F2F4] text-[#0A0A0B] border border-[rgba(0,0,0,0.08)]"
+            ? "bg-[#F2F2F4] text-text-primary border border-[rgba(0,0,0,0.08)]"
             : "bg-[#1D4ED8] text-white"
         }`}
       >

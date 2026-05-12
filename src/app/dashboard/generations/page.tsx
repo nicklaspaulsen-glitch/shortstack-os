@@ -132,7 +132,7 @@ export default function GenerationsPage() {
         </div>
         <button
           onClick={fetchGenerations}
-          className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all"
+          className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-text-primary text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all"
         >
           <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
         </button>
@@ -144,7 +144,7 @@ export default function GenerationsPage() {
                 { label: "Latest",       value: latest,           icon: <Clock size={14} />,       color: "text-purple-400" },
               ].map((s, i) => (
                 <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
                   <div className="py-2.5 px-3 flex items-center gap-3">
                     <div className={s.color}>{s.icon}</div>
                     <div>

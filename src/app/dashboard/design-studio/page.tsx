@@ -128,7 +128,7 @@ export default function DesignStudioPage() {
       </div><div className="flex-1 p-8">
                   <div className="max-w-3xl mx-auto">
                     <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-lg font-semibold text-[#0A0A0B]">New Design</h2>
+                      <h2 className="text-lg font-semibold text-text-primary">New Design</h2>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                       {SIZE_PRESETS.map((preset, i) => (
@@ -152,7 +152,7 @@ export default function DesignStudioPage() {
                             }}
                           />
                           <div className="text-center">
-                            <p className="text-xs font-medium text-gray-700 group-hover:text-[#0A0A0B]">
+                            <p className="text-xs font-medium text-gray-700 group-hover:text-text-primary">
                               {preset.label}
                             </p>
                             <p className="text-[10px] text-gray-600">
@@ -164,7 +164,7 @@ export default function DesignStudioPage() {
                     </div>
 
                     <div className="mt-10">
-                      <h2 className="text-lg font-semibold text-[#0A0A0B] mb-4">Recent Designs</h2>
+                      <h2 className="text-lg font-semibold text-text-primary mb-4">Recent Designs</h2>
                       <RecentDesigns />
                     </div>
                   </div>
@@ -248,7 +248,7 @@ function RecentDesigns() {
             )}
           </div>
           <div className="p-2">
-            <p className="text-xs font-medium text-gray-700 group-hover:text-[#0A0A0B] truncate">
+            <p className="text-xs font-medium text-gray-700 group-hover:text-text-primary truncate">
               {d.title}
             </p>
             <p className="text-[10px] text-gray-600">

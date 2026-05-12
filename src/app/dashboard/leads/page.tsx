@@ -499,7 +499,7 @@ function LeadDetailPanel({
       <button
         type="button"
         onClick={onClose}
-        className="absolute right-3 top-3 rounded-lg p-1 text-[#71717A] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.04)] transition-colors cursor-pointer"
+        className="absolute right-3 top-3 rounded-lg p-1 text-[#71717A] hover:text-text-primary hover:bg-[rgba(0,0,0,0.04)] transition-colors cursor-pointer"
         aria-label="Close preview"
       >
         <X size={14} />
@@ -507,7 +507,7 @@ function LeadDetailPanel({
 
       {/* Name + score */}
       <div className="pr-6">
-        <h3 className="text-sm font-semibold text-[#0A0A0B] leading-snug">{lead.business_name}</h3>
+        <h3 className="text-sm font-semibold text-text-primary leading-snug">{lead.business_name}</h3>
         {lead.industry && (
           <span className="mt-1 inline-block rounded-full bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] px-2 py-0.5 text-[10px] text-[#71717A]">
             {lead.industry}
@@ -816,10 +816,10 @@ export default function LeadEnginePage() {
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <button onClick={() => setShowImportModal(true)} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.03)] text-xs font-medium text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.06)] transition-colors">
+          <button onClick={() => setShowImportModal(true)} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.03)] text-xs font-medium text-[#52525B] hover:text-text-primary hover:bg-[rgba(0,0,0,0.06)] transition-colors">
             <Upload size={12} /> Import
           </button>
-          <button onClick={handleExport} disabled={exporting} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.03)] text-xs font-medium text-[#52525B] hover:text-[#0A0A0B] hover:bg-[rgba(0,0,0,0.06)] transition-colors disabled:opacity-40">
+          <button onClick={handleExport} disabled={exporting} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.03)] text-xs font-medium text-[#52525B] hover:text-text-primary hover:bg-[rgba(0,0,0,0.06)] transition-colors disabled:opacity-40">
             {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
             {exporting ? "…" : "Export"}
           </button>
@@ -854,7 +854,7 @@ export default function LeadEnginePage() {
                   { label: "Avg Score", value: totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length || 0) : 0, icon: <Target size={12} />, color: "text-blue-400" },
                   { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-[#2563EB]" },
                 ].map((stat, index) => (
-                  <PrismPanel key={index} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
+                  <PrismPanel key={index} padding="p-3" className="text-center" delay={index * 0.06}>
                     <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
                     <p className="text-lg font-bold">{stat.value}</p>
                     <p className="text-[9px] text-muted">{stat.label}</p>
@@ -1301,7 +1301,7 @@ export default function LeadEnginePage() {
                     { label: "Missing Email", value: 0, total: totalLeads, color: "text-red-400" },
                     { label: "Missing Phone", value: 0, total: totalLeads, color: "text-red-400" },
                   ].map((s, index) => (
-                    <PrismPanel key={index} rainbow padding="p-3" className="text-center" delay={index * 0.06}>
+                    <PrismPanel key={index} padding="p-3" className="text-center" delay={index * 0.06}>
                       <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
                       <p className="text-[9px] text-muted">{s.label}</p>
                       <p className="text-[8px] text-muted">of {s.total} leads</p>

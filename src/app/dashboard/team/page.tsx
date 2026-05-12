@@ -13,7 +13,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { TableSkeleton } from "@/components/ui/skeleton";
-import { PrismPanel } from "@/components/prism";
+import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type TeamTab = "members" | "permissions" | "roles" | "activity" | "capacity";
@@ -56,7 +56,7 @@ interface PermissionRow {
 
 const RAINBOW_BAR = {
   height: 3,
-  background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)",
+  background: PRISM_RAINBOW_GRADIENT,
 };
 
 const ROLE_DEFINITIONS: RoleDefinition[] = [
@@ -268,14 +268,14 @@ export default function TeamPage() {
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setShowInvite(true)}
-                  className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-[#0A0A0B] text-xs font-semibold hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-text-primary text-xs font-semibold hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5"
                 >
                   <UserPlus size={12} /> Invite Member
                 </motion.button>
       </div>
     </div>{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
               {STATS.map((stat, index) => (
-                <PrismPanel key={stat.label} rainbow padding="p-3" delay={index * 0.06}>
+                <PrismPanel key={stat.label} padding="p-3" delay={index * 0.06}>
                   <div className="flex items-center gap-1.5 mb-1">{stat.icon}<p className="text-[10px] text-muted uppercase tracking-wider">{stat.label}</p></div>
                   <p className={`text-lg font-bold ${stat.valueColor ?? ""}`}>{stat.value}</p>
                   <p className={`text-[10px] ${stat.subColor ?? "text-muted"}`}>{stat.sub}</p>

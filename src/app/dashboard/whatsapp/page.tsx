@@ -245,9 +245,9 @@ export default function WhatsAppPage() {
             <div className="flex items-center justify-between px-5 py-4 border-b border-black/8">
               <div className="flex items-center gap-2">
                 <MessageCircle className="w-5 h-5 text-[#25D366]" />
-                <p className="font-semibold text-[#0A0A0B]">New WhatsApp Campaign</p>
+                <p className="font-semibold text-text-primary">New WhatsApp Campaign</p>
               </div>
-              <button onClick={resetCompose} className="text-black/40 hover:text-[#0A0A0B]">
+              <button onClick={resetCompose} className="text-black/40 hover:text-text-primary">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -261,7 +261,7 @@ export default function WhatsAppPage() {
                   value={campaignName}
                   onChange={(e) => setCampaignName(e.target.value)}
                   placeholder="e.g. April Promo Blast"
-                  className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all"
+                  className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all"
                 />
               </div>
 
@@ -280,7 +280,7 @@ export default function WhatsAppPage() {
                   placeholder="Search clients�"
                   value={clientSearch}
                   onChange={(e) => setClientSearch(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all"
+                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all"
                 />
                 <div className="rounded-lg border border-black/8 bg-black/3 max-h-40 overflow-y-auto">
                   {filteredClients.length === 0 ? (
@@ -301,7 +301,7 @@ export default function WhatsAppPage() {
                           className="w-4 h-4 rounded accent-[#25D366]"
                         />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm text-[#0A0A0B] truncate">{c.business_name}</p>
+                          <p className="text-sm text-text-primary truncate">{c.business_name}</p>
                           {c.phone && (
                             <p className="text-xs text-black/40">{c.phone}</p>
                           )}
@@ -330,7 +330,7 @@ export default function WhatsAppPage() {
                   onChange={(e) => setMessage(e.target.value.slice(0, MAX_MSG_LEN))}
                   placeholder="Hi {{name}}, here's your update from ShortStack�"
                   rows={5}
-                  className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all resize-none"
+                  className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all resize-none"
                 />
                 {message.length > WARN_LEN && (
                   <div className="flex items-center gap-1.5 text-xs text-[#2563EB]">
@@ -351,7 +351,7 @@ export default function WhatsAppPage() {
                     type="datetime-local"
                     value={scheduleAt}
                     onChange={(e) => setScheduleAt(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-[#0A0A0B] text-sm focus:outline-none focus:border-[#25D366]/50 transition-all [color-scheme:light]"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm focus:outline-none focus:border-[#25D366]/50 transition-all [color-scheme:light]"
                   />
                 </div>
                 {!scheduleAt && (
@@ -364,7 +364,7 @@ export default function WhatsAppPage() {
             <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-black/8">
               <button
                 onClick={resetCompose}
-                className="px-4 py-2 rounded-lg text-sm font-medium text-black/60 hover:text-[#0A0A0B] bg-black/5 hover:bg-black/8 transition-all"
+                className="px-4 py-2 rounded-lg text-sm font-medium text-black/60 hover:text-text-primary bg-black/5 hover:bg-black/8 transition-all"
               >
                 Cancel
               </button>
@@ -399,7 +399,7 @@ export default function WhatsAppPage() {
             onClick={() => setActiveTab(t.id)}
             className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium border-b-2 transition-all ${
               activeTab === t.id
-                ? "text-[#0A0A0B] border-[#25D366]"
+                ? "text-text-primary border-[#25D366]"
                 : "text-black/50 border-transparent hover:text-black/65"
             }`}
           >
@@ -436,7 +436,7 @@ export default function WhatsAppPage() {
                     <Phone className="w-4 h-4 text-[#25D366]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#0A0A0B] truncate">{n.label}</p>
+                    <p className="text-sm font-semibold text-text-primary truncate">{n.label}</p>
                     <p className="text-xs text-black/40 font-mono">{n.phone}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
@@ -481,7 +481,7 @@ export default function WhatsAppPage() {
                     {(c.subject || c.external_thread_id || "?").charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#0A0A0B] truncate">
+                    <p className="text-sm font-semibold text-text-primary truncate">
                       {c.subject || c.external_thread_id || "Unknown contact"}
                     </p>
                     <p className="text-xs text-black/40 truncate line-clamp-1">
@@ -522,9 +522,9 @@ export default function WhatsAppPage() {
             transition={{ delay: i * 0.06, duration: 0.4 }}
             className="glass rounded-xl overflow-hidden"
           >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
+            <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
             <div className="p-4 text-center">
-              <p className="text-2xl font-bold text-[#0A0A0B]">{s.value}</p>
+              <p className="text-2xl font-bold text-text-primary">{s.value}</p>
               <p className="text-xs text-black/40 mt-1">{s.label}</p>
             </div>
           </motion.div>
@@ -559,7 +559,7 @@ export default function WhatsAppPage() {
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-sm font-semibold text-[#0A0A0B] truncate">{c.name}</p>
+                    <p className="text-sm font-semibold text-text-primary truncate">{c.name}</p>
                     <StatusBadge status={c.status} />
                   </div>
                   <p className="text-xs text-black/40 mt-1 truncate line-clamp-1">

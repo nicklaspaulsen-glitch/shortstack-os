@@ -14,7 +14,7 @@ import {
   Clock,
 } from "lucide-react";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
-import { PrismPanel } from "@/components/prism";
+import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type Depth = "shallow" | "medium" | "deep";
@@ -75,7 +75,6 @@ const STATUS_PILLS: Record<JobRow["status"], string> = {
   failed: "bg-red-500/15 text-red-700 border-red-500/30",
 };
 
-const RAINBOW_BAR = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 export default function ColdEmailPage() {
   const [jobs, setJobs] = useState<JobRow[]>([]);
@@ -201,7 +200,7 @@ export default function ColdEmailPage() {
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <button
                     onClick={() => setShowCreate((v) => !v)}
-                    className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-[#0A0A0B] border border-black/20 hover:bg-black/15 transition-all flex items-center gap-1.5"
+                    className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-text-primary border border-black/20 hover:bg-black/15 transition-all flex items-center gap-1.5"
                   >
                     <Sparkles size={11} />
                     New Campaign
@@ -370,7 +369,7 @@ export default function ColdEmailPage() {
                       {/* Rainbow top bar (first item only decorative, per-card via absolute) */}
                       <div
                         className="absolute top-0 left-0 right-0 h-[2px]"
-                        style={{ background: RAINBOW_BAR, opacity: 0.5 }}
+                        style={{ background: PRISM_RAINBOW_GRADIENT, opacity: 0.5 }}
                       />
 
                       <div className="flex items-start justify-between gap-3">
@@ -443,7 +442,7 @@ export default function ColdEmailPage() {
                             className="h-full transition-all"
                             style={{
                               width: `${Math.min(100, progress)}%`,
-                              background: RAINBOW_BAR,
+                              background: PRISM_RAINBOW_GRADIENT,
                             }}
                           />
                         </div>

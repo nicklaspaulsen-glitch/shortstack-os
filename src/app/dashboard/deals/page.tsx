@@ -42,14 +42,6 @@ const STAGES = [
   { key: "closed_lost", label: "Closed Lost", color: "#dc2626" },
 ];
 
-const RAINBOW_BARS = [
-  "bg-gradient-to-r from-indigo-500 to-violet-500",
-  "bg-gradient-to-r from-violet-500 to-purple-500",
-  "bg-gradient-to-r from-green-500 to-emerald-500",
-  "bg-gradient-to-r from-rose-500 to-red-500",
-  "bg-gradient-to-r from-sky-500 to-blue-500",
-  "bg-gradient-to-r from-yellow-500 to-amber-500",
-];
 
 const formatCurrency = (n: number) => `$${n.toLocaleString()}`;
 
@@ -238,7 +230,7 @@ export default function DealsPage() {
                   { label: "Win Rate", value: `${winRate}%`, icon: <Award size={12} />, color: "text-blue-400" },
                   { label: "Avg Deal", value: formatCurrency(avgDealSize), icon: <BarChart3 size={12} />, color: "text-[#2563EB]" },
                 ].map((stat, i) => (
-                  <PrismPanel key={i} rainbow padding="p-3" className="text-center" delay={i * 0.06}>
+                  <PrismPanel key={i} padding="p-3" className="text-center" delay={i * 0.06}>
                     <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
                     <p className="text-lg font-bold">{stat.value}</p>
                     <p className="text-[9px] text-muted">{stat.label}</p>
@@ -359,7 +351,7 @@ export default function DealsPage() {
                 )}
 
                 {/* Deal Velocity Tracker */}
-                <PrismPanel rainbow glow padding="p-4">
+                <PrismPanel glow padding="p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <Clock size={14} className="text-[#2563EB]" /> Deal Velocity Tracker
                   </h3>
@@ -388,7 +380,7 @@ export default function DealsPage() {
                 </PrismPanel>
 
                 {/* Deal Timeline */}
-                <PrismPanel rainbow padding="p-4">
+                <PrismPanel padding="p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <Calendar size={14} className="text-[#2563EB]" /> Recent Deal Timeline
                   </h3>
@@ -419,7 +411,7 @@ export default function DealsPage() {
                     { label: "Most Likely", value: formatCurrency(Math.round(weightedPipeline)), sub: "Weighted probability", color: "text-[#2563EB]", bar: "bg-gradient-to-r from-indigo-500 to-violet-500" },
                     { label: "Best Case", value: formatCurrency(totalPipeline), sub: "100% close rate", color: "text-emerald-700", bar: "bg-gradient-to-r from-green-500 to-emerald-500" },
                   ].map((card, i) => (
-                    <PrismPanel key={i} rainbow padding="p-5" className="text-center" delay={i * 0.06}>
+                    <PrismPanel key={i} padding="p-5" className="text-center" delay={i * 0.06}>
                       <p className="text-[10px] text-muted mb-1 uppercase font-semibold">{card.label}</p>
                       <p className={`text-2xl font-bold ${card.color}`}>{card.value}</p>
                       <p className="text-[9px] text-muted mt-1">{card.sub}</p>
@@ -427,7 +419,7 @@ export default function DealsPage() {
                   ))}
                 </motion.div>
                 {/* Monthly breakdown */}
-                <PrismPanel rainbow padding="p-4">
+                <PrismPanel padding="p-4">
                   <h4 className="text-xs font-semibold mb-3">Monthly Revenue Trend</h4>
                   <div className="text-center py-8 text-muted text-xs">
                     Monthly revenue trend will appear once deals are closed.
@@ -438,14 +430,14 @@ export default function DealsPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {/* Win Reasons */}
-                  <PrismPanel rainbow padding="p-4">
+                  <PrismPanel padding="p-4">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <CheckCircle size={14} className="text-emerald-700" /> Win Factors
                     </h3>
                     <div className="text-center py-8 text-muted text-xs">No win data yet.</div>
                   </PrismPanel>
                   {/* Loss Reasons */}
-                  <PrismPanel rainbow padding="p-4" delay={0.06}>
+                  <PrismPanel padding="p-4" delay={0.06}>
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <AlertTriangle size={14} className="text-rose-700" /> Loss Reasons
                     </h3>
@@ -453,7 +445,7 @@ export default function DealsPage() {
                   </PrismPanel>
                 </div>
                 {/* Competitor notes */}
-                <PrismPanel rainbow glow padding="p-4">
+                <PrismPanel glow padding="p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <Shield size={14} className="text-[#2563EB]" /> Competitor Intelligence
                   </h3>
@@ -510,7 +502,7 @@ export default function DealsPage() {
                 </motion.div>
 
                 {/* Stage Automation � starter rule templates */}
-                <PrismPanel rainbow padding="p-4">
+                <PrismPanel padding="p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <ArrowRight size={14} className="text-[#2563EB]" /> Deal Stage Automation
                   </h3>
@@ -542,7 +534,7 @@ export default function DealsPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Contract Templates */}
-                  <PrismPanel rainbow padding="p-4">
+                  <PrismPanel padding="p-4">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <FileText size={14} className="text-[#2563EB]" /> Contract Templates
                     </h3>
@@ -572,7 +564,7 @@ export default function DealsPage() {
                     </div>
                   </PrismPanel>
                   {/* Proposal Generator */}
-                  <PrismPanel rainbow padding="p-4" delay={0.06}>
+                  <PrismPanel padding="p-4" delay={0.06}>
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Star size={14} className="text-[#2563EB]" /> Quick Proposal
                     </h3>
@@ -624,7 +616,7 @@ export default function DealsPage() {
                     { label: "Projected", value: formatCurrency(Math.round(weightedPipeline * 0.15)), sub: "Based on weighted pipeline", color: "text-purple-400", bar: "bg-gradient-to-r from-purple-500 to-pink-500" },
                     { label: "YTD Earnings", value: formatCurrency(0), sub: "No data yet", color: "text-emerald-700", bar: "bg-gradient-to-r from-green-500 to-emerald-500" },
                   ].map((card, i) => (
-                    <PrismPanel key={i} rainbow padding="p-5" className="text-center" delay={i * 0.06}>
+                    <PrismPanel key={i} padding="p-5" className="text-center" delay={i * 0.06}>
                       <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>
                       <p className={`text-3xl font-bold ${card.color}`}>{card.value}</p>
                       <p className="text-[10px] text-muted mt-1">{card.sub}</p>

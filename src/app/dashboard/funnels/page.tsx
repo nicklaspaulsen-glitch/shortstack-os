@@ -291,7 +291,7 @@ export default function FunnelsPage() {
                     whileHover={{ y: -2 }}
                     className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-4 relative overflow-hidden"
                   >
-                    <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
+                    <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} className="absolute top-0 inset-x-0" />
                     <div className={`${stat.color} mb-2 mt-1`}>{stat.icon}</div>
                     <div className="text-[#111827] font-bold text-xl">{stat.value}</div>
                     <div className="text-[#6B7280] text-xs mt-0.5">{stat.label}</div>

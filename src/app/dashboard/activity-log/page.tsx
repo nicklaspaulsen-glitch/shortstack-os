@@ -208,7 +208,7 @@ export default function ActivityLogPage() {
                 { value: logs.filter(l => l.type === "automation").length, label: "Automations", color: "text-[#2563EB]" },
                 { value: suspicious.length, label: "Suspicious", color: suspicious.length > 0 ? "text-red-400" : "text-emerald-400" },
               ].map((stat, i) => (
-                <PrismPanel key={stat.label} rainbow delay={i * 0.06} padding="p-3" className="text-center">
+                <PrismPanel key={stat.label} delay={i * 0.06} padding="p-3" className="text-center">
                     <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
                     <p className="text-[10px] text-muted">{stat.label}</p>
                 </PrismPanel>

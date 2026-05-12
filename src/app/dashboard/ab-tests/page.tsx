@@ -23,6 +23,7 @@ import {
   Trash2,
   ArrowRight,
 } from "lucide-react";
+import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type ParentType = "landing_page" | "funnel_step" | "email";
@@ -72,7 +73,6 @@ const PARENT_LABEL: Record<ParentType, string> = {
   email: "Email",
 };
 
-const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 function conversionRate(v: Variant): number {
   if (v.views <= 0) return 0;
@@ -321,7 +321,7 @@ function SummaryTile({
       transition={{ delay: index * 0.06, duration: 0.4 }}
       className="glass rounded-xl overflow-hidden"
     >
-      <div style={{ height: 3, background: RAINBOW, borderRadius: "4px 4px 0 0" }} />
+      <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
       <div className="p-4">
         <div className={`${color} mb-2`}>{icon}</div>
         <div className="text-[#111827] font-bold text-xl">{value}</div>

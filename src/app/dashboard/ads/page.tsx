@@ -461,7 +461,7 @@ export default function AdsPage() {
                 transition={{ duration: 0.22, delay: index * 0.06 }}
                 whileHover={{ y: -2 }}
               >
-                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", zIndex: 1 }} />
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", zIndex: 1 }} />
                 <StatCard label={card.label} value={card.value} icon={card.icon} {...card.extra} />
               </motion.div>
             ))}

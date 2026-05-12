@@ -265,16 +265,16 @@ export default function CompetitiveMonitorPage() {
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Competitive Monitor</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <button onClick={() => setShowAddForm(!showAddForm)} className="flex items-center gap-2 px-4 py-2 bg-black/10 border border-black/20 text-[#0A0A0B] rounded-lg hover:bg-black/15 transition text-sm font-medium">
+        <button onClick={() => setShowAddForm(!showAddForm)} className="flex items-center gap-2 px-4 py-2 bg-black/10 border border-black/20 text-text-primary rounded-lg hover:bg-black/15 transition text-sm font-medium">
                   <Plus className="w-4 h-4" /> Add Competitor
                 </button>
       </div>
     </div>{/* --- Stats Row --- */}<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { icon: <Target className="w-3.5 h-3.5" />, label: "Monitoring", value: activeCompetitors, sub: `${competitors.length} total competitors`, color: "text-[#2563EB]", bar: "from-indigo-500 to-violet-400" },
-                { icon: <Activity className="w-3.5 h-3.5" />, label: "Changes (7d)", value: totalChanges, sub: "across all competitors", color: "text-[#0A0A0B]", bar: "from-indigo-500 to-blue-400" },
+                { icon: <Activity className="w-3.5 h-3.5" />, label: "Changes (7d)", value: totalChanges, sub: "across all competitors", color: "text-text-primary", bar: "from-indigo-500 to-blue-400" },
                 { icon: <AlertTriangle className="w-3.5 h-3.5" />, label: "High Priority", value: highSeverityChanges, sub: "require attention", color: "text-red-400", bar: "from-red-500 to-rose-400" },
-                { icon: <Zap className="w-3.5 h-3.5" />, label: "Credits", value: `${creditsUsed}/${creditsTotal}`, sub: null, color: "text-[#0A0A0B]", bar: "from-amber-500 to-yellow-400" },
+                { icon: <Zap className="w-3.5 h-3.5" />, label: "Credits", value: `${creditsUsed}/${creditsTotal}`, sub: null, color: "text-text-primary", bar: "from-amber-500 to-yellow-400" },
               ].map((stat, i) => (
                 <motion.div
                   key={stat.label}
@@ -324,7 +324,7 @@ export default function CompetitiveMonitorPage() {
                 </div>
                 <div className="flex gap-2 mt-4">
                   <motion.button whileHover={{ scale: 1.03 }} onClick={addCompetitor} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-500 transition">Add Competitor</motion.button>
-                  <button onClick={() => setShowAddForm(false)} className="px-4 py-2 bg-surface-light border border-border text-muted rounded-lg text-sm hover:text-[#0A0A0B] transition">Cancel</button>
+                  <button onClick={() => setShowAddForm(false)} className="px-4 py-2 bg-surface-light border border-border text-muted rounded-lg text-sm hover:text-text-primary transition">Cancel</button>
                 </div>
               </motion.div>
             )}{/* --- Competitors Grid --- */}<div>
@@ -369,10 +369,10 @@ export default function CompetitiveMonitorPage() {
                       <button onClick={() => checkNow(comp.id)} disabled={checkingId === comp.id} className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded text-[10px] font-medium hover:bg-[rgba(37,99,235,0.12)] transition disabled:opacity-50">
                         {checkingId === comp.id ? <Loader className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />} Check
                       </button>
-                      <button onClick={() => togglePause(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-[#0A0A0B] transition">
+                      <button onClick={() => togglePause(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-text-primary transition">
                         {comp.status === "paused" ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
                       </button>
-                      <button onClick={() => { setFilterCompetitor(comp.id); setTab("changes"); }} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-[#0A0A0B] transition">
+                      <button onClick={() => { setFilterCompetitor(comp.id); setTab("changes"); }} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-text-primary transition">
                         <Eye className="w-3 h-3" />
                       </button>
                       <button onClick={() => removeCompetitor(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-red-400 transition">
@@ -399,7 +399,7 @@ export default function CompetitiveMonitorPage() {
             </PrismPanel>{/* --- Tabs --- */}<div className="flex gap-1 border-b border-border overflow-x-auto">
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setTab(t.key)}
-                  className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition whitespace-nowrap ${tab === t.key ? "border-[#2563EB] text-[#2563EB]" : "border-transparent text-muted hover:text-[#0A0A0B]"}`}>
+                  className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition whitespace-nowrap ${tab === t.key ? "border-[#2563EB] text-[#2563EB]" : "border-transparent text-muted hover:text-text-primary"}`}>
                   <t.icon className="w-4 h-4" /> {t.label}
                 </button>
               ))}
@@ -590,10 +590,10 @@ export default function CompetitiveMonitorPage() {
                   </div>
                   {showAiAnalysis ? (
                     <div className="p-4 bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg text-sm text-muted leading-relaxed space-y-3">
-                      <p><strong className="text-[#0A0A0B]">Market Position:</strong> Trinity occupies a strong mid-market position in the agency SaaS space. Your pricing is competitive against 6 of 8 tracked competitors, and your feature count (42) exceeds the median (32). However, MarketMind AI&apos;s introduction of a free tier and AgencyFlow&apos;s upmarket push are creating a squeeze that requires strategic response.</p>
-                      <p><strong className="text-[#0A0A0B]">Key Threats:</strong> The convergence of AgencyFlow and ClientPulse toward enterprise signals a market bifurcation. SocialSpark&apos;s rapid growth (5,000 customers) and AI content calendar launch pose the most immediate feature-parity threat. MarketMind&apos;s free tier could erode your starter plan acquisition.</p>
-                      <p><strong className="text-[#0A0A0B]">Opportunities:</strong> AgencyFlow&apos;s 34% price increase creates a window for targeted switching campaigns. ContentEngine&apos;s limited feature set (22) makes their customer base vulnerable. The enterprise space is underserved by purpose-built agency tools -- an enterprise tier with SSO and advanced reporting could capture this growing segment.</p>
-                      <p><strong className="text-[#0A0A0B]">Recommended Actions:</strong> (1) Ship AI scheduling to match SocialSpark within 30 days. (2) Launch a &ldquo;Switch from AgencyFlow&rdquo; campaign targeting price-sensitive users. (3) Evaluate a free tier or extended trial to counter MarketMind. (4) Invest in content marketing to close the blog frequency gap.</p>
+                      <p><strong className="text-text-primary">Market Position:</strong> Trinity occupies a strong mid-market position in the agency SaaS space. Your pricing is competitive against 6 of 8 tracked competitors, and your feature count (42) exceeds the median (32). However, MarketMind AI&apos;s introduction of a free tier and AgencyFlow&apos;s upmarket push are creating a squeeze that requires strategic response.</p>
+                      <p><strong className="text-text-primary">Key Threats:</strong> The convergence of AgencyFlow and ClientPulse toward enterprise signals a market bifurcation. SocialSpark&apos;s rapid growth (5,000 customers) and AI content calendar launch pose the most immediate feature-parity threat. MarketMind&apos;s free tier could erode your starter plan acquisition.</p>
+                      <p><strong className="text-text-primary">Opportunities:</strong> AgencyFlow&apos;s 34% price increase creates a window for targeted switching campaigns. ContentEngine&apos;s limited feature set (22) makes their customer base vulnerable. The enterprise space is underserved by purpose-built agency tools -- an enterprise tier with SSO and advanced reporting could capture this growing segment.</p>
+                      <p><strong className="text-text-primary">Recommended Actions:</strong> (1) Ship AI scheduling to match SocialSpark within 30 days. (2) Launch a &ldquo;Switch from AgencyFlow&rdquo; campaign targeting price-sensitive users. (3) Evaluate a free tier or extended trial to counter MarketMind. (4) Invest in content marketing to close the blog frequency gap.</p>
                     </div>
                   ) : (
                     <div className="text-xs text-muted text-center py-8">Click &ldquo;Generate AI Analysis&rdquo; to get an AI-written competitive assessment based on all tracked data.</div>
@@ -651,7 +651,7 @@ export default function CompetitiveMonitorPage() {
                       <div className="flex gap-2">
                         {CHANNEL_OPTIONS.map(ch => (
                           <button key={ch} onClick={() => toggleAlertChannel(ch)}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${newAlertChannels.includes(ch) ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "bg-surface-light text-muted border border-border hover:text-[#0A0A0B]"}`}>
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${newAlertChannels.includes(ch) ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "bg-surface-light text-muted border border-border hover:text-text-primary"}`}>
                             {ch}
                           </button>
                         ))}
@@ -659,7 +659,7 @@ export default function CompetitiveMonitorPage() {
                     </div>
                     <div className="flex gap-2 mt-4">
                       <motion.button whileHover={{ scale: 1.03 }} onClick={addAlertRule} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-500 transition">Create Rule</motion.button>
-                      <button onClick={() => setShowAddAlert(false)} className="px-4 py-2 bg-surface-light border border-border text-muted rounded-lg text-sm hover:text-[#0A0A0B] transition">Cancel</button>
+                      <button onClick={() => setShowAddAlert(false)} className="px-4 py-2 bg-surface-light border border-border text-muted rounded-lg text-sm hover:text-text-primary transition">Cancel</button>
                     </div>
                   </motion.div>
                 )}
@@ -714,7 +714,7 @@ export default function CompetitiveMonitorPage() {
                 <PrismPanel padding="p-5">
                   <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-[#2563EB]" /> AI Market Summary</h3>
                   <div className="text-sm text-muted leading-relaxed space-y-2">
-                    <p>The agency SaaS market continues to consolidate around AI-first platforms. Over the past week, <strong className="text-[#0A0A0B]">3 of 8 tracked competitors</strong> made AI-related announcements. Pricing is trending upward (AgencyFlow +34%), while MarketMind bucks the trend with a free tier launch. The enterprise segment is heating up with both AgencyFlow and ClientPulse making upmarket moves.</p>
+                    <p>The agency SaaS market continues to consolidate around AI-first platforms. Over the past week, <strong className="text-text-primary">3 of 8 tracked competitors</strong> made AI-related announcements. Pricing is trending upward (AgencyFlow +34%), while MarketMind bucks the trend with a free tier launch. The enterprise segment is heating up with both AgencyFlow and ClientPulse making upmarket moves.</p>
                     <p>Your positioning remains strong on <span className="text-emerald-400">pricing</span> and <span className="text-emerald-400">review ratings</span>, but you are falling behind on <span className="text-red-400">social media presence</span> and <span className="text-red-400">content velocity</span>. The biggest opportunity window is the 2-4 week period before competitors ship their announced features.</p>
                   </div>
                 </PrismPanel>
@@ -831,7 +831,7 @@ export default function CompetitiveMonitorPage() {
                         </div>
                         <div className="flex-1 bg-surface-light rounded-full h-5 overflow-hidden">
                           <div className="h-full rounded-full flex items-center pl-2 transition-all duration-700" style={{ width: `${item.share * 3}%`, backgroundColor: item.color }}>
-                            <span className="text-[10px] text-[#0A0A0B] font-bold">{item.share}%</span>
+                            <span className="text-[10px] text-text-primary font-bold">{item.share}%</span>
                           </div>
                         </div>
                       </div>

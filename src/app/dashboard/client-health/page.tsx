@@ -171,7 +171,7 @@ export default function ClientHealthPage() {
                 { icon: <ShieldAlert size={14} className="text-red-400" />, label: "Critical", value: <span className="text-red-400">{criticalCount}</span> },
                 { icon: <DollarSign size={14} className="text-red-400" />, label: "At-Risk MRR", value: <span className="text-red-400">${atRiskMRR.toLocaleString()}</span> },
               ].map((tile, i) => (
-                <PrismPanel key={i} rainbow delay={i * 0.06} padding="p-4">
+                <PrismPanel key={i} delay={i * 0.06} padding="p-4">
                   <div className="flex items-center gap-2 mb-2">
                     {tile.icon}
                     <span className="text-[9px] text-muted uppercase tracking-wider">{tile.label}</span>
@@ -500,7 +500,7 @@ export default function ClientHealthPage() {
                     { icon: <ThumbsUp size={20} className="text-green-400 mx-auto mb-2" />, value: clients.filter(c => c.nps >= 9).length, color: "text-green-400", label: "Promoters (9-10)" },
                     { icon: <MessageSquare size={20} className="text-yellow-400 mx-auto mb-2" />, value: clients.filter(c => c.nps >= 7 && c.nps < 9).length, color: "text-yellow-400", label: "Passives (7-8)" },
                   ].map((tile, i) => (
-                    <PrismPanel key={i} rainbow delay={i * 0.06} padding="p-4">
+                    <PrismPanel key={i} delay={i * 0.06} padding="p-4">
                       <div className="text-center">
                         {tile.icon}
                         <p className={`text-3xl font-bold font-mono ${tile.color}`}>{tile.value}</p>

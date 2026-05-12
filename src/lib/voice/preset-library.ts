@@ -59,12 +59,12 @@ export const PRESETS: ReadonlyArray<VoicePreset> = [
   },
   {
     slug: "preset_youthful_energetic",
-    label: "Preset: Youthful & energetic (Sarah)",
+    label: "Preset: Youthful & energetic (Elli)",
     description:
-      "High-energy American female. Top-of-funnel cold calls and Gen Z DMs.",
+      "High-energy young American female. Top-of-funnel cold calls and Gen Z DMs.",
     category: "youthful",
     gender: "female",
-    elevenLabsVoiceId: "EXAVITQu4vr4xnSDxMaL",
+    elevenLabsVoiceId: "MF3mGyEYCl7XYWbV9V6O",
     language: "en",
   },
   {

@@ -213,7 +213,7 @@ export default function DiscordPage() {
           { icon: Users, color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]", value: "0", label: "Total Members" },
           { icon: Hash, color: "text-purple-400", bg: "bg-purple-500/10", value: "0", label: "Total Channels" },
         ].map((tile, i) => (
-          <PrismPanel key={i} rainbow delay={i * 0.06} padding="p-3">
+          <PrismPanel key={i} delay={i * 0.06} padding="p-3">
             <div className="flex items-center gap-3">
               <div className={`w-9 h-9 rounded-lg ${tile.bg} flex items-center justify-center`}><tile.icon size={16} className={tile.color} /></div>
               <div><p className="text-lg font-bold font-mono">{tile.value}</p><p className="text-[10px] text-muted">{tile.label}</p></div>

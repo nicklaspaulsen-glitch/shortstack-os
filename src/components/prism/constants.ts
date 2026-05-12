@@ -8,17 +8,19 @@
  * Reference: _design-previews/93-prism-dashboard.html
  */
 
-/** Primary prism accent — RED is the hero color */
-export const PRISM_RED = "#2563EB";
+/** Primary brand accent — blue */
+export const PRISM_ACCENT = "#2563EB";
+/** @deprecated Use PRISM_ACCENT instead */
+export const PRISM_RED = PRISM_ACCENT;
 
-/** Full prism accent palette — red leads, then cycles through spectrum */
+/** Brand accent palette — blue-dominant with restrained secondary tones */
 export const PRISM_ACCENTS = [
-  "#2563EB", // red (hero)
-  "#8B5CF6", // violet
-  "#2563EB", // blue
-  "#FF5252", // cyan
-  "#2563EB", // green
-  "#F59E0B", // amber
+  "#2563EB", // blue (hero)
+  "#1D4ED8", // blue-dark
+  "#3B82F6", // blue-light
+  "#2563EB", // blue (repeat)
+  "#1D4ED8", // blue-dark
+  "#3B82F6", // blue-light
 ] as const;
 
 /** Per-tile config — accent color + bottom bar gradient */
@@ -63,9 +65,9 @@ export const PRISM_BORDERS = {
   hover: "rgba(37,99,235,0.18)",
 } as const;
 
-/** Prismatic gradient for the signature top bars (red leads) */
+/** Accent gradient for signature top bars — blue shimmer, not rainbow */
 export const PRISM_RAINBOW_GRADIENT =
-  "linear-gradient(90deg, #2563EB, #8B5CF6, #2563EB, #FF5252, #2563EB, #F59E0B)";
+  "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)";
 
 /** Text color tokens — light-theme values */
 export const PRISM_TEXT = {
@@ -73,6 +75,7 @@ export const PRISM_TEXT = {
   secondary: "#374151",
   muted: "#6B7280",
   accent: "#2563EB",
+  /** @deprecated Use accent instead */
   red: "#2563EB",
 } as const;
 

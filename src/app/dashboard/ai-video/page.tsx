@@ -992,10 +992,10 @@ export default function AIVideoPage() {
 
       {/* Setup / GPU env note � admin-only; clients should never see env-var names */}
       {advancedMode && isPlatformAdmin && (
-        <div className="flex items-center gap-2 text-[9px] text-[#0A0A0B]/35 px-1">
+        <div className="flex items-center gap-2 text-[9px] text-text-primary/35 px-1">
           <Zap size={10} />
           <span>
-            GPU rendering requires <code className="text-[#0A0A0B]/55 bg-[rgba(0,0,0,0.05)] px-1 py-0.5 rounded">HIGGSFIELD_URL</code> + <code className="text-[#0A0A0B]/55 bg-[rgba(0,0,0,0.05)] px-1 py-0.5 rounded">RUNPOD_API_KEY</code>. Without them, you&apos;ll get a scene plan instead.
+            GPU rendering requires <code className="text-text-primary/55 bg-[rgba(0,0,0,0.05)] px-1 py-0.5 rounded">HIGGSFIELD_URL</code> + <code className="text-text-primary/55 bg-[rgba(0,0,0,0.05)] px-1 py-0.5 rounded">RUNPOD_API_KEY</code>. Without them, you&apos;ll get a scene plan instead.
           </span>
         </div>
       )}

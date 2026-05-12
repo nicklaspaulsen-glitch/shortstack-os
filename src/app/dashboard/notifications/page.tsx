@@ -305,13 +305,13 @@ export default function NotificationsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <>
                   {unreadCount > 0 && (
-                    <span className="text-[10px] font-medium text-[#0A0A0B] bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] px-2.5 py-1 rounded-full">
+                    <span className="text-[10px] font-medium text-text-primary bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] px-2.5 py-1 rounded-full">
                       {unreadCount} unread
                     </span>
                   )}
                   <button
                     onClick={() => fetchNotifications()}
-                    className="p-2 rounded-xl text-[#0A0A0B] bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.09)] transition-colors"
+                    className="p-2 rounded-xl text-text-primary bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.09)] transition-colors"
                     title="Refresh"
                   >
                     <RefreshCw size={14} />
@@ -321,7 +321,7 @@ export default function NotificationsPage() {
                       <button
                         onClick={markAllRead}
                         disabled={markingAll}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-[#0A0A0B] bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] hover:bg-[rgba(0,0,0,0.10)] transition-colors disabled:opacity-50"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-text-primary bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] hover:bg-[rgba(0,0,0,0.10)] transition-colors disabled:opacity-50"
                       >
                         {markingAll ? <Loader size={12} className="animate-spin" /> : <Check size={12} />}
                         Mark All Read

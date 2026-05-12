@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { Coffee, Users, MessageSquare, Calendar, FileText, BookOpen, Loader2, Sparkles } from "lucide-react";
+import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface BriefingStats {
@@ -21,8 +22,6 @@ interface StatTile {
   color: string;
   bgColor: string;
 }
-
-const RAINBOW = "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)";
 
 const containerVariants = {
   hidden: {},
@@ -197,7 +196,7 @@ Be direct, specific, and action-oriented. No fluff.`;
                   whileHover={{ y: -2 }}
                   className={`glass rounded-xl p-4 border relative overflow-hidden ${bgColor}`}
                 >
-                  <div style={{ height: 3, background: RAINBOW }} className="absolute top-0 inset-x-0" />
+                  <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} className="absolute top-0 inset-x-0" />
                   <div className="flex items-center gap-2 mb-2 mt-1">
                     <Icon className={`w-4 h-4 ${color}`} />
                     <span className="text-xs text-muted">{label}</span>
