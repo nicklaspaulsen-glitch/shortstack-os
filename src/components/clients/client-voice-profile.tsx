@@ -316,7 +316,7 @@ function GenerateModal({
           <h3 className="font-semibold">Generate copy in {clientName}&apos;s voice</h3>
           <button
             onClick={onClose}
-            className="text-xs text-text-muted hover:text-zinc-200"
+            className="text-xs text-text-muted hover:text-text-primary"
           >
             Close
           </button>
