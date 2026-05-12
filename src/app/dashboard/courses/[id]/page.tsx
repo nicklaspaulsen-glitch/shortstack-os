@@ -373,7 +373,7 @@ export default function CourseBuilderPage() {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center gap-2">
-            {saving && <Loader2 size={14} className="text-[#9CA3AF] animate-spin" />}
+            {saving && <Loader2 size={14} className="text-text-muted animate-spin" />}
             <Link
               href="/dashboard/courses"
               className="flex items-center gap-1.5 px-3 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[#374151] rounded-lg text-sm transition-colors"
@@ -399,7 +399,7 @@ export default function CourseBuilderPage() {
         <aside className="w-72 flex-shrink-0 flex flex-col gap-3">
           <div className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-xl p-3 flex-1 overflow-y-auto max-h-[calc(100vh-220px)]">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium text-[#9CA3AF] uppercase tracking-wider">Curriculum</span>
+              <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Curriculum</span>
               <button
                 onClick={() => void addModule()}
                 className="flex items-center gap-1 text-xs text-[#2563EB] hover:text-[#1D4ED8] transition-colors"
@@ -410,7 +410,7 @@ export default function CourseBuilderPage() {
             </div>
 
             {modules.length === 0 ? (
-              <p className="text-[#9CA3AF] text-xs text-center py-6">No modules yet</p>
+              <p className="text-text-muted text-xs text-center py-6">No modules yet</p>
             ) : (
               <div className="space-y-1">
                 {modules.map((mod) => (
@@ -555,7 +555,7 @@ export default function CourseBuilderPage() {
               </div>
             </div>
           ) : (
-            <div className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-xl h-full flex items-center justify-center text-[#9CA3AF]">
+            <div className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-xl h-full flex items-center justify-center text-text-muted">
               <div className="text-center">
                 <BookOpen size={40} className="mx-auto mb-3 opacity-30" />
                 <p className="text-sm">Select a lesson to edit</p>
@@ -636,7 +636,7 @@ export default function CourseBuilderPage() {
                     className={`flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs capitalize transition-colors ${
                       settingsStatus === s
                         ? s === "published" ? "bg-green-600 text-white" : "bg-[rgba(0,0,0,0.08)] text-[#374151]"
-                        : "bg-[rgba(0,0,0,0.04)] text-[#9CA3AF] hover:bg-[rgba(0,0,0,0.06)]"
+                        : "bg-[rgba(0,0,0,0.04)] text-text-muted hover:bg-[rgba(0,0,0,0.06)]"
                     }`}
                   >
                     {s === "published" ? <Eye size={11} /> : <EyeOff size={11} />}
@@ -756,25 +756,25 @@ function ModuleItem({
           className="flex-1 flex items-center gap-1 text-left min-w-0"
         >
           {expanded ? (
-            <ChevronDown size={13} className="text-[#9CA3AF] flex-shrink-0" />
+            <ChevronDown size={13} className="text-text-muted flex-shrink-0" />
           ) : (
-            <ChevronRight size={13} className="text-[#9CA3AF] flex-shrink-0" />
+            <ChevronRight size={13} className="text-text-muted flex-shrink-0" />
           )}
           <span className="text-sm font-medium text-[#111827] truncate">{mod.title}</span>
-          <span className="ml-auto text-xs text-[#9CA3AF] flex-shrink-0">
+          <span className="ml-auto text-xs text-text-muted flex-shrink-0">
             {lessons.length}
           </span>
         </button>
         <button
           onClick={onAddLesson}
-          className="opacity-0 group-hover:opacity-100 p-0.5 text-[#9CA3AF] hover:text-[#2563EB] transition-all"
+          className="opacity-0 group-hover:opacity-100 p-0.5 text-text-muted hover:text-[#2563EB] transition-all"
           title="Add lesson"
         >
           <Plus size={12} />
         </button>
         <button
           onClick={onDeleteModule}
-          className="opacity-0 group-hover:opacity-100 p-0.5 text-[#9CA3AF] hover:text-red-400 transition-all"
+          className="opacity-0 group-hover:opacity-100 p-0.5 text-text-muted hover:text-red-400 transition-all"
           title="Delete module"
         >
           <Trash2 size={12} />
@@ -818,14 +818,14 @@ function LessonItem({
     >
       <GripVertical size={11} className="text-[#D1D5DB] flex-shrink-0" />
       <button onClick={onSelect} className="flex-1 flex items-center gap-1.5 min-w-0 text-left">
-        <span className={`flex-shrink-0 ${selected ? "text-[#2563EB]" : "text-[#9CA3AF]"}`}>
+        <span className={`flex-shrink-0 ${selected ? "text-[#2563EB]" : "text-text-muted"}`}>
           {CONTENT_TYPE_ICON[lesson.content_type]}
         </span>
         <span className={`text-xs truncate ${selected ? "text-[#111827]" : "text-[#374151]"}`}>
           {lesson.title}
         </span>
         {lesson.drip_delay_days > 0 && (
-          <span className="ml-auto text-[10px] text-[#9CA3AF] flex-shrink-0">+{lesson.drip_delay_days}d</span>
+          <span className="ml-auto text-[10px] text-text-muted flex-shrink-0">+{lesson.drip_delay_days}d</span>
         )}
       </button>
       <button

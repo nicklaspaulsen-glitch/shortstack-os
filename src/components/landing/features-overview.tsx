@@ -265,7 +265,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
       <h3 className="text-base font-bold text-white mb-2 relative">
         {feature.title}
       </h3>
-      <p className="text-sm text-gray-400 leading-relaxed mb-5 relative">
+      <p className="text-sm text-text-muted leading-relaxed mb-5 relative">
         {feature.description}
       </p>
 

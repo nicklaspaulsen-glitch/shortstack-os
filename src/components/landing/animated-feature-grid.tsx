@@ -235,7 +235,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
         </div>
         <h3 className="text-white font-semibold">{feature.title}</h3>
       </div>
-      <p className="text-sm text-gray-400 leading-relaxed mb-5">{feature.blurb}</p>
+      <p className="text-sm text-text-muted leading-relaxed mb-5">{feature.blurb}</p>
       <div className="pt-2">{feature.preview(hovering)}</div>
     </motion.div>
   );
@@ -256,7 +256,7 @@ export default function AnimatedFeatureGrid() {
             style={{ letterSpacing: "-0.02em" }}>
             Nine products. <span style={{ color: GOLD }}>One login.</span>
           </h2>
-          <p className="text-gray-400 mt-3 max-w-xl mx-auto">
+          <p className="text-text-muted mt-3 max-w-xl mx-auto">
             Hover any card to see the feature in motion.
           </p>
         </motion.div>

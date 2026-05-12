@@ -165,7 +165,7 @@ function PainCard({ pain }: { pain: Pain }) {
       <h3 className="text-base font-bold text-white mb-2 relative">
         {pain.title}
       </h3>
-      <p className="text-sm text-gray-400 leading-relaxed mb-5 flex-1 relative">
+      <p className="text-sm text-text-muted leading-relaxed mb-5 flex-1 relative">
         {pain.body}
       </p>
 

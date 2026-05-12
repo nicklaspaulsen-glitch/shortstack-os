@@ -108,7 +108,7 @@ export default function KeyboardShortcuts() {
           <div className="px-5 py-4 max-h-[400px] overflow-y-auto space-y-5">
             {categories.map(cat => (
               <div key={cat}>
-                <p className="text-[9px] text-[#9CA3AF] uppercase tracking-[0.15em] font-bold mb-2">{cat}</p>
+                <p className="text-[9px] text-text-muted uppercase tracking-[0.15em] font-bold mb-2">{cat}</p>
                 <div className="space-y-0.5">
                   {shortcuts.filter(s => s.category === cat).map(s => (
                     <div key={s.keys} className="flex items-center justify-between py-1.5 px-1 rounded-lg hover:bg-[#F9FAFB] transition-colors">
@@ -119,7 +119,7 @@ export default function KeyboardShortcuts() {
                             <kbd className="px-1.5 py-0.5 rounded-md text-[10px] font-mono bg-[#F3F4F6] text-[#2563EB] border border-[rgba(0,0,0,0.08)]">
                               {k}
                             </kbd>
-                            {i < s.keys.split(" ").length - 1 && <span className="text-[#9CA3AF] text-[9px]">then</span>}
+                            {i < s.keys.split(" ").length - 1 && <span className="text-text-muted text-[9px]">then</span>}
                           </span>
                         ))}
                       </div>
@@ -131,7 +131,7 @@ export default function KeyboardShortcuts() {
           </div>
 
           <div className="px-5 py-3 border-t border-[rgba(0,0,0,0.06)] text-center">
-            <p className="text-[9px] text-[#9CA3AF]">Press <kbd className="px-1 py-0.5 rounded text-[8px] bg-[#F3F4F6] font-mono">Esc</kbd> to close</p>
+            <p className="text-[9px] text-text-muted">Press <kbd className="px-1 py-0.5 rounded text-[8px] bg-[#F3F4F6] font-mono">Esc</kbd> to close</p>
           </div>
         </div>
       </div>

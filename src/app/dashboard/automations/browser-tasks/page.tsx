@@ -179,7 +179,7 @@ export default function BrowserTasksPage() {
                       <span className="block text-xs font-medium text-[#6B7280]">
                         {v.name}
                         {v.required && <span className="text-rose-500"> *</span>}
-                        <span className="ml-1 text-[10px] uppercase tracking-wide text-[#9CA3AF]">{v.kind}</span>
+                        <span className="ml-1 text-[10px] uppercase tracking-wide text-text-muted">{v.kind}</span>
                       </span>
                       <input
                         type={v.kind === "number" ? "number" : v.kind === "url" ? "url" : "text"}
@@ -270,11 +270,11 @@ export default function BrowserTasksPage() {
                 </span>
               </div>
               {loading ? (
-                <div className="flex items-center justify-center px-5 py-10 text-sm text-[#9CA3AF]">
+                <div className="flex items-center justify-center px-5 py-10 text-sm text-text-muted">
                   <Loader2 size={16} className="mr-2 animate-spin" /> Loading…
                 </div>
               ) : tasks.length === 0 ? (
-                <div className="px-5 py-10 text-center text-sm text-[#9CA3AF]">
+                <div className="px-5 py-10 text-center text-sm text-text-muted">
                   No tasks yet. Queue your first one above.
                 </div>
               ) : (
@@ -293,12 +293,12 @@ export default function BrowserTasksPage() {
                             {status.icon} {status.label}
                           </span>
                           <span className="flex-1 truncate text-sm text-[#374151]">{t.goal}</span>
-                          <span className="hidden text-xs text-[#9CA3AF] md:inline">
+                          <span className="hidden text-xs text-text-muted md:inline">
                             {t.steps_taken}/{t.max_steps} steps
                           </span>
-                          <span className="hidden text-xs text-[#9CA3AF] md:inline">{fmtCost(t.total_cost_usd)}</span>
-                          <span className="hidden text-xs text-[#9CA3AF] lg:inline">{fmtDate(t.created_at)}</span>
-                          <ChevronRight size={14} className="text-[#9CA3AF]" />
+                          <span className="hidden text-xs text-text-muted md:inline">{fmtCost(t.total_cost_usd)}</span>
+                          <span className="hidden text-xs text-text-muted lg:inline">{fmtDate(t.created_at)}</span>
+                          <ChevronRight size={14} className="text-text-muted" />
                         </Link>
                       </li>
                     );

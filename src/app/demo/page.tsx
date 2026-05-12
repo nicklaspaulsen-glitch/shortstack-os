@@ -36,7 +36,7 @@ export default function DemoPage() {
             <span className="text-white font-bold text-sm">Trinity</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/pricing" className="text-xs text-gray-400 hover:text-white">Pricing</Link>
+            <Link href="/pricing" className="text-xs text-text-muted hover:text-white">Pricing</Link>
             <Link href="/login" className="text-xs px-4 py-2 rounded-lg font-medium text-black"
               style={{ background: "linear-gradient(135deg, #c8a855, #b89840)" }}>
               Login
@@ -54,7 +54,7 @@ export default function DemoPage() {
             Run your entire agency<br />
             <span style={{ color: "#c8a855" }}>on autopilot</span>
           </h1>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-text-muted max-w-2xl mx-auto mb-8">
             20 AI agents work around the clock — scraping leads, sending outreach, creating content, managing clients, and closing deals. All while you sleep.
           </p>
           <div className="flex items-center justify-center gap-4">
@@ -100,7 +100,7 @@ export default function DemoPage() {
         {/* CTA */}
         <div className="text-center mb-8 p-8 " style={{ background: "rgba(200,168,85,0.04)", border: "1px solid rgba(200,168,85,0.1)" }}>
           <h2 className="text-xl font-bold text-white mb-2">Ready to automate your agency?</h2>
-          <p className="text-sm text-gray-400 mb-6">Book a free strategy call and see how ShortStack can transform your business.</p>
+          <p className="text-sm text-text-muted mb-6">Book a free strategy call and see how ShortStack can transform your business.</p>
           <Link href="/book" className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-semibold text-sm text-black"
             style={{ background: "linear-gradient(135deg, #c8a855, #b89840)" }}>
             Book Free Strategy Call <ArrowRight size={14} />
@@ -108,9 +108,9 @@ export default function DemoPage() {
         </div>
 
         <div className="flex items-center justify-center gap-6 text-[10px] text-gray-600">
-          <Link href="/changelog" className="hover:text-gray-400">Changelog</Link>
-          <Link href="/privacy" className="hover:text-gray-400">Privacy</Link>
-          <Link href="/terms" className="hover:text-gray-400">Terms</Link>
+          <Link href="/changelog" className="hover:text-text-muted">Changelog</Link>
+          <Link href="/privacy" className="hover:text-text-muted">Privacy</Link>
+          <Link href="/terms" className="hover:text-text-muted">Terms</Link>
           <span>Powered by ShortStack</span>
         </div>
       </div>

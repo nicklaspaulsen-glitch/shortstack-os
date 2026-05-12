@@ -272,14 +272,14 @@ function PresenceStrip({ users, loading }: PresenceStripProps) {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {loading && users.length === 0 ? (
-            <span className="text-xs text-[#9CA3AF]">Loading viewers…</span>
+            <span className="text-xs text-text-muted">Loading viewers…</span>
           ) : users.length === 0 ? (
-            <span className="text-xs text-[#9CA3AF]">No teammates online right now.</span>
+            <span className="text-xs text-text-muted">No teammates online right now.</span>
           ) : (
             users.slice(0, 16).map((u) => <PresenceBubble key={u.id} user={u} />)
           )}
           {users.length > 16 && (
-            <span className="text-xs text-[#9CA3AF]">+{users.length - 16} more</span>
+            <span className="text-xs text-text-muted">+{users.length - 16} more</span>
           )}
         </div>
       </div>
@@ -324,7 +324,7 @@ function ClientLaneCard({ lane }: { lane: ClientLane }) {
       </div>
       <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
         {lane.items.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-black/[0.06] px-3 py-6 text-center text-xs text-[#9CA3AF]">
+          <div className="rounded-lg border border-dashed border-black/[0.06] px-3 py-6 text-center text-xs text-text-muted">
             Nothing in flight.
           </div>
         ) : (
@@ -400,7 +400,7 @@ function ActivitySidebar({ events, loading }: { events: ActivityEvent[]; loading
           ))}
         </div>
       ) : events.length === 0 ? (
-        <p className="text-xs text-[#9CA3AF] py-4 text-center">No activity yet.</p>
+        <p className="text-xs text-text-muted py-4 text-center">No activity yet.</p>
       ) : (
         <ul className="space-y-1 max-h-[80vh] overflow-y-auto pr-1">
           {events.map((event) => (
@@ -432,10 +432,10 @@ function ActivityRow({ event }: { event: ActivityEvent }) {
           <span className="font-medium capitalize text-[#111827]">{event.verb}</span>{" "}
           <span className="text-[#374151]">{event.object_title}</span>
           {event.client_name && (
-            <span className="text-[#9CA3AF]"> · {event.client_name}</span>
+            <span className="text-text-muted"> · {event.client_name}</span>
           )}
         </p>
-        <p className="text-[10px] text-[#9CA3AF]">{timeAgo(event.occurred_at)}</p>
+        <p className="text-[10px] text-text-muted">{timeAgo(event.occurred_at)}</p>
       </div>
     </li>
   );

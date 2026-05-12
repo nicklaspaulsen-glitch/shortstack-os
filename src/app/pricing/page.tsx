@@ -119,7 +119,7 @@ export default function PricingPage() {
             <Image src={BRAND.logo_svg} alt={BRAND.product_name} width={28} height={28} />
             <span className="text-white font-bold text-sm leading-tight flex flex-col">
               <span>{BRAND.product_name}</span>
-              <span className="text-[8px] font-medium text-gray-400 tracking-wide">by {BRAND.company_name}</span>
+              <span className="text-[8px] font-medium text-text-muted tracking-wide">by {BRAND.company_name}</span>
             </span>
           </Link>
           <div className="flex items-center gap-4">
@@ -134,7 +134,7 @@ export default function PricingPage() {
           <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4" style={{ letterSpacing: "-0.03em" }}>
             The AI operating system<br /><span style={{ color: "#c8a855" }}>for agencies</span>
           </h1>
-          <p className="text-gray-400 text-lg max-w-xl mx-auto mb-8">
+          <p className="text-text-muted text-lg max-w-xl mx-auto mb-8">
             Run your entire agency with AI. Lead gen, content, social, video, design, outreach, reporting — all in one platform.
           </p>
 
@@ -212,7 +212,7 @@ export default function PricingPage() {
         {/* Bottom CTA */}
         <div className="text-center mt-16 mb-8">
           <p className="text-gray-500 text-sm mb-2">14-day free trial on all plans. Cancel anytime.</p>
-          <p className="text-gray-600 text-xs mb-5">Not sure which plan? <Link href="/book" className="text-gray-400 hover:text-white underline underline-offset-2 transition-colors">Book a free strategy call</Link> and we&apos;ll help you decide.</p>
+          <p className="text-gray-600 text-xs mb-5">Not sure which plan? <Link href="/book" className="text-text-muted hover:text-white underline underline-offset-2 transition-colors">Book a free strategy call</Link> and we&apos;ll help you decide.</p>
           <Link href="/login" className="inline-flex items-center gap-2 text-sm font-medium px-6 py-3 rounded-xl transition-all hover:opacity-90"
             style={{ background: "linear-gradient(135deg, #c8a855, #b89840)", color: "#0b0d12" }}>
             Get Started Now <ArrowRight size={14} />

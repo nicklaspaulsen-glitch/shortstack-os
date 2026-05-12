@@ -271,7 +271,7 @@ export default function OutreachFeedClient({
       <aside className="w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-[rgba(0,0,0,0.06)] flex flex-col">
         <div className="p-4 border-b border-[rgba(0,0,0,0.06)] space-y-3">
           <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
             <input
               type="text"
               value={search}
@@ -312,11 +312,11 @@ export default function OutreachFeedClient({
 
         <div className="flex-1 overflow-y-auto">
           {loadingList ? (
-            <div className="flex items-center justify-center h-32 text-[#9CA3AF] text-xs">
+            <div className="flex items-center justify-center h-32 text-text-muted text-xs">
               <Loader2 size={14} className="animate-spin mr-2" /> Loading…
             </div>
           ) : conversations.length === 0 ? (
-            <div className="text-center text-[#9CA3AF] text-xs px-6 py-8">
+            <div className="text-center text-text-muted text-xs px-6 py-8">
               No conversations yet. Outreach activity will appear here as soon as you start sending email, SMS, DMs, or making calls.
             </div>
           ) : (
@@ -335,7 +335,7 @@ export default function OutreachFeedClient({
                     >
                       <div className="flex items-start justify-between gap-2 mb-1">
                         <span className="text-sm font-medium text-[#111827] truncate">{c.contact_name}</span>
-                        <span className="text-[10px] text-[#9CA3AF] shrink-0">
+                        <span className="text-[10px] text-text-muted shrink-0">
                           {formatTimestamp(c.last_message.ts)}
                         </span>
                       </div>
@@ -426,7 +426,7 @@ export default function OutreachFeedClient({
             {/* Bubbles */}
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
               {thread.events.length === 0 ? (
-                <div className="text-center text-[#9CA3AF] text-xs py-8">
+                <div className="text-center text-text-muted text-xs py-8">
                   No interactions logged yet.
                 </div>
               ) : (
@@ -458,7 +458,7 @@ export default function OutreachFeedClient({
                     Call back manual
                   </button>
                   {!selected.contact_phone && (
-                    <span className="text-[10px] text-[#9CA3AF]">No phone on contact</span>
+                    <span className="text-[10px] text-text-muted">No phone on contact</span>
                   )}
                 </div>
               )}
@@ -488,7 +488,7 @@ export default function OutreachFeedClient({
                       <button
                         type="button"
                         onClick={() => setComposerChannel(null)}
-                        className="text-[10px] text-[#9CA3AF] hover:text-[#111827] inline-flex items-center gap-0.5"
+                        className="text-[10px] text-text-muted hover:text-[#111827] inline-flex items-center gap-0.5"
                       >
                         <X size={10} /> auto
                       </button>
@@ -524,7 +524,7 @@ export default function OutreachFeedClient({
                   </div>
                 </div>
               ) : (
-                <p className="text-[11px] text-[#9CA3AF] text-center py-2">
+                <p className="text-[11px] text-text-muted text-center py-2">
                   Read-only — replies are managed by your agency.
                 </p>
               )}
@@ -574,7 +574,7 @@ function BubbleItem({ event }: BubbleItemProps) {
             </pre>
           )}
         </div>
-        <span className="text-[10px] text-[#9CA3AF] mt-0.5 px-1">{formatTimestamp(event.ts)}</span>
+        <span className="text-[10px] text-text-muted mt-0.5 px-1">{formatTimestamp(event.ts)}</span>
       </div>
     );
   }
@@ -591,7 +591,7 @@ function BubbleItem({ event }: BubbleItemProps) {
           <span className="uppercase tracking-wider">{event.channel}</span>
           {event.outcome && <OutcomeChip outcome={event.outcome} />}
           {event.attachment_count && (
-            <span className="text-[10px] text-[#9CA3AF]">+{event.attachment_count} attached</span>
+            <span className="text-[10px] text-text-muted">+{event.attachment_count} attached</span>
           )}
         </div>
         {isEmail && event.subject && (
@@ -599,7 +599,7 @@ function BubbleItem({ event }: BubbleItemProps) {
         )}
         <p className="text-sm whitespace-pre-wrap leading-relaxed">{event.body || "(empty)"}</p>
       </div>
-      <span className="text-[10px] text-[#9CA3AF] mt-0.5 px-1">{formatTimestamp(event.ts)}</span>
+      <span className="text-[10px] text-text-muted mt-0.5 px-1">{formatTimestamp(event.ts)}</span>
     </div>
   );
 }

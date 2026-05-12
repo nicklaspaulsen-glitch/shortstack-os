@@ -29,7 +29,7 @@ export default function LandingNav() {
   }, []);
 
   const linkClass =
-    "text-sm text-gray-400 hover:text-white transition-colors duration-150";
+    "text-sm text-text-muted hover:text-white transition-colors duration-150";
 
   return (
     <nav
@@ -61,7 +61,7 @@ export default function LandingNav() {
           />
           <span className="text-white font-bold tracking-tight leading-tight flex flex-col">
             <span>{BRAND.product_name}</span>
-            <span className="text-[9px] font-medium text-gray-400 tracking-wide">
+            <span className="text-[9px] font-medium text-text-muted tracking-wide">
               by {BRAND.company_name}
             </span>
           </span>
@@ -88,7 +88,7 @@ export default function LandingNav() {
         <div className="flex items-center gap-3">
           <Link
             href="/login"
-            className="text-sm text-gray-400 hover:text-white transition-colors hidden sm:block"
+            className="text-sm text-text-muted hover:text-white transition-colors hidden sm:block"
           >
             Login
           </Link>

@@ -191,7 +191,7 @@ export default function GettingStartedPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className={done ? "text-green-700" : isCurrent ? "text-[#2563EB]" : "text-[#6B7280]"}>{step.icon}</span>
-                          <p className={`text-sm font-semibold ${done ? "line-through text-[#9CA3AF]" : "text-[#111827]"}`}>{step.title}</p>
+                          <p className={`text-sm font-semibold ${done ? "line-through text-text-muted" : "text-[#111827]"}`}>{step.title}</p>
                           {isCurrent && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Next</span>}
                         </div>
                         <p className="text-[10px] text-[#6B7280] mt-0.5">{step.description}</p>

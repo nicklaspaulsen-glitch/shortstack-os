@@ -2002,7 +2002,7 @@ export default function OutreachLogsPage() {
                                 {cells.map((day, i) => (
                                   <div key={i} className={`relative flex flex-col items-center justify-center h-6 rounded text-[9px]
                               ${!day ? "" : ""}
-                              ${day && isPast(day) ? "text-[#9CA3AF]" : "text-[#6B7280]"}
+                              ${day && isPast(day) ? "text-text-muted" : "text-[#6B7280]"}
                               ${day === todayDate ? "ring-1 ring-[rgba(37,99,235,0.6)] bg-[rgba(37,99,235,0.08)] font-bold text-[#2563EB]" : ""}
                             `}>
                                     {day && <span>{day}</span>}

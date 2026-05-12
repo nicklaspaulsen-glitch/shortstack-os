@@ -133,7 +133,7 @@ export default function NotionSyncPage() {
                   {connection.account_name || connection.account_id || "Unknown workspace"}
                 </span>
               </p>
-              <div className="flex items-center gap-1.5 mt-1.5 text-xs text-[#9CA3AF]">
+              <div className="flex items-center gap-1.5 mt-1.5 text-xs text-text-muted">
                 <Clock className="w-3.5 h-3.5" />
                 Last synced:{" "}
                 {connection.updated_at
@@ -185,7 +185,7 @@ export default function NotionSyncPage() {
                   {autoSync ? (
                     <ToggleRight className="w-9 h-9 text-[#2563EB]" />
                   ) : (
-                    <ToggleLeft className="w-9 h-9 text-[#9CA3AF]" />
+                    <ToggleLeft className="w-9 h-9 text-text-muted" />
                   )}
                 </button>
                 <span className="text-sm text-[#6B7280]">
@@ -197,7 +197,7 @@ export default function NotionSyncPage() {
 
           {/* What is synced */}
           <motion.div className="glass rounded-xl p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#9CA3AF] mb-3">
+            <p className="text-xs font-semibold uppercase tracking-widest text-text-muted mb-3">
               Synced Resources
             </p>
             <div className="flex flex-col gap-2">
@@ -234,7 +234,7 @@ export default function NotionSyncPage() {
       ) : (
         /* Not connected state */
         <div className="flex flex-col items-center gap-6 py-10">
-          <motion.div className="w-20 h-20  glass border border-[rgba(0,0,0,0.08)] flex items-center justify-center text-[#9CA3AF]" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
+          <motion.div className="w-20 h-20  glass border border-[rgba(0,0,0,0.08)] flex items-center justify-center text-text-muted" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
             <NotionIcon />
           </motion.div>
           <div className="text-center">
@@ -272,13 +272,13 @@ export default function NotionSyncPage() {
                 )
               }
               title="Notion OAuth is coming soon"
-              className="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] border border-[rgba(0,0,0,0.08)] cursor-not-allowed"
+              className="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold bg-[rgba(0,0,0,0.06)] text-text-muted border border-[rgba(0,0,0,0.08)] cursor-not-allowed"
             >
               <NotionIcon />
               Connect Notion Workspace
               <ExternalLink className="w-4 h-4 ml-1 opacity-60" />
             </button>
-            <p className="text-xs text-[#9CA3AF]">
+            <p className="text-xs text-text-muted">
               Coming soon � you&apos;ll be able to sync clients, leads, and content.
             </p>
           </div>

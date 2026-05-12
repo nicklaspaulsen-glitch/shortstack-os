@@ -159,7 +159,7 @@ export default function CookiePolicyPage() {
           <Link href="/legal/terms" className="hover:text-[#2563EB] transition-colors">Terms of Service</Link>
           <span className="font-medium text-[#111827]">Cookie Policy</span>
         </div>
-        <p className="mt-4 text-[10px] text-[#9CA3AF]">ShortStack Agency &middot; shortstack.work</p>
+        <p className="mt-4 text-[10px] text-text-muted">ShortStack Agency &middot; shortstack.work</p>
       </div>
     </div>
   );

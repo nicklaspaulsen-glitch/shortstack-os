@@ -210,7 +210,7 @@ export default function CompetitorTrackerPage() {
                 className="rounded-xl border border-[rgba(0,0,0,0.08)] p-12 text-center"
                 
 >
-                <Crosshair size={40} className="mx-auto mb-4 text-[#9CA3AF]" />
+                <Crosshair size={40} className="mx-auto mb-4 text-text-muted" />
                 <p className="text-[#6B7280] mb-4">No competitors tracked yet.</p>
                 <button
                   onClick={openCreate}
@@ -244,17 +244,17 @@ export default function CompetitorTrackerPage() {
                                 href={c.website}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-xs text-[#9CA3AF] hover:text-[#374151] flex items-center gap-0.5"
+                                className="text-xs text-text-muted hover:text-[#374151] flex items-center gap-0.5"
 >
                                 <Globe size={11} /> {c.website.replace(/^https?:\/\//, "")}
                               </a>
                             )}
                           </div>
                           {c.notes && (
-                            <p className="text-xs text-[#9CA3AF] mb-1 truncate">{c.notes}</p>
+                            <p className="text-xs text-text-muted mb-1 truncate">{c.notes}</p>
                           )}
                           {latest && (
-                            <p className="text-xs text-[#9CA3AF] truncate">
+                            <p className="text-xs text-text-muted truncate">
                               Title: {latest.title || "—"}
                             </p>
                           )}
@@ -265,12 +265,12 @@ export default function CompetitorTrackerPage() {
                             </div>
                           )}
                           {!diff && latest && (
-                            <div className="mt-1.5 flex items-center gap-1.5 text-xs text-[#9CA3AF]">
+                            <div className="mt-1.5 flex items-center gap-1.5 text-xs text-text-muted">
                               <CheckCircle size={11} />
                               No changes since last check
                             </div>
                           )}
-                          <p className="text-xs text-[#9CA3AF] mt-1">
+                          <p className="text-xs text-text-muted mt-1">
                             Last checked: {timeAgo(c.last_checked)}
                           </p>
                         </div>
@@ -289,13 +289,13 @@ export default function CompetitorTrackerPage() {
                           </button>
                           <button
                             onClick={() => openEdit(c)}
-                            className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-[#374151] transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-[#374151] transition-colors"
 >
                             <Edit2 size={15} />
                           </button>
                           <button
                             onClick={() => deleteItem(c.id)}
-                            className="p-1.5 rounded-lg hover:bg-red-50 text-[#9CA3AF] hover:text-red-600 transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-red-50 text-text-muted hover:text-red-600 transition-colors"
 >
                             <Trash2 size={15} />
                           </button>

@@ -89,7 +89,7 @@ function Milestone({ m, i }: { m: (typeof milestones)[number]; i: number }) {
         <h3 className="text-white text-xl font-semibold mb-1.5 tracking-tight">
           {m.title}
         </h3>
-        <p className="text-gray-400 leading-relaxed">{m.body}</p>
+        <p className="text-text-muted leading-relaxed">{m.body}</p>
       </motion.div>
     </div>
   );
@@ -112,7 +112,7 @@ export default function Milestones() {
           >
             The story so far.
           </h2>
-          <p className="text-gray-400 mt-3">Six months, zero slowdowns.</p>
+          <p className="text-text-muted mt-3">Six months, zero slowdowns.</p>
         </motion.div>
 
         <div>

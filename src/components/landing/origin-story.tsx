@@ -139,7 +139,7 @@ export default function OriginStory() {
                     <h3 className="text-base font-bold text-white mb-1.5">
                       {m.title}
                     </h3>
-                    <p className="text-sm text-gray-400 leading-relaxed">
+                    <p className="text-sm text-text-muted leading-relaxed">
                       {m.body}
                     </p>
                   </div>

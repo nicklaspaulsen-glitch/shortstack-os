@@ -174,9 +174,9 @@ export default function RoiCalculatorPage() {
                   ]
                 ).map(({ key, label, suffix, prefix }) => (
                   <div key={key}>
-                    <label className="block text-xs text-[#9CA3AF] mb-1">{label}</label>
+                    <label className="block text-xs text-text-muted mb-1">{label}</label>
                     <div className="flex items-center gap-1">
-                      {prefix ? <span className="text-[#9CA3AF] text-sm">{prefix}</span> : null}
+                      {prefix ? <span className="text-text-muted text-sm">{prefix}</span> : null}
                       <input
                         type="number"
                         value={inputs[key]}
@@ -184,13 +184,13 @@ export default function RoiCalculatorPage() {
                         onChange={e => setInput(key, e.target.value)}
                         className="flex-1 glass rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB] [appearance:textfield]"
                       />
-                      {suffix ? <span className="text-[#9CA3AF] text-sm">{suffix}</span> : null}
+                      {suffix ? <span className="text-text-muted text-sm">{suffix}</span> : null}
                     </div>
                   </div>
                 ))}
 
                 <div className="pt-2 border-t border-[rgba(0,0,0,0.08)] space-y-2">
-                  <label className="block text-xs text-[#9CA3AF]">Save Scenario</label>
+                  <label className="block text-xs text-text-muted">Save Scenario</label>
                   <input
                     value={scenarioName}
                     onChange={e => setScenarioName(e.target.value)}
@@ -232,7 +232,7 @@ export default function RoiCalculatorPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
                       <thead>
-                        <tr className="text-[#9CA3AF] border-b border-[rgba(0,0,0,0.08)]">
+                        <tr className="text-text-muted border-b border-[rgba(0,0,0,0.08)]">
                           <th className="text-left pb-2">Scenario</th>
                           <th className="text-right pb-2">Close Rate</th>
                           <th className="text-right pb-2">Revenue / mo</th>
@@ -283,7 +283,7 @@ export default function RoiCalculatorPage() {
                   ))}
                 </div>
               ) : scenarios.length === 0 ? (
-                <p className="text-sm text-[#9CA3AF] text-center py-6">No saved scenarios yet.</p>
+                <p className="text-sm text-text-muted text-center py-6">No saved scenarios yet.</p>
               ) : (
                 <div className="space-y-2">
                   {scenarios.map((s, i) => (
@@ -297,7 +297,7 @@ export default function RoiCalculatorPage() {
                     >
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-[#111827] text-sm truncate">{s.name}</p>
-                        <p className="text-xs text-[#9CA3AF]">
+                        <p className="text-xs text-text-muted">
                           {s.monthly_leads} leads · {s.close_rate}% close · {fmtUSD(s.avg_deal_size)} deal · {fmtUSD(s.monthly_spend)}/mo spend
                         </p>
                       </div>
@@ -311,13 +311,13 @@ export default function RoiCalculatorPage() {
                         </span>
                         <button
                           onClick={() => loadScenario(s)}
-                          className="text-xs text-[#9CA3AF] hover:text-[#111827] px-2 py-1 rounded border border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.10)] transition-colors"
+                          className="text-xs text-text-muted hover:text-[#111827] px-2 py-1 rounded border border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.10)] transition-colors"
                         >
                           Load
                         </button>
                         <button
                           onClick={() => deleteScenario(s.id)}
-                          className="text-[#9CA3AF] hover:text-red-500 transition-colors"
+                          className="text-text-muted hover:text-red-500 transition-colors"
                         >
                           <Trash2 size={14} />
                         </button>

@@ -167,7 +167,7 @@ export default function NewFunnelPage() {
                 { n: 2, label: "Review & Create" },
               ].map((s, idx) => (
                 <div key={s.n} className="flex items-center gap-2">
-                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${step === s.n ? "bg-[rgba(37,99,235,0.08)] text-blue-700 border border-[rgba(37,99,235,0.25)]" : step > s.n ? "text-emerald-700" : "text-[#9CA3AF]"}`}>
+                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${step === s.n ? "bg-[rgba(37,99,235,0.08)] text-blue-700 border border-[rgba(37,99,235,0.25)]" : step > s.n ? "text-emerald-700" : "text-text-muted"}`}>
                     {step > s.n ? <Check size={14} /> : <span className="w-4 h-4 rounded-full bg-current/20 flex items-center justify-center text-xs">{s.n}</span>}
                     {s.label}
                   </div>
@@ -204,7 +204,7 @@ export default function NewFunnelPage() {
                   <div className="flex items-center gap-2">
                     <Sparkles size={15} className="text-purple-600" />
                     <h2 className="text-[#111827] font-semibold text-base">Choose a Template</h2>
-                    <span className="text-[#9CA3AF] text-xs ml-1">(optional)</span>
+                    <span className="text-text-muted text-xs ml-1">(optional)</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {/* Blank option */}
@@ -288,7 +288,7 @@ export default function NewFunnelPage() {
                       {selectedTemplate.steps.map((s, idx) => (
                         <div key={idx} className="flex items-center gap-2 shrink-0">
                           <div className="bg-[#F8FAFC] border border-black/[0.06] rounded-lg px-4 py-3 min-w-[120px]">
-                            <div className="text-[#9CA3AF] text-[10px] font-bold uppercase tracking-widest mb-1">
+                            <div className="text-text-muted text-[10px] font-bold uppercase tracking-widest mb-1">
                               Step {idx + 1}
                             </div>
                             <div className="text-[#111827] text-sm font-medium mb-1.5">{s.title}</div>
@@ -297,7 +297,7 @@ export default function NewFunnelPage() {
                             </span>
                           </div>
                           {idx < selectedTemplate.steps.length - 1 && (
-                            <ArrowRight size={16} className="text-[#9CA3AF] shrink-0" />
+                            <ArrowRight size={16} className="text-text-muted shrink-0" />
                           )}
                         </div>
                       ))}

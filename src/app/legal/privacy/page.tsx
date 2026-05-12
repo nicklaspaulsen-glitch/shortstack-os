@@ -152,7 +152,7 @@ export default function PrivacyPolicyPage() {
           <Link href="/legal/terms" className="hover:text-[#2563EB] transition-colors">Terms of Service</Link>
           <Link href="/legal/cookies" className="hover:text-[#2563EB] transition-colors">Cookie Policy</Link>
         </div>
-        <p className="mt-4 text-[10px] text-[#9CA3AF]">ShortStack Agency &middot; shortstack.work</p>
+        <p className="mt-4 text-[10px] text-text-muted">ShortStack Agency &middot; shortstack.work</p>
       </div>
     </div>
   );

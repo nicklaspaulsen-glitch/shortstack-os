@@ -273,14 +273,14 @@ export default function SMSConsoleTab() {
                     value={singleTo}
                     onChange={(e) => setSingleTo(e.target.value)}
                     placeholder="+1 555 123 4567"
-                    className="rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-orange-400/50 focus:outline-none"
+                    className="rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-text-muted focus:border-orange-400/50 focus:outline-none"
                   />
                   <input
                     type="text"
                     value={singleName}
                     onChange={(e) => setSingleName(e.target.value)}
                     placeholder="Recipient name (optional)"
-                    className="rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-orange-400/50 focus:outline-none"
+                    className="rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-text-muted focus:border-orange-400/50 focus:outline-none"
                   />
                 </div>
               </>
@@ -295,14 +295,14 @@ export default function SMSConsoleTab() {
                   onChange={(e) => setBulkPaste(e.target.value)}
                   placeholder="One per line: phone, first_name, company"
                   rows={4}
-                  className="mt-3 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-orange-400/50 focus:outline-none"
+                  className="mt-3 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-text-muted focus:border-orange-400/50 focus:outline-none"
                 />
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <button
                     type="button"
                     onClick={parseBulk}
                     disabled={!bulkPaste.trim()}
-                    className="flex items-center gap-2 rounded-lg bg-orange-500/90 px-3 py-1.5 text-xs font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-black/[0.04] disabled:text-[#9CA3AF]"
+                    className="flex items-center gap-2 rounded-lg bg-orange-500/90 px-3 py-1.5 text-xs font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-black/[0.04] disabled:text-text-muted"
                   >
                     <Plus size={12} /> Add {bulkPaste.split(/\r?\n/).filter(Boolean).length} recipient(s)
                   </button>
@@ -337,7 +337,7 @@ export default function SMSConsoleTab() {
 
             <div className="mt-4">
               <div className="mb-2 flex items-center justify-between">
-                <label className="text-xs uppercase tracking-wider text-[#9CA3AF]">
+                <label className="text-xs uppercase tracking-wider text-text-muted">
                   {mode === "single" ? "Message" : "Template"}
                 </label>
                 <div className="flex items-center gap-1">
@@ -367,9 +367,9 @@ export default function SMSConsoleTab() {
                     : "Use {{first_name}} and {{company}} for personalisation."
                 }
                 rows={6}
-                className="w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-orange-400/50 focus:outline-none"
+                className="w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-text-muted focus:border-orange-400/50 focus:outline-none"
               />
-              <div className="mt-1 flex items-center justify-between text-xs text-[#9CA3AF]">
+              <div className="mt-1 flex items-center justify-between text-xs text-text-muted">
                 <span>{body.length} chars</span>
                 <span>
                   {body.length <= 160 ? "1 segment" : `${Math.ceil(body.length / 153)} segments`}
@@ -430,7 +430,7 @@ export default function SMSConsoleTab() {
                   !body.trim() ||
                   (mode === "single" ? !singleTo.trim() : bulkRecipients.length === 0)
                 }
-                className="ml-auto flex items-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-black/[0.04] disabled:text-[#9CA3AF]"
+                className="ml-auto flex items-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-black/[0.04] disabled:text-text-muted"
               >
                 {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                 {mode === "single" ? "Send SMS" : `Send to ${bulkRecipients.length}`}

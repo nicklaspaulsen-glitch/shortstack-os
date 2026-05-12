@@ -699,7 +699,7 @@ export default function AnalyticsPage() {
                     const pct = maxCount> 0 ? (s.count / maxCount) * 100 : 0;
                     return (
                       <div key={s.source} className="flex items-center gap-3">
-                        <span className="text-[10px] text-[#9F9DAA] w-20 text-right shrink-0 capitalize truncate">
+                        <span className="text-[10px] text-text-muted w-20 text-right shrink-0 capitalize truncate">
                           {s.source.replace(/_/g, " ")}
                         </span>
                         <div className="flex-1 h-1.5 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
@@ -747,7 +747,7 @@ export default function AnalyticsPage() {
                   return (
                     <div key={stage.name}>
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[10px] text-[#9F9DAA]">{stage.name}</span>
+                        <span className="text-[10px] text-text-muted">{stage.name}</span>
                         <div className="flex items-center gap-2.5">
                           <span
                             className="text-[11px] font-bold text-text-primary"
@@ -851,7 +851,7 @@ export default function AnalyticsPage() {
 >
                           {i + 1}
                         </span>
-                        <span className="text-[10px] text-[#9F9DAA] w-20 shrink-0 truncate capitalize">
+                        <span className="text-[10px] text-text-muted w-20 shrink-0 truncate capitalize">
                           {ind.industry.replace(/_/g, " ")}
                         </span>
                         <div className="flex-1 h-1 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
@@ -896,7 +896,7 @@ export default function AnalyticsPage() {
                   return (
                     <div key={goal.label}>
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[10px] text-[#9F9DAA]">{goal.label}</span>
+                        <span className="text-[10px] text-text-muted">{goal.label}</span>
                         <span
                           className="text-[10px] font-mono"
                           style={{ color: pct>= 70 ? "#3B82F6" : "#4F4D58", fontVariantNumeric: "tabular-nums" }}
@@ -1044,7 +1044,7 @@ export default function AnalyticsPage() {
                   <div className="w-4 h-4 flex items-center justify-center shrink-0">
                     {activityIcon(item.type)}
                   </div>
-                  <p className="text-[11px] text-[#9F9DAA] flex-1 min-w-0 truncate">{item.message}</p>
+                  <p className="text-[11px] text-text-muted flex-1 min-w-0 truncate">{item.message}</p>
                   <span
                     className="text-[9px] text-[#4F4D58] shrink-0"
                     style={{ fontVariantNumeric: "tabular-nums" }}
@@ -1174,7 +1174,7 @@ export default function AnalyticsPage() {
                     <tr key={p.platform} className="border-b border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.04)] transition-colors group">
 
                       <td className="py-3 font-medium text-text-primary">{p.platform}</td>
-                      <td className="py-3 text-right text-[#9F9DAA]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.spend)}</td>
+                      <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.spend)}</td>
                       <td className="py-3 text-right text-[#3B82F6] font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.revenue)}</td>
                       <td className="py-3 text-right">
                         <span
@@ -1184,7 +1184,7 @@ export default function AnalyticsPage() {
                           {p.roi}%
                         </span>
                       </td>
-                      <td className="py-3 text-right text-[#9F9DAA]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.cpl)}</td>
+                      <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.cpl)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1203,8 +1203,8 @@ export default function AnalyticsPage() {
             <div className="mt-4 space-y-2">
               {churnRiskClients.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
-                  <CheckCircle size={16} className="text-[#A1A1AA]" />
-                  <p className="text-[11px] text-[#9F9DAA]">All clients healthy</p>
+                  <CheckCircle size={16} className="text-text-muted" />
+                  <p className="text-[11px] text-text-muted">All clients healthy</p>
                   <p className="text-[9px] text-[#4F4D58] max-w-[200px] mx-auto">No churn signals detected. At-risk clients appear here when engagement drops.</p>
                 </div>
               ) : churnRiskClients.map(client => (
@@ -1261,7 +1261,7 @@ export default function AnalyticsPage() {
                         <td className="py-3 text-right text-[#4F4D58]" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {row.isCurrency ? formatCurrency(row.three) : row.three}
                         </td>
-                        <td className="py-3 text-right text-[#9F9DAA]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                        <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {row.isCurrency ? formatCurrency(row.last) : row.last}
                         </td>
                         <td className="py-3 text-right font-bold text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>
@@ -1295,7 +1295,7 @@ export default function AnalyticsPage() {
               {teamMembers.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <Trophy size={16} className="text-[#3A3840]" />
-                  <p className="text-[11px] text-[#9F9DAA]">No team activity yet</p>
+                  <p className="text-[11px] text-text-muted">No team activity yet</p>
                   <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#2563EB] hover:opacity-80 transition-opacity">
                     Invite team <ArrowUp size={9} className="rotate-45" />
                   </Link>
@@ -1380,7 +1380,7 @@ export default function AnalyticsPage() {
               {campaignData.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <Target size={16} className="text-[#3A3840]" />
-                  <p className="text-[11px] text-[#9F9DAA]">No campaign data yet</p>
+                  <p className="text-[11px] text-text-muted">No campaign data yet</p>
                   <p className="text-[9px] text-[#4F4D58] max-w-[200px]">Attribution appears once campaigns are live and conversions tracked</p>
                 </div>
               ) : campaignData.map((c, i) => (
@@ -1416,7 +1416,7 @@ export default function AnalyticsPage() {
               {clvData.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <DollarSign size={16} className="text-[#3A3840]" />
-                  <p className="text-[11px] text-[#9F9DAA]">No CLV data yet</p>
+                  <p className="text-[11px] text-text-muted">No CLV data yet</p>
                   <p className="text-[9px] text-[#4F4D58] max-w-[200px]">CLV tiers appear once clients have payment records attached</p>
                   <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#2563EB] hover:opacity-80 transition-opacity">
                     Add clients <ArrowUp size={9} className="rotate-45" />
@@ -1459,7 +1459,7 @@ export default function AnalyticsPage() {
               {revenueByService.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <BarChart3 size={16} className="text-[#3A3840]" />
-                  <p className="text-[11px] text-[#9F9DAA]">No service breakdown yet</p>
+                  <p className="text-[11px] text-text-muted">No service breakdown yet</p>
                   <p className="text-[9px] text-[#4F4D58] max-w-[200px]">Revenue by service type appears once deals are tagged to a service category</p>
                 </div>
               ) : (
@@ -1468,7 +1468,7 @@ export default function AnalyticsPage() {
                     <div key={s.service} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-sm" style={{ background: CHART_COLORS[i % CHART_COLORS.length] }} />
-                        <span className="text-[10px] text-[#9F9DAA]">{s.service}</span>
+                        <span className="text-[10px] text-text-muted">{s.service}</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="text-[10px] font-mono font-medium text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(s.revenue)}</span>

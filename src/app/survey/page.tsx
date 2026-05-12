@@ -35,7 +35,7 @@ export default function SurveyPage() {
         <div className="text-center mb-8">
           <Image src="/icons/shortstack-logo.svg" alt="ShortStack" width={36} height={36} className="mx-auto mb-3" />
           <h1 className="text-lg font-bold text-white">How are we doing?</h1>
-          <p className="text-sm text-gray-400 mt-1">Your feedback helps us improve</p>
+          <p className="text-sm text-text-muted mt-1">Your feedback helps us improve</p>
         </div>
 
         {step === "rate" && (
@@ -45,7 +45,7 @@ export default function SurveyPage() {
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
                 <button key={n} onClick={() => { setScore(n); setStep("feedback"); }}
                   className={`w-9 h-9 rounded-lg text-sm font-bold transition-all ${
-                    score === n ? "text-black" : "text-gray-400 hover:text-white"
+                    score === n ? "text-black" : "text-text-muted hover:text-white"
                   }`}
                   style={{
                     background: score === n
@@ -70,7 +70,7 @@ export default function SurveyPage() {
               <span className="text-2xl font-bold" style={{ color: score && score >= 9 ? "#2563EB" : score && score >= 7 ? "#c8a855" : "#ef4444" }}>
                 {score}/10
               </span>
-              <span className="text-sm text-gray-400">
+              <span className="text-sm text-text-muted">
                 {score && score >= 9 ? "Amazing!" : score && score >= 7 ? "Good!" : "We can do better"}
               </span>
             </div>
@@ -81,7 +81,7 @@ export default function SurveyPage() {
               style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }} />
 
             <div className="flex gap-2">
-              <button onClick={() => setStep("rate")} className="flex-1 py-2.5 rounded-lg text-sm text-gray-400"
+              <button onClick={() => setStep("rate")} className="flex-1 py-2.5 rounded-lg text-sm text-text-muted"
                 style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 Back
               </button>
@@ -100,7 +100,7 @@ export default function SurveyPage() {
               <CheckCircle size={28} className="text-emerald-400" />
             </div>
             <h2 className="text-lg font-bold text-white mb-1">Thank you!</h2>
-            <p className="text-sm text-gray-400">Your feedback means a lot to us.</p>
+            <p className="text-sm text-text-muted">Your feedback means a lot to us.</p>
           </div>
         )}
 

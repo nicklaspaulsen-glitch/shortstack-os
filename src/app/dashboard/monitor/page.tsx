@@ -131,7 +131,7 @@ export default function MonitorPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <div className="flex items-center gap-3">
-                  <span className="text-xs text-[#9CA3AF] tabular-nums">Next refresh in {countdown}s</span>
+                  <span className="text-xs text-text-muted tabular-nums">Next refresh in {countdown}s</span>
                   <button
                     onClick={load}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-[#374151] text-sm transition-colors border border-[rgba(0,0,0,0.08)]"

@@ -67,7 +67,7 @@ export default function AboutHero() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mt-8 leading-relaxed"
+          className="text-lg md:text-xl text-text-muted max-w-2xl mx-auto mt-8 leading-relaxed"
         >
           Every tool in Trinity exists because an agency operator needed it and
           got tired of waiting. We still build that way — close to the work,

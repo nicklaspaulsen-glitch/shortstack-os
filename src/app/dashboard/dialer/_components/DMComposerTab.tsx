@@ -160,7 +160,7 @@ export default function DMComposerTab() {
         </p>
 
         <div className="mt-4">
-          <label className="text-xs uppercase tracking-wider text-[#9CA3AF]">Platform</label>
+          <label className="text-xs uppercase tracking-wider text-text-muted">Platform</label>
           <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-5">
             {PLATFORMS.map((p) => {
               const isActive = platform === p.value;
@@ -185,32 +185,32 @@ export default function DMComposerTab() {
 
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div>
-            <label className="text-xs uppercase tracking-wider text-[#9CA3AF]">
+            <label className="text-xs uppercase tracking-wider text-text-muted">
               Recipient handle
             </label>
             <div className="mt-1 flex items-center gap-1 rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3">
-              <span className="text-[#9CA3AF]">@</span>
+              <span className="text-text-muted">@</span>
               <input
                 type="text"
                 value={handle}
                 onChange={(e) => setHandle(e.target.value)}
                 placeholder="username"
-                className="flex-1 bg-transparent py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:outline-none"
+                className="flex-1 bg-transparent py-2 text-sm text-[#111827] placeholder:text-text-muted focus:outline-none"
               />
             </div>
           </div>
         </div>
 
         <div className="mt-4">
-          <label className="text-xs uppercase tracking-wider text-[#9CA3AF]">Message</label>
+          <label className="text-xs uppercase tracking-wider text-text-muted">Message</label>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Hey, I came across your profile and..."
             rows={6}
-            className="mt-1 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:border-orange-400/50 focus:outline-none"
+            className="mt-1 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-text-muted focus:border-orange-400/50 focus:outline-none"
           />
-          <div className="mt-1 text-xs text-[#9CA3AF]">{message.length} / 2000 chars</div>
+          <div className="mt-1 text-xs text-text-muted">{message.length} / 2000 chars</div>
         </div>
 
         {/* Voice DM toggle. */}
@@ -265,7 +265,7 @@ export default function DMComposerTab() {
             type="button"
             onClick={sendDm}
             disabled={sending || !handle.trim() || !message.trim()}
-            className="ml-auto flex items-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-black/[0.04] disabled:text-[#9CA3AF]"
+            className="ml-auto flex items-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-black/[0.04] disabled:text-text-muted"
           >
             {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
             Send DM

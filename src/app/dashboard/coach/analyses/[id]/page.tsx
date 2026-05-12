@@ -265,7 +265,7 @@ export default function CoachAnalysisDetail() {
           {analysis.source_type === "email_thread" && isEmailSource(source) ? (
             <div className="space-y-4">
               {source.messages.length === 0 ? (
-                <p className="text-sm text-[#9CA3AF]">No messages on this thread.</p>
+                <p className="text-sm text-text-muted">No messages on this thread.</p>
               ) : (
                 source.messages.map((m) => (
                   <div
@@ -293,7 +293,7 @@ export default function CoachAnalysisDetail() {
               )}
             </div>
           ) : segments.length === 0 ? (
-            <p className="text-sm text-[#9CA3AF]">No transcript content available.</p>
+            <p className="text-sm text-text-muted">No transcript content available.</p>
           ) : (
             <div className="space-y-2">
               {segments.map((seg, idx) => {
@@ -309,7 +309,7 @@ export default function CoachAnalysisDetail() {
                         : "border border-transparent"
                     }`}
                   >
-                    <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-[#9CA3AF]">
+                    <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-text-muted">
                       <Clock className="h-3 w-3" />
                       <span className="font-mono">{formatTimestamp(seg.start)}</span>
                       {seg.speaker && <span className="text-[#6B7280]">{seg.speaker}</span>}
@@ -346,7 +346,7 @@ export default function CoachAnalysisDetail() {
               Insights ({analysis.insights.length})
             </h3>
             {analysis.insights.length === 0 ? (
-              <p className="text-sm text-[#9CA3AF]">No qualitative findings.</p>
+              <p className="text-sm text-text-muted">No qualitative findings.</p>
             ) : (
               <div className="space-y-2">
                 {analysis.insights.map((insight, idx) => {
@@ -389,7 +389,7 @@ export default function CoachAnalysisDetail() {
               Next actions ({analysis.next_actions.length})
             </h3>
             {analysis.next_actions.length === 0 ? (
-              <p className="text-sm text-[#9CA3AF]">No follow-ups suggested.</p>
+              <p className="text-sm text-text-muted">No follow-ups suggested.</p>
             ) : (
               <ul className="space-y-2">
                 {analysis.next_actions.map((action, idx) => {
@@ -406,7 +406,7 @@ export default function CoachAnalysisDetail() {
                         {done ? (
                           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2563EB]" />
                         ) : (
-                          <Circle className="mt-0.5 h-4 w-4 shrink-0 text-[#9CA3AF]" />
+                          <Circle className="mt-0.5 h-4 w-4 shrink-0 text-text-muted" />
                         )}
                         <div>
                           <span className="text-[#374151]">{action.text}</span>
@@ -430,7 +430,7 @@ export default function CoachAnalysisDetail() {
 function Metric({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="rounded-md border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] px-3 py-2">
-      <div className="text-[10px] uppercase tracking-wider text-[#9CA3AF]">{label}</div>
+      <div className="text-[10px] uppercase tracking-wider text-text-muted">{label}</div>
       <div className="mt-1 text-base font-semibold text-[#111827]">{value}</div>
     </div>
   );

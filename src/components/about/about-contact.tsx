@@ -23,7 +23,7 @@ export default function AboutContact() {
           >
             Say hello.
           </h2>
-          <p className="text-gray-400 mt-3 max-w-xl mx-auto">
+          <p className="text-text-muted mt-3 max-w-xl mx-auto">
             The fastest way to influence the roadmap is to tell us what&apos;s
             broken or missing.
           </p>

@@ -247,8 +247,8 @@ export default function CommandPalette() {
               placeholder="Search commands, clients, deals, content…"
               className="flex-1 bg-transparent text-sm text-[#111827] placeholder-[#9CA3AF] outline-none"
             />
-            {liveLoading && <Loader2 size={13} className="text-[#9CA3AF] animate-spin shrink-0" />}
-            <kbd className="hidden sm:inline-flex text-[9px] text-[#9CA3AF] bg-[rgba(0,0,0,0.05)] px-1.5 py-0.5 rounded font-mono border border-[rgba(0,0,0,0.08)]">
+            {liveLoading && <Loader2 size={13} className="text-text-muted animate-spin shrink-0" />}
+            <kbd className="hidden sm:inline-flex text-[9px] text-text-muted bg-[rgba(0,0,0,0.05)] px-1.5 py-0.5 rounded font-mono border border-[rgba(0,0,0,0.08)]">
               ESC
             </kbd>
           </div>
@@ -259,7 +259,7 @@ export default function CommandPalette() {
             {/* Nav commands — grouped by category */}
             {Object.entries(grouped).map(([category, items]) => (
               <div key={category}>
-                <p className="text-[9px] text-[#9CA3AF] uppercase tracking-[0.18em] font-semibold px-4 pt-2.5 pb-1">
+                <p className="text-[9px] text-text-muted uppercase tracking-[0.18em] font-semibold px-4 pt-2.5 pb-1">
                   {category}
                 </p>
                 {items.map((item) => {
@@ -277,7 +277,7 @@ export default function CommandPalette() {
                           : "hover:bg-[rgba(0,0,0,0.03)]"
                       }`}
                     >
-                      <span className={`shrink-0 ${isSelected ? "text-[#2563EB]" : "text-[#9CA3AF]"}`}>
+                      <span className={`shrink-0 ${isSelected ? "text-[#2563EB]" : "text-text-muted"}`}>
                         {item.icon}
                       </span>
                       <div className="flex-1 min-w-0">
@@ -285,11 +285,11 @@ export default function CommandPalette() {
                           {item.label}
                         </p>
                         {item.description && (
-                          <p className="text-[10px] text-[#9CA3AF] truncate">{item.description}</p>
+                          <p className="text-[10px] text-text-muted truncate">{item.description}</p>
                         )}
                       </div>
                       {isSelected && (
-                        <kbd className="text-[8px] text-[#9CA3AF] bg-[rgba(0,0,0,0.05)] px-1 py-0.5 rounded font-mono shrink-0">
+                        <kbd className="text-[8px] text-text-muted bg-[rgba(0,0,0,0.05)] px-1 py-0.5 rounded font-mono shrink-0">
                           ↵
                         </kbd>
                       )}
@@ -303,7 +303,7 @@ export default function CommandPalette() {
             {liveResults.length > 0 && (
               <>
                 <div className="mx-4 my-1.5 border-t border-[rgba(0,0,0,0.06)]" />
-                <p className="text-[9px] text-[#9CA3AF] uppercase tracking-[0.18em] font-semibold px-4 pt-1.5 pb-1">
+                <p className="text-[9px] text-text-muted uppercase tracking-[0.18em] font-semibold px-4 pt-1.5 pb-1">
                   Records
                 </p>
                 {liveResults.map((r) => {
@@ -321,14 +321,14 @@ export default function CommandPalette() {
                           : "hover:bg-[rgba(0,0,0,0.03)]"
                       }`}
                     >
-                      <span className="shrink-0">{RECORD_ICONS[r.type] ?? <Search size={14} className="text-[#9CA3AF]" />}</span>
+                      <span className="shrink-0">{RECORD_ICONS[r.type] ?? <Search size={14} className="text-text-muted" />}</span>
                       <div className="flex-1 min-w-0">
                         <p className={`text-xs font-medium truncate ${isSelected ? "text-[#1D4ED8]" : "text-[#374151]"}`}>
                           {r.title}
                         </p>
-                        <p className="text-[10px] text-[#9CA3AF] truncate">{r.subtitle}</p>
+                        <p className="text-[10px] text-text-muted truncate">{r.subtitle}</p>
                       </div>
-                      <span className="text-[9px] text-[#9CA3AF] bg-[rgba(0,0,0,0.05)] px-1.5 py-0.5 rounded capitalize shrink-0">
+                      <span className="text-[9px] text-text-muted bg-[rgba(0,0,0,0.05)] px-1.5 py-0.5 rounded capitalize shrink-0">
                         {r.type}
                       </span>
                     </button>
@@ -339,7 +339,7 @@ export default function CommandPalette() {
 
             {/* Empty state */}
             {allItems.length === 0 && !liveLoading && query.trim() && (
-              <p className="text-xs text-[#9CA3AF] text-center py-10">
+              <p className="text-xs text-text-muted text-center py-10">
                 No results for &ldquo;{query}&rdquo;
               </p>
             )}
@@ -347,12 +347,12 @@ export default function CommandPalette() {
 
           {/* Footer hint */}
           <div className="border-t border-[rgba(0,0,0,0.06)] px-4 py-2 flex items-center justify-between">
-            <div className="flex items-center gap-4 text-[9px] text-[#9CA3AF]">
+            <div className="flex items-center gap-4 text-[9px] text-text-muted">
               <span>↑↓ navigate</span>
               <span>↵ open</span>
               <span>esc close</span>
             </div>
-            <span className="text-[9px] text-[#9CA3AF]">ShortStack OS</span>
+            <span className="text-[9px] text-text-muted">ShortStack OS</span>
           </div>
         </div>
       </div>

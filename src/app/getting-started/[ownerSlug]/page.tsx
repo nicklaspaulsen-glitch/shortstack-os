@@ -281,7 +281,7 @@ function FaqItem({ item }: { item: GettingStartedFaq }) {
         <span>{item.q}</span>
         <ChevronRight
           size={16}
-          className="text-slate-400 transition-transform group-open:rotate-90"
+          className="text-text-muted transition-transform group-open:rotate-90"
         />
       </summary>
       <p className="mt-3 text-slate-600 leading-relaxed">{item.a}</p>

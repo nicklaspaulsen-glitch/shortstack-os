@@ -72,7 +72,7 @@ function WidgetCard({
       <div className="p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <GripVertical className="w-4 h-4 text-[#9CA3AF] shrink-0" />
+            <GripVertical className="w-4 h-4 text-text-muted shrink-0" />
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center"
               style={{ background: `${def.color}20`, color: def.color }}
@@ -83,13 +83,13 @@ function WidgetCard({
           </div>
           <button
             onClick={onRemove}
-            className="w-6 h-6 rounded-md flex items-center justify-center text-[#9CA3AF] hover:text-red-600 hover:bg-red-100 transition-all"
+            className="w-6 h-6 rounded-md flex items-center justify-center text-text-muted hover:text-red-600 hover:bg-red-100 transition-all"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
-        <p className="text-2xl font-bold text-[#9CA3AF] pl-6">--</p>
-        <p className="text-[10px] text-[#9CA3AF] pl-6 uppercase tracking-wider">No data yet</p>
+        <p className="text-2xl font-bold text-text-muted pl-6">--</p>
+        <p className="text-[10px] text-text-muted pl-6 uppercase tracking-wider">No data yet</p>
       </div>
     </div>
     </motion.div>
@@ -241,11 +241,11 @@ export default function CustomDashboardPage() {
                   {wt.icon}
                 </div>
                 <span className="text-xs text-[#374151] font-medium">{wt.label}</span>
-                <Plus className="w-3.5 h-3.5 text-[#9CA3AF] ml-auto shrink-0" />
+                <Plus className="w-3.5 h-3.5 text-text-muted ml-auto shrink-0" />
               </button>
             ))}
           </div>
-          <p className="text-[10px] text-[#9CA3AF] text-center mt-1">
+          <p className="text-[10px] text-text-muted text-center mt-1">
             Click to add � drag to reorder
           </p>
         </div>
@@ -257,9 +257,9 @@ export default function CustomDashboardPage() {
               className="rounded-xl border-2 border-dashed border-[rgba(0,0,0,0.08)] flex flex-col items-center justify-center gap-3 py-20 text-center"
               onDragOver={(e) => e.preventDefault()}
             >
-              <LayoutDashboard className="w-10 h-10 text-[#9CA3AF]" />
+              <LayoutDashboard className="w-10 h-10 text-text-muted" />
               <p className="text-[#6B7280] text-sm">Your dashboard is empty</p>
-              <p className="text-[#9CA3AF] text-xs">Add widgets from the panel on the left</p>
+              <p className="text-text-muted text-xs">Add widgets from the panel on the left</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

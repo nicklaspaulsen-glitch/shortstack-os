@@ -28,7 +28,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         />
       </div>
       {open && (
-        <p className="text-sm text-gray-400 mt-3 leading-relaxed whitespace-pre-line">
+        <p className="text-sm text-text-muted mt-3 leading-relaxed whitespace-pre-line">
           {answer}
         </p>
       )}

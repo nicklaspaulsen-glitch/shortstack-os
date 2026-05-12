@@ -41,7 +41,7 @@ export default function FinalCTA() {
             </span>
           </h2>
 
-          <p className="text-gray-400 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
+          <p className="text-text-muted text-lg max-w-xl mx-auto mb-10 leading-relaxed">
             Start your 7-day free trial. If it doesn&apos;t replace at least
             three of your current tools in the first week, keep your old stack
             and we&apos;ll refund whatever you paid.

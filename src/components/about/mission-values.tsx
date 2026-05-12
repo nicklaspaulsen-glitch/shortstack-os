@@ -40,7 +40,7 @@ export default function MissionValues() {
           >
             What we care about.
           </h2>
-          <p className="text-gray-400 mt-3 max-w-xl mx-auto">
+          <p className="text-text-muted mt-3 max-w-xl mx-auto">
             Three principles, written on the wall, not in a deck.
           </p>
         </motion.div>
@@ -83,7 +83,7 @@ export default function MissionValues() {
                   <Icon size={20} strokeWidth={1.8} />
                 </div>
                 <h3 className="text-white font-semibold text-lg mb-2">{v.title}</h3>
-                <p className="text-gray-400 leading-relaxed">{v.body}</p>
+                <p className="text-text-muted leading-relaxed">{v.body}</p>
               </motion.div>
             );
           })}

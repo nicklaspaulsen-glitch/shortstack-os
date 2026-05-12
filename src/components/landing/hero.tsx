@@ -161,7 +161,7 @@ export default function Hero() {
         {/* Sub-headline */}
         <motion.p
           variants={ITEM}
-          className="text-base md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+          className="text-base md:text-xl text-text-muted max-w-2xl mx-auto mb-10 leading-relaxed"
         >
           {BRAND.product_name} runs your agency end-to-end — lead scraping, AI outreach and calls,
           content creation, CRM, proposals, billing, and white-label client portals. One command center.
@@ -186,7 +186,7 @@ export default function Hero() {
 
           <Link
             href="#features"
-            className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors duration-150"
+            className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-white transition-colors duration-150"
           >
             See all features
             <ChevronRight size={14} />

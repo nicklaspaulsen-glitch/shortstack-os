@@ -225,7 +225,7 @@ export default function CommissionTrackerPage() {
               className="flex flex-wrap items-center gap-3"
             >
               <div className="relative flex-1 min-w-[180px]">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   value={search}
                   onChange={e => setSearch(e.target.value)}
@@ -241,7 +241,7 @@ export default function CommissionTrackerPage() {
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
                       filterStatus === s
                         ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
-                        : "bg-[rgba(0,0,0,0.04)] text-[#9CA3AF] hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
+                        : "bg-[rgba(0,0,0,0.04)] text-text-muted hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
                     }`}
                   >
                     {s}
@@ -260,8 +260,8 @@ export default function CommissionTrackerPage() {
                 animate={{ opacity: 1 }}
                 className="glass rounded-xl p-12 text-center"
               >
-                <DollarSign size={36} className="mx-auto mb-3 text-[#9CA3AF]" />
-                <p className="text-[#9CA3AF] text-sm">No commissions found.</p>
+                <DollarSign size={36} className="mx-auto mb-3 text-text-muted" />
+                <p className="text-text-muted text-sm">No commissions found.</p>
               </motion.div>
             ) : (
               <motion.div
@@ -272,7 +272,7 @@ export default function CommissionTrackerPage() {
               >
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="border-b border-[rgba(0,0,0,0.08)] text-xs text-[#9CA3AF]">
+                    <thead className="border-b border-[rgba(0,0,0,0.08)] text-xs text-text-muted">
                       <tr>
                         <th className="text-left px-4 py-3">Rep</th>
                         <th className="text-left px-4 py-3">Deal Ref</th>
@@ -293,7 +293,7 @@ export default function CommissionTrackerPage() {
                             className="hover:bg-[rgba(0,0,0,0.03)] transition-colors"
                           >
                             <td className="px-4 py-3 font-medium text-[#374151]">{repName}</td>
-                            <td className="px-4 py-3 text-[#9CA3AF]">{c.deal_id || "—"}</td>
+                            <td className="px-4 py-3 text-text-muted">{c.deal_id || "—"}</td>
                             <td className="px-4 py-3 text-right font-medium text-[#374151]">
                               {fmtUSD(c.amount_cents)}
                             </td>
@@ -326,7 +326,7 @@ export default function CommissionTrackerPage() {
                                 )}
                                 <button
                                   onClick={() => deleteCommission(c.id)}
-                                  className="p-1.5 rounded-lg hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400 transition-colors"
+                                  className="p-1.5 rounded-lg hover:bg-red-500/20 text-text-muted hover:text-red-400 transition-colors"
                                 >
                                   <Trash2 size={13} />
                                 </button>
@@ -375,7 +375,7 @@ export default function CommissionTrackerPage() {
                   ]
                 ).map(({ key, label, placeholder, type }) => (
                   <div key={key}>
-                    <label className="block text-xs text-[#9CA3AF] mb-1">{label}</label>
+                    <label className="block text-xs text-text-muted mb-1">{label}</label>
                     <input
                       type={type || "text"}
                       value={form[key]}

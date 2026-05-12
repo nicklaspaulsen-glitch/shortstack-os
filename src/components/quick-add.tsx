@@ -278,7 +278,7 @@ export default function QuickAdd() {
 
             {/* Footer hint */}
             <div className="px-5 pb-4 text-center">
-              <p className="text-[10px] text-[#9CA3AF]">
+              <p className="text-[10px] text-text-muted">
                 Press <kbd className="px-1 py-0.5 rounded text-[9px] bg-[#F3F4F6] font-mono">Esc</kbd> to close
               </p>
             </div>

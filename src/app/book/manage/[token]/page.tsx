@@ -138,7 +138,7 @@ export default function ManageBookingPage({
             >
               <X size={14} /> Cancel booking
             </button>
-            <p className="text-xs text-gray-400 text-center">
+            <p className="text-xs text-text-muted text-center">
               Need a different time? Cancel and re-book — you can pick any open slot.
             </p>
           </div>

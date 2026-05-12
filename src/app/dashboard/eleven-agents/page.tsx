@@ -396,7 +396,7 @@ export default function ElevenAgentsPage() {
                     </motion.div>
                   ) : !apiLoading ? (
                     <div className="p-6 text-center border border-dashed border-[rgba(0,0,0,0.12)] rounded-lg">
-                      <Phone size={24} className="text-[#9CA3AF] mx-auto mb-2" />
+                      <Phone size={24} className="text-text-muted mx-auto mb-2" />
                       <p className="text-xs text-[#6B7280] mb-2">No agents found on ElevenLabs</p>
                       <button onClick={() => { setShowCreateForm(true); handleLoadDefaults(); }}
                         className="text-[10px] px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-lg border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all">
@@ -464,9 +464,9 @@ export default function ElevenAgentsPage() {
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center py-10 text-center">
-                      <PhoneCall size={20} className="text-[#9CA3AF] mb-2" />
+                      <PhoneCall size={20} className="text-text-muted mb-2" />
                       <p className="text-xs text-[#6B7280]">No conversations yet.</p>
-                      <p className="text-[10px] text-[#9CA3AF] mt-1">Create an agent and make calls to see live data here.</p>
+                      <p className="text-[10px] text-text-muted mt-1">Create an agent and make calls to see live data here.</p>
                     </div>
                   )}
                 </motion.div>
@@ -556,9 +556,9 @@ export default function ElevenAgentsPage() {
                       </div>
                     ) : (
                       <div className="p-6 text-center border border-dashed border-[rgba(0,0,0,0.12)] rounded-lg">
-                        <PhoneCall size={24} className="text-[#9CA3AF] mx-auto mb-2" />
+                        <PhoneCall size={24} className="text-text-muted mx-auto mb-2" />
                         <p className="text-xs text-[#6B7280]">No call history yet</p>
-                        <p className="text-[10px] text-[#9CA3AF] mt-1">Create an agent and make calls to see live data here</p>
+                        <p className="text-[10px] text-text-muted mt-1">Create an agent and make calls to see live data here</p>
                       </div>
                     )}
                   </div>
@@ -572,9 +572,9 @@ export default function ElevenAgentsPage() {
                     <h2 className="text-sm font-semibold text-[#111827]">Call Transcript Viewer</h2>
                   </div>
                   <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <FileText size={24} className="text-[#9CA3AF] mb-2" />
+                    <FileText size={24} className="text-text-muted mb-2" />
                     <p className="text-xs text-[#6B7280]">No transcripts available yet.</p>
-                    <p className="text-[10px] text-[#9CA3AF] mt-1">Make calls with an agent to see transcripts here.</p>
+                    <p className="text-[10px] text-text-muted mt-1">Make calls with an agent to see transcripts here.</p>
                   </div>
                 </motion.div>
               </div>
@@ -583,9 +583,9 @@ export default function ElevenAgentsPage() {
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
                   <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-[#111827]"><TrendingUp size={14} className="text-[#2563EB]" /> Sentiment Analysis</h2>
                   <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <TrendingUp size={24} className="text-[#9CA3AF] mb-2" />
+                    <TrendingUp size={24} className="text-text-muted mb-2" />
                     <p className="text-xs text-[#6B7280]">No sentiment data yet.</p>
-                    <p className="text-[10px] text-[#9CA3AF] mt-1">Sentiment is tracked automatically as calls complete.</p>
+                    <p className="text-[10px] text-text-muted mt-1">Sentiment is tracked automatically as calls complete.</p>
                   </div>
                 </motion.div>
               </div>
@@ -635,7 +635,7 @@ export default function ElevenAgentsPage() {
                     );
                   }) : !voicesLoading ? (
                     <div className="p-6 text-center border border-dashed border-[rgba(0,0,0,0.12)] rounded-lg">
-                      <Volume2 size={24} className="text-[#9CA3AF] mx-auto mb-2" />
+                      <Volume2 size={24} className="text-text-muted mx-auto mb-2" />
                       <p className="text-xs text-[#6B7280]">No voices loaded</p>
                       <button onClick={() => loadVoices()}
                         className="mt-2 text-[10px] px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-lg border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all">
@@ -656,9 +656,9 @@ export default function ElevenAgentsPage() {
                   ))}
                 </div>
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <FileText size={24} className="text-[#9CA3AF] mb-2" />
+                  <FileText size={24} className="text-text-muted mb-2" />
                   <p className="text-xs text-[#6B7280]">No scripts yet.</p>
-                  <p className="text-[10px] text-[#9CA3AF] mt-1">Scripts will appear here once created.</p>
+                  <p className="text-[10px] text-text-muted mt-1">Scripts will appear here once created.</p>
                 </div>
               </div>
             )}{/* ═══ A/B TESTS TAB ═══ */}{activeTab === "A/B Tests" && (
@@ -723,9 +723,9 @@ export default function ElevenAgentsPage() {
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
                 <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-[#111827]"><Users size={14} className="text-[#2563EB]" /> Contact Lists</h2>
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <Users size={24} className="text-[#9CA3AF] mb-2" />
+                  <Users size={24} className="text-text-muted mb-2" />
                   <p className="text-xs text-[#6B7280]">No contact lists yet.</p>
-                  <p className="text-[10px] text-[#9CA3AF] mt-1">Upload a contact list to start calling.</p>
+                  <p className="text-[10px] text-text-muted mt-1">Upload a contact list to start calling.</p>
                 </div>
               </motion.div>
             )}{/* ═══ ANALYTICS TAB ═══ */}{activeTab === "Analytics" && (

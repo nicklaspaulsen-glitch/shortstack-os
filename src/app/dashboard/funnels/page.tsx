@@ -151,7 +151,7 @@ export default function FunnelsPage() {
               </div>
 
               <div className="relative">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -218,7 +218,7 @@ export default function FunnelsPage() {
                         </div>
                         <div className="bg-black/[0.04] rounded-lg p-2 text-center">
                           <div className="text-[#111827] font-bold text-lg leading-none flex items-center justify-center gap-0.5">
-                            <Eye size={12} className="text-[#9CA3AF]" />
+                            <Eye size={12} className="text-text-muted" />
                             {funnel.total_views.toLocaleString()}
                           </div>
                           <div className="text-[#6B7280] text-[10px] mt-0.5">Views</div>
@@ -233,7 +233,7 @@ export default function FunnelsPage() {
 
                       {/* Actions */}
                       <div className="flex items-center justify-between">
-                        <span className="text-[#9CA3AF] text-xs">
+                        <span className="text-text-muted text-xs">
                           {new Date(funnel.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                         </span>
                         <div
@@ -242,14 +242,14 @@ export default function FunnelsPage() {
                         >
                           <button
                             onClick={() => handleDuplicate(funnel)}
-                            className="p-1.5 rounded-md hover:bg-black/[0.06] text-[#9CA3AF] hover:text-[#374151] transition-colors"
+                            className="p-1.5 rounded-md hover:bg-black/[0.06] text-text-muted hover:text-[#374151] transition-colors"
                             title="Duplicate"
                           >
                             <Copy size={13} />
                           </button>
                           <button
                             onClick={() => router.push(`/dashboard/funnels/${funnel.id}`)}
-                            className="p-1.5 rounded-md hover:bg-black/[0.06] text-[#9CA3AF] hover:text-[#374151] transition-colors"
+                            className="p-1.5 rounded-md hover:bg-black/[0.06] text-text-muted hover:text-[#374151] transition-colors"
                             title="Edit"
                           >
                             <Pencil size={13} />
@@ -257,12 +257,12 @@ export default function FunnelsPage() {
                           <button
                             onClick={() => handleDelete(funnel.id)}
                             disabled={deletingId === funnel.id}
-                            className="p-1.5 rounded-md hover:bg-red-500/10 text-[#9CA3AF] hover:text-red-600 transition-colors"
+                            className="p-1.5 rounded-md hover:bg-red-500/10 text-text-muted hover:text-red-600 transition-colors"
                             title="Delete"
                           >
                             <Trash2 size={13} />
                           </button>
-                          <ChevronRight size={13} className="text-[#9CA3AF] ml-1" />
+                          <ChevronRight size={13} className="text-text-muted ml-1" />
                         </div>
                       </div>
                     </motion.div>

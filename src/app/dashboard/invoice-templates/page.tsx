@@ -108,7 +108,7 @@ function PreviewModal({ template, onClose }: { template: InvoiceTemplate; onClos
 
           {template.notes && (
             <div className="mt-6 p-4 bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] rounded-xl text-sm text-[#6B7280]">
-              <p className="text-xs uppercase tracking-wider text-[#9CA3AF] mb-1">Notes</p>
+              <p className="text-xs uppercase tracking-wider text-text-muted mb-1">Notes</p>
               <p>{template.notes}</p>
             </div>
           )}

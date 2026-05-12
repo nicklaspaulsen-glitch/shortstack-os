@@ -193,7 +193,7 @@ function Stats({ profile }: { profile: VoiceProfile }) {
           return (
             <div key={g.label}>
               <div className="flex justify-between text-[11px] mb-1">
-                <span className="text-zinc-400">{g.label}</span>
+                <span className="text-text-muted">{g.label}</span>
                 <span className="text-zinc-200 font-mono">
                   {Number.isFinite(g.value) ? g.value.toFixed(2) : "0"}
                   {g.suffix}
@@ -231,7 +231,7 @@ function Signature({ profile }: { profile: VoiceProfile }) {
       {groups.map((g) =>
         g.items && g.items.length > 0 ? (
           <div key={g.label}>
-            <p className="text-[11px] text-zinc-400 mb-1.5">{g.label}</p>
+            <p className="text-[11px] text-text-muted mb-1.5">{g.label}</p>
             <div className="flex flex-wrap gap-1.5">
               {g.items.map((x, i) => (
                 <span
@@ -316,13 +316,13 @@ function GenerateModal({
           <h3 className="font-semibold">Generate copy in {clientName}&apos;s voice</h3>
           <button
             onClick={onClose}
-            className="text-xs text-zinc-400 hover:text-zinc-200"
+            className="text-xs text-text-muted hover:text-zinc-200"
           >
             Close
           </button>
         </div>
         <div>
-          <label className="text-xs text-zinc-400 block mb-1">Prompt</label>
+          <label className="text-xs text-text-muted block mb-1">Prompt</label>
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
@@ -340,7 +340,7 @@ function GenerateModal({
         </button>
         {output && (
           <div>
-            <label className="text-xs text-zinc-400 block mb-1">Output</label>
+            <label className="text-xs text-text-muted block mb-1">Output</label>
             <pre className="text-xs whitespace-pre-wrap rounded-lg bg-black/40 border border-border p-3">
               {output}
             </pre>

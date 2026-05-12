@@ -117,7 +117,7 @@ export default function StatStrip({
           >
             <div className="flex items-center gap-1">
               {stat.icon && (
-                <span className="text-[#9CA3AF]">{stat.icon}</span>
+                <span className="text-text-muted">{stat.icon}</span>
               )}
               <p className="text-[10px] text-[#52525B] uppercase tracking-widest font-normal">
                 {stat.label}

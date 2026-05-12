@@ -472,7 +472,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
               type="button"
               onClick={onSubmit}
               disabled={submitting}
-              className="ml-auto flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-medium text-white hover:bg-[#1D4ED8] transition-colors disabled:cursor-not-allowed disabled:bg-[rgba(0,0,0,0.08)] disabled:text-[#9CA3AF]"
+              className="ml-auto flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-medium text-white hover:bg-[#1D4ED8] transition-colors disabled:cursor-not-allowed disabled:bg-[rgba(0,0,0,0.08)] disabled:text-text-muted"
             >
               {submitting ? (
                 <Loader2 size={14} className="animate-spin" />

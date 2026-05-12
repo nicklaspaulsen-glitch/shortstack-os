@@ -68,7 +68,7 @@ export default function ChangelogPage() {
               <span className="text-[9px] font-medium text-gray-500 tracking-wide">by ShortStack</span>
             </span>
           </Link>
-          <Link href="/login" className="text-xs text-gray-400 hover:text-white">Login</Link>
+          <Link href="/login" className="text-xs text-text-muted hover:text-white">Login</Link>
         </div>
 
         <h1 className="text-3xl font-extrabold text-white mb-2" style={{ letterSpacing: "-0.03em" }}>Changelog</h1>
@@ -89,7 +89,7 @@ export default function ChangelogPage() {
               <h2 className="text-lg font-bold text-white mb-3">{entry.title}</h2>
               <ul className="space-y-1.5">
                 {entry.items.map((item, j) => (
-                  <li key={j} className="text-sm text-gray-400 flex items-start gap-2">
+                  <li key={j} className="text-sm text-text-muted flex items-start gap-2">
                     <span className="text-gray-600 mt-1">•</span>
                     {item}
                   </li>

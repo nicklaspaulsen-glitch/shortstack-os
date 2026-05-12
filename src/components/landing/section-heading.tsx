@@ -40,7 +40,7 @@ export default function SectionHeading({
       </h2>
       {subtitle && (
         <p
-          className={`text-gray-400 leading-relaxed ${
+          className={`text-text-muted leading-relaxed ${
             align === "center" ? "max-w-2xl mx-auto" : "max-w-2xl"
           }`}
         >

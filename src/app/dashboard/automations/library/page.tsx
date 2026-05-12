@@ -140,7 +140,7 @@ export default function WorkflowLibraryPage() {
                 <div className="relative flex-1 min-w-[240px]">
                   <Search
                     size={14}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
                   />
                   <input
                     value={search}
@@ -150,7 +150,7 @@ export default function WorkflowLibraryPage() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Filter size={14} className="text-[#9CA3AF]" />
+                  <Filter size={14} className="text-text-muted" />
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
@@ -174,11 +174,11 @@ export default function WorkflowLibraryPage() {
 
               {/* Cards */}
               {loading ? (
-                <div className="flex items-center justify-center py-24 text-[#9CA3AF]">
+                <div className="flex items-center justify-center py-24 text-text-muted">
                   <Loader className="animate-spin" size={20} />
                 </div>
               ) : filtered.length === 0 ? (
-                <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-6 py-16 text-center text-[#9CA3AF]">
+                <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-6 py-16 text-center text-text-muted">
                   No templates match your filters.
                 </div>
               ) : (
@@ -212,7 +212,7 @@ export default function WorkflowLibraryPage() {
                         {t.description}
                       </p>
 
-                      <div className="mb-4 flex flex-wrap gap-2 text-[11px] text-[#9CA3AF]">
+                      <div className="mb-4 flex flex-wrap gap-2 text-[11px] text-text-muted">
                         <span className="inline-flex items-center gap-1">
                           <Zap size={11} /> {t.step_count} steps
                         </span>
@@ -222,7 +222,7 @@ export default function WorkflowLibraryPage() {
                       </div>
 
                       {t.required_integrations.length > 0 && (
-                        <div className="mb-4 text-[11px] text-[#9CA3AF]">
+                        <div className="mb-4 text-[11px] text-text-muted">
                           <span className="text-[#6B7280]">Needs:</span>{" "}
                           {t.required_integrations.map((i) => (
                             <span

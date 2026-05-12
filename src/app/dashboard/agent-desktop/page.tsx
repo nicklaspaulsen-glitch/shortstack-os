@@ -179,7 +179,7 @@ export default function AgentDesktopPage() {
                       </button>
                       <Link
                         href="/dashboard/monitor"
-                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] text-xs font-medium border border-[rgba(0,0,0,0.08)] transition-colors"
+                        className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-text-muted text-xs font-medium border border-[rgba(0,0,0,0.08)] transition-colors"
                       >
                         <Activity className="w-3 h-3" />
                         Logs

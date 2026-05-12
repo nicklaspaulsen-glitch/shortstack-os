@@ -162,14 +162,14 @@ export default function DemoManagementPage() {
             <div className="flex items-center gap-1.5 pt-1">
               <CheckCircle2 className="w-3 h-3 text-emerald-600" />
               <span className="text-[10px] text-emerald-600">Demo client active</span>
-              <span className="text-[9px] text-[#9CA3AF] ml-auto">ID: {demoClient.id.slice(0, 8)}...</span>
+              <span className="text-[9px] text-text-muted ml-auto">ID: {demoClient.id.slice(0, 8)}...</span>
             </div>
           </div>
         ) : (
           <div className="text-center py-6">
-            <Database className="w-6 h-6 text-[#9CA3AF] mx-auto mb-2" />
+            <Database className="w-6 h-6 text-text-muted mx-auto mb-2" />
             <p className="text-[10px] text-[#6B7280]">No demo client found</p>
-            <p className="text-[9px] text-[#9CA3AF] mt-0.5">Click &quot;Seed Demo Data&quot; to create one</p>
+            <p className="text-[9px] text-text-muted mt-0.5">Click &quot;Seed Demo Data&quot; to create one</p>
           </div>
         )}
       </motion.div>
@@ -240,7 +240,7 @@ export default function DemoManagementPage() {
             {copied ? "Copied" : "Copy"}
           </button>
         </div>
-        <p className="text-[9px] text-[#9CA3AF] mt-2">Share this link with prospects to preview the platform with sample data.</p>
+        <p className="text-[9px] text-text-muted mt-2">Share this link with prospects to preview the platform with sample data.</p>
       </motion.div>
 
       {/* Instructions */}

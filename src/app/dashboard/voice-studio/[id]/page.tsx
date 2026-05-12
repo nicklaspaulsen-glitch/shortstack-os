@@ -241,7 +241,7 @@ export default function VoiceCloneDetailPage() {
                   <section className="rounded-xl border border-black/[0.08] bg-white p-6">
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <div>
-                        <div className="text-xs uppercase tracking-wider text-[#9CA3AF]">
+                        <div className="text-xs uppercase tracking-wider text-text-muted">
                           Status
                         </div>
                         <div className="mt-1 flex items-center gap-2">
@@ -343,7 +343,7 @@ export default function VoiceCloneDetailPage() {
                         value={testText}
                         onChange={(e) => setTestText(e.target.value)}
                         rows={3}
-                        className="mt-2 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#374151] placeholder:text-[#9CA3AF] focus:border-[#2563EB]/60 focus:outline-none"
+                        className="mt-2 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#374151] placeholder:text-text-muted focus:border-[#2563EB]/60 focus:outline-none"
                         placeholder="Test text..."
                       />
                       <div className="mt-3 flex items-center gap-2">
@@ -351,7 +351,7 @@ export default function VoiceCloneDetailPage() {
                           type="button"
                           onClick={onTest}
                           disabled={testing || testText.trim().length === 0}
-                          className="flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#3B82F6] disabled:cursor-not-allowed disabled:bg-black/[0.06] disabled:text-[#9CA3AF]"
+                          className="flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#3B82F6] disabled:cursor-not-allowed disabled:bg-black/[0.06] disabled:text-text-muted"
                         >
                           {testing ? (
                             <Loader2 size={12} className="animate-spin" />
@@ -417,12 +417,12 @@ export default function VoiceCloneDetailPage() {
                                     </button>
                                   ) : (
                                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-black/[0.04] flex items-center justify-center">
-                                      <Mic size={10} className="text-[#9CA3AF]" />
+                                      <Mic size={10} className="text-text-muted" />
                                     </div>
                                   )}
-                                  <span className="truncate font-mono text-[#9CA3AF] text-[10px]">{s.r2_key}</span>
+                                  <span className="truncate font-mono text-text-muted text-[10px]">{s.r2_key}</span>
                                 </div>
-                                <div className="flex items-center gap-2 flex-shrink-0 text-[#9CA3AF]">
+                                <div className="flex items-center gap-2 flex-shrink-0 text-text-muted">
                                   {s.duration_seconds != null && (
                                     <span className="flex items-center gap-1">
                                       <Clock size={9} />
@@ -488,12 +488,12 @@ export default function VoiceCloneDetailPage() {
                                   </button>
                                 ) : (
                                   <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-black/[0.04] flex items-center justify-center">
-                                    <Play size={10} className="text-[#9CA3AF]" />
+                                    <Play size={10} className="text-text-muted" />
                                   </div>
                                 )}
                                 <div className="flex-1 min-w-0">
                                   <p className="text-[#374151] leading-snug">{r.text_preview}</p>
-                                  <p className="mt-1 text-[10px] text-[#9CA3AF]">
+                                  <p className="mt-1 text-[10px] text-text-muted">
                                     {new Date(r.rendered_at).toLocaleString(undefined, {
                                       dateStyle: "short",
                                       timeStyle: "short",

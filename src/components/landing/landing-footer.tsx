@@ -37,7 +37,7 @@ export default function LandingFooter() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
               Product
             </p>
             <ul className="space-y-2">
@@ -61,7 +61,7 @@ export default function LandingFooter() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
               Company
             </p>
             <ul className="space-y-2">
@@ -84,7 +84,7 @@ export default function LandingFooter() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
               Contact
             </p>
             <a

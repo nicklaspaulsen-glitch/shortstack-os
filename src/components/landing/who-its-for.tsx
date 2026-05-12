@@ -85,7 +85,7 @@ export default function WhoItsFor() {
                 <h3 className="text-sm font-bold text-white mb-2">
                   {a.title}
                 </h3>
-                <p className="text-xs text-gray-400 leading-relaxed">
+                <p className="text-xs text-text-muted leading-relaxed">
                   {a.body}
                 </p>
               </div>

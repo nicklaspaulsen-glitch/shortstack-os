@@ -203,7 +203,7 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
           </button>
         </div>
 
-        <p className="text-[10px] text-zinc-400 leading-relaxed mb-3">
+        <p className="text-[10px] text-text-muted leading-relaxed mb-3">
           {step.description}
         </p>
 

@@ -380,13 +380,13 @@ export default function FunnelCanvasPage() {
                         <div className="grid grid-cols-2 gap-1 mt-2">
                           <div className="bg-black/[0.06] rounded p-1 text-center">
                             <div className="text-[#111827] text-xs font-bold">{stepAnalytics.views}</div>
-                            <div className="text-[#9CA3AF] text-[9px]">views</div>
+                            <div className="text-text-muted text-[9px]">views</div>
                           </div>
                           <div className="bg-black/[0.06] rounded p-1 text-center">
                             <div className={`text-xs font-bold ${stepAnalytics.conversion_rate >= 20 ? "text-emerald-700" : "text-[#6B7280]"}`}>
                               {stepAnalytics.conversion_rate}%
                             </div>
-                            <div className="text-[#9CA3AF] text-[9px]">conv.</div>
+                            <div className="text-text-muted text-[9px]">conv.</div>
                           </div>
                         </div>
                       )}
@@ -396,20 +396,20 @@ export default function FunnelCanvasPage() {
                         <button
                           onClick={(e) => { e.stopPropagation(); void moveStep(step.id, "left"); }}
                           disabled={idx === 0}
-                          className="p-1 rounded hover:bg-black/[0.06] text-[#9CA3AF] hover:text-[#374151] disabled:opacity-20 transition-colors"
+                          className="p-1 rounded hover:bg-black/[0.06] text-text-muted hover:text-[#374151] disabled:opacity-20 transition-colors"
                         >
                           <ChevronLeft size={12} />
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); void deleteStep(step.id); }}
-                          className="p-1 rounded hover:bg-red-500/10 text-[#9CA3AF] hover:text-red-600 transition-colors"
+                          className="p-1 rounded hover:bg-red-500/10 text-text-muted hover:text-red-600 transition-colors"
                         >
                           <Trash2 size={12} />
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); void moveStep(step.id, "right"); }}
                           disabled={idx === steps.length - 1}
-                          className="p-1 rounded hover:bg-black/[0.06] text-[#9CA3AF] hover:text-[#374151] disabled:opacity-20 transition-colors"
+                          className="p-1 rounded hover:bg-black/[0.06] text-text-muted hover:text-[#374151] disabled:opacity-20 transition-colors"
                         >
                           <ChevronRight size={12} />
                         </button>
@@ -419,7 +419,7 @@ export default function FunnelCanvasPage() {
                     {/* Arrow connector */}
                     {idx < steps.length - 1 && (
                       <div className="flex items-center px-1">
-                        <ArrowRight size={18} className="text-[#9CA3AF]" />
+                        <ArrowRight size={18} className="text-text-muted" />
                       </div>
                     )}
                   </div>
@@ -432,7 +432,7 @@ export default function FunnelCanvasPage() {
                 {!addingStep ? (
                   <button
                     onClick={() => setAddingStep(true)}
-                    className="w-44 h-full min-h-[120px] rounded-xl border-2 border-dashed border-black/[0.08] hover:border-purple-500/40 flex flex-col items-center justify-center gap-2 text-[#9CA3AF] hover:text-purple-600 transition-all"
+                    className="w-44 h-full min-h-[120px] rounded-xl border-2 border-dashed border-black/[0.08] hover:border-purple-500/40 flex flex-col items-center justify-center gap-2 text-text-muted hover:text-purple-600 transition-all"
                   >
                     <Plus size={20} />
                     <span className="text-sm font-medium">Add Step</span>
@@ -516,7 +516,7 @@ export default function FunnelCanvasPage() {
                             <span className="text-[#111827] text-sm font-medium truncate">{step.title}</span>
                             <div className="flex items-center gap-3 text-xs shrink-0 ml-2">
                               <span className="text-[#6B7280]">{views.toLocaleString()} views</span>
-                              <span className={sa?.conversion_rate && sa.conversion_rate >= 20 ? "text-emerald-700 font-semibold" : "text-[#9CA3AF]"}>
+                              <span className={sa?.conversion_rate && sa.conversion_rate >= 20 ? "text-emerald-700 font-semibold" : "text-text-muted"}>
                                 {sa?.conversion_rate ?? 0}% conv.
                               </span>
                               {idx > 0 && sa?.dropoff_pct !== undefined && (
@@ -559,7 +559,7 @@ export default function FunnelCanvasPage() {
                 <Pencil size={15} className="text-purple-600" />
                 <span className="text-[#111827] font-semibold text-sm">Edit Step</span>
               </div>
-              <button onClick={() => setPanelOpen(false)} className="text-[#9CA3AF] hover:text-[#374151] transition-colors">
+              <button onClick={() => setPanelOpen(false)} className="text-text-muted hover:text-[#374151] transition-colors">
                 <X size={16} />
               </button>
             </div>
@@ -602,7 +602,7 @@ export default function FunnelCanvasPage() {
                   ))}
                 </select>
                 {pages.length === 0 && (
-                  <p className="text-[#9CA3AF] text-xs mt-1">No landing pages yet — create one first.</p>
+                  <p className="text-text-muted text-xs mt-1">No landing pages yet — create one first.</p>
                 )}
               </div>
 
@@ -642,7 +642,7 @@ export default function FunnelCanvasPage() {
                         ].map((s) => (
                           <div key={s.label} className="bg-black/[0.06] rounded p-2">
                             <div className="text-[#111827] text-sm font-bold">{s.value}</div>
-                            <div className="text-[#9CA3AF] text-[10px]">{s.label}</div>
+                            <div className="text-text-muted text-[10px]">{s.label}</div>
                           </div>
                         ))}
                       </div>

@@ -452,11 +452,11 @@ export default function WorkspaceFilesPage() {
             )}{/* 2-column body */}<div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-6">
               {/* LEFT — folder tree */}
               <aside className="rounded-xl border border-black/[0.06] bg-white p-2 h-fit">
-                <h3 className="text-[11px] uppercase tracking-wide text-[#9CA3AF] px-2 pt-2 pb-1.5">
+                <h3 className="text-[11px] uppercase tracking-wide text-text-muted px-2 pt-2 pb-1.5">
                   Folders
                 </h3>
                 {loading && rootFolders.length === 0 ? (
-                  <div className="px-2 py-4 text-[#9CA3AF] text-sm">Loading…</div>
+                  <div className="px-2 py-4 text-text-muted text-sm">Loading…</div>
                 ) : (
                   <ul className="space-y-0.5">
                     {rootFolders.map((f) => (
@@ -484,10 +484,10 @@ export default function WorkspaceFilesPage() {
               >
                 {/* Breadcrumb */}
                 <nav className="flex flex-wrap items-center gap-1.5 text-sm text-[#6B7280] mb-4">
-                  <span className="text-[#9CA3AF]">Files</span>
+                  <span className="text-text-muted">Files</span>
                   {breadcrumb.map((c, i) => (
                     <span key={c.id} className="flex items-center gap-1.5">
-                      <ChevronRight size={12} className="text-[#9CA3AF]" />
+                      <ChevronRight size={12} className="text-text-muted" />
                       <span className={i === breadcrumb.length - 1 ? "text-[#111827]" : ""}>{c.name}</span>
                     </span>
                   ))}
@@ -501,12 +501,12 @@ export default function WorkspaceFilesPage() {
                 )}
 
                 {!activeFolderId ? (
-                  <div className="flex flex-col items-center justify-center py-16 text-[#9CA3AF]">
+                  <div className="flex flex-col items-center justify-center py-16 text-text-muted">
                     <FolderIcon size={32} />
                     <p className="mt-3 text-sm">Select a folder to see its files</p>
                   </div>
                 ) : files.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-16 text-[#9CA3AF]">
+                  <div className="flex flex-col items-center justify-center py-16 text-text-muted">
                     <FilePlus size={32} />
                     <p className="mt-3 text-sm">No files yet — drop a file here or click Upload</p>
                   </div>
@@ -622,7 +622,7 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
         >
           <FolderIcon size={14} className={isActive ? "text-[#2563EB]" : "text-[#6B7280]"} />
           <span className="truncate">{folder.name}</span>
-          {folder.is_system && <Lock size={9} className="text-[#9CA3AF] shrink-0" />}
+          {folder.is_system && <Lock size={9} className="text-text-muted shrink-0" />}
         </button>
       </div>
       {isOpen && kids.length > 0 && (
@@ -664,7 +664,7 @@ function FileCard(props: FileCardProps) {
       onDoubleClick={() => onDoubleClick(file)}
       className="group flex flex-col text-left rounded-lg border border-black/[0.06] bg-white hover:bg-[#F8FAFC] hover:border-[rgba(37,99,235,0.3)] transition overflow-hidden"
     >
-      <div className="aspect-square w-full bg-[#F8FAFC] flex items-center justify-center text-[#9CA3AF] overflow-hidden">
+      <div className="aspect-square w-full bg-[#F8FAFC] flex items-center justify-center text-text-muted overflow-hidden">
         {isImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -681,7 +681,7 @@ function FileCard(props: FileCardProps) {
         <div className="text-xs text-[#111827] truncate" title={file.name}>
           {file.name}
         </div>
-        <div className="text-[10px] text-[#9CA3AF] mt-0.5 flex items-center justify-between">
+        <div className="text-[10px] text-text-muted mt-0.5 flex items-center justify-between">
           <span>{formatBytes(file.size_bytes)}</span>
           {file.status !== "ready" && <span className="text-amber-700">{file.status}</span>}
         </div>

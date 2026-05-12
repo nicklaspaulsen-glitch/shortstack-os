@@ -100,7 +100,7 @@ export default function OrdersPage() {
               <div className="py-12 text-center text-sm text-muted">Loading...</div>
             ) : orders.length === 0 ? (
               <div className="card flex flex-col items-center justify-center py-12 text-center">
-                <Receipt size={36} className="mb-3 text-[#9CA3AF]" />
+                <Receipt size={36} className="mb-3 text-text-muted" />
                 <p className="text-sm font-medium text-[#111827]">
                   No {role === "buyer" ? "purchases" : "incoming orders"} yet
                 </p>
@@ -153,7 +153,7 @@ export default function OrdersPage() {
                     </div>
                     <ArrowRight
                       size={14}
-                      className="text-[#9CA3AF] transition group-hover:translate-x-0.5 group-hover:text-[#2563EB]"
+                      className="text-text-muted transition group-hover:translate-x-0.5 group-hover:text-[#2563EB]"
                     />
                   </Link>
                 ))}

@@ -126,9 +126,9 @@ export default function ClientReportsPage() {
           <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Client Reports</h1>
         </div>
       </div><motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-12 text-center">
-                  <FileText size={40} className="mx-auto mb-4 text-[#9CA3AF]" />
+                  <FileText size={40} className="mx-auto mb-4 text-text-muted" />
                   <p className="text-[#6B7280] mb-2">No reports generated yet.</p>
-                  <p className="text-[#9CA3AF] text-sm mb-6">
+                  <p className="text-text-muted text-sm mb-6">
                     Generate your first report using the Report Generator.
                   </p>
                   <Link
@@ -167,7 +167,7 @@ export default function ClientReportsPage() {
         </div>
       ) : rows.length === 0 ? (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-12 text-center">
-          <ClipboardList size={40} className="mx-auto mb-4 text-[#9CA3AF]" />
+          <ClipboardList size={40} className="mx-auto mb-4 text-text-muted" />
           <p className="text-[#6B7280] mb-2">No reports yet.</p>
           <Link
             href="/dashboard/report-generator"
@@ -202,12 +202,12 @@ export default function ClientReportsPage() {
                     </div>
                     <div className="text-left">
                       <p className="font-medium text-[#111827] text-sm">{row.client_name}</p>
-                      <p className="text-xs text-[#9CA3AF]">
+                      <p className="text-xs text-text-muted">
                         {row.reports.length} report{row.reports.length !== 1 ? "s" : ""}
                       </p>
                     </div>
                   </div>
-                  <span className="text-[#9CA3AF] text-xs">
+                  <span className="text-text-muted text-xs">
                     {isExpanded ? "Hide" : "Show"}
                   </span>
                 </button>
@@ -231,7 +231,7 @@ export default function ClientReportsPage() {
                               {fmtDate(r.date_from)} – {fmtDate(r.date_to)}
                             </span>
                           </div>
-                          <div className="flex items-center gap-3 text-xs text-[#9CA3AF]">
+                          <div className="flex items-center gap-3 text-xs text-text-muted">
                             <span className="flex items-center gap-1">
                               <Calendar size={10} /> Generated {fmtDate(r.created_at)}
                             </span>

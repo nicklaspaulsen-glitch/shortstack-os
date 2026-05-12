@@ -396,8 +396,8 @@ function ContentMock() {
           );
         })}
       </div>
-      <div className="flex items-center gap-2 text-[10px] text-gray-400">
-        <PenTool size={10} className="text-gray-400" />
+      <div className="flex items-center gap-2 text-[10px] text-text-muted">
+        <PenTool size={10} className="text-text-muted" />
         <span>Next post drafted in your voice — review at 2pm.</span>
       </div>
     </div>

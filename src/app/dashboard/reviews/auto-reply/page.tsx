@@ -322,7 +322,7 @@ export default function ReviewsAutoReplyPage() {
               {/* List */}
               {loading ? (
                 <div className="flex items-center justify-center py-16">
-                  <Loader2 size={28} className="animate-spin text-[#9CA3AF]" />
+                  <Loader2 size={28} className="animate-spin text-text-muted" />
                 </div>
               ) : drafts.length === 0 ? (
                 <EmptyState
@@ -348,17 +348,17 @@ export default function ReviewsAutoReplyPage() {
                             <span className="text-xs text-[#6B7280] capitalize">{d.platform}</span>
                             <Stars rating={d.review_rating} />
                             {d.review_author && (
-                              <span className="text-xs text-[#9CA3AF]">— {d.review_author}</span>
+                              <span className="text-xs text-text-muted">— {d.review_author}</span>
                             )}
                           </div>
-                          <span className="text-[11px] text-[#9CA3AF]">
+                          <span className="text-[11px] text-text-muted">
                             {new Date(d.created_at).toLocaleDateString()}
                           </span>
                         </div>
 
                         {d.review_text && (
                           <div className="mb-3 px-3 py-2 rounded-lg bg-[#F3F6FA] border border-black/[0.06]">
-                            <p className="text-[11px] uppercase tracking-wider text-[#9CA3AF] mb-1">
+                            <p className="text-[11px] uppercase tracking-wider text-text-muted mb-1">
                               Original Review
                             </p>
                             <p className="text-sm text-[#374151] whitespace-pre-wrap">{d.review_text}</p>
@@ -449,7 +449,7 @@ export default function ReviewsAutoReplyPage() {
               )}
 
               {/* Footnote */}
-              <div className="rounded-lg border border-black/[0.06] bg-white p-3 flex items-start gap-2 text-xs text-[#9CA3AF]">
+              <div className="rounded-lg border border-black/[0.06] bg-white p-3 flex items-start gap-2 text-xs text-text-muted">
                 <AlertCircle size={14} className="text-amber-500 shrink-0 mt-0.5" />
                 <p>
                   v1 stores approved replies locally. Auto-posting back to Google

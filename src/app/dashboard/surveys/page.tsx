@@ -203,7 +203,7 @@ export default function SurveysPage() {
                   className={`px-4 py-2 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${
                     activeTab === t
                       ? "border-[#2563EB] text-[#2563EB]"
-                      : "border-transparent text-[#9CA3AF] hover:text-[#6B7280]"
+                      : "border-transparent text-text-muted hover:text-[#6B7280]"
                   }`}
                 >
                   {t}
@@ -214,7 +214,7 @@ export default function SurveysPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35 }}
-                className="glass rounded-xl p-8 text-center text-[#9CA3AF]"
+                className="glass rounded-xl p-8 text-center text-text-muted"
               >
                 <BarChart2 size={36} className="mx-auto mb-3 opacity-40" />
                 <p className="text-sm">Select a survey to view its responses.</p>
@@ -232,7 +232,7 @@ export default function SurveysPage() {
                 transition={{ duration: 0.35 }}
                 className="glass rounded-xl p-12 text-center"
               >
-                <ClipboardCheck size={40} className="mx-auto mb-4 text-[#9CA3AF]" />
+                <ClipboardCheck size={40} className="mx-auto mb-4 text-text-muted" />
                 <p className="text-[#6B7280] mb-4">No surveys yet. Create your first one.</p>
                 <button
                   onClick={openCreate}
@@ -259,37 +259,37 @@ export default function SurveysPage() {
                           />
                           <span className="font-medium text-foreground truncate">{s.title}</span>
                         </div>
-                        <p className="text-xs text-[#9CA3AF] truncate">
+                        <p className="text-xs text-text-muted truncate">
                           {s.description || "No description"}
                         </p>
-                        <p className="text-xs text-[#9CA3AF] mt-1">
+                        <p className="text-xs text-text-muted mt-1">
                           {s.questions.length} questions · {s.response_count} responses
                         </p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         <button
                           onClick={() => toggleActive(s)}
-                          className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-foreground transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-foreground transition-colors"
                           title={s.is_active ? "Deactivate" : "Activate"}
                         >
                           <ToggleLeft size={16} />
                         </button>
                         <button
                           onClick={() => copyLink(s)}
-                          className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-foreground transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-foreground transition-colors"
                           title="Copy share link"
                         >
                           <Share2 size={16} />
                         </button>
                         <button
                           onClick={() => openEdit(s)}
-                          className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-foreground transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-foreground transition-colors"
                         >
                           <Edit2 size={16} />
                         </button>
                         <button
                           onClick={() => deleteSurvey(s.id)}
-                          className="p-1.5 rounded-lg hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400 transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-red-500/20 text-text-muted hover:text-red-400 transition-colors"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -306,7 +306,7 @@ export default function SurveysPage() {
             >
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs text-[#9CA3AF] mb-1">Title *</label>
+                  <label className="block text-xs text-text-muted mb-1">Title *</label>
                   <input
                     value={title}
                     onChange={e => setTitle(e.target.value)}
@@ -315,7 +315,7 @@ export default function SurveysPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-[#9CA3AF] mb-1">Description</label>
+                  <label className="block text-xs text-text-muted mb-1">Description</label>
                   <input
                     value={description}
                     onChange={e => setDescription(e.target.value)}
@@ -326,7 +326,7 @@ export default function SurveysPage() {
 
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="text-xs text-[#9CA3AF]">Questions</label>
+                    <label className="text-xs text-text-muted">Questions</label>
                     <button
                       onClick={addQuestion}
                       className="flex items-center gap-1 text-xs text-[#2563EB] hover:text-[#3B82F6]"
@@ -346,7 +346,7 @@ export default function SurveysPage() {
                         <div className="flex items-start gap-2">
                           <GripVertical
                             size={14}
-                            className="text-[#9CA3AF] cursor-grab mt-2 shrink-0"
+                            className="text-text-muted cursor-grab mt-2 shrink-0"
                           />
                           <div className="flex-1 space-y-2">
                             <div className="flex gap-2">
@@ -383,13 +383,13 @@ export default function SurveysPage() {
                                 ))}
                                 <button
                                   onClick={() => addOption(idx)}
-                                  className="text-xs text-[#9CA3AF] hover:text-[#6B7280]"
+                                  className="text-xs text-text-muted hover:text-[#6B7280]"
                                 >
                                   <Plus size={10} className="inline" /> Add option
                                 </button>
                               </div>
                             )}
-                            <label className="flex items-center gap-1.5 text-xs text-[#9CA3AF] cursor-pointer">
+                            <label className="flex items-center gap-1.5 text-xs text-text-muted cursor-pointer">
                               <input
                                 type="checkbox"
                                 checked={q.required}
@@ -401,7 +401,7 @@ export default function SurveysPage() {
                           </div>
                           <button
                             onClick={() => removeQuestion(idx)}
-                            className="text-[#9CA3AF] hover:text-red-400 transition-colors mt-1"
+                            className="text-text-muted hover:text-red-400 transition-colors mt-1"
                           >
                             <X size={14} />
                           </button>

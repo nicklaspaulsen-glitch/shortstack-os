@@ -547,7 +547,7 @@ export default function ConversationsPage() {
                       </div>
                     ) : messages.length === 0 ? (
                       <div className="flex flex-col items-center justify-center h-full gap-2 py-16 text-center">
-                        <MessageCircle size={28} className="text-[#9CA3AF]" />
+                        <MessageCircle size={28} className="text-text-muted" />
                         <p className="text-xs text-[#71717A]">No messages yet � say hello</p>
                       </div>
                     ) : (

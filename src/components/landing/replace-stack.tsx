@@ -105,7 +105,7 @@ export default function ReplaceStack() {
             >
               ${TOTAL_SAVED}+ saved / month
             </p>
-            <p className="text-sm text-gray-400 relative">
+            <p className="text-sm text-text-muted relative">
               That&apos;s <span className="text-white font-semibold">${TOTAL_SAVED * 12}+ a year</span>{" "}
               back in your pocket — without counting the hours you stop losing
               between {TOOLS.length} different logins.

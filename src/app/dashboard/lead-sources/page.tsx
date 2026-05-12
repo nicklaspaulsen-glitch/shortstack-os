@@ -196,7 +196,7 @@ export default function LeadSourcesPage() {
               </motion.div>
             )}{loading ? <TableSkeleton rows={5} /> : sources.length === 0 ? (
               <motion.div className="bg-white border border-black/[0.06] rounded-xl p-12 flex flex-col items-center gap-4 text-center" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-                <Filter size={40} className="text-[#9CA3AF]" />
+                <Filter size={40} className="text-text-muted" />
                 <p className="text-[#111827] font-semibold">No lead sources yet</p>
                 <p className="text-[#6B7280] text-sm max-w-xs">Add your first source to start tracking where leads originate.</p>
                 <button onClick={() => setShowCreate(true)}

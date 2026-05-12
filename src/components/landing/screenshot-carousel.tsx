@@ -289,7 +289,7 @@ export default function ScreenshotCarousel() {
             style={{ letterSpacing: "-0.02em" }}>
             One platform, <span style={{ color: GOLD }}>every view.</span>
           </h2>
-          <p className="text-gray-400 mt-3 max-w-xl mx-auto">
+          <p className="text-text-muted mt-3 max-w-xl mx-auto">
             Eight flagship surfaces, rotating every four seconds. Hover to pause.
           </p>
         </motion.div>

@@ -57,7 +57,7 @@ export default function PublicBookingPage() {
         <div className="text-center mb-8">
           <Image src="/icons/shortstack-logo.svg" alt="ShortStack" width={40} height={40} className="mx-auto mb-3" />
           <h1 className="text-xl font-bold text-white">Book a Free Strategy Call</h1>
-          <p className="text-sm text-gray-400 mt-1">30-minute video call to discuss your marketing goals</p>
+          <p className="text-sm text-text-muted mt-1">30-minute video call to discuss your marketing goals</p>
         </div>
 
         {step === "select" && (
@@ -72,7 +72,7 @@ export default function PublicBookingPage() {
                 return (
                   <button key={dateStr} onClick={() => setSelectedDate(dateStr)}
                     className={`p-2 rounded-lg text-center transition-all ${
-                      isSelected ? "bg-[#2563EB]/10 border-[#2563EB]/30 text-[#2563EB]" : "border-white/[0.05] text-gray-400 hover:text-white"
+                      isSelected ? "bg-[#2563EB]/10 border-[#2563EB]/30 text-[#2563EB]" : "border-white/[0.05] text-text-muted hover:text-white"
                     }`} style={{ border: `1px solid ${isSelected ? "rgba(200,168,85,0.3)" : "rgba(255,255,255,0.05)"}` }}>
                     <p className="text-[9px] uppercase">{d.toLocaleDateString("en-US", { weekday: "short" })}</p>
                     <p className="text-lg font-bold">{d.getDate()}</p>
@@ -91,7 +91,7 @@ export default function PublicBookingPage() {
                   {TIME_SLOTS.map(time => (
                     <button key={time} onClick={() => setSelectedTime(time)}
                       className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                        selectedTime === time ? "bg-[#2563EB]/10 text-[#2563EB] border-[#2563EB]/30" : "text-gray-400 hover:text-white border-white/[0.05]"
+                        selectedTime === time ? "bg-[#2563EB]/10 text-[#2563EB] border-[#2563EB]/30" : "text-text-muted hover:text-white border-white/[0.05]"
                       }`} style={{ border: `1px solid ${selectedTime === time ? "rgba(200,168,85,0.3)" : "rgba(255,255,255,0.05)"}` }}>
                       {time}
                     </button>
@@ -114,7 +114,7 @@ export default function PublicBookingPage() {
           <div className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
             <div className="flex items-center gap-2 mb-4 pb-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
               <Video size={14} className="text-[#2563EB]" />
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-text-muted">
                 {new Date(selectedDate).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })} at {selectedTime}
               </span>
               <button onClick={() => setStep("select")} className="text-[10px] text-[#2563EB] ml-auto">Change</button>
@@ -157,7 +157,7 @@ export default function PublicBookingPage() {
               <CheckCircle size={32} className="text-emerald-400" />
             </div>
             <h2 className="text-lg font-bold text-white mb-1">You&apos;re Booked!</h2>
-            <p className="text-sm text-gray-400 mb-4">
+            <p className="text-sm text-text-muted mb-4">
               {new Date(selectedDate).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })} at {selectedTime}
             </p>
             <p className="text-xs text-gray-500">We&apos;ll send a calendar invite and video link to {form.email}</p>

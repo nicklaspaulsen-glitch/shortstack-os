@@ -256,13 +256,13 @@ export default function AbTestsPage() {
                             <TrendingUp size={12} />+{lift}% lift
                           </span>
                         ) : (
-                          <span className="text-[#9CA3AF] text-xs">No lift yet</span>
+                          <span className="text-text-muted text-xs">No lift yet</span>
                         )}
                         <div className="flex items-center gap-1">
                           {test.status === "running" && (
                             <button
                               onClick={() => void handleStatusChange(test.id, "paused")}
-                              className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-[#2563EB] transition-colors"
+                              className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-[#2563EB] transition-colors"
                               title="Pause"
                             >
                               <Pause size={13} />
@@ -271,7 +271,7 @@ export default function AbTestsPage() {
                           {test.status === "paused" && (
                             <button
                               onClick={() => void handleStatusChange(test.id, "running")}
-                              className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-emerald-400 transition-colors"
+                              className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-emerald-400 transition-colors"
                               title="Resume"
                             >
                               <Clock size={13} />
@@ -279,14 +279,14 @@ export default function AbTestsPage() {
                           )}
                           <Link
                             href={`/dashboard/ab-tests/${test.id}`}
-                            className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-[#374151] transition-colors"
+                            className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-[#374151] transition-colors"
                             title="Open"
                           >
                             <ArrowRight size={13} />
                           </Link>
                           <button
                             onClick={() => void handleDelete(test.id)}
-                            className="p-1.5 rounded-md hover:bg-red-500/10 text-[#9CA3AF] hover:text-red-400 transition-colors"
+                            className="p-1.5 rounded-md hover:bg-red-500/10 text-text-muted hover:text-red-400 transition-colors"
                             title="Delete"
                           >
                             <Trash2 size={13} />
@@ -410,7 +410,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
               placeholder="UUID of the surface to test"
               className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] placeholder-[#9CA3AF] text-sm focus:outline-none focus:border-[#2563EB] font-mono bg-white"
             />
-            <p className="text-[11px] text-[#9CA3AF] mt-1">
+            <p className="text-[11px] text-text-muted mt-1">
               Find this id from the URL of the landing page / funnel step / email.
             </p>
           </div>

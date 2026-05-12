@@ -340,7 +340,7 @@ export default function ListingsPage() {
                               ? "bg-emerald-500/10 text-emerald-400"
                               : svc.status === "paused"
                                 ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
-                                : "bg-[rgba(0,0,0,0.06)] text-[#9CA3AF]"
+                                : "bg-[rgba(0,0,0,0.06)] text-text-muted"
                           }`}
                         >
                           {svc.status}

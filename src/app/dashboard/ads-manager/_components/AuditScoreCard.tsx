@@ -390,7 +390,7 @@ export default function AuditScoreCard() {
       )}
 
       {/* Footer attribution */}
-      <p className="text-[9px] text-[#9CA3AF] text-right">
+      <p className="text-[9px] text-text-muted text-right">
         Powered by 200+ account health checks
       </p>
     </div>

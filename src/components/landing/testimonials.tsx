@@ -41,7 +41,7 @@ export default function Testimonials() {
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
               We don&rsquo;t fake social proof.
             </h2>
-            <p className="text-sm md:text-base text-gray-400 leading-relaxed max-w-xl mx-auto mb-6">
+            <p className="text-sm md:text-base text-text-muted leading-relaxed max-w-xl mx-auto mb-6">
               {BRAND.product_name} is brand-new, and we&rsquo;d rather show you no
               testimonials than make them up. Case studies with real agency
               founders, real numbers, and real logos will land here as the

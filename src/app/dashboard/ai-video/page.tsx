@@ -594,7 +594,7 @@ export default function AIVideoPage() {
               <div className="flex items-end gap-5 flex-wrap">
                 {/* Model picker � icon-first, compact */}
                 <div>
-                  <p className="text-[9px] uppercase tracking-[0.18em] text-[#9CA3AF] mb-1.5 font-medium">Style</p>
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-text-muted mb-1.5 font-medium">Style</p>
                   <div className="flex gap-1.5">
                     {MODELS.map(m => {
                       const Icon = m.icon;
@@ -633,7 +633,7 @@ export default function AIVideoPage() {
 
                 {/* Aspect picker � visual mini frames */}
                 <div>
-                  <p className="text-[9px] uppercase tracking-[0.18em] text-[#9CA3AF] mb-1.5 font-medium">Aspect</p>
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-text-muted mb-1.5 font-medium">Aspect</p>
                   <div className="flex gap-1.5">
                     {ASPECTS.map(ar => (
                       <button
@@ -685,7 +685,7 @@ export default function AIVideoPage() {
                 className="overflow-hidden"
               >
                 <div className="space-y-2 py-1">
-                  <div className="flex items-center justify-between text-[10px] text-[#9CA3AF]">
+                  <div className="flex items-center justify-between text-[10px] text-text-muted">
                     <span>Estimated 45�90 seconds � Frame {Math.round((progress / 100) * numFrames)}/{numFrames}</span>
                     <span>{Math.round(progress)}%</span>
                   </div>
@@ -705,20 +705,20 @@ export default function AIVideoPage() {
           <div>
             <button
               onClick={() => setAdvancedOpen(v => !v)}
-              className="flex items-center gap-1.5 text-[11px] text-[#9CA3AF] hover:text-[#374151] transition-colors px-1"
+              className="flex items-center gap-1.5 text-[11px] text-text-muted hover:text-[#374151] transition-colors px-1"
             >
               {advancedOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
               Advanced settings
-              <span className="text-[#9CA3AF] ml-1">
+              <span className="text-text-muted ml-1">
                 � {(numFrames / 24).toFixed(1)}s � guidance {guidanceScale}
               </span>
             </button>
             {advancedOpen && (
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 p-4  border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)]">
                 <div>
-                  <label className="block text-[9px] text-[#9CA3AF] uppercase tracking-[0.16em] mb-1.5">
+                  <label className="block text-[9px] text-text-muted uppercase tracking-[0.16em] mb-1.5">
                     Frames
-                    <span className="normal-case tracking-normal ml-1 text-[#9CA3AF]">
+                    <span className="normal-case tracking-normal ml-1 text-text-muted">
                       (max {Number.isFinite(maxFrames) ? maxFrames : "8"})
                     </span>
                   </label>
@@ -734,16 +734,16 @@ export default function AIVideoPage() {
                     }}
                     className="input w-full text-xs bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)]"
                   />
-                  <p className="text-[9px] text-[#9CA3AF] mt-1">~{(numFrames / 24).toFixed(1)}s @ 24fps</p>
+                  <p className="text-[9px] text-text-muted mt-1">~{(numFrames / 24).toFixed(1)}s @ 24fps</p>
                 </div>
                 <div>
-                  <label className="block text-[9px] text-[#9CA3AF] uppercase tracking-[0.16em] mb-1.5">Guidance scale</label>
+                  <label className="block text-[9px] text-text-muted uppercase tracking-[0.16em] mb-1.5">Guidance scale</label>
                   <input
                     type="number" min={1} max={20} step={0.5} value={guidanceScale}
                     onChange={e => setGuidanceScale(parseFloat(e.target.value) || 7.5)}
                     className="input w-full text-xs bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)]"
                   />
-                  <p className="text-[9px] text-[#9CA3AF] mt-1">Higher = stricter prompt adherence</p>
+                  <p className="text-[9px] text-text-muted mt-1">Higher = stricter prompt adherence</p>
                 </div>
                 {nextTierLabel && (
                   <Link
@@ -759,7 +759,7 @@ export default function AIVideoPage() {
 
           {/* GALLERY � fullbleed thumbs, no card chrome */}
           {results.length === 0 ? (
-            <div className="text-center py-16 text-[#9CA3AF]">
+            <div className="text-center py-16 text-text-muted">
               <Film size={28} strokeWidth={1} className="mx-auto mb-3 opacity-50" />
               <p className="text-sm font-light">Your generations will appear here.</p>
             </div>
@@ -837,7 +837,7 @@ export default function AIVideoPage() {
                     )}
                     <div className="hf-thumb-meta">
                       <p className="line-clamp-2 leading-tight">{result.prompt}</p>
-                      <div className="flex items-center justify-between mt-1 text-[9px] text-[#9CA3AF]">
+                      <div className="flex items-center justify-between mt-1 text-[9px] text-text-muted">
                         <span>{result.aspect_ratio} � {result.style || "cinematic"}</span>
                         {result.url && (
                           <div className="flex items-center gap-2">
