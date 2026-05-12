@@ -1068,7 +1068,7 @@ export default function WebsitesPage() {
                     )}
                     <button
                       onClick={() => openPricing(active)}
-                      className="text-[10px] px-3 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center gap-1 hover:shadow-lg hover:shadow-amber-400/30"
+                      className="text-[10px] px-3 py-2 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white font-bold flex items-center gap-1 hover:shadow-lg hover:shadow-[#2563EB]/30"
                     >
                       <Rocket size={11} /> See pricing
                     </button>
@@ -1107,7 +1107,7 @@ export default function WebsitesPage() {
                     </button>
                     <button
                       onClick={() => openPricing(active)}
-                      className="text-[10px] px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center gap-1"
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white font-bold flex items-center gap-1"
                     >
                       <Rocket size={10} /> Go Live
                     </button>
@@ -1318,7 +1318,7 @@ export default function WebsitesPage() {
                               </button>
                               {status === "preview" && (
                                 <>
-                                  <button onClick={() => openPricing(p)} className="text-[10px] px-2 py-1 rounded-md bg-gradient-to-r from-amber-400 to-orange-500 text-black font-semibold flex items-center gap-1">
+                                  <button onClick={() => openPricing(p)} className="text-[10px] px-2 py-1 rounded-md bg-[#2563EB] hover:bg-[#3B82F6] text-white font-semibold flex items-center gap-1">
                                     <Rocket size={10} /> Go Live
                                   </button>
                                   <button onClick={() => shareDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-border text-muted hover:text-foreground flex items-center gap-1">
@@ -1543,7 +1543,7 @@ function PricingModal({
               <button
                 onClick={onSubscribe}
                 disabled={subscribing || quoteLoading || !quote}
-                className="w-full text-xs px-4 py-3 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center justify-center gap-1.5 disabled:opacity-50"
+                className="w-full text-xs px-4 py-3 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white font-bold flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
                 {subscribing ? <Loader size={12} className="animate-spin" /> : <Rocket size={12} />}
                 Go Live ï¿½ ${display}{cyclePer}

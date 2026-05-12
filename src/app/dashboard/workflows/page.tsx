@@ -361,7 +361,7 @@ export default function WorkflowsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <button onClick={() => setShowAiGen(true)} className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-semibold hover:shadow-lg transition-all flex items-center gap-1.5">
+                    <button onClick={() => setShowAiGen(true)} className="px-3 py-1.5 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white text-xs font-semibold hover:shadow-lg transition-all flex items-center gap-1.5">
                       <Sparkles size={13} /> Generate with AI
                     </button>
                   </motion.div>

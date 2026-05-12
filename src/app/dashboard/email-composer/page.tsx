@@ -855,7 +855,7 @@ export default function EmailComposerPage() {
               <>
                 <button
                   onClick={() => setWizardOpen(true)}
-                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black shadow-lg shadow-gold/30 hover:shadow-gold/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white shadow-lg shadow-[#2563EB]/30 hover:shadow-[#2563EB]/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
 >
                   <Sparkles size={12} className="animate-pulse" />
                   New with AI
@@ -1207,7 +1207,7 @@ export default function EmailComposerPage() {
                   whileTap={{ scale: 0.97 }}
                   onClick={() => handleSend()}
                   disabled={sending || sendingTest}
-                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white font-semibold shadow-lg shadow-[#2563EB]/25 hover:shadow-[#2563EB]/40 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
 >
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sending ? "Sending..." : "Send"}
@@ -1447,7 +1447,7 @@ export default function EmailComposerPage() {
                     }
                     toast.success("Scheduling arrives soon � send now for instant delivery");
                   }}
-                  className="w-full text-xs flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all"
+                  className="w-full text-xs flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#3B82F6] text-white font-semibold shadow-lg shadow-[#2563EB]/25 hover:shadow-[#2563EB]/40 transition-all"
 >
                   <Clock size={12} /> Schedule Email
                 </button>
@@ -1565,7 +1565,7 @@ export default function EmailComposerPage() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
-                className="w-full text-xs py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all"
+                className="w-full text-xs py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#3B82F6] text-white font-semibold shadow-lg shadow-[#2563EB]/25 hover:shadow-[#2563EB]/40 transition-all"
 >Save Signature</motion.button>
             </motion.div>
             <motion.div

@@ -530,7 +530,7 @@ export default function DomainsPage() {
                               <button
                                 onClick={() => purchaseDomain(r.domain, "yearly", r.price || undefined)}
                                 disabled={anyRowLoading}
-                                className="relative text-[10px] px-2 py-2 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 text-black font-bold flex flex-col items-center hover:shadow-lg hover:shadow-amber-400/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                                className="relative text-[10px] px-2 py-2 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white font-bold flex flex-col items-center hover:shadow-lg hover:shadow-[#2563EB]/30 disabled:opacity-60 disabled:cursor-not-allowed"
                               >
                                 {rowYearlyLoading ? (
                                   <Loader size={12} className="animate-spin my-1" />
