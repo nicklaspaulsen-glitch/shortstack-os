@@ -80,7 +80,7 @@ export default function IntegrationsSettings({ socialAccounts, socialLoading, di
                     <button
                       onClick={() => disconnectSocialAccount(account)}
                       disabled={disconnectingSocial === account.id}
-                      className="text-xs text-red-400 hover:text-red-300 transition-colors px-2 py-1 rounded hover:bg-red-500/10 disabled:opacity-50"
+                      className="text-xs text-red-400 hover:text-red-600 transition-colors px-2 py-1 rounded hover:bg-red-500/10 disabled:opacity-50"
                       title="Disconnect account">
                       {disconnectingSocial === account.id ? (
                         <Loader2 size={12} className="animate-spin" />

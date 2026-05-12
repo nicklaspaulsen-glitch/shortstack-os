@@ -162,7 +162,7 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
               border: "1px solid rgba(34,197,94,0.3)",
             }}
           >
-            <Inbox size={16} className="text-emerald-300" />
+            <Inbox size={16} className="text-emerald-600" />
           </div>
           <div>
             <h2 className="text-base font-bold text-foreground">
@@ -233,7 +233,7 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
                         : "rgba(255,255,255,0.04)",
                     }}
                   >
-                    <Icon size={14} className={isOn ? "text-emerald-300" : "text-muted"} />
+                    <Icon size={14} className={isOn ? "text-emerald-600" : "text-muted"} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
@@ -274,7 +274,7 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
                     }}
                   >
                     {isOn ? (
-                      <Check size={11} className="text-emerald-200" />
+                      <Check size={11} className="text-emerald-700" />
                     ) : (
                       <Plus size={11} className="text-muted" />
                     )}

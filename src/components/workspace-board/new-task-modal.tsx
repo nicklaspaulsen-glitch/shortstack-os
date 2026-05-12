@@ -237,7 +237,7 @@ export function NewTaskModal({
               </div>
 
               {error && (
-                <div className="px-3 py-2 rounded-md bg-red-500/10 border border-red-500/30 text-red-300 text-xs">
+                <div className="px-3 py-2 rounded-md bg-red-500/10 border border-red-500/30 text-red-600 text-xs">
                   {error}
                 </div>
               )}

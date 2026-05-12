@@ -494,7 +494,7 @@ export default function WorkspaceFilesPage() {
                 </nav>
 
                 {uploading > 0 && (
-                  <div className="mb-3 flex items-center gap-2 text-cyan-300 text-sm">
+                  <div className="mb-3 flex items-center gap-2 text-cyan-600 text-sm">
                     <Loader2 size={14} className="animate-spin" /> Uploading {uploading} file
                     {uploading === 1 ? "" : "s"}…
                   </div>

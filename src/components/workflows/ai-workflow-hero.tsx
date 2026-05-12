@@ -201,7 +201,7 @@ export default function AiWorkflowHero({
         {recent.length === 0 && !generating && (
           <div>
             <div className="flex items-center gap-1.5 mb-2">
-              <Lightbulb size={11} className="text-amber-300" />
+              <Lightbulb size={11} className="text-amber-600" />
               <p className="text-[10.5px] uppercase tracking-wider text-muted font-semibold">
                 Try one of these
               </p>

@@ -14,19 +14,19 @@ const OUTCOME_META: Record<
 > = {
   interested: {
     label: "Interested",
-    tone: "text-emerald-300 bg-emerald-500/15 border-emerald-500/30",
+    tone: "text-emerald-700 bg-emerald-500/15 border-emerald-500/30",
   },
   booked: {
     label: "Booked",
-    tone: "text-emerald-200 bg-emerald-500/25 border-emerald-400/40",
+    tone: "text-emerald-700 bg-emerald-500/25 border-emerald-400/40",
   },
   replied: {
     label: "Replied",
-    tone: "text-sky-300 bg-sky-500/15 border-sky-500/30",
+    tone: "text-sky-700 bg-sky-500/15 border-sky-500/30",
   },
   objection: {
     label: "Objection",
-    tone: "text-amber-300 bg-amber-500/15 border-amber-500/30",
+    tone: "text-amber-700 bg-amber-500/15 border-amber-500/30",
   },
   no_answer: {
     label: "No answer",
@@ -34,11 +34,11 @@ const OUTCOME_META: Record<
   },
   voicemail: {
     label: "Voicemail",
-    tone: "text-violet-300 bg-violet-500/15 border-violet-500/30",
+    tone: "text-violet-700 bg-violet-500/15 border-violet-500/30",
   },
   bounced: {
     label: "Bounced",
-    tone: "text-rose-300 bg-rose-500/15 border-rose-500/30",
+    tone: "text-rose-700 bg-rose-500/15 border-rose-500/30",
   },
   unknown: {
     label: "Pending",

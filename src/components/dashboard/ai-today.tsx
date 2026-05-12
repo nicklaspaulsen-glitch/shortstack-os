@@ -46,8 +46,8 @@ const ICON_MAP = {
 } as const;
 
 const URGENCY_COLORS = {
-  high: { glow: "rgba(239,68,68,0.18)", accent: "#ef4444", text: "text-red-300", border: "rgba(239,68,68,0.25)" },
-  medium: { glow: "rgba(200,168,85,0.16)", accent: "#c8a855", text: "text-amber-300", border: "rgba(200,168,85,0.25)" },
+  high: { glow: "rgba(239,68,68,0.18)", accent: "#ef4444", text: "text-red-600", border: "rgba(239,68,68,0.25)" },
+  medium: { glow: "rgba(200,168,85,0.16)", accent: "#c8a855", text: "text-amber-600", border: "rgba(200,168,85,0.25)" },
   low: { glow: "rgba(37,99,235,0.10)", accent: "#2563EB", text: "text-blue-600", border: "rgba(37,99,235,0.18)" },
 } as const;
 

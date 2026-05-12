@@ -76,7 +76,7 @@ export default function AgentDrawer({ agent, status, integrationEnvStatus, run, 
 
               {/* Integration env-var hint */}
               {agent.kind !== "worker" && integrationEnvStatus === "missing" && (
-                <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200 flex gap-2">
+                <div className="p-3 rounded-lg bg-amber-50 border border-amber-500/20 text-xs text-amber-700 flex gap-2">
                   <AlertTriangle size={14} className="mt-0.5 shrink-0" />
                   <div>
                     Missing environment variables — the integration is
@@ -146,12 +146,12 @@ export default function AgentDrawer({ agent, status, integrationEnvStatus, run, 
 function StatusPill({ status }: { status: AgentStatus }) {
   const map: Record<AgentStatus, { bg: string; label: string; icon: React.ReactNode }> = {
     live: {
-      bg: "bg-emerald-400/15 text-emerald-300 border-emerald-400/30",
+      bg: "bg-emerald-400/15 text-emerald-700 border-emerald-400/30",
       label: "Live — ran in the last 5 min",
       icon: <Activity size={12} />,
     },
     recent: {
-      bg: "bg-amber-400/15 text-amber-300 border-amber-400/30",
+      bg: "bg-amber-400/15 text-amber-700 border-amber-400/30",
       label: "Recent — ran in the last hour",
       icon: <Clock size={12} />,
     },
@@ -161,7 +161,7 @@ function StatusPill({ status }: { status: AgentStatus }) {
       icon: <Clock size={12} />,
     },
     error: {
-      bg: "bg-red-400/15 text-red-300 border-red-400/30",
+      bg: "bg-red-400/15 text-red-600 border-red-400/30",
       label: "Error — half or more recent runs failed",
       icon: <AlertTriangle size={12} />,
     },

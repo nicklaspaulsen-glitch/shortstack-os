@@ -660,7 +660,7 @@ export default function ContentLibraryPage() {
             />
             <button onClick={bulkTag} className="btn-ghost text-xs" aria-label="Apply tag to selected assets"><Tag size={12} /></button>
           </div>
-          <button onClick={bulkDelete} className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1">
+          <button onClick={bulkDelete} className="text-xs text-red-400 hover:text-red-600 flex items-center gap-1">
             <Trash2 size={12} /> Delete
           </button>
           <button onClick={() => setSelectedAssets(new Set())} className="text-xs text-muted hover:text-text-primary" aria-label="Clear selection">
@@ -914,7 +914,7 @@ export default function ContentLibraryPage() {
               <button onClick={() => { navigator.clipboard.writeText(previewAsset.url); toast.success("Link copied"); }} className="btn-ghost text-xs flex items-center gap-1">
                 <Copy size={12} /> Copy Link
               </button>
-              <button onClick={() => { deleteAsset(previewAsset.id); setPreviewAsset(null); }} className="btn-ghost text-xs flex items-center gap-1 text-red-400 hover:text-red-300">
+              <button onClick={() => { deleteAsset(previewAsset.id); setPreviewAsset(null); }} className="btn-ghost text-xs flex items-center gap-1 text-red-400 hover:text-red-600">
                 <Trash2 size={12} /> Delete
               </button>
             </div>

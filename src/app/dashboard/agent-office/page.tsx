@@ -253,7 +253,7 @@ export default function AgentOfficePage() {
       </div>
 
       {snapshotError && (
-        <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-xs text-red-300">
+        <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-xs text-red-600">
           Snapshot failed to load — {snapshotError}. The canvas will run on
           live data only until you reload.
         </div>

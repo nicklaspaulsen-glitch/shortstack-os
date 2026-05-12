@@ -159,7 +159,7 @@ export function TaskDrawer({
                         void onDelete();
                       }
                     }}
-                    className="p-1.5 rounded-md text-muted hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                    className="p-1.5 rounded-md text-muted hover:text-red-600 hover:bg-red-500/10 transition-colors"
                     aria-label="Delete"
                   >
                     <Trash2 size={16} />

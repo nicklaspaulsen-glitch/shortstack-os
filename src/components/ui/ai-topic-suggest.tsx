@@ -72,7 +72,7 @@ const DEFAULT_TITLE: Record<SuggestSurface, string> = {
 };
 
 const IMPACT_BADGE: Record<SuggestedTopic["impact"], string> = {
-  high: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30",
+  high: "bg-emerald-500/15 text-emerald-700 border border-emerald-500/30",
   medium: "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]",
   low: "bg-muted/15 text-muted border border-border/40",
 };

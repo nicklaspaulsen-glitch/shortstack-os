@@ -12,12 +12,12 @@ interface ChannelIconProps {
 export default function ChannelIcon({ channel, size = 14, className = "" }: ChannelIconProps) {
   switch (channel) {
     case "voice_call":
-      return <Phone size={size} className={`text-amber-300 ${className}`} />;
+      return <Phone size={size} className={`text-amber-600 ${className}`} />;
     case "email":
-      return <Mail size={size} className={`text-sky-300 ${className}`} />;
+      return <Mail size={size} className={`text-sky-600 ${className}`} />;
     case "sms":
-      return <MessageSquare size={size} className={`text-emerald-300 ${className}`} />;
+      return <MessageSquare size={size} className={`text-emerald-600 ${className}`} />;
     case "dm":
-      return <Send size={size} className={`text-pink-300 ${className}`} />;
+      return <Send size={size} className={`text-pink-600 ${className}`} />;
   }
 }

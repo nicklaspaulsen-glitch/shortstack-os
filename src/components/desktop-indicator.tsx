@@ -101,7 +101,7 @@ export default function DesktopIndicator({ collapsed }: { collapsed?: boolean })
                   <button
                     type="button"
                     onClick={() => void openDropboxFolder()}
-                    className="hover:text-emerald-300 transition-colors underline decoration-dotted underline-offset-2"
+                    className="hover:text-emerald-600 transition-colors underline decoration-dotted underline-offset-2"
                   >
                     ~/ShortStack/Dropbox auto-upload
                   </button>

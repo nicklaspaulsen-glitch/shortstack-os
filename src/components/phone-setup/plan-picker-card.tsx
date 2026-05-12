@@ -184,7 +184,7 @@ export default function PlanPickerCard() {
               Cost per new number
             </p>
             <p className="text-[12px] text-foreground">
-              <span className="text-lg font-extrabold text-emerald-300">
+              <span className="text-lg font-extrabold text-emerald-600">
                 ${features.perNumber.toFixed(2)}/mo
               </span>{" "}
               billed by Twilio · included in your plan tier
