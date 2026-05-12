@@ -347,8 +347,7 @@ export default function AIStudioPage() {
         {/* Wizard image results � inline strip above the workspace */}
         {wizardImages.length > 0 && (
           <motion.div
-            className="mb-5 p-4"
-            style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "12px", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 1px 3px rgba(0,0,0,0.06)" }}
+            className="glass mb-5 p-4"
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
           >
             <div className="flex items-center justify-between mb-3">
@@ -420,7 +419,7 @@ export default function AIStudioPage() {
         <div className={`grid grid-cols-1 gap-3 items-start ${history.length > 0 ? "md:grid-cols-[200px_1fr_188px]" : "md:grid-cols-[200px_1fr]"}`}>
 
           {/* Left: vertical tool list */}
-          <div className="overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "12px", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)" }}>
+          <div className="glass overflow-hidden">
             <div className="px-3 pt-3 pb-1">
               <p className="text-[8px] uppercase tracking-[0.2em] text-text-muted font-semibold px-1 mb-2">Tools</p>
             </div>
@@ -489,8 +488,7 @@ export default function AIStudioPage() {
           {/* Right: active tool workspace */}
           <div
             ref={toolPanelRef}
-            className="relative overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "12px", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)" }}
+            className="glass relative overflow-hidden"
           >
             {/* Tool header */}
             <div className="flex items-center gap-3 px-5 py-3.5 border-b border-border-subtle">
@@ -545,8 +543,7 @@ export default function AIStudioPage() {
           {/* Right: history panel � only rendered when jobs exist */}
           {history.length > 0 && (
             <motion.div
-              className="hidden md:flex flex-col gap-2 overflow-hidden"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "12px", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)" }}
+              className="glass hidden md:flex flex-col gap-2 overflow-hidden"
               initial={{ opacity: 0, x: 12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
@@ -743,7 +740,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
         {/* Output */}
         <motion.div
           className="rounded-xl p-4 min-h-[200px]"
-          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
+
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22, delay: 0.08 }}
@@ -965,7 +962,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
+
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {images.length > 0 ? (
@@ -1136,7 +1133,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
+
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1360,7 +1357,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
         </div>
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
+
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1466,7 +1463,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex flex-col items-center justify-center"
-          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
+
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
@@ -1638,7 +1635,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
           </div>
           <motion.div
             className="rounded-xl p-4 flex items-center justify-center"
-            style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
+
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
           >
             {result ? (
@@ -1772,7 +1769,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px]"
-          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
+
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           <h3 className="text-xs font-semibold text-foreground mb-3">How it works</h3>
@@ -1906,7 +1903,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
 
         <motion.div
           className="rounded-xl p-4 min-h-[200px]"
-          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
+
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           <h3 className="text-xs font-semibold text-foreground mb-3">Queue ({results.length})</h3>

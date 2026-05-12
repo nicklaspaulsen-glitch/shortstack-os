@@ -68,7 +68,7 @@ export default function CompetitorTrackerPage() {
 
   useEffect(() => {
     load();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function openCreate() {
@@ -193,7 +193,7 @@ export default function CompetitorTrackerPage() {
         <button
                   onClick={openCreate}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm font-medium transition-colors border border-border"
-                >
+>
                   <Plus size={15} /> Add Competitor
                 </button>
       </div>
@@ -208,14 +208,14 @@ export default function CompetitorTrackerPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="rounded-xl border border-[rgba(0,0,0,0.08)] p-12 text-center"
-                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
-              >
+                
+>
                 <Crosshair size={40} className="mx-auto mb-4 text-[#9CA3AF]" />
                 <p className="text-[#6B7280] mb-4">No competitors tracked yet.</p>
                 <button
                   onClick={openCreate}
                   className="px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors"
-                >
+>
                   <Plus size={14} className="inline mr-1" /> Add Competitor
                 </button>
               </motion.div>
@@ -229,12 +229,12 @@ export default function CompetitorTrackerPage() {
                     <motion.div
                       key={c.id}
                       className="rounded-xl border border-[rgba(0,0,0,0.08)] p-4"
-                      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+                      
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05 }}
                       whileHover={{ y: -4, scale: 1.01 }}
-                    >
+>
                       <div className="flex items-start gap-4">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
@@ -245,7 +245,7 @@ export default function CompetitorTrackerPage() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-xs text-[#9CA3AF] hover:text-[#374151] flex items-center gap-0.5"
-                              >
+>
                                 <Globe size={11} /> {c.website.replace(/^https?:\/\//, "")}
                               </a>
                             )}
@@ -279,7 +279,7 @@ export default function CompetitorTrackerPage() {
                             onClick={() => checkNow(c)}
                             disabled={checking === c.id}
                             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-xs transition-colors disabled:opacity-50"
-                          >
+>
                             {checking === c.id ? (
                               <Loader size={12} className="animate-spin" />
                             ) : (
@@ -290,13 +290,13 @@ export default function CompetitorTrackerPage() {
                           <button
                             onClick={() => openEdit(c)}
                             className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#9CA3AF] hover:text-[#374151] transition-colors"
-                          >
+>
                             <Edit2 size={15} />
                           </button>
                           <button
                             onClick={() => deleteItem(c.id)}
                             className="p-1.5 rounded-lg hover:bg-red-50 text-[#9CA3AF] hover:text-red-600 transition-colors"
-                          >
+>
                             <Trash2 size={15} />
                           </button>
                         </div>
@@ -309,7 +309,7 @@ export default function CompetitorTrackerPage() {
               isOpen={showCreate}
               onClose={() => setShowCreate(false)}
               title={editItem ? "Edit Competitor" : "Add Competitor"}
-            >
+>
               <div className="space-y-3">
                 {(
                   [
@@ -325,21 +325,21 @@ export default function CompetitorTrackerPage() {
                       onChange={e => setF(key, e.target.value)}
                       placeholder={placeholder}
                       className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[rgba(37,99,235,0.40)]"
-                    />
+ />
                   </div>
                 ))}
                 <div className="flex justify-end gap-2 pt-2">
                   <button
                     onClick={() => setShowCreate(false)}
                     className="px-4 py-2 rounded-lg border border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#111827] text-sm"
-                  >
+>
                     Cancel
                   </button>
                   <button
                     onClick={save}
                     disabled={saving}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white text-sm font-medium disabled:opacity-50"
-                  >
+>
                     {saving && <Loader size={13} className="animate-spin" />}
                     {editItem ? "Save" : "Add"}
                   </button>

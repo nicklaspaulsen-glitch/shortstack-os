@@ -333,10 +333,9 @@ export default function BillingPage() {
                   return (
                     <motion.div
                       key={meta.key}
-                      className={` border overflow-hidden relative transition-all ${
+                      className={`glass border overflow-hidden relative transition-all ${
                         maxed ? "shadow-[0_0_16px_rgba(239,68,68,0.12)]" : ""
                       }`}
-                      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px -4px rgba(0,0,0,0.06)" }}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}

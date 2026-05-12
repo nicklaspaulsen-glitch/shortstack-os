@@ -66,13 +66,7 @@ export default function ClientOutreachFeedPage() {
   return (
     <div className="space-y-4">
       <div
-        className="rounded-xl border border-[rgba(0,0,0,0.08)] px-6 py-5 sm:py-6"
-        style={{
-          background: "rgba(255,255,255,0.88)",
-          backdropFilter: "blur(24px) saturate(1.8)",
-          WebkitBackdropFilter: "blur(24px) saturate(1.8)",
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 16px rgba(0,0,0,0.06)",
-        }}
+        className="glass rounded-xl border border-[rgba(0,0,0,0.08)] px-6 py-5 sm:py-6"
       >
         <div className="flex items-start gap-3">
           <div

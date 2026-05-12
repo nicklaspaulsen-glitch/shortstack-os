@@ -90,7 +90,7 @@ export default function EmailTemplatesPage() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "opens" | "replies">("name");
 
-  /* -- AI state -- */
+ /* -- AI state -- */
   const [aiTemplateType, setAiTemplateType] = useState<AiTemplateType>("welcome");
   const [aiAudience, setAiAudience] = useState("");
   const [aiBrandVoice, setAiBrandVoice] = useState("");
@@ -238,8 +238,8 @@ export default function EmailTemplatesPage() {
                       transition={{ delay: i * 0.05, duration: 0.4 }}
                       whileHover={{ y: -4, scale: 1.01 }}
                       onClick={() => openTemplate(template)}
-                      className="rounded-xl overflow-hidden cursor-pointer group" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                    >
+                      className="glass rounded-xl overflow-hidden cursor-pointer group" 
+>
                       <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
                       <div className="p-4">
                         <div className="flex items-start justify-between mb-2">
@@ -302,7 +302,7 @@ export default function EmailTemplatesPage() {
                     </div>
                     {/* Merge Tag Helper */}
                     <div className="space-y-3">
-                      <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                      <div className="glass rounded-xl p-4">
                         <h4 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Merge Tags</h4>
                         <div className="space-y-1">
                           {MERGE_TAGS.map(tag => (
@@ -315,7 +315,7 @@ export default function EmailTemplatesPage() {
                         </div>
                       </div>
                       {/* Preview Modes */}
-                      <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                      <div className="glass rounded-xl p-4">
                         <h4 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Preview Mode</h4>
                         <div className="flex gap-1">
                           {[
@@ -342,8 +342,8 @@ export default function EmailTemplatesPage() {
                   <motion.div
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="rounded-xl text-center py-12" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                  >
+                    className="glass rounded-xl text-center py-12" 
+>
                     <Edit3 size={24} className="mx-auto mb-2 text-muted/30" />
                     <p className="text-sm text-muted">Select a template from the Gallery to edit</p>
                   </motion.div>
@@ -354,22 +354,22 @@ export default function EmailTemplatesPage() {
                 <StatStrip
                   focal={{
                     label: "Avg Open Rate",
-                    value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.opens, 0) / TEMPLATES.length)}%` : "0%",
+                    value: TEMPLATES.length> 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.opens, 0) / TEMPLATES.length)}%` : "0%",
                     icon: <Eye size={12} />,
                     color: "text-blue-700",
                   }}
                   support={[
-                    { label: "Avg Click Rate", value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.clicks, 0) / TEMPLATES.length)}%` : "0%", icon: <TrendingUp size={12} />, color: "text-green-700" },
-                    { label: "Avg Reply Rate", value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.replies, 0) / TEMPLATES.length)}%` : "0%", icon: <Mail size={12} />, color: "text-purple-700" },
-                    { label: "Top Performer", value: TEMPLATES.length > 0 ? [...TEMPLATES].sort((a, b) => b.replies - a.replies)[0].name : "N/A", icon: <Star size={12} />, color: "text-[#2563EB]" },
+                    { label: "Avg Click Rate", value: TEMPLATES.length> 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.clicks, 0) / TEMPLATES.length)}%` : "0%", icon: <TrendingUp size={12} />, color: "text-green-700" },
+                    { label: "Avg Reply Rate", value: TEMPLATES.length> 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.replies, 0) / TEMPLATES.length)}%` : "0%", icon: <Mail size={12} />, color: "text-purple-700" },
+                    { label: "Top Performer", value: TEMPLATES.length> 0 ? [...TEMPLATES].sort((a, b) => b.replies - a.replies)[0].name : "N/A", icon: <Star size={12} />, color: "text-[#2563EB]" },
                   ]}
-                />
+ />
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.25 }}
-                  className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                >
+                  className="glass rounded-xl p-4" 
+>
                   <h3 className="text-sm font-semibold mb-3">Template Performance Ranking</h3>
                   <div className="space-y-2">
                     {TEMPLATES.length === 0 && (
@@ -382,7 +382,7 @@ export default function EmailTemplatesPage() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.04 }}
                         className="flex items-center gap-3 p-2.5 rounded" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(255,255,255,0.70)" }}
-                      >
+>
                         <span className="text-[9px] text-muted font-bold w-6 text-center">#{i + 1}</span>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium truncate">{t.name}</p>
@@ -404,17 +404,17 @@ export default function EmailTemplatesPage() {
                   <GitBranch size={14} className="text-[#2563EB]" /> Template Version History
                 </h3>
                 <div className="space-y-3">
-                  {TEMPLATES.filter(t => t.version > 1).length === 0 && (
+                  {TEMPLATES.filter(t => t.version> 1).length === 0 && (
                     <p className="text-center text-[10px] text-muted py-6">No version history yet. Versions will appear here as templates are edited.</p>
                   )}
-                  {TEMPLATES.filter(t => t.version > 1).map((t, i) => (
+                  {TEMPLATES.filter(t => t.version> 1).map((t, i) => (
                     <motion.div
                       key={t.id}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05 }}
-                      className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                    >
+                      className="glass rounded-xl p-4" 
+>
                       <div className="flex items-center justify-between mb-3">
                         <p className="text-xs font-semibold">{t.name}</p>
                         <span className="text-[9px] px-2 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">v{t.version} (current)</span>
@@ -444,8 +444,8 @@ export default function EmailTemplatesPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                >
+                  className="glass rounded-xl p-6" 
+>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center">
                       <Sparkles size={18} className="text-[#2563EB]" />
@@ -509,8 +509,8 @@ export default function EmailTemplatesPage() {
                   <motion.div
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                  >
+                    className="glass rounded-xl p-4" 
+>
                     <div className="flex items-center justify-between mb-3">
                       <div>
                         <h4 className="text-sm font-semibold">{aiGenerated.name}</h4>
@@ -541,7 +541,7 @@ export default function EmailTemplatesPage() {
                         </div>
                         <textarea value={editedBody} onChange={e => setEditedBody(e.target.value)} rows={12} className="input w-full text-xs font-mono resize-none" />
                       </div>
-                      {aiGenerated.merge_tags.length > 0 && (
+                      {aiGenerated.merge_tags.length> 0 && (
                         <div className="flex gap-1 flex-wrap">
                           {aiGenerated.merge_tags.map(tag => (
                             <span key={tag} className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{tag}</span>
@@ -568,8 +568,8 @@ export default function EmailTemplatesPage() {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                  >
+                    className="glass rounded-xl p-3" 
+>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] px-2 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-semibold">{v.angle}</span>
                       <button onClick={() => { setEditedSubject(v.subject); setEditedBody(v.body); setShowVariantsModal(false); toast.success("Variant applied"); }} className="btn-primary text-[10px] py-1 px-2">Apply</button>
@@ -586,8 +586,8 @@ export default function EmailTemplatesPage() {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0 }}
-                    className="rounded-xl text-center p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                  >
+                    className="glass rounded-xl text-center p-6" 
+>
                     <Upload size={24} className="mx-auto mb-2 text-[#2563EB]" />
                     <h3 className="text-sm font-semibold mb-1">Import Templates</h3>
                     <p className="text-[10px] text-muted mb-3">Upload HTML or JSON template files</p>
@@ -601,8 +601,8 @@ export default function EmailTemplatesPage() {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.05 }}
-                    className="rounded-xl text-center p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                  >
+                    className="glass rounded-xl text-center p-6" 
+>
                     <Download size={24} className="mx-auto mb-2 text-[#2563EB]" />
                     <h3 className="text-sm font-semibold mb-1">Export Templates</h3>
                     <p className="text-[10px] text-muted mb-3">Download your templates for backup or sharing</p>
@@ -624,8 +624,8 @@ export default function EmailTemplatesPage() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                >
+                  className="glass rounded-xl p-4" 
+>
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <Share2 size={14} className="text-[#2563EB]" /> Template Sharing
                   </h3>
@@ -640,7 +640,7 @@ export default function EmailTemplatesPage() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.04 }}
                         className="flex items-center justify-between p-2 rounded glass-md text-[10px]"
-                      >
+>
                         <span className="font-medium">{t.name}</span>
                         <div className="flex items-center gap-2">
                           <span className={`text-[9px] px-1.5 py-0.5 rounded ${t.shared ? "bg-green-500/10 text-green-700" : "bg-[rgba(0,0,0,0.04)] text-[#6B7280]"}`}>
@@ -660,8 +660,8 @@ export default function EmailTemplatesPage() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.97, y: 8 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  className="rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                >
+                  className="glass rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col" 
+>
                   <div className="flex items-center justify-between p-4 border-b border-[rgba(0,0,0,0.10)]">
                     <div className="flex items-center gap-2">
                       <Tag size={14} className="text-[#2563EB]" />

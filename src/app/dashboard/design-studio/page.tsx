@@ -141,7 +141,7 @@ export default function DesignStudioPage() {
                           transition={{ delay: i * 0.06, duration: 0.4 }}
                           whileHover={{ y: -4, scale: 1.02 }}
                           className="rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-[#2563EB]/40 transition-colors group"
-                          style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
+
                         >
                           <div
                             className="border border-black/15 bg-black/5 rounded group-hover:border-[#2563EB]/50 transition-colors"
@@ -229,7 +229,7 @@ function RecentDesigns() {
           transition={{ delay: i * 0.05, duration: 0.35 }}
           whileHover={{ y: -4, scale: 1.01 }}
           className="rounded-xl overflow-hidden hover:border-[#2563EB]/30 transition-colors group"
-          style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
+
         >
           <div className="relative aspect-video bg-[#F2F2F4] flex items-center justify-center">
             {d.thumbnail_url ? (

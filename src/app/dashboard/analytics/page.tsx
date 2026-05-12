@@ -50,13 +50,12 @@ function Accordion({
 }) {
   return (
     <div
-      className="rounded-xl overflow-hidden"
-      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9), 0 4px 16px -4px rgba(0,0,0,0.08)" }}
+      className="glass rounded-xl overflow-hidden"
     >
       <button
         onClick={onToggle}
         className="flex items-center justify-between w-full px-6 py-4 hover:bg-[rgba(0,0,0,0.04)] transition-colors duration-150"
-      >
+>
         <div className="flex items-center gap-2.5">
           <span className="text-[#6F6D7A]">{icon}</span>
           <span className="font-display text-sm font-semibold text-text-primary tracking-[-0.01em]">{label}</span>
@@ -75,7 +74,7 @@ function Accordion({
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
             style={{ overflow: "hidden" }}
-          >
+>
             <div className="px-6 pb-6 border-t border-[rgba(0,0,0,0.08)]">
               {children}
             </div>
@@ -149,14 +148,14 @@ export default function AnalyticsPage() {
       if (!cancelled.current) console.error("[analytics] fetchAnalytics error:", err);
     });
     return () => { cancelled.current = true; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateRange, customStart, customEnd]);
 
   useEffect(() => {
     fetchActivityFeed();
     const id = setInterval(() => { fetchActivityFeed(); }, 15000);
     return () => clearInterval(id);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchActivityFeed() {
@@ -216,14 +215,14 @@ export default function AnalyticsPage() {
         supabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("status", "published"),
         supabase.from("leads").select("scraped_at, source, industry, status").gte("scraped_at", rangeStart).order("scraped_at"),
         supabase.from("outreach_log").select("sent_at, status, platform").gte("sent_at", rangeStart).order("sent_at"),
-        // Invoice queries for lastMonthMRR and revenueByMonth chart
+ // Invoice queries for lastMonthMRR and revenueByMonth chart
         supabase.from("invoices").select("amount, paid_at").eq("status", "paid").gte("paid_at", lastMonth).lte("paid_at", lastMonthEnd),
         supabase.from("invoices").select("amount, paid_at").eq("status", "paid").gte("paid_at", new Date(now.getFullYear(), now.getMonth() - 5, 1).toISOString()),
       ]);
 
       const totalMRR = clients?.reduce((s: number, c: Record<string, number>) => s + (c.mrr || 0), 0) || 0;
       const dealValue = deals?.reduce((s: number, d: Record<string, number>) => s + (d.amount || 0), 0) || 0;
-      // lastMonthMRR: cash received from paid invoices in the prior calendar month
+ // lastMonthMRR: cash received from paid invoices in the prior calendar month
       const lastMonthMRR = (lastMonthInvoices || []).reduce((s: number, i: Record<string, number>) => s + (i.amount || 0), 0);
 
       if (cancelled.current) return;
@@ -265,7 +264,7 @@ export default function AnalyticsPage() {
       });
       setOutreachByDay(Object.entries(outMap).map(([date, v]) => ({ date, ...v })));
 
-      // Build revenueByMonth from invoice payments (past 6 months) + won deals
+ // Build revenueByMonth from invoice payments (past 6 months) + won deals
       const monthMap: Record<string, { mrr: number; deals: number }> = {};
       (revenueHistoryInvoices || []).forEach((inv: Record<string, string | number>) => {
         const month = new Date(String(inv.paid_at)).toLocaleString("en-US", { month: "short", year: "2-digit" });
@@ -288,16 +287,16 @@ export default function AnalyticsPage() {
     }
   }
 
-  const leadGrowth = stats.leadsLastMonth > 0
+  const leadGrowth = stats.leadsLastMonth> 0
     ? Math.round(((stats.leadsThisMonth - stats.leadsLastMonth) / stats.leadsLastMonth) * 100)
     : 0;
-  const replyRate = stats.dmsSent > 0 ? Math.round((stats.replies / stats.dmsSent) * 100) : 0;
+  const replyRate = stats.dmsSent> 0 ? Math.round((stats.replies / stats.dmsSent) * 100) : 0;
 
-  // -- Computed features ---------------------------------------------------
+ // -- Computed features ---------------------------------------------------
   const revenueForecast = useMemo(() => {
     if (revenueByMonth.length < 2) return [];
     const mrrValues = revenueByMonth.map(r => r.mrr);
-    const avgGrowth = mrrValues.length > 1
+    const avgGrowth = mrrValues.length> 1
       ? mrrValues.slice(1).reduce((s, v, i) => s + (v - mrrValues[i]) / (mrrValues[i] || 1), 0) / (mrrValues.length - 1)
       : 0.05;
     const lastMRR = mrrValues[mrrValues.length - 1] || stats.totalMRR;
@@ -330,7 +329,7 @@ export default function AnalyticsPage() {
 
   const hasContentHeatmapData = useMemo(() => {
     const hours = ["9am", "12pm", "3pm", "6pm", "9pm"];
-    return contentHeatmap.some(row => hours.some(h => (row[h] as number) > 0));
+    return contentHeatmap.some(row => hours.some(h => (row[h] as number)> 0));
   }, [contentHeatmap]);
 
   const funnelData = useMemo(() => [
@@ -356,8 +355,8 @@ export default function AnalyticsPage() {
 
   const benchmarks = useMemo(() => [
     { metric: "Reply Rate", yours: replyRate || 0, industry: 5.0, max: 20 },
-    { metric: "Call Book Rate", yours: stats.callsBooked > 0 ? Math.round((stats.callsBooked / (stats.dmsSent || 1)) * 100) : 0, industry: 3.2, max: 15 },
-    { metric: "Close Rate", yours: stats.totalDeals > 0 ? Math.round((stats.totalDeals / (stats.callsBooked || 1)) * 100) : 0, industry: 22, max: 50 },
+    { metric: "Call Book Rate", yours: stats.callsBooked> 0 ? Math.round((stats.callsBooked / (stats.dmsSent || 1)) * 100) : 0, industry: 3.2, max: 15 },
+    { metric: "Close Rate", yours: stats.totalDeals> 0 ? Math.round((stats.totalDeals / (stats.callsBooked || 1)) * 100) : 0, industry: 22, max: 50 },
     { metric: "Content Eng.", yours: 0, industry: 3.2, max: 10 },
     { metric: "Retention", yours: 0, industry: 85, max: 100 },
   ], [replyRate, stats]);
@@ -400,19 +399,19 @@ export default function AnalyticsPage() {
     }
   };
 
-  const hasData = stats.totalLeads > 0 || stats.totalMRR > 0 || stats.dmsSent > 0 ||
-    stats.totalClients > 0 || stats.totalDeals > 0 || stats.replies > 0 ||
-    stats.callsBooked > 0 || stats.contentPublished > 0;
+  const hasData = stats.totalLeads> 0 || stats.totalMRR> 0 || stats.dmsSent> 0 ||
+    stats.totalClients> 0 || stats.totalDeals> 0 || stats.replies> 0 ||
+    stats.callsBooked> 0 || stats.contentPublished> 0;
 
-  // --- Prism color map for stat tiles -------------------------------------
+ // --- Prism color map for stat tiles -------------------------------------
   const PRISM_TILES = [
-    { accent: "#2563EB", bar: "from-[#2563EB] to-transparent" },   // MRR ? emerald
-    { accent: "#2563EB", bar: "from-[#2563EB] to-transparent" },   // Leads ? blue
-    { accent: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },   // DMs
-    { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },   // Deals
+    { accent: "#2563EB", bar: "from-[#2563EB] to-transparent" }, // MRR ? emerald
+    { accent: "#2563EB", bar: "from-[#2563EB] to-transparent" }, // Leads ? blue
+    { accent: "#3B82F6", bar: "from-[#3B82F6] to-transparent" }, // DMs
+    { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" }, // Deals
   ] as const;
 
-  // --- Render ---------------------------------------------------------------
+ // --- Render ---------------------------------------------------------------
   return (
     <MotionPage className="space-y-4">
 
@@ -431,7 +430,7 @@ export default function AnalyticsPage() {
           <div
             className="hidden sm:flex items-center gap-0.5 rounded-lg p-0.5 border border-[rgba(0,0,0,0.08)]"
             style={{ background: "rgba(255,255,255,0.80)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
-          >
+>
             {(["7d", "30d", "90d"] as const).map(r => (
               <button
                 key={r}
@@ -441,7 +440,7 @@ export default function AnalyticsPage() {
                     ? "bg-[#1D4ED8] text-white font-semibold"
                     : "text-[#6F6D7A] hover:text-text-primary"
                 }`}
-              >
+>
                 {r}
               </button>
             ))}
@@ -451,11 +450,11 @@ export default function AnalyticsPage() {
             onClick={handleExport}
             className="flex items-center gap-1 text-[10px] text-[#71717A] hover:text-text-primary transition-colors border border-[rgba(0,0,0,0.08)] px-2.5 py-1.5 rounded-md"
             title="Export report as JSON"
-          >
+>
             <Download size={11} />
           </button>
           {/* Live MRR badge */}
-          {stats.totalMRR > 0 && (
+          {stats.totalMRR> 0 && (
             <span className="hidden md:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.18)] text-[#1D4ED8]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
               {formatCurrency(stats.totalMRR)} MRR
@@ -491,7 +490,7 @@ export default function AnalyticsPage() {
                 if (!cancelled.current) console.error("[analytics] retry failed:", err);
               });
             }}
-          >
+>
             Retry
           </button>
         </div>
@@ -509,11 +508,11 @@ export default function AnalyticsPage() {
               Add your first client
             </Link>
           }
-        />
+ />
       )}
 
       {/* ------------------------------------------------------------------ */}
-      {/* Main dashboard                                                     */}
+      {/* Main dashboard */}
       {/* ------------------------------------------------------------------ */}
       {!isLoading && fetchError === null && hasData && (
         <>
@@ -531,18 +530,14 @@ export default function AnalyticsPage() {
 
           {/* -- Zone 1: Command Strip -------------------------------------- */}
           <motion.div
-            className="relative overflow-hidden rounded-xl"
+            className="glass relative overflow-hidden rounded-xl"
             style={{
-              background: "rgba(255, 255, 255, 0.90)",
-              backdropFilter: "blur(24px) saturate(1.8)",
-              WebkitBackdropFilter: "blur(24px) saturate(1.8)",
-              border: "1px solid rgba(255,255,255,0.70)",
               boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 20px -4px rgba(0,0,0,0.10), 0 0 48px -12px rgba(37,99,235,0.14)",
             }}
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
-          >
+>
             {/* Blue top rail */}
             <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent 0%, #1D4ED8 30%, #3B82F6 50%, #1D4ED8 70%, transparent 100%)" }} />
             {/* Subtle red glow at top */}
@@ -560,7 +555,7 @@ export default function AnalyticsPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.52, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-              >
+>
                 {formatCurrency(stats.totalMRR)}
               </motion.p>
 
@@ -575,16 +570,16 @@ export default function AnalyticsPage() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.38, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-                >
+>
                   <p className="text-xs text-[#52525B] uppercase tracking-widest font-normal">Total Leads</p>
                   <p
                     className="font-display text-4xl font-bold tracking-[-0.04em] mt-1 text-text-primary"
                     style={{ fontVariantNumeric: "tabular-nums" }}
-                  >
+>
                     {stats.totalLeads.toLocaleString()}
                   </p>
-                  <p className="text-[10px] mt-0.5" style={{ color: leadGrowth >= 0 ? "#52525B" : "#F26063" }}>
-                    {leadGrowth !== 0 ? `${leadGrowth > 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "�"}
+                  <p className="text-[10px] mt-0.5" style={{ color: leadGrowth>= 0 ? "#52525B" : "#F26063" }}>
+                    {leadGrowth !== 0 ? `${leadGrowth> 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "�"}
                   </p>
                 </motion.div>
 
@@ -595,25 +590,25 @@ export default function AnalyticsPage() {
                 {/* Support stats strip � 3 remaining */}
                 <div className="flex flex-1 grid-cols-3 md:pl-6">
                   {[
-                    { label: "DMs Sent", value: stats.dmsSent.toLocaleString(), sub: `${replyRate}% reply rate`, subOk: replyRate >= 5,
-                      sparkData: outreachByDay.length > 1 ? outreachByDay.slice(-10).map(d => d.sent) : undefined },
+                    { label: "DMs Sent", value: stats.dmsSent.toLocaleString(), sub: `${replyRate}% reply rate`, subOk: replyRate>= 5,
+                      sparkData: outreachByDay.length> 1 ? outreachByDay.slice(-10).map(d => d.sent) : undefined },
                     { label: "Calls Booked", value: stats.callsBooked.toLocaleString(), sub: "this period", subOk: true, sparkData: undefined },
                     { label: "Deals Won", value: stats.totalDeals.toLocaleString(), sub: `${formatCurrency(stats.dealValue)} closed`, subOk: true,
-                      sparkData: revenueByMonth.length > 1 ? revenueByMonth.slice(-8).map(r => r.deals) : undefined },
+                      sparkData: revenueByMonth.length> 1 ? revenueByMonth.slice(-8).map(r => r.deals) : undefined },
                   ].map((stat, i) => (
                     <motion.div
                       key={stat.label}
-                      className={`flex-1 py-1 ${i > 0 ? "pl-6 border-l border-[rgba(0,0,0,0.08)]" : ""} ${i < 2 ? "pr-6" : ""}`}
+                      className={`flex-1 py-1 ${i> 0 ? "pl-6 border-l border-[rgba(0,0,0,0.08)]" : ""} ${i < 2 ? "pr-6" : ""}`}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.22 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-                    >
+>
                       <p className="text-xs text-[#52525B] uppercase tracking-widest font-normal">{stat.label}</p>
                       <div className="flex items-end justify-between gap-2 mt-1">
                         <p className="font-display text-xl font-semibold tracking-[-0.03em] text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {stat.value}
                         </p>
-                        {stat.sparkData && stat.sparkData.length > 1 && (
+                        {stat.sparkData && stat.sparkData.length> 1 && (
                           <Sparkline values={stat.sparkData} color="#3B82F6" id={`z1s-${i}`} width={44} height={18} />
                         )}
                       </div>
@@ -624,13 +619,13 @@ export default function AnalyticsPage() {
               </div>
 
               {/* Footer context */}
-              {(stats.activeClients > 0 || stats.contentPublished > 0) && (
+              {(stats.activeClients> 0 || stats.contentPublished> 0) && (
                 <div className="mt-5 pt-4 border-t border-[rgba(0,0,0,0.08)] flex items-center gap-4">
                   <span className="text-[10px] text-[#52525B]">
                     <span className="text-[#71717A] font-medium [font-variant-numeric:tabular-nums]">{stats.activeClients}</span>{" "}
                     active client{stats.activeClients !== 1 ? "s" : ""}
                   </span>
-                  {stats.contentPublished > 0 && (
+                  {stats.contentPublished> 0 && (
                     <span className="text-[10px] text-[#52525B]">
                       <span className="text-[#71717A] font-medium [font-variant-numeric:tabular-nums]">{stats.contentPublished}</span>{" "}
                       posts published
@@ -647,10 +642,10 @@ export default function AnalyticsPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.44, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-          >
+>
 
             {/* Lead velocity area chart */}
-            <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+            <div className="glass rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-4">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Acquisition</p>
@@ -682,7 +677,7 @@ export default function AnalyticsPage() {
                         type="monotone" dataKey="count" name="Leads"
                         stroke="#2563EB" strokeWidth={1.5}
                         fill="url(#blueAreaGrad)"
-                      />
+ />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -690,7 +685,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Lead sources */}
-            <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+            <div className="glass rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5">
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Channels</p>
               <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Lead Sources</h2>
               {leadsBySource.length === 0 ? (
@@ -701,7 +696,7 @@ export default function AnalyticsPage() {
                 <div className="space-y-3">
                   {[...leadsBySource].sort((a, b) => b.count - a.count).slice(0, 7).map((s, i) => {
                     const maxCount = [...leadsBySource].sort((a, b) => b.count - a.count)[0].count;
-                    const pct = maxCount > 0 ? (s.count / maxCount) * 100 : 0;
+                    const pct = maxCount> 0 ? (s.count / maxCount) * 100 : 0;
                     return (
                       <div key={s.source} className="flex items-center gap-3">
                         <span className="text-[10px] text-[#9F9DAA] w-20 text-right shrink-0 capitalize truncate">
@@ -714,12 +709,12 @@ export default function AnalyticsPage() {
                             initial={{ width: 0 }}
                             animate={{ width: `${pct}%` }}
                             transition={{ duration: 0.6, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                          />
+ />
                         </div>
                         <span
                           className="text-[10px] font-bold text-text-primary w-5 text-right shrink-0"
                           style={{ fontVariantNumeric: "tabular-nums" }}
-                        >
+>
                           {s.count}
                         </span>
                       </div>
@@ -736,17 +731,17 @@ export default function AnalyticsPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.44, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
-          >
+>
 
             {/* Conversion funnel */}
-            <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+            <div className="glass rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5">
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Sales Pipeline</p>
               <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Conversion Funnel</h2>
               <div className="space-y-3">
                 {funnelData.map((stage, i) => {
                   const maxVal = funnelData[0].value;
-                  const pct = maxVal > 0 ? (stage.value / maxVal) * 100 : 0;
-                  const convRate = i > 0 && funnelData[i - 1].value > 0
+                  const pct = maxVal> 0 ? (stage.value / maxVal) * 100 : 0;
+                  const convRate = i> 0 && funnelData[i - 1].value> 0
                     ? Math.round((stage.value / funnelData[i - 1].value) * 100)
                     : null;
                   return (
@@ -757,7 +752,7 @@ export default function AnalyticsPage() {
                           <span
                             className="text-[11px] font-bold text-text-primary"
                             style={{ fontVariantNumeric: "tabular-nums" }}
-                          >
+>
                             {stage.value.toLocaleString()}
                           </span>
                           {convRate !== null && (
@@ -772,9 +767,9 @@ export default function AnalyticsPage() {
                           className="h-full rounded-full"
                           style={{ background: stage.fill }}
                           initial={{ width: 0 }}
-                          animate={{ width: `${Math.max(pct, stage.value > 0 ? 3 : 0)}%` }}
+                          animate={{ width: `${Math.max(pct, stage.value> 0 ? 3 : 0)}%` }}
                           transition={{ duration: 0.7, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-                        />
+ />
                       </div>
                     </div>
                   );
@@ -785,8 +780,8 @@ export default function AnalyticsPage() {
                 <span
                   className="font-display text-xl font-bold text-text-primary tracking-[-0.02em]"
                   style={{ fontVariantNumeric: "tabular-nums" }}
-                >
-                  {funnelData[0].value > 0
+>
+                  {funnelData[0].value> 0
                     ? ((funnelData[funnelData.length - 1].value / funnelData[0].value) * 100).toFixed(1)
                     : "0"}%
                 </span>
@@ -794,7 +789,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Outreach performance */}
-            <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+            <div className="glass rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-4">
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Engagement</p>
               <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-4">Outreach Performance</h2>
               {outreachByDay.length === 0 ? (
@@ -834,11 +829,11 @@ export default function AnalyticsPage() {
             {/* Top industries */}
             <motion.div
               className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+              
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.44, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
-            >
+>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Verticals</p>
               <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Top Industries</h2>
               {leadsByIndustry.length === 0 ? (
@@ -847,13 +842,13 @@ export default function AnalyticsPage() {
                 <div className="space-y-2.5">
                   {leadsByIndustry.slice(0, 6).map((ind, i) => {
                     const maxInd = leadsByIndustry[0].count;
-                    const pct = maxInd > 0 ? (ind.count / maxInd) * 100 : 0;
+                    const pct = maxInd> 0 ? (ind.count / maxInd) * 100 : 0;
                     return (
                       <div key={ind.industry} className="flex items-center gap-2.5">
                         <span
                           className="text-[9px] text-[#3A3840] w-3 shrink-0 text-right"
                           style={{ fontVariantNumeric: "tabular-nums" }}
-                        >
+>
                           {i + 1}
                         </span>
                         <span className="text-[10px] text-[#9F9DAA] w-20 shrink-0 truncate capitalize">
@@ -865,12 +860,12 @@ export default function AnalyticsPage() {
                             initial={{ width: 0 }}
                             animate={{ width: `${pct}%` }}
                             transition={{ duration: 0.6, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
-                          />
+ />
                         </div>
                         <span
                           className="text-[10px] font-bold text-text-primary w-4 shrink-0 text-right"
                           style={{ fontVariantNumeric: "tabular-nums" }}
-                        >
+>
                           {ind.count}
                         </span>
                       </div>
@@ -890,22 +885,22 @@ export default function AnalyticsPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.44, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-            >
+>
               {/* No pseudo accent div needed � top border handles it */}
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Progress</p>
               <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Monthly Goals</h2>
               <div className="space-y-3.5">
                 {goals.map(goal => {
-                  const pct = goal.target > 0 ? Math.min((goal.current / goal.target) * 100, 100) : 0;
-                  const barColor = pct >= 100 ? "#1D4ED8" : pct >= 70 ? "#1D4ED8" : pct >= 40 ? "#1D4ED8" : "#4F4D58";
+                  const pct = goal.target> 0 ? Math.min((goal.current / goal.target) * 100, 100) : 0;
+                  const barColor = pct>= 100 ? "#1D4ED8" : pct>= 70 ? "#1D4ED8" : pct>= 40 ? "#1D4ED8" : "#4F4D58";
                   return (
                     <div key={goal.label}>
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="text-[10px] text-[#9F9DAA]">{goal.label}</span>
                         <span
                           className="text-[10px] font-mono"
-                          style={{ color: pct >= 70 ? "#3B82F6" : "#4F4D58", fontVariantNumeric: "tabular-nums" }}
-                        >
+                          style={{ color: pct>= 70 ? "#3B82F6" : "#4F4D58", fontVariantNumeric: "tabular-nums" }}
+>
                           {Math.round(pct)}%
                         </span>
                       </div>
@@ -916,7 +911,7 @@ export default function AnalyticsPage() {
                           initial={{ width: 0 }}
                           animate={{ width: `${pct}%` }}
                           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                        />
+ />
                       </div>
                     </div>
                   );
@@ -927,16 +922,16 @@ export default function AnalyticsPage() {
             {/* Benchmarks */}
             <motion.div
               className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+              
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.44, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
-            >
+>
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">vs Industry</p>
               <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Benchmarks</h2>
               <div className="space-y-3">
                 {benchmarks.map(b => {
-                  const isAbove = b.yours >= b.industry;
+                  const isAbove = b.yours>= b.industry;
                   const yourPct = Math.min((b.yours / b.max) * 100, 100);
                   const indPct = Math.min((b.industry / b.max) * 100, 100);
                   return (
@@ -947,7 +942,7 @@ export default function AnalyticsPage() {
                         <div
                           className="absolute h-full rounded-full bg-[rgba(0,0,0,0.08)]"
                           style={{ width: `${indPct}%` }}
-                        />
+ />
                         {/* Your score */}
                         <motion.div
                           className="absolute h-full rounded-full"
@@ -955,12 +950,12 @@ export default function AnalyticsPage() {
                           initial={{ width: 0 }}
                           animate={{ width: `${yourPct}%` }}
                           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                        />
+ />
                       </div>
                       <span
                         className="text-[9px] font-mono w-7 text-right shrink-0"
                         style={{ color: isAbove ? "#2563EB" : "#F26063", fontVariantNumeric: "tabular-nums" }}
-                      >
+>
                         {b.yours}%
                       </span>
                     </div>
@@ -982,22 +977,21 @@ export default function AnalyticsPage() {
 
           {/* -- Zone 5: Scorecard strip (prism glass, staggered entrance) -- */}
           <motion.div
-            className="relative rounded-xl border border-[rgba(255,255,255,0.70)] overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)" }}
+            className="glass relative rounded-xl border border-[rgba(255,255,255,0.70)] overflow-hidden"
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
-          >
+>
             <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(0,0,0,0.08)]">
               {[
                 { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#2563EB",
-                  sparkData: revenueByMonth.length > 1 ? revenueByMonth.map(r => r.mrr) : undefined },
-                { label: "Lead Growth", value: `${leadGrowth >= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth >= 0 ? "#2563EB" : "#F26063",
+                  sparkData: revenueByMonth.length> 1 ? revenueByMonth.map(r => r.mrr) : undefined },
+                { label: "Lead Growth", value: `${leadGrowth>= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth>= 0 ? "#2563EB" : "#F26063",
                   sparkData: leadsByDay.slice(-10).map(d => d.count) },
                 { label: "Reply Rate", value: `${replyRate}%`, sub: `${stats.dmsSent.toLocaleString()} DMs sent`, color: "#3B82F6",
                   sparkData: outreachByDay.slice(-10).map(d => d.replies) },
                 { label: "Active Clients", value: String(stats.activeClients), sub: `${formatCurrency(stats.totalMRR)} MRR`, color: "#1D4ED8",
-                  sparkData: revenueByMonth.length > 1 ? revenueByMonth.map(r => r.mrr) : undefined },
+                  sparkData: revenueByMonth.length> 1 ? revenueByMonth.map(r => r.mrr) : undefined },
               ].map((cell, i) => (
                 <motion.div
                   key={cell.label}
@@ -1005,16 +999,16 @@ export default function AnalyticsPage() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.36, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}
-                >
+>
                   <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">{cell.label}</span>
                   <div className="flex items-end justify-between gap-3">
                     <span
                       className="font-display text-2xl font-bold tracking-[-0.03em] font-mono"
                       style={{ color: cell.color, fontVariantNumeric: "tabular-nums" }}
-                    >
+>
                       {cell.value}
                     </span>
-                    {cell.sparkData && cell.sparkData.length > 1 && (
+                    {cell.sparkData && cell.sparkData.length> 1 && (
                       <Sparkline values={cell.sparkData} color={cell.color} id={`score-${i}`} width={52} height={22} />
                     )}
                   </div>
@@ -1025,7 +1019,7 @@ export default function AnalyticsPage() {
           </motion.div>
 
           {/* -- Zone 6: Real-time activity feed ---------------------------- */}
-          <div className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+          <div className="glass rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Live Stream</p>
@@ -1039,14 +1033,14 @@ export default function AnalyticsPage() {
               </div>
             </div>
             <div ref={activityRef} className="max-h-44 overflow-y-auto space-y-0.5">
-              {activityFeed.length > 0 ? activityFeed.map((item, idx) => (
+              {activityFeed.length> 0 ? activityFeed.map((item, idx) => (
                 <motion.div
                   key={item.id}
                   className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[rgba(0,0,0,0.04)] transition-colors duration-100"
                   initial={{ opacity: 0, x: -4 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.2, delay: idx * 0.025 }}
-                >
+>
                   <div className="w-4 h-4 flex items-center justify-center shrink-0">
                     {activityIcon(item.type)}
                   </div>
@@ -1054,7 +1048,7 @@ export default function AnalyticsPage() {
                   <span
                     className="text-[9px] text-[#4F4D58] shrink-0"
                     style={{ fontVariantNumeric: "tabular-nums" }}
-                  >
+>
                     {formatRelativeTime(item.time)}
                   </span>
                 </motion.div>
@@ -1068,7 +1062,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* --------------------------------------------------------------- */}
-          {/* Collapsible sections � advanced / data-dependent analytics     */}
+          {/* Collapsible sections � advanced / data-dependent analytics */}
           {/* --------------------------------------------------------------- */}
 
           {/* Revenue Forecast */}
@@ -1077,7 +1071,7 @@ export default function AnalyticsPage() {
             label="Revenue Forecast"
             icon={<TrendingUp size={13} />}
             badge={
-              revenueForecast.length > 0 ? (
+              revenueForecast.length> 0 ? (
                 <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(37,99,235,0.10)] text-[#2563EB]">
                   {formatCurrency(revenueForecast[0]?.projected || 0)} next mo.
                 </span>
@@ -1085,7 +1079,7 @@ export default function AnalyticsPage() {
             }
             expanded={expandedSection === "forecast"}
             onToggle={() => toggleSection("forecast")}
-          >
+>
             <div className="mt-4">
               {revenueByMonth.length < 2 ? (
                 <p className="text-[11px] text-[#6F6D7A] py-6 text-center">
@@ -1101,7 +1095,7 @@ export default function AnalyticsPage() {
                           ...revenueForecast,
                         ]}
                         margin={{ top: 4, right: 4, left: -24, bottom: 0 }}
-                      >
+>
                         <defs>
                           <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="0%" stopColor="#2563EB" stopOpacity={0.15} />
@@ -1118,18 +1112,18 @@ export default function AnalyticsPage() {
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
-                  {revenueForecast.length > 0 && (
+                  {revenueForecast.length> 0 && (
                     <div className="grid grid-cols-3 mt-4 pt-4 border-t border-[rgba(0,0,0,0.08)]">
                       {revenueForecast.map((f, i) => (
                         <div
                           key={f.month}
-                          className={`${i > 0 ? "border-l border-[rgba(0,0,0,0.08)] pl-4" : ""} ${i < 2 ? "pr-4" : ""}`}
-                        >
+                          className={`${i> 0 ? "border-l border-[rgba(0,0,0,0.08)] pl-4" : ""} ${i < 2 ? "pr-4" : ""}`}
+>
                           <p className="text-[9px] text-[#6F6D7A] uppercase tracking-wider">{f.month}</p>
                           <p
                             className="font-display text-lg font-bold text-text-primary mt-1"
                             style={{ fontVariantNumeric: "tabular-nums" }}
-                          >
+>
                             {formatCurrency(f.projected)}
                           </p>
                           <p className="text-[9px] text-[#4F4D58] mt-0.5">
@@ -1151,7 +1145,7 @@ export default function AnalyticsPage() {
             icon={<Target size={13} />}
             expanded={expandedSection === "roi"}
             onToggle={() => toggleSection("roi")}
-          >
+>
             <div className="mt-4 overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
@@ -1160,7 +1154,7 @@ export default function AnalyticsPage() {
                       <th
                         key={h}
                         className={`pb-2.5 text-[9px] text-[#6F6D7A] font-medium uppercase tracking-wider ${i === 0 ? "text-left" : "text-right"}`}
-                      >
+>
                         {h}
                       </th>
                     ))}
@@ -1185,8 +1179,8 @@ export default function AnalyticsPage() {
                       <td className="py-3 text-right">
                         <span
                           className="text-[10px] font-bold"
-                          style={{ color: p.roi > 200 ? "#3B82F6" : p.roi > 100 ? "#2563EB" : "#F26063", fontVariantNumeric: "tabular-nums" }}
-                        >
+                          style={{ color: p.roi> 200 ? "#3B82F6" : p.roi> 100 ? "#2563EB" : "#F26063", fontVariantNumeric: "tabular-nums" }}
+>
                           {p.roi}%
                         </span>
                       </td>
@@ -1205,7 +1199,7 @@ export default function AnalyticsPage() {
             icon={<AlertTriangle size={13} />}
             expanded={expandedSection === "churn"}
             onToggle={() => toggleSection("churn")}
-          >
+>
             <div className="mt-4 space-y-2">
               {churnRiskClients.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
@@ -1223,7 +1217,7 @@ export default function AnalyticsPage() {
                   <span
                     className="text-[10px] font-bold shrink-0"
                     style={{ color: client.risk === "high" ? "#F26063" : client.risk === "medium" ? "#3B82F6" : "rgba(0,0,0,0.35)", fontVariantNumeric: "tabular-nums" }}
-                  >
+>
                     {client.score}%
                   </span>
                 </div>
@@ -1238,7 +1232,7 @@ export default function AnalyticsPage() {
             icon={<Calendar size={13} />}
             expanded={expandedSection === "monthly"}
             onToggle={() => toggleSection("monthly")}
-          >
+>
             <div className="mt-4 overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
@@ -1247,7 +1241,7 @@ export default function AnalyticsPage() {
                       <th
                         key={h}
                         className={`pb-2.5 text-[9px] text-[#6F6D7A] font-medium uppercase tracking-wider ${i === 0 ? "text-left" : "text-right"}`}
-                      >
+>
                         {h}
                       </th>
                     ))}
@@ -1260,7 +1254,7 @@ export default function AnalyticsPage() {
                     { label: "Deals Won", three: monthlyComparison.threeAgo.deals, last: monthlyComparison.last.deals, current: monthlyComparison.current.deals },
                     { label: "Replies", three: monthlyComparison.threeAgo.replies, last: monthlyComparison.last.replies, current: monthlyComparison.current.replies },
                   ].map(row => {
-                    const growth = row.last > 0 ? Math.round(((row.current - row.last) / row.last) * 100) : 0;
+                    const growth = row.last> 0 ? Math.round(((row.current - row.last) / row.last) * 100) : 0;
                     return (
                       <tr key={row.label} className="border-b border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.04)] transition-colors">
                         <td className="py-3 font-medium text-text-primary">{row.label}</td>
@@ -1276,9 +1270,9 @@ export default function AnalyticsPage() {
                         <td className="py-3 text-right">
                           <span
                             className="text-[10px] font-mono font-bold"
-                            style={{ color: growth >= 0 ? "#3B82F6" : "#F26063", fontVariantNumeric: "tabular-nums" }}
-                          >
-                            {growth >= 0 ? "+" : ""}{growth}%
+                            style={{ color: growth>= 0 ? "#3B82F6" : "#F26063", fontVariantNumeric: "tabular-nums" }}
+>
+                            {growth>= 0 ? "+" : ""}{growth}%
                           </span>
                         </td>
                       </tr>
@@ -1296,7 +1290,7 @@ export default function AnalyticsPage() {
             icon={<Trophy size={13} />}
             expanded={expandedSection === "leaderboard"}
             onToggle={() => toggleSection("leaderboard")}
-          >
+>
             <div className="mt-4 space-y-2">
               {teamMembers.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
@@ -1334,7 +1328,7 @@ export default function AnalyticsPage() {
               icon={<Flame size={13} />}
               expanded={expandedSection === "heatmap"}
               onToggle={() => toggleSection("heatmap")}
-            >
+>
               <div className="mt-4 overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -1358,9 +1352,9 @@ export default function AnalyticsPage() {
                                 className="h-7 rounded-md flex items-center justify-center text-[9px] font-bold transition-all hover:scale-105"
                                 style={{
                                   background: `rgba(37, 99, 235, ${intensity * 0.6 + 0.04})`,
-                                  color: intensity > 0.5 ? "#fff" : "#6F6D7A",
+                                  color: intensity> 0.5 ? "#fff" : "#6F6D7A",
                                 }}
-                              >
+>
                                 {val}
                               </div>
                             </td>
@@ -1381,7 +1375,7 @@ export default function AnalyticsPage() {
             icon={<Target size={13} />}
             expanded={expandedSection === "campaigns"}
             onToggle={() => toggleSection("campaigns")}
-          >
+>
             <div className="mt-4 space-y-2">
               {campaignData.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
@@ -1394,7 +1388,7 @@ export default function AnalyticsPage() {
                   <div
                     className="w-5 h-5 rounded flex items-center justify-center text-[9px] font-bold shrink-0"
                     style={{ background: CHART_COLORS[i % CHART_COLORS.length] + "22", color: CHART_COLORS[i % CHART_COLORS.length] }}
-                  >
+>
                     {i + 1}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -1417,7 +1411,7 @@ export default function AnalyticsPage() {
             icon={<DollarSign size={13} />}
             expanded={expandedSection === "clv"}
             onToggle={() => toggleSection("clv")}
-          >
+>
             <div className="mt-4">
               {clvData.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
@@ -1460,7 +1454,7 @@ export default function AnalyticsPage() {
             icon={<BarChart3 size={13} />}
             expanded={expandedSection === "service"}
             onToggle={() => toggleSection("service")}
-          >
+>
             <div className="mt-4">
               {revenueByService.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">

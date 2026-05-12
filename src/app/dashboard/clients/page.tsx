@@ -46,7 +46,7 @@ function HealthArc({ score }: { score: number }) {
   const pct = Math.min(100, Math.max(0, score ?? 0));
   const r = 16, circ = 2 * Math.PI * r;
   const dash = (pct / 100) * circ;
-  const color = pct >= 70 ? "#3B82F6" : pct >= 40 ? "#1D4ED8" : "#F26063";
+  const color = pct>= 70 ? "#3B82F6" : pct>= 40 ? "#1D4ED8" : "#F26063";
   return (
     <svg width="42" height="42" viewBox="0 0 42 42" className="-rotate-90">
       <circle cx="21" cy="21" r={r} fill="none" stroke="rgba(0,0,0,0.08)" strokeWidth="3" />
@@ -62,10 +62,10 @@ function HealthArc({ score }: { score: number }) {
 
 function ClientInitialsBadge({ name }: { name: string }) {
   const words = (name || "?").trim().split(/\s+/);
-  const initials = words.length >= 2
+  const initials = words.length>= 2
     ? (words[0][0] + words[1][0]).toUpperCase()
     : (name || "?").slice(0, 2).toUpperCase();
-  // Deterministic red-family tint from name hash
+ // Deterministic red-family tint from name hash
   const TINTS = [0.10, 0.13, 0.08, 0.12, 0.11, 0.09, 0.14, 0.10];
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) & 0xffffff;
@@ -100,7 +100,7 @@ export default function ClientsPage() {
   const router = useRouter();
   const setManagedClient = useAppStore(s => s.setManagedClient);
 
-  // --- New feature state ---
+ // --- New feature state ---
   const [viewMode, setViewMode] = useState<ViewMode>("table");
   const [sortField, setSortField] = useState<SortField>("business_name");
   const [sortDir, setSortDir] = useState<SortDir>("asc");
@@ -116,44 +116,44 @@ export default function ClientsPage() {
   const [filterTag, setFilterTag] = useState("");
   const [filterMrrMin, setFilterMrrMin] = useState("");
   const [filterMrrMax, setFilterMrrMax] = useState("");
-  // Quick activity chips: "recent" = touched in last 7d, "stale" = no touch in 30d
+ // Quick activity chips: "recent" = touched in last 7d, "stale" = no touch in 30d
   const [activityFilter, setActivityFilter] = useState<"all" | "recent" | "stale">("all");
   const [showCompareModal, setShowCompareModal] = useState(false);
   const [compareClients, setCompareClients] = useState<string[]>([]);
   const [hoveredClient, setHoveredClient] = useState<string | null>(null);
   const [showTagModal, setShowTagModal] = useState<string | null>(null);
-  // Admin / founder god-mode: when the API reports role admin/founder we
-  // get the platform-wide list. Toggle scope=mine to see only the caller's
-  // own agency. Stored locally so the choice persists across re-renders.
+ // Admin / founder god-mode: when the API reports role admin/founder we
+ // get the platform-wide list. Toggle scope=mine to see only the caller's
+ // own agency. Stored locally so the choice persists across re-renders.
   const [callerRole, setCallerRole] = useState<string | null>(null);
   const [scope, setScope] = useState<"all" | "mine">("all");
-  // Ref that always holds the current filteredAndSortedClients list so that
-  // selectAllClients can read it without being declared after the useMemo
-  // (which would cause a TDZ ReferenceError) and without stale-closure bugs.
+ // Ref that always holds the current filteredAndSortedClients list so that
+ // selectAllClients can read it without being declared after the useMemo
+ // (which would cause a TDZ ReferenceError) and without stale-closure bugs.
   const filteredAndSortedClientsRef = useRef<Client[]>([]);
 
-  // codex round-1: use a ref-box so fetchData reads `cancelled.current`
-  // at await-resume time rather than from a stale snapshot parameter.
+ // codex round-1: use a ref-box so fetchData reads `cancelled.current`
+ // at await-resume time rather than from a stale snapshot parameter.
   useEffect(() => {
     const cancelled = { current: false };
     fetchData(cancelled).catch((err: unknown) => {
       if (!cancelled.current) console.error("[Clients] fetchData error:", err);
     });
     return () => { cancelled.current = true; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scope]);
 
   async function fetchData(cancelled: { current: boolean } = { current: false }) {
     try {
       setLoading(true);
-      // Fetch clients via the authenticated server API route.
-      // Browser-side supabase queries sometimes race with the access token
-      // hydration in auth-context, which caused the list to render empty
-      // when the user was actually scoped to rows owned by their profile.
-      // The server route reads the session from cookies and scopes by the
-      // effective agency owner � so it works reliably on first mount.
-      // For admin/founder, the API returns ALL clients across the
-      // platform unless we pass ?scope=mine.
+ // Fetch clients via the authenticated server API route.
+ // Browser-side supabase queries sometimes race with the access token
+ // hydration in auth-context, which caused the list to render empty
+ // when the user was actually scoped to rows owned by their profile.
+ // The server route reads the session from cookies and scopes by the
+ // effective agency owner � so it works reliably on first mount.
+ // For admin/founder, the API returns ALL clients across the
+ // platform unless we pass ?scope=mine.
       const clientsUrl = scope === "mine" ? "/api/clients?scope=mine" : "/api/clients";
       const [clientsRes, contractsRes, invoicesRes] = await Promise.all([
         fetch(clientsUrl, { cache: "no-store" }),
@@ -180,7 +180,7 @@ export default function ClientsPage() {
       setClients(clientsData);
       setContracts(contractsRes.data || []);
       setInvoices(invoicesRes.data || []);
-      // Hydrate local tag + note state from DB columns so edits survive refresh.
+ // Hydrate local tag + note state from DB columns so edits survive refresh.
       const savedTags: Record<string, ClientTag[]> = {};
       const savedNotes: Record<string, string> = {};
       clientsData.forEach(c => {
@@ -202,54 +202,54 @@ export default function ClientsPage() {
     }
   }
 
-  // Memoize � these aggregates ran on every re-render otherwise (every
-  // keystroke in filter inputs, every hover state change, etc.).
+ // Memoize � these aggregates ran on every re-render otherwise (every
+ // keystroke in filter inputs, every hover state change, etc.).
   const { activeClients, totalMRR } = useMemo(() => {
     const active = clients.filter((c) => c.is_active);
     const mrr = active.reduce((sum, c) => sum + (c.mrr || 0), 0);
     return { activeClients: active, totalMRR: mrr };
   }, [clients]);
 
-  // --- Client status pill (derived) ---
-  // Maps a client's real state to one of 4 buckets the table visualises
-  // with a color bar + pill: active, paused, churned, trial.
+ // --- Client status pill (derived) ---
+ // Maps a client's real state to one of 4 buckets the table visualises
+ // with a color bar + pill: active, paused, churned, trial.
   type LifecycleStatus = "active" | "paused" | "churned" | "trial";
   const getLifecycleStatus = useCallback((c: Client): LifecycleStatus => {
     const rec = c as Client & { cancelled_at?: string | null };
     if (rec.cancelled_at) return "churned";
     if (!c.is_active) return "paused";
-    // "trial" if no paid subscription AND contract not yet signed
+ // "trial" if no paid subscription AND contract not yet signed
     if (!c.stripe_subscription_id && c.contract_status !== "signed") return "trial";
     return "active";
   }, []);
-  // Status pill styles � colored dot + tinted pill matched to brand status colors.
-  // Each row in the table gets a vertical accent bar in the same hue so the
-  // lifecycle reads at-a-glance without forcing the user to parse text.
+ // Status pill styles � colored dot + tinted pill matched to brand status colors.
+ // Each row in the table gets a vertical accent bar in the same hue so the
+ // lifecycle reads at-a-glance without forcing the user to parse text.
   const STATUS_STYLES: Record<LifecycleStatus, { bar: string; pill: string; dot: string; label: string }> = {
-    active:  { bar: "bg-success", pill: "bg-success/10 text-success border-success/30", dot: "bg-success shadow-[0_0_8px_rgba(127,229,184,0.5)]", label: "Active" },
-    paused:  { bar: "bg-warning", pill: "bg-warning/10 text-warning border-warning/30", dot: "bg-warning",                                            label: "Paused" },
-    churned: { bar: "bg-danger",  pill: "bg-danger/10 text-danger border-danger/30",    dot: "bg-danger",                                             label: "Churned" },
-    trial:   { bar: "bg-info",    pill: "bg-info/10 text-info border-info/30",          dot: "bg-info shadow-[0_0_8px_rgba(255,255,255,0.5)]",         label: "Trial" },
+    active: { bar: "bg-success", pill: "bg-success/10 text-success border-success/30", dot: "bg-success shadow-[0_0_8px_rgba(127,229,184,0.5)]", label: "Active" },
+    paused: { bar: "bg-warning", pill: "bg-warning/10 text-warning border-warning/30", dot: "bg-warning", label: "Paused" },
+    churned: { bar: "bg-danger", pill: "bg-danger/10 text-danger border-danger/30", dot: "bg-danger", label: "Churned" },
+    trial: { bar: "bg-info", pill: "bg-info/10 text-info border-info/30", dot: "bg-info shadow-[0_0_8px_rgba(255,255,255,0.5)]", label: "Trial" },
   };
 
-  // --- Feature 1: Client Health Score helper ---
+ // --- Feature 1: Client Health Score helper ---
   const getHealthColor = (score: number) => {
-    if (score > 75) return "text-success";
-    if (score > 50) return "text-warning";
+    if (score> 75) return "text-success";
+    if (score> 50) return "text-warning";
     return "text-danger";
   };
   const getHealthBg = (score: number) => {
-    if (score > 75) return "bg-success";
-    if (score > 50) return "bg-warning";
+    if (score> 75) return "bg-success";
+    if (score> 50) return "bg-warning";
     return "bg-danger";
   };
   const getHealthLabel = (score: number) => {
-    if (score > 75) return "Healthy";
-    if (score > 50) return "Needs Attention";
+    if (score> 75) return "Healthy";
+    if (score> 50) return "Needs Attention";
     return "At Risk";
   };
 
-  // --- Feature 6: Revenue Breakdown per client ---
+ // --- Feature 6: Revenue Breakdown per client ---
   const getClientRevenue = useCallback((clientId: string) => {
     const clientInvoices = invoices.filter(i => i.client_id === clientId);
     const totalPaid = clientInvoices.filter(i => i.status === "paid").reduce((s, i) => s + i.amount, 0);
@@ -258,7 +258,7 @@ export default function ClientsPage() {
     return { mrr: client?.mrr || 0, totalPaid, outstanding };
   }, [invoices, clients]);
 
-  // --- Feature 7: Contract Status per client ---
+ // --- Feature 7: Contract Status per client ---
   const getContractStatus = useCallback((clientId: string) => {
     const clientContracts = contracts.filter(c => c.client_id === clientId);
     if (clientContracts.length === 0) return { status: "none", daysLeft: 0, warning: false };
@@ -266,20 +266,20 @@ export default function ClientsPage() {
     if (!active) return { status: "expired", daysLeft: 0, warning: true };
     if (active.end_date) {
       const daysLeft = Math.ceil((new Date(active.end_date).getTime() - Date.now()) / 86400000);
-      return { status: daysLeft < 0 ? "expired" : "active", daysLeft, warning: daysLeft <= 30 && daysLeft > 0 };
+      return { status: daysLeft < 0 ? "expired" : "active", daysLeft, warning: daysLeft <= 30 && daysLeft> 0 };
     }
     return { status: "active", daysLeft: 999, warning: false };
   }, [contracts]);
 
-  // --- Feature 13: Onboarding Progress ---
+ // --- Feature 13: Onboarding Progress ---
   const getOnboardingProgress = useCallback((client: Client) => {
     let steps = 0;
     let completed = 0;
-    // Check steps
+ // Check steps
     steps++; if (client.email) completed++;
     steps++; if (client.phone) completed++;
     steps++; if (client.website) completed++;
-    steps++; if (client.services && client.services.length > 0) completed++;
+    steps++; if (client.services && client.services.length> 0) completed++;
     steps++; if (client.package_tier) completed++;
     steps++; if (client.stripe_customer_id) completed++;
     steps++; if (client.contract_status === "signed") completed++;
@@ -287,7 +287,7 @@ export default function ClientsPage() {
     return Math.round((completed / steps) * 100);
   }, []);
 
-  // --- Feature 14: Next Action Due (mock) ---
+ // --- Feature 14: Next Action Due (mock) ---
   const getNextAction = useCallback((client: Client) => {
     if (!client.stripe_customer_id) return { action: "Connect Stripe", type: "billing", urgent: false };
     if (client.contract_status !== "signed") return { action: "Send contract", type: "contract", urgent: true };
@@ -298,7 +298,7 @@ export default function ClientsPage() {
     return { action: "Monthly review", type: "review", urgent: false };
   }, [getContractStatus]);
 
-  // --- Feature 3: Tag Management ---
+ // --- Feature 3: Tag Management ---
   const toggleTag = useCallback((clientId: string, tag: ClientTag) => {
     setClientTags(prev => {
       const current = prev[clientId] || [];
@@ -306,8 +306,8 @@ export default function ClientsPage() {
       const updated = exists
         ? current.filter(t => t.label !== tag.label)
         : [...current, tag];
-      // Persist to clients.metadata JSONB (no migration needed � metadata is
-      // already Record<string, unknown>). Fire-and-forget; optimistic UI above.
+ // Persist to clients.metadata JSONB (no migration needed � metadata is
+ // already Record<string, unknown>). Fire-and-forget; optimistic UI above.
       const client = clients.find(c => c.id === clientId);
       const existingMeta = ((client?.metadata || {}) as Record<string, unknown>);
       supabase
@@ -321,13 +321,13 @@ export default function ClientsPage() {
     });
   }, [clients, supabase]);
 
-  // --- Feature 8: Client Notes ---
+ // --- Feature 8: Client Notes ---
   const saveNote = useCallback((clientId: string) => {
     const text = noteText;
     setClientNotes(prev => ({ ...prev, [clientId]: text }));
     setEditingNote(null);
     setNoteText("");
-    // Persist to clients.notes column; optimistic UI already applied above.
+ // Persist to clients.notes column; optimistic UI already applied above.
     supabase
       .from("clients")
       .update({ notes: text })
@@ -342,7 +342,7 @@ export default function ClientsPage() {
       });
   }, [noteText, supabase]);
 
-  // --- Feature 4: Bulk Actions ---
+ // --- Feature 4: Bulk Actions ---
   const toggleSelectClient = useCallback((clientId: string) => {
     setSelectedClients(prev => {
       const next = new Set(prev);
@@ -352,15 +352,15 @@ export default function ClientsPage() {
     });
   }, []);
   const selectAllClients = useCallback(() => {
-    // Read via ref so this callback doesn't depend on a const declared later
-    // in the function (which would cause a Temporal Dead Zone ReferenceError).
+ // Read via ref so this callback doesn't depend on a const declared later
+ // in the function (which would cause a Temporal Dead Zone ReferenceError).
     const list = filteredAndSortedClientsRef.current;
     if (selectedClients.size === list.length) {
       setSelectedClients(new Set());
     } else {
       setSelectedClients(new Set(list.map(c => c.id)));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedClients.size]);
 
   const handleBulkAction = useCallback(async (action: string) => {
@@ -378,8 +378,8 @@ export default function ClientsPage() {
       case "email": {
         const emails = selected.map(c => c.email).filter(Boolean);
         if (emails.length === 0) { toast.error("No emails on selected clients"); return; }
-        // mailto: with a BCC list is the reliable cross-client path here �
-        // no extra backend/ESP integration required to get bulk compose.
+ // mailto: with a BCC list is the reliable cross-client path here �
+ // no extra backend/ESP integration required to get bulk compose.
         window.location.href = `mailto:?bcc=${encodeURIComponent(emails.join(","))}`;
         toast.success(`Opening mail draft for ${emails.length} client${emails.length === 1 ? "" : "s"}`);
         break;
@@ -387,8 +387,8 @@ export default function ClientsPage() {
       case "sms": {
         const phones = selected.map(c => c.phone).filter((p): p is string => !!p);
         if (phones.length === 0) { toast.error("No phone numbers on selected clients"); return; }
-        // sms: URIs: multi-recipient support is spotty on desktop. Copy the
-        // list so the user can paste it into their preferred channel.
+ // sms: URIs: multi-recipient support is spotty on desktop. Copy the
+ // list so the user can paste it into their preferred channel.
         await navigator.clipboard.writeText(phones.join(", "));
         toast.success(`Copied ${phones.length} phone number${phones.length === 1 ? "" : "s"} to clipboard`);
         break;
@@ -426,10 +426,10 @@ export default function ClientsPage() {
         break;
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedClients, clients, supabase]);
 
-  // --- Feature 10: Export CSV ---
+ // --- Feature 10: Export CSV ---
   const handleExportCSV = useCallback((exportClients: Client[]) => {
     const headers = ["Business Name", "Contact", "Email", "Phone", "Industry", "Package", "MRR", "Health Score", "Status", "Created"];
     const rows = exportClients.map(c => [
@@ -437,7 +437,7 @@ export default function ClientsPage() {
       c.package_tier || "", c.mrr?.toString() || "0", c.health_score?.toString() || "0",
       c.is_active ? "Active" : "Inactive", c.created_at || ""
     ]);
-    // Escape internal double-quotes per RFC 4180 before wrapping in quotes.
+ // Escape internal double-quotes per RFC 4180 before wrapping in quotes.
     const csv = [headers.join(","), ...rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))].join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
@@ -449,7 +449,7 @@ export default function ClientsPage() {
     toast.success(`Exported ${exportClients.length} clients`);
   }, []);
 
-  // --- Feature 9: Advanced Filters + Feature 11: Sort ---
+ // --- Feature 9: Advanced Filters + Feature 11: Sort ---
   const industries = useMemo(() => {
     const set = new Set(clients.map(c => c.industry).filter((v): v is string => !!v));
     return Array.from(set).sort();
@@ -461,8 +461,8 @@ export default function ClientsPage() {
     return Array.from(set);
   }, [clientTags]);
 
-  // Pull the most recent timestamp we have for each client (for "last activity" sort/filter).
-  // updated_at is written whenever a row is mutated; fall back to created_at.
+ // Pull the most recent timestamp we have for each client (for "last activity" sort/filter).
+ // updated_at is written whenever a row is mutated; fall back to created_at.
   const getLastActivity = useCallback((c: Client) => {
     const rec = c as Client & { updated_at?: string | null };
     return new Date(rec.updated_at || c.created_at || 0).getTime();
@@ -475,37 +475,37 @@ export default function ClientsPage() {
     const MONTH = 30 * 86400 * 1000;
 
     const result = clients.filter((c) => {
-      // Fuzzy text search across name, contact, email, phone, company/industry
+ // Fuzzy text search across name, contact, email, phone, company/industry
       if (q) {
         const hay = [
           c.business_name, c.contact_name, c.email, c.phone || "", c.industry || "", c.website || "",
         ].join(" ").toLowerCase();
         if (!hay.includes(q)) return false;
       }
-      // Status filter
+ // Status filter
       if (filterStatus === "active" && !c.is_active) return false;
       if (filterStatus === "inactive" && c.is_active) return false;
-      // Industry filter
+ // Industry filter
       if (filterIndustry && c.industry !== filterIndustry) return false;
-      // MRR range
+ // MRR range
       if (filterMrrMin && c.mrr < parseFloat(filterMrrMin)) return false;
-      if (filterMrrMax && c.mrr > parseFloat(filterMrrMax)) return false;
-      // Tag filter
+      if (filterMrrMax && c.mrr> parseFloat(filterMrrMax)) return false;
+ // Tag filter
       if (filterTag) {
         const tags = clientTags[c.id] || [];
         if (!tags.find(t => t.label === filterTag)) return false;
       }
-      // Activity chip filter
+ // Activity chip filter
       if (activityFilter !== "all") {
         const last = getLastActivity(c);
         const age = now - last;
-        if (activityFilter === "recent" && age > WEEK) return false;
+        if (activityFilter === "recent" && age> WEEK) return false;
         if (activityFilter === "stale" && age < MONTH) return false;
       }
       return true;
     });
 
-    // Sort
+ // Sort
     result.sort((a, b) => {
       let cmp = 0;
       switch (sortField) {
@@ -521,16 +521,16 @@ export default function ClientsPage() {
     return result;
   }, [clients, searchQuery, filterStatus, filterIndustry, filterMrrMin, filterMrrMax, filterTag, clientTags, sortField, sortDir, activityFilter, getLastActivity]);
 
-  // Keep ref in sync every render so selectAllClients always sees current list.
+ // Keep ref in sync every render so selectAllClients always sees current list.
   filteredAndSortedClientsRef.current = filteredAndSortedClients;
-  // Keep backward compat alias
+ // Keep backward compat alias
   const filteredClients = filteredAndSortedClients;
 
-  // --- Feature 12: Client Comparison ---
+ // --- Feature 12: Client Comparison ---
   const toggleCompare = useCallback((clientId: string) => {
     setCompareClients(prev => {
       if (prev.includes(clientId)) return prev.filter(id => id !== clientId);
-      if (prev.length >= 4) { toast.error("Max 4 clients for comparison"); return prev; }
+      if (prev.length>= 4) { toast.error("Max 4 clients for comparison"); return prev; }
       return [...prev, clientId];
     });
   }, []);
@@ -641,12 +641,12 @@ export default function ClientsPage() {
   const paidInvoices = invoices.filter(i => i.status === "paid");
   const overdueInvoices = invoices.filter(i => i.status === "overdue");
 
-  // --- Prism color map for stat tiles -------------------------------------
+ // --- Prism color map for stat tiles -------------------------------------
   const CLIENT_PRISM = [
-    { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },  // Total
-    { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },  // Active
-    { accent: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },  // MRR
-    { accent: "#F26063", bar: "from-[#F26063] to-transparent" },  // At Risk
+    { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" }, // Total
+    { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" }, // Active
+    { accent: "#3B82F6", bar: "from-[#3B82F6] to-transparent" }, // MRR
+    { accent: "#F26063", bar: "from-[#F26063] to-transparent" }, // At Risk
   ] as const;
 
   if (loading) return (
@@ -670,13 +670,13 @@ export default function ClientsPage() {
             </h1>
           </div>
           {/* Live count + MRR badges beside the title */}
-          {clients.length > 0 && (
+          {clients.length> 0 && (
             <div className="hidden sm:flex items-center gap-1.5 ml-1">
               <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[10px] font-medium text-[#1D4ED8]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#1D4ED8] animate-pulse" />
                 {clients.length}
               </span>
-              {totalMRR > 0 && (
+              {totalMRR> 0 && (
                 <span className="px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-border-subtle text-[10px] font-medium text-text-muted">
                   {formatCurrency(totalMRR)}
                 </span>
@@ -693,39 +693,39 @@ export default function ClientsPage() {
                 className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
                   scope === "all" ? "bg-[#1D4ED8] text-white" : "text-text-muted hover:text-text-primary"
                 }`}
-              >All</button>
+>All</button>
               <button
                 onClick={() => setScope("mine")}
                 className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
                   scope === "mine" ? "bg-[#1D4ED8] text-white" : "text-text-muted hover:text-text-primary"
                 }`}
-              >Mine</button>
+>Mine</button>
             </div>
           )}
           <button
             onClick={() => setShowAddModal(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all"
-          >
+>
             <Plus size={13} /> Add Client
           </button>
         </div>
       </div>
 
       {/* Clients command strip */}
-      {clients.length > 0 && (
+      {clients.length> 0 && (
         <StatStrip
           focal={{ label: "MRR", value: formatCurrency(totalMRR), icon: <DollarSign size={14} />, color: "text-[#1D4ED8]", sub: `${activeClients.length} active · ${Math.round((activeClients.length / (clients.length || 1)) * 100)}% retention` }}
           support={[
             { label: "Total Clients", value: String(clients.length), sub: `${clients.filter(c => !c.is_active).length} inactive`, icon: <Users size={12} /> },
-            { label: "At Risk", value: String(clients.filter(c => c.health_score < 40).length), sub: "health < 40", color: clients.filter(c => c.health_score < 40).length > 0 ? "text-[#1D4ED8]" : undefined },
+            { label: "At Risk", value: String(clients.filter(c => c.health_score < 40).length), sub: "health < 40", color: clients.filter(c => c.health_score < 40).length> 0 ? "text-[#1D4ED8]" : undefined },
             { label: "Active", value: String(activeClients.length), sub: "currently live", icon: <UserCheck size={12} /> },
           ]}
-        />
+ />
       )}
 
       {/* Tabs (sticky) */}
       <div className="overflow-x-auto max-w-full">
-      <div role="tablist" aria-label="Client sections" className="sticky top-0 z-10 flex gap-1 rounded-xl p-1 w-fit min-w-max" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 1px 3px rgba(0,0,0,0.06)" }}>
+      <div role="tablist" aria-label="Client sections" className="glass sticky top-0 z-10 flex gap-1 rounded-xl p-1 w-fit min-w-max">
         {(["clients", "contracts", "invoices", "billing"] as const).map((t) => (
           <button
             key={t}
@@ -735,7 +735,7 @@ export default function ClientsPage() {
             className={`px-4 py-2 text-sm rounded-md capitalize transition-all flex items-center gap-1.5 ${
               tab === t ? "bg-[#1D4ED8] text-white font-medium" : "text-muted hover:text-foreground"
             }`}
-          >
+>
             {t === "billing" && <CreditCard size={14} />}
             {t}
           </button>
@@ -756,7 +756,7 @@ export default function ClientsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="input w-full pl-10"
-              />
+ />
             </div>
 
             {/* Feature 9: Advanced Filters Toggle */}
@@ -809,7 +809,7 @@ export default function ClientsPage() {
             </button>
 
             {/* Feature 12: Compare button */}
-            {compareClients.length >= 2 && (
+            {compareClients.length>= 2 && (
               <button onClick={() => setShowCompareModal(true)}
                 className="btn-primary text-xs flex items-center gap-1.5">
                 <Columns size={14} /> Compare ({compareClients.length})
@@ -823,7 +823,7 @@ export default function ClientsPage() {
             {([
               { key: "all" as const, label: "All", color: "bg-surface text-muted" },
               { key: "recent" as const, label: "Active this week", color: "bg-success/10 text-success border-success/30" },
-              { key: "stale" as const, label: "Stale >30d", color: "bg-warning/10 text-warning border-warning/30" },
+              { key: "stale" as const, label: "Stale>30d", color: "bg-warning/10 text-warning border-warning/30" },
             ]).map(chip => (
               <button
                 key={chip.key}
@@ -833,7 +833,7 @@ export default function ClientsPage() {
                     ? chip.color + " border"
                     : "bg-surface text-muted border-border hover:border-[rgba(37,99,235,0.30)]"
                 }`}
-              >
+>
                 {chip.label}
               </button>
             ))}
@@ -892,7 +892,7 @@ export default function ClientsPage() {
           )}
 
           {/* Feature 4: Bulk Actions Bar */}
-          {selectedClients.size > 0 && (
+          {selectedClients.size> 0 && (
             <div className="card p-2.5 flex items-center gap-3 bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.20)] flex-wrap">
               <span className="text-xs font-medium">{selectedClients.size} selected</span>
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -930,27 +930,27 @@ export default function ClientsPage() {
           initial="hidden"
           animate="visible"
           variants={staggerContainerFast}
-        >
+>
           {filteredClients.map((c, cardIdx) => {
             const revenue = getClientRevenue(c.id);
             const contractInfo = getContractStatus(c.id);
             const onboarding = getOnboardingProgress(c);
             const nextAction = getNextAction(c);
             const tags = clientTags[c.id] || [];
-            const isFeatured = cardIdx === 0 && filteredClients.length > 1;
+            const isFeatured = cardIdx === 0 && filteredClients.length> 1;
 
             const status = getLifecycleStatus(c);
             const statusStyles = STATUS_STYLES[status];
-            // Border accent follows the lifecycle status so the card and table tell the same story
+ // Border accent follows the lifecycle status so the card and table tell the same story
             const accentClass =
-              status === "active"  ? "card-accent-green"   :
-              status === "paused"  ? "card-accent-warning" :
-              status === "churned" ? "card-accent-danger"  :
+              status === "active" ? "card-accent-green" :
+              status === "paused" ? "card-accent-warning" :
+              status === "churned" ? "card-accent-danger" :
               "card-accent-blue"; // trial
             return (
               <motion.div key={c.id}
-                className={`card card-accent ${accentClass} ${isFeatured ? "md:col-span-2" : ""} p-4 transition-all cursor-pointer group relative overflow-hidden`}
-                style={{ background: isFeatured ? "rgba(37,99,235,0.06)" : "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", boxShadow: "0 1px 0 rgba(255,255,255,0.9) inset, 0 4px 12px -4px rgba(0,0,0,0.06)" }}
+                className={`glass card card-accent ${accentClass} ${isFeatured ? "md:col-span-2" : ""} p-4 transition-all cursor-pointer group relative overflow-hidden`}
+                style={{ boxShadow: "0 1px 0 rgba(255,255,255,0.9) inset, 0 4px 12px -4px rgba(0,0,0,0.06)" }}
                 variants={fadeUp}
                 whileHover={{ y: -4, borderColor: "rgba(0,0,0,0.16)", boxShadow: "0 12px 40px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.08)", transition: { duration: 0.22 } }}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
@@ -988,10 +988,10 @@ export default function ClientsPage() {
                         <div
                           className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white"
                           style={{
-                            background: c.health_score >= 70 ? '#22C55E' : c.health_score >= 40 ? '#F59E0B' : '#EF4444',
+                            background: c.health_score>= 70 ? '#22C55E' : c.health_score>= 40 ? '#F59E0B' : '#EF4444',
                           }}
                           title={`Health: ${c.health_score}`}
-                        />
+ />
                       )}
                     </div>
                     {/* Health arc only on featured tile (has space for it) */}
@@ -1011,7 +1011,7 @@ export default function ClientsPage() {
                       <p className="text-[10px] text-muted mt-0.5">{c.industry}</p>
                     )}
                     {/* Revenue badge � compact cards only (featured has dedicated MRR callout) */}
-                    {!isFeatured && c.mrr > 0 && (
+                    {!isFeatured && c.mrr> 0 && (
                       <span className="inline-block mt-0.5 text-[9px] font-semibold bg-[rgba(0,0,0,0.04)] text-text-muted px-2 py-0.5 rounded-full border border-border-subtle">
                         {formatCurrency(c.mrr)}/mo
                       </span>
@@ -1027,7 +1027,7 @@ export default function ClientsPage() {
                 </div>
 
                 {/* Tags */}
-                {tags.length > 0 && (
+                {tags.length> 0 && (
                   <div className="flex flex-wrap gap-1 mb-2">
                     {tags.map(t => (
                       <span key={t.label} className="text-[9px] px-1.5 py-0.5 rounded-full font-medium"
@@ -1048,7 +1048,7 @@ export default function ClientsPage() {
                   </div>
                   <div className="px-3 py-2 flex flex-col gap-0.5">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Owed</p>
-                    <p className={`text-xs font-bold ${revenue.outstanding > 0 ? "text-[#F26063]" : "text-muted"}`}>
+                    <p className={`text-xs font-bold ${revenue.outstanding> 0 ? "text-[#F26063]" : "text-muted"}`}>
                       {formatCurrency(revenue.outstanding)}
                     </p>
                   </div>
@@ -1061,7 +1061,7 @@ export default function ClientsPage() {
                     <span className="text-[9px] font-mono font-medium">{onboarding}%</span>
                   </div>
                   <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full transition-all ${onboarding >= 100 ? "bg-[#2563EB]" : onboarding >= 60 ? "bg-[#2563EB]" : "bg-[#1D4ED8]"}`}
+                    <div className={`h-full rounded-full transition-all ${onboarding>= 100 ? "bg-[#2563EB]" : onboarding>= 60 ? "bg-[#2563EB]" : "bg-[#1D4ED8]"}`}
                       style={{ width: `${onboarding}%` }} />
                   </div>
                 </div>
@@ -1124,7 +1124,7 @@ export default function ClientsPage() {
                       }}
                       className="btn-primary text-[10px] px-2 py-1 flex items-center gap-1"
                       title="Switch the whole OS to manage this client's data, content, AI recs, etc."
-                    >
+>
                       <UserCheck size={10} /> Manage
                     </button>
                     <button onClick={() => setShowTagModal(c.id)} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
@@ -1146,7 +1146,7 @@ export default function ClientsPage() {
                     <Plus size={12} /> Add Client
                   </button>
                 ) : undefined}
-              />
+ />
             </div>
           )}
         </motion.div>
@@ -1164,18 +1164,18 @@ export default function ClientsPage() {
                 <Plus size={12} /> Add Client
               </button>
             ) : undefined}
-          />
+ />
         </div>
       )}
-      {tab === "clients" && viewMode === "table" && filteredClients.length > 0 && (
+      {tab === "clients" && viewMode === "table" && filteredClients.length> 0 && (
         <div className="space-y-0 [&_tbody_tr:hover]:border-l-2 [&_tbody_tr:hover]:border-l-[#2563EB]/40">
           <DataTable
             columns={[
               { key: "select", label: (
                 <button onClick={selectAllClients} className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                  selectedClients.size === filteredClients.length && filteredClients.length > 0 ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
+                  selectedClients.size === filteredClients.length && filteredClients.length> 0 ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
                 }`}>
-                  {selectedClients.size === filteredClients.length && filteredClients.length > 0 && <Check size={10} />}
+                  {selectedClients.size === filteredClients.length && filteredClients.length> 0 && <Check size={10} />}
                 </button>
               ) as unknown as string, render: (c: Client) => (
                 <div onClick={e => e.stopPropagation()}>
@@ -1230,7 +1230,7 @@ export default function ClientsPage() {
                 return (
                   <div>
                     <p className="font-medium">{formatCurrency(c.mrr)}</p>
-                    {rev.outstanding > 0 && <p className="text-[9px] text-danger">{formatCurrency(rev.outstanding)} due</p>}
+                    {rev.outstanding> 0 && <p className="text-[9px] text-danger">{formatCurrency(rev.outstanding)} due</p>}
                   </div>
                 );
               }},
@@ -1249,7 +1249,7 @@ export default function ClientsPage() {
                     <div
                       className={`h-2 rounded-full ${getHealthBg(c.health_score)}`}
                       style={{ width: `${c.health_score}%` }}
-                    />
+ />
                   </div>
                   <span className={`text-xs font-medium ${getHealthColor(c.health_score)}`}>{c.health_score}%</span>
                 </div>
@@ -1259,7 +1259,7 @@ export default function ClientsPage() {
                 return (
                   <div className="flex items-center gap-1.5">
                     <div className="w-10 bg-surface-light rounded-full h-1.5">
-                      <div className={`h-full rounded-full ${pct >= 100 ? "bg-success" : "bg-[#2563EB]"}`} style={{ width: `${pct}%` }} />
+                      <div className={`h-full rounded-full ${pct>= 100 ? "bg-success" : "bg-[#2563EB]"}`} style={{ width: `${pct}%` }} />
                     </div>
                     <span className="text-[10px] text-muted">{pct}%</span>
                   </div>
@@ -1322,7 +1322,7 @@ export default function ClientsPage() {
             data={filteredClients}
             onRowClick={(c) => router.push(`/dashboard/clients/${c.id}`)}
             emptyMessage="No clients match your filters."
-          />
+ />
 
           {/* Feature 5: Expanded Detail Panel */}
           {expandedRow && (() => {
@@ -1335,12 +1335,12 @@ export default function ClientsPage() {
                 <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
                   {[
                     { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#1D4ED8" },
-                    { label: "Health", value: `${client.health_score ?? "�"}%`, color: client.health_score >= 70 ? "#3B82F6" : client.health_score >= 40 ? "#1D4ED8" : "#F26063" },
+                    { label: "Health", value: `${client.health_score ?? "�"}%`, color: client.health_score>= 70 ? "#3B82F6" : client.health_score>= 40 ? "#1D4ED8" : "#F26063" },
                     { label: "Package", value: client.package_tier ?? "�", color: "#3B82F6" },
                     { label: "Since", value: formatDate(client.created_at ?? ""), color: "#6F6D7A" },
                   ].map((tile, ti) => {
                     return (
-                      <div key={tile.label} className="relative rounded-xl border border-border-subtle p-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+                      <div key={tile.label} className="glass relative rounded-xl border border-border-subtle p-3 overflow-hidden">
                         <div className="text-[10px] uppercase tracking-wider text-text-muted">{tile.label}</div>
                         <div className="mt-1 text-lg font-bold font-mono" style={{ color: tile.color, fontVariantNumeric: "tabular-nums" }}>{tile.value}</div>
                       </div>
@@ -1383,7 +1383,7 @@ export default function ClientsPage() {
                       </div>
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-muted">Outstanding</span>
-                        <span className={`font-bold ${revenue.outstanding > 0 ? "text-danger" : "text-muted"}`}>{formatCurrency(revenue.outstanding)}</span>
+                        <span className={`font-bold ${revenue.outstanding> 0 ? "text-danger" : "text-muted"}`}>{formatCurrency(revenue.outstanding)}</span>
                       </div>
                       <div className="flex items-center justify-between text-xs border-t border-border pt-2">
                         <span className="text-muted">Est. Lifetime Value</span>
@@ -1431,7 +1431,7 @@ export default function ClientsPage() {
           ]}
           data={contracts}
           emptyMessage="No contracts yet."
-        />
+ />
       )}
 
       {/* Invoices Table */}
@@ -1447,7 +1447,7 @@ export default function ClientsPage() {
           ]}
           data={invoices}
           emptyMessage="No invoices yet."
-        />
+ />
       )}
 
       {/* Billing Tab */}
@@ -1459,17 +1459,16 @@ export default function ClientsPage() {
               { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },
               { label: "Active Subs", value: String(clientsWithSubs.length), color: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },
               { label: "Paid Invoices", value: String(paidInvoices.length), color: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },
-              { label: "Overdue", value: String(overdueInvoices.length), color: overdueInvoices.length > 0 ? "#F26063" : "#6F6D7A", bar: overdueInvoices.length > 0 ? "from-[#F26063] to-transparent" : "from-[#6F6D7A] to-transparent" },
+              { label: "Overdue", value: String(overdueInvoices.length), color: overdueInvoices.length> 0 ? "#F26063" : "#6F6D7A", bar: overdueInvoices.length> 0 ? "from-[#F26063] to-transparent" : "from-[#6F6D7A] to-transparent" },
             ].map((tile, i) => (
               <motion.div
                 key={tile.label}
-                className="relative rounded-xl border border-border-subtle px-4 py-3 overflow-hidden"
-                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px -4px rgba(0,0,0,0.06)" }}
+                className="glass relative rounded-xl border border-border-subtle px-4 py-3 overflow-hidden"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.36, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -2, transition: { duration: 0.2 } }}
-              >
+>
                 <p className="text-[10px] text-text-muted uppercase tracking-wider">{tile.label}</p>
                 <p className="text-xl font-bold font-mono mt-1" style={{ color: tile.color, fontVariantNumeric: "tabular-nums" }}>{tile.value}</p>
               </motion.div>
@@ -1502,7 +1501,7 @@ export default function ClientsPage() {
                             <span className="text-muted flex items-center gap-0.5"><span className="w-1.5 h-1.5 rounded-full bg-muted inline-block" /> No Stripe</span>
                           )}
                           {hasSub && <span className="text-[#2563EB]">Subscribed</span>}
-                          {client.mrr > 0 && <span>{formatCurrency(client.mrr)}/mo</span>}
+                          {client.mrr> 0 && <span>{formatCurrency(client.mrr)}/mo</span>}
                         </div>
                       </div>
                     </div>
@@ -1612,7 +1611,7 @@ export default function ClientsPage() {
         onClose={() => setSelectedClient(null)}
         title={selectedClient?.business_name || "Client Details"}
         size="xl"
-      >
+>
         {selectedClient && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -1638,7 +1637,7 @@ export default function ClientsPage() {
               </div>
               <div>
                 <p className="text-xs text-muted">Health Score</p>
-                <p className={selectedClient.health_score > 75 ? "text-success" : selectedClient.health_score > 50 ? "text-warning" : "text-danger"}>
+                <p className={selectedClient.health_score> 75 ? "text-success" : selectedClient.health_score> 50 ? "text-warning" : "text-danger"}>
                   {selectedClient.health_score}%
                 </p>
               </div>
@@ -1712,8 +1711,8 @@ export default function ClientsPage() {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a"); a.href = url;
                     a.download = `${selectedClient.business_name}_contract.pdf`; a.click();
-                    // Free the object URL once the browser starts the download so we
-                    // don't leak blob memory on every contract generation.
+ // Free the object URL once the browser starts the download so we
+ // don't leak blob memory on every contract generation.
                     setTimeout(() => URL.revokeObjectURL(url), 1000);
                     toast.success("Contract downloaded!", { id: tid });
                   } else { toast.error("Failed to generate contract", { id: tid }); }
@@ -1865,7 +1864,7 @@ export default function ClientsPage() {
                   );
                 })}
               </div>
-              {currentTags.length > 0 && (
+              {currentTags.length> 0 && (
                 <div className="pt-2 border-t border-border">
                   <p className="text-[10px] text-muted mb-2">Active tags:</p>
                   <div className="flex flex-wrap gap-1.5">
@@ -1903,7 +1902,7 @@ export default function ClientsPage() {
                 onChange={e => setNoteText(e.target.value)}
                 className="input w-full h-32 resize-none"
                 placeholder="Add notes about this client..."
-              />
+ />
               <div className="flex justify-end gap-3">
                 <button onClick={() => setEditingNote(null)} className="btn-secondary">Cancel</button>
                 <button onClick={() => saveNote(editingNote)} className="btn-primary flex items-center gap-2">
@@ -1951,7 +1950,7 @@ export default function ClientsPage() {
                 ].map(row => {
                   const clientObjs = compareClients.map(id => clients.find(cl => cl.id === id)).filter(Boolean) as Client[];
                   const nums = row.getNum ? clientObjs.map(c => row.getNum!(c)) : [];
-                  const bestVal = nums.length > 0 ? Math.max(...nums) : -1;
+                  const bestVal = nums.length> 0 ? Math.max(...nums) : -1;
                   return (
                     <tr key={row.label} className="border-b border-border/50">
                       <td className="py-2 text-muted font-medium">{row.label}</td>

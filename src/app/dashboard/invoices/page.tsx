@@ -146,7 +146,7 @@ export default function InvoicesPage() {
                     <Link
                       href="/dashboard/invoices/new"
                       className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold text-black font-medium hover:bg-gold/90 transition-all"
-                    >
+>
                       <Sparkles size={12} /> AI Smart Invoice
                     </Link>
                   </motion.div>
@@ -155,7 +155,7 @@ export default function InvoicesPage() {
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setActiveTab("builder")}
                     className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-text-primary font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all"
-                  >
+>
                     <Plus size={12} /> New Invoice
                   </motion.button>
                 </div>
@@ -170,7 +170,7 @@ export default function InvoicesPage() {
                 { label: "Draft", value: formatCurrency(totalDraft), icon: <FileText size={12} />, color: "text-muted" },
                 { label: "Monthly Recurring", value: formatCurrency(recurringTotal), icon: <RefreshCw size={12} />, color: "text-[#2563EB]" },
               ]}
-            />{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+ />{/* Tabs */}<div className="glass flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]">
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
@@ -185,10 +185,10 @@ export default function InvoicesPage() {
                     <input
                       value={search}
                       onChange={e => setSearch(e.target.value)}
-                      className="rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-[rgba(255,255,255,0.70)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+                      className="glass rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-[rgba(255,255,255,0.70)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" 
                       placeholder="Search invoices..."
                       aria-label="Search invoices"
-                    />
+ />
                   </div>
                   <div className="flex gap-1.5">
                     {(["all", "sent", "paid", "overdue", "draft"] as const).map(f => (
@@ -212,7 +212,7 @@ export default function InvoicesPage() {
                             Create Invoice
                           </button>
                         }
-                      />
+ />
                     </div>
                   ) : (
                     <motion.div className="divide-y divide-[rgba(0,0,0,0.06)]" variants={containerVariants} initial="hidden" animate="visible">
@@ -226,7 +226,7 @@ export default function InvoicesPage() {
                               className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-[rgba(37,99,235,0.05)] ${
                                 isOverdue ? "bg-rose-50" : ""
                               }`}
-                            >
+>
                               <div className="flex items-center gap-3">
                                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                                   inv.status === "paid" ? "bg-emerald-50" : isOverdue ? "bg-rose-50" : inv.status === "draft" ? "bg-surface" : "bg-amber-50"
@@ -266,7 +266,7 @@ export default function InvoicesPage() {
                                 <div className="grid grid-cols-4 gap-3 text-[10px]">
                                   <div><span className="text-muted">Sent:</span> <span>{inv.sentDate || "Not sent"}</span></div>
                                   <div><span className="text-muted">Due:</span> <span>{inv.dueDate}</span></div>
-                                  <div><span className="text-muted">Tax:</span> <span>{inv.tax > 0 ? formatCurrency(inv.tax) : "None"}</span></div>
+                                  <div><span className="text-muted">Tax:</span> <span>{inv.tax> 0 ? formatCurrency(inv.tax) : "None"}</span></div>
                                   <div><span className="text-muted">Currency:</span> <span>{inv.currency}</span></div>
                                 </div>
                                 <div className="flex gap-2 pt-2 items-center">
@@ -447,8 +447,8 @@ export default function InvoicesPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.05 }}
-                      className="rounded-xl p-4 flex items-center justify-between border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
-                    >
+                      className="glass rounded-xl p-4 flex items-center justify-between border border-[rgba(255,255,255,0.70)]" 
+>
                       <div className="flex items-center gap-3">
                         <RefreshCw size={14} className="text-[#2563EB]" />
                         <div>
@@ -496,8 +496,8 @@ export default function InvoicesPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: i * 0.05 }}
-                      className={`rounded-xl p-4 flex items-center justify-between border border-[rgba(255,255,255,0.70)] ${!reminder.enabled ? "opacity-50" : ""}`} style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
-                    >
+                      className={`glass rounded-xl p-4 flex items-center justify-between border border-[rgba(255,255,255,0.70)] ${!reminder.enabled ? "opacity-50" : ""}`} 
+>
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${i < 2 ? "bg-amber-50" : i < 4 ? "bg-orange-50" : "bg-rose-50"}`}>
                           <Clock size={14} className={i < 2 ? "text-amber-600" : i < 4 ? "text-orange-600" : "text-rose-700"} />
@@ -555,8 +555,8 @@ export default function InvoicesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -3 }}
-                      className="rounded-xl p-4 cursor-pointer border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
-                    >
+                      className="glass rounded-xl p-4 cursor-pointer border border-[rgba(255,255,255,0.70)]" 
+>
                       <div className="flex items-center gap-3 mb-2">
                         <div className="w-10 h-10 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
                           <FileText size={16} className="text-[#2563EB]" />
@@ -585,7 +585,7 @@ export default function InvoicesPage() {
                 </h3>
                 <div className="grid grid-cols-5 gap-3">
                   {[
-                    { range: "Current", amount: totalSent - totalOverdue, count: invoicesData.filter(i => i.status === "sent" && i.dueDate >= today).length, color: "text-emerald-700" },
+                    { range: "Current", amount: totalSent - totalOverdue, count: invoicesData.filter(i => i.status === "sent" && i.dueDate>= today).length, color: "text-emerald-700" },
                     { range: "1-7 days", amount: 0, count: 0, color: "text-amber-600" },
                     { range: "8-14 days", amount: 0, count: 0, color: "text-orange-600" },
                     { range: "15-30 days", amount: 0, count: 0, color: "text-rose-700" },
@@ -597,8 +597,8 @@ export default function InvoicesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: i * 0.06 }}
                       whileHover={{ y: -2 }}
-                      className="rounded-xl text-center p-3 overflow-hidden border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
-                    >
+                      className="glass rounded-xl text-center p-3 overflow-hidden border border-[rgba(255,255,255,0.70)]" 
+>
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                       <p className="text-[9px] text-muted uppercase mb-1">{bucket.range}</p>
                       <p className={`text-lg font-bold ${bucket.color}`}>{formatCurrency(bucket.amount)}</p>
@@ -628,7 +628,7 @@ export default function InvoicesPage() {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.18, delay: index * 0.03 }}
                           className="grid grid-cols-6 text-[10px] py-2 px-3 hover:bg-indigo-500/5 transition-colors items-center"
-                        >
+>
                           <span className="font-mono text-muted">{inv.id}</span>
                           <span className="font-medium">{inv.client}</span>
                           <span className="font-bold">{formatCurrency(inv.amount, inv.currency)}</span>
@@ -638,7 +638,7 @@ export default function InvoicesPage() {
                             inv.status === "overdue" ? "bg-rose-50 text-rose-700 border border-rose-200" :
                             "bg-amber-50 text-amber-700 border border-amber-200"
                           }`}>{inv.status}</span>
-                          <span className={ageDays > 7 ? "text-rose-700" : "text-muted"}>{ageDays}d</span>
+                          <span className={ageDays> 7 ? "text-rose-700" : "text-muted"}>{ageDays}d</span>
                         </motion.div>
                       );
                     })}
@@ -662,8 +662,8 @@ export default function InvoicesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -2 }}
-                      className="rounded-xl text-center p-5 overflow-hidden border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
-                    >
+                      className="glass rounded-xl text-center p-5 overflow-hidden border border-[rgba(255,255,255,0.70)]" 
+>
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                       <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>
                       <p className={`text-2xl font-bold ${card.color}`}>{card.value}</p>
@@ -687,7 +687,7 @@ export default function InvoicesPage() {
                     ].map((m, i) => (
                       <div key={i} className="flex-1 flex flex-col items-center gap-1">
                         <p className="text-[9px] font-bold">{formatCurrency(m.amount)}</p>
-                        <div className="w-full bg-[#2563EB] rounded-t" style={{ height: `${m.amount > 0 ? Math.max((m.amount / 20000) * 100, 4) : 0}%`, minHeight: m.amount > 0 ? 8 : 2 }} />
+                        <div className="w-full bg-[#2563EB] rounded-t" style={{ height: `${m.amount> 0 ? Math.max((m.amount / 20000) * 100, 4) : 0}%`, minHeight: m.amount> 0 ? 8 : 2 }} />
                         <span className="text-[8px] text-muted">{m.month}</span>
                       </div>
                     ))}

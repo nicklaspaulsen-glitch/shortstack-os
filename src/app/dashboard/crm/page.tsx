@@ -203,7 +203,7 @@ function getLeadScore(lead: CRMLead): number {
   if (lead.phone) score += 15;
   if (lead.instagram_url || lead.facebook_url || lead.linkedin_url) score += 10;
   if (lead.google_rating) score += Math.min(Math.round(lead.google_rating * 4), 20);
-  if (lead.review_count > 0) score += Math.min(Math.round(lead.review_count / 10), 10);
+  if (lead.review_count> 0) score += Math.min(Math.round(lead.review_count / 10), 10);
   if (lead.website) score += 5;
   if (lead.owner_name) score += 5;
   if (lead.outreach_log.some(o => o.status === "replied")) score += 20;
@@ -213,8 +213,8 @@ function getLeadScore(lead: CRMLead): number {
 }
 
 function getScoreInfo(score: number) {
-  if (score >= 70) return { label: "HOT", color: "#ef4444", bg: "bg-red-500/10 text-red-400" };
-  if (score >= 40) return { label: "WARM", color: "#f59e0b", bg: "bg-amber-500/10 text-amber-400" };
+  if (score>= 70) return { label: "HOT", color: "#ef4444", bg: "bg-red-500/10 text-red-400" };
+  if (score>= 40) return { label: "WARM", color: "#f59e0b", bg: "bg-amber-500/10 text-amber-400" };
   return { label: "COLD", color: "#6b7280", bg: "bg-gray-500/10 text-gray-500" };
 }
 
@@ -231,9 +231,9 @@ export default function CRMPage() {
   const supabase = createClient();
   const { clientId: managedClientId } = useManagedClient();
 
-  // -- Core state --
+ // -- Core state --
   const [leads, setLeads] = useState<CRMLead[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+ // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<CRMStatus | "all">("all");
@@ -244,7 +244,7 @@ export default function CRMPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [page, setPage] = useState(0);
 
-  // -- UI state --
+ // -- UI state --
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showBulkStatusMenu, setShowBulkStatusMenu] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -257,9 +257,9 @@ export default function CRMPage() {
   const [statsCollapsed, setStatsCollapsed] = useState(false);
   const [inlineStatusId, setInlineStatusId] = useState<string | null>(null);
 
-  // -- Data state --
-  // Previously useState-only and lost on reload. Now each persists via
-  // /api/crm/<resource> and is rehydrated by fetchCrmSettings() on mount.
+ // -- Data state --
+ // Previously useState-only and lost on reload. Now each persists via
+ // /api/crm/<resource> and is rehydrated by fetchCrmSettings() on mount.
   const [emailCredits, setEmailCredits] = useState(0);
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [columns, setColumns] = useState<ColumnConfig[]>(DEFAULT_COLUMNS);
@@ -275,15 +275,15 @@ export default function CRMPage() {
 
   const detailPanelRef = useRef<HTMLDivElement>(null);
 
-  // -- Data fetching --
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ // -- Data fetching --
+ // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const controller = new AbortController();
     fetchLeads(controller.signal);
     return () => controller.abort();
   }, [managedClientId]);
-  // Rehydrate persisted CRM settings on mount (was useState-only before).
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ // Rehydrate persisted CRM settings on mount (was useState-only before).
+ // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchCrmSettings(); }, []);
   useEffect(() => { setPage(0); }, [activeTab, search, sortBy, filters]);
 
@@ -324,7 +324,7 @@ export default function CRMPage() {
     } finally { if (!signal?.aborted) setLoading(false); }
   }
 
-  // Rehydrate all persisted CRM settings (previously useState-only).
+ // Rehydrate all persisted CRM settings (previously useState-only).
   async function fetchCrmSettings() {
     try {
       const [automationsRes, tagsRes, notesRes, followUpsRes, segmentsRes] = await Promise.all([
@@ -397,7 +397,7 @@ export default function CRMPage() {
     }
   }
 
-  // -- Computed data --
+ // -- Computed data --
   const statusCounts = useMemo(() => {
     const c: Record<string, number> = { all: leads.length, new: 0, contacted: 0, replied: 0, booked: 0, converted: 0 };
     leads.forEach(l => { const s = mapToCRMStatus(l.status); c[s] = (c[s] || 0) + 1; });
@@ -409,9 +409,9 @@ export default function CRMPage() {
 
   const hasActiveFilters = useMemo(() => {
     const f = filters;
-    return f.industries.length > 0 || f.cities.length > 0 || f.hasPhone !== null || f.hasEmail !== null ||
-      f.hasSocial !== null || f.ratingMin > 0 || f.ratingMax < 5 || f.scoreMin > 0 || f.scoreMax < 100 ||
-      f.tags.length > 0 || f.dateFrom !== "" || f.dateTo !== "" || f.isStale !== null;
+    return f.industries.length> 0 || f.cities.length> 0 || f.hasPhone !== null || f.hasEmail !== null ||
+      f.hasSocial !== null || f.ratingMin> 0 || f.ratingMax < 5 || f.scoreMin> 0 || f.scoreMax < 100 ||
+      f.tags.length> 0 || f.dateFrom !== "" || f.dateTo !== "" || f.isStale !== null;
   }, [filters]);
 
   const filtered = useMemo(() => {
@@ -428,26 +428,26 @@ export default function CRMPage() {
         (l.phone && l.phone.includes(q))
       );
     }
-    // Advanced filters
+ // Advanced filters
     const f = filters;
-    if (f.industries.length > 0) result = result.filter(l => l.industry && f.industries.includes(l.industry));
-    if (f.cities.length > 0) result = result.filter(l => l.city && f.cities.includes(l.city));
+    if (f.industries.length> 0) result = result.filter(l => l.industry && f.industries.includes(l.industry));
+    if (f.cities.length> 0) result = result.filter(l => l.city && f.cities.includes(l.city));
     if (f.hasPhone === true) result = result.filter(l => !!l.phone);
     if (f.hasPhone === false) result = result.filter(l => !l.phone);
     if (f.hasEmail === true) result = result.filter(l => !!l.email);
     if (f.hasEmail === false) result = result.filter(l => !l.email);
     if (f.hasSocial === true) result = result.filter(l => !!(l.instagram_url || l.facebook_url || l.linkedin_url || l.tiktok_url));
-    if (f.ratingMin > 0) result = result.filter(l => (l.google_rating || 0) >= f.ratingMin);
+    if (f.ratingMin> 0) result = result.filter(l => (l.google_rating || 0)>= f.ratingMin);
     if (f.ratingMax < 5) result = result.filter(l => (l.google_rating || 0) <= f.ratingMax);
-    if (f.scoreMin > 0) result = result.filter(l => getLeadScore(l) >= f.scoreMin);
+    if (f.scoreMin> 0) result = result.filter(l => getLeadScore(l)>= f.scoreMin);
     if (f.scoreMax < 100) result = result.filter(l => getLeadScore(l) <= f.scoreMax);
-    if (f.tags.length > 0) result = result.filter(l => f.tags.some(t => (leadTags[l.id] || []).includes(t)));
-    if (f.dateFrom) result = result.filter(l => new Date(l.created_at) >= new Date(f.dateFrom));
+    if (f.tags.length> 0) result = result.filter(l => f.tags.some(t => (leadTags[l.id] || []).includes(t)));
+    if (f.dateFrom) result = result.filter(l => new Date(l.created_at)>= new Date(f.dateFrom));
     if (f.dateTo) result = result.filter(l => new Date(l.created_at) <= new Date(f.dateTo));
     if (f.isStale === true) result = result.filter(l => isLeadStale(l));
     if (f.isStale === false) result = result.filter(l => !isLeadStale(l));
 
-    // Sort
+ // Sort
     result = [...result].sort((a, b) => {
       if (sortBy === "newest") return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       if (sortBy === "oldest") return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
@@ -480,7 +480,7 @@ export default function CRMPage() {
   const paginated = useMemo(() => filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE), [filtered, page]);
   const detailLead = leads.find(l => l.id === detailLeadId) || null;
 
-  // -- Stats --
+ // -- Stats --
   const stats = useMemo(() => {
     const total = leads.length;
     const withEmail = leads.filter(l => l.email).length;
@@ -488,9 +488,9 @@ export default function CRMPage() {
     const totalOutreach = leads.reduce((s, l) => s + l.outreach_log.length, 0);
     const replied = leads.filter(l => l.outreach_log.some(o => o.status === "replied")).length;
     const stale = leads.filter(l => isLeadStale(l)).length;
-    const avgScore = total > 0 ? Math.round(leads.reduce((s, l) => s + getLeadScore(l), 0) / total) : 0;
-    const convRate = total > 0 ? Math.round((statusCounts.converted / total) * 100) : 0;
-    const replyRate = totalOutreach > 0 ? Math.round((replied / Math.max(leads.filter(l => l.outreach_log.length > 0).length, 1)) * 100) : 0;
+    const avgScore = total> 0 ? Math.round(leads.reduce((s, l) => s + getLeadScore(l), 0) / total) : 0;
+    const convRate = total> 0 ? Math.round((statusCounts.converted / total) * 100) : 0;
+    const replyRate = totalOutreach> 0 ? Math.round((replied / Math.max(leads.filter(l => l.outreach_log.length> 0).length, 1)) * 100) : 0;
     const todayFollowUps = followUps.filter(f => {
       const d = new Date(f.date);
       const now = new Date();
@@ -499,7 +499,7 @@ export default function CRMPage() {
     return { total, withEmail, withPhone, totalOutreach, replied, stale, avgScore, convRate, replyRate, todayFollowUps };
   }, [leads, statusCounts, followUps]);
 
-  // -- Actions --
+ // -- Actions --
   const toggleSelect = useCallback((id: string) => {
     setSelectedIds(prev => { const n = new Set(prev); if (n.has(id)) n.delete(id); else n.add(id); return n; });
   }, []);
@@ -511,18 +511,18 @@ export default function CRMPage() {
   function isLeadStale(lead: CRMLead): boolean {
     const age = Date.now() - new Date(lead.created_at).getTime();
     const days = age / 86400000;
-    if (lead.outreach_log.length > 0) {
+    if (lead.outreach_log.length> 0) {
       const lastContact = new Date(lead.outreach_log[0].sent_at).getTime();
-      return (Date.now() - lastContact) / 86400000 > LEAD_EXPIRY_DAYS;
+      return (Date.now() - lastContact) / 86400000> LEAD_EXPIRY_DAYS;
     }
-    return days > LEAD_EXPIRY_DAYS && lead.status === "new";
+    return days> LEAD_EXPIRY_DAYS && lead.status === "new";
   }
 
   function getDaysUntilExpiry(lead: CRMLead): number | null {
     if (lead.status === "booked" || lead.status === "converted") return null;
-    const ref = lead.outreach_log.length > 0 ? new Date(lead.outreach_log[0].sent_at) : new Date(lead.created_at);
+    const ref = lead.outreach_log.length> 0 ? new Date(lead.outreach_log[0].sent_at) : new Date(lead.created_at);
     const remaining = Math.ceil(LEAD_EXPIRY_DAYS - (Date.now() - ref.getTime()) / 86400000);
-    return remaining > 0 ? remaining : 0;
+    return remaining> 0 ? remaining : 0;
   }
 
   async function sendAction(lead: CRMLead, action: "email" | "sms" | "call") {
@@ -544,7 +544,7 @@ export default function CRMPage() {
       }
       const res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const data = await res.json();
-      if (data.success && (data.sent ?? 1) > 0) {
+      if (data.success && (data.sent ?? 1)> 0) {
         toast.success(`${action === "email" ? "Email sent" : action === "sms" ? "SMS sent" : "Call initiated"}!`);
         fetchLeads();
       } else toast.error(data.error || "Failed to send");
@@ -560,7 +560,7 @@ export default function CRMPage() {
     if (selected.length === 0) { toast.error("No leads selected"); return; }
     const valid = action === "email" ? selected.filter(l => l.email) : selected.filter(l => l.phone);
     if (valid.length === 0) { toast.error(`No selected leads have ${action === "email" ? "email" : "phone"}`); return; }
-    if (action === "email" && valid.length > emailCredits) {
+    if (action === "email" && valid.length> emailCredits) {
       toast.error(`Need ${valid.length} credits, have ${emailCredits}`);
       setShowBuyCredits(true); return;
     }
@@ -568,7 +568,7 @@ export default function CRMPage() {
     toast.loading(`Processing ${valid.length} ${action}s...`, { id: tid });
     let success = 0;
     if (action === "call") {
-      // Calls must be sent individually (each is a live call)
+ // Calls must be sent individually (each is a live call)
       for (const lead of valid) {
         try {
           const res = await fetch("/api/call", { method: "POST", headers: { "Content-Type": "application/json" },
@@ -578,7 +578,7 @@ export default function CRMPage() {
         } catch (err) { console.error("[CRM] bulk call error:", err); }
       }
     } else {
-      // Email and SMS endpoints support batch via lead_ids array
+ // Email and SMS endpoints support batch via lead_ids array
       const endpoint = action === "email" ? "/api/outreach/email" : "/api/twilio/send-sms";
       try {
         const res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" },
@@ -783,8 +783,8 @@ export default function CRMPage() {
     toast.success(`Loaded "${seg.name}"`);
   }
 
-  // Persist automation rules. Server-shaped UUIDs get PATCHed; brand-new local
-  // ones get POSTed and swap their id for the server's UUID.
+ // Persist automation rules. Server-shaped UUIDs get PATCHed; brand-new local
+ // ones get POSTed and swap their id for the server's UUID.
   async function persistAutomations() {
     try {
       const results = await Promise.all(
@@ -818,7 +818,7 @@ export default function CRMPage() {
         })
       );
       const failed = results.filter(r => !r.success).length;
-      if (failed > 0) toast.error(`${failed} automation(s) failed to save`);
+      if (failed> 0) toast.error(`${failed} automation(s) failed to save`);
       else toast.success("Automations saved");
     } catch (err) {
       console.error("[CRM] persistAutomations error:", err);
@@ -878,12 +878,12 @@ export default function CRMPage() {
     }
   }
 
-  // -- Density styles --
+ // -- Density styles --
   const dPy = density === "dense" ? "py-1" : density === "compact" ? "py-1.5" : "py-2.5";
   const dText = density === "dense" ? "text-[9px]" : density === "compact" ? "text-[10px]" : "text-[11px]";
   const dGap = density === "dense" ? "gap-1" : density === "compact" ? "gap-1.5" : "gap-2";
 
-  /* -------------------------------------------------------------------
+ /* -------------------------------------------------------------------
      RENDER
      ------------------------------------------------------------------- */
 
@@ -899,7 +899,7 @@ export default function CRMPage() {
                   CRM
                 </h1>
               </div>
-              {stats.total > 0 && (
+              {stats.total> 0 && (
                 <span className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[10px] font-medium text-[#1D4ED8]">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#1D4ED8] animate-pulse" />
                   {stats.total} leads
@@ -928,7 +928,7 @@ export default function CRMPage() {
                       { label: "Outreach Sent", value: stats.totalOutreach, icon: Send, color: "text-blue-400" },
                       { label: "With Email", value: stats.withEmail, icon: Mail, color: "text-amber-400" },
                       { label: "With Phone", value: stats.withPhone, icon: Phone, color: "text-emerald-400" },
-                      { label: "Stale Leads", value: stats.stale, icon: AlertTriangle, color: stats.stale > 0 ? "text-red-400" : "text-muted" },
+                      { label: "Stale Leads", value: stats.stale, icon: AlertTriangle, color: stats.stale> 0 ? "text-red-400" : "text-muted" },
                     ].map((s, i) => (
                       <PrismPanel key={i} rainbow padding="px-3 py-2" delay={i * 0.06}>
                         <div className="flex items-center gap-1.5 mb-1">
@@ -943,11 +943,11 @@ export default function CRMPage() {
                   <div className="mt-3 flex items-center gap-1">
                     {STATUS_TABS.filter(t => t.key !== "all").map((t, i) => {
                       const count = statusCounts[t.key] || 0;
-                      const pct = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
+                      const pct = stats.total> 0 ? Math.round((count / stats.total) * 100) : 0;
                       const colors: Record<string, string> = { new: "#1D4ED8", contacted: "#f59e0b", replied: "#1D4ED8", booked: "#a855f7", converted: "#1D4ED8" };
                       return (
                         <div key={t.key} className="flex-1 group cursor-pointer" onClick={() => setActiveTab(t.key as CRMStatus)}>
-                          <div className="h-2 rounded-full transition-all group-hover:h-3" style={{ background: colors[t.key], opacity: count > 0 ? 1 : 0.2 }} />
+                          <div className="h-2 rounded-full transition-all group-hover:h-3" style={{ background: colors[t.key], opacity: count> 0 ? 1 : 0.2 }} />
                           <div className="flex items-center justify-between mt-1">
                             <span className="text-[8px] text-muted">{t.label}</span>
                             <span className="text-[8px] font-mono" style={{ color: colors[t.key] }}>{count} <span className="text-muted">({pct}%)</span></span>
@@ -1051,7 +1051,7 @@ export default function CRMPage() {
             </div>
 
             {/* -- Saved Segments -- */}
-            {savedSegments.length > 0 && (
+            {savedSegments.length> 0 && (
               <div className="flex items-center gap-1.5 overflow-x-auto">
                 <Bookmark size={10} className="text-muted shrink-0" />
                 {savedSegments.map(seg => (
@@ -1263,8 +1263,8 @@ export default function CRMPage() {
             </div>
 
             {/* -- Bulk Actions Bar -- */}
-            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${selectedIds.size > 0 ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.12)]" : "bg-surface-light/20 border-transparent"}`}>
-              {selectedIds.size > 0 ? (
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${selectedIds.size> 0 ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.12)]" : "bg-surface-light/20 border-transparent"}`}>
+              {selectedIds.size> 0 ? (
                 <>
                   <span className="text-[9px] text-[#2563EB] font-medium shrink-0">{selectedIds.size} selected</span>
                   <div className="flex items-center gap-1 flex-wrap">
@@ -1301,7 +1301,7 @@ export default function CRMPage() {
 
                 {/* -- TABLE VIEW -- */}
                 {viewMode === "table" && (
-                  <div className=" p-0 overflow-hidden border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+                  <div className="glass p-0 overflow-hidden border border-[rgba(255,255,255,0.70)]">
                     <div className="overflow-x-auto">
                       <table className={`w-full ${dText}`}>
                         <thead>
@@ -1310,7 +1310,7 @@ export default function CRMPage() {
                               if (col.key === "select") return (
                                 <th key={col.key} className={`text-left px-2 ${dPy} ${col.width || ""}`}>
                                   <button onClick={toggleSelectAll}>
-                                    {selectedIds.size === filtered.length && filtered.length > 0
+                                    {selectedIds.size === filtered.length && filtered.length> 0
                                       ? <CheckSquare size={12} className="text-[#2563EB]" />
                                       : <Square size={12} className="text-muted/40" />}
                                   </button>
@@ -1408,7 +1408,7 @@ export default function CRMPage() {
                                             if (!tag) return null;
                                             return <span key={tagId} className={`text-[7px] px-1 py-0.5 rounded-full border ${getTagStyle(tag.color)}`}>{tag.label}</span>;
                                           })}
-                                          {tags.length > 2 && <span className="text-[7px] text-muted">+{tags.length - 2}</span>}
+                                          {tags.length> 2 && <span className="text-[7px] text-muted">+{tags.length - 2}</span>}
                                         </div>
                                       </td>
                                     );
@@ -1477,7 +1477,7 @@ export default function CRMPage() {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ duration: 0.15 }}
-                                  >
+>
                                     <td colSpan={columns.filter(c => c.visible).length} className="px-4 py-3">
                                       <div className="flex items-center gap-2 mb-2">
                                         <Send size={10} className="text-[#2563EB]" />
@@ -1528,7 +1528,7 @@ export default function CRMPage() {
                         <motion.div
                           key={lead.id}
                           className={`rounded-xl border border-[rgba(0,0,0,0.08)] ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : ""}`}
-                          style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+                          
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.18, delay: index * 0.04 }}
@@ -1570,7 +1570,7 @@ export default function CRMPage() {
                             <span className="ml-auto text-[8px]">{lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "No outreach"}</span>
                           </div>
                           {/* Tags */}
-                          {tags.length > 0 && (
+                          {tags.length> 0 && (
                             <div className="flex items-center gap-0.5 flex-wrap">
                               {tags.map(tagId => {
                                 const tag = AVAILABLE_TAGS.find(t => t.id === tagId);
@@ -1623,7 +1623,7 @@ export default function CRMPage() {
                               return (
                                 <motion.div
                                   key={lead.id}
-                                  className="rounded-lg p-2.5 space-y-1.5 cursor-pointer border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
+                                  className="glass rounded-lg p-2.5 space-y-1.5 cursor-pointer border border-[rgba(255,255,255,0.70)]" 
                                   initial={{ opacity: 0, x: -8 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ duration: 0.18, delay: index * 0.04 }}
@@ -1644,7 +1644,7 @@ export default function CRMPage() {
                                     <div className="flex-1 h-1 rounded-full bg-border"><div className="h-1 rounded-full" style={{ width: `${score}%`, background: scoreInfo.color }} /></div>
                                     <span className="text-[7px] font-mono" style={{ color: scoreInfo.color }}>{score}</span>
                                   </div>
-                                  {tags.length > 0 && (
+                                  {tags.length> 0 && (
                                     <div className="flex gap-0.5 flex-wrap">
                                       {tags.slice(0, 2).map(tagId => {
                                         const tag = AVAILABLE_TAGS.find(t => t.id === tagId);
@@ -1667,7 +1667,7 @@ export default function CRMPage() {
                 )}
 
                 {/* -- Pagination -- */}
-                {totalPages > 1 && viewMode !== "pipeline" && (
+                {totalPages> 1 && viewMode !== "pipeline" && (
                   <div className="flex items-center justify-between px-1 mt-2">
                     <span className="text-[9px] text-muted">
                       {page * PAGE_SIZE + 1}�{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
@@ -1676,8 +1676,8 @@ export default function CRMPage() {
                       <button onClick={() => setPage(0)} disabled={page === 0} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">First</button>
                       <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Prev</button>
                       <span className="text-[9px] text-muted px-2">{page + 1}/{totalPages}</span>
-                      <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page >= totalPages - 1} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Next</button>
-                      <button onClick={() => setPage(totalPages - 1)} disabled={page >= totalPages - 1} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Last</button>
+                      <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page>= totalPages - 1} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Next</button>
+                      <button onClick={() => setPage(totalPages - 1)} disabled={page>= totalPages - 1} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Last</button>
                     </div>
                   </div>
                 )}
@@ -1685,7 +1685,7 @@ export default function CRMPage() {
 
               {/* -- DETAIL SIDEBAR -- */}
               {detailLead && (
-                <div ref={detailPanelRef} className="w-[350px] shrink-0  p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+                <div ref={detailPanelRef} className="glass w-[350px] shrink-0 p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(255,255,255,0.70)]">
                   <div className="px-4 py-3 border-b border-border bg-surface-light/50 flex items-center justify-between">
                     <h3 className="text-xs font-bold truncate">{detailLead.business_name}</h3>
                     <button onClick={() => setDetailLeadId(null)} className="text-muted hover:text-foreground" aria-label="Close detail panel"><X size={14} /></button>
@@ -1783,7 +1783,7 @@ export default function CRMPage() {
                           <CalendarClock size={10} />
                         </button>
                       </div>
-                      {followUps.filter(f => f.leadId === detailLead.id).length > 0 && (
+                      {followUps.filter(f => f.leadId === detailLead.id).length> 0 && (
                         <div className="mt-1 space-y-0.5">
                           {followUps.filter(f => f.leadId === detailLead.id).map((f, i) => (
                             <div key={i} className="text-[8px] text-muted flex items-center gap-1">
@@ -1826,7 +1826,7 @@ export default function CRMPage() {
             {/* -- AUTOMATION MODAL -- */}
             {showAutomation && (
               <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowAutomation(false)}>
-                <div className="bg-surface border border-border  shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden" onClick={e => e.stopPropagation()}>
+                <div className="bg-surface border border-border shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between px-5 py-4 border-b border-border">
                     <div>
                       <h3 className="text-sm font-bold flex items-center gap-2"><Bot size={16} className="text-[#2563EB]" /> Automation Rules</h3>
@@ -1954,7 +1954,7 @@ export default function CRMPage() {
             {/* -- BUY CREDITS MODAL -- */}
             {showBuyCredits && (
               <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowBuyCredits(false)}>
-                <div className="bg-surface border border-border  shadow-2xl p-6 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
+                <div className="bg-surface border border-border shadow-2xl p-6 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <h3 className="text-sm font-bold flex items-center gap-2"><Coins size={16} className="text-[#2563EB]" /> Buy Email Credits</h3>
@@ -1986,7 +1986,7 @@ export default function CRMPage() {
             {/* -- SAVE SEGMENT MODAL -- */}
             {showSegmentSave && (
               <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowSegmentSave(false)}>
-                <div className="bg-surface border border-border  shadow-2xl p-6 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
+                <div className="bg-surface border border-border shadow-2xl p-6 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
                   <h3 className="text-sm font-bold mb-3 flex items-center gap-2"><Bookmark size={14} className="text-[#2563EB]" /> Save Segment</h3>
                   <input value={newSegmentName} onChange={e => setNewSegmentName(e.target.value)} placeholder="Segment name..."
                     className="input w-full text-xs px-3 py-2 mb-3" onKeyDown={e => { if (e.key === "Enter") saveSegment(); }} />
@@ -2006,7 +2006,7 @@ export default function CRMPage() {
                 "Write a cold DM for a dental practice",
                 "Analyze my conversion rate and suggest improvements",
               ]}
-            />
+ />
             </ErrorBoundary></MotionPage>
   );
 }

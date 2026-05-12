@@ -69,15 +69,15 @@ export default function BrandKitPage() {
   const [brand, setBrand] = useState<BrandData | null>(null);
   const [copiedColor, setCopiedColor] = useState<string | null>(null);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
-  // `generating` is retained so the preset cards can flip into a loading state
-  // once the /api/brand-generate endpoint lands.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+ // `generating` is retained so the preset cards can flip into a loading state
+ // once the /api/brand-generate endpoint lands.
+ // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [generating, setGenerating] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [savingManual, setSavingManual] = useState(false);
   const exportMenuRef = useRef<HTMLDivElement>(null);
 
-  // Restore previously extracted brand from localStorage on mount
+ // Restore previously extracted brand from localStorage on mount
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
@@ -96,7 +96,7 @@ export default function BrandKitPage() {
     }
   }, []);
 
-  // Auto-save brand kit state to localStorage
+ // Auto-save brand kit state to localStorage
   const saveBrandKit = useCallback(async (v: { url: string; brand: BrandData | null }) => {
     if (typeof window === "undefined") return;
     localStorage.setItem("ss_brand_kit_url", v.url);
@@ -165,8 +165,8 @@ export default function BrandKitPage() {
   }
 
   function generateFromPreset(presetId: string) {
-    // TODO: Wire to real /api/brand-generate endpoint that renders assets.
-    // For now show an honest message instead of a fake-success toast.
+ // TODO: Wire to real /api/brand-generate endpoint that renders assets.
+ // For now show an honest message instead of a fake-success toast.
     setSelectedPreset(presetId);
     toast("Brand asset generation ships with the next AI update.", { icon: "info" });
   }
@@ -202,16 +202,16 @@ export default function BrandKitPage() {
 
     brand.colors.forEach((color, i) => {
       const label = i === 0 ? "primary" : i === 1 ? "secondary" : i === 2 ? "accent" : `color-${i + 1}`;
-      lines.push(`  --brand-${label}: ${color};`);
+      lines.push(` --brand-${label}: ${color};`);
     });
 
-    if (brand.fonts.length > 0) {
-      lines.push(`  --brand-font-heading: '${brand.fonts[0]}';`);
+    if (brand.fonts.length> 0) {
+      lines.push(` --brand-font-heading: '${brand.fonts[0]}';`);
     }
-    if (brand.fonts.length > 1) {
-      lines.push(`  --brand-font-body: '${brand.fonts[1]}';`);
+    if (brand.fonts.length> 1) {
+      lines.push(` --brand-font-body: '${brand.fonts[1]}';`);
     } else if (brand.fonts.length === 1) {
-      lines.push(`  --brand-font-body: '${brand.fonts[0]}';`);
+      lines.push(` --brand-font-body: '${brand.fonts[0]}';`);
     }
 
     lines.push("}");
@@ -237,32 +237,32 @@ export default function BrandKitPage() {
       parts.push(`\nDescription: ${brand.description}`);
     }
 
-    if (brand.colors.length > 0) {
+    if (brand.colors.length> 0) {
       parts.push(`\nColors (${brand.colors.length}):`);
       brand.colors.forEach((c, i) => {
         const label = i === 0 ? "Primary" : i === 1 ? "Secondary" : i === 2 ? "Accent" : `Color ${i + 1}`;
-        parts.push(`  ${label}: ${c}`);
+        parts.push(` ${label}: ${c}`);
       });
     }
 
-    if (brand.fonts.length > 0) {
+    if (brand.fonts.length> 0) {
       parts.push(`\nFonts (${brand.fonts.length}):`);
-      brand.fonts.forEach((f) => parts.push(`  - ${f}`));
+      brand.fonts.forEach((f) => parts.push(` - ${f}`));
     }
 
-    if (brand.headings.length > 0) {
+    if (brand.headings.length> 0) {
       parts.push(`\nKey Headlines (${brand.headings.length}):`);
-      brand.headings.forEach((h) => parts.push(`  - ${h}`));
+      brand.headings.forEach((h) => parts.push(` - ${h}`));
     }
 
-    if (brand.ctaTexts.length > 0) {
+    if (brand.ctaTexts.length> 0) {
       parts.push(`\nCTA Texts (${brand.ctaTexts.length}):`);
-      brand.ctaTexts.forEach((cta) => parts.push(`  - ${cta}`));
+      brand.ctaTexts.forEach((cta) => parts.push(` - ${cta}`));
     }
 
-    if (brand.socialLinks.length > 0) {
+    if (brand.socialLinks.length> 0) {
       parts.push(`\nSocial Links (${brand.socialLinks.length}):`);
-      brand.socialLinks.forEach((s) => parts.push(`  ${s.platform}: ${s.url}`));
+      brand.socialLinks.forEach((s) => parts.push(` ${s.platform}: ${s.url}`));
     }
 
     navigator.clipboard.writeText(parts.join("\n"));
@@ -291,7 +291,7 @@ export default function BrandKitPage() {
                       <button
                         onClick={() => setShowExportMenu((v) => !v)}
                         className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
-                      >
+>
                         <Download size={13} /> Export Kit
                         <ChevronDown size={12} className={showExportMenu ? "rotate-180 transition-transform" : "transition-transform"} />
                       </button>
@@ -315,7 +315,7 @@ export default function BrandKitPage() {
                     <button
                       onClick={() => { setBrand(null); setUrl(""); setTab("extract"); if (typeof window !== "undefined") { localStorage.removeItem("ss_brand_kit_data"); localStorage.removeItem("ss_brand_kit_url"); } }}
                       className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
-                    >
+>
                       <RefreshCw size={13} /> New Scan
                     </button>
                   </div>
@@ -343,7 +343,7 @@ export default function BrandKitPage() {
                       setSavingManual(false);
                     }}
                     className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1"
-                  >
+>
                     <Save size={10} /> {savingManual ? "Saving..." : "Save"}
                   </button>
                 </div>
@@ -361,7 +361,7 @@ export default function BrandKitPage() {
                         ? "text-muted/40 cursor-not-allowed"
                         : "text-muted hover:text-foreground"
                   }`}
-                >
+>
                   {t.icon} {t.label}
                 </button>
               ))}
@@ -371,10 +371,10 @@ export default function BrandKitPage() {
                 initial="hidden"
                 animate="visible"
                 className="space-y-6"
-              >
+>
                 {/* URL Input */}
-                <motion.div variants={tileVariants} className="rounded-xl p-8 text-center space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                  <div className="w-16 h-16 mx-auto bg-[rgba(37,99,235,0.08)]  flex items-center justify-center mb-4">
+                <motion.div variants={tileVariants} className="glass rounded-xl p-8 text-center space-y-4">
+                  <div className="w-16 h-16 mx-auto bg-[rgba(37,99,235,0.08)] flex items-center justify-center mb-4">
                     <Globe size={28} className="text-[#2563EB]" />
                   </div>
                   <h2 className="text-lg font-bold">Extract Brand Identity</h2>
@@ -393,7 +393,7 @@ export default function BrandKitPage() {
                         onKeyDown={(e) => e.key === "Enter" && scrapeBrand()}
                         className="rounded-lg w-full pl-9 py-2.5 text-sm bg-transparent focus:outline-none focus:ring-1 focus:ring-[#2563EB]/40 placeholder:text-muted" style={{ border: "1px solid rgba(0,0,0,0.10)" }}
                         disabled={loading}
-                      />
+ />
                     </div>
                     <motion.button
                       whileHover={{ scale: 1.04 }}
@@ -401,7 +401,7 @@ export default function BrandKitPage() {
                       onClick={scrapeBrand}
                       disabled={loading}
                       className="btn-primary px-6 py-2.5 text-sm flex items-center gap-2"
-                    >
+>
                       {loading ? <Loader size={14} className="animate-spin" /> : <Zap size={14} />}
                       {loading ? "Scanning..." : "Extract"}
                     </motion.button>
@@ -431,7 +431,7 @@ export default function BrandKitPage() {
                       toast.success("Brand profile populated from website");
                       setTab("colors");
                     }}
-                  />
+ />
                 </motion.div>
 
                 {/* How it works */}
@@ -442,7 +442,7 @@ export default function BrandKitPage() {
                     { icon: <Palette size={18} />, title: "3. Brand Kit", desc: "Complete brand profile ready" },
                     { icon: <Sparkles size={18} />, title: "4. Generate", desc: "Create on-brand content" },
                   ].map((step, i) => (
-                    <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="rounded-xl p-4 text-center relative overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                    <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="glass rounded-xl p-4 text-center relative overflow-hidden">
                       <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} className="absolute top-0 inset-x-0" />
                       <div className="w-10 h-10 mx-auto bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center text-[#2563EB] mb-2 mt-1">
                         {step.icon}
@@ -455,10 +455,10 @@ export default function BrandKitPage() {
 
                 {/* Brand overview (after scan) */}
                 {brand && (
-                  <motion.div variants={tileVariants} className="rounded-xl p-6 space-y-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <motion.div variants={tileVariants} className="glass rounded-xl p-6 space-y-4">
                     <div className="flex items-center gap-4">
                       {brand.favicon && (
-                        // eslint-disable-next-line @next/next/no-img-element
+ // eslint-disable-next-line @next/next/no-img-element
                         <img src={brand.favicon} alt="Favicon" className="w-10 h-10 rounded-lg bg-surface-light border border-border/20" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                       )}
                       <div>
@@ -474,7 +474,7 @@ export default function BrandKitPage() {
                         { label: "Images", value: String(brand.images.length), icon: <ImageIcon size={14} /> },
                         { label: "Socials", value: String(brand.socialLinks.length), icon: <Share2 size={14} /> },
                       ]}
-                    />
+ />
 
                     <div className="flex items-center gap-2">
                       <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setTab("colors")} className="btn-primary text-xs px-4 py-2 flex items-center gap-1.5">
@@ -493,9 +493,9 @@ export default function BrandKitPage() {
                 initial="hidden"
                 animate="visible"
                 className="space-y-6"
-              >
+>
                 {/* Color palette */}
-                <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-semibold flex items-center gap-2">
                       <Palette size={14} className="text-[#2563EB]" /> Extracted Color Palette
@@ -519,7 +519,7 @@ export default function BrandKitPage() {
                             onClick={() => copyColor(color)}
                             className="group relative aspect-square rounded-xl border border-border/20 transition-all hover:shadow-lg"
                             style={{ backgroundColor: color }}
-                          >
+>
                             <div className="absolute inset-x-0 bottom-0 bg-black/60 backdrop-blur-sm rounded-b-xl px-2 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                               <p className="text-[10px] font-mono text-white text-center flex items-center justify-center gap-1">
                                 {copiedColor === color ? <Check size={10} /> : <Copy size={10} />}
@@ -531,7 +531,7 @@ export default function BrandKitPage() {
                       </motion.div>
 
                       {/* Small swatches */}
-                      {brand.colors.length > 6 && (
+                      {brand.colors.length> 6 && (
                         <motion.div variants={containerVariants} className="flex flex-wrap gap-2">
                           {brand.colors.slice(6).map((color) => (
                             <motion.button
@@ -540,7 +540,7 @@ export default function BrandKitPage() {
                               whileHover={{ x: 2 }}
                               onClick={() => copyColor(color)}
                               className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:border-[rgba(37,99,235,0.25)] transition-all text-xs" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
-                            >
+>
                               <div className="w-4 h-4 rounded-md border border-border/30" style={{ backgroundColor: color }} />
                               <span className="font-mono text-[10px]">{color}</span>
                             </motion.button>
@@ -552,14 +552,14 @@ export default function BrandKitPage() {
                 </motion.div>
 
                 {/* Color harmony suggestions */}
-                {brand.colors.length >= 2 && (
-                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                {brand.colors.length>= 2 && (
+                  <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Hash size={14} className="text-[#2563EB]" /> Suggested Pairings
                     </h3>
                     <motion.div variants={containerVariants} className="grid grid-cols-3 gap-3">
-                      {brand.colors.length >= 2 && (
-                        <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                      {brand.colors.length>= 2 && (
+                        <motion.div variants={tileVariants} className="glass rounded-lg p-3">
                           <p className="text-[9px] text-muted uppercase mb-2">Primary + Accent</p>
                           <div className="flex h-12 rounded-lg overflow-hidden">
                             <div className="flex-1" style={{ backgroundColor: brand.colors[0] }} />
@@ -567,8 +567,8 @@ export default function BrandKitPage() {
                           </div>
                         </motion.div>
                       )}
-                      {brand.colors.length >= 3 && (
-                        <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                      {brand.colors.length>= 3 && (
+                        <motion.div variants={tileVariants} className="glass rounded-lg p-3">
                           <p className="text-[9px] text-muted uppercase mb-2">Tricolor</p>
                           <div className="flex h-12 rounded-lg overflow-hidden">
                             <div className="flex-1" style={{ backgroundColor: brand.colors[0] }} />
@@ -577,8 +577,8 @@ export default function BrandKitPage() {
                           </div>
                         </motion.div>
                       )}
-                      {brand.colors.length >= 4 && (
-                        <motion.div variants={tileVariants} className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                      {brand.colors.length>= 4 && (
+                        <motion.div variants={tileVariants} className="glass rounded-lg p-3">
                           <p className="text-[9px] text-muted uppercase mb-2">Full Palette</p>
                           <div className="flex h-12 rounded-lg overflow-hidden">
                             {brand.colors.slice(0, 5).map((c, i) => (
@@ -592,8 +592,8 @@ export default function BrandKitPage() {
                 )}
 
                 {/* Social links found */}
-                {brand.socialLinks.length > 0 && (
-                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                {brand.socialLinks.length> 0 && (
+                  <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Share2 size={14} className="text-[#2563EB]" /> Social Profiles Found
                     </h3>
@@ -607,7 +607,7 @@ export default function BrandKitPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 rounded-lg px-3 py-2 hover:border-[rgba(37,99,235,0.25)] transition-all text-xs" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
-                        >
+>
                           <ExternalLink size={12} className="text-[#2563EB]" />
                           {s.platform}
                         </motion.a>
@@ -622,8 +622,8 @@ export default function BrandKitPage() {
                 initial="hidden"
                 animate="visible"
                 className="space-y-6"
-              >
-                <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+>
+                <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                   <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
                     <Type size={14} className="text-[#2563EB]" /> Extracted Fonts
                   </h3>
@@ -632,14 +632,14 @@ export default function BrandKitPage() {
                   ) : (
                     <motion.div variants={containerVariants} className="space-y-4">
                       {brand.fonts.map((font, i) => (
-                        <motion.div key={i} variants={tileVariants} whileHover={{ y: -1 }} className="rounded-lg p-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                        <motion.div key={i} variants={tileVariants} whileHover={{ y: -1 }} className="glass rounded-lg p-4">
                           <div className="flex items-center justify-between mb-2">
                             <p className="text-xs font-semibold">{font}</p>
                             <motion.button
                               whileHover={{ scale: 1.05 }}
                               onClick={() => { navigator.clipboard.writeText(font); toast.success(`Copied "${font}"`); }}
                               className="text-[10px] text-muted hover:text-[#2563EB] flex items-center gap-1"
-                            >
+>
                               <Copy size={10} /> Copy
                             </motion.button>
                           </div>
@@ -656,8 +656,8 @@ export default function BrandKitPage() {
                 </motion.div>
 
                 {/* Headings from site */}
-                {brand.headings.length > 0 && (
-                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                {brand.headings.length> 0 && (
+                  <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <FileText size={14} className="text-[#2563EB]" /> Key Headlines Found
                     </h3>
@@ -668,12 +668,12 @@ export default function BrandKitPage() {
                           variants={rowVariants}
                           whileHover={{ x: 4, backgroundColor: "rgba(0,0,0,0.03)" }}
                           className="flex items-center justify-between rounded-lg px-3 py-2" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
-                        >
+>
                           <p className="text-xs">{h}</p>
                           <button
                             onClick={() => { navigator.clipboard.writeText(h); toast.success("Copied!"); }}
                             className="text-muted hover:text-[#2563EB] shrink-0 ml-2"
-                          >
+>
                             <Copy size={12} />
                           </button>
                         </motion.div>
@@ -683,8 +683,8 @@ export default function BrandKitPage() {
                 )}
 
                 {/* CTAs */}
-                {brand.ctaTexts.length > 0 && (
-                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                {brand.ctaTexts.length> 0 && (
+                  <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Zap size={14} className="text-[#2563EB]" /> Call-to-Action Texts
                     </h3>
@@ -704,10 +704,10 @@ export default function BrandKitPage() {
                 initial="hidden"
                 animate="visible"
                 className="space-y-6"
-              >
+>
                 {/* OG Image */}
                 {brand.ogImage && (
-                  <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                  <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Share2 size={14} className="text-[#2563EB]" /> Social Preview Image (OG)
                     </h3>
@@ -719,7 +719,7 @@ export default function BrandKitPage() {
                 )}
 
                 {/* All images */}
-                <motion.div variants={tileVariants} className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                   <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
                     <ImageIcon size={14} className="text-[#2563EB]" /> Extracted Images
                     <span className="text-[10px] text-muted bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded">{brand.images.length}</span>
@@ -734,7 +734,7 @@ export default function BrandKitPage() {
                           variants={tileVariants}
                           whileHover={{ y: -2 }}
                           className="group relative aspect-video rounded-lg overflow-hidden border border-border/20 bg-surface-light"
-                        >
+>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={img}
@@ -742,7 +742,7 @@ export default function BrandKitPage() {
                             className="w-full h-full object-cover"
                             loading="lazy"
                             onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }}
-                          />
+ />
                           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                             <a href={img} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-black/10 rounded-lg hover:bg-black/15">
                               <ExternalLink size={14} className="text-white" />
@@ -750,7 +750,7 @@ export default function BrandKitPage() {
                             <button
                               onClick={() => { navigator.clipboard.writeText(img); toast.success("Image URL copied!"); }}
                               className="p-1.5 bg-black/10 rounded-lg hover:bg-black/15"
-                            >
+>
                               <Copy size={14} className="text-white" />
                             </button>
                           </div>
@@ -766,11 +766,11 @@ export default function BrandKitPage() {
                 initial="hidden"
                 animate="visible"
                 className="space-y-6"
-              >
+>
                 {/* Brand context summary */}
-                <motion.div variants={tileVariants} className="rounded-xl p-4 flex items-center gap-4" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                <motion.div variants={tileVariants} className="glass rounded-xl p-4 flex items-center gap-4">
                   {brand.favicon && (
-                    // eslint-disable-next-line @next/next/no-img-element
+ // eslint-disable-next-line @next/next/no-img-element
                     <img src={brand.favicon} alt="" className="w-8 h-8 rounded-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                   )}
                   <div className="flex-1 min-w-0">
@@ -801,13 +801,13 @@ export default function BrandKitPage() {
                         whileTap={{ scale: 0.98 }}
                         onClick={() => generateFromPreset(preset.id)}
                         disabled={generating}
-                        style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
+                        
                         className={`text-left rounded-xl p-4 hover:border-[rgba(37,99,235,0.25)] transition-all group ${
                           selectedPreset === preset.id && generating
                             ? "border-[rgba(37,99,235,0.40)] bg-[rgba(37,99,235,0.05)]"
                             : ""
                         }`}
-                      >
+>
                         <div className="flex items-start gap-3">
                           <div className={`p-2 rounded-lg ${
                             selectedPreset === preset.id && generating
@@ -834,7 +834,7 @@ export default function BrandKitPage() {
                 "Suggest font pairings for this brand",
                 "Generate ad copy ideas from these brand elements",
               ]}
-            /></MotionPage>
+ /></MotionPage>
   );
 }
 

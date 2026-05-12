@@ -167,12 +167,7 @@ function RouterPrefetch({ router }: { router: ReturnType<typeof useRouter> }) {
 function BentoFallback() {
   return (
     <div
-      className="rounded-xl border border-border-subtle p-12 flex flex-col items-center justify-center text-center gap-4"
-      style={{
-        background: "rgba(255,255,255,0.88)",
-        backdropFilter: "blur(24px) saturate(1.8)",
-        WebkitBackdropFilter: "blur(24px) saturate(1.8)",
-      }}
+      className="glass rounded-xl border border-border-subtle p-12 flex flex-col items-center justify-center text-center gap-4"
     >
       <p className="font-editorial text-base text-text-secondary max-w-md">
         Couldn&apos;t reach the dashboard service. Refresh the page or check the system status if this keeps happening.

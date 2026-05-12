@@ -74,7 +74,7 @@ export default function DealsPage() {
   const [creating, setCreating] = useState(false);
   const [draggedDealId, setDraggedDealId] = useState<string | null>(null);
 
-  // -- Fetch deals from API (scoped to managed client when selected) --
+ // -- Fetch deals from API (scoped to managed client when selected) --
   const fetchDeals = useCallback(async () => {
     try {
       const params = new URLSearchParams();
@@ -91,7 +91,7 @@ export default function DealsPage() {
 
   useEffect(() => { fetchDeals(); }, [fetchDeals]);
 
-  // -- Create deal --
+ // -- Create deal --
   const handleCreate = async () => {
     if (!dealForm.title || !dealForm.company) return;
     setCreating(true);
@@ -118,9 +118,9 @@ export default function DealsPage() {
     }
   };
 
-  // -- Update deal stage (drag-drop) --
+ // -- Update deal stage (drag-drop) --
   const handleStageChange = async (dealId: string, newStage: string) => {
-    // Optimistic update
+ // Optimistic update
     setDeals(prev => prev.map(d => d.id === dealId ? { ...d, stage: newStage } : d));
     const res = await fetch("/api/deals", {
       method: "PATCH",
@@ -128,12 +128,12 @@ export default function DealsPage() {
       body: JSON.stringify({ id: dealId, stage: newStage }),
     });
     if (!res.ok) {
-      // Revert on failure
+ // Revert on failure
       fetchDeals();
     }
   };
 
-  // -- Delete deal --
+ // -- Delete deal --
   const handleDelete = async (dealId: string) => {
     setDeals(prev => prev.filter(d => d.id !== dealId));
     const res = await fetch("/api/deals", {
@@ -144,7 +144,7 @@ export default function DealsPage() {
     if (!res.ok) fetchDeals();
   };
 
-  // -- Drag handlers --
+ // -- Drag handlers --
   const onDragStart = (dealId: string) => setDraggedDealId(dealId);
   const onDragOver = (e: React.DragEvent) => e.preventDefault();
   const onDrop = (stageKey: string) => {
@@ -154,15 +154,15 @@ export default function DealsPage() {
     }
   };
 
-  // -- Computed values --
+ // -- Computed values --
   const openDeals = deals.filter(d => !["closed_won", "closed_lost"].includes(d.stage));
   const wonDeals = deals.filter(d => d.stage === "closed_won");
   const lostDeals = deals.filter(d => d.stage === "closed_lost");
   const totalPipeline = openDeals.reduce((s, d) => s + Number(d.value), 0);
   const wonValue = wonDeals.reduce((s, d) => s + Number(d.value), 0);
   const lostValue = lostDeals.reduce((s, d) => s + Number(d.value), 0);
-  const avgDealSize = openDeals.length > 0 ? Math.round(totalPipeline / openDeals.length) : 0;
-  const winRate = wonDeals.length + lostDeals.length > 0 ? Math.round((wonDeals.length / (wonDeals.length + lostDeals.length)) * 100) : 0;
+  const avgDealSize = openDeals.length> 0 ? Math.round(totalPipeline / openDeals.length) : 0;
+  const winRate = wonDeals.length + lostDeals.length> 0 ? Math.round((wonDeals.length / (wonDeals.length + lostDeals.length)) * 100) : 0;
   const weightedPipeline = openDeals.reduce((s, d) => s + (Number(d.value) * d.probability / 100), 0);
 
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
@@ -186,7 +186,7 @@ export default function DealsPage() {
               Deals Pipeline
             </h1>
           </div>
-          {deals.length > 0 && (
+          {deals.length> 0 && (
             <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[#1D4ED8]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
               {deals.length} deal{deals.length !== 1 ? "s" : ""}
@@ -197,7 +197,7 @@ export default function DealsPage() {
           <button
             onClick={() => setShowCreateModal(!showCreateModal)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8]/90 transition-all"
-          >
+>
             <Plus size={13} /> New Deal
           </button>
         </div>
@@ -216,7 +216,7 @@ export default function DealsPage() {
                   <span>Avg <span className="text-[#2563EB] font-semibold">{formatCurrency(avgDealSize)}</span></span>
                 </>
               }
-            >
+>
               <StatStrip
                 focal={{ label: "Pipeline Value", value: formatCurrency(totalPipeline), icon: <DollarSign size={14} />, color: "text-[#2563EB]" }}
                 support={[
@@ -226,8 +226,8 @@ export default function DealsPage() {
                   { label: "Win Rate", value: `${winRate}%`, icon: <Award size={12} />, color: "text-blue-400" },
                   { label: "Avg Deal", value: formatCurrency(avgDealSize), icon: <BarChart3 size={12} />, color: "text-[#2563EB]" },
                 ]}
-              />
-            </CollapsibleStats>{/* Tabs (sticky) */}<div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+ />
+            </CollapsibleStats>{/* Tabs (sticky) */}<div className="glass sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]">
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
@@ -241,7 +241,7 @@ export default function DealsPage() {
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white border border-[rgba(37,99,235,0.15)] rounded-xl p-4 space-y-3 shadow-sm"
-              >
+>
                 <h3 className="text-sm font-semibold">Quick Create Deal</h3>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                   <input value={dealForm.title} onChange={e => setDealForm({...dealForm, title: e.target.value})} className="input text-xs" placeholder="Deal title" aria-label="Deal title" />
@@ -284,7 +284,7 @@ export default function DealsPage() {
                           variants={containerVariants}
                           initial="hidden"
                           animate="show"
-                        >
+>
                           {stageDeals.length === 0 && (
                             <div className={`text-center py-8 border border-dashed rounded-lg transition-colors ${draggedDealId ? "border-indigo-500/30 bg-indigo-500/5" : ""}`} style={{ borderColor: draggedDealId ? undefined : `${stage.color}20` }}>
                               <p className="text-[9px] text-muted">Drop deals here</p>
@@ -299,7 +299,7 @@ export default function DealsPage() {
                               draggable
                               onDragStart={() => onDragStart(deal.id)}
                               onClick={() => setExpandedDeal(expandedDeal === deal.id ? null : deal.id)}
-                              className="rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-[rgba(0,0,0,0.12)] transition-colors border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+                              className="glass rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-[rgba(0,0,0,0.12)] transition-colors border border-[rgba(255,255,255,0.70)]">
                               <p className="text-[11px] font-semibold truncate">{deal.title}</p>
                               <p className="text-[9px] text-muted">{deal.client_name}</p>
                               <p className="text-sm font-bold mt-1" style={{ color: stage.color }}>{formatCurrency(Number(deal.value))}</p>
@@ -350,14 +350,14 @@ export default function DealsPage() {
                     variants={containerVariants}
                     initial="hidden"
                     animate="show"
-                  >
+>
                     {[
                       { stage: "Prospect to Qualified", avg: "0 days", trend: "faster" },
                       { stage: "Qualified to Proposal", avg: "0 days", trend: "faster" },
                       { stage: "Proposal to Negotiation", avg: "0 days", trend: "faster" },
                       { stage: "Negotiation to Close", avg: "0 days", trend: "faster" },
                     ].map((v, i) => (
-                      <motion.div key={i} variants={fadeUp} className="rounded-lg p-3 text-center border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+                      <motion.div key={i} variants={fadeUp} className="glass rounded-lg p-3 text-center border border-[rgba(255,255,255,0.70)]">
                         <p className="text-[9px] text-muted mb-1">{v.stage}</p>
                         <p className="text-sm font-bold">{v.avg}</p>
                         <p className={`text-[8px] flex items-center justify-center gap-0.5 ${v.trend === "faster" ? "text-emerald-700" : "text-rose-700"}`}>
@@ -395,7 +395,7 @@ export default function DealsPage() {
                   variants={containerVariants}
                   initial="hidden"
                   animate="show"
-                >
+>
                   {[
                     { label: "Conservative", value: formatCurrency(Math.round(weightedPipeline * 0.6)), sub: "60% of weighted pipeline", color: "text-rose-700", bar: "bg-gradient-to-r from-red-500 to-rose-500" },
                     { label: "Most Likely", value: formatCurrency(Math.round(weightedPipeline)), sub: "Weighted probability", color: "text-[#2563EB]", bar: "bg-gradient-to-r from-indigo-500 to-violet-500" },
@@ -452,18 +452,18 @@ export default function DealsPage() {
                   variants={containerVariants}
                   initial="hidden"
                   animate="show"
-                >
+>
                   {openDeals.length === 0 && (
                     <div className="text-center py-8 text-muted text-xs">No open deals to score yet.</div>
                   )}
                   {[...openDeals].sort((a, b) => b.probability - a.probability).map(deal => {
                     const daysSinceUpdate = Math.floor((Date.now() - new Date(deal.updated_at).getTime()) / 86400000);
                     const amt = Number(deal.value);
-                    const score = Math.round(deal.probability * 0.4 + (amt > 3000 ? 30 : 15) + (daysSinceUpdate < 5 ? 20 : 5));
-                    const scoreColor = score >= 70 ? "text-emerald-700" : score >= 40 ? "text-amber-600" : "text-rose-700";
-                    const scoreBg = score >= 70 ? "bg-green-400" : score >= 40 ? "bg-yellow-400" : "bg-red-400";
+                    const score = Math.round(deal.probability * 0.4 + (amt> 3000 ? 30 : 15) + (daysSinceUpdate < 5 ? 20 : 5));
+                    const scoreColor = score>= 70 ? "text-emerald-700" : score>= 40 ? "text-amber-600" : "text-rose-700";
+                    const scoreBg = score>= 70 ? "bg-green-400" : score>= 40 ? "bg-yellow-400" : "bg-red-400";
                     return (
-                      <motion.div key={deal.id} variants={fadeUp} whileHover={{ y: -3 }} className="rounded-xl p-4 flex items-center gap-4 border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+                      <motion.div key={deal.id} variants={fadeUp} whileHover={{ y: -3 }} className="glass rounded-xl p-4 flex items-center gap-4 border border-[rgba(255,255,255,0.70)]">
                         <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.72)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
                           <p className={`text-lg font-bold ${scoreColor}`}>{score}</p>
                         </div>
@@ -502,7 +502,7 @@ export default function DealsPage() {
                       { trigger: "Score reaches 80+", action: "Auto-move to Proposal stage" },
                       { trigger: "No activity for 7 days", action: "Send automated follow-up email" },
                       { trigger: "Proposal viewed 3+ times", action: "Notify owner + move to Negotiation" },
-                      { trigger: "Deal value > $5,000", action: "Require manager approval before close" },
+                      { trigger: "Deal value> $5,000", action: "Require manager approval before close" },
                     ].map((rule, i) => (
                       <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-[rgba(0,0,0,0.08)] opacity-60" style={{ background: "rgba(255,255,255,0.88)" }}>
                         <div className="flex items-center gap-2">
@@ -540,7 +540,7 @@ export default function DealsPage() {
                           whileHover={{ y: -2 }}
                           onClick={() => toast("Contract templates coming soon � needs API")}
                           className="flex items-center justify-between p-3 rounded-lg hover:border-[rgba(0,0,0,0.12)] transition-all cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)" }}
-                        >
+>
                           <div className="flex items-center gap-2">
                             <FileText size={14} className="text-muted" />
                             <div>
@@ -575,7 +575,7 @@ export default function DealsPage() {
                             key={s}
                             onClick={() => toast(`${s} service selection coming soon � needs proposal builder`)}
                             className="text-[9px] px-2 py-1 rounded border border-[rgba(0,0,0,0.10)] hover:border-[#1D4ED8]/30 hover:bg-[#1D4ED8]/5 text-muted hover:text-[#1D4ED8] transition-all"
-                          >{s}</button>
+>{s}</button>
                         ))}
                       </div>
                       <motion.button
@@ -583,7 +583,7 @@ export default function DealsPage() {
                         whileTap={{ scale: 0.98 }}
                         onClick={() => toast("Proposal PDF generation coming soon � needs API")}
                         className="btn-primary w-full text-xs flex items-center justify-center gap-1.5"
-                      >
+>
                         <Zap size={12} /> Generate Proposal PDF
                       </motion.button>
                     </div>
@@ -600,7 +600,7 @@ export default function DealsPage() {
                   variants={containerVariants}
                   initial="hidden"
                   animate="show"
-                >
+>
                   {[
                     { label: "This Month", value: formatCurrency(Math.round(wonValue * 0.15)), sub: `15% of ${formatCurrency(wonValue)} closed`, color: "text-[#2563EB]", bar: "bg-gradient-to-r from-indigo-500 to-violet-500" },
                     { label: "Projected", value: formatCurrency(Math.round(weightedPipeline * 0.15)), sub: "Based on weighted pipeline", color: "text-purple-400", bar: "bg-gradient-to-r from-purple-500 to-pink-500" },
@@ -622,7 +622,7 @@ export default function DealsPage() {
                     <div className="grid grid-cols-5 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
                       <span>Deal</span><span>Amount</span><span>Rate</span><span>Commission</span><span>Status</span>
                     </div>
-                    {deals.filter(d => d.stage === "closed_won" || d.probability >= 50).length === 0 && (
+                    {deals.filter(d => d.stage === "closed_won" || d.probability>= 50).length === 0 && (
                       <div className="text-center py-8 text-muted text-xs">No commission data yet.</div>
                     )}
                     <motion.div
@@ -630,17 +630,17 @@ export default function DealsPage() {
                       variants={containerVariants}
                       initial="hidden"
                       animate="show"
-                    >
-                      {deals.filter(d => d.stage === "closed_won" || d.probability >= 50).map(deal => {
+>
+                      {deals.filter(d => d.stage === "closed_won" || d.probability>= 50).map(deal => {
                         const amt = Number(deal.value);
-                        const rate = amt >= 5000 ? 0.20 : amt >= 3000 ? 0.15 : 0.10;
+                        const rate = amt>= 5000 ? 0.20 : amt>= 3000 ? 0.15 : 0.10;
                         const commission = Math.round(amt * rate);
                         return (
                           <motion.div
                             key={deal.id}
                             variants={slideX}
                             className="grid grid-cols-5 text-[10px] py-2 px-2 rounded-lg hover:bg-[rgba(0,0,0,0.02)] items-center transition-colors border border-[rgba(0,0,0,0.06)]" style={{ background: "rgba(255,255,255,0.88)" }}
-                          >
+>
                             <span className="font-medium truncate">{deal.title}</span>
                             <span>{formatCurrency(amt)}</span>
                             <span className="text-[#2563EB]">{(rate * 100).toFixed(0)}%</span>

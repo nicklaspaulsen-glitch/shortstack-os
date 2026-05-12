@@ -877,7 +877,7 @@ function PostGrid({
           className={`rounded-xl overflow-hidden cursor-pointer group transition-shadow ${
             selectedIds.has(p.id) ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : ""
           }`}
-          style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
+
           onClick={() => onOpen(p)}
         >
           {/* Thumbnail area */}
@@ -956,7 +956,7 @@ function PostList({
   }, [insights]);
 
   return (
-    <div className="rounded-xl p-0 overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+    <div className="glass rounded-xl p-0 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-[11px]">
           <thead className="bg-surface-light border-b border-border">
@@ -1070,7 +1070,7 @@ function PostCalendar({
   const today = new Date();
 
   return (
-    <div className="rounded-xl" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)", padding: "1.25rem 1.5rem" }}>
+    <div className="glass rounded-xl" style={{ padding: "1.25rem 1.5rem" }}>
       {/* Calendar header */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -1363,7 +1363,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
 
 function Stat({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
   return (
-    <div className="rounded-lg text-center" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)", padding: "0.5rem" }}>
+    <div className="glass rounded-lg text-center" style={{ padding: "0.5rem" }}>
       <div className="text-[10px] text-muted flex items-center justify-center gap-1 mb-0.5">{icon} {label}</div>
       <div className="text-sm font-semibold text-foreground">{value}</div>
     </div>

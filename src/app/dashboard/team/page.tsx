@@ -108,12 +108,12 @@ export default function TeamPage() {
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+ // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [inviteForm, setInviteForm] = useState({ name: "", email: "", role: "creator" as RoleId });
   const [customRoleName, setCustomRoleName] = useState("");
   const [customPermissions, setCustomPermissions] = useState<Record<string, boolean>>({});
 
-  // Real team members from DB
+ // Real team members from DB
   interface RealMember {
     id: string; email: string; full_name: string; role: string; status: string;
     can_manage_clients: boolean; can_manage_outreach: boolean; can_manage_content: boolean;
@@ -225,7 +225,7 @@ export default function TeamPage() {
   const onlineCount = members.filter(m => m.status === "online").length;
   const totalTasks = members.reduce((s, m) => s + m.tasksAssigned, 0);
   const completedTasks = members.reduce((s, m) => s + m.tasksCompleted, 0);
-  const avgHours = members.length > 0 ? Math.round(members.reduce((s, m) => s + m.hoursThisWeek, 0) / members.length) : 0;
+  const avgHours = members.length> 0 ? Math.round(members.reduce((s, m) => s + m.hoursThisWeek, 0) / members.length) : 0;
 
   const filteredMembers = members.filter(m => {
     const matchesSearch = m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -243,7 +243,7 @@ export default function TeamPage() {
     { id: "capacity", label: "Capacity", icon: <BarChart3 size={13} /> },
   ];
 
-  // Group permissions by category
+ // Group permissions by category
   const permCategories = PERMISSIONS.reduce<Record<string, PermissionRow[]>>((acc, p) => {
     if (!acc[p.category]) acc[p.category] = [];
     acc[p.category].push(p);
@@ -270,14 +270,14 @@ export default function TeamPage() {
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setShowInvite(true)}
                   className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-text-primary text-xs font-semibold hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5"
-                >
+>
                   <UserPlus size={12} /> Invite Member
                 </motion.button>
       </div>
     </div>{/* Stats */}<StatStrip
               focal={{ label: STATS[0].label, value: String(STATS[0].value), sub: STATS[0].sub, icon: STATS[0].icon }}
               support={STATS.slice(1).map(s => ({ label: s.label, value: String(s.value), sub: s.sub, color: s.valueColor, icon: s.icon }))}
-            />{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+ />{/* Tabs */}<div className="glass flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(255,255,255,0.70)]">
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
@@ -328,7 +328,7 @@ export default function TeamPage() {
                           transition={{ duration: 0.18, delay: index * 0.04 }}
                           className="border-b border-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.03)] transition-colors cursor-pointer"
                           onClick={() => setSelectedMember(selectedMember === member.id ? null : member.id)}
-                        >
+>
                           <td className="py-2.5 px-3">
                             <div className="flex items-center gap-2.5">
                               <div className="relative">
@@ -359,12 +359,12 @@ export default function TeamPage() {
                                 onClick={e => { e.stopPropagation(); toast("Edit panel coming soon � use the 'Active Team Members' section below to manage real members.", { icon: "??" }); }}
                                 className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors"
                                 title="Edit"
-                              ><Pencil size={11} /></button>
+><Pencil size={11} /></button>
                               <button
                                 onClick={e => { e.stopPropagation(); window.open(`mailto:${member.email}`); }}
                                 className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors"
                                 title="Email"
-                              ><Mail size={11} /></button>
+><Mail size={11} /></button>
                             </div>
                           </td>
                         </motion.tr>
@@ -382,8 +382,8 @@ export default function TeamPage() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="rounded-xl p-4 space-y-4 border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
-                    >
+                      className="glass rounded-xl p-4 space-y-4 border border-[rgba(255,255,255,0.70)]" 
+>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="relative">
@@ -403,7 +403,7 @@ export default function TeamPage() {
                           { value: m.clients, label: "Clients" },
                           { value: `${m.hoursThisWeek}h`, label: "This Week", color: "text-blue-400" },
                           { value: m.tasksCompleted, label: "Tasks Done", color: "text-emerald-400" },
-                          { value: `${m.tasksAssigned > 0 ? Math.round((m.tasksCompleted / m.tasksAssigned) * 100) : 0}%`, label: "Completion", color: "text-[#2563EB]" },
+                          { value: `${m.tasksAssigned> 0 ? Math.round((m.tasksCompleted / m.tasksAssigned) * 100) : 0}%`, label: "Completion", color: "text-[#2563EB]" },
                         ].map((tile) => (
                           <div key={tile.label} className="p-2.5 rounded-lg bg-surface-light text-center border border-border">
                             <p className={`text-lg font-bold ${tile.color ?? ""}`}>{tile.value}</p>
@@ -434,8 +434,8 @@ export default function TeamPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                className="rounded-xl overflow-x-auto p-4 border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
-              >
+                className="glass rounded-xl overflow-x-auto p-4 border border-[rgba(255,255,255,0.70)]" 
+>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-sm font-bold flex items-center gap-2"><Shield size={14} className="text-[#2563EB]" /> Role Permissions Matrix</h2>
                   <motion.button
@@ -443,7 +443,7 @@ export default function TeamPage() {
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setShowCustomRole(true)}
                     className="btn-secondary text-[10px] flex items-center gap-1.5"
-                  >
+>
                     <Settings size={10} /> Custom Role Builder
                   </motion.button>
                 </div>
@@ -489,8 +489,8 @@ export default function TeamPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -3 }}
-                      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "0.75rem", padding: "1rem", position: "relative", overflow: "hidden" }}
-                    >
+                      className="glass rounded-xl p-4 relative overflow-hidden"
+>
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                       <div className="flex items-center gap-3 mb-3">
                         <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${role.color}15` }}>
@@ -504,7 +504,7 @@ export default function TeamPage() {
                           onClick={() => toast("Role editing is managed by the permission matrix � tweak per-member permissions in the Active Team Members list.", { icon: "??" })}
                           className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors"
                           title="Role permissions are managed per-member"
-                        ><Pencil size={11} /></button>
+><Pencil size={11} /></button>
                       </div>
                       <p className="text-[10px] text-muted mb-3">{role.description}</p>
                       <div className="flex items-center gap-1.5">
@@ -520,9 +520,9 @@ export default function TeamPage() {
                   <motion.button
                     whileHover={{ y: -3 }}
                     onClick={() => setShowCustomRole(true)}
-                    className="hover:border-[rgba(37,99,235,0.2)] transition-all flex flex-col items-center justify-center gap-2 min-h-[160px]"
-                    style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px dashed rgba(0,0,0,0.12)", borderRadius: "0.75rem", padding: "1rem" }}
-                  >
+                    className="glass hover:border-[rgba(37,99,235,0.2)] transition-all flex flex-col items-center justify-center gap-2 min-h-[160px] rounded-xl p-4"
+                    style={{ border: "1px dashed rgba(0,0,0,0.12)" }}
+>
                     <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
                       <Settings size={16} className="text-[#2563EB]" />
                     </div>
@@ -536,8 +536,8 @@ export default function TeamPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "0.75rem", padding: "1rem" }}
-              >
+                className="glass rounded-xl p-4"
+>
                 <h2 className="section-header flex items-center gap-2 mb-3"><Activity size={13} className="text-[#2563EB]" /> Per-Member Access Log</h2>
                 <div className="space-y-2">
                   {members.flatMap(m =>
@@ -554,7 +554,7 @@ export default function TeamPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: idx * 0.04 }}
                       className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-[rgba(0,0,0,0.03)] border-b border-[rgba(0,0,0,0.05)] transition-colors"
-                    >
+>
                       <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[9px] font-bold text-[#2563EB] shrink-0">{act.avatar}</div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[11px]">
@@ -573,18 +573,18 @@ export default function TeamPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "0.75rem", padding: "1rem" }}
-              >
+                className="glass rounded-xl p-4"
+>
                 <h2 className="section-header flex items-center gap-2 mb-1"><BarChart3 size={13} className="text-[#2563EB]" /> Team Capacity Tracker</h2>
                 <p className="text-[10px] text-muted mb-4">See who has bandwidth and who is overloaded.</p>
                 <div className="space-y-3">
                   {members.map((m, idx) => {
-                    const taskLoad = m.tasksAssigned > 0 ? (m.tasksAssigned / 30) * 100 : 0;
+                    const taskLoad = m.tasksAssigned> 0 ? (m.tasksAssigned / 30) * 100 : 0;
                     const hourLoad = (m.hoursThisWeek / 45) * 100;
                     const combinedLoad = Math.min(Math.round((taskLoad + hourLoad) / 2), 100);
-                    const loadLevel = combinedLoad > 80 ? "Overloaded" : combinedLoad > 50 ? "Balanced" : "Available";
-                    const loadColor = combinedLoad > 80 ? "text-red-400" : combinedLoad > 50 ? "text-[#2563EB]" : "text-emerald-400";
-                    const barColor = combinedLoad > 80 ? "#ef4444" : combinedLoad > 50 ? "#1D4ED8" : "#16a34a";
+                    const loadLevel = combinedLoad> 80 ? "Overloaded" : combinedLoad> 50 ? "Balanced" : "Available";
+                    const loadColor = combinedLoad> 80 ? "text-red-400" : combinedLoad> 50 ? "text-[#2563EB]" : "text-emerald-400";
+                    const barColor = combinedLoad> 80 ? "#ef4444" : combinedLoad> 50 ? "#1D4ED8" : "#16a34a";
                     return (
                       <motion.div
                         key={m.id}
@@ -592,7 +592,7 @@ export default function TeamPage() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.18, delay: idx * 0.05 }}
                         className="p-3 rounded-lg bg-surface-light border border-border"
-                      >
+>
                         <div className="flex items-center gap-3 mb-2">
                           <div className="relative">
                             <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[10px] font-bold text-[#2563EB]">{m.avatar}</div>
@@ -602,7 +602,7 @@ export default function TeamPage() {
                             <div className="flex items-center justify-between">
                               <p className="text-xs font-semibold">{m.name}</p>
                               <div className="flex items-center gap-2">
-                                {combinedLoad > 80 && <AlertTriangle size={10} className="text-red-400" />}
+                                {combinedLoad> 80 && <AlertTriangle size={10} className="text-red-400" />}
                                 <span className={`text-[9px] font-medium ${loadColor}`}>{loadLevel}</span>
                               </div>
                             </div>
@@ -621,14 +621,13 @@ export default function TeamPage() {
                   })}
                 </div>
               </motion.div>
-            )}{/* --- REAL TEAM MEMBERS SECTION --- */}{tab === "members" && membersLoading && <TableSkeleton rows={4} />}{tab === "members" && !membersLoading && realMembers.length > 0 && (
+            )}{/* --- REAL TEAM MEMBERS SECTION --- */}{tab === "members" && membersLoading && <TableSkeleton rows={4} />}{tab === "members" && !membersLoading && realMembers.length> 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22 }}
-                className="mt-4"
-                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "0.75rem", padding: "1rem" }}
-              >
+                className="glass mt-4 rounded-xl p-4"
+>
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="section-header flex items-center gap-2 mb-0">
                     <Users size={13} className="text-[#2563EB]" /> Active Team Members
@@ -645,9 +644,8 @@ export default function TeamPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.05 }}
                       whileHover={{ y: -3 }}
-                      className="flex items-center gap-3 hover:border-[rgba(37,99,235,0.2)] transition-all"
-                      style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "0.75rem", padding: "0.75rem", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px -4px rgba(0,0,0,0.06)" }}
-                    >
+                      className="glass flex items-center gap-3 rounded-xl p-3 hover:border-[rgba(37,99,235,0.2)] transition-all"
+>
                       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[rgba(37,99,235,0.25)] to-[rgba(59,130,246,0.15)] flex items-center justify-center text-[#2563EB] text-xs font-bold shrink-0">
                         {m.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase() || m.email[0].toUpperCase()}
                       </div>
@@ -682,7 +680,7 @@ export default function TeamPage() {
                           onClick={() => setEditingMember(m)}
                           className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-muted hover:text-foreground"
                           title="Edit"
-                        >
+>
                           <Pencil size={11} />
                         </motion.button>
                         <motion.button
@@ -691,7 +689,7 @@ export default function TeamPage() {
                           onClick={() => removeMember(m.id, m.email)}
                           className="p-1.5 rounded hover:bg-red-500/10 text-muted hover:text-red-400"
                           title="Remove"
-                        >
+>
                           <Trash2 size={11} />
                         </motion.button>
                       </div>
@@ -701,7 +699,7 @@ export default function TeamPage() {
               </motion.div>
             )}{/* --- INVITE MODAL --- */}{showInvite && (
               <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowInvite(false)}>
-                <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                <div className="bg-surface border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold flex items-center gap-2"><UserPlus size={14} className="text-[#2563EB]" /> Create Team Member</h3>
                     <button onClick={() => setShowInvite(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
@@ -763,7 +761,7 @@ export default function TeamPage() {
                             checked={!!createForm[p.key as keyof typeof createForm]}
                             onChange={e => setCreateForm({ ...createForm, [p.key]: e.target.checked })}
                             className="accent-blue-600"
-                          />
+ />
                           <span className="text-[10px]">{p.label}</span>
                         </label>
                       ))}
@@ -794,10 +792,10 @@ export default function TeamPage() {
                   const ok = await updateMember(editingMember.id, updates);
                   if (ok) setEditingMember(null);
                 }}
-              />
+ />
             )}{/* --- CUSTOM ROLE BUILDER MODAL --- */}{showCustomRole && (
               <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCustomRole(false)}>
-                <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                <div className="bg-surface border border-border w-full max-w-lg p-5 space-y-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold flex items-center gap-2"><Settings size={14} className="text-[#2563EB]" /> Custom Role Builder</h3>
                     <button onClick={() => setShowCustomRole(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
@@ -847,7 +845,7 @@ export default function TeamPage() {
                         setCustomRoleName("");
                         setCustomPermissions({});
                       }}
-                    >
+>
                       <CheckCircle size={12} /> Create Role
                     </button>
                   </div>
@@ -906,7 +904,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+      <div className="bg-surface border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold flex items-center gap-2"><Pencil size={14} className="text-[#2563EB]" /> Edit Team Member</h3>
           <button onClick={onClose} className="text-muted hover:text-foreground" aria-label="Close edit dialog"><X size={16} /></button>
@@ -941,7 +939,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
               onChange={e => setNewPassword(e.target.value)}
               placeholder="Leave blank to keep current"
               className="input w-full text-xs pr-8"
-            />
+ />
             <button onClick={() => setShowPassword(s => !s)} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted hover:text-foreground">
               {showPassword ? <EyeOff size={11} /> : <Eye size={11} />}
             </button>
@@ -977,7 +975,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
                   checked={perms[p.key as keyof typeof perms]}
                   onChange={e => setPerms({ ...perms, [p.key]: e.target.checked })}
                   className="accent-blue-600"
-                />
+ />
                 <span className="text-[10px]">{p.label}</span>
               </label>
             ))}

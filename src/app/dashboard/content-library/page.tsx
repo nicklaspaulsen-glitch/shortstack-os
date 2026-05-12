@@ -516,9 +516,8 @@ export default function ContentLibraryPage() {
         tabIndex={0}
         onKeyDown={e => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click(); }}
         className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer ${
-          dragging ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(0,0,0,0.15)]"
+          dragging ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : "glass border-[rgba(0,0,0,0.10)] hover:border-[rgba(0,0,0,0.15)]"
         }`}
-        style={!dragging ? { background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" } : undefined}
       >
         {uploading ? (
           <div className="flex items-center justify-center gap-2">
@@ -566,9 +565,8 @@ export default function ContentLibraryPage() {
                 <div
                   key={c.id}
                   className={`rounded-xl cursor-pointer hover:border-[rgba(0,0,0,0.15)] transition-all p-3 relative group ${
-                    collectionFilter === c.id ? "border border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)]" : ""
+                    collectionFilter === c.id ? "border border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)]" : "glass"
                   }`}
-                  style={collectionFilter !== c.id ? { background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" } : undefined}
                   onClick={() => setCollectionFilter(collectionFilter === c.id ? "all" : c.id)}
                 >
                   <button
@@ -647,7 +645,7 @@ export default function ContentLibraryPage() {
 
       {/* Bulk Actions */}
       {selectedAssets.size > 0 && (
-        <div className="rounded-xl p-4 flex items-center gap-3 border border-[rgba(0,0,0,0.12)]" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+        <div className="glass rounded-xl p-4 flex items-center gap-3 border border-[rgba(0,0,0,0.12)]">
           <button onClick={selectAll} className="text-xs text-muted hover:text-text-primary flex items-center gap-1">
             <CheckSquare size={14} /> {selectedAssets.size} selected
           </button>
@@ -695,9 +693,8 @@ export default function ContentLibraryPage() {
               transition={{ delay: i * 0.04, duration: 0.4 }}
               whileHover={{ y: -4, scale: 1.01 }}
               className={`rounded-xl p-3 group cursor-pointer transition-all hover:border-[rgba(0,0,0,0.15)] relative ${
-                selectedAssets.has(asset.id) ? "border border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)]" : ""
+                selectedAssets.has(asset.id) ? "border border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)]" : "glass"
               }`}
-              style={!selectedAssets.has(asset.id) ? { background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" } : undefined}
             >
               {/* Select checkbox */}
               <button
@@ -750,7 +747,7 @@ export default function ContentLibraryPage() {
 
       {/* Asset List */}
       {filteredAssets.length > 0 && viewMode === "list" && (
-        <div className="rounded-xl overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+        <div className="glass rounded-xl overflow-hidden">
           <table className="w-full">
             <thead>
               <tr className="border-b border-black/10">
@@ -828,7 +825,7 @@ export default function ContentLibraryPage() {
       {/* Preview Modal */}
       {previewAsset && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => { setPreviewAsset(null); setEditText(null); }}>
-          <div className="rounded-xl p-4 max-w-lg w-full" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} onClick={e => e.stopPropagation()}>
+          <div className="glass rounded-xl p-4 max-w-lg w-full" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold">{previewAsset.name}</h3>
               <button onClick={() => { setPreviewAsset(null); setEditText(null); }} className="text-muted hover:text-text-primary" aria-label="Close asset preview"><X size={16} /></button>

@@ -217,8 +217,8 @@ export default function ColdEmailPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22 }}
-                className="rounded-xl p-4 space-y-3"
-                style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", borderColor: "rgba(0,0,0,0.12)" }}
+                className="glass rounded-xl p-4 space-y-3"
+                style={{ borderColor: "rgba(0,0,0,0.12)" }}
               >
                 <div className="flex items-center gap-2">
                   <Sparkles size={13} className="text-[#2563EB]" />
@@ -454,7 +454,7 @@ export default function ColdEmailPage() {
                             Preview samples
                           </p>
                           {jobSamples.map((s) => (
-                            <div key={s.personalization_id} className="rounded-xl p-3 space-y-1.5" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+                            <div key={s.personalization_id} className="glass rounded-xl p-3 space-y-1.5">
                               {s.error ? (
                                 <div className="text-[10px] text-red-400 flex items-center gap-1.5">
                                   <AlertTriangle size={10} />

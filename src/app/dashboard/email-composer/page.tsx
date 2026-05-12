@@ -69,12 +69,12 @@ export default function EmailComposerPage() {
     fromEmail: "",
     replyTo: "",
   });
-  // SMTP is the default � it's the recommended path (branded Resend send).
-  // Gmail/Outlook require the user to have connected a personal OAuth account.
+ // SMTP is the default � it's the recommended path (branded Resend send).
+ // Gmail/Outlook require the user to have connected a personal OAuth account.
   const [provider, setProvider] = useState<"gmail" | "outlook" | "smtp">("smtp");
 
-  // OAuth connection state for Gmail/Outlook � used to gate the send with a
-  // "Connect X" CTA instead of silently failing.
+ // OAuth connection state for Gmail/Outlook � used to gate the send with a
+ // "Connect X" CTA instead of silently failing.
   const [connectedProviders, setConnectedProviders] = useState<{
     gmail: boolean;
     outlook: boolean;
@@ -101,14 +101,14 @@ export default function EmailComposerPage() {
           });
         }
       } catch {
-        // Best-effort � if we can't resolve connection state we still show the
-        // CTA (safer to prompt than to let a send silently fail).
+ // Best-effort � if we can't resolve connection state we still show the
+ // CTA (safer to prompt than to let a send silently fail).
       }
     })();
     return () => { cancelled = true; };
   }, []);
 
-  /* -- AI state -- */
+ /* -- AI state -- */
   const [showAiWrite, setShowAiWrite] = useState(false);
   const [aiWriting, setAiWriting] = useState(false);
   const [aiImproving, setAiImproving] = useState(false);
@@ -123,11 +123,11 @@ export default function EmailComposerPage() {
   const [subjectVariants, setSubjectVariants] = useState<SubjectVariant[]>([]);
   const [subjectIdeas, setSubjectIdeas] = useState<string[]>([]);
 
-  /* -- Creation wizard -- */
+ /* -- Creation wizard -- */
   const [wizardOpen, setWizardOpen] = useState(false);
   const [wizardSubmitting, setWizardSubmitting] = useState(false);
 
-  /* -- Guided Mode ? Advanced Mode -- */
+ /* -- Guided Mode ? Advanced Mode -- */
   const [advancedMode, setAdvancedMode] = useAdvancedMode("email-composer");
   const [guidedStep, setGuidedStep] = useState(0);
   const [guidedKind, setGuidedKind] = useState<"welcome" | "promo" | "follow-up" | "cold-outreach">("welcome");
@@ -135,7 +135,7 @@ export default function EmailComposerPage() {
   const [guidedDirection, setGuidedDirection] = useState("");
   const [guidedGenerating, setGuidedGenerating] = useState(false);
 
-  /* -- Send state -- */
+ /* -- Send state -- */
   const [sending, setSending] = useState(false);
   const [sendingTest, setSendingTest] = useState(false);
 
@@ -163,10 +163,10 @@ export default function EmailComposerPage() {
       toast.error("Write a body first");
       return;
     }
-    // Block sends via Gmail/Outlook when the user hasn't connected OAuth �
-    // the API would accept the request but the personal-inbox path would
-    // silently fall through to SMTP, which is surprising. Surface the real
-    // missing step instead.
+ // Block sends via Gmail/Outlook when the user hasn't connected OAuth �
+ // the API would accept the request but the personal-inbox path would
+ // silently fall through to SMTP, which is surprising. Surface the real
+ // missing step instead.
     if (provider === "gmail" && !connectedProviders.gmail) {
       toast.error("Connect Gmail first to send from your personal inbox");
       return;
@@ -210,7 +210,7 @@ export default function EmailComposerPage() {
       try {
         data = await res.json();
       } catch {
-        // non-JSON response
+ // non-JSON response
       }
 
       if (!res.ok || data.success === false) {
@@ -264,8 +264,8 @@ export default function EmailComposerPage() {
       }
       setEmail(prev => ({
         ...prev,
-        // Only overwrite subject if the user hasn't typed one yet.
-        // Preserves user-entered subjects from being silently replaced by AI.
+ // Only overwrite subject if the user hasn't typed one yet.
+ // Preserves user-entered subjects from being silently replaced by AI.
         subject: prev.subject.trim() ? prev.subject : (data.subject || prev.subject),
         body: data.body || prev.body,
       }));
@@ -394,14 +394,14 @@ export default function EmailComposerPage() {
 
   const spamChecks = [
     { rule: "No spam trigger words", pass: !email.body.toLowerCase().includes("free money") && !email.body.toLowerCase().includes("act now"), weight: 20 },
-    { rule: "Subject line under 60 chars", pass: email.subject.length < 60 && email.subject.length > 0, weight: 15 },
+    { rule: "Subject line under 60 chars", pass: email.subject.length < 60 && email.subject.length> 0, weight: 15 },
     { rule: "Has personalization tags", pass: email.body.includes("{"), weight: 15 },
     { rule: "No excessive caps", pass: email.body === email.body || (email.body.replace(/[^A-Z]/g, "").length / email.body.length) < 0.3, weight: 10 },
-    { rule: "Body length 50-300 words", pass: wordCount >= 50 && wordCount <= 300, weight: 10 },
+    { rule: "Body length 50-300 words", pass: wordCount>= 50 && wordCount <= 300, weight: 10 },
     { rule: "Has clear CTA", pass: email.body.toLowerCase().includes("call") || email.body.toLowerCase().includes("chat") || email.body.toLowerCase().includes("link"), weight: 10 },
-    { rule: "From name is set", pass: email.fromName.length > 0, weight: 10 },
+    { rule: "From name is set", pass: email.fromName.length> 0, weight: 10 },
     { rule: "Link tracking enabled", pass: linkTracking, weight: 5 },
-    { rule: "Reply-to address set", pass: email.replyTo.length > 0, weight: 5 },
+    { rule: "Reply-to address set", pass: email.replyTo.length> 0, weight: 5 },
   ];
   const spamScore = spamChecks.reduce((s, c) => s + (c.pass ? c.weight : 0), 0);
 
@@ -409,7 +409,7 @@ export default function EmailComposerPage() {
     templateCategory === "all" || t.category === templateCategory
   );
 
-  /* -- Wizard steps -- */
+ /* -- Wizard steps -- */
   const GOAL_AUDIENCE_HINTS: Record<string, string> = {
     welcome: "New signups who created an account in the last 48 hours",
     newsletter: "Engaged subscribers who open at least 1 in 3 emails",
@@ -452,7 +452,7 @@ export default function EmailComposerPage() {
         label: "Suggest audience from my CRM",
         onClick: async (d) => {
           try {
-            // Try a CRM audiences endpoint if present
+ // Try a CRM audiences endpoint if present
             const res = await fetch("/api/crm/audiences", { method: "GET" }).catch(() => null);
             if (res && res.ok) {
               const data = await res.json();
@@ -463,7 +463,7 @@ export default function EmailComposerPage() {
                 return { audience: val };
               }
             }
-            // Fallback: heuristic based on selected goal
+ // Fallback: heuristic based on selected goal
             const goals = Array.isArray(d.goals) ? (d.goals as string[]) : [];
             const goal = goals[0] || "newsletter";
             const hint = GOAL_AUDIENCE_HINTS[goal];
@@ -499,7 +499,7 @@ export default function EmailComposerPage() {
             const audience = typeof d.audience === "string" ? d.audience : "";
             const bodyDirection = typeof d.bodyDirection === "string" ? d.bodyDirection : "";
 
-            // Prefer the subject-variants endpoint when we have body direction
+ // Prefer the subject-variants endpoint when we have body direction
             if (bodyDirection.trim()) {
               const res = await fetch("/api/emails/subject-variants", {
                 method: "POST",
@@ -515,7 +515,7 @@ export default function EmailComposerPage() {
                 }
               }
             }
-            // Fallback: use enhance-prompt
+ // Fallback: use enhance-prompt
             const seed = `Write a single compelling email subject line (under 55 characters) for a ${goal} email${audience ? ` targeting ${audience}` : ""}. Return ONLY the subject line, no quotes, no prefix.`;
             const res = await fetch("/api/ai/enhance-prompt", {
               method: "POST",
@@ -588,7 +588,7 @@ export default function EmailComposerPage() {
               return {};
             }
             toast.success("Draft ready");
-            // Merge subject only if user hasn't already set one
+ // Merge subject only if user hasn't already set one
             const patch: Record<string, unknown> = { bodyDirection: body };
             if (subject && !(d.subject && String(d.subject).trim())) {
               patch.subject = subject;
@@ -617,9 +617,9 @@ export default function EmailComposerPage() {
 
     setWizardSubmitting(true);
     try {
-      // If the body direction already looks like a written email (has greeting, multiple lines),
-      // use it directly; otherwise, have the compose API generate the full email.
-      const looksLikeDraft = bodyDirection.length > 300 && /\n/.test(bodyDirection);
+ // If the body direction already looks like a written email (has greeting, multiple lines),
+ // use it directly; otherwise, have the compose API generate the full email.
+      const looksLikeDraft = bodyDirection.length> 300 && /\n/.test(bodyDirection);
 
       let finalSubject = subject;
       let finalBody = bodyDirection;
@@ -647,7 +647,7 @@ export default function EmailComposerPage() {
         }
       }
 
-      // If we still don't have a subject, quietly derive one
+ // If we still don't have a subject, quietly derive one
       if (!finalSubject) {
         finalSubject = bodyDirection.split("\n")[0].slice(0, 80);
       }
@@ -675,7 +675,7 @@ export default function EmailComposerPage() {
     }
   }
 
-  /* --- Guided Mode: draft an email and drop it into the composer --- */
+ /* --- Guided Mode: draft an email and drop it into the composer --- */
   async function handleGuidedGenerate() {
     const direction = guidedDirection.trim();
     if (!direction) {
@@ -734,7 +734,7 @@ export default function EmailComposerPage() {
     }
   }
 
-  /* --- Guided steps --- */
+ /* --- Guided steps --- */
   const guidedSteps: WizardStepDef[] = [
     {
       id: "kind",
@@ -761,7 +761,7 @@ export default function EmailComposerPage() {
                                     ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
                                     : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                                 }`}
-                              >
+>
                                 <p className="text-sm font-semibold">{k.label}</p>
                                 <p className="text-[10px] text-muted mt-1">{k.desc}</p>
                               </button>
@@ -776,7 +776,7 @@ export default function EmailComposerPage() {
       title: "Who's it for + the goal",
       description: "A single line about the reader plus what you want them to do � AI takes it from there.",
       icon: <Users size={18} />,
-      canProceed: guidedDirection.trim().length > 0,
+      canProceed: guidedDirection.trim().length> 0,
       component: (
         <div className="space-y-3">
           <div>
@@ -789,7 +789,7 @@ export default function EmailComposerPage() {
               onChange={e => setGuidedAudience(e.target.value)}
               placeholder="e.g., SaaS founders on a free trial"
               className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.4)] focus:ring-2 focus:ring-[rgba(37,99,235,0.12)] transition-all"
-            />
+ />
           </div>
           <div>
             <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
@@ -802,7 +802,7 @@ export default function EmailComposerPage() {
               rows={4}
               className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.4)] focus:ring-2 focus:ring-[rgba(37,99,235,0.12)] transition-all resize-none"
               autoFocus
-            />
+ />
           </div>
         </div>
       ),
@@ -856,7 +856,7 @@ export default function EmailComposerPage() {
                 <button
                   onClick={() => setWizardOpen(true)}
                   className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black shadow-lg shadow-gold/30 hover:shadow-gold/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                >
+>
                   <Sparkles size={12} className="animate-pulse" />
                   New with AI
                   <span className="ml-1 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
@@ -864,7 +864,7 @@ export default function EmailComposerPage() {
                 <button
                   onClick={() => { setEmail({ to: "", subject: "", body: "", fromName: email.fromName, fromEmail: email.fromEmail, replyTo: email.replyTo }); setActiveTab("compose"); toast.success("Blank email ready"); }}
                   className="px-3 py-1.5 rounded-lg bg-transparent border border-border text-foreground text-xs font-medium hover:bg-black/5 transition-all flex items-center gap-1.5"
-                >
+>
                   <Plus size={12} /> Blank
                 </button>
                 <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={aiWriting}>
@@ -880,7 +880,7 @@ export default function EmailComposerPage() {
                   onClick={() => handleSend()}
                   disabled={sending}
                   className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
-                >
+>
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />} {sending ? "Sending..." : "Send"}
                 </button>
               </>
@@ -900,7 +900,7 @@ export default function EmailComposerPage() {
           onFinish={handleGuidedGenerate}
           onCancel={() => setAdvancedMode(true)}
           cancelLabel="Advanced mode"
-        />
+ />
       )}
 
       {/* Creation Wizard */}
@@ -919,7 +919,7 @@ export default function EmailComposerPage() {
         }}
         onClose={() => setWizardOpen(false)}
         onComplete={handleWizardComplete}
-      />
+ />
 
       {advancedMode && (<>
       {/* Tabs */}
@@ -942,8 +942,8 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl p-5 space-y-2"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-            >
+              
+>
               {/* Email Provider Selector */}
               <div>
                 <div className="flex items-center gap-1.5 mb-1">
@@ -952,7 +952,7 @@ export default function EmailComposerPage() {
                     className="inline-flex text-muted/70 hover:text-[#2563EB] cursor-help"
                     title="SMTP = brand blasts, Gmail/Outlook = personal 1:1s"
                     aria-label="SMTP = brand blasts, Gmail/Outlook = personal 1:1s"
-                  >
+>
                     <Info size={10} />
                   </span>
                 </div>
@@ -998,7 +998,7 @@ export default function EmailComposerPage() {
                     <Link
                       href="/dashboard/integrations-hub"
                       className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-300 hover:bg-amber-400/25 transition-all font-semibold"
-                    >
+>
                       Connect Gmail
                     </Link>
                   </div>
@@ -1011,7 +1011,7 @@ export default function EmailComposerPage() {
                     <Link
                       href="/dashboard/integrations-hub"
                       className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-300 hover:bg-amber-400/25 transition-all font-semibold"
-                    >
+>
                       Connect Outlook
                     </Link>
                   </div>
@@ -1029,7 +1029,7 @@ export default function EmailComposerPage() {
                     onChange={e => setEmail({ ...email, fromName: e.target.value })}
                     className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                     placeholder="e.g. Nicklas at ShortStack"
-                  />
+ />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -1041,7 +1041,7 @@ export default function EmailComposerPage() {
                     onChange={e => setEmail({ ...email, fromEmail: e.target.value })}
                     className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                     placeholder="growth@yourdomain.com (uses verified domain if blank)"
-                  />
+ />
                 </div>
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Reply-To</label>
@@ -1080,7 +1080,7 @@ export default function EmailComposerPage() {
             )}
 
             {/* Rich Text Toolbar */}
-            <div className="flex items-center gap-1 p-1.5 rounded-lg" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
+            <div className="glass flex items-center gap-1 p-1.5 rounded-lg">
               {[
                 { icon: <Bold size={12} />, label: "Bold" },
                 { icon: <Italic size={12} />, label: "Italic" },
@@ -1173,7 +1173,7 @@ export default function EmailComposerPage() {
                 <span>From: {email.fromName}</span>
                 <span>{wordCount} words</span>
                 <span>{charCount} chars</span>
-                <span className={`flex items-center gap-1 ${spamScore >= 80 ? "text-green-400" : spamScore >= 50 ? "text-yellow-400" : "text-red-400"}`}>
+                <span className={`flex items-center gap-1 ${spamScore>= 80 ? "text-green-400" : spamScore>= 50 ? "text-yellow-400" : "text-red-400"}`}>
                   <AlertTriangle size={9} /> Spam score: {spamScore}/100
                 </span>
               </div>
@@ -1189,7 +1189,7 @@ export default function EmailComposerPage() {
                     }
                   }}
                   className="btn-ghost text-xs flex items-center gap-1"
-                >
+>
                   <Save size={12} /> Draft
                 </button>
                 <motion.button
@@ -1198,7 +1198,7 @@ export default function EmailComposerPage() {
                   onClick={() => handleSend({ testMode: true })}
                   disabled={sendingTest || sending}
                   className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg hover:border-border transition-all disabled:opacity-60 disabled:cursor-not-allowed bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)]"
-                >
+>
                   {sendingTest ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sendingTest ? "Sending..." : "Test Send"}
                 </motion.button>
@@ -1208,7 +1208,7 @@ export default function EmailComposerPage() {
                   onClick={() => handleSend()}
                   disabled={sending || sendingTest}
                   className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                >
+>
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sending ? "Sending..." : "Send"}
                 </motion.button>
@@ -1221,21 +1221,21 @@ export default function EmailComposerPage() {
             {/* Quick stats */}
             <div
               className="rounded-xl p-4"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-            >
+              
+>
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Composer Stats</h3>
               <StatStrip
                 focal={{
                   label: "Spam Score",
                   value: `${spamScore}%`,
-                  color: spamScore >= 80 ? "text-green-400" : "text-yellow-400",
+                  color: spamScore>= 80 ? "text-green-400" : "text-yellow-400",
                 }}
                 support={[
                   { label: "Words", value: String(wordCount), color: "text-indigo-400" },
                   { label: "Variables", value: String(VARIABLES.filter(v => email.body.includes(v.tag)).length) },
                   { label: "Attachments", value: String(attachments.length) },
                 ]}
-              />
+ />
             </div>
 
             {/* Quick Templates */}
@@ -1244,8 +1244,8 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.1 }}
               className="rounded-xl p-4"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-            >
+              
+>
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Quick Templates</h3>
               <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(255,255,255,0.70)" }}>
                 {TEMPLATE_GALLERY.length === 0 && (
@@ -1260,7 +1260,7 @@ export default function EmailComposerPage() {
                     whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
                     onClick={() => setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview }))}
                     className="w-full text-left p-2 text-[10px] transition-all border-b border-[rgba(0,0,0,0.06)] last:border-0"
-                  >
+>
                     <p className="font-semibold">{t.name}</p>
                     <p className="text-muted truncate">{t.subject}</p>
                   </motion.button>
@@ -1295,7 +1295,7 @@ export default function EmailComposerPage() {
                 whileHover={{ y: -4, scale: 1.01 }}
                 onClick={() => { setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview })); setActiveTab("compose"); }}
                 className="text-left p-3 rounded-xl hover:border-indigo-500/30 transition-all group bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)]"
-              >
+>
                 <p className="text-[10px] font-semibold">{t.name}</p>
                 <p className="text-[9px] text-indigo-400 mt-0.5">{t.category}</p>
                 <p className="text-[9px] text-muted mt-1 line-clamp-2">{t.subject}</p>
@@ -1338,7 +1338,7 @@ export default function EmailComposerPage() {
                 <div className="text-sm text-[#374151] leading-relaxed whitespace-pre-wrap">
                   {email.body.replace(/\{first_name\}/g, "John").replace(/\{business_name\}/g, "Bright Smile Dental").replace(/\{industry\}/g, "dental").replace(/\{company\}/g, "ShortStack").replace(/\{city\}/g, "Miami")}
                 </div>
-                {attachments.length > 0 && (
+                {attachments.length> 0 && (
                   <div className="mt-4 pt-4 border-t border-[rgba(0,0,0,0.10)]">
                     <p className="text-[10px] text-muted mb-2">Attachments ({attachments.length})</p>
                     <div className="flex gap-2">
@@ -1365,19 +1365,19 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl text-center p-6"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-            >
+              
+>
               <div className={`w-24 h-24 rounded-full border-4 flex items-center justify-center mx-auto mb-3 ${
-                spamScore >= 80 ? "border-green-400" : spamScore >= 50 ? "border-yellow-400" : "border-red-400"
+                spamScore>= 80 ? "border-green-400" : spamScore>= 50 ? "border-yellow-400" : "border-red-400"
               }`}>
                 <div>
-                  <p className={`text-3xl font-bold ${spamScore >= 80 ? "text-green-400" : spamScore >= 50 ? "text-yellow-400" : "text-red-400"}`}>{spamScore}</p>
+                  <p className={`text-3xl font-bold ${spamScore>= 80 ? "text-green-400" : spamScore>= 50 ? "text-yellow-400" : "text-red-400"}`}>{spamScore}</p>
                   <p className="text-[9px] text-muted">/ 100</p>
                 </div>
               </div>
               <h3 className="text-sm font-semibold">Spam Score</h3>
-              <p className={`text-[10px] mt-1 ${spamScore >= 80 ? "text-green-400" : spamScore >= 50 ? "text-yellow-400" : "text-red-400"}`}>
-                {spamScore >= 80 ? "Excellent - Safe to send" : spamScore >= 50 ? "Fair - Review suggestions" : "Poor - High spam risk"}
+              <p className={`text-[10px] mt-1 ${spamScore>= 80 ? "text-green-400" : spamScore>= 50 ? "text-yellow-400" : "text-red-400"}`}>
+                {spamScore>= 80 ? "Excellent - Safe to send" : spamScore>= 50 ? "Fair - Review suggestions" : "Poor - High spam risk"}
               </p>
             </motion.div>
             <motion.div
@@ -1385,8 +1385,8 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.06 }}
               className="rounded-xl p-5 col-span-1 lg:col-span-2"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-            >
+              
+>
               <h3 className="text-sm font-semibold mb-3">Deliverability Checklist</h3>
               <div className="space-y-2">
                 {spamChecks.map((check, i) => (
@@ -1415,8 +1415,8 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-            >
+              
+>
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Calendar size={14} className="text-indigo-400" /> Schedule Send
               </h3>
@@ -1448,7 +1448,7 @@ export default function EmailComposerPage() {
                     toast.success("Scheduling arrives soon � send now for instant delivery");
                   }}
                   className="w-full text-xs flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all"
-                >
+>
                   <Clock size={12} /> Schedule Email
                 </button>
               </div>
@@ -1458,8 +1458,8 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.06 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-            >
+              
+>
               <h3 className="text-sm font-semibold mb-3">Optimal Send Times</h3>
               <p className="text-[10px] text-muted mb-3">Based on your audience engagement data</p>
               <div className="space-y-2">
@@ -1482,7 +1482,7 @@ export default function EmailComposerPage() {
               surface="email_composer"
               onSelect={picked => setAiPrompt(picked)}
               max={5}
-            />
+ />
           </div>
           <div className="grid grid-cols-3 gap-2">
             <div>
@@ -1553,8 +1553,8 @@ export default function EmailComposerPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
               className="rounded-xl p-5 space-y-3"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-            >
+              
+>
               <h4 className="text-xs font-semibold">Edit Signature</h4>
               <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Full Name" defaultValue="" />
               <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Title" defaultValue="" />
@@ -1566,15 +1566,15 @@ export default function EmailComposerPage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
                 className="w-full text-xs py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all"
-              >Save Signature</motion.button>
+>Save Signature</motion.button>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.06 }}
               className="rounded-xl p-5"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-            >
+              
+>
               <h4 className="text-xs font-semibold mb-3">Preview</h4>
               <div className="p-4 rounded-lg bg-[#F5F5F5]">
                 <div className="border-t-2 border-indigo-500 pt-3">
