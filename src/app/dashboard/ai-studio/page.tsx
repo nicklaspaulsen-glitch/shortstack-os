@@ -219,10 +219,7 @@ export default function AIStudioPage() {
                               : "border-border hover:border-[#2563EB]/35 bg-surface-light"
                         }`}
                       >
-                        {/* always-visible top accent on featured tiles */}
-                        {isFeatured && !selected && (
-                          <div className="absolute top-0 left-0 right-0 h-[1px] rounded-t-xl bg-gradient-to-r from-transparent via-[#2563EB]/40 to-transparent" />
-                        )}
+                        {/* featured tile accent handled by border-brand on parent */}
                         {/* ambient glow on featured tiles */}
                         {isFeatured && (
                           <>
@@ -495,8 +492,6 @@ export default function AIStudioPage() {
             className="relative overflow-hidden"
             style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", borderRadius: "12px", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)" }}
           >
-            {/* Prism accent top bar */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#1D4ED8]" />
             {/* Tool header */}
             <div className="flex items-center gap-3 px-5 py-3.5 border-b border-border-subtle">
               {(() => {

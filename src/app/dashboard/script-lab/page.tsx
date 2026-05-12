@@ -1622,7 +1622,6 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               className="rounded-xl p-5"
               style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
-              <div className="h-px bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#2563EB] mb-3 rounded-full" />
               <h3 className="section-header flex items-center gap-2 mb-2"><Zap size={12} className="text-[#2563EB]" /> Pro Tips</h3>
               <div className="space-y-2 text-[10px] text-muted">
                 <p><span className="text-[#2563EB] font-medium">Hook:</span> First 3 seconds decide if someone watches or scrolls</p>

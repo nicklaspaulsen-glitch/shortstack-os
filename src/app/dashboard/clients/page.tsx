@@ -957,10 +957,6 @@ export default function ClientsPage() {
                 onMouseEnter={() => setHoveredClient(c.id)}
                 onMouseLeave={() => setHoveredClient(null)}>
 
-                {/* Featured tile: subtle prism glow */}
-                {isFeatured && (
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#1D4ED8] via-[#3B82F6] to-transparent" />
-                )}
 
                 {/* Feature 4: Selection checkbox */}
                 <div className="absolute top-3 left-3" onClick={e => e.stopPropagation()}>
@@ -1343,10 +1339,8 @@ export default function ClientsPage() {
                     { label: "Package", value: client.package_tier ?? "�", color: "#3B82F6" },
                     { label: "Since", value: formatDate(client.created_at ?? ""), color: "#6F6D7A" },
                   ].map((tile, ti) => {
-                    const bars = ["from-[#1D4ED8]","from-[#3B82F6]","from-[#1D4ED8]","from-[#6F6D7A]"];
                     return (
                       <div key={tile.label} className="relative rounded-xl border border-border-subtle p-3 overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
-                        <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${bars[ti]} to-transparent opacity-60`} />
                         <div className="text-[10px] uppercase tracking-wider text-text-muted">{tile.label}</div>
                         <div className="mt-1 text-lg font-bold font-mono" style={{ color: tile.color, fontVariantNumeric: "tabular-nums" }}>{tile.value}</div>
                       </div>
@@ -1476,7 +1470,6 @@ export default function ClientsPage() {
                 transition={{ duration: 0.36, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -2, transition: { duration: 0.2 } }}
               >
-                <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${tile.bar} opacity-70`} />
                 <p className="text-[10px] text-text-muted uppercase tracking-wider">{tile.label}</p>
                 <p className="text-xl font-bold font-mono mt-1" style={{ color: tile.color, fontVariantNumeric: "tabular-nums" }}>{tile.value}</p>
               </motion.div>

@@ -1250,7 +1250,7 @@ export default function OnboardPage() {
             {step === 5 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-bold flex items-center gap-2 bg-gradient-to-r from-[#2563EB] to-[#3B82F6] bg-clip-text text-transparent">
+                  <h2 className="text-lg font-bold flex items-center gap-2 text-[#2563EB]">
                     <Sparkles size={18} className="text-[#2563EB]" /> Personalized for you
                   </h2>
                   <p className="text-xs text-muted mt-0.5">

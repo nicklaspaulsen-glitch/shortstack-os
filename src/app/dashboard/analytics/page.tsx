@@ -988,8 +988,6 @@ export default function AnalyticsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Prism top bar */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#1D4ED8]" />
             <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(0,0,0,0.08)]">
               {[
                 { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#2563EB",
