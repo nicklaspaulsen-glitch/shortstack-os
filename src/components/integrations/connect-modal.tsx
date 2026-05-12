@@ -22,7 +22,7 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { Check, X } from "lucide-react";
-import Logo, { SHORTSTACK_GOLD } from "@/components/logo";
+import Logo, { BRAND_ACCENT } from "@/components/logo";
 import { BRAND } from "@/lib/brand-config";
 
 export interface ConnectModalProps {
@@ -160,7 +160,7 @@ export default function ConnectModal({
           className="h-1.5 w-full"
           style={{
             background:
-              `linear-gradient(90deg, ${SHORTSTACK_GOLD} 0%, #60A5FA 60%, ${SHORTSTACK_GOLD} 100%)`,
+              `linear-gradient(90deg, ${BRAND_ACCENT} 0%, #60A5FA 60%, ${BRAND_ACCENT} 100%)`,
           }}
         />
 
@@ -209,7 +209,7 @@ export default function ConnectModal({
               ) : (
                 <span
                   className="text-2xl font-bold"
-                  style={{ color: SHORTSTACK_GOLD }}
+                  style={{ color: BRAND_ACCENT }}
                 >
                   {integrationName.charAt(0).toUpperCase()}
                 </span>
@@ -251,8 +251,8 @@ export default function ConnectModal({
                     <span
                       className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center"
                       style={{
-                        background: `${SHORTSTACK_GOLD}26`, // ~0.15 alpha
-                        color: SHORTSTACK_GOLD,
+                        background: `${BRAND_ACCENT}26`, // ~0.15 alpha
+                        color: BRAND_ACCENT,
                       }}
                       aria-hidden="true"
                     >
@@ -280,7 +280,7 @@ export default function ConnectModal({
               onClick={onConfirm}
               className="px-4 py-2 rounded-lg text-sm font-semibold text-black transition-colors"
               style={{
-                background: SHORTSTACK_GOLD,
+                background: BRAND_ACCENT,
                 boxShadow:
                   "0 1px 0 rgba(255,255,255,0.3) inset, 0 4px 12px -4px rgba(201,168,76,0.6)",
               }}

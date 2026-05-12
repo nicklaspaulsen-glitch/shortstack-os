@@ -130,7 +130,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       style_vibe: "minimal-clean",
       hero_style: "split-screen",
       cta_goal: "schedule-demo",
-      brand_primary: "#E02020",
+      brand_primary: "#2563EB",
       brand_accent: "#0F172A",
       sections: ["features", "testimonials", "pricing", "faq"],
     },
@@ -382,11 +382,11 @@ export default function WebsitesPage() {
       restaurant: { primary: "#B45309", accent: "#78350F" },
       real_estate: { primary: "#2563EB", accent: "#1E293B" },
       coach: { primary: "#7C3AED", accent: "#1E1B4B" },
-      saas: { primary: "#E02020", accent: "#0F172A" },
+      saas: { primary: "#2563EB", accent: "#0F172A" },
       ecommerce: { primary: "#EC4899", accent: "#111827" },
       local_service: { primary: "#2563EB", accent: "#0C4A6E" },
       portfolio: { primary: "#F97316", accent: "#18181B" },
-      blog: { primary: "#E02020", accent: "#991414" },
+      blog: { primary: "#2563EB", accent: "#1E3A5F" },
       agency: { primary: "#DC2626", accent: "#1F2937" },
     };
     const palette = map[industry.toLowerCase()] || { primary: "#2563EB", accent: "#0F172A" };

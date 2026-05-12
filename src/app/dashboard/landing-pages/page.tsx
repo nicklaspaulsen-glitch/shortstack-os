@@ -93,7 +93,7 @@ interface BusinessInfo {
 
 const COLOR_SCHEMES = [
   { id: "modern-dark", name: "Modern Dark", bg: "#0f172a", primary: "#2563EB", accent: "#3B82F6", text: "#f1f5f9" },
-  { id: "clean-light", name: "Clean Light", bg: "#ffffff", primary: "#E02020", accent: "#2563EB", text: "#1e293b" },
+  { id: "clean-light", name: "Clean Light", bg: "#ffffff", primary: "#2563EB", accent: "#3B82F6", text: "#1e293b" },
   { id: "bold-gradient", name: "Bold Gradient", bg: "linear-gradient(135deg,#2563EB,#ec4899)", primary: "#8b5cf6", accent: "#f472b6", text: "#ffffff" },
   { id: "minimal", name: "Minimal", bg: "#fafafa", primary: "#18181b", accent: "#71717a", text: "#18181b" },
   { id: "luxury-gold", name: "Luxury Gold", bg: "#0a0a0a", primary: "#2563EB", accent: "#d4af37", text: "#f5f5f5" },

@@ -76,9 +76,9 @@ const TEMPLATES = [
 ];
 
 const PRESET_COLORS: { name: string; primary: string; secondary: string }[] = [
-  { name: "Ocean Blue", primary: "#E02020", secondary: "#3B82F6" },
+  { name: "Ocean Blue", primary: "#2563EB", secondary: "#3B82F6" },
   { name: "Coral Sunset", primary: "#f43f5e", secondary: "#fb923c" },
-  { name: "Forest Green", primary: "#E02020", secondary: "#3B82F6" },
+  { name: "Forest Green", primary: "#16A34A", secondary: "#86EFAC" },
   { name: "Royal Purple", primary: "#7c3aed", secondary: "#3B82F6" },
   { name: "Midnight Gold", primary: "#1a1a2e", secondary: "#2563EB" },
   { name: "Slate Rose", primary: "#475569", secondary: "#f472b6" },
