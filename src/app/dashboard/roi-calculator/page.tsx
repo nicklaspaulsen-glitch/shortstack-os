@@ -8,8 +8,8 @@ import {
   Calculator, Save, Trash2, Loader,
   TrendingUp, DollarSign, Target, Clock
 } from "lucide-react";
-import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 interface Inputs {
   monthly_leads: number;
@@ -146,32 +146,7 @@ export default function RoiCalculatorPage() {
     setInputs(prev => ({ ...prev, [key]: parseFloat(val) || 0 }));
   }
 
-  const metricCards = [
-    {
-      label: "Monthly Revenue",
-      value: fmtUSD(results.monthly_revenue),
-      icon: <DollarSign size={18} />,
-      color: "text-green-400",
-    },
-    {
-      label: "ROI",
-      value: fmtN(results.roi) + "%",
-      icon: <TrendingUp size={18} />,
-      color: results.roi >= 0 ? "text-emerald-400" : "text-red-400",
-    },
-    {
-      label: "CAC",
-      value: fmtUSD(results.cac),
-      icon: <Target size={18} />,
-      color: "text-blue-400",
-    },
-    {
-      label: "Payback Period",
-      value: results.payback_months > 0 ? fmtN(results.payback_months) + " mo" : "—",
-      icon: <Clock size={18} />,
-      color: "text-[#2563EB]",
-    },
-  ];
+  /* metric cards removed — now rendered inline via <StatStrip> */
 
   return (
     <MotionPage className="space-y-6">{/* -- ROI Calculator command strip -- */}
@@ -235,24 +210,14 @@ export default function RoiCalculatorPage() {
 
               {/* Results column */}
               <div className="lg:col-span-2 space-y-5">
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {metricCards.map((c, i) => (
-                    <motion.div
-                      key={c.label}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.06, duration: 0.4 }}
-                      className="glass rounded-xl overflow-hidden"
-                    >
-                      <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
-                      <div className="p-4">
-                        <div className={`mb-2 ${c.color}`}>{c.icon}</div>
-                        <p className={`text-xl font-bold ${c.color}`}>{c.value}</p>
-                        <p className="text-xs text-[#9CA3AF] mt-0.5">{c.label}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <StatStrip
+                  focal={{ label: "Monthly Revenue", value: fmtUSD(results.monthly_revenue), icon: <DollarSign size={14} />, color: "text-green-400" }}
+                  support={[
+                    { label: "ROI", value: fmtN(results.roi) + "%", icon: <TrendingUp size={12} />, color: results.roi >= 0 ? "text-emerald-400" : "text-red-400" },
+                    { label: "CAC", value: fmtUSD(results.cac), icon: <Target size={12} />, color: "text-blue-400" },
+                    { label: "Payback Period", value: results.payback_months > 0 ? fmtN(results.payback_months) + " mo" : "—", icon: <Clock size={12} />, color: "text-[#2563EB]" },
+                  ]}
+                />
 
                 {/* Sensitivity table */}
                 <motion.div

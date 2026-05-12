@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 interface WorkflowNode {
   id: string;
@@ -136,27 +137,13 @@ export default function AutomationsPage() {
                   </motion.div>
                 </div>
       </div>
-    </div>{/* Stats bar */}<div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {[
-                { label: "Total", value: workflows.length, color: "text-text-primary" },
-                { label: "Active", value: activeCount, color: "text-emerald-400" },
-                { label: "Paused", value: workflows.length - activeCount, color: "text-[#2563EB]" },
-              ].map((s, index) => (
-                <motion.div
-                  key={s.label}
-                  className="glass rounded-xl px-4 py-3 text-center overflow-hidden relative"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.22, delay: index * 0.06 }}
-                  whileHover={{ y: -2 }}
-                >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} />
-                  <p className={`text-2xl font-bold ${s.color} mt-2`}>{s.value}</p>
-                  <p className="text-xs text-[#71717A] mt-0.5">{s.label}</p>
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: 'rgba(0,0,0,0.08)' }} />
-                </motion.div>
-              ))}
-            </div>{/* Search */}<div className="relative">
+    </div>{/* Stats bar */}<StatStrip
+              focal={{ label: "Total", value: String(workflows.length) }}
+              support={[
+                { label: "Active", value: String(activeCount), color: "text-emerald-700" },
+                { label: "Paused", value: String(workflows.length - activeCount), color: "text-[#2563EB]" },
+              ]}
+            />{/* Search */}<div className="relative">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#71717A]" />
               <input
                 value={search}

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -89,23 +90,15 @@ export default function GoogleBusinessPage() {
                   <RefreshCw size={12} /> Refresh
                 </button>
       </div>
-    </div>{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {[
-                { value: avgRating, label: <span className="flex items-center justify-center gap-0.5">{renderStars(Math.round(Number(avgRating)))} Avg</span>, color: "text-[#2563EB]" },
-                { value: reviews.length, label: "Total Reviews", color: "" },
-                { value: needsReply, label: "Needs Reply", color: "text-yellow-400" },
-                { value: "—", label: "Profile Views", color: "text-green-400" },
-                { value: "—", label: "Actions Taken", color: "text-[#4285F4]" },
-              ].map((tile, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass-md rounded-xl overflow-hidden">
-                  <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
-                  <div className="p-3 text-center">
-                    <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
-                    <p className="text-[10px] text-muted">{tile.label}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
+    </div>{/* Stats */}<StatStrip
+              focal={{ label: "Avg Rating", value: String(avgRating), color: "text-[#2563EB]", sub: `${Math.round(Number(avgRating))}/5 stars` }}
+              support={[
+                { label: "Total Reviews", value: String(reviews.length) },
+                { label: "Needs Reply", value: String(needsReply), color: "text-yellow-400" },
+                { label: "Profile Views", value: "—", color: "text-green-400" },
+                { label: "Actions Taken", value: "—", color: "text-[#4285F4]" },
+              ]}
+            />{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
               {tabs.map(t => (
                 <button key={t.id} onClick={() => setActiveTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${

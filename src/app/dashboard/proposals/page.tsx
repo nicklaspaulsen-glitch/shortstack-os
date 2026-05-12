@@ -26,6 +26,7 @@ import {
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import EmptyState from "@/components/ui/empty-state";
+import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface Proposal {
@@ -136,46 +137,18 @@ export default function ProposalsPage() {
                 device. E-sign and PandaDoc wiring land next sprint — existing drafts will migrate.
               </div>
 
-              {/* Stats row */}
-              <motion.div
-                className="grid grid-cols-1 gap-3 sm:grid-cols-3"
-                variants={containerVariants}
-                initial="hidden"
-                animate="show"
-              >
-                {[
-                  {
-                    label: "Total value",
-                    value: `$${stats.total.toLocaleString()}`,
-                    sub: `${proposals.length} proposals`,
-                    valueClass: "",
-                  },
-                  {
-                    label: "Signed",
-                    value: String(stats.signed),
-                    sub: `$${stats.signedValue.toLocaleString()} closed`,
-                    valueClass: "text-emerald-300",
-                  },
-                  {
-                    label: "Win rate",
-                    value: proposals.length === 0 ? "—" : `${Math.round((stats.signed / proposals.length) * 100)}%`,
-                    sub: "signed / total",
-                    valueClass: "",
-                  },
-                ].map((stat, i) => (
-                  <motion.div
-                    key={i}
-                    variants={fadeUp}
-                    whileHover={{ y: -2 }}
-                    className="glass rounded-xl overflow-hidden relative p-4"
-                  >
-                    <div className={`absolute top-0 left-0 right-0 h-0.5 ${STAT_BARS[i]}`} />
-                    <p className="text-[10px] uppercase tracking-wider text-muted">{stat.label}</p>
-                    <p className={`mt-1 text-2xl font-bold ${stat.valueClass}`}>{stat.value}</p>
-                    <p className="mt-0.5 text-[11px] text-muted">{stat.sub}</p>
-                  </motion.div>
-                ))}
-              </motion.div>
+              {/* Stats strip */}
+              <StatStrip
+                focal={{
+                  label: "Total Value",
+                  value: `$${stats.total.toLocaleString()}`,
+                  sub: `${proposals.length} proposals`,
+                }}
+                support={[
+                  { label: "Signed", value: String(stats.signed), sub: `$${stats.signedValue.toLocaleString()} closed`, color: "text-emerald-700" },
+                  { label: "Win Rate", value: proposals.length === 0 ? "—" : `${Math.round((stats.signed / proposals.length) * 100)}%`, sub: "signed / total" },
+                ]}
+              />
 
               {/* Toolbar */}
               <div className="flex items-center justify-between">

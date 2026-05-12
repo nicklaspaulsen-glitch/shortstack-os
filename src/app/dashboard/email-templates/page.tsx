@@ -13,6 +13,7 @@ import Modal from "@/components/ui/modal";
 import { MailPlus } from "lucide-react";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
+import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type AiTemplateType =
@@ -350,29 +351,19 @@ export default function EmailTemplatesPage() {
               </div>
             )}{/* ===== PERFORMANCE STATS ===== */}{activeTab === "performance" && (
               <div className="space-y-4">
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {[
-                    { label: "Avg Open Rate", value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.opens, 0) / TEMPLATES.length)}%` : "0%", icon: <Eye size={12} />, color: "text-blue-700" },
+                <StatStrip
+                  focal={{
+                    label: "Avg Open Rate",
+                    value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.opens, 0) / TEMPLATES.length)}%` : "0%",
+                    icon: <Eye size={12} />,
+                    color: "text-blue-700",
+                  }}
+                  support={[
                     { label: "Avg Click Rate", value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.clicks, 0) / TEMPLATES.length)}%` : "0%", icon: <TrendingUp size={12} />, color: "text-green-700" },
                     { label: "Avg Reply Rate", value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.replies, 0) / TEMPLATES.length)}%` : "0%", icon: <Mail size={12} />, color: "text-purple-700" },
                     { label: "Top Performer", value: TEMPLATES.length > 0 ? [...TEMPLATES].sort((a, b) => b.replies - a.replies)[0].name : "N/A", icon: <Star size={12} />, color: "text-[#2563EB]" },
-                  ].map((stat, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.06, duration: 0.4 }}
-                      className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                    >
-                      <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} />
-                      <div className="p-3">
-                        <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
-                        <p className="text-sm font-bold">{stat.value}</p>
-                        <p className="text-[9px] text-muted">{stat.label}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                  ]}
+                />
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}

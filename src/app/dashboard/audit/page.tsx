@@ -10,6 +10,7 @@ import {
   Mail, UserPlus, AlertCircle, X, Copy
 } from "lucide-react";
 import { PrismPanel } from "@/components/prism";
+import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type AuditTab = "trail" | "security" | "retention" | "export";
@@ -222,22 +223,18 @@ export default function AuditPage() {
                   <Download size={12} /> Export CSV
                 </button>
       </div>
-    </div>{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-              {[
-                { label: "Total Actions", value: stats.total, color: "text-[#2563EB]" },
-                { label: "Success Rate", value: `${stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0}%`, color: "text-emerald-400" },
-                { label: "Failures", value: stats.failed, color: stats.failed > 0 ? "text-red-400" : "text-emerald-400" },
-                { label: "Sensitive", value: stats.sensitive, color: "text-[#2563EB]" },
-                { label: "Alerts", value: stats.unresolvedAlerts, color: stats.unresolvedAlerts > 0 ? "text-red-400" : "text-emerald-400" },
-              ].map((stat, i) => (
-                <PrismPanel key={stat.label} delay={i * 0.06} padding="p-3">
-                  <div className="text-center">
-                    <p className="text-[9px] text-muted uppercase">{stat.label}</p>
-                    <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
-                  </div>
-                </PrismPanel>
-              ))}
-            </div>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit flex-wrap">
+    </div>{/* Stats */}<StatStrip
+              focal={{
+                label: "Total Actions",
+                value: String(stats.total),
+                sub: `${stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0}% success`,
+              }}
+              support={[
+                { label: "Failures", value: String(stats.failed), color: stats.failed > 0 ? "text-red-600" : "text-emerald-700" },
+                { label: "Sensitive", value: String(stats.sensitive), color: "text-[#2563EB]" },
+                { label: "Alerts", value: String(stats.unresolvedAlerts), color: stats.unresolvedAlerts > 0 ? "text-red-600" : "text-emerald-700" },
+              ]}
+            />{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit flex-wrap">
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${

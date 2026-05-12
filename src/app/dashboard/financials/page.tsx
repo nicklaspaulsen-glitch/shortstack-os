@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { formatCurrency } from "@/lib/utils";
@@ -520,48 +521,25 @@ export default function FinancialsPage() {
             )}{activeTab === "overview" && !loading && (
               <>
                 {/* Key Metrics */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-                  {[
-                    { icon: <DollarSign size={12} className="text-[#2563EB]" />, label: "MRR", value: formatCurrency(totalMRR), color: "text-[#2563EB]", sub: `${activeClients.length} active clients` },
-                    { icon: <Globe size={12} className="text-blue-400" />, label: "ARR", value: formatCurrency(annualRecurringRevenue), color: "text-blue-400", sub: "annualized" },
-                    { icon: <TrendingUp size={12} className={netProfit >= 0 ? "text-emerald-700" : "text-rose-700"} />, label: "Net Profit", value: formatCurrency(netProfit), color: netProfit >= 0 ? "text-emerald-700" : "text-rose-700", sub: <span className="flex items-center gap-0.5">{marginPct >= 0 ? <ArrowUpRight size={10} className="text-emerald-700" /> : <ArrowDownRight size={10} className="text-rose-700" />}{marginPct.toFixed(1)}% margin</span> },
-                    { icon: <AlertTriangle size={12} className={churnRate > 5 ? "text-rose-700" : "text-amber-600"} />, label: "Churn Rate", value: `${churnRate.toFixed(1)}%`, color: churnRate > 5 ? "text-rose-700" : "text-amber-600", sub: `${churnedThisMonth} churned / ${totalClients} total` },
-                  ].map((tile, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                      <div className="p-3">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          {tile.icon}
-                          <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
-                        </div>
-                        <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
-                        <p className="text-[10px] text-muted mt-0.5">{tile.sub}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <StatStrip
+                  focal={{ label: "MRR", value: formatCurrency(totalMRR), icon: <DollarSign size={14} />, color: "text-[#2563EB]", sub: `${activeClients.length} active clients` }}
+                  support={[
+                    { label: "ARR", value: formatCurrency(annualRecurringRevenue), color: "text-blue-400", sub: "annualized", icon: <Globe size={12} /> },
+                    { label: "Net Profit", value: formatCurrency(netProfit), color: netProfit >= 0 ? "text-emerald-700" : "text-rose-700", sub: `${marginPct.toFixed(1)}% margin`, subOk: marginPct >= 0, icon: <TrendingUp size={12} /> },
+                    { label: "Churn Rate", value: `${churnRate.toFixed(1)}%`, color: churnRate > 5 ? "text-rose-700" : "text-amber-600", sub: `${churnedThisMonth} churned / ${totalClients} total`, icon: <AlertTriangle size={12} /> },
+                  ]}
+                />
 
                 {/* Extended Metrics Row */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-                  {[
-                    { icon: <Minus size={12} className="text-rose-700" />, label: "Monthly Expenses", value: formatCurrency(totalMonthlyExpenses), color: "text-rose-700", sub: `${expenses.length} subscriptions` },
-                    { icon: <Users size={12} className="text-purple-400" />, label: "Avg / Client", value: formatCurrency(avgRevenue), color: "text-purple-400", sub: `${activeClients.length} clients` },
-                    { icon: <Zap size={12} className="text-[#2563EB]" />, label: "Client LTV", value: formatCurrency(clv), color: "text-[#2563EB]", sub: `avg ${avgClientLifeMonths} months` },
-                    { icon: <Shield size={12} className="text-orange-400" />, label: "Est. Annual Tax", value: formatCurrency(estimatedTax), color: "text-orange-400", sub: `${estimatedTaxRate}% effective rate` },
-                  ].map((tile, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 + i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                      <div className="p-3">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          {tile.icon}
-                          <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
-                        </div>
-                        <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
-                        <p className="text-[10px] text-muted mt-0.5">{tile.sub}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <StatStrip
+                  focal={{ label: "Monthly Expenses", value: formatCurrency(totalMonthlyExpenses), icon: <Minus size={14} />, color: "text-rose-700", sub: `${expenses.length} subscriptions` }}
+                  support={[
+                    { label: "Avg / Client", value: formatCurrency(avgRevenue), color: "text-purple-400", sub: `${activeClients.length} clients`, icon: <Users size={12} /> },
+                    { label: "Client LTV", value: formatCurrency(clv), color: "text-[#2563EB]", sub: `avg ${avgClientLifeMonths} months`, icon: <Zap size={12} /> },
+                    { label: "Est. Annual Tax", value: formatCurrency(estimatedTax), color: "text-orange-400", sub: `${estimatedTaxRate}% effective rate`, icon: <Shield size={12} /> },
+                  ]}
+                  baseDelay={0.25}
+                />
 
                 {/* Revenue vs Expenses Bar */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
@@ -673,25 +651,14 @@ export default function FinancialsPage() {
             )}{/* ================================================================== */}{/* EXPENSES TAB                                                        */}{/* ================================================================== */}{activeTab === "expenses" && (
               <>
                 {/* Expense Summary Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-                  {[
-                    { icon: <Minus size={12} className="text-rose-700" />, label: "Monthly Total", value: formatCurrency(totalMonthlyExpenses), color: "text-rose-700" },
-                    { icon: <Calendar size={12} className="text-orange-400" />, label: "Annual Total", value: formatCurrency(totalMonthlyExpenses * 12), color: "text-orange-400" },
-                    { icon: <Layers size={12} className="text-blue-400" />, label: "Categories", value: String(categoryTotals.length), color: "text-blue-400" },
-                    { icon: <Percent size={12} className={marginPct >= 0 ? "text-emerald-700" : "text-rose-700"} />, label: "Profit Margin", value: `${marginPct.toFixed(1)}%`, color: marginPct >= 0 ? "text-emerald-700" : "text-rose-700" },
-                  ].map((tile, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                      <div className="p-3">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          {tile.icon}
-                          <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
-                        </div>
-                        <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <StatStrip
+                  focal={{ label: "Monthly Total", value: formatCurrency(totalMonthlyExpenses), icon: <Minus size={14} />, color: "text-rose-700" }}
+                  support={[
+                    { label: "Annual Total", value: formatCurrency(totalMonthlyExpenses * 12), color: "text-orange-400", icon: <Calendar size={12} /> },
+                    { label: "Categories", value: String(categoryTotals.length), color: "text-blue-400", icon: <Layers size={12} /> },
+                    { label: "Profit Margin", value: `${marginPct.toFixed(1)}%`, color: marginPct >= 0 ? "text-emerald-700" : "text-rose-700", icon: <Percent size={12} /> },
+                  ]}
+                />
 
                 {/* Budget vs Actual */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
@@ -832,24 +799,15 @@ export default function FinancialsPage() {
             )}{/* ================================================================== */}{/* SUBSCRIPTIONS TAB                                                   */}{/* ================================================================== */}{activeTab === "subscriptions" && (
               <>
                 {/* Summary cards */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-                  {[
-                    { label: "Monthly Spend", value: formatCurrency(totalMonthlySubs), color: "text-rose-700", sub: `${activeSubs} active tools` },
-                    { label: "Annual Spend", value: formatCurrency(totalAnnualSubs), color: "text-foreground", sub: "Projected" },
+                <StatStrip
+                  focal={{ label: "Monthly Spend", value: formatCurrency(totalMonthlySubs), color: "text-rose-700", sub: `${activeSubs} active tools` }}
+                  support={[
+                    { label: "Annual Spend", value: formatCurrency(totalAnnualSubs), sub: "Projected" },
                     { label: "Active", value: String(activeSubs), color: "text-emerald-700", sub: `of ${subscriptions.length} total` },
                     { label: "Renewals ≤7d", value: String(upcomingRenewals), color: "text-amber-600", sub: "Upcoming charges" },
-                    { label: "Top Cost", value: mostExpensive?.tool_name || "—", color: "text-[#2563EB]", sub: mostExpensive ? formatCurrency(mostExpensive.cost_monthly) + "/mo" : "No data", small: true },
-                  ].map((tile, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                      <div className="p-4">
-                        <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
-                        <p className={`${tile.small ? "text-sm font-semibold truncate" : "text-lg font-bold"} ${tile.color}`}>{tile.value}</p>
-                        <p className="text-[9px] text-muted">{tile.sub}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                    { label: "Top Cost", value: mostExpensive?.tool_name || "—", color: "text-[#2563EB]", sub: mostExpensive ? formatCurrency(mostExpensive.cost_monthly) + "/mo" : "No data" },
+                  ]}
+                />
 
                 {/* Header + Add button */}
                 <div className="flex items-center justify-between">
@@ -965,26 +923,14 @@ export default function FinancialsPage() {
             )}{/* ================================================================== */}{/* INVOICING TAB                                                       */}{/* ================================================================== */}{activeTab === "invoicing" && (
               <>
                 {/* Invoice Summary */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-                  {[
-                    { icon: <AlertTriangle size={12} className="text-rose-700" />, label: "Overdue", value: formatCurrency(invoiceTotals.overdue), color: "text-rose-700", sub: `${invoices.filter(i => i.status === "overdue").length} invoices` },
-                    { icon: <Clock size={12} className="text-amber-600" />, label: "Due Soon", value: formatCurrency(invoiceTotals.dueSoon), color: "text-amber-600", sub: `${invoices.filter(i => i.status === "due_soon").length} invoices` },
-                    { icon: <FileText size={12} className="text-blue-400" />, label: "Pending", value: formatCurrency(invoiceTotals.pending), color: "text-blue-400", sub: `${invoices.filter(i => i.status === "pending").length} invoices` },
-                    { icon: <CheckCircle size={12} className="text-emerald-700" />, label: "Paid", value: formatCurrency(invoiceTotals.paid), color: "text-emerald-700", sub: `${invoices.filter(i => i.status === "paid").length} invoices` },
-                  ].map((tile, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                      <div className="p-3">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          {tile.icon}
-                          <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
-                        </div>
-                        <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
-                        <p className="text-[10px] text-muted mt-0.5">{tile.sub}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <StatStrip
+                  focal={{ label: "Overdue", value: formatCurrency(invoiceTotals.overdue), icon: <AlertTriangle size={14} />, color: "text-rose-700", sub: `${invoices.filter(i => i.status === "overdue").length} invoices` }}
+                  support={[
+                    { label: "Due Soon", value: formatCurrency(invoiceTotals.dueSoon), color: "text-amber-600", sub: `${invoices.filter(i => i.status === "due_soon").length} invoices`, icon: <Clock size={12} /> },
+                    { label: "Pending", value: formatCurrency(invoiceTotals.pending), color: "text-blue-400", sub: `${invoices.filter(i => i.status === "pending").length} invoices`, icon: <FileText size={12} /> },
+                    { label: "Paid", value: formatCurrency(invoiceTotals.paid), color: "text-emerald-700", sub: `${invoices.filter(i => i.status === "paid").length} invoices`, icon: <CheckCircle size={12} /> },
+                  ]}
+                />
 
                 {/* Invoice Aging Chart */}
                 <div className="card p-4">

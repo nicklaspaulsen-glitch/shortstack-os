@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
 import {
@@ -391,30 +392,14 @@ export default function ReportsPage() {
                   <RefreshCw size={12} /> Refresh
                 </button>
       </div>
-    </div>{/* Stats */}<div className="grid grid-cols-4 gap-3">
-              {[
-                { label: "Total Reports", value: totalReports, icon: FileText, color: "text-info" },
-                { label: "Weekly Reports", value: weeklyReports, icon: Calendar, color: "text-[#2563EB]" },
-                { label: "Monthly Reports", value: monthlyReports, icon: BarChart3, color: "text-[#2563EB]" },
-                { label: "Clients Covered", value: uniqueClients, icon: Users, color: "text-success" },
-              ].map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  className="glass rounded-xl p-4 relative overflow-hidden"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.22, delay: index * 0.06 }}
-                  whileHover={{ y: -2 }}
-                >
-                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-                  <div className="flex items-center justify-between mb-2">
-                    <stat.icon size={14} className={stat.color} />
-                  </div>
-                  <p className="text-xl font-bold text-foreground">{stat.value}</p>
-                  <p className="text-[10px] text-muted">{stat.label}</p>
-                </motion.div>
-              ))}
-            </div><div className="grid grid-cols-3 gap-6">
+    </div>{/* Stats */}<StatStrip
+              focal={{ label: "Total Reports", value: String(totalReports), icon: <FileText size={12} />, color: "text-info" }}
+              support={[
+                { label: "Weekly Reports", value: String(weeklyReports), icon: <Calendar size={12} />, color: "text-[#2563EB]" },
+                { label: "Monthly Reports", value: String(monthlyReports), icon: <BarChart3 size={12} />, color: "text-[#2563EB]" },
+                { label: "Clients Covered", value: String(uniqueClients), icon: <Users size={12} />, color: "text-success" },
+              ]}
+            /><div className="grid grid-cols-3 gap-6">
               {/* Generate Report Panel */}
               <div className="col-span-1 space-y-4">
                 <motion.div

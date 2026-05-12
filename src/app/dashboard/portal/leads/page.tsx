@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 const NICHES = [
   "Dentist", "Lawyer", "Plumber", "Electrician", "Gym", "Roofer",
@@ -246,22 +247,14 @@ export default function ClientLeadEnginePage() {
                   <Download size={12} /> Export
                 </button>
               </div>
-            </div>{/* Stats Row */}<div className="grid grid-cols-4 gap-3">
-              {[
-                { label: "Total Leads", value: stats.total, icon: <Users size={14} />, color: "text-info" },
-                { label: "With Email", value: stats.withEmail, icon: <Mail size={14} />, color: "text-success" },
-                { label: "With Phone", value: stats.withPhone, icon: <Phone size={14} />, color: "text-[#2563EB]" },
+            </div>{/* Stats Row */}<StatStrip
+              focal={{ label: "Total Leads", value: String(stats.total), icon: <Users size={14} />, color: "text-info" }}
+              support={[
+                { label: "With Email", value: String(stats.withEmail), icon: <Mail size={14} />, color: "text-success" },
+                { label: "With Phone", value: String(stats.withPhone), icon: <Phone size={14} />, color: "text-[#2563EB]" },
                 { label: "Avg Score", value: `${stats.avgScore}%`, icon: <Target size={14} />, color: "text-[#2563EB]" },
-              ].map((s) => (
-                <div key={s.label} className="card flex items-center gap-3 py-3">
-                  <div className={`${s.color}`}>{s.icon}</div>
-                  <div>
-                    <p className="text-lg font-bold">{s.value}</p>
-                    <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
-                  </div>
-                </div>
-              ))}
-            </div>{/* Search Bar — The Engine */}<div className="card border-[rgba(37,99,235,0.2)]">
+              ]}
+            />{/* Search Bar — The Engine */}<div className="card border-[rgba(37,99,235,0.2)]">
               <div className="flex items-center gap-2 mb-3">
                 <Zap size={14} className="text-[#2563EB]" />
                 <span className="text-xs font-semibold">Find New Leads</span>

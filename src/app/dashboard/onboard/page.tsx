@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import StatStrip from "@/components/ui/stat-strip";
 import {
   UserPlus, ArrowRight, ArrowLeft, Check, Sparkles,
   Upload, Palette, Briefcase, ShieldCheck, Eye,
@@ -795,21 +796,15 @@ export default function OnboardPage() {
             <span className="font-semibold text-foreground">{form.business_name || "New Client"}</span> has been onboarded.
             Their workspace is being configured with {selectedServices.length} services and {accessUsers.length} team member{accessUsers.length !== 1 ? "s" : ""}.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-xl mx-auto">
-            {[
-              { label: "Package", value: form.package_tier },
-              { label: "Services", value: `${selectedServices.length} active` },
-              { label: "Team", value: `${accessUsers.length} members` },
-              { label: "Assets", value: `${uploadedAssets} uploaded` },
-            ].map((stat, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                <div className="p-3">
-                  <p className="text-[9px] text-muted">{stat.label}</p>
-                  <p className="text-sm font-bold text-[#2563EB]">{stat.value}</p>
-                </div>
-              </motion.div>
-            ))}
+          <div className="max-w-xl mx-auto">
+            <StatStrip
+              focal={{ label: "Package", value: String(form.package_tier), color: "text-[#2563EB]" }}
+              support={[
+                { label: "Services", value: `${selectedServices.length} active` },
+                { label: "Team", value: `${accessUsers.length} members` },
+                { label: "Assets", value: `${uploadedAssets} uploaded` },
+              ]}
+            />
           </div>
           <div className="flex items-center justify-center gap-3">
             <button onClick={() => { setWizardComplete(false); setLaunchedClientId(null); setStep(0); setForm({ business_name: "", contact_name: "", email: "", phone: "", website: "", industry: "", target_audience: "", goals: "", brand_voice: "", package_tier: "Growth", notes: "" }); }}

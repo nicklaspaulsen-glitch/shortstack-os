@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 interface DemoClient {
   id: string;
@@ -138,28 +139,16 @@ export default function DemoManagementPage() {
           </div>
         ) : demoClient ? (
           <div className="space-y-2">
-            <div className="grid grid-cols-2 gap-2">
-              {[
-                { label: "Business", value: demoClient.business_name, color: "text-[#111827]" },
-                { label: "Industry", value: demoClient.industry, color: "text-[#111827]", capitalize: true },
-                { label: "MRR", value: `$${demoClient.mrr.toLocaleString()}`, color: "text-emerald-600" },
-                { label: "Health", value: `${demoClient.health_score}/100`, color: "text-[#111827]" },
-                { label: "Package", value: demoClient.package_tier, color: "text-[#2563EB]" },
-                { label: "Contract", value: demoClient.contract_status, color: "text-[#111827]", capitalize: true },
-              ].map((tile, index) => (
-                <motion.div
-                  key={tile.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.06, duration: 0.4 }}
-                  className="glass-md rounded-xl p-2.5 relative overflow-hidden"
-                >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
-                  <p className="text-[9px] text-[#6B7280] uppercase tracking-wider">{tile.label}</p>
-                  <p className={`text-[10px] ${tile.color} font-medium mt-0.5 ${tile.capitalize ? "capitalize" : ""}`}>{tile.value}</p>
-                </motion.div>
-              ))}
-            </div>
+            <StatStrip
+              focal={{ label: "MRR", value: `$${demoClient.mrr.toLocaleString()}`, color: "text-emerald-600" }}
+              support={[
+                { label: "Business", value: String(demoClient.business_name) },
+                { label: "Industry", value: String(demoClient.industry) },
+                { label: "Health", value: `${demoClient.health_score}/100` },
+                { label: "Package", value: String(demoClient.package_tier), color: "text-[#2563EB]" },
+                { label: "Contract", value: String(demoClient.contract_status) },
+              ]}
+            />
             <div className="glass-md rounded-xl p-2.5">
               <p className="text-[9px] text-[#6B7280] uppercase tracking-wider mb-1">Services</p>
               <div className="flex flex-wrap gap-1">

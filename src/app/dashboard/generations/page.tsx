@@ -11,6 +11,7 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 /* ── Types ── */
 
@@ -136,25 +137,14 @@ export default function GenerationsPage() {
         >
           <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
         </button>
-      </div>{/* Stats Strip */}<div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-              {[
-                { label: "Total Items",  value: total,            icon: <Layers size={14} />,      color: "text-[#2563EB]" },
-                { label: "This Week",    value: thisWeekCount,    icon: <TrendingUp size={14} />,  color: "text-emerald-400" },
-                { label: "Categories",   value: uniqueCategories, icon: <Calendar size={14} />,    color: "text-blue-400" },
-                { label: "Latest",       value: latest,           icon: <Clock size={14} />,       color: "text-purple-400" },
-              ].map((s, i) => (
-                <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
-                  <div className="py-2.5 px-3 flex items-center gap-3">
-                    <div className={s.color}>{s.icon}</div>
-                    <div>
-                      <p className="text-lg font-bold leading-none">{s.value}</p>
-                      <p className="text-[9px] text-muted">{s.label}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>{/* Search */}<div className="relative max-w-md">
+      </div>{/* Stats Strip */}<StatStrip
+              focal={{ label: "Total Items", value: String(total), icon: <Layers size={14} />, color: "text-[#2563EB]" }}
+              support={[
+                { label: "This Week", value: String(thisWeekCount), icon: <TrendingUp size={14} />, color: "text-emerald-700" },
+                { label: "Categories", value: String(uniqueCategories), icon: <Calendar size={14} />, color: "text-blue-700" },
+                { label: "Latest", value: latest, icon: <Clock size={14} />, color: "text-purple-700" },
+              ]}
+            />{/* Search */}<div className="relative max-w-md">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
               <input
                 value={search}

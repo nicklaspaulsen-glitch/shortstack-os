@@ -9,6 +9,7 @@ import {
   Trash2, Eye, EyeOff, Activity, ToggleLeft, ToggleRight, RefreshCw
 } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 /* ── Types ── */
 interface Endpoint {
@@ -281,23 +282,15 @@ export default function ApiDocsPage() {
                   <span>{totalEndpoints} endpoints</span>
                 </div>
       </div>
-    </div>{/* Stats Strip */}<div className="grid grid-cols-5 gap-3">
-              {[
-                { label: "Endpoints", value: totalEndpoints, color: "text-[#2563EB]" },
-                { label: "Categories", value: API_CATEGORIES.length, color: "text-[#2563EB]" },
+    </div>{/* Stats Strip */}<StatStrip
+              focal={{ label: "Endpoints", value: String(totalEndpoints), color: "text-[#2563EB]" }}
+              support={[
+                { label: "Categories", value: String(API_CATEGORIES.length), color: "text-[#2563EB]" },
                 { label: "Auth Methods", value: "2", color: "text-green-400" },
-                { label: "SDKs", value: SDK_DOWNLOADS.length, color: "text-[#2563EB]" },
+                { label: "SDKs", value: String(SDK_DOWNLOADS.length), color: "text-[#2563EB]" },
                 { label: "API Version", value: "v2.4", color: "text-cyan-400" },
-              ].map((s, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
-                  <div className="p-3 text-center">
-                    <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
-                    <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>{/* Tab Navigation */}<div className="flex gap-1 border-b border-border overflow-x-auto pb-px">
+              ]}
+            />{/* Tab Navigation */}<div className="flex gap-1 border-b border-border overflow-x-auto pb-px">
               {TABS.map(t => (
                 <button key={t} onClick={() => setActiveTab(t)}
                   className={`px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${
@@ -797,25 +790,14 @@ const valid = signature === expected;`}</pre>
                 )}
 
                 {/* Stats Row */}
-                <div className="grid grid-cols-4 gap-3">
-                  {[
-                    { label: "Total Keys", value: apiKeys.length, color: "text-[#2563EB]", icon: <Key size={13} className="text-[#2563EB]" /> },
-                    { label: "Active", value: apiKeys.filter(k => k.is_active).length, color: "text-green-400", icon: <CheckCircle size={13} className="text-green-400" /> },
-                    { label: "Revoked", value: apiKeys.filter(k => !k.is_active).length, color: "text-red-400", icon: <Shield size={13} className="text-red-400" /> },
-                    { label: "Full Access", value: apiKeys.filter(k => k.permissions === "full" && k.is_active).length, color: "text-orange-400", icon: <AlertTriangle size={13} className="text-orange-400" /> },
-                  ].map((s, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
-                      <div className="p-3">
-                        <div className="flex items-center gap-2 mb-1">
-                          {s.icon}
-                          <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
-                        </div>
-                        <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <StatStrip
+                  focal={{ label: "Total Keys", value: String(apiKeys.length), color: "text-[#2563EB]", icon: <Key size={14} /> }}
+                  support={[
+                    { label: "Active", value: String(apiKeys.filter(k => k.is_active).length), color: "text-green-400", icon: <CheckCircle size={12} /> },
+                    { label: "Revoked", value: String(apiKeys.filter(k => !k.is_active).length), color: "text-red-400", icon: <Shield size={12} /> },
+                    { label: "Full Access", value: String(apiKeys.filter(k => k.permissions === "full" && k.is_active).length), color: "text-orange-400", icon: <AlertTriangle size={12} /> },
+                  ]}
+                />
 
                 {/* Key Management Card */}
                 <div className="glass rounded-xl p-4">

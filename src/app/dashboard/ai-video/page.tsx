@@ -23,6 +23,7 @@ import {
 } from "@/lib/plan-limits";
 import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
 import { PrismPanel } from "@/components/prism";
+import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 const PROMPT_IDEAS = [
@@ -504,31 +505,14 @@ export default function AIVideoPage() {
         <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
       </div>
 
-      {/* Scorecard strip � 3-cell stagger, same pattern as analytics/clients */}
-      <PrismPanel rainbow padding="p-0" className="rounded-xl">
-        <motion.div
-          className="grid grid-cols-3 divide-x divide-[rgba(0,0,0,0.08)] overflow-hidden"
-          initial="hidden"
-          animate="visible"
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
-        >
-          {[
-            { label: "Videos generated", value: results.length.toString(), color: "#2563EB" },
-            { label: "Plan tier", value: planTier, color: "#F5F4F1" },
-            { label: "Max duration", value: Number.isFinite(maxSeconds) ? formatVideoDuration(maxSeconds) : "Unlimited", color: "#7FE5B8" },
-          ].map(({ label, value, color }, index) => (
-            <motion.div
-              key={label}
-              className="relative px-4 py-3 flex flex-col gap-0.5 overflow-hidden"
-              variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] } } }}
-              whileHover={{ y: -2 }}
-            >
-              <span className="text-[9px] uppercase tracking-[0.12em] text-[#6F6D7A] font-semibold">{label}</span>
-              <span className="font-display text-lg font-bold tracking-[-0.02em]" style={{ color, fontVariantNumeric: "tabular-nums" }}>{value}</span>
-            </motion.div>
-          ))}
-        </motion.div>
-      </PrismPanel>
+      {/* Scorecard strip */}
+      <StatStrip
+        focal={{ label: "Videos generated", value: String(results.length), color: "text-[#2563EB]" }}
+        support={[
+          { label: "Plan tier", value: planTier },
+          { label: "Max duration", value: Number.isFinite(maxSeconds) ? formatVideoDuration(maxSeconds) : "Unlimited" },
+        ]}
+      />
 
       {/* Guided Mode � preserved untouched for beginners */}
       {!advancedMode && (

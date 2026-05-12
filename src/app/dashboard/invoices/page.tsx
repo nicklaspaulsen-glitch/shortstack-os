@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import StatStrip from "@/components/ui/stat-strip";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -132,14 +133,6 @@ export default function InvoicesPage() {
     { key: "revenue", label: "Revenue", icon: <BarChart3 size={14} /> },
   ];
 
-  const STATS = [
-    { label: "Outstanding", value: formatCurrency(totalSent), icon: <Clock size={12} />, color: "text-amber-600" },
-    { label: "Collected", value: formatCurrency(totalPaid), icon: <CheckCircle size={12} />, color: "text-emerald-700" },
-    { label: "Overdue", value: formatCurrency(totalOverdue), icon: <AlertTriangle size={12} />, color: "text-rose-700" },
-    { label: "Draft", value: formatCurrency(totalDraft), icon: <FileText size={12} />, color: "text-muted" },
-    { label: "Monthly Recurring", value: formatCurrency(recurringTotal), icon: <RefreshCw size={12} />, color: "text-[#2563EB]" },
-  ];
-
   return (
     <MotionPage className="fade-in space-y-5">{/* Hero Header */}{/* -- Invoices command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
@@ -169,15 +162,15 @@ export default function InvoicesPage() {
       </div>
     </div>{/* Loading note */}{loading && (
               <p className="text-[11px] text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices�</p>
-            )}{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {STATS.map((stat, index) => (
-                <PrismPanel key={stat.label} padding="p-3" className="text-center" delay={index * 0.06}>
-                  <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
-                  <p className="text-lg font-bold">{stat.value}</p>
-                  <p className="text-[9px] text-muted">{stat.label}</p>
-                </PrismPanel>
-              ))}
-            </div>{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+            )}{/* Stats */}<StatStrip
+              focal={{ label: "Collected", value: formatCurrency(totalPaid), icon: <CheckCircle size={14} />, color: "text-emerald-700" }}
+              support={[
+                { label: "Outstanding", value: formatCurrency(totalSent), icon: <Clock size={12} />, color: "text-amber-600" },
+                { label: "Overdue", value: formatCurrency(totalOverdue), icon: <AlertTriangle size={12} />, color: "text-rose-700" },
+                { label: "Draft", value: formatCurrency(totalDraft), icon: <FileText size={12} />, color: "text-muted" },
+                { label: "Monthly Recurring", value: formatCurrency(recurringTotal), icon: <RefreshCw size={12} />, color: "text-[#2563EB]" },
+              ]}
+            />{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${

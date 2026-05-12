@@ -10,6 +10,7 @@ import {
   CheckCircle2, Clock, Archive, Pencil, ArrowRight,
 } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 /* ═══════════════════════════════════════════════════════════ TYPES */
 
@@ -481,19 +482,14 @@ export default function FunnelCanvasPage() {
       {activeTab === "analytics" && (
         <div className="space-y-5">
           {/* Summary cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { label: "Total Views", value: analytics?.total_views ?? 0, color: "text-blue-700" },
-              { label: "Unique Visitors", value: analytics?.unique_visitors ?? 0, color: "text-purple-700" },
-              { label: "Total Submits", value: analytics?.total_submits ?? 0, color: "text-amber-700" },
+          <StatStrip
+            focal={{ label: "Total Views", value: String((analytics?.total_views ?? 0).toLocaleString()), color: "text-blue-700" }}
+            support={[
+              { label: "Unique Visitors", value: String((analytics?.unique_visitors ?? 0).toLocaleString()), color: "text-purple-700" },
+              { label: "Total Submits", value: String((analytics?.total_submits ?? 0).toLocaleString()), color: "text-amber-700" },
               { label: "Overall Conv.", value: `${analytics?.overall_conversion_rate ?? 0}%`, color: "text-emerald-700" },
-            ].map((stat) => (
-              <div key={stat.label} className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-4">
-                <div className={`text-2xl font-bold ${stat.color}`}>{stat.value.toLocaleString()}</div>
-                <div className="text-[#6B7280] text-xs mt-1">{stat.label}</div>
-              </div>
-            ))}
-          </div>
+            ]}
+          />
 
           {/* Step-by-step funnel visualization */}
           <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-6 space-y-4">

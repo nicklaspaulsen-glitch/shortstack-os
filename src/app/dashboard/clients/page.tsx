@@ -20,6 +20,7 @@ import {
 import { useAppStore } from "@/lib/store";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import { staggerContainerFast, fadeUp } from "@/lib/motion-variants";
 
 import CollapsibleStats from "@/components/ui/collapsible-stats";
@@ -710,64 +711,16 @@ export default function ClientsPage() {
         </div>
       </div>
 
-      {/* Clients command strip � MRR focal left, 3 stats inline right */}
+      {/* Clients command strip */}
       {clients.length > 0 && (
-        <motion.div
-          className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-3"
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {/* MRR focal tile */}
-          <div
-            className="relative overflow-hidden rounded-xl px-8 py-7"
-            style={{
-              background: "rgba(255,255,255,0.90)",
-              backdropFilter: "blur(24px) saturate(1.8)",
-              WebkitBackdropFilter: "blur(24px) saturate(1.8)",
-              border: "1px solid rgba(37,99,235,0.16)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 8px 24px -4px rgba(0,0,0,0.08), 0 0 48px -12px rgba(37,99,235,0.14)",
-            }}
-          >
-            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent, #1D4ED8 40%, #3B82F6 50%, #1D4ED8 60%, transparent)" }} />
-            <div className="pointer-events-none absolute -right-20 -top-20 w-72 h-72 rounded-full bg-[#1D4ED8] opacity-[0.04] blur-[64px]" />
-            <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-text-muted mb-2">Monthly Recurring Revenue</p>
-            <p className="font-display font-black leading-[0.88] text-[#1D4ED8]" style={{ fontSize: "clamp(48px,6vw,80px)", letterSpacing: "-0.04em", fontVariantNumeric: "tabular-nums" }}>
-              {formatCurrency(totalMRR)}
-            </p>
-            <p className="mt-3 text-[10px] text-text-muted">
-              <span className="text-text-muted font-medium">{activeClients.length}</span> active � <span className="text-text-muted font-medium">{Math.round((activeClients.length / (clients.length || 1)) * 100)}%</span> retention
-            </p>
-          </div>
-
-          {/* 3 secondary stats stacked */}
-          <div className="flex lg:flex-col gap-3 min-w-[200px]">
-            {[
-              { label: "Total Clients", value: String(clients.length), sub: `${clients.filter(c => !c.is_active).length} inactive` },
-              { label: "At Risk", value: String(clients.filter(c => c.health_score < 40).length), sub: "health < 40", danger: clients.filter(c => c.health_score < 40).length > 0 },
-              { label: "Active", value: String(activeClients.length), sub: "currently live" },
-            ].map((cell, i) => (
-              <motion.div
-                key={cell.label}
-                className="flex-1 relative rounded-xl px-5 py-4 overflow-hidden"
-                style={{
-                  background: "rgba(255,255,255,0.88)",
-                  backdropFilter: "blur(24px) saturate(1.8)",
-                  WebkitBackdropFilter: "blur(24px) saturate(1.8)",
-                  border: `1px solid ${cell.danger ? "rgba(204,36,36,0.22)" : "rgba(0,0,0,0.08)"}`,
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 12px -4px rgba(0,0,0,0.06)",
-                }}
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.34, delay: 0.1 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <span className="text-[8px] font-semibold uppercase tracking-[0.18em] text-text-muted">{cell.label}</span>
-                <span className="block font-display text-2xl font-bold tracking-[-0.03em] mt-0.5" style={{ color: cell.danger ? "#1D4ED8" : "#0A0A0B", fontVariantNumeric: "tabular-nums" }}>{cell.value}</span>
-                <span className="text-[10px] text-text-muted">{cell.sub}</span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+        <StatStrip
+          focal={{ label: "MRR", value: formatCurrency(totalMRR), icon: <DollarSign size={14} />, color: "text-[#1D4ED8]", sub: `${activeClients.length} active · ${Math.round((activeClients.length / (clients.length || 1)) * 100)}% retention` }}
+          support={[
+            { label: "Total Clients", value: String(clients.length), sub: `${clients.filter(c => !c.is_active).length} inactive`, icon: <Users size={12} /> },
+            { label: "At Risk", value: String(clients.filter(c => c.health_score < 40).length), sub: "health < 40", color: clients.filter(c => c.health_score < 40).length > 0 ? "text-[#1D4ED8]" : undefined },
+            { label: "Active", value: String(activeClients.length), sub: "currently live", icon: <UserCheck size={12} /> },
+          ]}
+        />
       )}
 
       {/* Tabs (sticky) */}

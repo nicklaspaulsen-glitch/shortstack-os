@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import {
   Globe, Sparkles, Layout, Eye, Pencil, Trash2, Copy, Rocket,
   ChevronUp, ChevronDown, EyeOff, RotateCcw, Plus, X, Check,
@@ -1438,32 +1439,16 @@ export default function LandingPagesPage() {
           </div>
 
           {/* Stat Cards */}
-          <div className="grid grid-cols-6 gap-3">
-            {[
-              { label: "Total Views", value: EMPTY_ANALYTICS.views.toLocaleString(), icon: Eye, color: "text-blue-400" },
-              { label: "Unique Visitors", value: EMPTY_ANALYTICS.uniqueVisitors.toLocaleString(), icon: Users, color: "text-purple-400" },
-              { label: "Bounce Rate", value: `${EMPTY_ANALYTICS.bounceRate}%`, icon: TrendingUp, color: "text-orange-400" },
-              { label: "Avg. Time", value: EMPTY_ANALYTICS.avgTime, icon: Timer, color: "text-cyan-400" },
-              { label: "Conversion Rate", value: `${EMPTY_ANALYTICS.conversionRate}%`, icon: Target, color: "text-green-400" },
-              { label: "Form Submissions", value: EMPTY_ANALYTICS.formSubmissions.toLocaleString(), icon: Mail, color: "text-indigo-400" },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.22, delay: index * 0.06 }}
-                whileHover={{ y: -2 }}
-                className="glass rounded-xl p-4 relative overflow-hidden"
-              >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} className="absolute top-0 inset-x-0" />
-                <div className="flex items-center justify-between mb-2 mt-1">
-                  <stat.icon className={`w-4 h-4 ${stat.color}`} />
-                </div>
-                <p className="text-lg font-bold text-text-primary">{stat.value}</p>
-                <p className="text-xs text-muted mt-0.5">{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
+          <StatStrip
+            focal={{ label: "Total Views", value: EMPTY_ANALYTICS.views.toLocaleString(), icon: <Eye size={12} />, color: "text-blue-400" }}
+            support={[
+              { label: "Unique Visitors", value: EMPTY_ANALYTICS.uniqueVisitors.toLocaleString(), icon: <Users size={12} />, color: "text-purple-400" },
+              { label: "Bounce Rate", value: `${EMPTY_ANALYTICS.bounceRate}%`, icon: <TrendingUp size={12} />, color: "text-orange-400" },
+              { label: "Avg. Time", value: EMPTY_ANALYTICS.avgTime, icon: <Timer size={12} />, color: "text-cyan-400" },
+              { label: "Conversion Rate", value: `${EMPTY_ANALYTICS.conversionRate}%`, icon: <Target size={12} />, color: "text-green-400" },
+              { label: "Form Submissions", value: EMPTY_ANALYTICS.formSubmissions.toLocaleString(), icon: <Mail size={12} />, color: "text-indigo-400" },
+            ]}
+          />
 
           <div className="grid grid-cols-3 gap-4">
             {/* Views Chart (CSS) */}

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import {
   PhoneCall, Mail, MessageSquare, Send, Settings,
   Sparkles, Loader2, Copy, Check, Save,
@@ -1710,36 +1711,16 @@ export default function OutreachHubPage() {
             {/* ------------------------------------------------------------ */}
             {tab === "analytics" && (
               <div className="space-y-4">
-                {/* Stats cards row */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                  {[
-                    { label: "Total Leads", value: 0, change: "0%" },
-                    { label: "Contacted", value: 0, change: "0%" },
-                    { label: "Replied", value: 0, change: "0%" },
-                    { label: "Booked", value: 0, change: "0%" },
-                    { label: "Converted", value: 0, change: "0%" },
-                  ].map((stat, index) => (
-                    <motion.div
-                      key={stat.label}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.22, delay: index * 0.06 }}
-                      whileHover={{ y: -2 }}
-                      className="rounded-xl overflow-hidden relative"
-                      style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                    >
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-                      <div className="p-4">
-                        <p className="text-[10px] text-muted mb-1">{stat.label}</p>
-                        <p className="text-xl font-bold">{stat.value}</p>
-                        <div className="flex items-center gap-1 mt-1">
-                          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-black/[0.04] text-muted">{stat.change}</span>
-                          <span className="text-[9px] text-muted">vs last period</span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                {/* Stats strip */}
+                <StatStrip
+                  focal={{ label: "Total Leads", value: "0", sub: "0% vs last period" }}
+                  support={[
+                    { label: "Contacted", value: "0", sub: "0% vs last period" },
+                    { label: "Replied", value: "0", sub: "0% vs last period" },
+                    { label: "Booked", value: "0", sub: "0% vs last period" },
+                    { label: "Converted", value: "0", sub: "0% vs last period" },
+                  ]}
+                />
 
                 {/* Channel Performance */}
                 <motion.div

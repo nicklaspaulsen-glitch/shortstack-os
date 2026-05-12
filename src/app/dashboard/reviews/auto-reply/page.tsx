@@ -10,6 +10,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import StatStrip from "@/components/ui/stat-strip";
 import {
   Star,
   Sparkles,
@@ -219,18 +220,13 @@ export default function ReviewsAutoReplyPage() {
       </div>
     </div><div className="mx-auto max-w-5xl px-6 py-6 space-y-6">
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { label: "Total Drafts", value: stats.total },
-                  { label: "Pending Review", value: stats.pending },
-                  { label: "Published", value: stats.published },
-                ].map((s) => (
-                  <div key={s.label} className="rounded-xl border border-black/[0.06] bg-white p-4 text-center">
-                    <p className="text-2xl font-bold text-[#111827]">{s.value}</p>
-                    <p className="text-xs text-[#9CA3AF] mt-1">{s.label}</p>
-                  </div>
-                ))}
-              </div>
+              <StatStrip
+                focal={{ label: "Total Drafts", value: String(stats.total) }}
+                support={[
+                  { label: "Pending Review", value: String(stats.pending) },
+                  { label: "Published", value: String(stats.published) },
+                ]}
+              />
 
               {/* Compose */}
               {showCompose && (

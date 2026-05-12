@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 /* -- Types -- */
 type InboxCategory = "all" | "scripts" | "emails" | "outreach" | "contracts" | "ideas" | "reports" | "briefings" | "exports";
@@ -566,30 +567,14 @@ export default function InboxPage() {
 
         {/* Stats � inbox view only */}
         {view === "inbox" && (
-        <div className="grid grid-cols-4 gap-3">
-          {[
-            { label: "Total", value: stats.total, icon: <Inbox size={14} />, color: "text-[#2563EB]" },
-            { label: "Unread", value: stats.unread, icon: <AlertCircle size={14} />, color: "text-amber-400" },
-            { label: "Starred", value: stats.starred, icon: <Star size={14} />, color: "text-yellow-400" },
-            { label: "This Week", value: stats.thisWeek, icon: <Calendar size={14} />, color: "text-emerald-400" },
-          ].map((s, index) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.22, delay: index * 0.06 }}
-              whileHover={{ y: -2 }}
-              className="glass rounded-xl overflow-hidden relative !py-2.5 !px-3 flex items-center gap-3"
-            >
-              <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-              <div className={`${s.color}`}>{s.icon}</div>
-              <div>
-                <p className="text-lg font-bold leading-none">{s.value}</p>
-                <p className="text-[9px] text-muted">{s.label}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+          <StatStrip
+            focal={{ label: "Total", value: String(stats.total), icon: <Inbox size={14} />, color: "text-[#2563EB]" }}
+            support={[
+              { label: "Unread", value: String(stats.unread), icon: <AlertCircle size={12} />, color: "text-amber-400" },
+              { label: "Starred", value: String(stats.starred), icon: <Star size={12} />, color: "text-yellow-400" },
+              { label: "This Week", value: String(stats.thisWeek), icon: <Calendar size={12} />, color: "text-emerald-400" },
+            ]}
+          />
         )}
 
         {/* Search & Filters � inbox view only */}

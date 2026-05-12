@@ -9,6 +9,7 @@ import {
   Repeat, Eye, Star, AlertCircle, Loader2
 } from "lucide-react";
 import { PrismPanel } from "@/components/prism";
+import StatStrip from "@/components/ui/stat-strip";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { GoogleIcon, OutlookIcon } from "@/components/ui/platform-icons";
 import { TableSkeleton } from "@/components/ui/skeleton";
@@ -604,30 +605,14 @@ export default function CalendarPage() {
                   <PrismPanel padding="p-0" rainbow>
                     <div className="p-4">
                       <h2 className="section-header flex items-center gap-2"><Star size={13} className="text-[#2563EB]" /> Quick Stats</h2>
-                      <div className="space-y-2">
-                        {[
-                          { label: "Today", value: `${todaysEvents.length} events`, color: "" },
-                          { label: "This Week", value: `${filteredEvents.filter(e => weekDays.some(d => d.toISOString().split("T")[0] === e.date)).length} events`, color: "" },
-                          { label: "Calls Today", value: todaysEvents.filter(e => e.category === "call").length, color: "text-emerald-400" },
+                      <StatStrip
+                        focal={{ label: "Today", value: `${todaysEvents.length} events` }}
+                        support={[
+                          { label: "This Week", value: `${filteredEvents.filter(e => weekDays.some(d => d.toISOString().split("T")[0] === e.date)).length} events` },
+                          { label: "Calls Today", value: String(todaysEvents.filter(e => e.category === "call").length), color: "text-emerald-400" },
                           { label: "Recurring", value: `${events.filter(e => e.recurring).length} events`, color: "text-[#2563EB]" },
-                        ].map((stat, index) => (
-                          <motion.div
-                            key={stat.label}
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.22, delay: index * 0.06 }}
-                            whileHover={{ y: -2 }}
-                            className="rounded-xl overflow-hidden relative"
-                            style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)" }}
-                          >
-                            <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} className="absolute top-0 left-0 right-0" />
-                            <div className="flex justify-between text-xs p-2 pt-3">
-                              <span className="text-muted">{stat.label}</span>
-                              <span className={`font-bold ${stat.color}`}>{stat.value}</span>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
+                        ]}
+                      />
                     </div>
                   </PrismPanel>
                   <PrismPanel padding="p-4">

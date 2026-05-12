@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -833,28 +834,14 @@ export default function CommunityPage() {
                   <p className="text-[9px] text-muted">{qa.sub}</p>
                 </motion.button>
               ))}
-            </div>{/* Stats bar */}<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {[
-                { value: MEMBERS.length, label: "Members", color: "" },
-                { value: MEMBERS.filter(m => m.online).length, label: "Online Now", color: "text-green-400" },
-                { value: posts.length, label: "Posts This Week", color: "" },
-                { value: events.length, label: "Upcoming Events", color: "text-[#2563EB]" },
-              ].map((tile, i) => (
-                <motion.div
-                  key={tile.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.4 }}
-                  className="glass rounded-xl overflow-hidden"
-                >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} />
-                  <div className="p-3 text-center">
-                    <p className={`text-lg font-bold font-mono ${tile.color}`}>{tile.value}</p>
-                    <p className="text-[10px] text-muted">{tile.label}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
+            </div>{/* Stats bar */}<StatStrip
+              focal={{ label: "Members", value: String(MEMBERS.length) }}
+              support={[
+                { label: "Online Now", value: String(MEMBERS.filter(m => m.online).length), color: "text-emerald-700" },
+                { label: "Posts This Week", value: String(posts.length) },
+                { label: "Upcoming Events", value: String(events.length), color: "text-[#2563EB]" },
+              ]}
+            />{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
               {tabs.map(t => (
                 <button key={t.id} onClick={() => setActiveTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${

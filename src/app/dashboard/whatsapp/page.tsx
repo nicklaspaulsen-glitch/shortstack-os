@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 const MAX_MSG_LEN = 1600;
 const WARN_LEN = 160;
@@ -508,28 +509,14 @@ export default function WhatsAppPage() {
       {activeTab === "campaigns" && (<>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {[
-          { label: "Total Campaigns", value: campaigns.length },
-          { label: "Sent", value: campaigns.filter((c) => c.status === "sent").length },
-          { label: "Scheduled", value: campaigns.filter((c) => c.status === "scheduled").length },
-          { label: "Recipients Reached", value: campaigns.filter((c) => c.status === "sent").reduce((a, c) => a + c.recipient_count, 0) },
-        ].map((s, i) => (
-          <motion.div
-            key={s.label}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06, duration: 0.4 }}
-            className="glass rounded-xl overflow-hidden"
-          >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-4 text-center">
-              <p className="text-2xl font-bold text-text-primary">{s.value}</p>
-              <p className="text-xs text-black/40 mt-1">{s.label}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      <StatStrip
+        focal={{ label: "Total Campaigns", value: String(campaigns.length) }}
+        support={[
+          { label: "Sent", value: String(campaigns.filter((c) => c.status === "sent").length), color: "text-emerald-700" },
+          { label: "Scheduled", value: String(campaigns.filter((c) => c.status === "scheduled").length), color: "text-[#2563EB]" },
+          { label: "Recipients Reached", value: String(campaigns.filter((c) => c.status === "sent").reduce((a, c) => a + c.recipient_count, 0)) },
+        ]}
+      />
 
       {/* Campaign list */}
       <div className="flex flex-col gap-3">

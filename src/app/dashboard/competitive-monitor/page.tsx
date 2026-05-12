@@ -16,6 +16,7 @@ import {
   Target as TargetIcon,
 } from "lucide-react";
 import { PrismPanel } from "@/components/prism";
+import StatStrip from "@/components/ui/stat-strip";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -269,34 +270,19 @@ export default function CompetitiveMonitorPage() {
                   <Plus className="w-4 h-4" /> Add Competitor
                 </button>
       </div>
-    </div>{/* --- Stats Row --- */}<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { icon: <Target className="w-3.5 h-3.5" />, label: "Monitoring", value: activeCompetitors, sub: `${competitors.length} total competitors`, color: "text-[#2563EB]", bar: "from-indigo-500 to-violet-400" },
-                { icon: <Activity className="w-3.5 h-3.5" />, label: "Changes (7d)", value: totalChanges, sub: "across all competitors", color: "text-text-primary", bar: "from-indigo-500 to-blue-400" },
-                { icon: <AlertTriangle className="w-3.5 h-3.5" />, label: "High Priority", value: highSeverityChanges, sub: "require attention", color: "text-red-400", bar: "from-red-500 to-rose-400" },
-                { icon: <Zap className="w-3.5 h-3.5" />, label: "Credits", value: `${creditsUsed}/${creditsTotal}`, sub: null, color: "text-text-primary", bar: "from-amber-500 to-yellow-400" },
-              ].map((stat, i) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: i * 0.07 }}
-                  whileHover={{ y: -2 }}
-                  className="rounded-xl p-4 relative overflow-hidden" style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                >
-                  <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${stat.bar}`} />
-                  <div className="flex items-center gap-2 text-muted text-xs mb-1">{stat.icon} {stat.label}</div>
-                  <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
-                  {stat.sub ? (
-                    <div className="text-xs text-muted">{stat.sub}</div>
-                  ) : (
-                    <div className="w-full bg-surface-light rounded-full h-1.5 mt-2">
-                      <div className="bg-indigo-500 rounded-full h-1.5 transition-all" style={{ width: `${(creditsUsed / creditsTotal) * 100}%` }} />
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-            </div>{/* --- Add Competitor Form --- */}{showAddForm && (
+    </div>{/* --- Stats Row --- */}<StatStrip
+              focal={{
+                label: "Monitoring",
+                value: String(activeCompetitors),
+                sub: `${competitors.length} total competitors`,
+                icon: <Target className="w-3.5 h-3.5" />,
+              }}
+              support={[
+                { label: "Changes (7d)", value: String(totalChanges), sub: "across all competitors", icon: <Activity className="w-3.5 h-3.5" /> },
+                { label: "High Priority", value: String(highSeverityChanges), sub: "require attention", color: highSeverityChanges > 0 ? "text-red-600" : undefined, icon: <AlertTriangle className="w-3.5 h-3.5" /> },
+                { label: "Credits", value: `${creditsUsed}/${creditsTotal}`, icon: <Zap className="w-3.5 h-3.5" /> },
+              ]}
+            />{/* --- Add Competitor Form --- */}{showAddForm && (
               <motion.div
                 initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}

@@ -19,6 +19,7 @@ import {
 import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -550,28 +551,19 @@ export default function OutreachLogsPage() {
                   <Download size={12} /> Export
                 </button>
               </div>
-            </div>{/* Stats */}<div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-9 gap-2">
-              {[
-                { label: "Total", value: stats.total, color: "text-[#2563EB]", icon: <Send size={12} /> },
-                { label: "Sent", value: stats.sent, color: "text-blue-400", icon: <CheckCircle size={12} /> },
-                { label: "Replied", value: stats.replied, color: "text-green-400", icon: <ThumbsUp size={12} /> },
-                { label: "Failed", value: stats.failed, color: "text-red-400", icon: <XCircle size={12} /> },
-                { label: "Reply Rate", value: `${replyRate}%`, color: "text-green-400", icon: <BarChart3 size={12} /> },
-                { label: "Book Rate", value: `${bookRate}%`, color: "text-emerald-400", icon: <BookCheck size={12} /> },
-                { label: "Emails", value: stats.byPlatform?.email || 0, color: "text-[#2563EB]", icon: <Mail size={12} /> },
-                { label: "SMS", value: stats.byPlatform?.sms || 0, color: "text-emerald-400", icon: <Phone size={12} /> },
-                { label: "Calls", value: stats.byPlatform?.call || 0, color: "text-blue-400", icon: <PhoneCall size={12} /> },
-              ].map((s, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-                  <div className="p-2">
-                    <div className={`w-5 h-5 rounded-md mx-auto mb-1 flex items-center justify-center bg-black/[0.04] ${s.color}`}>{s.icon}</div>
-                    <p className="text-sm font-bold">{s.value}</p>
-                    <p className="text-[8px] text-muted">{s.label}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1">
+            </div>{/* Stats */}<StatStrip
+              focal={{ label: "Total", value: String(stats.total), icon: <Send size={12} />, color: "text-[#2563EB]" }}
+              support={[
+                { label: "Sent", value: String(stats.sent), icon: <CheckCircle size={12} />, color: "text-blue-400" },
+                { label: "Replied", value: String(stats.replied), icon: <ThumbsUp size={12} />, color: "text-green-400" },
+                { label: "Failed", value: String(stats.failed), icon: <XCircle size={12} />, color: "text-red-400" },
+                { label: "Reply Rate", value: `${replyRate}%`, icon: <BarChart3 size={12} />, color: "text-green-400" },
+                { label: "Book Rate", value: `${bookRate}%`, icon: <BookCheck size={12} />, color: "text-emerald-400" },
+                { label: "Emails", value: String(stats.byPlatform?.email || 0), icon: <Mail size={12} />, color: "text-[#2563EB]" },
+                { label: "SMS", value: String(stats.byPlatform?.sms || 0), icon: <Phone size={12} />, color: "text-emerald-400" },
+                { label: "Calls", value: String(stats.byPlatform?.call || 0), icon: <PhoneCall size={12} />, color: "text-blue-400" },
+              ]}
+            />{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1">
               {([
                 { key: "outreach" as Tab, label: "All Logs", icon: <Send size={13} /> },
                 { key: "analytics" as Tab, label: "Analytics", icon: <BarChart3 size={13} /> },

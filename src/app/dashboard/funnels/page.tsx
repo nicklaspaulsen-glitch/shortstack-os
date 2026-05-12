@@ -10,6 +10,7 @@ import {
   Clock, CheckCircle2, Archive, Trash2, Copy, Pencil,
   ChevronRight, Filter, Layers,
 } from "lucide-react";
+import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type FunnelStatus = "draft" | "published" | "archived";
@@ -269,35 +270,20 @@ export default function FunnelsPage() {
                 })}
               </div>
             )}{/* Stats summary */}{funnels.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
-                {[
-                  { label: "Total Funnels", value: funnels.length, icon: <Filter size={16} />, color: "text-blue-600" },
-                  { label: "Published", value: funnels.filter((f) => f.status === "published").length, icon: <CheckCircle2 size={16} />, color: "text-emerald-700" },
-                  { label: "Total Views", value: funnels.reduce((a, f) => a + f.total_views, 0).toLocaleString(), icon: <Eye size={16} />, color: "text-blue-700" },
-                  {
-                    label: "Avg Conversion",
-                    value: funnels.length
-                      ? `${Math.round(funnels.reduce((a, f) => a + f.conversion_rate, 0) / funnels.length)}%`
-                      : "0%",
-                    icon: <TrendingUp size={16} />,
-                    color: "text-amber-700",
-                  },
-                ].map((stat, index) => (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.22, delay: index * 0.06 }}
-                    whileHover={{ y: -2 }}
-                    className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-4 relative overflow-hidden"
-                  >
-                    <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} className="absolute top-0 inset-x-0" />
-                    <div className={`${stat.color} mb-2 mt-1`}>{stat.icon}</div>
-                    <div className="text-[#111827] font-bold text-xl">{stat.value}</div>
-                    <div className="text-[#6B7280] text-xs mt-0.5">{stat.label}</div>
-                  </motion.div>
-                ))}
-              </div>
+              <StatStrip
+                focal={{
+                  label: "Total Views",
+                  value: funnels.reduce((a, f) => a + f.total_views, 0).toLocaleString(),
+                  sub: `${funnels.length} funnels`,
+                  icon: <Eye size={14} />,
+                }}
+                support={[
+                  { label: "Published", value: String(funnels.filter((f) => f.status === "published").length), color: "text-emerald-700", icon: <CheckCircle2 size={12} /> },
+                  { label: "Avg Conversion", value: funnels.length ? `${Math.round(funnels.reduce((a, f) => a + f.conversion_rate, 0) / funnels.length)}%` : "0%", icon: <TrendingUp size={12} /> },
+                  { label: "Total Funnels", value: String(funnels.length), icon: <Filter size={12} /> },
+                ]}
+                className="pt-2"
+              />
             )}</MotionPage>
   );
 }

@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 type Channel = "email" | "dm" | "sms" | "call";
 type Tab = "compose" | "history" | "templates";
@@ -191,22 +192,14 @@ export default function ClientOutreachPage() {
                 Outreach Center
               </h1>
               <p className="text-xs text-gray-500 mt-1">Launch multi-channel campaigns with AI-personalized messages</p>
-            </div>{/* Stats */}<div className="grid grid-cols-4 gap-3">
-              {[
-                { label: "Sent", value: stats.sent, icon: <CheckCircle size={14} />, color: "text-blue-600" },
-                { label: "Replied", value: stats.replied, icon: <MessageSquare size={14} />, color: "text-green-700" },
-                { label: "Pending", value: stats.pending, icon: <Clock size={14} />, color: "text-yellow-600" },
-                { label: "Failed", value: stats.failed, icon: <XCircle size={14} />, color: "text-red-600" },
-              ].map((s) => (
-                <div key={s.label} className="card flex items-center gap-3 py-3">
-                  <div className={s.color}>{s.icon}</div>
-                  <div>
-                    <p className="text-lg font-bold text-gray-900">{s.value}</p>
-                    <p className="text-[9px] text-gray-500 uppercase tracking-wider">{s.label}</p>
-                  </div>
-                </div>
-              ))}
-            </div>{/* Channel Selector */}<div className="flex gap-2">
+            </div>{/* Stats */}<StatStrip
+              focal={{ label: "Sent", value: String(stats.sent), icon: <CheckCircle size={14} />, color: "text-blue-600" }}
+              support={[
+                { label: "Replied", value: String(stats.replied), icon: <MessageSquare size={14} />, color: "text-green-700" },
+                { label: "Pending", value: String(stats.pending), icon: <Clock size={14} />, color: "text-yellow-600" },
+                { label: "Failed", value: String(stats.failed), icon: <XCircle size={14} />, color: "text-red-600" },
+              ]}
+            />{/* Channel Selector */}<div className="flex gap-2">
               {channels.map((ch) => (
                 <button
                   key={ch.id}

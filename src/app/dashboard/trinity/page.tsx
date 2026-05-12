@@ -8,6 +8,7 @@ import {
   Layers, Star, Eye
 } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -229,22 +230,14 @@ export default function TrinityPage() {
               </div>
             )}{/* ═══ DASHBOARD TAB ═══ */}{tab === "Dashboard" && (
               <div className="space-y-4">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {[
-                    { label: "Total Agents", value: agents.length, cls: "text-[#2563EB]" },
-                    { label: "Active Now", value: activeAgentCount, cls: "text-emerald-400" },
-                    { label: "Actions Today", value: totalActionsToday, cls: "text-foreground" },
-                    { label: "Errors", value: errorAgentCount, cls: errorAgentCount > 0 ? "text-red-400" : "text-emerald-400" },
-                  ].map((s, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
-                      <div className="p-3 text-center">
-                        <p className="text-[9px] text-muted uppercase">{s.label}</p>
-                        <p className={`text-xl font-bold ${s.cls}`}>{s.value}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <StatStrip
+                  focal={{ label: "Total Agents", value: String(agents.length), color: "text-[#2563EB]" }}
+                  support={[
+                    { label: "Active Now", value: String(activeAgentCount), color: "text-emerald-700" },
+                    { label: "Actions Today", value: String(totalActionsToday) },
+                    { label: "Errors", value: String(errorAgentCount), color: errorAgentCount > 0 ? "text-rose-700" : "text-emerald-700" },
+                  ]}
+                />
                 <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-bold mb-3">Response Time Comparison (ms)</h3>
                   <div className="flex items-end gap-2 h-28">
@@ -335,22 +328,14 @@ export default function TrinityPage() {
               const maxAgentAmount = costByAgent.reduce((m, a) => Math.max(m, a.amount), 0);
               return (
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {[
-                      { label: "Events (Month)", value: history.length, cls: "text-[#2563EB]" },
-                      { label: "Agents", value: costByAgent.length, cls: "text-foreground" },
-                      { label: "This Month", value: `$${costTotal.toFixed(2)}`, cls: "text-foreground" },
-                      { label: "Per Task Avg", value: `$${perTaskAvg.toFixed(2)}`, cls: "text-foreground" },
-                    ].map((s, i) => (
-                      <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                        <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
-                        <div className="p-3 text-center">
-                          <p className="text-[9px] text-muted uppercase">{s.label}</p>
-                          <p className={`text-xl font-bold ${s.cls}`}>{s.value}</p>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
+                  <StatStrip
+                    focal={{ label: "This Month", value: `$${costTotal.toFixed(2)}` }}
+                    support={[
+                      { label: "Events (Month)", value: String(history.length), color: "text-[#2563EB]" },
+                      { label: "Agents", value: String(costByAgent.length) },
+                      { label: "Per Task Avg", value: `$${perTaskAvg.toFixed(2)}` },
+                    ]}
+                  />
                   <div className="glass rounded-xl p-4">
                     <h3 className="text-xs font-bold mb-3">Cost by Agent</h3>
                     <div className="space-y-2">
@@ -438,22 +423,14 @@ export default function TrinityPage() {
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><BarChart3 size={14} className="text-[#2563EB]" /> Trinity Analytics</h2>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {[
-                      { label: "Tasks This Month", value: history.length, cls: "text-[#2563EB]" },
-                      { label: "Success Rate", value: `${successRateAvg}%`, cls: "text-emerald-400" },
-                      { label: "In Queue", value: queue.length, cls: "text-blue-400" },
-                      { label: "Monthly Cost", value: `$${costTotal.toFixed(2)}`, cls: "text-foreground" },
-                    ].map((s, i) => (
-                      <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass-md rounded-xl overflow-hidden">
-                        <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
-                        <div className="p-3 text-center">
-                          <p className={`text-xl font-bold ${s.cls}`}>{s.value}</p>
-                          <p className="text-[9px] text-muted">{s.label}</p>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
+                  <StatStrip
+                    focal={{ label: "Tasks This Month", value: String(history.length), color: "text-[#2563EB]" }}
+                    support={[
+                      { label: "Success Rate", value: `${successRateAvg}%`, color: "text-emerald-700" },
+                      { label: "In Queue", value: String(queue.length), color: "text-blue-700" },
+                      { label: "Monthly Cost", value: `$${costTotal.toFixed(2)}` },
+                    ]}
+                  />
                 </div>
                 <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-bold mb-3">Agent Weighting Controls</h3>

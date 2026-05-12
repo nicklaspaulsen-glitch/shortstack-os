@@ -22,6 +22,7 @@ import {
   computeFieldVisibility,
 } from "@/lib/forms/conditional-logic";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 type AiFormType = "contact" | "signup" | "survey" | "booking" | "application" | "feedback" | "quote" | "custom";
 
@@ -418,28 +419,14 @@ export default function FormsPage() {
                   </button>
                 </div>
               </div>
-            </Modal>{/* Stats */}<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {[
-                { value: forms.length, label: "Total Forms", color: "text-[#111827]" },
-                { value: totalSubmissions, label: "Submissions", color: "text-[#2563EB]" },
-                { value: `${avgCompletionRate}%`, label: "Avg Completion", color: "text-emerald-400" },
-                { value: forms.reduce((s, f) => s + f.views, 0), label: "Total Views", color: "text-blue-400" },
-              ].map((tile, i) => (
-                <motion.div
-                  key={tile.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.4 }}
-                  className=" border overflow-hidden" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
-                >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} />
-                  <div className="p-3 text-center">
-                    <p className={`text-lg font-bold ${tile.color}`}>{tile.value}</p>
-                    <p className="text-[10px] text-muted">{tile.label}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>{/* Tabs */}<div className="flex gap-1 rounded-lg border p-1 w-fit" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+            </Modal>{/* Stats */}<StatStrip
+              focal={{ label: "Total Forms", value: String(forms.length) }}
+              support={[
+                { label: "Submissions", value: String(totalSubmissions), color: "text-[#2563EB]" },
+                { label: "Avg Completion", value: `${avgCompletionRate}%`, color: "text-emerald-700" },
+                { label: "Total Views", value: String(forms.reduce((s, f) => s + f.views, 0)), color: "text-blue-700" },
+              ]}
+            />{/* Tabs */}<div className="flex gap-1 rounded-lg border p-1 w-fit" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${

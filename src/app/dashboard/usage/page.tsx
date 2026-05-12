@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, type PlanTier, isValidPlanTier } from "@/lib/plan-config";
 import Link from "next/link";
@@ -250,32 +251,20 @@ export default function UsagePage() {
                   </button>
                 </>
       </div>
-    </div>{/* ── Stats Strip ── */}<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {[
-                { icon: <Activity size={10} />, label: "Tokens Used", value: loading ? null : fmt(used), sub: "this month" },
-                { icon: <Zap size={10} />, label: "Remaining", value: loading ? null : (isUnlimited ? "∞" : fmt(remaining)), sub: isUnlimited ? "unlimited" : `of ${fmtShort(effectiveLimit)}`, valueClass: isUnlimited ? "text-[#2563EB]" : remaining < effectiveLimit * 0.1 ? "text-red-400" : "text-foreground" },
-                { icon: <Clock size={10} />, label: "Resets In", value: loading ? null : String(tokenData.days_remaining), sub: "days" },
-                { icon: <TrendingUp size={10} />, label: "Daily Avg", value: loading ? null : fmtShort(tokenData.daily_average), sub: "tokens / day" },
-              ].map((stat, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
-                  <div className="p-3 flex flex-col gap-1">
-                    <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted font-medium">
-                      {stat.icon}
-                      {stat.label}
-                    </div>
-                    {stat.value === null ? (
-                      <div className="h-6 w-20 bg-surface-light animate-pulse rounded" />
-                    ) : (
-                      <div className={`text-2xl font-bold ${stat.valueClass ?? "text-foreground"}`}>
-                        {stat.value}
-                      </div>
-                    )}
-                    <div className="text-[10px] text-muted">{stat.sub}</div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>{/* ── Progress Bar ── */}{!isUnlimited && (
+    </div>{/* ── Stats Strip ── */}{loading ? (
+              <div className="flex gap-4 py-2">
+                {[1,2,3,4].map(k => <div key={k} className="h-16 flex-1 bg-surface-light animate-pulse rounded-lg" />)}
+              </div>
+            ) : (
+              <StatStrip
+                focal={{ label: "Tokens Used", value: fmt(used), icon: <Activity size={10} />, sub: "this month" }}
+                support={[
+                  { label: "Remaining", value: isUnlimited ? "∞" : fmt(remaining), icon: <Zap size={10} />, sub: isUnlimited ? "unlimited" : `of ${fmtShort(effectiveLimit)}`, color: isUnlimited ? "text-[#2563EB]" : remaining < effectiveLimit * 0.1 ? "text-red-400" : undefined },
+                  { label: "Resets In", value: String(tokenData.days_remaining), icon: <Clock size={10} />, sub: "days" },
+                  { label: "Daily Avg", value: fmtShort(tokenData.daily_average), icon: <TrendingUp size={10} />, sub: "tokens / day" },
+                ]}
+              />
+            )}{/* ── Progress Bar ── */}{!isUnlimited && (
               <div className="glass rounded-xl p-5 space-y-3">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-muted">Monthly usage</span>

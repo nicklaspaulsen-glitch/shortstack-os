@@ -5,6 +5,7 @@ import { motion, type Variants } from "framer-motion";
 import { TrendingUp, Loader2, AlertCircle } from "lucide-react";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { PrismPanel } from "@/components/prism";
+import StatStrip from "@/components/ui/stat-strip";
 import { createClient } from "@/lib/supabase/client";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -74,12 +75,6 @@ const slideX: Variants = {
   show: { opacity: 1, x: 0, transition: { duration: 0.3, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } },
 };
 
-/** Blue-tonal stat accent bars — brand-consistent, not rainbow */
-const STAT_BARS = [
-  "bg-gradient-to-r from-blue-600 to-blue-500",
-  "bg-gradient-to-r from-blue-500 to-blue-400",
-  "bg-gradient-to-r from-blue-700 to-blue-600",
-];
 
 function BarChart({ buckets }: { buckets: MonthBucket[] }) {
   const max = Math.max(...buckets.map((b) => b.weighted), 1);
@@ -172,46 +167,27 @@ export default function ForecastPage() {
             ) : (
               <>
                 {/* Hero stats */}
-                <motion.div
-                  className="grid grid-cols-1 sm:grid-cols-3 gap-4"
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate="show"
-                >
-                  {[
-                    {
-                      label: "Total Weighted Pipeline",
-                      value: fmt(totalPipeline),
-                      sub: `across ${deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length} open deals`,
-                      valueClass: "text-text-primary",
-                    },
+                <StatStrip
+                  focal={{
+                    label: "Total Weighted Pipeline",
+                    value: fmt(totalPipeline),
+                    sub: `across ${deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length} open deals`,
+                  }}
+                  support={[
                     {
                       label: "Likely This Month",
                       value: fmt(likelyClose.reduce((s, d) => s + d.value * (d.probability / 100), 0)),
                       sub: `${likelyClose.length} deal${likelyClose.length !== 1 ? "s" : ""} =70% probability`,
-                      valueClass: "text-blue-700",
+                      color: "text-blue-700",
                     },
                     {
                       label: "Closed Won (All Time)",
                       value: fmt(wonTotal),
                       sub: `${deals.filter((d) => d.stage === "closed_won").length} deals won`,
-                      valueClass: "text-green-700",
+                      color: "text-green-700",
                     },
-                  ].map((stat, i) => (
-                    <motion.div
-                      key={i}
-                      variants={fadeUp}
-                      whileHover={{ y: -2 }}
-                      className=" border p-5 overflow-hidden relative"
-                      style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", borderColor: "rgba(0,0,0,0.08)" }}
-                    >
-                      <div className={`absolute top-0 left-0 right-0 h-0.5 ${STAT_BARS[i]}`} />
-                      <p className="text-xs text-muted uppercase tracking-wider mb-1">{stat.label}</p>
-                      <p className={`text-3xl font-bold ${stat.valueClass}`}>{stat.value}</p>
-                      <p className="text-xs text-muted mt-1">{stat.sub}</p>
-                    </motion.div>
-                  ))}
-                </motion.div>
+                  ]}
+                />
 
                 {deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length === 0 ? (
                   <PrismPanel padding="p-10" className="flex flex-col items-center gap-3 text-center">

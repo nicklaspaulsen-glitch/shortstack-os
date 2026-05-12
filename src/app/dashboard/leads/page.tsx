@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
+import StatStrip from "@/components/ui/stat-strip";
 import Link from "next/link";
 import { ALLOWED_CSV, buildAccept, validateFile } from "@/lib/file-types";
 import { motion } from "framer-motion";
@@ -845,22 +846,16 @@ export default function LeadEnginePage() {
                 </>
               }
             >
-              <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-                {[
-                  { label: "Total Leads", value: totalLeads, icon: <Users size={12} />, color: "text-[#2563EB]" },
-                  { label: "Hot Leads", value: hotLeads, icon: <Flame size={12} />, color: "text-red-400" },
-                  { label: "Qualified", value: qualifiedLeads, icon: <CheckCircle size={12} />, color: "text-green-400" },
-                  { label: "Converted", value: convertedLeads, icon: <Star size={12} />, color: "text-purple-400" },
-                  { label: "Avg Score", value: totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length || 0) : 0, icon: <Target size={12} />, color: "text-blue-400" },
+              <StatStrip
+                focal={{ label: "Total Leads", value: String(totalLeads), icon: <Users size={14} />, color: "text-[#2563EB]" }}
+                support={[
+                  { label: "Hot Leads", value: String(hotLeads), icon: <Flame size={12} />, color: "text-red-400" },
+                  { label: "Qualified", value: String(qualifiedLeads), icon: <CheckCircle size={12} />, color: "text-green-400" },
+                  { label: "Converted", value: String(convertedLeads), icon: <Star size={12} />, color: "text-purple-400" },
+                  { label: "Avg Score", value: String(totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length || 0) : 0), icon: <Target size={12} />, color: "text-blue-400" },
                   { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-[#2563EB]" },
-                ].map((stat, index) => (
-                  <PrismPanel key={index} padding="p-3" className="text-center" delay={index * 0.06}>
-                    <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
-                    <p className="text-lg font-bold">{stat.value}</p>
-                    <p className="text-[9px] text-muted">{stat.label}</p>
-                  </PrismPanel>
-                ))}
-              </div>
+                ]}
+              />
             </CollapsibleStats>{/* Tabs (sticky) */}<div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}

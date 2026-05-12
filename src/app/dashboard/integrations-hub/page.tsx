@@ -31,6 +31,7 @@ import { motion } from "framer-motion";
 import { Plug, Sparkles, RefreshCw, ExternalLink, Key } from "lucide-react";
 import toast from "react-hot-toast";
 import StatCard from "@/components/ui/stat-card";
+import StatStrip from "@/components/ui/stat-strip";
 import ConnectModal from "@/components/integrations/connect-modal";
 import IntegrationCard, {
   type IntegrationCardData,
@@ -639,31 +640,14 @@ export default function IntegrationsHubPage() {
                   <span className="font-medium">Refresh</span>
                 </button>
       </div>
-    </div>{/* Hero stat tiles */}<div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              {[
-                { label: "Connected", value: connectedCount, icon: <Plug size={14} />, bar: "from-indigo-500 to-violet-500" },
-                { label: "Available", value: availableCount, icon: <Sparkles size={14} />, bar: "from-sky-500 to-indigo-500" },
-                { label: "Powered by", value: "Nango + Zernio", icon: <Sparkles size={14} />, bar: "from-purple-500 to-indigo-500", premium: true },
-                { label: "Last sync", value: lastSyncLabel, icon: null, bar: "from-emerald-500 to-teal-500" },
-              ].map((tile, i) => (
-                <motion.div
-                  key={tile.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.08, duration: 0.4, ease: "easeOut" }}
-                  whileHover={{ y: -2 }}
-                  className="glass rounded-xl overflow-hidden"
-                >
-                  <div className={`h-[3px] w-full bg-gradient-to-r ${tile.bar}`} />
-                  <StatCard
-                    label={tile.label}
-                    value={tile.value}
-                    icon={tile.icon ?? undefined}
-                    premium={tile.premium}
-                  />
-                </motion.div>
-              ))}
-            </div>{/* Category filter pills */}<motion.div
+    </div>{/* Hero stat strip */}<StatStrip
+              focal={{ label: "Connected", value: String(connectedCount), icon: <Plug size={14} /> }}
+              support={[
+                { label: "Available", value: String(availableCount), icon: <Sparkles size={14} /> },
+                { label: "Powered by", value: "Nango + Zernio", icon: <Sparkles size={14} /> },
+                { label: "Last sync", value: String(lastSyncLabel) },
+              ]}
+            />{/* Category filter pills */}<motion.div
               className="flex items-center gap-2 flex-wrap glass rounded-lg px-3 py-2"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}

@@ -13,6 +13,7 @@ import EmptyState from "@/components/empty-state";
 import { ZoomIcon, CalendlyIcon, GoogleIcon } from "@/components/ui/platform-icons";
 import { PageSkeleton } from "@/components/ui/skeleton";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 /** Pick a small brand icon for a meeting location_type value. */
 function LocationIcon({ type, size = 10 }: { type: string; size?: number }) {
@@ -286,29 +287,18 @@ export default function SchedulingPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-5 gap-3">
-        {[
-          { value: meetingTypes.filter(m => m.active).length, label: "Active Types", color: "" },
-          { value: totalBookings, label: "Total Bookings", color: "text-[#2563EB]" },
-          { value: confirmedBookings, label: "Confirmed", color: "text-emerald-400" },
-          { value: `${conversionRate}%`, label: "Conversion Rate", color: "text-[#2563EB]" },
-          { value: `${noShowRate}%`, label: "No-Show Rate", color: "text-orange-400" },
-        ].map((stat, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06, duration: 0.4 }}
-            className="glass rounded-xl overflow-hidden text-center"
-          >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-3">
-              <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
-              <p className="text-[10px] text-muted">{stat.label}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      <StatStrip
+        focal={{
+          label: "Total Bookings",
+          value: String(totalBookings),
+          sub: `${meetingTypes.filter(m => m.active).length} active types`,
+        }}
+        support={[
+          { label: "Confirmed", value: String(confirmedBookings), color: "text-emerald-700" },
+          { label: "Conversion", value: `${conversionRate}%`, color: "text-[#2563EB]" },
+          { label: "No-Show", value: `${noShowRate}%`, color: noShowRate > 15 ? "text-orange-600" : undefined },
+        ]}
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">

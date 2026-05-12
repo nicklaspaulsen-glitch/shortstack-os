@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { PrismPanel } from "@/components/prism";
+import StatStrip from "@/components/ui/stat-strip";
 import { useAuth } from "@/lib/auth-context";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -206,21 +207,19 @@ export default function DiscordPage() {
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {[
-          { icon: Zap, color: "text-green-400", bg: "bg-green-400/10", value: "Online", label: "Bot Status" },
-          { icon: Server, color: "text-[#5865F2]", bg: "bg-[#5865F2]/10", value: "0", label: "Servers" },
-          { icon: Users, color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]", value: "0", label: "Total Members" },
-          { icon: Hash, color: "text-purple-400", bg: "bg-purple-500/10", value: "0", label: "Total Channels" },
-        ].map((tile, i) => (
-          <PrismPanel key={i} delay={i * 0.06} padding="p-3">
-            <div className="flex items-center gap-3">
-              <div className={`w-9 h-9 rounded-lg ${tile.bg} flex items-center justify-center`}><tile.icon size={16} className={tile.color} /></div>
-              <div><p className="text-lg font-bold font-mono">{tile.value}</p><p className="text-[10px] text-muted">{tile.label}</p></div>
-            </div>
-          </PrismPanel>
-        ))}
-      </div>
+      <StatStrip
+        focal={{
+          label: "Bot Status",
+          value: "Online",
+          icon: <Zap size={12} />,
+          color: "text-green-400",
+        }}
+        support={[
+          { label: "Servers", value: "0", icon: <Server size={12} />, color: "text-[#5865F2]" },
+          { label: "Total Members", value: "0", icon: <Users size={12} />, color: "text-[#2563EB]" },
+          { label: "Total Channels", value: "0", icon: <Hash size={12} />, color: "text-purple-400" },
+        ]}
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 overflow-x-auto border-b border-border pb-px">
@@ -675,29 +674,19 @@ export default function DiscordPage() {
       {activeTab === "Analytics" && (
         <div className="space-y-4">
           <PreviewBanner />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              { label: "Messages Today", value: "�", icon: MessageSquare, color: "text-[#5865F2]" },
-              { label: "Active Members", value: "�", icon: Users, color: "text-green-400" },
-              { label: "New Members (7d)", value: "�", icon: UserCheck, color: "text-[#2563EB]" },
-              { label: "Voice Hours (7d)", value: "�", icon: Volume2, color: "text-purple-400" },
-            ].map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.06, duration: 0.4 }}
-                className="rounded-xl overflow-hidden" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
-              >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-                <div className="p-3 text-center">
-                  <stat.icon size={16} className={`mx-auto mb-1 ${stat.color}`} />
-                  <p className="text-lg font-bold font-mono">{stat.value}</p>
-                  <p className="text-[10px] text-muted">{stat.label}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          <StatStrip
+            focal={{
+              label: "Messages Today",
+              value: "—",
+              icon: <MessageSquare size={12} />,
+              color: "text-[#5865F2]",
+            }}
+            support={[
+              { label: "Active Members", value: "—", icon: <Users size={12} />, color: "text-green-400" },
+              { label: "New Members (7d)", value: "—", icon: <UserCheck size={12} />, color: "text-[#2563EB]" },
+              { label: "Voice Hours (7d)", value: "—", icon: <Volume2 size={12} />, color: "text-purple-400" },
+            ]}
+          />
           {/* Daily Activity Chart */}
           <div className="card p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-[#2563EB]" /> Daily Activity</h3>
@@ -942,25 +931,17 @@ export default function DiscordPage() {
           {/* Engagement trends */}
           <div className="card p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><TrendingUp size={14} className="text-green-400" /> Engagement Trends</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {[
-                { label: "Avg Messages/Day", value: "0" },
+            <StatStrip
+              focal={{
+                label: "Avg Messages/Day",
+                value: "0",
+              }}
+              support={[
                 { label: "Avg Active/Day", value: "0" },
                 { label: "Retention (30d)", value: "--" },
                 { label: "Avg Session", value: "--" },
-              ].map((stat, i) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="text-center p-3 rounded-lg" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
-                >
-                  <p className="text-lg font-bold font-mono">{stat.value}</p>
-                  <p className="text-[10px] text-muted">{stat.label}</p>
-                </motion.div>
-              ))}
-            </div>
+              ]}
+            />
           </div>
         </div>
       )}

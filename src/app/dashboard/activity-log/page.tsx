@@ -10,6 +10,7 @@ import {
   ClipboardList, Loader2,
 } from "lucide-react";
 import { PrismPanel } from "@/components/prism";
+import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type ActivityTab = "feed" | "heatmap" | "users" | "audit" | "security";
@@ -200,20 +201,15 @@ export default function ActivityLogPage() {
                     className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"><Download size={12} /> Export Log</button>
                 </>
       </div>
-    </div>{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-              {[
-                { value: logs.length, label: "Total Events", color: "" },
-                { value: logs.filter(l => l.timestamp.startsWith(new Date().toISOString().slice(0, 10))).length, label: "Today", color: "text-[#2563EB]" },
-                { value: Object.keys(userActivity).filter(u => u !== "System" && u !== "API").length, label: "Active Users", color: "text-[#2563EB]" },
-                { value: logs.filter(l => l.type === "automation").length, label: "Automations", color: "text-[#2563EB]" },
-                { value: suspicious.length, label: "Suspicious", color: suspicious.length > 0 ? "text-red-400" : "text-emerald-400" },
-              ].map((stat, i) => (
-                <PrismPanel key={stat.label} delay={i * 0.06} padding="p-3" className="text-center">
-                    <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
-                    <p className="text-[10px] text-muted">{stat.label}</p>
-                </PrismPanel>
-              ))}
-            </div>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit flex-wrap">
+    </div>{/* Stats */}<StatStrip
+              focal={{ label: "Total Events", value: logs.length.toLocaleString() }}
+              support={[
+                { label: "Today", value: String(logs.filter(l => l.timestamp.startsWith(new Date().toISOString().slice(0, 10))).length), color: "text-[#2563EB]" },
+                { label: "Active Users", value: String(Object.keys(userActivity).filter(u => u !== "System" && u !== "API").length), color: "text-[#2563EB]" },
+                { label: "Automations", value: String(logs.filter(l => l.type === "automation").length), color: "text-[#2563EB]" },
+                { label: "Suspicious", value: String(suspicious.length), color: suspicious.length > 0 ? "text-red-400" : "text-emerald-400" },
+              ]}
+            />{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit flex-wrap">
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${

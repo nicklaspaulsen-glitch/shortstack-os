@@ -8,6 +8,7 @@ import {
 } from "@/lib/file-types";
 import { useAuth } from "@/lib/auth-context";
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import {
   FolderOpen, Upload, Search, Grid, List, Image as ImageIcon,
   Video, Music, FileText, File, Palette, Tag, Trash2, Eye,
@@ -815,29 +816,14 @@ export default function ContentLibraryPage() {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {[
-          { label: "Total Assets", value: assets.length, color: undefined },
-          { label: "Images", value: assets.filter(a => a.type === "image").length, color: "text-blue-400" },
-          { label: "Videos", value: assets.filter(a => a.type === "video").length, color: "text-[#2563EB]" },
-          { label: "Collections", value: collections.length, color: "text-[#2563EB]" },
-        ].map((tile, i) => (
-          <motion.div
-            key={tile.label}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06, duration: 0.4 }}
-            className="rounded-xl overflow-hidden"
-            style={{ background: "rgba(250,250,251,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-          >
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-4">
-              <p className="text-[10px] text-muted uppercase tracking-wider">{tile.label}</p>
-              <p className={`text-xl font-bold ${tile.color || ""}`}>{tile.value}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      <StatStrip
+        focal={{ label: "Total Assets", value: String(assets.length) }}
+        support={[
+          { label: "Images", value: String(assets.filter(a => a.type === "image").length), color: "text-blue-400" },
+          { label: "Videos", value: String(assets.filter(a => a.type === "video").length), color: "text-[#2563EB]" },
+          { label: "Collections", value: String(collections.length), color: "text-[#2563EB]" },
+        ]}
+      />
 
       {/* Preview Modal */}
       {previewAsset && (

@@ -26,6 +26,7 @@ import {
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import EmptyState from "@/components/ui/empty-state";
+import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* ─────────────────────────────────────────────────────────────── */
@@ -209,25 +210,18 @@ function ReviewManager() {
         Google Business Profile + Trustpilot auto-import lands next sprint.
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {[
-          { label: "Total", value: stats.count, color: undefined },
-          { label: "Avg rating", value: stats.avg || "—", stars: stats.avg > 0 ? Math.round(stats.avg) : 0 },
-          { label: "Unreplied", value: stats.unreplied, color: "text-[#2563EB]" },
-          { label: "1–2 star", value: stats.critical, color: "text-rose-300" },
-        ].map((stat, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-            <div className="p-3">
-              <p className="text-[10px] uppercase tracking-wider text-muted">{stat.label}</p>
-              <div className="mt-1 flex items-center gap-1.5">
-                <span className={`text-2xl font-bold ${stat.color || ""}`}>{stat.value}</span>
-                {stat.stars ? <Stars rating={stat.stars} /> : null}
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      <StatStrip
+        focal={{
+          label: "Avg Rating",
+          value: stats.avg ? `${stats.avg.toFixed(1)}` : "—",
+          sub: `${stats.count} total reviews`,
+        }}
+        support={[
+          { label: "Total", value: String(stats.count) },
+          { label: "Unreplied", value: String(stats.unreplied), color: "text-[#2563EB]" },
+          { label: "1-2 Star", value: String(stats.critical), color: stats.critical > 0 ? "text-rose-600" : undefined },
+        ]}
+      />
 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex gap-1">

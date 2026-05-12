@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import StatCard from "@/components/ui/stat-card";
+import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface Subaccount {
@@ -150,24 +151,13 @@ export default function SubaccountsPage() {
                   Invite Subaccount
                 </button>
       </div>
-    </div><div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {[
-                { label: "Total Subaccounts", value: stats.total, icon: <Users className="w-4 h-4" /> },
-                { label: "Active", value: stats.active, icon: <CheckCircle2 className="w-4 h-4" /> },
-                { label: "Monthly Recurring Revenue", value: formatMrr(stats.mrr_cents), icon: <DollarSign className="w-4 h-4" />, premium: true },
-              ].map((tile, i) => (
-                <motion.div
-                  key={tile.label}
-                  className="glass rounded-xl overflow-hidden"
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06, duration: 0.4 }}
-                >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                  <StatCard label={tile.label} value={tile.value} icon={tile.icon} premium={tile.premium} />
-                </motion.div>
-              ))}
-            </div>{loading ? (
+    </div><StatStrip
+              focal={{ label: "Monthly Recurring Revenue", value: String(formatMrr(stats.mrr_cents)), icon: <DollarSign className="w-4 h-4" /> }}
+              support={[
+                { label: "Total Subaccounts", value: String(stats.total), icon: <Users className="w-4 h-4" /> },
+                { label: "Active", value: String(stats.active), icon: <CheckCircle2 className="w-4 h-4" /> },
+              ]}
+            />{loading ? (
               <div className="flex items-center justify-center py-16">
                 <Loader2 className="w-6 h-6 animate-spin text-[#2563EB]" />
               </div>

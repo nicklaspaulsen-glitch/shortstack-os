@@ -58,9 +58,10 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import FirstCallWizard from "@/components/voice-receptionist/first-call-wizard";
-import StatCard from "@/components/ui/stat-card";
+
 import EmptyState from "@/components/ui/empty-state";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 // -------------------------------------------------------------------
 // Types
@@ -681,34 +682,13 @@ export default function VoiceReceptionistPage() {
                     <RefreshCw size={12} /> Refresh
                   </motion.button>
                 </div>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {[
-                    { label: "Calls handled", value: stats.handled, icon: <PhoneCall size={14} /> },
-                    { label: "Booked to calendar", value: stats.booked, icon: <CalendarIcon size={14} /> },
-                    { label: "Avg call duration", value: fmtDurationAvg(stats.avgDuration), icon: <Clock size={14} /> },
-                  ].map((card, index) => (
-                    <motion.div
-                      key={card.label}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.22, delay: index * 0.06 }}
-                      whileHover={{ y: -2 }}
-                      className="relative glass rounded-xl overflow-hidden"
-                    >
-                      <div
-                        className="absolute top-0 left-0 right-0"
-                        style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }}
-                      />
-                      <div className="pt-2">
-                        <StatCard
-                          label={card.label}
-                          value={card.value}
-                          icon={card.icon}
-                        />
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <StatStrip
+                  focal={{ label: "Calls handled", value: String(stats.handled), icon: <PhoneCall size={14} /> }}
+                  support={[
+                    { label: "Booked to calendar", value: String(stats.booked), icon: <CalendarIcon size={12} /> },
+                    { label: "Avg call duration", value: fmtDurationAvg(stats.avgDuration), icon: <Clock size={12} /> },
+                  ]}
+                />
               </section>
 
               {/* -- 2. Agent setup card ------------------------------------- */}

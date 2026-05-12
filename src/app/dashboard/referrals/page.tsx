@@ -61,6 +61,7 @@ function LinkedinIcon({ size = 14 }: { size?: number }) {
   );
 }
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import { COMMISSION_RATES } from "@/lib/referral-commission";
 import { PLAN_TIERS, getPlanConfig, type PlanTier } from "@/lib/plan-config";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -357,17 +358,14 @@ export default function ReferralsPage() {
               <p className="text-[10px] text-muted mt-3">
                 Commission paid monthly for 12 months on every active subscription. Payout sent on the 1st of each month via Stripe Connect.
               </p>
-            </motion.section>{/* ─── Stat cards ─────────────────────────────────────────────── */}<section className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {[
-                { icon: <TrendingUp size={14} />, accent: "#2563EB", label: "This month", value: meLoading ? "—" : fmtCents(me?.stats.this_month_cents ?? 0), sublabel: "Current cycle" },
-                { icon: <Wallet size={14} />, accent: "#c8a855", label: "All time earned", value: meLoading ? "—" : fmtCents(me?.stats.total_earned_cents ?? 0), sublabel: `${me?.stats.total_referrals ?? 0} total referral${me?.stats.total_referrals === 1 ? "" : "s"}` },
-                { icon: <Clock size={14} />, accent: "#a855f7", label: "Pending payout", value: meLoading ? "—" : fmtCents(me?.stats.pending_payout_cents ?? 0), sublabel: "Paid on the 1st" },
-              ].map((tile, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                  <StatCard {...tile} />
-                </motion.div>
-              ))}
+            </motion.section>{/* ─── Stat cards ─────────────────────────────────────────────── */}<section>
+              <StatStrip
+                focal={{ label: "This month", value: meLoading ? "—" : fmtCents(me?.stats.this_month_cents ?? 0), icon: <TrendingUp size={14} />, color: "text-[#2563EB]", sub: "Current cycle" }}
+                support={[
+                  { label: "All time earned", value: meLoading ? "—" : fmtCents(me?.stats.total_earned_cents ?? 0), icon: <Wallet size={14} />, sub: `${me?.stats.total_referrals ?? 0} total referral${me?.stats.total_referrals === 1 ? "" : "s"}` },
+                  { label: "Pending payout", value: meLoading ? "—" : fmtCents(me?.stats.pending_payout_cents ?? 0), icon: <Clock size={14} />, sub: "Paid on the 1st" },
+                ]}
+              />
             </section>{/* ─── Bottom: referred users + leaderboard ──────────────────── */}<section className="grid grid-cols-1 lg:grid-cols-3 gap-5">
               {/* Referrals table */}
               <div className="lg:col-span-2 glass rounded-xl overflow-hidden">
@@ -527,36 +525,6 @@ export default function ReferralsPage() {
 }
 
 // ── Subcomponents ────────────────────────────────────────────────────────────
-
-function StatCard({
-  icon,
-  accent,
-  label,
-  value,
-  sublabel,
-}: {
-  icon: React.ReactNode;
-  accent: string;
-  label: string;
-  value: string;
-  sublabel: string;
-}) {
-  return (
-    <div className="p-4">
-      <div className="flex items-center gap-2 mb-2.5">
-        <div
-          className="w-7 h-7 rounded-lg flex items-center justify-center"
-          style={{ background: `${accent}15`, color: accent }}
-        >
-          {icon}
-        </div>
-        <span className="text-xs font-semibold text-foreground">{label}</span>
-      </div>
-      <div className="text-2xl font-bold text-foreground leading-none">{value}</div>
-      <p className="text-[10px] text-muted mt-1.5">{sublabel}</p>
-    </div>
-  );
-}
 
 function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
   const medal =

@@ -20,6 +20,7 @@ import Modal from "@/components/ui/modal";
 import InlineSocialConnect from "@/components/inline-social-connect";
 import { Lightbulb, Megaphone, Loader2, ChevronsRight } from "lucide-react";
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import toast from "react-hot-toast";
 import ErrorBoundary from "@/components/error-boundary";
 import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
@@ -1268,26 +1269,13 @@ export default function ScraperPage() {
                 {results.length > 0 ? (
                   <>
                     <div className="flex items-center justify-between">
-                      <div className="flex gap-4">
-                        {[
-                          { value: stats.scraped, label: "Leads Found", color: "text-[#2563EB]", bar: "from-indigo-500 to-violet-400" },
-                          { value: stats.skipped, label: "Duplicates", color: "text-muted", bar: "from-slate-600 to-slate-500" },
-                          { value: selectedLeads.size, label: "Selected", color: "text-emerald-400", bar: "from-emerald-500 to-emerald-400" },
-                        ].map((s, i) => (
-                          <motion.div
-                            key={s.label}
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: i * 0.07 }}
-                            whileHover={{ y: -2 }}
-                            className="glass rounded-xl px-4 py-3 text-center relative overflow-hidden min-w-[80px]"
-                          >
-                            <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${s.bar}`} />
-                            <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
-                            <p className="text-[10px] text-muted">{s.label}</p>
-                          </motion.div>
-                        ))}
-                      </div>
+                      <StatStrip
+                        focal={{ label: "Leads Found", value: String(stats.scraped), icon: <Target size={14} />, color: "text-[#2563EB]" }}
+                        support={[
+                          { label: "Duplicates", value: String(stats.skipped) },
+                          { label: "Selected", value: String(selectedLeads.size), color: "text-emerald-400" },
+                        ]}
+                      />
                       <div className="flex items-center gap-1.5">
                         <button onClick={selectAllLeads} className="btn-secondary text-[10px] py-1.5"><CheckCircle size={12} /> {selectedLeads.size === results.length ? "Deselect All" : "Select All"}</button>
                         <button onClick={openPushToCampaign} className="btn-secondary flex items-center gap-1.5 text-[10px] py-1.5"><Megaphone size={12} /> Push to campaign</button>
@@ -1409,27 +1397,14 @@ export default function ScraperPage() {
                   </div>
                 </div>
                 {/* Enrichment stats */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {[
-                    { value: results.filter(r => r.email).length, label: "With Email", color: "text-[#2563EB]", bar: "from-indigo-500 to-violet-400" },
-                    { value: results.filter(r => r.tech_stack).length, label: "Tech Detected", color: "text-[#2563EB]", bar: "from-sky-500 to-blue-400" },
-                    { value: results.filter(r => r.decision_maker).length, label: "Decision Makers", color: "text-violet-400", bar: "from-violet-500 to-purple-400" },
-                    { value: results.filter(r => (r.lead_score || 0) >= 70).length, label: "Hot Leads", color: "text-emerald-400", bar: "from-emerald-500 to-emerald-400" },
-                  ].map((s, i) => (
-                    <motion.div
-                      key={s.label}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: i * 0.07 }}
-                      whileHover={{ y: -2 }}
-                      className="glass rounded-xl text-center p-4 relative overflow-hidden"
-                    >
-                      <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${s.bar}`} />
-                      <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
-                      <p className="text-[10px] text-muted">{s.label}</p>
-                    </motion.div>
-                  ))}
-                </div>
+                <StatStrip
+                  focal={{ label: "With Email", value: String(results.filter(r => r.email).length), icon: <Mail size={14} />, color: "text-[#2563EB]" }}
+                  support={[
+                    { label: "Tech Detected", value: String(results.filter(r => r.tech_stack).length), color: "text-[#2563EB]" },
+                    { label: "Decision Makers", value: String(results.filter(r => r.decision_maker).length), color: "text-violet-400" },
+                    { label: "Hot Leads", value: String(results.filter(r => (r.lead_score || 0) >= 70).length), color: "text-emerald-400" },
+                  ]}
+                />
 
                 {/* Single-URL website enrichment (optional) */}
                 <WebsiteScraper

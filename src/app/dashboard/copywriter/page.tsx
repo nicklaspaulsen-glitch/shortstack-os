@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import {
   PenTool, Sparkles, FileText, Globe, Mail, MessageSquare,
   ShoppingBag, Megaphone, Copy, BookmarkPlus, Loader, Clock,
@@ -1487,26 +1488,13 @@ export default function CopywriterPage() {
                     transition={{ delay: 0.12, duration: 0.35 }}
                     className="glass rounded-xl p-4"
                   >
-                    <div className="h-px bg-gradient-to-r from-[#2563EB] via-violet-400 to-[#2563EB] mb-3 rounded-full" />
-                    <div className="grid grid-cols-3 gap-3">
-                      {[
-                        { label: "Generated", value: history.length },
+                    <StatStrip
+                      focal={{ label: "Generated", value: String(history.length), icon: <FileText size={14} /> }}
+                      support={[
                         { label: "Total Words", value: history.reduce((sum, h) => sum + h.wordCount, 0).toLocaleString() },
-                        { label: "Saved", value: savedItems.size },
-                      ].map((stat, i) => (
-                        <motion.div
-                          key={stat.label}
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.14 + i * 0.05 }}
-                          whileHover={{ y: -2 }}
-                          className="text-center"
-                        >
-                          <p className="text-lg font-bold text-foreground">{stat.value}</p>
-                          <p className="text-[9px] text-muted">{stat.label}</p>
-                        </motion.div>
-                      ))}
-                    </div>
+                        { label: "Saved", value: String(savedItems.size) },
+                      ]}
+                    />
                   </motion.div>
                 )}
               </div>

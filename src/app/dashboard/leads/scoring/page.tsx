@@ -12,6 +12,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import StatStrip from "@/components/ui/stat-strip";
 import {
   Target,
   Loader,
@@ -597,44 +598,14 @@ export default function LeadScoringPage() {
                 </>
               }
             >
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {[
-                  {
-                    label: "Hot",
-                    value: counts.hot,
-                    icon: <Flame size={12} />,
-                    color: "text-orange-400",
-                  },
-                  {
-                    label: "Warm",
-                    value: counts.warm,
-                    icon: <Sun size={12} />,
-                    color: "text-yellow-400",
-                  },
-                  {
-                    label: "Cold",
-                    value: counts.cold,
-                    icon: <Snowflake size={12} />,
-                    color: "text-[#2563EB]",
-                  },
-                  {
-                    label: "Customer",
-                    value: counts.customer,
-                    icon: <BadgeCheck size={12} />,
-                    color: "text-emerald-400",
-                  },
-                ].map((stat, i) => (
-                  <div key={i} className="card text-center p-3">
-                    <div
-                      className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}
-                    >
-                      {stat.icon}
-                    </div>
-                    <p className="text-lg font-bold">{stat.value}</p>
-                    <p className="text-[9px] text-muted">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
+              <StatStrip
+                focal={{ label: "Hot", value: String(counts.hot), icon: <Flame size={12} />, color: "text-orange-400" }}
+                support={[
+                  { label: "Warm", value: String(counts.warm), icon: <Sun size={12} />, color: "text-yellow-400" },
+                  { label: "Cold", value: String(counts.cold), icon: <Snowflake size={12} />, color: "text-[#2563EB]" },
+                  { label: "Customer", value: String(counts.customer), icon: <BadgeCheck size={12} />, color: "text-emerald-400" },
+                ]}
+              />
             </CollapsibleStats>{/* Filter pills + bulk action toolbar */}<div className="flex flex-wrap gap-2 items-center justify-between">
               <div className="flex flex-wrap gap-2">
                 {(

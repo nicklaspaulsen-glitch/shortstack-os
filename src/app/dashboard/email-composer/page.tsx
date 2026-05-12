@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
+import StatStrip from "@/components/ui/stat-strip";
 import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { trackGeneration } from "@/lib/track-generation";
@@ -1218,36 +1219,24 @@ export default function EmailComposerPage() {
           {/* Sidebar */}
           <div className="space-y-3">
             {/* Quick stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.06 }}
+            <div
               className="rounded-xl p-4"
               style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
             >
-              <div className="h-px bg-gradient-to-r from-indigo-500 via-violet-400 to-indigo-500 mb-3 rounded-full" />
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Composer Stats</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { value: wordCount, label: "Words", color: "text-indigo-400" },
-                  { value: VARIABLES.filter(v => email.body.includes(v.tag)).length, label: "Variables" },
-                  { value: attachments.length, label: "Attachments" },
-                  { value: `${spamScore}%`, label: "Spam Score", color: spamScore >= 80 ? "text-green-400" : "text-yellow-400" },
-                ].map((stat, i) => (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.08 + i * 0.04, duration: 0.25 }}
-                    whileHover={{ y: -2 }}
-                    className="text-center p-2 rounded-lg bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.05)]"
-                  >
-                    <p className={`text-sm font-bold ${stat.color ?? ""}`}>{stat.value}</p>
-                    <p className="text-[8px] text-muted">{stat.label}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+              <StatStrip
+                focal={{
+                  label: "Spam Score",
+                  value: `${spamScore}%`,
+                  color: spamScore >= 80 ? "text-green-400" : "text-yellow-400",
+                }}
+                support={[
+                  { label: "Words", value: String(wordCount), color: "text-indigo-400" },
+                  { label: "Variables", value: String(VARIABLES.filter(v => email.body.includes(v.tag)).length) },
+                  { label: "Attachments", value: String(attachments.length) },
+                ]}
+              />
+            </div>
 
             {/* Quick Templates */}
             <motion.div

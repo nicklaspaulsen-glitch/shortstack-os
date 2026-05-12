@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
+import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type TeamTab = "members" | "permissions" | "roles" | "activity" | "capacity";
@@ -273,15 +274,10 @@ export default function TeamPage() {
                   <UserPlus size={12} /> Invite Member
                 </motion.button>
       </div>
-    </div>{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-              {STATS.map((stat, index) => (
-                <PrismPanel key={stat.label} padding="p-3" delay={index * 0.06}>
-                  <div className="flex items-center gap-1.5 mb-1">{stat.icon}<p className="text-[10px] text-muted uppercase tracking-wider">{stat.label}</p></div>
-                  <p className={`text-lg font-bold ${stat.valueColor ?? ""}`}>{stat.value}</p>
-                  <p className={`text-[10px] ${stat.subColor ?? "text-muted"}`}>{stat.sub}</p>
-                </PrismPanel>
-              ))}
-            </div>{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
+    </div>{/* Stats */}<StatStrip
+              focal={{ label: STATS[0].label, value: String(STATS[0].value), sub: STATS[0].sub, icon: STATS[0].icon }}
+              support={STATS.slice(1).map(s => ({ label: s.label, value: String(s.value), sub: s.sub, color: s.valueColor, icon: s.icon }))}
+            />{/* Tabs */}<div className="flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${

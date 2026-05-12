@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { ContentScript, ContentRequest, PublishQueueItem, PersonalBrandIdea, ContentCalendarEntry, PublishPlatform } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
+import StatStrip from "@/components/ui/stat-strip";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import Modal from "@/components/ui/modal";
@@ -1056,21 +1057,13 @@ export default function ContentPage() {
           {/* Publish Queue — Pre-Publishing Editor */}
           {tab === "publish" && (
             <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { label: "Pending Review", value: publishQueue.filter((p) => p.status === "pending").length },
-                  { label: "Approved", value: publishQueue.filter((p) => p.status === "approved").length },
-                  { label: "Published", value: publishQueue.filter((p) => p.status === "published").length },
-                ].map((stat, index) => (
-                  <PrismPanel
-                    key={stat.label}
-                    padding="pt-1 px-0 pb-0"
-                    delay={index * 0.06}
-                  >
-                    <StatCard label={stat.label} value={stat.value} index={index} />
-                  </PrismPanel>
-                ))}
-              </div>
+              <StatStrip
+                focal={{ label: "Pending Review", value: String(publishQueue.filter((p) => p.status === "pending").length), icon: <Clock size={14} />, color: "text-amber-600" }}
+                support={[
+                  { label: "Approved", value: String(publishQueue.filter((p) => p.status === "approved").length), icon: <Check size={12} />, color: "text-emerald-700" },
+                  { label: "Published", value: String(publishQueue.filter((p) => p.status === "published").length), icon: <Send size={12} />, color: "text-[#2563EB]" },
+                ]}
+              />
               <DataTable
                 columns={[
                   { key: "video_title", label: "Video Title" },
@@ -1300,29 +1293,14 @@ export default function ContentPage() {
           {/* Analytics Tab */}
           {tab === "analytics" && (
             <div className="space-y-4">
-              <motion.div
-                className="grid grid-cols-2 md:grid-cols-4 gap-3"
-                initial="hidden"
-                animate="visible"
-                variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
-              >
-                {[
-                  { label: "Total Content", value: contentAnalytics.total_pieces, icon: <FileText size={16} />, color: "text-[#2563EB]" },
-                  { label: "Published This Month", value: contentAnalytics.published_this_month, icon: <Check size={16} />, color: "text-success" },
-                  { label: "Avg Engagement", value: contentAnalytics.avg_engagement, icon: <TrendingUp size={16} />, color: "text-info" },
-                  { label: "AI Enhanced", value: `${contentAnalytics.ai_enhanced}%`, icon: <Sparkles size={16} />, color: "text-purple-700" },
-                ].map(stat => (
-                  <PrismPanel
-                    key={stat.label}
-                    padding="p-4"
-                    className="text-center"
-                  >
-                    <div className={`${stat.color} mx-auto mb-2`}>{stat.icon}</div>
-                    <p className="text-xl font-bold">{stat.value}</p>
-                    <p className="text-[10px] text-muted">{stat.label}</p>
-                  </PrismPanel>
-                ))}
-              </motion.div>
+              <StatStrip
+                focal={{ label: "Total Content", value: String(contentAnalytics.total_pieces), icon: <FileText size={14} />, color: "text-[#2563EB]" }}
+                support={[
+                  { label: "Published This Month", value: String(contentAnalytics.published_this_month), icon: <Check size={12} />, color: "text-emerald-700" },
+                  { label: "Avg Engagement", value: contentAnalytics.avg_engagement, icon: <TrendingUp size={12} /> },
+                  { label: "AI Enhanced", value: `${contentAnalytics.ai_enhanced}%`, icon: <Sparkles size={12} />, color: "text-purple-700" },
+                ]}
+              />
               <div className="card">
                 <h3 className="text-sm font-medium mb-3">Content by Type</h3>
                 <div className="grid grid-cols-4 gap-3">

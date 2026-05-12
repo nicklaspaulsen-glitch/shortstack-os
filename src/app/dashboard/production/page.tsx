@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import toast from "react-hot-toast";
 import {
   Film, CheckCircle, MessageSquare,
@@ -111,27 +112,15 @@ export default function ProductionPage() {
                   <Plus size={12} /> New Request
                 </button>
       </div>
-    </div>{/* Stats */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-              {[
-                { value: items.length, label: "Total Items", color: "" },
-                { value: items.filter(i => i.status === "in_progress").length, label: "In Progress", color: "text-[#2563EB]" },
-                { value: inReview, label: "In Review", color: "text-[#2563EB]" },
-                { value: overdue, label: "Overdue", color: "text-red-400" },
-                { value: `${totalActual.toFixed(1)}h`, label: `of ${totalEstimated}h est.`, color: "text-emerald-400" },
-              ].map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.06, duration: 0.4 }}
-                  className="glass rounded-xl p-3 text-center relative overflow-hidden"
-                >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} className="absolute top-0 inset-x-0" />
-                  <p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p>
-                  <p className="text-[10px] text-muted">{stat.label}</p>
-                </motion.div>
-              ))}
-            </div>{/* Filters */}<div className="flex gap-2 flex-wrap">
+    </div>{/* Stats */}<StatStrip
+              focal={{ label: "Total Items", value: String(items.length) }}
+              support={[
+                { label: "In Progress", value: String(items.filter(i => i.status === "in_progress").length), color: "text-[#2563EB]" },
+                { label: "In Review", value: String(inReview), color: "text-[#2563EB]" },
+                { label: "Overdue", value: String(overdue), color: "text-red-400" },
+                { label: "Hours", value: `${totalActual.toFixed(1)}h`, sub: `of ${totalEstimated}h est.`, color: "text-emerald-400" },
+              ]}
+            />{/* Filters */}<div className="flex gap-2 flex-wrap">
               <select value={filterClient} onChange={e => setFilterClient(e.target.value)} className="input text-xs">
                 {clients.map(c => <option key={c} value={c}>{c === "All" ? "All Clients" : c}</option>)}
               </select>

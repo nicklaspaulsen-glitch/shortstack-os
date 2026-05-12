@@ -13,6 +13,7 @@ import Modal from "@/components/ui/modal";
 import { Smartphone } from "lucide-react";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import { PrismPanel } from "@/components/prism";
+import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type SmsIntent = "reminder" | "promo" | "confirmation" | "welcome" | "winback" | "abandon_cart" | "appointment" | "custom";
@@ -512,24 +513,20 @@ export default function SMSTemplatesPage() {
             )}{/* ===== SMS ANALYTICS ===== */}{activeTab === "analytics" && (
               <div className="space-y-4">
                 {/* Overview Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                  {[
-                    { label: "Total Sent", value: totalSends.toLocaleString(), icon: <Send size={12} />, color: "text-[#2563EB]" },
+                <StatStrip
+                  focal={{
+                    label: "Total Sent",
+                    value: totalSends.toLocaleString(),
+                    icon: <Send size={12} />,
+                    color: "text-[#2563EB]",
+                  }}
+                  support={[
                     { label: "Delivered", value: totalDelivered.toLocaleString(), icon: <CheckCircle size={12} />, color: "text-green-400" },
                     { label: "Delivery Rate", value: `${deliveryRate}%`, icon: <TrendingUp size={12} />, color: "text-blue-400" },
                     { label: "Total Replies", value: totalReplies.toLocaleString(), icon: <MessageSquare size={12} />, color: "text-[#2563EB]" },
                     { label: "Reply Rate", value: `${replyRate}%`, icon: <BarChart3 size={12} />, color: "text-[#2563EB]" },
-                  ].map((stat, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
-                      <div className="p-3">
-                        <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-black/[0.04] ${stat.color}`}>{stat.icon}</div>
-                        <p className="text-lg font-bold">{stat.value}</p>
-                        <p className="text-[9px] text-muted">{stat.label}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                  ]}
+                />
 
                 {/* Delivery Rate Monitor */}
                 <PrismPanel padding="p-4">

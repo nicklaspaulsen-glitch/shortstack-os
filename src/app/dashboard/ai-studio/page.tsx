@@ -18,6 +18,7 @@ import ImageWizard from "@/components/image-wizard";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
 import SafeThumb from "@/components/safe-thumb";
+import StatStrip from "@/components/ui/stat-strip";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
@@ -380,34 +381,16 @@ export default function AIStudioPage() {
           </motion.div>
         )}
 
-        {/* Editorial stats strip � shown when there's job history */}
+        {/* Editorial stats strip -- shown when there's job history */}
         {history.length > 0 && (
-          <motion.div
-            className="grid grid-cols-[1fr_1fr_1.4fr] gap-2 mb-4"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {[
-              { label: "Jobs Run", value: String(history.length), sub: "this session" },
+          <StatStrip
+            className="mb-4"
+            focal={{ label: "Jobs Run", value: String(history.length), sub: "this session" }}
+            support={[
               { label: "Completed", value: String(history.filter(j => j.status === "completed").length), sub: `${Math.round((history.filter(j => j.status === "completed").length / history.length) * 100)}% success` },
-              { label: "Active Tool", value: TOOLS.find(t => t.id === activeTool)?.name ?? "�", sub: TOOLS.find(t => t.id === activeTool)?.tag ?? "" },
-            ].map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                className="relative rounded-xl border border-border-subtle px-4 py-3 overflow-hidden"
-                style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.24, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {i === 0 && <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#2563EB] to-transparent" />}
-                <p className="text-[8px] uppercase tracking-[0.18em] text-text-muted mb-1">{stat.label}</p>
-                <p className="font-display text-lg font-bold text-[#1D4ED8] tracking-tight tabular-nums truncate">{stat.value}</p>
-                <p className="text-[9px] text-text-muted truncate">{stat.sub}</p>
-              </motion.div>
-            ))}
-          </motion.div>
+              { label: "Active Tool", value: TOOLS.find(t => t.id === activeTool)?.name ?? "—", sub: TOOLS.find(t => t.id === activeTool)?.tag ?? "" },
+            ]}
+          />
         )}
 
         {/* Category filter pills */}

@@ -14,7 +14,7 @@ ShortStack OS is an agency operating system — a single dashboard that replaces
 
 ## Brand Personality
 
-Precision. Signal. Control. Not a tool that shouts — a tool that whispers the right thing at the right moment. Feels like Linear meets Spotify meets Figma: fast, opinionated, dark, and precise. Not corporate. Not startup-generic.
+Precision. Signal. Control. Not a tool that shouts — a tool that whispers the right thing at the right moment. Feels like Linear meets Notion meets Figma: fast, opinionated, light, and precise. Not corporate. Not startup-generic. Editorial gravity without heaviness.
 
 ## Anti-references
 
@@ -24,15 +24,17 @@ Precision. Signal. Control. Not a tool that shouts — a tool that whispers the 
 - Gold/amber fintech aesthetic
 - Rainbow chart dashboards (multi-color data viz with no hierarchy)
 - Hero-metric template: big number, small label, gradient accent, repeated 8x
+- Multi-color prismatic gradient bars on every card (uniform visual noise)
+- Identical PrismPanel grids with no compositional hierarchy
 
 ## Design Principles
 
 1. **Signal over decoration** — every visual element must communicate something. Remove what only decorates.
 2. **One hero per section** — each card/section has exactly one dominant element. Everything else is supporting.
-3. **Lime earns its placement** — the acid lime (#D4FF00) accent appears once per visual zone, on the highest-signal element only. Indigo handles secondary interactivity.
-4. **Elevation tells the story** — four surface levels (base → card → raised → overlay) replace border-heavy card patterns.
+3. **Blue earns its placement** — the brand blue (#2563EB) accent appears sparingly on the highest-signal element per visual zone. Secondary interactivity uses muted blue (#1D4ED8 dim, #3B82F6 hover).
+4. **Elevation tells the story** — four surface levels (base #F3F6FA → card white → raised #F8FAFC → overlay) replace border-heavy card patterns. Glass panels with backdrop-blur on prominent surfaces.
 5. **Motion communicates state** — animation only on state changes, data updates, or navigation. Never decorative.
 
 ## Accessibility & Inclusion
 
-WCAG AA minimum. Reduced motion respected. prefers-color-scheme: dark only (no light mode for dashboard). Keyboard navigation required for all interactive elements. Min touch target 44×44px.
+WCAG AA minimum. Reduced motion respected. Light theme is the default (dark theme exists under `[data-theme="dark"]` for backward compat). Keyboard navigation required for all interactive elements. Min touch target 44x44px.

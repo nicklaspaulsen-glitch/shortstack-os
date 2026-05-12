@@ -13,6 +13,7 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
+import StatStrip from "@/components/ui/stat-strip";
 import WebsiteScraper from "@/components/ui/website-scraper";
 import { useAutoSave } from "@/lib/use-auto-save";
 import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
@@ -466,26 +467,14 @@ export default function BrandKitPage() {
                       </div>
                     </div>
 
-                    <motion.div variants={containerVariants} className="grid grid-cols-4 gap-3">
-                      {[
-                        { icon: <Palette size={14} />, value: brand.colors.length, label: "Colors" },
-                        { icon: <Type size={14} />, value: brand.fonts.length, label: "Fonts" },
-                        { icon: <ImageIcon size={14} />, value: brand.images.length, label: "Images" },
-                        { icon: <Share2 size={14} />, value: brand.socialLinks.length, label: "Socials" },
-                      ].map(({ icon, value, label }) => (
-                        <motion.div
-                          key={label}
-                          variants={tileVariants}
-                          whileHover={{ y: -2 }}
-                          className="rounded-xl p-3 text-center relative overflow-hidden" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.16)" }}
-                        >
-                          <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} className="absolute top-0 inset-x-0" />
-                          <div className="text-[#2563EB] mx-auto mb-1 mt-1 flex justify-center">{icon}</div>
-                          <p className="text-lg font-bold font-mono">{value}</p>
-                          <p className="text-[9px] text-muted uppercase">{label}</p>
-                        </motion.div>
-                      ))}
-                    </motion.div>
+                    <StatStrip
+                      focal={{ label: "Colors", value: String(brand.colors.length), icon: <Palette size={14} /> }}
+                      support={[
+                        { label: "Fonts", value: String(brand.fonts.length), icon: <Type size={14} /> },
+                        { label: "Images", value: String(brand.images.length), icon: <ImageIcon size={14} /> },
+                        { label: "Socials", value: String(brand.socialLinks.length), icon: <Share2 size={14} /> },
+                      ]}
+                    />
 
                     <div className="flex items-center gap-2">
                       <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setTab("colors")} className="btn-primary text-xs px-4 py-2 flex items-center gap-1.5">

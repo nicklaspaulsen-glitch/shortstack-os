@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 type CommissionStatus = "pending" | "approved" | "paid";
 
@@ -211,27 +212,13 @@ export default function CommissionTrackerPage() {
                   </button>
                 </div>
       </div>
-    </div>{/* Stat tiles */}<div className="grid grid-cols-3 gap-3">
-              {[
-                { label: "Total", value: fmtUSD(totals.total), color: "text-[#374151]" },
+    </div>{/* Stat strip */}<StatStrip
+              focal={{ label: "Total", value: fmtUSD(totals.total) }}
+              support={[
                 { label: "Paid", value: fmtUSD(totals.paid), color: "text-emerald-400" },
                 { label: "Pending", value: fmtUSD(totals.pending), color: "text-yellow-400" },
-              ].map((tile, i) => (
-                <motion.div
-                  key={tile.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06 }}
-                  className="glass rounded-xl overflow-hidden"
-                >
-                  <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
-                  <div className="p-4">
-                    <p className="text-xs text-[#9CA3AF] uppercase tracking-wider mb-1">{tile.label}</p>
-                    <p className={`text-xl font-bold ${tile.color}`}>{tile.value}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>{/* Filters */}<motion.div
+              ]}
+            />{/* Filters */}<motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.18 }}

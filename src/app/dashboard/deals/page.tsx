@@ -12,6 +12,7 @@ import {
 import { TableSkeleton } from "@/components/ui/skeleton";
 import toast from "react-hot-toast";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
+import StatStrip from "@/components/ui/stat-strip";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -216,27 +217,16 @@ export default function DealsPage() {
                 </>
               }
             >
-              <motion.div
-                className="grid grid-cols-2 md:grid-cols-6 gap-3"
-                variants={containerVariants}
-                initial="hidden"
-                animate="show"
-              >
-                {[
-                  { label: "Pipeline Value", value: formatCurrency(totalPipeline), icon: <DollarSign size={12} />, color: "text-[#2563EB]" },
+              <StatStrip
+                focal={{ label: "Pipeline Value", value: formatCurrency(totalPipeline), icon: <DollarSign size={14} />, color: "text-[#2563EB]" }}
+                support={[
                   { label: "Weighted", value: formatCurrency(Math.round(weightedPipeline)), icon: <Target size={12} />, color: "text-purple-400" },
                   { label: "Won", value: formatCurrency(wonValue), icon: <CheckCircle size={12} />, color: "text-emerald-700" },
                   { label: "Lost", value: formatCurrency(lostValue), icon: <TrendingDown size={12} />, color: "text-rose-700" },
                   { label: "Win Rate", value: `${winRate}%`, icon: <Award size={12} />, color: "text-blue-400" },
                   { label: "Avg Deal", value: formatCurrency(avgDealSize), icon: <BarChart3 size={12} />, color: "text-[#2563EB]" },
-                ].map((stat, i) => (
-                  <PrismPanel key={i} padding="p-3" className="text-center" delay={i * 0.06}>
-                    <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-[rgba(0,0,0,0.04)] ${stat.color}`}>{stat.icon}</div>
-                    <p className="text-lg font-bold">{stat.value}</p>
-                    <p className="text-[9px] text-muted">{stat.label}</p>
-                  </PrismPanel>
-                ))}
-              </motion.div>
+                ]}
+              />
             </CollapsibleStats>{/* Tabs (sticky) */}<div className="sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)" }}>
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}

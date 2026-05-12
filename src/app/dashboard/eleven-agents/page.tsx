@@ -8,6 +8,7 @@ import {
   TrendingUp, Calendar, Shield, ArrowRight, Copy
 } from "lucide-react";
 import { motion } from "framer-motion";
+import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* ── Types ── */
@@ -265,24 +266,16 @@ export default function ElevenAgentsPage() {
                   <RefreshCw size={12} className={apiLoading ? "animate-spin" : ""} /> {apiLoading ? "Loading..." : "Refresh"}
                 </button>
       </div>
-    </div>{/* Stats Strip */}<div className="grid grid-cols-6 gap-3">
-              {[
-                { label: "Calls Today", value: totalCallsToday, color: "text-[#2563EB]" },
-                { label: "Qualified", value: qualifiedCalls, color: "text-green-700" },
+    </div>{/* Stats Strip */}<StatStrip
+              focal={{ label: "Calls Today", value: String(totalCallsToday), icon: <PhoneCall size={14} />, color: "text-[#2563EB]" }}
+              support={[
+                { label: "Qualified", value: String(qualifiedCalls), color: "text-green-700" },
                 { label: "Success Rate", value: `${avgSuccessRate}%`, color: avgSuccessRate >= 30 ? "text-green-700" : "text-amber-700" },
-                { label: "Active Agents", value: agents.filter(a => a.status === "active").length, color: "text-[#374151]" },
-                { label: "Avg Duration", value: agents.length ? `${Math.round(agents.reduce((s, a) => s + a.avgDuration, 0) / agents.length)}s` : "---", color: "text-[#374151]" },
+                { label: "Active Agents", value: String(agents.filter(a => a.status === "active").length) },
+                { label: "Avg Duration", value: agents.length ? `${Math.round(agents.reduce((s, a) => s + a.avgDuration, 0) / agents.length)}s` : "---" },
                 { label: "Cost Today", value: `$${totalCost.toFixed(2)}`, color: "text-[#2563EB]" },
-              ].map((s, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden text-center">
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-                  <div className="p-3">
-                    <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
-                    <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>{/* Tab Navigation */}<div className="flex gap-1 border-b border-[rgba(0,0,0,0.08)] overflow-x-auto pb-px">
+              ]}
+            />{/* Tab Navigation */}<div className="flex gap-1 border-b border-[rgba(0,0,0,0.08)] overflow-x-auto pb-px">
               {TABS.map(t => (
                 <button key={t} onClick={() => setActiveTab(t)}
                   className={`px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${

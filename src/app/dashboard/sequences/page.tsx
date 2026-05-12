@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import { ListOrdered } from "lucide-react";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
+import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type MainTab = "builder" | "templates" | "analytics" | "enrollment" | "runs" | "settings";
@@ -1005,28 +1006,19 @@ export default function SequencesPage() {
               </div>
             )}{/* ===== PERFORMANCE ANALYTICS ===== */}{activeTab === "analytics" && (
               <div className="space-y-4">
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                  {[
-                    { label: "Total Enrolled", value: sequences.reduce((s, seq) => s + seq.enrolled, 0), color: "text-[#2563EB]" },
-                    { label: "Completed", value: sequences.reduce((s, seq) => s + seq.completed, 0), color: "text-green-600" },
-                    { label: "Replied", value: sequences.reduce((s, seq) => s + seq.replied, 0), color: "text-[#2563EB]" },
+                <StatStrip
+                  focal={{
+                    label: "Total Enrolled",
+                    value: String(sequences.reduce((s, seq) => s + seq.enrolled, 0)),
+                    color: "text-[#2563EB]",
+                  }}
+                  support={[
+                    { label: "Completed", value: String(sequences.reduce((s, seq) => s + seq.completed, 0)), color: "text-green-600" },
+                    { label: "Replied", value: String(sequences.reduce((s, seq) => s + seq.replied, 0)), color: "text-[#2563EB]" },
                     { label: "Avg Reply Rate", value: sequences.length > 0 ? `${(sequences.reduce((s, seq) => s + (seq.enrolled > 0 ? seq.replied / seq.enrolled : 0), 0) / sequences.length * 100).toFixed(1)}%` : "0%", color: "text-[#2563EB]" },
-                    { label: "Active Sequences", value: sequences.filter(s => s.active).length, color: "text-[#2563EB]" },
-                  ].map((stat, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.22, delay: i * 0.06 }}
-                      whileHover={{ y: -2 }}
-                      className="rounded-xl overflow-hidden relative text-center p-3" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
-                    >
-                      <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: PRISM_RAINBOW_GRADIENT }} />
-                      <p className={`text-xl font-bold ${stat.color}`}>{stat.value}</p>
-                      <p className="text-[9px] text-muted">{stat.label}</p>
-                    </motion.div>
-                  ))}
-                </div>
+                    { label: "Active Sequences", value: String(sequences.filter(s => s.active).length), color: "text-[#2563EB]" },
+                  ]}
+                />
                 <PrismPanel padding="p-4" className="overflow-hidden">
                   <h3 className="text-sm font-semibold mb-3">Sequence Performance</h3>
                   <div className="space-y-3">

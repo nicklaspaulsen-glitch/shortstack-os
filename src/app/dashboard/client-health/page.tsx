@@ -9,6 +9,7 @@ import {
   ArrowUpRight, ArrowDownRight, Target, Lightbulb, Calendar
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
+import StatStrip from "@/components/ui/stat-strip";
 import { PrismPanel } from "@/components/prism";
 import { Heart as HeartIcon } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -162,25 +163,16 @@ export default function ClientHealthPage() {
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">CLIENT HEALTH</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Client Health Monitor</h1>
       </div>
-    </div>{/* Summary cards */}<div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
-              {[
-                { icon: <Activity size={14} className="text-[#2563EB]" />, label: "Avg Health", value: <span className={getHealthColor(avgHealth)}>{avgHealth}%</span>, extra: <div className="flex items-center gap-1 mt-1"><Clock size={10} className="text-muted" /><span className="text-[9px] text-muted">Live score</span></div> },
-                { icon: <DollarSign size={14} className="text-[#2563EB]" />, label: "Total MRR", value: `$${totalMRR.toLocaleString()}` },
-                { icon: <CheckCircle size={14} className="text-green-400" />, label: "Healthy", value: <span className="text-green-400">{healthyCount}</span> },
-                { icon: <AlertTriangle size={14} className="text-yellow-400" />, label: "Warning", value: <span className="text-yellow-400">{warningCount}</span> },
-                { icon: <ShieldAlert size={14} className="text-red-400" />, label: "Critical", value: <span className="text-red-400">{criticalCount}</span> },
-                { icon: <DollarSign size={14} className="text-red-400" />, label: "At-Risk MRR", value: <span className="text-red-400">${atRiskMRR.toLocaleString()}</span> },
-              ].map((tile, i) => (
-                <PrismPanel key={i} delay={i * 0.06} padding="p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    {tile.icon}
-                    <span className="text-[9px] text-muted uppercase tracking-wider">{tile.label}</span>
-                  </div>
-                  <p className="text-2xl font-bold font-mono">{tile.value}</p>
-                  {tile.extra}
-                </PrismPanel>
-              ))}
-            </div>{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
+    </div>{/* Summary stats */}<StatStrip
+            focal={{ label: "Avg Health", value: `${avgHealth}%`, sub: "Live score", icon: <Activity size={14} />, color: getHealthColor(avgHealth) }}
+            support={[
+              { label: "Total MRR", value: `$${totalMRR.toLocaleString()}`, icon: <DollarSign size={12} /> },
+              { label: "Healthy", value: String(healthyCount), icon: <CheckCircle size={12} />, color: "text-green-400" },
+              { label: "Warning", value: String(warningCount), icon: <AlertTriangle size={12} />, color: "text-yellow-400" },
+              { label: "Critical", value: String(criticalCount), icon: <ShieldAlert size={12} />, color: "text-red-400" },
+              { label: "At-Risk MRR", value: `$${atRiskMRR.toLocaleString()}`, icon: <DollarSign size={12} />, color: "text-red-400" },
+            ]}
+          />{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
               {tabs.map(t => (
                 <button key={t.id} onClick={() => setActiveTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${

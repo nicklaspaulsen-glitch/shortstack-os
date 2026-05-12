@@ -20,6 +20,7 @@ import CreationWizard, { WizardStep } from "@/components/creation-wizard";
 import InlineSocialConnect from "@/components/inline-social-connect";
 import { useSocialAccounts } from "@/hooks/use-social-accounts";
 import { MotionPage } from "@/components/motion/motion-page";
+import StatStrip from "@/components/ui/stat-strip";
 
 /* ------------------------------------------------------------------ */
 /*  Platforms & Constants                                              */
@@ -1179,22 +1180,14 @@ export default function DMControllerPage() {
                TAB 5 · ANALYTICS
                ============================================================= */}{activeTab === "analytics" && (
               <div className="space-y-4">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {[
-                    { val: totalSent, label: "Sent today", color: "" },
-                    { val: `${replyRate}%`, label: "Reply Rate", color: "text-green-400" },
-                    { val: `${positiveReplyRate}%`, label: "Positive Reply Rate", color: "text-blue-400" },
-                    { val: totalBooked, label: "Booked Calls", color: "text-[#2563EB]" },
-                  ].map((s, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden text-center">
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
-                      <div className="p-3">
-                        <p className={cn("text-2xl font-bold font-mono", s.color)}>{s.val}</p>
-                        <p className="text-[10px] text-muted">{s.label}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <StatStrip
+                  focal={{ label: "Sent today", value: String(totalSent) }}
+                  support={[
+                    { label: "Reply Rate", value: `${replyRate}%`, color: "text-green-400" },
+                    { label: "Positive Reply Rate", value: `${positiveReplyRate}%`, color: "text-blue-400" },
+                    { label: "Booked Calls", value: String(totalBooked), color: "text-[#2563EB]" },
+                  ]}
+                />
 
                 {/* Per-platform breakdown */}
                 <div className="card p-4">

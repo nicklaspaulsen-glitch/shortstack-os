@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useManagedClient } from "@/lib/use-managed-client";
 import { Client, ContentCalendarEntry } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
+import StatStrip from "@/components/ui/stat-strip";
 import StatusBadge from "@/components/ui/status-badge";
 import { formatDate, formatRelativeTime } from "@/lib/utils";
 import {
@@ -675,18 +676,14 @@ export default function SocialManagerPage() {
       {tab === "dashboard" && (
         <div className="space-y-4">
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            {[
-              { label: "Scheduled", value: scheduledPosts.length, icon: <Calendar size={14} /> },
-              { label: "Published", value: recentPosts.length, icon: <CheckCircle size={14} />, changeType: "positive" as const },
-              { label: "Platforms", value: currentClient?.accounts.length || 0, icon: <Globe size={14} /> },
-              { label: "Autopilot", value: isAutopilot ? "Active" : "Off", icon: <Bot size={14} />, changeType: (isAutopilot ? "positive" : "neutral") as "positive" | "neutral" },
-            ].map((stat, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }}>
-                <StatCard label={stat.label} value={stat.value} icon={stat.icon} changeType={stat.changeType} index={i} />
-              </motion.div>
-            ))}
-          </div>
+          <StatStrip
+            focal={{ label: "Published", value: String(recentPosts.length), icon: <CheckCircle size={14} /> }}
+            support={[
+              { label: "Scheduled", value: String(scheduledPosts.length), icon: <Calendar size={14} /> },
+              { label: "Platforms", value: String(currentClient?.accounts.length || 0), icon: <Globe size={14} /> },
+              { label: "Autopilot", value: isAutopilot ? "Active" : "Off", icon: <Bot size={14} />, color: isAutopilot ? "text-emerald-700" : "text-muted" },
+            ]}
+          />
 
           {/* Generate week */}
           <PrismPanel rainbow glow padding="px-6 py-5" className="relative overflow-hidden">
