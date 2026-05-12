@@ -157,7 +157,6 @@ export default function ProfilePage() {
               className="glass rounded-xl overflow-hidden"
               whileHover={{ y: -4, scale: 1.01 }}
             >
-              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
               <div className="p-5">
               <div className="flex items-center gap-5">
                 <div className="relative group">
@@ -200,7 +199,6 @@ export default function ProfilePage() {
               className="glass rounded-xl overflow-hidden"
               whileHover={{ y: -4, scale: 1.01 }}
             >
-              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
             <div className="p-5 space-y-3">
               <h2 className="section-header flex items-center gap-2">
                 <AtSign size={14} className="text-[#2563EB]" /> Identity
@@ -255,7 +253,6 @@ export default function ProfilePage() {
               className="glass rounded-xl overflow-hidden"
               whileHover={{ y: -4, scale: 1.01 }}
             >
-              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
             <div className="p-5 space-y-3">
               <h2 className="section-header">Personal Information</h2>
               <div className="grid grid-cols-2 gap-3">
@@ -297,7 +294,6 @@ export default function ProfilePage() {
               className="glass rounded-xl overflow-hidden"
               whileHover={{ y: -4, scale: 1.01 }}
             >
-              <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
             <div className="p-5 space-y-3">
               <h2 className="section-header flex items-center gap-2"><Key size={14} className="text-[#2563EB]" /> Change Password</h2>
               <div className="space-y-2">

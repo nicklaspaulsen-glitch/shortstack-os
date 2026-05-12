@@ -524,10 +524,6 @@ export default function NotificationsPage() {
                         activeTab === tab.key ? "ring-1 ring-indigo-500/30" : ""
                       }`}
                     >
-                      <div
-                        className="absolute top-0 left-0 right-0"
-                        style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #8b5cf6, #ec4899, #f97316, #1D4ED8)" }}
-                      />
                       <div className="flex items-center justify-center gap-1.5 mb-1 mt-1">
                         <span className="text-muted">{tab.icon}</span>
                         <span className="text-lg font-bold text-foreground">{count}</span>

@@ -983,7 +983,6 @@ export default function DesignStudioPage() {
                       transition={{ delay: i * 0.06, duration: 0.4 }}
                       whileHover={{ y: -4, scale: 1.01 }}
                     >
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                       <div className="p-5">
                       <div className="flex items-center gap-3 mb-3">
                         <div className="w-9 h-9 bg-[rgba(204,36,36,0.08)] rounded-xl flex items-center justify-center text-[#1D4ED8]">
@@ -1103,7 +1102,6 @@ export default function DesignStudioPage() {
                       className={`rounded-xl overflow-hidden text-left ${selectedTemplate?.label === t.label ? "border-[#2563EB]/40" : ""}`}
                       style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: selectedTemplate?.label === t.label ? "1px solid rgba(204,36,36,0.5)" : "1px solid rgba(0,0,0,0.08)" }}
                     >
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                       <div className="p-3">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-[#2563EB]">{t.icon}</span>
@@ -1135,7 +1133,6 @@ export default function DesignStudioPage() {
                       className={`rounded-xl overflow-hidden text-left ${selectedPalette?.name === palette.name ? "border-[#2563EB]/40" : ""}`}
                       style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: selectedPalette?.name === palette.name ? "1px solid rgba(204,36,36,0.5)" : "1px solid rgba(0,0,0,0.08)" }}
                     >
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                       <div className="p-4">
                       <p className="text-xs font-semibold mb-2">{palette.name}</p>
                       <div className="flex gap-1 mb-2">

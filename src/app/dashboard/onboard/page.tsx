@@ -887,7 +887,6 @@ export default function OnboardPage() {
                     { icon: Rocket, label: "Launch & Go", desc: "Portal access & automation" },
                   ].map((item, i) => (
                     <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
                       <div className="p-4 text-center">
                         <item.icon size={20} className="mx-auto mb-2 text-[#2563EB]" />
                         <p className="text-xs font-semibold">{item.label}</p>

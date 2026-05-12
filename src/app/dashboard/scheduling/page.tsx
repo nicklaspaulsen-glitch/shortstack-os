@@ -334,7 +334,6 @@ export default function SchedulingPage() {
                   whileHover={{ y: -4, scale: 1.01 }}
                   className={`glass rounded-xl overflow-hidden ${!mt.active ? "opacity-50" : ""}`}
                 >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                   <div className="p-4">
                   <div className="flex items-start gap-3">
                     <div className="w-3 h-full rounded-full shrink-0 mt-1" style={{ background: mt.color || "#2563EB", minHeight: 40 }} />
@@ -769,7 +768,6 @@ export default function SchedulingPage() {
                 transition={{ delay: i * 0.06, duration: 0.4 }}
                 className="glass rounded-xl overflow-hidden text-center"
               >
-                <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                 <div className="p-3">
                   <p className="text-[10px] text-muted">{stat.label}</p>
                   <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>

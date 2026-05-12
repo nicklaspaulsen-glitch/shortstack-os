@@ -102,7 +102,6 @@ export default function ContactSupportPage() {
                       whileHover={{ y: -4, scale: 1.01 }}
                       className={`flex flex-col glass rounded-xl overflow-hidden p-5 transition ${accent.ring}`}
                     >
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
                       <div
                         className={`mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl ${accent.iconBg} ${accent.iconText}`}
                       >

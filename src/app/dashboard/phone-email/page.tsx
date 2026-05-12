@@ -513,7 +513,6 @@ export default function PhoneEmailPage() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {/* Total pool capacity */}
                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
                   <div className="p-3">
                     <div className="flex items-center gap-1.5 mb-1">
                       <BarChart3 size={11} className="text-[#2563EB]" />
@@ -526,7 +525,6 @@ export default function PhoneEmailPage() {
 
                 {/* Used today */}
                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
                   <div className="p-3">
                     <div className="flex items-center gap-1.5 mb-1">
                       <TrendingUp size={11} className="text-cyan-400" />
@@ -542,7 +540,6 @@ export default function PhoneEmailPage() {
 
                 {/* Phone senders */}
                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
                   <div className="p-3">
                     <div className="flex items-center gap-1.5 mb-1">
                       <Phone size={11} className="text-[#2563EB]" />
@@ -557,7 +554,6 @@ export default function PhoneEmailPage() {
 
                 {/* Email senders */}
                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 3 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0" }} />
                   <div className="p-3">
                     <div className="flex items-center gap-1.5 mb-1">
                       <Mail size={11} className="text-[#2563EB]" />

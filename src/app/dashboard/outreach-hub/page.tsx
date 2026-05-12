@@ -1730,7 +1730,6 @@ export default function OutreachHubPage() {
                   className="rounded-xl overflow-hidden"
                   style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}
                 >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                   <div className="p-4 space-y-4">
                   <h3 className="text-xs font-semibold flex items-center gap-2">
                     <BarChart3 size={12} className="text-[#2563EB]" /> Channel Performance

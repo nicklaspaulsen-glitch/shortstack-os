@@ -286,7 +286,7 @@ export default function WhiteLabelPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0, duration: 0.4 }}
         >
-          <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
+
           <div className="p-5 flex flex-col gap-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#9CA3AF]">Branding</p>
           <Field label="Brand Name" hint="Replaces ShortStack across the platform">
@@ -320,7 +320,7 @@ export default function WhiteLabelPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.06, duration: 0.4 }}
         >
-          <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
+
           <div className="p-5 flex flex-col gap-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#9CA3AF]">Colors</p>
           <Field label="Primary Color" hint="Main accent color -- buttons, highlights">
@@ -354,7 +354,7 @@ export default function WhiteLabelPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12, duration: 0.4 }}
         >
-          <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
+
           <div className="p-5 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-[#9CA3AF]">Custom Domain</p>
@@ -451,7 +451,7 @@ export default function WhiteLabelPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.18, duration: 0.4 }}
         >
-          <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
+
           <div className="p-5 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-[#9CA3AF]">Resell Billing</p>
@@ -510,7 +510,7 @@ export default function WhiteLabelPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.24, duration: 0.4 }}
         >
-          <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)", borderRadius: "4px 4px 0 0" }} />
+
           <div className="p-5 flex flex-col gap-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#9CA3AF]">Email and Portal Copy</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

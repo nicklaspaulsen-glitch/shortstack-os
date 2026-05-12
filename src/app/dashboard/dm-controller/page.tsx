@@ -1582,7 +1582,6 @@ function StatTile({ label, value, icon, tone, index }: { label: string; value: s
       transition={{ delay: (index ?? 0) * 0.06, duration: 0.4 }}
       className="glass rounded-xl overflow-hidden"
     >
-      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
       <div className="p-3">
         <div className="flex items-center justify-between mb-1">
           <span className="text-[9px] text-muted uppercase tracking-wider">{label}</span>

@@ -328,7 +328,6 @@ export default function IntakePage() {
                             whileHover={{ y: -4, scale: 1.01 }}
                             className="glass rounded-xl overflow-hidden p-4 flex flex-col gap-3"
                           >
-                            <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)", borderRadius: "4px 4px 0 0", marginTop: -16, marginLeft: -16, marginRight: -16, marginBottom: 4, width: "calc(100% + 32px)" }} />
                             <div className="flex items-start gap-3">
                               <div
                                 className="w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center"

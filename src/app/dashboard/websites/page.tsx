@@ -1231,7 +1231,6 @@ export default function WebsitesPage() {
                         whileHover={{ y: -4, scale: 1.01 }}
                         className="glass rounded-xl p-0 overflow-hidden shadow-lg shadow-black/20 relative"
                       >
-                        <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} className="absolute top-0 inset-x-0" />
                         {/* Thumbnail */}
                         <div className="relative h-36 bg-surface border-b border-border overflow-hidden">
                           {html ? (
@@ -1362,7 +1361,6 @@ export default function WebsitesPage() {
                   whileHover={{ y: -2 }}
                   className="glass rounded-xl p-4 relative overflow-hidden"
                 >
-                  <div style={{ height: 3, background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} className="absolute top-0 inset-x-0" />
                   <h3 className="section-header flex items-center gap-2 text-[#2563EB]">{item.icon} {item.title}</h3>
                   <p className="text-[10px] text-muted">{item.body}</p>
                 </motion.div>

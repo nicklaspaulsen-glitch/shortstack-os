@@ -372,8 +372,6 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
 
   return (
     <div className="relative rounded-xl overflow-hidden p-6" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(255,255,255,0.70)", boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 16px -4px rgba(0,0,0,0.08), 0 0 48px -12px rgba(37,99,235,0.10)" }}>
-      {/* Blue gradient top accent bar */}
-      <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)" }} />
       <div className="flex items-start gap-4">
         <div className="rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] p-2.5">
           <Upload size={20} className="text-[#2563EB]" />
@@ -980,8 +978,6 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         if (hoverTimerRef.current) { clearTimeout(hoverTimerRef.current); hoverTimerRef.current = null; }
       }}
     >
-      {/* Brand accent top bar */}
-      <div style={{ height: 2, background: "linear-gradient(90deg, #2563EB, #3B82F6, #1D4ED8)" }} className="rounded-t-xl" />
       <div className="p-5 flex flex-col flex-1">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">

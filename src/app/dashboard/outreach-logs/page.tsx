@@ -880,7 +880,6 @@ export default function OutreachLogsPage() {
                 {detailEntry && (
                   <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full lg:w-[380px] flex-shrink-0 lg:sticky lg:top-4 lg:self-start">
                     <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }}>
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                     <div className="p-5 space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto">
                       {/* Header */}
                       <div className="flex items-start justify-between">
@@ -1211,7 +1210,6 @@ export default function OutreachLogsPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }}>
-                    <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                     <div className="p-5">
                     <h3 className="text-sm font-semibold mb-3">Volume by Platform</h3>
                     <div className="space-y-3">
@@ -1236,7 +1234,6 @@ export default function OutreachLogsPage() {
                     </div>
                   </motion.div>
                   <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.9)", backdropFilter: "blur(24px) saturate(1.8)", WebkitBackdropFilter: "blur(24px) saturate(1.8)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }}>
-                    <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                     <div className="p-5">
                     <h3 className="text-sm font-semibold mb-3">Status Breakdown</h3>
                     <div className="space-y-3">
@@ -1267,7 +1264,6 @@ export default function OutreachLogsPage() {
                     { icon: <Calendar size={20} className="mx-auto mb-2 text-blue-400" />, value: stats.total, label: "All Time Total", color: "text-blue-400" },
                   ].map((tile, i) => (
                     <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 + i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }}>
-                      <div style={{ height: 3, background: "linear-gradient(90deg, #2563EB, #8b5cf6, #ec4899, #f97316, #2563EB)" }} />
                       <div className="p-4">
                         {tile.icon}
                         <p className={`text-xl font-bold ${tile.color}`}>{tile.value}</p>
