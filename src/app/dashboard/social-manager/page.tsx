@@ -649,7 +649,7 @@ export default function SocialManagerPage() {
                         </div>
                         <button onClick={() => disconnectAccount(account)}
                           disabled={disconnectingId === account.id}
-                          className="text-[10px] text-red-400 hover:text-red-300 transition-colors disabled:opacity-50">
+                          className="text-[10px] text-red-600 hover:text-red-700 transition-colors disabled:opacity-50">
                           {disconnectingId === account.id ? <Loader size={10} className="animate-spin" /> : "Disconnect"}
                         </button>
                       </div>

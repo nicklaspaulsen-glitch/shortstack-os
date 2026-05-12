@@ -68,7 +68,7 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     label: "Form submitted",
     description: "Fires when a visitor submits any form on your site or landing page.",
     icon: FileText,
-    tint: "text-emerald-300 bg-emerald-500/15",
+    tint: "text-emerald-700 bg-emerald-500/15",
     filterFields: [{ key: "form_id", label: "Form ID (optional)", placeholder: "Leave blank = any form" }],
   },
   {
@@ -99,7 +99,7 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     label: "Tracked link clicked",
     description: "A tracked shortlink was clicked.",
     icon: MousePointerClick,
-    tint: "text-cyan-300 bg-cyan-500/15",
+    tint: "text-cyan-700 bg-cyan-500/15",
     filterFields: [{ key: "link_id", label: "Link ID (optional)", placeholder: "Any tracked link" }],
   },
   {
@@ -129,14 +129,14 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     label: "Appointment booked",
     description: "A lead or client booked on your calendar.",
     icon: CalendarCheck,
-    tint: "text-green-300 bg-green-500/15",
+    tint: "text-green-700 bg-green-500/15",
   },
   {
     id: "appointment_completed",
     label: "Appointment completed",
     description: "An appointment finished — auto-trigger review request, follow-up email, etc.",
     icon: CalendarCheck,
-    tint: "text-emerald-300 bg-emerald-500/15",
+    tint: "text-emerald-700 bg-emerald-500/15",
   },
   {
     id: "pipeline_stage_changed",
@@ -154,7 +154,7 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     label: "Webhook received",
     description: "An external service hit your custom webhook URL.",
     icon: Webhook,
-    tint: "text-rose-300 bg-rose-500/15",
+    tint: "text-rose-700 bg-rose-500/15",
     filterFields: [{ key: "slug", label: "Webhook slug", placeholder: "e.g. zapier-inbound" }],
   },
   {
@@ -162,7 +162,7 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     label: "Scheduled (cron)",
     description: "Fires on a recurring schedule, like every Monday at 9am.",
     icon: CalendarClock,
-    tint: "text-violet-300 bg-violet-500/15",
+    tint: "text-violet-700 bg-violet-500/15",
     filterFields: [{ key: "cron", label: "Cron expression", placeholder: "0 9 * * mon" }],
   },
   {
@@ -429,9 +429,9 @@ export default function TriggersPage() {
                             <span
                               className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
                                 r.status === "completed"
-                                  ? "bg-emerald-500/15 text-emerald-300"
+                                  ? "bg-emerald-500/15 text-emerald-700"
                                   : r.status === "failed"
-                                    ? "bg-rose-500/15 text-rose-300"
+                                    ? "bg-rose-500/15 text-rose-700"
                                     : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
                               }`}
                             >
@@ -439,7 +439,7 @@ export default function TriggersPage() {
                             </span>
                             <span className="text-muted">{new Date(r.started_at).toLocaleString()}</span>
                           </div>
-                          {r.error && <p className="mt-1 text-rose-300">{r.error}</p>}
+                          {r.error && <p className="mt-1 text-rose-600">{r.error}</p>}
                         </div>
                       ))}
                     </div>
@@ -502,7 +502,7 @@ function TriggerRowCard({
             <span
               className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
                 trigger.is_active
-                  ? "bg-emerald-500/15 text-emerald-300"
+                  ? "bg-emerald-500/15 text-emerald-700"
                   : "bg-muted/20 text-muted"
               }`}
             >
@@ -532,7 +532,7 @@ function TriggerRowCard({
             className={`rounded px-2 py-1.5 text-[11px] ${
               trigger.is_active
                 ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)]"
-                : "bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25"
+                : "bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/25"
             }`}
             title={trigger.is_active ? "Pause" : "Resume"}
             aria-label={trigger.is_active ? "Pause trigger" : "Resume trigger"}
@@ -550,7 +550,7 @@ function TriggerRowCard({
           </button>
           <button
             onClick={onDelete}
-            className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-300 hover:bg-rose-500/20"
+            className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-700 hover:bg-rose-500/20"
             title="Delete"
             aria-label="Delete trigger"
           >

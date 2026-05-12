@@ -214,8 +214,8 @@ export default function DMComposerTab() {
         </div>
 
         {/* Voice DM toggle. */}
-        <div className="mt-4 rounded-lg border border-amber-500/20 bg-amber-950/15 p-3">
-          <label className="flex items-center gap-2 text-xs font-medium text-amber-200">
+        <div className="mt-4 rounded-lg border border-amber-500/20 bg-amber-50 p-3">
+          <label className="flex items-center gap-2 text-xs font-medium text-amber-700">
             <input
               type="checkbox"
               checked={voiceMode}
@@ -226,7 +226,7 @@ export default function DMComposerTab() {
             <Mic size={12} />
             Send as voice note
             {!voiceSupported && (
-              <span className="text-[10px] uppercase tracking-wider text-rose-300">
+              <span className="text-[10px] uppercase tracking-wider text-rose-600">
                 {platform} doesn&apos;t support voice DM
               </span>
             )}
@@ -239,7 +239,7 @@ export default function DMComposerTab() {
                 surface="dm"
                 compact
               />
-              <p className="mt-2 text-[11px] text-amber-200/80">
+              <p className="mt-2 text-[11px] text-amber-600">
                 We&apos;ll synthesise the message above with the chosen voice and
                 deliver it as an audio attachment via the {platform} API.
               </p>
@@ -276,8 +276,8 @@ export default function DMComposerTab() {
           <div
             className={`mt-3 flex items-start gap-2 rounded-lg border p-3 text-sm ${
               resultBanner.ok
-                ? "border-emerald-500/30 bg-emerald-950/40 text-emerald-200"
-                : "border-rose-500/30 bg-rose-950/40 text-rose-200"
+                ? "border-emerald-500/30 bg-emerald-50 text-emerald-700"
+                : "border-rose-500/30 bg-rose-50 text-rose-700"
             }`}
           >
             {resultBanner.ok ? <CheckCircle size={16} /> : <AlertTriangle size={16} />}

@@ -433,7 +433,7 @@ export default function DialerTab() {
               onChange={(e) => setTcpaAccepted(e.target.checked)}
               className="h-3 w-3 rounded border border-black/[0.08] bg-[#F8FAFC] text-amber-500 focus:ring-amber-400"
             />
-            <ShieldAlert size={12} className="text-amber-300" />
+            <ShieldAlert size={12} className="text-amber-600" />
             TCPA disclosure spoken (if cloned voice in use)
           </label>
         </div>
@@ -541,7 +541,7 @@ export default function DialerTab() {
                   <div className="text-right">
                     <CallStatusBadge status={callStatus} />
                     {callStatus === "in_progress" && (
-                      <div className="mt-2 font-mono text-lg text-orange-200">
+                      <div className="mt-2 font-mono text-lg text-orange-700">
                         {formatDuration(callDuration)}
                       </div>
                     )}

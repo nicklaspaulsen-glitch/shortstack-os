@@ -588,7 +588,7 @@ function DomainRow({
         )}
         <button
           onClick={onDelete}
-          className="rounded bg-rose-500/10 px-2 py-1 text-[11px] text-rose-300 hover:bg-rose-500/20"
+          className="rounded bg-rose-500/10 px-2 py-1 text-[11px] text-rose-700 hover:bg-rose-500/20"
           title="Remove domain"
           aria-label="Remove domain"
         >

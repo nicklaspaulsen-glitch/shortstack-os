@@ -997,7 +997,7 @@ export default function EmailComposerPage() {
                     </p>
                     <Link
                       href="/dashboard/integrations-hub"
-                      className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-300 hover:bg-amber-400/25 transition-all font-semibold"
+                      className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-700 hover:bg-amber-400/25 transition-all font-semibold"
 >
                       Connect Gmail
                     </Link>
@@ -1010,7 +1010,7 @@ export default function EmailComposerPage() {
                     </p>
                     <Link
                       href="/dashboard/integrations-hub"
-                      className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-300 hover:bg-amber-400/25 transition-all font-semibold"
+                      className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-700 hover:bg-amber-400/25 transition-all font-semibold"
 >
                       Connect Outlook
                     </Link>

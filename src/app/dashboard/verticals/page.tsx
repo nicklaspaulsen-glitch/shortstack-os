@@ -62,10 +62,10 @@ const ACCENT_RING: Record<string, string> = {
 const ACCENT_ICON_BG: Record<string, string> = {
   blue: "bg-[rgba(37,99,235,0.10)] text-[#2563EB]",
   purple: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
-  sunset: "bg-orange-500/15 text-orange-300",
+  sunset: "bg-orange-500/15 text-orange-700",
   gold: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
-  green: "bg-emerald-500/15 text-emerald-300",
-  ocean: "bg-cyan-500/15 text-cyan-300",
+  green: "bg-emerald-500/15 text-emerald-700",
+  ocean: "bg-cyan-500/15 text-cyan-700",
 };
 
 export default function VerticalsIndexPage() {

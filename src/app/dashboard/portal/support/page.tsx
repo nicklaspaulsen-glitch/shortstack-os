@@ -71,7 +71,7 @@ export default function ClientSupportPage() {
                 <div className="flex-1 overflow-y-auto space-y-3 mb-3">
                   {messages.length === 0 && (
                     <div className="text-center py-12">
-                      <Bot size={28} className="mx-auto mb-3 text-blue-300" />
+                      <Bot size={28} className="mx-auto mb-3 text-blue-600" />
                       <p className="text-xs text-gray-500 mb-3">How can I help you today?</p>
                       <div className="flex flex-wrap justify-center gap-1.5">
                         {[

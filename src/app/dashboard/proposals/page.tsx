@@ -46,8 +46,8 @@ const STORAGE_KEY = "ss_proposals_v1";
 const STATUS_STYLES: Record<Proposal["status"], { label: string; tint: string }> = {
   draft: { label: "Draft", tint: "bg-muted/20 text-muted" },
   sent: { label: "Sent", tint: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" },
-  signed: { label: "Signed", tint: "bg-emerald-500/15 text-emerald-300" },
-  declined: { label: "Declined", tint: "bg-rose-500/15 text-rose-300" },
+  signed: { label: "Signed", tint: "bg-emerald-500/15 text-emerald-700" },
+  declined: { label: "Declined", tint: "bg-rose-500/15 text-rose-700" },
 };
 
 const STAT_BARS = [
@@ -303,7 +303,7 @@ function ProposalCard({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onDelete}
-            className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-300 hover:bg-rose-500/20"
+            className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-700 hover:bg-rose-500/20"
             title="Delete"
             aria-label="Delete proposal"
           >

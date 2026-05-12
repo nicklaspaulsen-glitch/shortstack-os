@@ -246,7 +246,7 @@ export default function BrowserTaskDetailPage() {
           <button
             onClick={runNow}
             disabled={!!busy}
-            className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500/20 px-3 py-1.5 text-xs font-medium text-emerald-300 hover:bg-emerald-500/30 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500/20 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-500/30 disabled:opacity-50"
           >
             {busy === "run" ? <Loader2 size={12} className="animate-spin" /> : <Play size={12} />}
             Run now
@@ -265,7 +265,7 @@ export default function BrowserTaskDetailPage() {
           <button
             onClick={cancel}
             disabled={!!busy}
-            className="inline-flex items-center gap-1.5 rounded-md bg-rose-500/20 px-3 py-1.5 text-xs font-medium text-rose-300 hover:bg-rose-500/30 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-md bg-rose-500/20 px-3 py-1.5 text-xs font-medium text-rose-700 hover:bg-rose-500/30 disabled:opacity-50"
           >
             <XCircle size={12} /> Cancel
           </button>
@@ -328,7 +328,7 @@ export default function BrowserTaskDetailPage() {
 
       {task.status === "failed" && task.error_message && (
         <div className="rounded-xl border border-rose-500/30 bg-rose-500/5 p-5">
-          <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-rose-200">
+          <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-rose-700">
             <XCircle size={14} /> Error
           </div>
           <div className="text-sm text-gray-800">{task.error_message}</div>

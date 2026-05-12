@@ -880,7 +880,7 @@ export default function LandingPagesPage() {
                   <div key={fi} className="p-3 bg-surface-light rounded-lg border border-border space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-muted font-medium">Feature {fi + 1}</span>
-                      <button onClick={() => setContent(c => ({ ...c, features: c.features.filter((_, i) => i !== fi) }))} className="text-red-400 hover:text-red-300"><X className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => setContent(c => ({ ...c, features: c.features.filter((_, i) => i !== fi) }))} className="text-red-400 hover:text-red-600"><X className="w-3.5 h-3.5" /></button>
                     </div>
                     <input value={f.title} onChange={e => { const nf = [...content.features]; nf[fi] = { ...nf[fi], title: e.target.value }; setContent(c => ({ ...c, features: nf })); }} placeholder="Title" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
                     <input value={f.description} onChange={e => { const nf = [...content.features]; nf[fi] = { ...nf[fi], description: e.target.value }; setContent(c => ({ ...c, features: nf })); }} placeholder="Description" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
@@ -899,7 +899,7 @@ export default function LandingPagesPage() {
                   <div key={ti} className="p-3 bg-surface-light rounded-lg border border-border space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-muted font-medium">Testimonial {ti + 1}</span>
-                      <button onClick={() => setContent(c => ({ ...c, testimonials: c.testimonials.filter((_, i) => i !== ti) }))} className="text-red-400 hover:text-red-300"><X className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => setContent(c => ({ ...c, testimonials: c.testimonials.filter((_, i) => i !== ti) }))} className="text-red-400 hover:text-red-600"><X className="w-3.5 h-3.5" /></button>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <input value={t.name} onChange={e => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], name: e.target.value }; setContent(c => ({ ...c, testimonials: nt })); }} placeholder="Name" className="bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
@@ -935,7 +935,7 @@ export default function LandingPagesPage() {
                       {tier.features.map((feat, fi) => (
                         <div key={fi} className="flex items-center gap-1">
                           <input value={feat} onChange={e => { const np = [...content.pricing]; const nf = [...np[pi].features]; nf[fi] = e.target.value; np[pi] = { ...np[pi], features: nf }; setContent(c => ({ ...c, pricing: np })); }} className="flex-1 bg-surface border border-border rounded px-2 py-1 text-xs text-text-primary" />
-                          <button onClick={() => { const np = [...content.pricing]; np[pi] = { ...np[pi], features: np[pi].features.filter((_, i) => i !== fi) }; setContent(c => ({ ...c, pricing: np })); }} className="text-red-400 hover:text-red-300"><X className="w-3 h-3" /></button>
+                          <button onClick={() => { const np = [...content.pricing]; np[pi] = { ...np[pi], features: np[pi].features.filter((_, i) => i !== fi) }; setContent(c => ({ ...c, pricing: np })); }} className="text-red-400 hover:text-red-600"><X className="w-3 h-3" /></button>
                         </div>
                       ))}
                       <button onClick={() => { const np = [...content.pricing]; np[pi] = { ...np[pi], features: [...np[pi].features, "New feature"] }; setContent(c => ({ ...c, pricing: np })); }} className="text-xs text-muted hover:text-[#2563EB] flex items-center gap-1 mt-1"><Plus className="w-3 h-3" /> Add feature</button>
@@ -950,7 +950,7 @@ export default function LandingPagesPage() {
                   <div key={fi} className="p-3 bg-surface-light rounded-lg border border-border space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-muted font-medium">Q{fi + 1}</span>
-                      <button onClick={() => setContent(c => ({ ...c, faq: c.faq.filter((_, i) => i !== fi) }))} className="text-red-400 hover:text-red-300"><X className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => setContent(c => ({ ...c, faq: c.faq.filter((_, i) => i !== fi) }))} className="text-red-400 hover:text-red-600"><X className="w-3.5 h-3.5" /></button>
                     </div>
                     <input value={item.question} onChange={e => { const nf = [...content.faq]; nf[fi] = { ...nf[fi], question: e.target.value }; setContent(c => ({ ...c, faq: nf })); }} placeholder="Question" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
                     <div className="flex items-center justify-between">

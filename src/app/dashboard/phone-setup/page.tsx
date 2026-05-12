@@ -614,7 +614,7 @@ export default function PhoneSetupPage() {
                     />
                   </div>
 
-                  <div className="mb-5 flex items-start gap-2 rounded-lg bg-amber-500/10 p-3 text-[11px] text-amber-300">
+                  <div className="mb-5 flex items-start gap-2 rounded-lg bg-amber-500/10 p-3 text-[11px] text-amber-700">
                     <AlertTriangle size={13} className="mt-0.5 shrink-0" />
                     <p>
                       This is a real purchase against your Twilio account. The number stays yours
@@ -694,7 +694,7 @@ export default function PhoneSetupPage() {
                     <Row
                       label="Phone"
                       value={
-                        <span className="font-mono text-base font-semibold text-emerald-300">
+                        <span className="font-mono text-base font-semibold text-emerald-700">
                           {purchaseResult.phone_number}
                         </span>
                       }
@@ -794,7 +794,7 @@ function PipelineStep({ label, active, done }: { label: string; active: boolean;
       <span
         className={
           done
-            ? "text-emerald-300"
+            ? "text-emerald-700"
             : active
               ? "text-foreground"
               : "text-muted opacity-60"
