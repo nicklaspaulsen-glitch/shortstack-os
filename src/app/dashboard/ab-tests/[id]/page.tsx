@@ -156,7 +156,7 @@ export default function AbTestDetailPage() {
             {test.status === "running" && (
               <button
                 onClick={() => void setStatus("paused")}
-                className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm bg-amber-500/15 hover:bg-amber-500/25 text-amber-300"
+                className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm bg-amber-500/15 hover:bg-amber-500/25 text-amber-600"
               >
                 <Pause size={14} />
                 Pause
@@ -165,7 +165,7 @@ export default function AbTestDetailPage() {
             {test.status === "paused" && (
               <button
                 onClick={() => void setStatus("running")}
-                className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300"
+                className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-600"
               >
                 <Clock size={14} />
                 Resume
@@ -230,7 +230,7 @@ export default function AbTestDetailPage() {
                     {test.status !== "completed" && (
                       <button
                         onClick={() => void declareWinner(v.id)}
-                        className="text-xs px-2 py-1 rounded bg-amber-500/15 hover:bg-amber-500/25 text-amber-300"
+                        className="text-xs px-2 py-1 rounded bg-amber-500/15 hover:bg-amber-500/25 text-amber-600"
                       >
                         Declare winner
                       </button>
@@ -266,7 +266,7 @@ export default function AbTestDetailPage() {
       )}
 
       {test.status === "completed" && (
-        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 flex items-center gap-3 text-emerald-300">
+        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 flex items-center gap-3 text-emerald-700">
           <CheckCircle2 size={18} />
           Test completed{test.ended_at ? ` on ${new Date(test.ended_at).toLocaleDateString()}` : ""}.
         </div>

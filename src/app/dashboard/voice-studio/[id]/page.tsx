@@ -248,10 +248,10 @@ export default function VoiceCloneDetailPage() {
                           <span
                             className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
                               clone.status === "ready"
-                                ? "bg-emerald-500/15 text-emerald-200"
+                                ? "bg-emerald-500/15 text-emerald-700"
                                 : clone.status === "training"
-                                  ? "bg-amber-500/15 text-amber-200"
-                                  : "bg-rose-500/15 text-rose-200"
+                                  ? "bg-amber-500/15 text-amber-700"
+                                  : "bg-rose-500/15 text-rose-700"
                             }`}
                           >
                             {clone.status === "training" && (
@@ -264,7 +264,7 @@ export default function VoiceCloneDetailPage() {
                           </span>
                         </div>
                         {clone.failed_reason && (
-                          <p className="mt-2 text-xs text-rose-300">
+                          <p className="mt-2 text-xs text-rose-600">
                             {clone.failed_reason}
                           </p>
                         )}
@@ -289,7 +289,7 @@ export default function VoiceCloneDetailPage() {
                           <button
                             type="button"
                             onClick={onDelete}
-                            className="flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-medium text-rose-200 hover:bg-rose-500/20"
+                            className="flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-medium text-rose-700 hover:bg-rose-500/20"
                           >
                             <Trash2 size={12} /> Delete
                           </button>

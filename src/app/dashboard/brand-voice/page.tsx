@@ -766,7 +766,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 {checkerResult.issues.map((issue, i) => (
                                   <div key={i} className="flex items-center gap-2 p-1.5 rounded bg-red-500/5 mb-1">
                                     <AlertCircle size={12} className="text-red-400 shrink-0" />
-                                    <span className="text-xs text-red-300">{issue}</span>
+                                    <span className="text-xs text-red-600">{issue}</span>
                                   </div>
                                 ))}
                               </div>
@@ -777,7 +777,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 {checkerResult.suggestions.map((s, i) => (
                                   <div key={i} className="flex items-center gap-2 p-1.5 rounded bg-green-500/5 mb-1">
                                     <ChevronRight size={12} className="text-green-400 shrink-0" />
-                                    <span className="text-xs text-green-300">{s}</span>
+                                    <span className="text-xs text-green-700">{s}</span>
                                   </div>
                                 ))}
                               </div>

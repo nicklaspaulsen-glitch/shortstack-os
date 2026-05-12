@@ -252,7 +252,7 @@ function outcomeMeta(outcome: CallOutcome): {
     case "booked":
       return {
         label: "Booked",
-        className: "bg-emerald-500/15 text-emerald-300",
+        className: "bg-emerald-500/15 text-emerald-600",
         icon: CalendarIcon,
       };
     case "qualified":
@@ -270,7 +270,7 @@ function outcomeMeta(outcome: CallOutcome): {
     case "spam":
       return {
         label: "Spam",
-        className: "bg-rose-500/15 text-rose-300",
+        className: "bg-rose-500/15 text-rose-600",
         icon: Ban,
       };
     case "missed":
@@ -711,7 +711,7 @@ export default function VoiceReceptionistPage() {
                     </div>
                   </div>
                   {hasAgent && (
-                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
+                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-600">
                       {agents.length} agent{agents.length === 1 ? "" : "s"} live
                     </span>
                   )}
@@ -1108,7 +1108,7 @@ function CalendarIntegrationCard() {
       className="glass rounded-xl !p-5"
     >
       <div className="mb-3 flex items-center gap-2">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-300">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-600">
           <CalendarIcon size={14} />
         </div>
         <div>
@@ -1126,7 +1126,7 @@ function CalendarIntegrationCard() {
       ) : state === "connected" ? (
         <div className="flex items-center justify-between gap-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
           <div className="flex items-center gap-2">
-            <CheckCircle2 size={15} className="text-emerald-300" />
+            <CheckCircle2 size={15} className="text-emerald-600" />
             <div>
               <p className="text-[12.5px] font-semibold text-foreground">
                 Connected
@@ -1246,11 +1246,11 @@ function QuotaCard({
             />
           </div>
           {!quota.isUnlimited && quota.pct >= 100 && (
-            <p className="text-[11px] text-rose-300">
+            <p className="text-[11px] text-rose-600">
               Limit reached �{" "}
               <Link
                 href="/dashboard/pricing"
-                className="underline hover:text-rose-200"
+                className="underline hover:text-rose-500"
               >
                 upgrade your plan
               </Link>{" "}

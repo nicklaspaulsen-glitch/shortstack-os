@@ -892,7 +892,7 @@ export default function ContentPage() {
                       {!isPublishing && (status === "scheduled" || (!p.status && !p.needs_creation)) && (
                         <>
                           <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
-                          <span className="text-yellow-300">Scheduled</span>
+                          <span className="text-yellow-700">Scheduled</span>
                         </>
                       )}
                     </span>

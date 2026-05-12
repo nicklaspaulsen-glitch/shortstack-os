@@ -119,7 +119,7 @@ export default function CoursesPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={() => setShowCreate(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-lg text-sm font-medium transition-colors"
                 >
                   <Plus size={16} />
                   New Course
@@ -134,7 +134,7 @@ export default function CoursesPage() {
                     onClick={() => setFilter(f)}
                     className={`px-4 py-1.5 rounded-full text-sm font-medium capitalize transition-colors ${
                       filter === f
-                        ? "bg-purple-600 text-text-primary"
+                        ? "bg-[#2563EB] text-white"
                         : "bg-black/5 text-black/60 hover:text-text-primary hover:bg-black/10"
                     }`}
                   >
@@ -227,7 +227,7 @@ export default function CoursesPage() {
                     <button
                       onClick={() => void handleCreate()}
                       disabled={creating}
-                      className="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors"
+                      className="flex-1 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors"
                     >
                       {creating ? "Creatingâ€¦" : "Create Course"}
                     </button>

@@ -312,7 +312,7 @@ export default function ClientHealthPage() {
                             ) : (
                               <div className="space-y-1">
                                 {client.risk_factors.map((r, i) => (
-                                  <div key={i} className="text-[10px] text-red-300 flex items-start gap-1">
+                                  <div key={i} className="text-[10px] text-red-600 flex items-start gap-1">
                                     <AlertTriangle size={9} className="shrink-0 mt-0.5" /> {r}
                                   </div>
                                 ))}

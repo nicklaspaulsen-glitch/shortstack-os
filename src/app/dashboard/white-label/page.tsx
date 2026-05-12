@@ -359,7 +359,7 @@ export default function WhiteLabelPage() {
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">Custom Domain</p>
             {config.custom_domain && (
-              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${config.custom_domain_verified ? "bg-emerald-500/20 text-emerald-300" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"}`}>
+              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${config.custom_domain_verified ? "bg-emerald-500/20 text-emerald-700" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"}`}>
                 {config.custom_domain_verified ? "Verified" : "Awaiting DNS"}
               </span>
             )}
@@ -404,7 +404,7 @@ export default function WhiteLabelPage() {
                     {domainBusy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
                     Verify
                   </button>
-                  <button onClick={handleRemoveDomain} disabled={domainBusy} className="p-1.5 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-300" title="Remove">
+                  <button onClick={handleRemoveDomain} disabled={domainBusy} className="p-1.5 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-600" title="Remove">
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -435,7 +435,7 @@ export default function WhiteLabelPage() {
               )}
 
               {config.custom_domain_verified && (
-                <div className="flex items-center gap-2 text-xs bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2 text-emerald-300">
+                <div className="flex items-center gap-2 text-xs bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2 text-emerald-700">
                   <CheckCircle2 className="w-4 h-4 shrink-0" />
                   Live with SSL. Your subaccounts can sign in at <span className="font-mono">https://{config.custom_domain}</span>.
                 </div>
@@ -456,7 +456,7 @@ export default function WhiteLabelPage() {
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">Resell Billing</p>
             {stripeStatus && (
-              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${stripeStatus.fully_onboarded ? "bg-emerald-500/20 text-emerald-300" : stripeStatus.connected ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "bg-[rgba(0,0,0,0.06)] text-text-muted"}`}>
+              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${stripeStatus.fully_onboarded ? "bg-emerald-500/20 text-emerald-700" : stripeStatus.connected ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "bg-[rgba(0,0,0,0.06)] text-text-muted"}`}>
                 {stripeStatus.fully_onboarded ? "Stripe Connected" : stripeStatus.connected ? "Onboarding incomplete" : "Not connected"}
               </span>
             )}

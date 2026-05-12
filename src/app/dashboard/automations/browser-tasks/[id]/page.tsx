@@ -48,10 +48,10 @@ interface BrowserTask {
 }
 
 const STATUS_STYLES: Record<BrowserTask["status"], { label: string; bg: string; fg: string; icon: React.ReactNode }> = {
-  queued: { label: "Queued", bg: "bg-amber-500/15", fg: "text-amber-300", icon: <Clock size={14} /> },
-  running: { label: "Running", bg: "bg-sky-500/15", fg: "text-sky-300", icon: <Loader2 size={14} className="animate-spin" /> },
-  completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-300", icon: <CheckCircle2 size={14} /> },
-  failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-300", icon: <XCircle size={14} /> },
+  queued: { label: "Queued", bg: "bg-amber-500/15", fg: "text-amber-700", icon: <Clock size={14} /> },
+  running: { label: "Running", bg: "bg-sky-500/15", fg: "text-sky-700", icon: <Loader2 size={14} className="animate-spin" /> },
+  completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-700", icon: <CheckCircle2 size={14} /> },
+  failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-700", icon: <XCircle size={14} /> },
   cancelled: { label: "Cancelled", bg: "bg-zinc-100", fg: "text-zinc-600", icon: <XCircle size={14} /> },
 };
 
@@ -282,7 +282,7 @@ export default function BrowserTaskDetailPage() {
       {/* Live tail when running */}
       {isLive && lastRec && (
         <div className="rounded-xl border border-sky-500/30 bg-sky-500/5 p-5">
-          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-sky-200">
+          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-sky-700">
             <Loader2 size={14} className="animate-spin" /> Live — step {lastRec.step + 1}
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -314,7 +314,7 @@ export default function BrowserTaskDetailPage() {
       {/* Final result */}
       {task.status === "completed" && task.result_text && (
         <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5">
-          <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-emerald-200">
+          <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-emerald-700">
             <CheckCircle2 size={14} /> Result
           </div>
           <div className="text-sm text-gray-800 whitespace-pre-wrap">{task.result_text}</div>

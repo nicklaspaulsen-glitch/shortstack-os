@@ -212,7 +212,7 @@ export default function ReviewsAutoReplyPage() {
                   </Link>
                   <button
                     onClick={() => setShowCompose((v) => !v)}
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-purple-500/80 hover:bg-purple-500 text-white transition-all"
+                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#1D4ED8] text-white transition-all"
                   >
                     <Sparkles size={14} /> New Draft
                   </button>

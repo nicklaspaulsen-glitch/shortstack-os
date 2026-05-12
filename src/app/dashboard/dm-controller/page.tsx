@@ -545,7 +545,7 @@ export default function DMControllerPage() {
                     {running ? `Running · ${completed}/${totalDMs}` : "Paused"}
                   </div>
                   {running && (
-                    <button onClick={() => setRunning(false)} className="text-[10px] bg-red-500/20 border border-red-500/40 text-red-200 px-2.5 py-1 rounded-md hover:bg-red-500/30 transition-all flex items-center gap-1">
+                    <button onClick={() => setRunning(false)} className="text-[10px] bg-red-500/20 border border-red-500/40 text-red-700 px-2.5 py-1 rounded-md hover:bg-red-500/30 transition-all flex items-center gap-1">
                       <Pause size={10} /> Pause all
                     </button>
                   )}
@@ -1456,7 +1456,7 @@ export default function DMControllerPage() {
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {keywordBlacklist.map((kw, i) => (
-                      <span key={i} className="text-[10px] px-2.5 py-1 rounded-lg border border-red-400/30 bg-red-400/[0.04] text-red-300 flex items-center gap-1.5">
+                      <span key={i} className="text-[10px] px-2.5 py-1 rounded-lg border border-red-400/30 bg-red-400/[0.04] text-red-600 flex items-center gap-1.5">
                         {kw}
                         <button onClick={() => setKeywordBlacklist(list => list.filter((_, idx) => idx !== i))} className="hover:text-red-400">
                           <X size={10} />

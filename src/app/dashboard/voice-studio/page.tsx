@@ -585,7 +585,7 @@ function CloneRow({
             <p className="mt-1 text-xs text-[#52525B]">{clone.description}</p>
           )}
           {clone.failed_reason && (
-            <p className="mt-1 text-xs text-rose-300">
+            <p className="mt-1 text-xs text-rose-600">
               {clone.failed_reason}
             </p>
           )}
@@ -622,7 +622,7 @@ function CloneRow({
         </div>
       )}
       {error && (
-        <p className="mt-2 text-xs text-rose-300">{error}</p>
+        <p className="mt-2 text-xs text-rose-600">{error}</p>
       )}
 
       {clone.status === "ready" && (

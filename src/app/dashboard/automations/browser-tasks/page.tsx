@@ -45,8 +45,8 @@ interface BrowserTaskTemplate {
 const STATUS_STYLES: Record<BrowserTask["status"], { label: string; bg: string; fg: string; icon: React.ReactNode }> = {
   queued: { label: "Queued", bg: "bg-amber-50", fg: "text-amber-700", icon: <Clock size={12} /> },
   running: { label: "Running", bg: "bg-[rgba(37,99,235,0.08)]", fg: "text-[#2563EB]", icon: <Loader2 size={12} className="animate-spin" /> },
-  completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-300", icon: <CheckCircle2 size={12} /> },
-  failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-300", icon: <XCircle size={12} /> },
+  completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-700", icon: <CheckCircle2 size={12} /> },
+  failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-700", icon: <XCircle size={12} /> },
   cancelled: { label: "Cancelled", bg: "bg-zinc-500/15", fg: "text-text-muted", icon: <XCircle size={12} /> },
 };
 
