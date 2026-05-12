@@ -101,7 +101,7 @@ export default function ClientVoiceProfile({ clientId, clientName }: Props) {
           <button
             onClick={() => setGenOpen(true)}
             disabled={!data?.active}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-500 hover:bg-purple-400 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#2563EB] hover:bg-[#1D4ED8] text-white disabled:opacity-50 transition-colors"
           >
             <MessageSquare size={13} />
             Generate copy in their voice
@@ -146,9 +146,9 @@ function StatusBanner({
   const profile = data.profile;
   if (!profile) {
     return (
-      <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 text-xs">
-        <p className="font-semibold text-amber-300 mb-1">Not yet learned</p>
-        <p className="text-amber-200/80">
+      <div className="rounded-xl border border-amber-500/30 bg-amber-50 p-3 text-xs">
+        <p className="font-semibold text-amber-700 mb-1">Not yet learned</p>
+        <p className="text-amber-600">
           Need at least {data.minCorpusWords} words from {clientName}&apos;s
           replies before voice matching activates.
         </p>
@@ -158,14 +158,14 @@ function StatusBanner({
 
   if (profile.corpus_size_words < data.minCorpusWords) {
     return (
-      <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 text-xs text-amber-200/80">
+      <div className="rounded-xl border border-amber-500/30 bg-amber-50 p-3 text-xs text-amber-600">
         {profile.corpus_size_words} words captured. Need ~{data.minCorpusWords - profile.corpus_size_words} more.
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3 text-xs text-emerald-200/80">
+    <div className="rounded-xl border border-emerald-500/30 bg-emerald-50 p-3 text-xs text-emerald-700">
       Active — {profile.corpus_size_words.toLocaleString()} words. Last
       refreshed {new Date(profile.computed_at).toLocaleString()}.
     </div>
@@ -184,7 +184,7 @@ function Stats({ profile }: { profile: VoiceProfile }) {
   return (
     <div className="rounded-xl border border-border bg-black/5 p-4">
       <div className="flex items-center gap-2 mb-3">
-        <Type size={14} className="text-purple-400" />
+        <Type size={14} className="text-[#2563EB]" />
         <span className="text-xs font-semibold">Stats</span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -194,14 +194,14 @@ function Stats({ profile }: { profile: VoiceProfile }) {
             <div key={g.label}>
               <div className="flex justify-between text-[11px] mb-1">
                 <span className="text-text-muted">{g.label}</span>
-                <span className="text-zinc-200 font-mono">
+                <span className="text-text-primary font-mono">
                   {Number.isFinite(g.value) ? g.value.toFixed(2) : "0"}
                   {g.suffix}
                 </span>
               </div>
               <div className="h-1.5 rounded-full bg-black/5 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all"
+                  className="h-full rounded-full bg-[#2563EB] transition-all"
                   style={{ width: `${pct}%` }}
                 />
               </div>
@@ -225,7 +225,7 @@ function Signature({ profile }: { profile: VoiceProfile }) {
   return (
     <div className="rounded-xl border border-border bg-black/5 p-4 space-y-3">
       <div className="flex items-center gap-2">
-        <Sparkles size={14} className="text-purple-400" />
+        <Sparkles size={14} className="text-[#2563EB]" />
         <span className="text-xs font-semibold">Signature</span>
       </div>
       {groups.map((g) =>
@@ -236,7 +236,7 @@ function Signature({ profile }: { profile: VoiceProfile }) {
               {g.items.map((x, i) => (
                 <span
                   key={`${g.label}-${i}`}
-                  className="text-[10px] px-2 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-200"
+                  className="text-[10px] px-2 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] text-[#2563EB]"
                 >
                   {x}
                 </span>
@@ -253,10 +253,10 @@ function PromptPanel({ snippet }: { snippet: string }) {
   return (
     <div className="rounded-xl border border-border bg-black/5 p-4">
       <div className="flex items-center gap-2 mb-2">
-        <Wand2 size={14} className="text-purple-400" />
+        <Wand2 size={14} className="text-[#2563EB]" />
         <span className="text-xs font-semibold">Injected prompt</span>
       </div>
-      <pre className="text-[11px] whitespace-pre-wrap font-mono text-zinc-200 rounded-lg bg-black/40 p-3 border border-border max-h-40 overflow-auto">
+      <pre className="text-[11px] whitespace-pre-wrap font-mono text-text-primary rounded-lg bg-black/[0.04] p-3 border border-border max-h-40 overflow-auto">
         {snippet}
       </pre>
     </div>
@@ -328,20 +328,20 @@ function GenerateModal({
             onChange={(e) => setPrompt(e.target.value)}
             placeholder={promptHelp}
             rows={4}
-            className="w-full text-xs rounded-lg bg-black/40 border border-border p-3 focus:outline-none focus:border-purple-500/50 resize-y"
+            className="w-full text-xs rounded-lg bg-bg-base border border-border p-3 focus:outline-none focus:border-[rgba(37,99,235,0.5)] resize-y"
           />
         </div>
         <button
           onClick={handleGenerate}
           disabled={busy || !prompt.trim()}
-          className="px-4 py-2 rounded-lg text-xs font-semibold bg-purple-500 hover:bg-purple-400 disabled:opacity-50 transition-colors"
+          className="px-4 py-2 rounded-lg text-xs font-semibold bg-[#2563EB] hover:bg-[#1D4ED8] text-white disabled:opacity-50 transition-colors"
         >
           {busy ? "Generating..." : "Generate"}
         </button>
         {output && (
           <div>
             <label className="text-xs text-text-muted block mb-1">Output</label>
-            <pre className="text-xs whitespace-pre-wrap rounded-lg bg-black/40 border border-border p-3">
+            <pre className="text-xs whitespace-pre-wrap rounded-lg bg-black/[0.04] border border-border p-3">
               {output}
             </pre>
           </div>

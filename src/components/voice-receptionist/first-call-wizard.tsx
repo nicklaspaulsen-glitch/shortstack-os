@@ -211,7 +211,7 @@ export default function FirstCallWizard() {
               border: "1px solid rgba(168,85,247,0.3)",
             }}
           >
-            <Sparkles size={16} className="text-purple-300" />
+            <Sparkles size={16} className="text-purple-600" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -220,7 +220,7 @@ export default function FirstCallWizard() {
                   ? "✓ Voice Receptionist is wired"
                   : "Place your first call in 3 steps"}
               </h3>
-              <span className="text-[9.5px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-300">
+              <span className="text-[9.5px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-600">
                 Setup
               </span>
             </div>
@@ -303,7 +303,7 @@ export default function FirstCallWizard() {
           }
         >
           {clients.length === 0 ? (
-            <p className="text-[11px] text-amber-300">
+            <p className="text-[11px] text-amber-600">
               You need at least one client first.{" "}
               <a href="/dashboard/clients" className="underline">
                 Add a client
@@ -320,7 +320,7 @@ export default function FirstCallWizard() {
                 if (c && !c.twilio_phone_number) setStep(2);
                 else if (c && !c.eleven_agent_id) setStep(3);
               }}
-              className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400/40"
+              className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500/50"
             >
               {clients.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -351,13 +351,13 @@ export default function FirstCallWizard() {
               value={twilioInput}
               onChange={(e) => setTwilioInput(e.target.value)}
               placeholder="+1 555 555 0123"
-              className="flex-1 bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-400/40"
+              className="flex-1 bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500/50"
               disabled={!selectedClientId || savingTwilio}
             />
             <button
               onClick={onSaveTwilio}
               disabled={!selectedClientId || !twilioInput.trim() || savingTwilio}
-              className="px-4 py-2 rounded-lg bg-purple-500/15 border border-purple-500/30 text-purple-200 text-sm font-semibold hover:bg-purple-500/25 transition disabled:opacity-50 flex items-center justify-center gap-1.5"
+              className="px-4 py-2 rounded-lg bg-purple-500/15 border border-purple-500/30 text-purple-700 text-sm font-semibold hover:bg-purple-500/25 transition disabled:opacity-50 flex items-center justify-center gap-1.5"
             >
               {savingTwilio ? (
                 <Loader size={12} className="animate-spin" />
@@ -371,7 +371,7 @@ export default function FirstCallWizard() {
             href="https://console.twilio.com/us1/develop/phone-numbers/manage/search"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[11px] text-purple-300 hover:underline mt-2"
+            className="inline-flex items-center gap-1 text-[11px] text-purple-600 hover:underline mt-2"
           >
             Open Twilio Console <ExternalLink size={9} />
           </a>
@@ -391,7 +391,7 @@ export default function FirstCallWizard() {
           }
         >
           {selectedClient?.eleven_agent_id ? (
-            <div className="flex items-center gap-2 text-[11px] text-emerald-300">
+            <div className="flex items-center gap-2 text-[11px] text-emerald-700">
               <CheckCircle2 size={12} />
               Agent ready — call your Twilio number to test live.
             </div>
@@ -428,7 +428,7 @@ export default function FirstCallWizard() {
           className="mt-5 pt-4 relative"
           style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
         >
-          <p className="text-[12px] text-emerald-300 font-semibold mb-1">
+          <p className="text-[12px] text-emerald-700 font-semibold mb-1">
             🎉 You&apos;re live. Place a test call now:
           </p>
           <p className="text-[11.5px] text-muted">
@@ -491,7 +491,7 @@ function StepRow({
           Step {n} — {title}
         </h4>
         {done && (
-          <span className="ml-auto text-[9.5px] font-bold uppercase tracking-wider text-emerald-300">
+          <span className="ml-auto text-[9.5px] font-bold uppercase tracking-wider text-emerald-700">
             Done
           </span>
         )}
