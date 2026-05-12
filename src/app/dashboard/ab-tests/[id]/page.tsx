@@ -210,8 +210,8 @@ export default function AbTestDetailPage() {
                       {v.variant_key}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-right text-zinc-300">{v.views}</td>
-                  <td className="px-4 py-3 text-right text-zinc-300">{v.conversions}</td>
+                  <td className="px-4 py-3 text-right text-text-muted">{v.views}</td>
+                  <td className="px-4 py-3 text-right text-text-muted">{v.conversions}</td>
                   <td className="px-4 py-3 text-right text-emerald-400 font-semibold">{rate}%</td>
                   <td className="px-4 py-3 text-right">
                     {v.id === baseline?.id ? (

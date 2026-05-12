@@ -43,7 +43,7 @@ const SUPPORTED_PLATFORMS = [
   { key: "facebook", label: "Facebook", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]", border: "border-[rgba(37,99,235,0.20)]", description: "Connect your Facebook Page for publishing" },
   { key: "tiktok", label: "TikTok", color: "text-white", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your TikTok account for video publishing" },
   { key: "linkedin", label: "LinkedIn", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]", border: "border-[rgba(37,99,235,0.18)]", description: "Connect your LinkedIn profile or company page" },
-  { key: "twitter", label: "Twitter / X", color: "text-zinc-300", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your X (Twitter) account" },
+  { key: "twitter", label: "Twitter / X", color: "text-text-muted", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your X (Twitter) account" },
   { key: "threads", label: "Threads", color: "text-foreground", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your Threads account for text posts" },
   { key: "pinterest", label: "Pinterest", color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20", description: "Connect Pinterest for pins and boards" },
   { key: "youtube_shorts", label: "YouTube Shorts", color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20", description: "Connect for short-form vertical video" },

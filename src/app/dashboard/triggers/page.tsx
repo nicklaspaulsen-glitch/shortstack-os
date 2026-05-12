@@ -170,7 +170,7 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     label: "Manual / API fire",
     description: "Only fires when you explicitly call /api/triggers/fire. Useful for testing.",
     icon: Hand,
-    tint: "text-slate-300 bg-slate-500/15",
+    tint: "text-text-muted bg-slate-500/15",
   },
 ];
 

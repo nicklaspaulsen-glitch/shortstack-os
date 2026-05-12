@@ -41,7 +41,7 @@ const PRIORITY_CONFIG: Record<Priority, { label: string; color: string; bg: stri
 };
 
 const STATUS_CONFIG: Record<KanbanStatus, { label: string; color: string }> = {
-  backlog: { label: "Backlog", color: "text-gray-400" },
+  backlog: { label: "Backlog", color: "text-text-muted" },
   in_progress: { label: "In Progress", color: "text-[#2563EB]" },
   review: { label: "In Review", color: "text-[#2563EB]" },
   approved: { label: "Approved", color: "text-emerald-400" },

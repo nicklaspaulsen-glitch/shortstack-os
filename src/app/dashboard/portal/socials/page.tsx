@@ -281,7 +281,7 @@ export default function ClientSocialsPage() {
                   onClick={() => connectPlatform(platform.id)}
                   aria-disabled
                   title={`${platform.name} support is coming soon`}
-                  className="text-[10px] px-3 py-1.5 rounded-lg border border-gray-200 text-gray-400 bg-gray-50 hover:bg-gray-100 flex items-center gap-1.5 cursor-not-allowed"
+                  className="text-[10px] px-3 py-1.5 rounded-lg border border-gray-200 text-text-muted bg-gray-50 hover:bg-gray-100 flex items-center gap-1.5 cursor-not-allowed"
                 >
                   <Link2 size={10} /> Coming soon
                 </button>

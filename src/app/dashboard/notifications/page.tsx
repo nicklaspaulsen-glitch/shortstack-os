@@ -71,7 +71,7 @@ const TYPE_CONFIG: Record<string, {
   },
   system: {
     icon: <Activity size={16} />,
-    color: "text-gray-400",
+    color: "text-text-muted",
     bg: "bg-gray-500/10",
     border: "border-gray-500/30",
     label: "System",

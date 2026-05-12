@@ -105,7 +105,7 @@ const STATUS_STYLE: Record<string, string> = {
   not_interested: "bg-orange-400/10 text-orange-400",
   pending: "bg-yellow-400/10 text-yellow-400",
   maybe_later: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
-  no_answer: "bg-gray-400/10 text-gray-400",
+  no_answer: "bg-gray-400/10 text-text-muted",
   voicemail: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
 };
 

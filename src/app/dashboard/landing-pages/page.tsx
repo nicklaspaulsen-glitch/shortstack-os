@@ -1327,7 +1327,7 @@ export default function LandingPagesPage() {
                       <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
                         page.status === "Published" ? "bg-green-500/10 text-green-400" :
                         page.status === "Draft" ? "bg-yellow-500/10 text-yellow-400" :
-                        "bg-zinc-500/10 text-zinc-400"
+                        "bg-zinc-500/10 text-text-muted"
                       }`}>
                         {page.status}
                       </span>

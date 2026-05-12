@@ -108,7 +108,7 @@ export default function ClientReportsPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-gray-700">{a.description as string}</p>
-                  <p className="text-[9px] text-gray-400 mt-0.5">{formatRelativeTime(a.created_at as string)}</p>
+                  <p className="text-[9px] text-text-muted mt-0.5">{formatRelativeTime(a.created_at as string)}</p>
                 </div>
               </div>
             ))

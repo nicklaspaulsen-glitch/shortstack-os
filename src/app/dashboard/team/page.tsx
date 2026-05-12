@@ -97,7 +97,7 @@ const ROLE_COLORS: Record<string, string> = {
   admin: "bg-blue-400/10 text-blue-400 border-blue-400/20",
   manager: "bg-purple-400/10 text-purple-400 border-purple-400/20",
   creator: "bg-emerald-400/10 text-emerald-400 border-emerald-400/20",
-  viewer: "bg-gray-400/10 text-gray-400 border-gray-400/20",
+  viewer: "bg-gray-400/10 text-text-muted border-gray-400/20",
 };
 
 export default function TeamPage() {
@@ -347,7 +347,7 @@ export default function TeamPage() {
                             </span>
                           </td>
                           <td className="py-2.5 px-3 hidden md:table-cell">
-                            <span className={`text-[9px] capitalize ${member.status === "online" ? "text-emerald-400" : member.status === "away" ? "text-yellow-400" : "text-gray-400"}`}>
+                            <span className={`text-[9px] capitalize ${member.status === "online" ? "text-emerald-400" : member.status === "away" ? "text-yellow-400" : "text-text-muted"}`}>
                               {member.status}
                             </span>
                           </td>
@@ -654,7 +654,7 @@ export default function TeamPage() {
                           <p className="text-xs font-semibold truncate">{m.full_name || m.email}</p>
                           <span className={`text-[9px] px-1.5 py-0.5 rounded-full capitalize ${
                             m.role === "manager" ? "bg-purple-400/10 text-purple-400" :
-                            m.role === "viewer" ? "bg-gray-400/10 text-gray-400" :
+                            m.role === "viewer" ? "bg-gray-400/10 text-text-muted" :
                             "bg-emerald-400/10 text-emerald-400"
                           }`}>{m.role}</span>
                           {m.job_title && <span className="text-[9px] text-muted">� {m.job_title}</span>}

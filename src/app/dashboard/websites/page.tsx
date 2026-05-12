@@ -55,14 +55,14 @@ interface PriceQuote {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  draft: "bg-slate-500/10 text-slate-400 border-slate-500/30",
-  generating: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",
-  preview: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
-  deploying: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",
-  live: "bg-green-500/10 text-green-400 border-green-500/30",
-  failed: "bg-red-500/10 text-red-400 border-red-500/30",
-  archived: "bg-slate-500/10 text-slate-400 border-slate-500/30",
-  expired: "bg-orange-500/10 text-orange-400 border-orange-500/30",
+  draft: "bg-gray-100 text-gray-600 border-gray-200",
+  generating: "bg-blue-50 text-blue-700 border-blue-200",
+  preview: "bg-amber-50 text-amber-700 border-amber-200",
+  deploying: "bg-blue-50 text-blue-700 border-blue-200",
+  live: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  failed: "bg-red-50 text-red-700 border-red-200",
+  archived: "bg-gray-100 text-gray-600 border-gray-200",
+  expired: "bg-orange-50 text-orange-700 border-orange-200",
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -77,10 +77,10 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const TIER_COLOR: Record<string, string> = {
-  starter: "from-sky-500 to-cyan-500",
-  pro: "from-violet-500 to-fuchsia-500",
-  business: "from-amber-400 to-orange-500",
-  premium: "from-rose-500 to-purple-600",
+  starter: "bg-sky-600",
+  pro: "bg-violet-600",
+  business: "bg-amber-600",
+  premium: "bg-rose-600",
 };
 
 const ALL_ADDONS = [
@@ -1254,7 +1254,7 @@ export default function WebsitesPage() {
                             </span>
                           )}
                           {status === "live" && p.pricing_tier && (
-                            <span className={`absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full text-white bg-gradient-to-r ${TIER_COLOR[p.pricing_tier] || TIER_COLOR.starter}`}>
+                            <span className={`absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full text-white ${TIER_COLOR[p.pricing_tier] || TIER_COLOR.starter}`}>
                               {p.pricing_tier}
                             </span>
                           )}
@@ -1458,7 +1458,7 @@ function PricingModal({
           {/* Pricing details */}
           <div className="space-y-3">
             {/* Tier badge + price */}
-            <div className={`rounded-xl p-4 text-white bg-gradient-to-br ${TIER_COLOR[tier]}`}>
+            <div className={`rounded-xl p-4 text-white ${TIER_COLOR[tier]}`}>
               <p className="text-[10px] uppercase tracking-wider opacity-80">Recommended tier</p>
               <p className="text-lg font-bold capitalize">{tier}</p>
               <div className="flex items-baseline gap-1 mt-2">

@@ -330,7 +330,7 @@ export default function EmailTemplatesPage() {
                           ))}
                         </div>
                         <div className={`mt-3 rounded-lg overflow-hidden ${previewMode === "dark" ? "bg-gray-900" : "bg-white"}`}>
-                          <div className={`p-3 text-[9px] leading-relaxed ${previewMode === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                          <div className={`p-3 text-[9px] leading-relaxed ${previewMode === "dark" ? "text-text-muted" : "text-gray-700"}`}>
                             <p className={`font-semibold mb-1 ${previewMode === "dark" ? "text-white" : "text-gray-900"}`}>{editedSubject}</p>
                             <p className="whitespace-pre-wrap">{editedBody.substring(0, 200)}...</p>
                           </div>

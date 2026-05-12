@@ -134,7 +134,7 @@ export default function ClientContentPage() {
                   <StatusBadge status={c.status} />
                 </div>
                 <p className="text-xs font-medium mb-1 text-gray-900">{c.title}</p>
-                {c.scheduled_at && <p className="text-[9px] text-gray-400 mb-2">{formatDate(c.scheduled_at)}</p>}
+                {c.scheduled_at && <p className="text-[9px] text-text-muted mb-2">{formatDate(c.scheduled_at)}</p>}
                 {(c.status === "published" || c.status === "approved_for_publish") && (
                   <button
                     onClick={() => openRevisionModal(c.id, c.title, "request")}

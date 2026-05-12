@@ -294,7 +294,7 @@ export default function BrowserTaskDetailPage() {
                 className="rounded-md border border-black/[0.08]"
               />
             ) : (
-              <div className="rounded-md border border-black/[0.06] bg-gray-50 p-4 text-xs text-gray-400">
+              <div className="rounded-md border border-black/[0.06] bg-gray-50 p-4 text-xs text-text-muted">
                 Screenshot unavailable
               </div>
             )}
@@ -344,7 +344,7 @@ export default function BrowserTaskDetailPage() {
           </span>
         </div>
         {recordings.length === 0 ? (
-          <div className="px-5 py-8 text-center text-sm text-gray-400">No steps yet.</div>
+          <div className="px-5 py-8 text-center text-sm text-text-muted">No steps yet.</div>
         ) : (
           <ul className="divide-y divide-black/[0.04]">
             {recordings.map((r) => {
@@ -361,7 +361,7 @@ export default function BrowserTaskDetailPage() {
                           className="rounded-md border border-black/[0.08]"
                         />
                       ) : (
-                        <div className="rounded-md border border-black/[0.06] bg-gray-50 p-3 text-xs text-gray-400">
+                        <div className="rounded-md border border-black/[0.06] bg-gray-50 p-3 text-xs text-text-muted">
                           (no screenshot)
                         </div>
                       )}
@@ -370,7 +370,7 @@ export default function BrowserTaskDetailPage() {
                           href={url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-1 inline-flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-800"
+                          className="mt-1 inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-gray-800"
                         >
                           <ExternalLink size={10} /> open full
                         </a>
@@ -378,7 +378,7 @@ export default function BrowserTaskDetailPage() {
                     </div>
                     <div className="md:col-span-2 text-sm text-gray-700">
                       <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <span className="font-mono text-[11px] text-gray-400">
+                        <span className="font-mono text-[11px] text-text-muted">
                           step {String(r.step + 1).padStart(2, "0")}
                         </span>
                         <span>·</span>

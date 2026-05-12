@@ -250,7 +250,7 @@ const MUSIC_MOODS: MoodOption[] = [
   { id: "motivational", name: "Motivational",    icon: Flame,      tint: "text-orange-300", bg: "bg-orange-500/15" },
   { id: "chill",        name: "Chill",           icon: Cloud,      tint: "text-sky-300",    bg: "bg-sky-500/15" },
   { id: "dramatic",     name: "Dramatic",        icon: Film,       tint: "text-violet-300", bg: "bg-violet-500/15" },
-  { id: "corporate",    name: "Corporate",       icon: Briefcase,  tint: "text-slate-300",  bg: "bg-slate-500/15" },
+  { id: "corporate",    name: "Corporate",       icon: Briefcase,  tint: "text-text-muted",  bg: "bg-slate-500/15" },
   { id: "trendy",       name: "Trendy/Pop",      icon: Sparkles,   tint: "text-pink-300",   bg: "bg-pink-500/15" },
   { id: "emotional",    name: "Emotional",       icon: Heart,      tint: "text-rose-300",   bg: "bg-rose-500/15" },
   { id: "lofi",         name: "Lo-Fi",           icon: Headphones, tint: "text-indigo-300", bg: "bg-indigo-500/15" },

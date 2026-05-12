@@ -23,7 +23,7 @@ function StatusChip({ status }: { status: AgentService["status"] }) {
     healthy: { cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", label: "Healthy", icon: CheckCircle },
     degraded: { cls: "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border-[rgba(37,99,235,0.25)]", label: "Degraded", icon: AlertTriangle },
     down: { cls: "bg-red-500/15 text-red-400 border-red-500/30", label: "Down", icon: XCircle },
-    unknown: { cls: "bg-slate-500/15 text-slate-400 border-slate-500/30", label: "Unknown", icon: Clock },
+    unknown: { cls: "bg-slate-500/15 text-text-muted border-slate-500/30", label: "Unknown", icon: Clock },
   };
   const { cls, label, icon: Icon } = map[status] ?? map.unknown;
   return (
@@ -104,7 +104,7 @@ export default function AgentDesktopPage() {
                 { label: "Healthy", count: counts.healthy, cls: "text-emerald-400" },
                 { label: "Degraded", count: counts.degraded, cls: "text-[#2563EB]" },
                 { label: "Down", count: counts.down, cls: "text-red-400" },
-                { label: "Unknown", count: counts.unknown, cls: "text-slate-400" },
+                { label: "Unknown", count: counts.unknown, cls: "text-text-muted" },
               ].map(({ label, count, cls }, i) => (
                 <motion.div key={label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
                   <div className="p-4 text-center">

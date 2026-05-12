@@ -598,7 +598,7 @@ function ClientPhoneSection({
                   <Bot size={9} /> AI agent ready
                 </span>
               ) : (
-                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-slate-500/10 text-slate-400 border-slate-500/30 flex items-center gap-1">
+                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-slate-500/10 text-text-muted border-slate-500/30 flex items-center gap-1">
                   <Bot size={9} /> AI agent not configured
                 </span>
               )}

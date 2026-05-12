@@ -42,7 +42,7 @@ function StatusIcon({ status }: { status: string }) {
   if (status === "healthy") return <CheckCircle className="w-5 h-5 text-emerald-400" />;
   if (status === "degraded") return <AlertTriangle className="w-5 h-5 text-[#2563EB]" />;
   if (status === "down") return <XCircle className="w-5 h-5 text-red-400" />;
-  return <Clock className="w-5 h-5 text-slate-400" />;
+  return <Clock className="w-5 h-5 text-text-muted" />;
 }
 
 function StatusDot({ status }: { status: string }) {

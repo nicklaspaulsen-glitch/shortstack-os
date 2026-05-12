@@ -264,7 +264,7 @@ function outcomeMeta(outcome: CallOutcome): {
     case "unqualified":
       return {
         label: "Unqualified",
-        className: "bg-slate-500/15 text-slate-300",
+        className: "bg-slate-500/15 text-text-muted",
         icon: PhoneCall,
       };
     case "spam":

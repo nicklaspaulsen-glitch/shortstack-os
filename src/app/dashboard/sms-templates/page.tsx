@@ -399,7 +399,7 @@ export default function SMSTemplatesPage() {
                         </div>
                         <div>
                           <p className="text-[10px] font-semibold text-white">ShortStack</p>
-                          <p className="text-[8px] text-gray-400">SMS</p>
+                          <p className="text-[8px] text-text-muted">SMS</p>
                         </div>
                       </div>
                       <div className="p-3 min-h-[300px] space-y-2">

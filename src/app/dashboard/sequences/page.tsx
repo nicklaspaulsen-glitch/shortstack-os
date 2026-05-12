@@ -638,7 +638,7 @@ export default function SequencesPage() {
                   {activity.map(a => (
                     <li key={a.id} className="flex items-center justify-between text-[10px] py-1 border-b border-black/[0.05] last:border-0">
                       <span className="flex items-center gap-2">
-                        <span className={`px-1.5 py-0.5 rounded text-[9px] ${a.status === "completed" ? "bg-green-500/10 text-green-400" : a.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-gray-500/10 text-gray-400"}`}>
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] ${a.status === "completed" ? "bg-green-500/10 text-green-400" : a.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-gray-500/10 text-text-muted"}`}>
                           {a.status || "run"}
                         </span>
                         <span>{a.description || `${a.sequence_name} ? step ${(a.step_order ?? 0) + 1}`}</span>

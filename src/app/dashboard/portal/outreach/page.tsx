@@ -252,7 +252,7 @@ export default function ClientOutreachPage() {
                       className="input w-full text-xs resize-none"
                       placeholder="Type your message..."
                     />
-                    <p className="text-[9px] text-gray-400 mt-1">
+                    <p className="text-[9px] text-text-muted mt-1">
                       Variables: {"{business_name}"}, {"{name}"}, {"{industry}"}, {"{my_name}"}
                     </p>
                   </div>

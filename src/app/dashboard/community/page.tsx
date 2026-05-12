@@ -1178,7 +1178,7 @@ export default function CommunityPage() {
                           {LEADERBOARD.slice(0, 5).map((m, i) => (
                             <div key={m.name} className="flex items-center gap-2">
                               <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold ${
-                                i === 0 ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : i === 1 ? "bg-gray-300/20 text-gray-300" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
+                                i === 0 ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : i === 1 ? "bg-border-strong/20 text-border-strong" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
                               }`}>{i + 1}</span>
                               <div className="w-5 h-5 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[8px] font-bold text-[#2563EB] shrink-0">{m.avatar}</div>
                               <span className="text-[10px] font-medium flex-1 truncate">{m.name}</span>
@@ -1238,7 +1238,7 @@ export default function CommunityPage() {
                         i < 3 ? "border-[rgba(37,99,235,0.1)] bg-[rgba(37,99,235,0.02)]" : "border-border"
                       }`}>
                         <span className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                          i === 0 ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : i === 1 ? "bg-gray-300/20 text-gray-300" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
+                          i === 0 ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : i === 1 ? "bg-border-strong/20 text-border-strong" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
                         }`}>{i + 1}</span>
                         <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-xs font-bold text-[#2563EB] shrink-0">{m.avatar}</div>
                         <span className="text-xs font-medium flex-1">{m.name}</span>
@@ -1277,7 +1277,7 @@ export default function CommunityPage() {
                             <div className="flex items-center gap-2">
                               <p className="text-xs font-semibold">{m.name}</p>
                               {m.badge === "gold" && <Award size={10} className="text-[#2563EB]" />}
-                              {m.badge === "silver" && <Award size={10} className="text-gray-300" />}
+                              {m.badge === "silver" && <Award size={10} className="text-border-strong" />}
                               {m.badge === "bronze" && <Award size={10} className="text-orange-400" />}
                             </div>
                             <p className="text-[10px] text-muted">{m.role}</p>

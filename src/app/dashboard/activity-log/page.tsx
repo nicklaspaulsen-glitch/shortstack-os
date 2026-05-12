@@ -36,7 +36,7 @@ const TYPE_CONFIG: Record<string, { icon: React.ReactNode; color: string; label:
   automation: { icon: <Bot size={12} />, color: "text-[#2563EB]", label: "Automation" },
   billing: { icon: <CreditCard size={12} />, color: "text-green-400", label: "Billing" },
   user: { icon: <Users size={12} />, color: "text-cyan-400", label: "User" },
-  system: { icon: <Settings size={12} />, color: "text-gray-400", label: "System" },
+  system: { icon: <Settings size={12} />, color: "text-text-muted", label: "System" },
   login: { icon: <Key size={12} />, color: "text-yellow-400", label: "Login" },
   api: { icon: <Globe size={12} />, color: "text-[#2563EB]", label: "API" },
 };
