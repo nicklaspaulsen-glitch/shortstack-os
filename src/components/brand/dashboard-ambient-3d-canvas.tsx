@@ -6,7 +6,7 @@
  * (`dashboard-ambient-3d.tsx`) can dynamic-import with ssr=false.
  *
  * Three shapes (low-poly, distorted) drift slowly through the scene.
- * Teal accent materials, dim emissive so the shapes glow softly
+ * Blue brand accent materials, dim emissive so the shapes glow softly
  * without overpowering UI on top.
  *
  * Perf budget:
@@ -23,9 +23,9 @@ import { Float, MeshDistortMaterial, Environment } from "@react-three/drei";
 import { Suspense, useRef } from "react";
 import type { Mesh } from "three";
 
-const TEAL = "#2563EB";
-const TEAL_LIGHT = "#FF8080";
-const TEAL_DARK = "#CC1A1A";
+const ACCENT = "#2563EB";
+const ACCENT_LIGHT = "#3B82F6";
+const ACCENT_DARK = "#1D4ED8";
 
 function FloatingTorus({ position }: { position: [number, number, number] }) {
   const ref = useRef<Mesh>(null!);
@@ -39,8 +39,8 @@ function FloatingTorus({ position }: { position: [number, number, number] }) {
       <mesh ref={ref} position={position}>
         <torusGeometry args={[0.85, 0.20, 12, 24]} />
         <MeshDistortMaterial
-          color={TEAL}
-          emissive={TEAL_DARK}
+          color={ACCENT}
+          emissive={ACCENT_DARK}
           emissiveIntensity={0.35}
           roughness={0.35}
           metalness={0.7}
@@ -60,8 +60,8 @@ function FloatingSphere({ position }: { position: [number, number, number] }) {
       <mesh position={position}>
         <sphereGeometry args={[0.50, 16, 16]} />
         <MeshDistortMaterial
-          color={TEAL_LIGHT}
-          emissive={TEAL}
+          color={ACCENT_LIGHT}
+          emissive={ACCENT}
           emissiveIntensity={0.30}
           roughness={0.30}
           metalness={0.85}
@@ -87,8 +87,8 @@ function FloatingOctahedron({ position }: { position: [number, number, number] }
       <mesh ref={ref} position={position}>
         <octahedronGeometry args={[0.42, 0]} />
         <meshStandardMaterial
-          color={TEAL_DARK}
-          emissive={TEAL}
+          color={ACCENT_DARK}
+          emissive={ACCENT}
           emissiveIntensity={0.40}
           roughness={0.30}
           metalness={0.90}
@@ -104,8 +104,8 @@ function SceneContent() {
   return (
     <>
       <ambientLight intensity={0.45} />
-      <directionalLight position={[3, 4, 4]} intensity={0.7} color={TEAL_LIGHT} />
-      <directionalLight position={[-3, -2, 2]} intensity={0.30} color={TEAL} />
+      <directionalLight position={[3, 4, 4]} intensity={0.7} color={ACCENT_LIGHT} />
+      <directionalLight position={[-3, -2, 2]} intensity={0.30} color={ACCENT} />
       <Environment preset="city" />
 
       {/* 3 shapes positioned to fill the viewport corners — covers the

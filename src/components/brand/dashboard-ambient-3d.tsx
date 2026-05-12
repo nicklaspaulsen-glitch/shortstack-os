@@ -2,8 +2,8 @@
 
 /**
  * DashboardAmbient3D — atmospheric floating-shapes background that sits
- * behind every dashboard page. Inspired by `landing/hero-3d-scene.tsx`
- * but tuned for permanent presence rather than landing-page hero use:
+ * behind every dashboard page. Tuned for permanent presence rather
+ * than landing-page hero use:
  *
  *   • Lower DPR (1.5 cap) — runs constantly, not a one-shot wow moment.
  *   • 3 shapes instead of 5 — smaller frame budget.
