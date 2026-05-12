@@ -45,7 +45,7 @@ const AgentScene3D = dynamic(
     loading: () => (
       <div className="flex aspect-video w-full items-center justify-center  border border-[rgba(0,0,0,0.08)] bg-[#FAFAFB]">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#FF2D2D]/30 border-t-[#FF2D2D]" />
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600/30 border-t-blue-600" />
           <p className="text-xs font-medium text-text-primary/40 tracking-widest uppercase">Loading 3D scene…</p>
         </div>
       </div>
@@ -228,7 +228,7 @@ export default function AgentOfficePage() {
             <div className="flex items-center rounded-lg border border-border bg-black/5 p-0.5">
               <button
                 onClick={() => setViewMode("kumo")}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "kumo" ? "bg-[#FF2D2D] text-white shadow" : "text-muted hover:text-muted"}`}
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "kumo" ? "bg-blue-600 text-white shadow" : "text-muted hover:text-muted"}`}
                 title="2D Pixel view"
               >
                 <LayoutGrid size={10} />
@@ -236,7 +236,7 @@ export default function AgentOfficePage() {
               </button>
               <button
                 onClick={() => setViewMode("3d")}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "3d" ? "bg-[#FF2D2D] text-white shadow" : "text-muted hover:text-muted"}`}
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "3d" ? "bg-blue-600 text-white shadow" : "text-muted hover:text-muted"}`}
                 title="3D Scene view"
               >
                 <Boxes size={10} />
@@ -246,7 +246,7 @@ export default function AgentOfficePage() {
             <StatTile icon={<Phone size={11} />} label="Calls today" value={snapshot?.stats.callsToday ?? "—"} accent="#5e5bff" />
             <StatTile icon={<Users size={11} />} label="Leads scored" value={snapshot?.stats.leadsScored ?? "—"} accent="#7fe5b8" />
             <StatTile icon={<Mail size={11} />} label="Emails sent" value={snapshot?.stats.emailsSent ?? "—"} accent="#ff8a4c" />
-            <StatTile icon={<Activity size={11} />} label="Trinity actions" value={snapshot?.stats.proposalsExecuted ?? "—"} accent="#FF6B6B" />
+            <StatTile icon={<Activity size={11} />} label="Trinity actions" value={snapshot?.stats.proposalsExecuted ?? "—"} accent="#3B82F6" />
             <StatTile icon={<BarChart3 size={11} />} label="Posts published" value={snapshot?.stats.contentPosted ?? "—"} accent="#ffc062" />
           </div>
         </div>

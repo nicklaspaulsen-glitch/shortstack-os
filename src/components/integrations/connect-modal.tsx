@@ -160,7 +160,7 @@ export default function ConnectModal({
           className="h-1.5 w-full"
           style={{
             background:
-              `linear-gradient(90deg, ${SHORTSTACK_GOLD} 0%, #FF8080 60%, ${SHORTSTACK_GOLD} 100%)`,
+              `linear-gradient(90deg, ${SHORTSTACK_GOLD} 0%, #60A5FA 60%, ${SHORTSTACK_GOLD} 100%)`,
           }}
         />
 
