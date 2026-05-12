@@ -17,7 +17,7 @@ export default function TrustBar() {
     >
       <div className="max-w-5xl mx-auto">
         <Reveal>
-          <p className="text-center text-xs text-gray-600 uppercase tracking-widest mb-10">
+          <p className="text-center text-xs text-gray-500 uppercase tracking-widest mb-10">
             Trusted by growing agencies worldwide
           </p>
         </Reveal>

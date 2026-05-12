@@ -60,7 +60,7 @@ export default function FinalCTA() {
             </Link>
           </div>
 
-          <p className="text-xs text-gray-600 mt-8">
+          <p className="text-xs text-gray-500 mt-8">
             Built and run by {BRAND.company_name} Digital — agency operators
             shipping the product they wished existed.
           </p>

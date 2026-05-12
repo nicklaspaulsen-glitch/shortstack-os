@@ -196,7 +196,7 @@ export default function Hero() {
         {/* Trust micro-copy */}
         <motion.div
           variants={ITEM}
-          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-600 mb-16"
+          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-500 mb-16"
         >
           {["No credit card required", "Cancel anytime", "You own your data"].map((text) => (
             <div key={text} className="flex items-center gap-1.5">

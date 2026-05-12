@@ -284,7 +284,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
               background: "rgba(255,255,255,0.02)",
             }}
           >
-            <p className="text-[9px] uppercase tracking-wider text-gray-600">
+            <p className="text-[9px] uppercase tracking-wider text-gray-500">
               {m.label}
             </p>
             <p

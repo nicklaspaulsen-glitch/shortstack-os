@@ -7,8 +7,8 @@ import {
   Package, Globe,
 } from "lucide-react";
 
-const GOLD = "#2563EB";
-const GOLD_LIGHT = "#60A5FA";
+const ACCENT = "#2563EB";
+const ACCENT_LIGHT = "#60A5FA";
 
 // Lucide icon compatible — accept any component that takes size + className
 type LucideLike = React.ComponentType<React.SVGProps<SVGSVGElement> & { size?: number | string }>;
@@ -48,7 +48,7 @@ function MockFrame({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Bar({ width, color = GOLD, opacity = 0.6 }: { width: string; color?: string; opacity?: number }) {
+function Bar({ width, color = ACCENT, opacity = 0.6 }: { width: string; color?: string; opacity?: number }) {
   return (
     <div className="h-2 rounded-full" style={{ width, background: color, opacity }} />
   );
@@ -75,7 +75,7 @@ const SLIDES: Slide[] = [
               border: "1px solid rgba(255,255,255,0.12)",
             }}
           >
-            <Sparkles size={18} style={{ color: GOLD }} />
+            <Sparkles size={18} style={{ color: ACCENT }} />
           </motion.div>
         ))}
       </div>
@@ -100,7 +100,7 @@ const SLIDES: Slide[] = [
                   className="h-6 rounded"
                   style={{
                     flex: w,
-                    background: i === 0 ? GOLD : i === 1 ? "#4a90e2" : "#27c93f",
+                    background: i === 0 ? ACCENT : i === 1 ? "#4a90e2" : "#27c93f",
                     opacity: 0.5,
                   }}
                 />
@@ -120,12 +120,12 @@ const SLIDES: Slide[] = [
     body: (
       <div className="grid grid-cols-4 gap-3">
         <div className="col-span-3 rounded-lg aspect-video"
-          style={{ background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})` }} />
+          style={{ background: `linear-gradient(135deg, ${ACCENT_LIGHT}, ${ACCENT})` }} />
         <div className="space-y-2">
           {["T", "B", "I", "F"].map((k) => (
             <div key={k} className="h-10 rounded flex items-center justify-center"
               style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
-              <span className="text-sm font-semibold" style={{ color: GOLD }}>{k}</span>
+              <span className="text-sm font-semibold" style={{ color: ACCENT }}>{k}</span>
             </div>
           ))}
         </div>
@@ -143,7 +143,7 @@ const SLIDES: Slide[] = [
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="flex items-center gap-3 p-3 rounded-lg"
             style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
-            <div className="w-8 h-8 rounded-full" style={{ background: GOLD }} />
+            <div className="w-8 h-8 rounded-full" style={{ background: ACCENT }} />
             <div className="flex-1 space-y-1.5">
               <Bar width="60%" color="#fff" opacity={0.8} />
               <Bar width="40%" />
@@ -165,10 +165,10 @@ const SLIDES: Slide[] = [
       <div className="space-y-3">
         {[0, 1, 2, 3].map((i) => (
           <div key={i} className={`flex items-start gap-3 ${i % 2 ? "justify-end" : ""}`}>
-            {!(i % 2) && <div className="w-7 h-7 rounded-full" style={{ background: GOLD }} />}
+            {!(i % 2) && <div className="w-7 h-7 rounded-full" style={{ background: ACCENT }} />}
             <div className="rounded-xl p-3 max-w-[65%] space-y-1.5"
               style={{
-                background: i % 2 ? GOLD : "rgba(255,255,255,0.05)",
+                background: i % 2 ? ACCENT : "rgba(255,255,255,0.05)",
                 color: i % 2 ? "#fff" : "#fff",
               }}>
               <Bar width={`${80 + i * 5}px`} color={i % 2 ? "#fff" : "#fff"} opacity={0.8} />
@@ -189,12 +189,12 @@ const SLIDES: Slide[] = [
       <div className="relative aspect-video rounded-lg overflow-hidden"
         style={{ background: `linear-gradient(135deg, #2a2f3a, #1a1d25)` }}>
         <div className="absolute top-8 left-12 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
-          style={{ background: GOLD, color: "#fff" }}>1</div>
+          style={{ background: ACCENT, color: "#fff" }}>1</div>
         <div className="absolute bottom-12 right-16 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
-          style={{ background: GOLD, color: "#fff" }}>2</div>
+          style={{ background: ACCENT, color: "#fff" }}>2</div>
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full px-4 py-2 text-xs font-medium flex items-center gap-2"
           style={{ background: "rgba(0,0,0,0.8)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff" }}>
-          <span className="w-2 h-2 rounded-full" style={{ background: GOLD }} />
+          <span className="w-2 h-2 rounded-full" style={{ background: ACCENT }} />
           2 notes pending
         </div>
       </div>
@@ -217,7 +217,7 @@ const SLIDES: Slide[] = [
             className="aspect-square rounded-lg"
             style={{
               background: i % 3 === 0
-                ? `linear-gradient(135deg, ${GOLD}, ${GOLD_LIGHT})`
+                ? `linear-gradient(135deg, ${ACCENT}, ${ACCENT_LIGHT})`
                 : "rgba(255,255,255,0.04)",
               border: "1px solid rgba(255,255,255,0.06)",
             }}
@@ -235,7 +235,7 @@ const SLIDES: Slide[] = [
     body: (
       <div className="space-y-4">
         <div className="rounded-xl aspect-[16/7]"
-          style={{ background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})` }} />
+          style={{ background: `linear-gradient(135deg, ${ACCENT_LIGHT}, ${ACCENT})` }} />
         <div className="space-y-2">
           <Bar width="50%" color="#fff" opacity={0.9} />
           <Bar width="80%" opacity={0.4} />
@@ -245,7 +245,7 @@ const SLIDES: Slide[] = [
           {["+312%", "42 days", "$1.8M"].map((k) => (
             <div key={k} className="rounded-lg p-3"
               style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
-              <div className="text-lg font-bold" style={{ color: GOLD }}>{k}</div>
+              <div className="text-lg font-bold" style={{ color: ACCENT }}>{k}</div>
             </div>
           ))}
         </div>
@@ -287,7 +287,7 @@ export default function ScreenshotCarousel() {
         >
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white"
             style={{ letterSpacing: "-0.02em" }}>
-            One platform, <span style={{ color: GOLD }}>every view.</span>
+            One platform, <span style={{ color: ACCENT }}>every view.</span>
           </h2>
           <p className="text-text-muted mt-3 max-w-xl mx-auto">
             Eight flagship surfaces, rotating every four seconds. Hover to pause.
@@ -308,7 +308,7 @@ export default function ScreenshotCarousel() {
                 style={{
                   background: i === index ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.03)",
                   border: `1px solid ${i === index ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.06)"}`,
-                  color: i === index ? GOLD : "rgba(255,255,255,0.6)",
+                  color: i === index ? ACCENT : "rgba(255,255,255,0.6)",
                 }}
               >
                 {s.label}

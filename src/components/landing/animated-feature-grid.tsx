@@ -7,8 +7,8 @@ import {
   Zap, Globe, BarChart3,
 } from "lucide-react";
 
-const GOLD = "#2563EB";
-const GOLD_LIGHT = "#60A5FA";
+const ACCENT = "#2563EB";
+const ACCENT_LIGHT = "#60A5FA";
 
 // Lucide icon compatible — accept any component that takes size + className
 type LucideLike = React.ComponentType<React.SVGProps<SVGSVGElement> & { size?: number | string }>;
@@ -35,7 +35,7 @@ const FEATURES: Feature[] = [
           <motion.div
             key={i}
             className="w-1.5 rounded-t"
-            style={{ background: GOLD }}
+            style={{ background: ACCENT }}
             animate={{
               height: h
                 ? [`${baseH * 100}%`, `${(baseH + 0.2) * 100}%`, `${baseH * 100}%`]
@@ -61,7 +61,7 @@ const FEATURES: Feature[] = [
             animate={{ x: h ? [0, 4, 0] : 0 }}
             transition={{ duration: 1.4, repeat: h ? Infinity : 0, delay: i * 0.1 }}
           >
-            <div className="w-4 h-4 rounded-full" style={{ background: GOLD }} />
+            <div className="w-4 h-4 rounded-full" style={{ background: ACCENT }} />
             <div className="flex-1 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
           </motion.div>
         ))}
@@ -78,7 +78,7 @@ const FEATURES: Feature[] = [
           <div key={i} className="relative h-3 rounded" style={{ background: "rgba(255,255,255,0.04)" }}>
             <motion.div
               className="absolute top-0 left-0 h-full rounded"
-              style={{ background: i === 0 ? GOLD : i === 1 ? "#4a90e2" : "#27c93f" }}
+              style={{ background: i === 0 ? ACCENT : i === 1 ? "#4a90e2" : "#27c93f" }}
               animate={{ width: h ? ["10%", "90%", "10%"] : "40%" }}
               transition={{ duration: 2, repeat: h ? Infinity : 0, delay: i * 0.15 }}
             />
@@ -93,7 +93,7 @@ const FEATURES: Feature[] = [
     Icon: ImageIcon,
     preview: (h) => (
       <div className="relative h-16 rounded overflow-hidden"
-        style={{ background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})` }}>
+        style={{ background: `linear-gradient(135deg, ${ACCENT_LIGHT}, ${ACCENT})` }}>
         <motion.div
           className="absolute inset-0"
           style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)" }}
@@ -117,7 +117,7 @@ const FEATURES: Feature[] = [
         />
         <motion.div
           className="w-1/2 h-3 rounded-lg rounded-br-none ml-auto"
-          style={{ background: GOLD }}
+          style={{ background: ACCENT }}
           animate={{ scaleX: h ? [0, 1, 1] : 1 }}
           transition={{ duration: 1.2, repeat: h ? Infinity : 0, delay: 0.4 }}
         />
@@ -130,10 +130,10 @@ const FEATURES: Feature[] = [
     Icon: Target,
     preview: (h) => (
       <div className="relative h-16 flex items-center justify-center">
-        <div className="w-10 h-10 rounded-full border-2" style={{ borderColor: GOLD, opacity: 0.3 }} />
+        <div className="w-10 h-10 rounded-full border-2" style={{ borderColor: ACCENT, opacity: 0.3 }} />
         <motion.div
           className="absolute w-3 h-3 rounded-full"
-          style={{ background: GOLD }}
+          style={{ background: ACCENT }}
           animate={{
             x: h ? [0, 20, 0, -20, 0] : 0,
             y: h ? [-20, 0, 20, 0, -20] : 0,
@@ -160,7 +160,7 @@ const FEATURES: Feature[] = [
             }}
             transition={{ duration: 1.2, repeat: h ? Infinity : 0, delay: i * 0.25 }}
           >
-            <Zap size={12} style={{ color: GOLD }} />
+            <Zap size={12} style={{ color: ACCENT }} />
           </motion.div>
         ))}
       </div>
@@ -181,7 +181,7 @@ const FEATURES: Feature[] = [
         transition={{ duration: 2, repeat: h ? Infinity : 0 }}
       >
         <div className="p-2 space-y-1.5">
-          <div className="w-1/3 h-1.5 rounded-full" style={{ background: GOLD }} />
+          <div className="w-1/3 h-1.5 rounded-full" style={{ background: ACCENT }} />
           <div className="w-2/3 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.1)" }} />
           <div className="w-1/2 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.1)" }} />
         </div>
@@ -197,7 +197,7 @@ const FEATURES: Feature[] = [
         <motion.path
           d="M0,40 L20,30 L40,35 L60,15 L80,22 L100,8 L120,16"
           fill="none"
-          stroke={GOLD}
+          stroke={ACCENT}
           strokeWidth="2"
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
@@ -254,7 +254,7 @@ export default function AnimatedFeatureGrid() {
         >
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white"
             style={{ letterSpacing: "-0.02em" }}>
-            Nine products. <span style={{ color: GOLD }}>One login.</span>
+            Nine products. <span style={{ color: ACCENT }}>One login.</span>
           </h2>
           <p className="text-text-muted mt-3 max-w-xl mx-auto">
             Hover any card to see the feature in motion.

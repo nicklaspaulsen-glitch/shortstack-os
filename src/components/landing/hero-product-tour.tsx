@@ -185,7 +185,7 @@ function DashboardMock() {
               border: "1px solid rgba(255,255,255,0.06)",
             }}
           >
-            <p className="text-[9px] text-gray-600 mb-1">{s.label}</p>
+            <p className="text-[9px] text-gray-500 mb-1">{s.label}</p>
             <p className="text-lg font-bold text-white">{s.val}</p>
             <p className="text-[9px] text-emerald-400 flex items-center gap-0.5">
               <ArrowUpRight size={8} /> {s.change}
@@ -380,7 +380,7 @@ function ContentMock() {
                 border: "1px solid rgba(255,255,255,0.05)",
               }}
             >
-              <p className="text-[9px] text-gray-600 mb-1 font-bold">{d}</p>
+              <p className="text-[9px] text-gray-500 mb-1 font-bold">{d}</p>
               {slot && (
                 <div
                   className="flex-1 rounded flex items-center justify-center"

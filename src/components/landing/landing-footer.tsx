@@ -30,7 +30,7 @@ export default function LandingFooter() {
                 </div>
               </div>
             </div>
-            <p className="text-xs text-gray-600 leading-relaxed">
+            <p className="text-xs text-gray-500 leading-relaxed">
               The AI operating system for modern digital marketing agencies.
               Built by operators at {BRAND.company_name} Digital.
             </p>
@@ -51,7 +51,7 @@ export default function LandingFooter() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-xs text-gray-600 hover:text-gray-300 transition-colors"
+                    className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -74,7 +74,7 @@ export default function LandingFooter() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-xs text-gray-600 hover:text-gray-300 transition-colors"
+                    className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -89,11 +89,11 @@ export default function LandingFooter() {
             </p>
             <a
               href="mailto:growth@shortstack.work"
-              className="text-xs text-gray-600 hover:text-gray-300 transition-colors block mb-2"
+              className="text-xs text-gray-500 hover:text-gray-300 transition-colors block mb-2"
             >
               growth@shortstack.work
             </a>
-            <p className="text-xs text-gray-600 leading-relaxed">
+            <p className="text-xs text-gray-500 leading-relaxed">
               Real humans. Usually reply within a few hours on weekdays.
             </p>
           </div>
