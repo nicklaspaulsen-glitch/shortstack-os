@@ -334,6 +334,55 @@ function effectiveStatus(p: WebsiteProject): string {
   return p.status;
 }
 
+/** Animated wireframe-building skeleton — shown when a site is generating */
+function GeneratingAnimation() {
+  const blocks = [
+    { delay: 0,    width: "w-full",  height: "h-4",   className: "rounded" },     // nav bar
+    { delay: 0.12, width: "w-full",  height: "h-10",  className: "rounded-md" },  // hero
+    { delay: 0.24, width: "w-1/2",  height: "h-2",   className: "rounded-full mx-auto" }, // headline
+    { delay: 0.36, width: "w-1/3",  height: "h-2",   className: "rounded-full mx-auto" }, // sub-headline
+    { delay: 0.48, width: "w-full",  height: "h-px",  className: "" },             // divider
+    { delay: 0.60, width: "w-full",  height: "h-6",   className: "rounded" },      // feature row
+  ];
+  return (
+    <div className="flex flex-col gap-1.5 p-3 w-full h-full justify-center">
+      {blocks.map((b, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, scaleX: 0.4 }}
+          animate={{ opacity: [0, 0.35, 0.2, 0.35], scaleX: 1 }}
+          transition={{
+            delay: b.delay,
+            duration: 0.5,
+            opacity: { duration: 2.4, repeat: Infinity, ease: "easeInOut", delay: b.delay },
+            scaleX: { duration: 0.5, ease: "easeOut" },
+          }}
+          style={{ originX: 0 }}
+          className={`${b.width} ${b.height} ${b.className} bg-[rgba(37,99,235,0.18)]`}
+        />
+      ))}
+      <div className="absolute bottom-2 left-0 right-0 flex items-center justify-center gap-1.5">
+        <span className="w-1 h-1 rounded-full bg-[#2563EB] animate-bounce [animation-delay:0ms]" />
+        <span className="w-1 h-1 rounded-full bg-[#2563EB] animate-bounce [animation-delay:120ms]" />
+        <span className="w-1 h-1 rounded-full bg-[#2563EB] animate-bounce [animation-delay:240ms]" />
+      </div>
+    </div>
+  );
+}
+
+/** Pulsing live indicator dot — shown inline next to Live / Deploying badges */
+function LiveDot({ color = "#10b981" }: { color?: string }) {
+  return (
+    <span className="relative flex items-center justify-center w-2 h-2 shrink-0">
+      <span
+        className="absolute inline-flex w-full h-full rounded-full opacity-60 animate-ping"
+        style={{ backgroundColor: color }}
+      />
+      <span className="relative inline-flex w-1 h-1 rounded-full" style={{ backgroundColor: color }} />
+    </span>
+  );
+}
+
 export default function WebsitesPage() {
   useAuth();
   const supabase = createClient();
@@ -1304,12 +1353,16 @@ export default function WebsitesPage() {
                               title={`${p.name} preview`}
                               sandbox=""
                             />
+                          ) : (status === "generating" || status === "deploying") ? (
+                            <GeneratingAnimation />
                           ) : (
                             <div className="flex items-center justify-center h-full text-muted">
                               <Globe size={24} className="opacity-30" />
                             </div>
                           )}
-                          <span className={`absolute top-2 right-2 text-[9px] px-2 py-0.5 rounded-full border backdrop-blur ${STATUS_BADGE[status] || STATUS_BADGE.draft}`}>
+                          <span className={`absolute top-2 right-2 text-[9px] px-2 py-0.5 rounded-full border backdrop-blur inline-flex items-center gap-1 ${STATUS_BADGE[status] || STATUS_BADGE.draft}`}>
+                            {(status === "live") && <LiveDot color="#10b981" />}
+                            {(status === "generating" || status === "deploying") && <LiveDot color="#2563EB" />}
                             {STATUS_LABEL[status] || p.status}
                           </span>
                           {status === "preview" && days !== null && (
