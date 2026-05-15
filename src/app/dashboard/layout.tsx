@@ -33,6 +33,7 @@ import toast from "react-hot-toast";
 // Lazy-load overlay/modal components — not needed on initial render
 const TopNavbar = dynamic(() => import("@/components/dashboard/top-navbar"), { ssr: false });
 const DashboardAmbient3D = dynamic(() => import("@/components/brand/dashboard-ambient-3d"), { ssr: false });
+const DashboardBackground = dynamic(() => import("@/components/brand/dashboard-background"), { ssr: false });
 const ClientChatWidget = dynamic(() => import("@/components/client-chat-widget"), { ssr: false });
 const VoiceAssistant = dynamic(() => import("@/components/voice-assistant"), { ssr: false });
 const OnboardingTour = dynamic(() => import("@/components/onboarding-tour"), { ssr: false });
@@ -348,6 +349,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           UI. Auto-disabled on prefers-reduced-motion + togglable via
           `data-ambient="off"` on <html> for video-editor / AI-studio
           where every paint frame matters. */}
+      {/* CSS animated mesh gradient blobs — zero JS per frame, pure compositor */}
+      <DashboardBackground />
       <DashboardAmbient3D />
       {/* `bg-background/85` instead of opaque `bg-background` lets the
           ambient 3D shapes peek through at 15% intensity — atmospheric

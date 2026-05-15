@@ -101,6 +101,7 @@
     "file-type": "19.6.0",
     "framer-motion": "^12.38.0",
     "html2canvas": "^1.4.1",
+    "iconsax-react": "^0.0.8",
     "langfuse": "^3.38.20",
     "lucide-react": "^1.7.0",
     "mem0ai": "^3.0.2",

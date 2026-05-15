@@ -39,6 +39,12 @@ export async function POST(request: NextRequest) {
       if (parsed.protocol !== "https:") {
         return NextResponse.json({ error: "webhook_url must use HTTPS" }, { status: 400 });
       }
+      // Reject credentials in the URL — they leak to the destination server and
+      // could be used to reach auth-protected internal endpoints (e.g.
+      // https://admin:secret@internal.corp/). Zero legitimate webhooks need them.
+      if (parsed.username || parsed.password) {
+        return NextResponse.json({ error: "webhook_url must not include credentials" }, { status: 400 });
+      }
       // Layer 1: reject IP literals and obvious private hostnames.
       if (isPrivateOrInternal(parsed.hostname)) {
         return NextResponse.json({ error: "Invalid webhook_url target" }, { status: 400 });
@@ -137,16 +143,26 @@ interface SafeAddress {
  * the private one during the actual connection. resolve4/resolve6 return
  * the full record set so we can reject if ANY address is private.
  */
+/** Race a promise against a fixed timeout; throws on timeout. */
+function withDnsTimeout<T>(p: Promise<T>, ms = 5000): Promise<T> {
+  return Promise.race([
+    p,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`DNS lookup timed out after ${ms}ms`)), ms)
+    ),
+  ]);
+}
+
 async function resolveAndCheck(hostname: string): Promise<SafeAddress | "PRIVATE" | null> {
   let v4addrs: string[] = [];
   let v6addrs: string[] = [];
 
   try {
-    v4addrs = await dns.promises.resolve4(hostname);
-  } catch { /* no A record — may still have AAAA */ }
+    v4addrs = await withDnsTimeout(dns.promises.resolve4(hostname));
+  } catch { /* no A record, timed out, or network error — may still have AAAA */ }
 
   try {
-    v6addrs = await dns.promises.resolve6(hostname);
+    v6addrs = await withDnsTimeout(dns.promises.resolve6(hostname));
   } catch { /* no AAAA record */ }
 
   // Must resolve to at least one address; fail closed otherwise.

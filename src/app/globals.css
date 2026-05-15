@@ -126,6 +126,55 @@ a[role="button"]:hover,
   }
 }
 
+/* ═══════════ ANIMATED MESH GRADIENT BLOBS ═══════════
+ * Five independently drifting blobs power the DashboardBackground
+ * component. Each blob has its own keyframe so the motion is organic
+ * (no two blobs move on the same axis/timing). Pure CSS — zero JS per
+ * frame. Filter blur is handled by the browser compositor.
+ *
+ * z-index: the dashboard layout uses z-[-20] for the static gradient
+ * and the blobs sit at -19 (above the static base, below everything). */
+
+/* Tailwind doesn't generate -z-19 by default — add it here */
+.-z-19 { z-index: -19; }
+
+@keyframes blobDrift1 {
+  0%   { transform: translate(0,    0)    scale(1); }
+  33%  { transform: translate(3%,   5%)   scale(1.06); }
+  66%  { transform: translate(-4%,  3%)   scale(0.96); }
+  100% { transform: translate(0,    0)    scale(1); }
+}
+@keyframes blobDrift2 {
+  0%   { transform: translate(0,    0)    scale(1); }
+  40%  { transform: translate(-5%,  -4%)  scale(1.08); }
+  70%  { transform: translate(3%,   -2%)  scale(0.94); }
+  100% { transform: translate(0,    0)    scale(1); }
+}
+@keyframes blobDrift3 {
+  0%   { transform: translate(0,    0)    scale(1); }
+  35%  { transform: translate(-3%,  4%)   scale(1.04); }
+  65%  { transform: translate(4%,   2%)   scale(0.97); }
+  100% { transform: translate(0,    0)    scale(1); }
+}
+@keyframes blobDrift4 {
+  0%   { transform: translate(0,    0)    scale(1); }
+  45%  { transform: translate(5%,   -3%)  scale(1.07); }
+  80%  { transform: translate(-2%,  5%)   scale(0.95); }
+  100% { transform: translate(0,    0)    scale(1); }
+}
+@keyframes blobDrift5 {
+  0%   { transform: translate(0,    0)    scale(1); }
+  30%  { transform: translate(-4%,  -5%)  scale(1.05); }
+  75%  { transform: translate(3%,   3%)   scale(0.98); }
+  100% { transform: translate(0,    0)    scale(1); }
+}
+
+.dashboard-blob-1 { animation: blobDrift1 22s ease-in-out infinite; }
+.dashboard-blob-2 { animation: blobDrift2 26s ease-in-out infinite; }
+.dashboard-blob-3 { animation: blobDrift3 19s ease-in-out infinite; }
+.dashboard-blob-4 { animation: blobDrift4 24s ease-in-out infinite; }
+.dashboard-blob-5 { animation: blobDrift5 17s ease-in-out infinite; }
+
 
 /* ═══════════ FONT LOADING ═══════════
  * Apr 28 v5: dropped `@import url(...)` — those are render-blocking

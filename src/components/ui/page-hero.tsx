@@ -266,62 +266,127 @@ export default function PageHero({
   variant = "editorial",
   className = "",
 }: PageHeroProps) {
-  // ── Editorial variant — clean white header with red accent rail ──
+  // ── Editorial variant — premium glass header with section-aware tint ──
   if (variant === "editorial") {
+    // Auto-detect section from pathname for tint
+    const editorialPathname = typeof window !== "undefined" ? window.location.pathname : "";
+    // Section tints: very subtle color shift in the glass based on route family
+    let sectionTint = "rgba(37,99,235,0.018)"; // default: blue
+    if (/\/(voice|phone|eleven|voicemail|dialer|headphone)/.test(editorialPathname)) {
+      sectionTint = "rgba(139,92,246,0.020)"; // voice: soft violet
+    } else if (/\/(leads|crm|deals|outreach|sales)/.test(editorialPathname)) {
+      sectionTint = "rgba(16,185,129,0.016)"; // sales: soft green
+    } else if (/\/(analytics|reports|forecast|financials)/.test(editorialPathname)) {
+      sectionTint = "rgba(14,165,233,0.020)"; // analytics: sky
+    } else if (/\/(content|carousel|script|copywriter|social)/.test(editorialPathname)) {
+      sectionTint = "rgba(245,158,11,0.016)"; // create: amber
+    } else if (/\/(thumbnail|video|ai-studio|design)/.test(editorialPathname)) {
+      sectionTint = "rgba(99,102,241,0.020)"; // visual: indigo
+    }
+
     return (
-      <div
-        className={`relative overflow-hidden -mx-4 sm:-mx-6 mb-4 ${className}`}
+      <motion.div
+        className={`relative overflow-hidden -mx-4 sm:-mx-6 mb-5 ${className}`}
+        initial={{ opacity: 0, y: -4 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
         style={{
-          background: "rgba(255,255,255,0.92)",
-          backdropFilter: "blur(20px) saturate(1.5)",
-          WebkitBackdropFilter: "blur(20px) saturate(1.5)",
-          borderBottom: "1px solid rgba(0,0,0,0.08)",
-          boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)",
+          background: `linear-gradient(135deg, rgba(255,255,255,0.93) 0%, rgba(255,255,255,0.88) 100%)`,
+          backdropFilter: "blur(24px) saturate(1.8) brightness(1.01)",
+          WebkitBackdropFilter: "blur(24px) saturate(1.8) brightness(1.01)",
+          borderBottom: "1px solid rgba(0,0,0,0.065)",
+          boxShadow: [
+            "inset 0 1px 0 rgba(255,255,255,1)",
+            "inset 0 0 0 1px rgba(0,0,0,0.04)",
+            `inset 0 0 40px 0 ${sectionTint}`,
+            "0 1px 3px rgba(0,0,0,0.05)",
+            "0 4px 16px -4px rgba(0,0,0,0.07)",
+            "0 0 48px -12px rgba(37,99,235,0.09)",
+          ].join(", "),
         }}
       >
-        {/* Top-edge blue accent line — 1px horizontal gradient, no side-stripe */}
+        {/* Top-edge gradient accent line */}
         <div
           className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-          style={{ background: "linear-gradient(90deg, transparent 0%, rgba(37,99,235,0.7) 25%, rgba(59,130,246,0.5) 75%, transparent 100%)" }}
+          style={{
+            background: "linear-gradient(90deg, transparent 0%, rgba(37,99,235,0.55) 20%, rgba(59,130,246,0.40) 60%, rgba(99,102,241,0.25) 85%, transparent 100%)",
+          }}
           aria-hidden
         />
 
-        <div className="flex items-center gap-3 pl-6 pr-5 py-4">
+        {/* Subtle background shimmer — reveals the glass depth */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.35] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")`,
+            backgroundSize: "200px 200px",
+          }}
+          aria-hidden
+        />
+
+        <div className="relative flex items-center gap-3.5 pl-6 pr-5 py-[14px]">
           {icon && (
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 [&_svg]:w-4 [&_svg]:h-4"
+            <motion.div
+              className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 [&_svg]:w-[17px] [&_svg]:h-[17px]"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.20, delay: 0.04, ease: [0.32, 0.72, 0, 1] }}
               style={{
-                background: "rgba(37,99,235,0.07)",
-                border: "1px solid rgba(37,99,235,0.15)",
+                background: "linear-gradient(135deg, rgba(37,99,235,0.09) 0%, rgba(37,99,235,0.05) 100%)",
+                border: "1px solid rgba(37,99,235,0.18)",
                 color: "#2563EB",
-                boxShadow: "0 1px 3px rgba(37,99,235,0.08)",
+                boxShadow: "0 1px 4px rgba(37,99,235,0.10), inset 0 1px 0 rgba(255,255,255,0.9)",
               }}
             >
               {icon}
-            </div>
+            </motion.div>
           )}
 
           <div className="flex-1 min-w-0">
             {eyebrow && (
-              <p className="font-editorial text-[10px] text-[#2563EB] tracking-wide mb-0.5 truncate" style={{ letterSpacing: "0.08em" }}>
+              <motion.p
+                className="font-editorial text-[9.5px] text-[#2563EB] mb-0.5 truncate uppercase"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.85 }}
+                transition={{ duration: 0.18, delay: 0.06 }}
+                style={{ letterSpacing: "0.10em" }}
+              >
                 {eyebrow}
-              </p>
+              </motion.p>
             )}
-            <h1 className="font-display text-[clamp(1.1rem,0.95rem+0.5vw,1.4rem)] font-bold text-text-primary leading-[1.1] tracking-[-0.025em] truncate">
+            <motion.h1
+              className="font-display text-[clamp(1.05rem,0.90rem+0.55vw,1.38rem)] font-bold text-text-primary leading-[1.12] tracking-[-0.025em] truncate"
+              initial={{ opacity: 0, x: -6 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.22, delay: 0.05, ease: [0.32, 0.72, 0, 1] }}
+            >
               {title}
-            </h1>
+            </motion.h1>
             {subtitle && (
-              <p className="text-[11px] text-[#52525B] mt-0.5 truncate">{subtitle}</p>
+              <motion.p
+                className="text-[11px] leading-[1.4] mt-0.5 truncate"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.62 }}
+                transition={{ duration: 0.20, delay: 0.09 }}
+                style={{ color: "#52525B" }}
+              >
+                {subtitle}
+              </motion.p>
             )}
           </div>
 
           {actions && (
-            <div className="flex items-center gap-2 shrink-0">
+            <motion.div
+              className="flex items-center gap-2 shrink-0"
+              initial={{ opacity: 0, x: 8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.22, delay: 0.08, ease: [0.32, 0.72, 0, 1] }}
+            >
               {actions}
-            </div>
+            </motion.div>
           )}
         </div>
-      </div>
+      </motion.div>
     );
   }
 

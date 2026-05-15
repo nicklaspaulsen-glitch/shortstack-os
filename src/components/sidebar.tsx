@@ -671,11 +671,11 @@ export default function Sidebar() {
             indented ? "px-3 ml-1" : "px-2.5"
           } ${
             isActive
-              ? "active text-brand-accent font-semibold bg-[rgba(37,99,235,0.10)]"
-              : "text-text-secondary hover:text-text-primary hover:bg-white/[0.03]"
+              ? "active text-brand-accent font-semibold bg-[rgba(37,99,235,0.09)] shadow-[inset_0_0_0_1px_rgba(37,99,235,0.13),0_1px_4px_rgba(37,99,235,0.06)]"
+              : "text-text-secondary hover:text-text-primary hover:bg-[rgba(0,0,0,0.04)]"
           }`}
         >
-          <span className={`shrink-0 transition-colors duration-220 ease-out-expo-foundation ${isActive ? "text-brand-accent" : hoveredItem === item.href ? "text-text-primary" : ""}`}>
+          <span className={`shrink-0 transition-all duration-220 ease-out-expo-foundation ${isActive ? "text-brand-accent scale-[1.06]" : hoveredItem === item.href ? "text-text-primary scale-[1.04]" : "scale-100"}`}>
             {customIcon || item.icon}
           </span>
           <span className="truncate flex-1">{label}</span>
@@ -683,8 +683,8 @@ export default function Sidebar() {
           {isActive && (
             <motion.div
               layoutId="sidebar-active-accent"
-              className="absolute -left-px top-1/2 w-[2px] h-[60%] rounded-r bg-brand-accent"
-              style={{ y: "-50%" }}
+              className="absolute -left-px top-1/2 w-[2px] h-[62%] rounded-r bg-brand-accent"
+              style={{ y: "-50%", boxShadow: "0 0 8px rgba(37,99,235,0.55), 0 0 2px rgba(37,99,235,0.8)" }}
               transition={{ type: "spring", stiffness: 380, damping: 32 }}
             />
           )}
