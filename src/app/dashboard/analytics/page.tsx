@@ -18,7 +18,7 @@ import { StatSkeleton, CardSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import Link from "next/link";
 
-const CHART_COLORS = ["#2563EB", "#3B82F6", "#1D4ED8", "#F26063", "#FF8585", "#8B1A1A"];
+const CHART_COLORS = ["#2563EB", "#3B82F6", "#1D4ED8", "#64748B", "#94A3B8", "#475569"];
 
 // --- Types -----------------------------------------------------------------
 interface ChurnClient { name: string; risk: "high" | "medium" | "low"; score: number; reason: string; mrr: number }
@@ -578,7 +578,7 @@ export default function AnalyticsPage() {
 >
                     {stats.totalLeads.toLocaleString()}
                   </p>
-                  <p className="text-[10px] mt-0.5" style={{ color: leadGrowth>= 0 ? "#52525B" : "#F26063" }}>
+                  <p className="text-[10px] mt-0.5" style={{ color: leadGrowth>= 0 ? "#52525B" : "#94A3B8" }}>
                     {leadGrowth !== 0 ? `${leadGrowth> 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "�"}
                   </p>
                 </motion.div>
@@ -612,7 +612,7 @@ export default function AnalyticsPage() {
                           <Sparkline values={stat.sparkData} color="#3B82F6" id={`z1s-${i}`} width={44} height={18} />
                         )}
                       </div>
-                      <p className="text-[10px] mt-0.5" style={{ color: stat.subOk ? "#52525B" : "#F26063" }}>{stat.sub}</p>
+                      <p className="text-[10px] mt-0.5" style={{ color: stat.subOk ? "#52525B" : "#94A3B8" }}>{stat.sub}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -946,7 +946,7 @@ export default function AnalyticsPage() {
                         {/* Your score */}
                         <motion.div
                           className="absolute h-full rounded-full"
-                          style={{ background: isAbove ? "#2563EB" : "#F26063" }}
+                          style={{ background: isAbove ? "#2563EB" : "#94A3B8" }}
                           initial={{ width: 0 }}
                           animate={{ width: `${yourPct}%` }}
                           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -954,7 +954,7 @@ export default function AnalyticsPage() {
                       </div>
                       <span
                         className="text-[9px] font-mono w-7 text-right shrink-0"
-                        style={{ color: isAbove ? "#2563EB" : "#F26063", fontVariantNumeric: "tabular-nums" }}
+                        style={{ color: isAbove ? "#2563EB" : "#6B7280", fontVariantNumeric: "tabular-nums" }}
 >
                         {b.yours}%
                       </span>
@@ -986,7 +986,7 @@ export default function AnalyticsPage() {
               {[
                 { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#2563EB",
                   sparkData: revenueByMonth.length> 1 ? revenueByMonth.map(r => r.mrr) : undefined },
-                { label: "Lead Growth", value: `${leadGrowth>= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth>= 0 ? "#2563EB" : "#F26063",
+                { label: "Lead Growth", value: `${leadGrowth>= 0 ? "+" : ""}${leadGrowth}%`, sub: "vs last month", color: leadGrowth>= 0 ? "#2563EB" : "#6B7280",
                   sparkData: leadsByDay.slice(-10).map(d => d.count) },
                 { label: "Reply Rate", value: `${replyRate}%`, sub: `${stats.dmsSent.toLocaleString()} DMs sent`, color: "#3B82F6",
                   sparkData: outreachByDay.slice(-10).map(d => d.replies) },
@@ -1179,7 +1179,7 @@ export default function AnalyticsPage() {
                       <td className="py-3 text-right">
                         <span
                           className="text-[10px] font-bold"
-                          style={{ color: p.roi> 200 ? "#3B82F6" : p.roi> 100 ? "#2563EB" : "#F26063", fontVariantNumeric: "tabular-nums" }}
+                          style={{ color: p.roi> 200 ? "#3B82F6" : p.roi> 100 ? "#2563EB" : "#6B7280", fontVariantNumeric: "tabular-nums" }}
 >
                           {p.roi}%
                         </span>
@@ -1209,14 +1209,14 @@ export default function AnalyticsPage() {
                 </div>
               ) : churnRiskClients.map(client => (
                 <div key={client.name} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
-                  <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F26063]" : client.risk === "medium" ? "bg-[#3B82F6]" : "bg-[rgba(0,0,0,0.2)]"}`} />
+                  <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F59E0B]" : client.risk === "medium" ? "bg-[#3B82F6]" : "bg-[rgba(0,0,0,0.2)]"}`} />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-text-primary truncate">{client.name}</p>
                     <p className="text-[9px] text-[#6F6D7A]">{client.reason}</p>
                   </div>
                   <span
                     className="text-[10px] font-bold shrink-0"
-                    style={{ color: client.risk === "high" ? "#F26063" : client.risk === "medium" ? "#3B82F6" : "rgba(0,0,0,0.35)", fontVariantNumeric: "tabular-nums" }}
+                    style={{ color: client.risk === "high" ? "#D97706" : client.risk === "medium" ? "#3B82F6" : "rgba(0,0,0,0.35)", fontVariantNumeric: "tabular-nums" }}
 >
                     {client.score}%
                   </span>
@@ -1270,7 +1270,7 @@ export default function AnalyticsPage() {
                         <td className="py-3 text-right">
                           <span
                             className="text-[10px] font-mono font-bold"
-                            style={{ color: growth>= 0 ? "#3B82F6" : "#F26063", fontVariantNumeric: "tabular-nums" }}
+                            style={{ color: growth>= 0 ? "#3B82F6" : "#94A3B8", fontVariantNumeric: "tabular-nums" }}
 >
                             {growth>= 0 ? "+" : ""}{growth}%
                           </span>

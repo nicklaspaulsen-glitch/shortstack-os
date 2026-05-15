@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ADS_PRESET — the full-ad video template.
  *
  * Opinionated configuration that mirrors the aesthetic of top IG Reels / TikTok
@@ -108,7 +108,7 @@ export const ADS_PRESET: AdsPreset = {
   color_palette: {
     primary: "#FFFFFF",
     secondary: "#000000",
-    accent: "#FF2D2D", // punchy red
+    accent: "#2563EB", // punchy red
     background: "#0A0A0A",
     text_on_dark: "#FFFFFF",
     text_on_light: "#0A0A0A",

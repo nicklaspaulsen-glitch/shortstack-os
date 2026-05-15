@@ -1,4 +1,4 @@
-// Brand tokens — single source of truth for the ShortStack OS visual system.
+﻿// Brand tokens — single source of truth for the ShortStack OS visual system.
 // Kept in TypeScript so React components can import them programmatically
 // and so the values can be type-checked. Tailwind reads from the same hex
 // values via tailwind.config.ts.
@@ -49,7 +49,7 @@ export const tokens = {
   status: {
     success: "#7FE5B8",
     warning: "#FFC062",
-    error: "#F26063",
+    error: "#3B82F6",
   },
   motion: {
     standard: "220ms cubic-bezier(0.32, 0.72, 0, 1)",

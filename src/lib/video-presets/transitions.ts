@@ -1,4 +1,4 @@
-/**
+﻿/**
  * TRANSITIONS_LIBRARY — 100+ video transitions for the editor.
  *
  * Each entry is a data-only preset. The renderer reads `category` + `id` to pick
@@ -118,7 +118,7 @@ export const TRANSITIONS_LIBRARY: Transition[] = [
     category: "fade",
     duration_ms: 400,
     description: "High-impact fade via red flash.",
-    cssOrCompositorHint: "fade-via: #FF2D2D",
+    cssOrCompositorHint: "fade-via: #2563EB",
   },
   {
     id: "tr_fade_through_color_blue",

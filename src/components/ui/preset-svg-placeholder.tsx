@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Category-themed gradient SVG placeholder shown when a preset has no
@@ -22,7 +22,7 @@ const CATEGORY_GRADIENTS: Record<string, [string, string]> = {
   youtube: ["#EF4444", "#F97316"],
   podcast: ["#7C3AED", "#A855F7"],
   education: ["#E02020", "#3B82F6"],
-  business: ["#991414", "#2563EB"],
+  business: ["#1D4ED8", "#2563EB"],
   personal: ["#BE185D", "#F472B6"],
   // Telegram presets
   onboarding: ["#CC1A1A", "#3B82F6"],

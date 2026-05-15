@@ -147,11 +147,11 @@ export default function TrinityOrbVisual({
             <linearGradient id="trinity-facet-mid" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#2563EB" />
               <stop offset="55%" stopColor="#1D4ED8" />
-              <stop offset="100%" stopColor="#991414" />
+              <stop offset="100%" stopColor="#1D4ED8" />
             </linearGradient>
             <linearGradient id="trinity-facet-dark" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#991414" />
-              <stop offset="55%" stopColor="#660E0E" />
+              <stop offset="0%" stopColor="#1D4ED8" />
+              <stop offset="55%" stopColor="#1E3A8A" />
               <stop offset="100%" stopColor="#1E1B4B" />
             </linearGradient>
             <radialGradient id="trinity-eye" cx="50%" cy="50%" r="50%">

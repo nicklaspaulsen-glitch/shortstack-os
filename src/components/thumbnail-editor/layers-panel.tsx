@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 // Right-side layers panel. Drag-to-reorder, visibility/lock/opacity/blend
 // controls per layer, right-click context menu, tiny thumbnail preview
@@ -327,7 +327,7 @@ function LayerRow({
       ctx.fillRect(4, 6, 24, 20);
       ctx.fillRect(4, 4, 12, 4);
     } else {
-      ctx.fillStyle = "#FF2D2D";
+      ctx.fillStyle = "#2563EB";
       ctx.fillRect(8, 8, 16, 16);
     }
   }, [layer]);

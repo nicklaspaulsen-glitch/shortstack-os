@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Danger Zone — irreversible account actions surface.
@@ -122,7 +122,7 @@ export default function DangerZonePage() {
               className="card"
               style={{
                 borderColor: "rgba(242, 96, 99, 0.30)",
-                background: "linear-gradient(180deg, color-mix(in srgb, #F26063 6%, transparent) 0%, transparent 60%)",
+                background: "linear-gradient(180deg, color-mix(in srgb, #3B82F6 6%, transparent) 0%, transparent 60%)",
               }}
             >
               <div className="flex items-start gap-4">

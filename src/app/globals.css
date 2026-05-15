@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -701,7 +701,7 @@ body {
     @apply outline-none;
     box-shadow:
       0 0 0 2px var(--color-background, #ffffff),
-      0 0 0 4px #FF2D2D;
+      0 0 0 4px #2563EB;
   }
 
   /* ═══════════ INPUTS ═══════════ */
@@ -726,8 +726,8 @@ body {
     box-shadow:
       inset 0 1px 2px rgba(0,0,0,0.1),
       0 0 0 2px var(--color-background, #ffffff),
-      0 0 0 4px #FF2D2D,
-      0 0 18px -4px color-mix(in srgb, var(--color-accent, #C9A84C) 40%, transparent);
+      0 0 0 4px #2563EB,
+      0 0 18px -4px color-mix(in srgb, var(--color-accent, #2563EB) 40%, transparent);
   }
 
   .badge {
@@ -892,7 +892,7 @@ body {
   /* Preset accent colors — override --card-accent-color or stack classes */
   .card-accent-gold   { --card-accent-color: #2563EB; }
   .card-accent-blue   { --card-accent-color: #2563EB; }
-  .card-accent-green  { --card-accent-color: #FF2D2D; }
+  .card-accent-green  { --card-accent-color: #22C55E; }
   .card-accent-purple { --card-accent-color: #A855F7; }
   .card-accent-warning{ --card-accent-color: #F59E0B; }
   .card-accent-danger { --card-accent-color: #EF4444; }
@@ -1047,7 +1047,7 @@ body {
   }
   .breathe { animation: breathe 3s ease-in-out infinite; }
   .pulse-ring { animation: pulseRing 2s ease-out infinite; }
-  .shimmer-bg { background: linear-gradient(90deg, transparent 33%, rgba(255,45,45,0.06) 50%, transparent 66%); background-size: 200% 100%; animation: shimmer 2.5s ease-in-out infinite; }
+  .shimmer-bg { background: linear-gradient(90deg, transparent 33%, rgba(37,99,235,0.06) 50%, transparent 66%); background-size: 200% 100%; animation: shimmer 2.5s ease-in-out infinite; }
 
   .stagger-1 { animation-delay: 0.06s; animation-fill-mode: backwards; }
   .stagger-2 { animation-delay: 0.12s; animation-fill-mode: backwards; }
@@ -1712,7 +1712,7 @@ body {
     0 2px 4px rgba(0,0,0,0.35),
     0 8px 24px rgba(0,0,0,0.3),
     0 20px 56px -12px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(255,45,45,0.04);
+    0 0 0 1px rgba(37,99,235,0.04);
 }
 /* Back-compat alias — resolves to .glass in dark theme */
 :root[data-theme="dark"] .glass-indigo,
@@ -1753,8 +1753,8 @@ body {
     0 2px 4px rgba(0,0,0,0.35),
     0 8px 24px rgba(0,0,0,0.3),
     0 24px 64px -16px rgba(0,0,0,0.55),
-    0 0 0 1px rgba(255,45,45,0.06),
-    0 0 48px -12px rgba(255,45,45,0.08);
+    0 0 0 1px rgba(37,99,235,0.06),
+    0 0 48px -12px rgba(37,99,235,0.08);
 }
 :root[data-theme="dark"] .glass-elevated:hover,
 .theme-dark .glass-elevated:hover {
@@ -1767,8 +1767,8 @@ body {
     0 4px 8px rgba(0,0,0,0.4),
     0 12px 32px rgba(0,0,0,0.35),
     0 32px 72px -16px rgba(0,0,0,0.6),
-    0 0 0 1px rgba(255,45,45,0.1),
-    0 0 56px -12px rgba(255,45,45,0.12);
+    0 0 0 1px rgba(37,99,235,0.1),
+    0 0 56px -12px rgba(37,99,235,0.12);
 }
 
 /* ── Floating pill top-navbar — dark theme override ── */
@@ -1812,7 +1812,7 @@ body {
     0 4px 8px rgba(0,0,0,0.3),
     0 12px 32px rgba(0,0,0,0.25),
     0 24px 56px -16px rgba(0,0,0,0.45),
-    0 0 40px -8px rgba(255,45,45,0.08);
+    0 0 40px -8px rgba(37,99,235,0.08);
   transform: translateY(-2px);
 }
 
@@ -1820,7 +1820,7 @@ body {
    VisionOS spatial UI: scale(1.02) on focus = premium "selected" feel. */
 .focus-scale:focus-visible {
   transform: scale(1.02);
-  outline: 2px solid rgba(255,45,45,0.4);
+  outline: 2px solid rgba(37,99,235,0.4);
   outline-offset: 2px;
   transition:
     transform var(--duration-micro, 100ms) var(--ease-out-expo-premium, cubic-bezier(0.16, 1, 0.3, 1)),
@@ -1836,7 +1836,7 @@ body {
 .tilt-3d:hover {
   transform: perspective(800px) rotateX(-3deg) translateY(-4px);
   border-color: rgba(255,255,255,0.18);
-  box-shadow: 0 12px 48px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.1), 0 0 40px rgba(255,45,45,0.06);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.1), 0 0 40px rgba(37,99,235,0.06);
 }
 
 /* ═══════════ PRISM AMBIENT BACKGROUND ═══════════ */
@@ -1887,7 +1887,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(255,45,45,0.06) 0%, transparent 70%);
+  background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(37,99,235,0.06) 0%, transparent 70%);
   pointer-events: none;
 }
 .ambient-radial::before {
@@ -1906,7 +1906,7 @@ body {
   box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.04);
 }
 .shadow-lift {
-  box-shadow: 0 12px 48px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.1), 0 0 40px rgba(255,45,45,0.06);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.1), 0 0 40px rgba(37,99,235,0.06);
 }
 
 /* Subtle icon breathing on idle nav items — one at a time */
@@ -2294,7 +2294,7 @@ body {
   height: 56px;
   padding: 0 2rem;
   border-radius: 14px;
-  border: 1px solid rgba(255, 45, 45, 0.5);
+  border: 1px solid rgba(37, 99, 235, 0.5);
   background: radial-gradient(ellipse at center,
     #FF5252 0%,
     #FF2D2D 45%,
@@ -2307,7 +2307,7 @@ body {
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
   box-shadow:
     0 0 0 0 rgba(255, 45, 45, 0.4),
-    0 8px 24px -6px rgba(255, 45, 45, 0.5),
+    0 8px 24px -6px rgba(37, 99, 235, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
   animation: hfBreathe 3s ease-in-out infinite;
 }
@@ -2330,7 +2330,7 @@ body {
   0%, 100% {
     box-shadow:
       0 0 0 0 rgba(255, 45, 45, 0.35),
-      0 8px 24px -6px rgba(255, 45, 45, 0.5),
+      0 8px 24px -6px rgba(37, 99, 235, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
   50% {
@@ -2386,10 +2386,10 @@ body {
   color: rgba(255, 255, 255, 0.95);
 }
 .hf-tile[data-active="true"] {
-  border-color: rgba(255, 45, 45, 0.6);
-  background: rgba(255, 45, 45, 0.1);
-  color: #FF6B6B;
-  box-shadow: 0 0 0 1px rgba(255, 45, 45, 0.2), 0 4px 16px -4px rgba(255, 45, 45, 0.25);
+  border-color: rgba(37, 99, 235, 0.6);
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563EB;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2), 0 4px 16px -4px rgba(37, 99, 235, 0.25);
 }
 
 /* Collapsible sidebar — expand on hover */
@@ -2463,8 +2463,8 @@ body {
   transition: all 0.2s ease;
 }
 .hf-tile[data-active="true"] .hf-aspect-frame {
-  border-color: #FF6B6B;
-  box-shadow: 0 0 0 1px rgba(255, 107, 107, 0.2), inset 0 0 12px rgba(255, 107, 107, 0.12);
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2), inset 0 0 12px rgba(59, 130, 246, 0.12);
 }
 
 /* Reduced motion — kill breathing */

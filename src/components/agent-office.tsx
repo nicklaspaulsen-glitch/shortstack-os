@@ -1,12 +1,12 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
 const AGENTS = [
-  { id: "lead-engine", name: "Scout", role: "Leads", color: "#FF2D2D", emoji: "🔍" },
-  { id: "outreach", name: "Echo", role: "Outreach", color: "#FF2D2D", emoji: "📨" },
+  { id: "lead-engine", name: "Scout", role: "Leads", color: "#2563EB", emoji: "🔍" },
+  { id: "outreach", name: "Echo", role: "Outreach", color: "#2563EB", emoji: "📨" },
   { id: "content", name: "Pixel", role: "Content", color: "#a855f7", emoji: "✨" },
   { id: "ads", name: "Blaze", role: "Ads", color: "#f59e0b", emoji: "🔥" },
   { id: "trinity", name: "Trinity", role: "Boss", color: "#c8a855", emoji: "👑" },
@@ -16,7 +16,7 @@ const AGENTS = [
   { id: "invoice", name: "Ledger", role: "Billing", color: "#22c55e", emoji: "💰" },
   { id: "retention", name: "Keep", role: "Retention", color: "#f43f5e", emoji: "❤️" },
   { id: "social-media", name: "Wave", role: "Social", color: "#ec4899", emoji: "📱" },
-  { id: "scheduler", name: "Clock", role: "Calendar", color: "#FF2D2D", emoji: "📅" },
+  { id: "scheduler", name: "Clock", role: "Calendar", color: "#2563EB", emoji: "📅" },
 ];
 
 export default function AgentOffice() {

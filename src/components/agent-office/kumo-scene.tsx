@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * KumoScene — Apr 28 v13 redesign.
@@ -283,8 +283,8 @@ function WhiteboardStation({ glowing, glowColor }: { glowing: boolean; glowColor
       <line x1={-40} y1={-15} x2={-15} y2={-15} stroke="#CC1A1A" strokeWidth={1.5} />
       <line x1={-40} y1={-10} x2={-25} y2={-10} stroke="#CC1A1A" strokeWidth={1.5} />
       <circle cx={-5} cy={-12} r={4} fill="none" stroke="#CC1A1A" strokeWidth={1.5} />
-      <line x1={5} y1={-15} x2={20} y2={-15} stroke="#FF2D2D" strokeWidth={1.5} />
-      <line x1={5} y1={-10} x2={30} y2={-10} stroke="#FF2D2D" strokeWidth={1.5} />
+      <line x1={5} y1={-15} x2={20} y2={-15} stroke="#2563EB" strokeWidth={1.5} />
+      <line x1={5} y1={-10} x2={30} y2={-10} stroke="#2563EB" strokeWidth={1.5} />
       <path d="M -40 0 L -32 -3 L -25 0 L -18 -5 L -10 -1 L 0 -4 L 12 0 L 25 -2"
         fill="none" stroke="#CC1A1A" strokeWidth={1.2} />
       {glowing && (
@@ -402,7 +402,7 @@ function ContentEasel({ glowing, glowColor }: { glowing: boolean; glowColor: str
                   cx={-24 + col * 8.4}
                   cy={-35 + row * 7}
                   r={1.5}
-                  fill={glowing ? glowColor : "#FF2D2D"}
+                  fill={glowing ? glowColor : "#2563EB"}
                   opacity={0.85}
                 />
               )}
@@ -718,8 +718,8 @@ export default function KumoScene({
           {/* Sky behind windows */}
           <linearGradient id="sky-grad" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#FF8080" />
-            <stop offset="60%" stopColor="#FF2D2D" />
-            <stop offset="100%" stopColor="#FF2D2D" />
+            <stop offset="60%" stopColor="#2563EB" />
+            <stop offset="100%" stopColor="#2563EB" />
           </linearGradient>
 
           {/* Wood floor */}
@@ -740,7 +740,7 @@ export default function KumoScene({
             <stop offset="100%" stopColor="#0A1F1E" />
           </linearGradient>
           <radialGradient id="floor-glow" cx="50%" cy="55%" r="55%">
-            <stop offset="0%" stopColor="#FF2D2D" stopOpacity="0.32" />
+            <stop offset="0%" stopColor="#2563EB" stopOpacity="0.32" />
             <stop offset="60%" stopColor="#CC1A1A" stopOpacity="0.08" />
             <stop offset="100%" stopColor="#042F2E" stopOpacity="0" />
           </radialGradient>
@@ -748,10 +748,10 @@ export default function KumoScene({
           {/* Desks */}
           <linearGradient id="desk-top-grad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FF8080" />
-            <stop offset="100%" stopColor="#FF2D2D" />
+            <stop offset="100%" stopColor="#2563EB" />
           </linearGradient>
           <linearGradient id="desk-side-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#FF2D2D" />
+            <stop offset="0%" stopColor="#2563EB" />
             <stop offset="100%" stopColor="#CC1A1A" />
           </linearGradient>
           <linearGradient id="desk-front-grad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -816,10 +816,10 @@ export default function KumoScene({
             <stop offset="0%" stopColor="#7F5530" /><stop offset="100%" stopColor="#3F2D1F" />
           </linearGradient>
           <radialGradient id="leaf-grad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FF6B6B" /><stop offset="100%" stopColor="#CC1A1A" />
+            <stop offset="0%" stopColor="#3B82F6" /><stop offset="100%" stopColor="#CC1A1A" />
           </radialGradient>
           <radialGradient id="leaf-grad-light" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FF8080" /><stop offset="100%" stopColor="#FF2D2D" />
+            <stop offset="0%" stopColor="#FF8080" /><stop offset="100%" stopColor="#2563EB" />
           </radialGradient>
 
           {/* Avatar gradients (head + shirt per agent) */}
@@ -853,7 +853,7 @@ export default function KumoScene({
         {/* BACK WALL */}
         <rect x={0} y={0} width={VB_W} height={150} fill="url(#wall-grad)" />
         <rect x={0} y={148} width={VB_W} height={2} fill="#FF8080" opacity={0.32} />
-        <ellipse cx={VB_W / 2} cy={150} rx={VB_W / 2} ry={50} fill="#FF2D2D" opacity={0.18} filter="url(#blur-glow)" />
+        <ellipse cx={VB_W / 2} cy={150} rx={VB_W / 2} ry={50} fill="#2563EB" opacity={0.18} filter="url(#blur-glow)" />
         <Window cx={200} cy={70} w={140} h={70} />
         <Window cx={500} cy={70} w={140} h={70} />
         <Window cx={800} cy={70} w={140} h={70} />

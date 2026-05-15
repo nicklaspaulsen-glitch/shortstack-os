@@ -18,7 +18,7 @@ export interface ThemeToggleProps {
 }
 
 export default function ThemeToggle({ variant = "icon", className = "" }: ThemeToggleProps) {
-  const [theme, setTheme] = useState<ThemeId>("dark");
+  const [theme, setTheme] = useState<ThemeId>("light");
 
   // Sync local state with the html attribute on mount + when the user
   // changes themes from another tab.

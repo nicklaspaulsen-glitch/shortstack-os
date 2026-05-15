@@ -224,7 +224,7 @@ mirrors the same hex values via `tailwind.config.ts`; CSS variables in
 
 Direction: **Light × Card × Blue Accent × Blue/White/Gray** (May 10 flip).
 The dark OLED theme still exists under `[data-theme="dark"]` in globals.css
-and retains its red accent for backward compat — but the DEFAULT (`:root`)
+and retains its blue accent for backward compat — but the DEFAULT (`:root`)
 theme is now light with a blue accent.
 
 ### Locked color palette — light theme (`:root`, the default)
@@ -238,8 +238,8 @@ theme is now light with a blue accent.
   `--border-strong rgba(0,0,0,0.14)`.
 - **Text:** `--text-primary #111827`, `--text-secondary #374151`,
   `--text-muted #6B7280`.
-- **Dark theme accent (legacy override):** `#FF2D2D` under
-  `[data-theme="dark"]`. Never reference this in new light-theme code.
+- **Dark theme accent:** `#3B82F6` under `[data-theme="dark"]`.
+  Same blue family as the light theme. Never reference dark-only values in new code.
 - **Accent alias:** `--brand-lime` is a back-compat alias that resolves
   to `#2563EB` in the light theme. Do not use it in new code.
 
@@ -281,16 +281,16 @@ pointer-events: none. The component itself is server-safe.
 
 ### Existing color names (back-compat shim)
 The 100+ pages still use the original Tailwind class names. Those stay
-registered in `tailwind.config.ts` and now point to the prism red palette:
-- `text-gold-*` / `bg-gold-*` / `border-gold-*` → prism red scale
-- `text-amber-*` / `bg-amber-*` / `border-amber-*` → prism red scale
+registered in `tailwind.config.ts` and now point to the blue brand accent:
+- `text-gold-*` / `bg-gold-*` / `border-gold-*` → blue brand scale
+- `text-amber-*` / `bg-amber-*` / `border-amber-*` → blue brand scale
 - `text-purple-*` / `bg-purple-*` / `border-purple-*` → charcoal/plum scale
-- `text-indigo-*` / `bg-indigo-*` / `border-indigo-*` → prism red scale
-- `bg-brand-lime` / `text-brand-lime` / `border-brand-lime` → prism red scale
+- `text-indigo-*` / `bg-indigo-*` / `border-indigo-*` → blue brand scale
+- `bg-brand-lime` / `text-brand-lime` / `border-brand-lime` → blue brand scale
 
 For **new code**, reference the canonical brand-foundation classes
 (`bg-brand-accent`, `border-border-subtle`, `text-text-primary`, etc.) or
-import `tokens` from `@/lib/brand/tokens` (`tokens.brand.accent = "#FF2D2D"`).
+import `tokens` from `@/lib/brand/tokens` (`tokens.brand.accent = "#2563EB"`).
 Do not introduce new uses of the legacy `gold`/`amber`/`purple`/`lime`
 shade names.
 

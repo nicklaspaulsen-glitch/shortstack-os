@@ -35,18 +35,18 @@ type ViewMode = "table" | "card";
 
 const TAG_PRESETS: ClientTag[] = [
   { label: "VIP", color: "#1D4ED8" },
-  { label: "At Risk", color: "#F26063" },
+  { label: "At Risk", color: "#F59E0B" },
   { label: "New", color: "#3B82F6" },
   { label: "Enterprise", color: "#3B82F6" },
   { label: "Growing", color: "#1D4ED8" },
-  { label: "Needs Attention", color: "#F26063" },
+  { label: "Needs Attention", color: "#F59E0B" },
 ];
 
 function HealthArc({ score }: { score: number }) {
   const pct = Math.min(100, Math.max(0, score ?? 0));
   const r = 16, circ = 2 * Math.PI * r;
   const dash = (pct / 100) * circ;
-  const color = pct>= 70 ? "#3B82F6" : pct>= 40 ? "#1D4ED8" : "#F26063";
+  const color = pct>= 70 ? "#3B82F6" : pct>= 40 ? "#1D4ED8" : "#F59E0B";
   return (
     <svg width="42" height="42" viewBox="0 0 42 42" className="-rotate-90">
       <circle cx="21" cy="21" r={r} fill="none" stroke="rgba(0,0,0,0.08)" strokeWidth="3" />
@@ -646,7 +646,7 @@ export default function ClientsPage() {
     { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" }, // Total
     { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" }, // Active
     { accent: "#3B82F6", bar: "from-[#3B82F6] to-transparent" }, // MRR
-    { accent: "#F26063", bar: "from-[#F26063] to-transparent" }, // At Risk
+    { accent: "#F59E0B", bar: "from-[#F59E0B] to-transparent" }, // At Risk
   ] as const;
 
   if (loading) return (
@@ -704,7 +704,7 @@ export default function ClientsPage() {
           )}
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#2563EB] transition-all"
 >
             <Plus size={13} /> Add Client
           </button>
@@ -1048,7 +1048,7 @@ export default function ClientsPage() {
                   </div>
                   <div className="px-3 py-2 flex flex-col gap-0.5">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Owed</p>
-                    <p className={`text-xs font-bold ${revenue.outstanding> 0 ? "text-[#F26063]" : "text-muted"}`}>
+                    <p className={`text-xs font-bold ${revenue.outstanding> 0 ? "text-[#F59E0B]" : "text-muted"}`}>
                       {formatCurrency(revenue.outstanding)}
                     </p>
                   </div>
@@ -1335,7 +1335,7 @@ export default function ClientsPage() {
                 <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
                   {[
                     { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#1D4ED8" },
-                    { label: "Health", value: `${client.health_score ?? "�"}%`, color: client.health_score>= 70 ? "#3B82F6" : client.health_score>= 40 ? "#1D4ED8" : "#F26063" },
+                    { label: "Health", value: `${client.health_score ?? "�"}%`, color: client.health_score>= 70 ? "#3B82F6" : client.health_score>= 40 ? "#1D4ED8" : "#F59E0B" },
                     { label: "Package", value: client.package_tier ?? "�", color: "#3B82F6" },
                     { label: "Since", value: formatDate(client.created_at ?? ""), color: "#6F6D7A" },
                   ].map((tile, ti) => {
@@ -1459,7 +1459,7 @@ export default function ClientsPage() {
               { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },
               { label: "Active Subs", value: String(clientsWithSubs.length), color: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },
               { label: "Paid Invoices", value: String(paidInvoices.length), color: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },
-              { label: "Overdue", value: String(overdueInvoices.length), color: overdueInvoices.length> 0 ? "#F26063" : "#6F6D7A", bar: overdueInvoices.length> 0 ? "from-[#F26063] to-transparent" : "from-[#6F6D7A] to-transparent" },
+              { label: "Overdue", value: String(overdueInvoices.length), color: overdueInvoices.length> 0 ? "#F59E0B" : "#6F6D7A", bar: overdueInvoices.length> 0 ? "from-[#F59E0B] to-transparent" : "from-[#6F6D7A] to-transparent" },
             ].map((tile, i) => (
               <motion.div
                 key={tile.label}

@@ -1135,7 +1135,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             {saved ? "Saved" : "Use"}
           </button>
         </div>
-        {error && <p className="mt-2 text-xs text-[#F26063]">{error}</p>}
+        {error && <p className="mt-2 text-xs text-[#3B82F6]">{error}</p>}
       </div>
     </div>
   );

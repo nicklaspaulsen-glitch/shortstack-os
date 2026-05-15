@@ -73,8 +73,8 @@ const config: Config = {
         "success-light": "#A7F0CC",
         warning: "#FFC062",
         "warning-light": "#FFD89A",
-        info: "#FF2D2D",
-        "info-light": "#FF6B6B",
+        info: "#2563EB",
+        "info-light": "#3B82F6",
         "border-light": "rgb(var(--color-border-rgb, 232 229 224) / <alpha-value>)",
 
         // ─────────────────────────────────────────────────────────────────
@@ -91,17 +91,17 @@ const config: Config = {
         // resolving — they just paint indigo now. Plum maps to a charcoal
         // neutral so old purple chrome doesn't fight the monochrome base.
         gold: {
-          DEFAULT: "rgb(var(--color-accent-rgb, 255 45 45) / <alpha-value>)",
-          50: "#FFF5F5",
-          100: "#FFE0E0",
-          200: "#FFB3B3",
-          300: "#FF8080",
-          400: "#FF5252",
-          500: "#FF2D2D",
-          600: "#E02020",
-          700: "#CC1A1A",
-          800: "#991414",
-          900: "#660E0E",
+          DEFAULT: "rgb(var(--color-accent-rgb, 37 99 235) / <alpha-value>)",
+          50: "#EFF6FF",
+          100: "#DBEAFE",
+          200: "#BFDBFE",
+          300: "#93C5FD",
+          400: "#60A5FA",
+          500: "#3B82F6",
+          600: "#2563EB",
+          700: "#1D4ED8",
+          800: "#1E40AF",
+          900: "#1E3A8A",
         },
         // amber, purple, green, emerald, teal, cyan, sky — Tailwind defaults
         // render natively. amber/yellow stay literal for warning/paused status
@@ -123,34 +123,34 @@ const config: Config = {
           800: "#18181B",
           900: "#101012",
         },
-        // Indigo alias — redirected to prism red so `bg-indigo-500`,
+        // Indigo alias — redirected to blue brand accent so `bg-indigo-500`,
         // `text-indigo-400`, etc. in the ~40 pages that still use them
-        // render as brand red instead of Tailwind's default violet.
+        // render as brand blue instead of Tailwind's default violet.
         indigo: {
-          50: "#FFF5F5",
-          100: "#FFE0E0",
-          200: "#FFB3B3",
-          300: "#FF8080",
-          400: "#FF5252",
-          500: "#FF2D2D",
-          600: "#E02020",
-          700: "#CC1A1A",
-          800: "#991414",
-          900: "#660E0E",
+          50: "#EFF6FF",
+          100: "#DBEAFE",
+          200: "#BFDBFE",
+          300: "#93C5FD",
+          400: "#60A5FA",
+          500: "#3B82F6",
+          600: "#2563EB",
+          700: "#1D4ED8",
+          800: "#1E40AF",
+          900: "#1E3A8A",
         },
         // Lime alias — kept registered so `text-lime-*` / `bg-lime-*` in
-        // old code still resolves, redirected to prism red accent.
+        // old code still resolves, redirected to blue brand accent.
         lime: {
-          50: "#FFF5F5",
-          100: "#FFE0E0",
-          200: "#FFB3B3",
-          300: "#FF8080",
-          400: "#FF5252",
-          500: "#FF2D2D",
-          600: "#E02020",
-          700: "#CC1A1A",
-          800: "#991414",
-          900: "#660E0E",
+          50: "#EFF6FF",
+          100: "#DBEAFE",
+          200: "#BFDBFE",
+          300: "#93C5FD",
+          400: "#60A5FA",
+          500: "#3B82F6",
+          600: "#2563EB",
+          700: "#1D4ED8",
+          800: "#1E40AF",
+          900: "#1E3A8A",
         },
         // Blue alias — redirected to neutral grey/silver so old `bg-blue-600
         // text-white` buttons become grey chrome that stands out on the OLED
@@ -196,7 +196,7 @@ const config: Config = {
       },
       boxShadow: {
         card: "0 1px 2px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08)",
-        "card-hover": "0 2px 4px rgba(0,0,0,0.08), 0 8px 24px -4px rgba(0,0,0,0.12), 0 0 32px -8px rgba(255,45,45,0.04)",
+        "card-hover": "0 2px 4px rgba(0,0,0,0.08), 0 8px 24px -4px rgba(0,0,0,0.12), 0 0 32px -8px rgba(37,99,235,0.04)",
         elevated: "0 2px 4px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.1), 0 20px 48px -12px rgba(0,0,0,0.15)",
         soft: "0 1px 4px rgba(0,0,0,0.04), 0 4px 12px -4px rgba(0,0,0,0.06)",
         // Window-glass depth system — multi-layer shadows for OLED surfaces
@@ -211,17 +211,17 @@ const config: Config = {
           "0 2px 4px rgba(0,0,0,0.35)",
           "0 8px 24px rgba(0,0,0,0.3)",
           "0 20px 56px -12px rgba(0,0,0,0.5)",
-          "0 0 0 1px rgba(255,45,45,0.06)",
+          "0 0 0 1px rgba(37,99,235,0.06)",
         ].join(", "),
         "stack-3": [
           "inset 0 1px 0 rgba(255,255,255,0.1)",
           "0 4px 8px rgba(0,0,0,0.4)",
           "0 12px 32px rgba(0,0,0,0.35)",
           "0 28px 64px -16px rgba(0,0,0,0.55)",
-          "0 0 0 1px rgba(255,45,45,0.08)",
-          "0 0 40px -12px rgba(255,45,45,0.12)",
+          "0 0 0 1px rgba(37,99,235,0.08)",
+          "0 0 40px -12px rgba(37,99,235,0.12)",
         ].join(", "),
-        "lime-glow": "0 0 24px -4px rgba(255,45,45,0.35), 0 0 48px -8px rgba(255,45,45,0.15)",
+        "lime-glow": "0 0 24px -4px rgba(37,99,235,0.35), 0 0 48px -8px rgba(37,99,235,0.15)",
         // Window glass floating shadow — for stat cards, panels floating above base
         "window": [
           "inset 0 1px 0 rgba(255,255,255,0.06)",
@@ -273,8 +273,8 @@ const config: Config = {
           to: { opacity: "1" },
         },
         limePulse: {
-          "0%, 100%": { boxShadow: "0 0 0 0 rgba(255,45,45,0.45)" },
-          "50%": { boxShadow: "0 0 0 8px rgba(255,45,45,0)" },
+          "0%, 100%": { boxShadow: "0 0 0 0 rgba(37,99,235,0.45)" },
+          "50%": { boxShadow: "0 0 0 8px rgba(37,99,235,0)" },
         },
         stackRotate: {
           from: { transform: "rotateY(0deg)" },
@@ -285,8 +285,8 @@ const config: Config = {
           to: { opacity: "1", filter: "blur(0px)" },
         },
         shadowBreathe: {
-          "0%, 100%": { boxShadow: "0 0 24px -8px rgba(255,45,45,0.08)" },
-          "50%": { boxShadow: "0 0 40px -8px rgba(255,45,45,0.16)" },
+          "0%, 100%": { boxShadow: "0 0 24px -8px rgba(37,99,235,0.08)" },
+          "50%": { boxShadow: "0 0 40px -8px rgba(37,99,235,0.16)" },
         },
       },
       transitionTimingFunction: {

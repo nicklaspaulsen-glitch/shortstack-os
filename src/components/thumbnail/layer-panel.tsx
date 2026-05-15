@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /* ────────────────────────────────────────────────────────────────
  * LayerPanel — Adobe-Premiere-style "layers" sidebar for thumbnails.
@@ -90,7 +90,7 @@ export interface LayerPanelProps {
 /* ─── Palette presets for quick background swatches ────────── */
 
 const COLOR_SWATCHES: Array<{ id: string; name: string; colors: [string, string] }> = [
-  { id: "red_black", name: "Red + Black", colors: ["#FF2D2D", "#0A0A0A"] },
+  { id: "red_black", name: "Red + Black", colors: ["#2563EB", "#0A0A0A"] },
   { id: "blue_white", name: "Blue + White", colors: ["#2563EB", "#FFFFFF"] },
   { id: "green_gold", name: "Green + Gold", colors: ["#16A34A", "#FACC15"] },
   { id: "purple_black", name: "Purple + Black", colors: ["#7C3AED", "#0B0120"] },

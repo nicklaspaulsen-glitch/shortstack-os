@@ -32,24 +32,24 @@ interface ThemeDef {
 
 const THEMES: Record<ThemeId, ThemeDef> = {
   dark: {
-    bg: "#070708",                // pure-leaning warm black
-    surface: "#101012",            // panels
-    surfaceLight: "#17171A",       // hover / raised
-    border: "#26262B",
-    accent: "#5E5BFF",             // indigo
-    accentSoft: "#7B79FF",
-    accentDim: "#3D3CB3",
-    text: "#F5F5F7",               // off-white, never pure
-    muted: "#9A9AA3",
+    bg: "#0D1120",                // deep blue-navy — matches globals.css
+    surface: "#131827",            // panels
+    surfaceLight: "#1C2338",       // hover / raised
+    border: "#2A3350",
+    accent: "#3B82F6",             // blue — matches globals.css dark override
+    accentSoft: "#60A5FA",
+    accentDim: "#2563EB",
+    text: "#F0F0F4",               // off-white, never pure
+    muted: "#A8A8B2",
   },
   light: {
-    bg: "#FFFFFF",
-    surface: "#FAFAFB",
-    surfaceLight: "#F2F2F4",
-    border: "#E4E4E7",
+    bg: "#F3F6FA",                // light blue-gray base — matches globals.css
+    surface: "#FFFFFF",
+    surfaceLight: "#F1F5F9",
+    border: "#E2E8F0",
     accent: "#2563EB",             // blue — AA contrast on white
     accentSoft: "#3B82F6",
-    accentDim: "#93C5FD",
+    accentDim: "#1D4ED8",
     text: "#0A0A0B",               // pure black for body
     muted: "#52525B",
   },
@@ -59,14 +59,21 @@ const STORAGE_KEY = "ss-theme";
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Resolve initial theme: explicit user choice → system preference → light.
-    // Apr 28 — default flipped to LIGHT per user request. Dark stays one
-    // click away via the ThemeToggle in the topbar; only users who explicitly
-    // pick (or whose OS asks for) dark see it.
+    // May 12 v2 migration — force light theme for all existing users.
+    // Old sessions may have "dark" saved from the pre-Apr-28 era.
+    // One-time migration: clear the old value so everyone starts on light.
+    const MIGRATION_KEY = "ss-theme-migrated-v2";
+    if (!localStorage.getItem(MIGRATION_KEY)) {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem("ss_theme");
+      localStorage.setItem(MIGRATION_KEY, "1");
+    }
+
+    // Resolve initial theme: explicit user choice → light.
+    // May 12 — removed system-prefers-dark auto-detect; light is the
+    // product default. Users who want dark toggle it explicitly.
     const saved = (localStorage.getItem(STORAGE_KEY) as ThemeId | null);
-    const systemPrefersDark =
-      typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initial: ThemeId = saved ?? (systemPrefersDark ? "dark" : "light");
+    const initial: ThemeId = saved ?? "light";
     applyTheme(initial);
 
     // Apply saved zoom + reduced-motion if previously set.
@@ -165,9 +172,9 @@ function normalizeThemeId(themeId: string): ThemeId {
 
 /** Read the current theme without subscribing. */
 export function currentTheme(): ThemeId {
-  if (typeof document === "undefined") return "dark";
+  if (typeof document === "undefined") return "light";
   const attr = document.documentElement.getAttribute("data-theme");
-  return attr === "light" ? "light" : "dark";
+  return attr === "dark" ? "dark" : "light";
 }
 
 /** Flip between dark and light. */

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -283,7 +283,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       hero_style: "interactive-gradient",
       cta_goal: "join-waitlist",
       brand_primary: "#2563EB",
-      brand_accent: "#991414",
+      brand_accent: "#2563EB",
       sections: ["features", "testimonials"],
     },
   },

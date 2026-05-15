@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Plan configuration — shared between frontend and backend.
  * Defines limits, labels, visual styling, and feature gates for each tier.
  */
@@ -9,7 +9,7 @@ export const PLAN_TIERS = {
     team_members: 1,
     price_monthly: 497,
     color: "#2563EB",
-    glow: "rgba(255,45,45,0.15)",
+    glow: "rgba(37,99,235,0.15)",
     badge_label: "Starter",
     tokens_monthly: 250_000,
     tokens_label: "250K",
@@ -37,7 +37,7 @@ export const PLAN_TIERS = {
     team_members: 3,
     price_monthly: 997,
     color: "#2563EB",
-    glow: "rgba(255,45,45,0.15)",
+    glow: "rgba(37,99,235,0.15)",
     badge_label: "Growth",
     tokens_monthly: 1_000_000,
     tokens_label: "1M",
