@@ -780,17 +780,21 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
     <div className="space-y-4">
       {/* Filter bar */}
       <div className="glass space-y-2.5 rounded-xl p-3">
-        {/* Search row */}
-        <div className="relative">
-          <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#71717A]" />
-          <input
-            type="search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search presets�"
-            className="rounded-lg w-full py-1.5 pl-8 pr-3 text-xs text-text-primary placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50"
-
-          />
+        {/* Search row — count badge here so it does not compete with lang select */}
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#71717A]" />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search presets..."
+              className="rounded-lg w-full border border-[rgba(0,0,0,0.10)] bg-white py-1.5 pl-8 pr-3 text-xs text-text-primary placeholder-[#A1A1AA] focus:outline-none focus:border-[#2563EB]/40 focus:ring-1 focus:ring-[#1D4ED8]/30"
+            />
+          </div>
+          <span className="flex-shrink-0 rounded-full border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2.5 py-1 text-[10px] font-medium text-[#71717A] tabular-nums">
+            {filtered.length}/{presets.length}
+          </span>
         </div>
         {/* Gender row */}
         <div className="flex flex-wrap items-center gap-2">
@@ -813,7 +817,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
         </div>
         {/* Category + language row */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-1 flex-wrap gap-1.5">
             {PRESET_CATEGORIES.map((c) => {
               const isActive = categoryFilter === c;
               return (
@@ -842,16 +846,15 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             <select
               value={langFilter}
               onChange={(e) => setLangFilter(e.target.value)}
-              className="ml-auto rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2 py-1 text-xs text-[#52525B] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50 cursor-pointer"
+              className="flex-shrink-0 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2 py-1 text-xs text-[#52525B] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50 cursor-pointer"
             >
               {languages.map((l) => (
                 <option key={l} value={l} className="bg-white">
-                  {l === "all" ? "All languages" : l.toUpperCase()}
+                  {l === "all" ? "All langs" : l.toUpperCase()}
                 </option>
               ))}
             </select>
           )}
-          <span className="ml-auto text-xs text-[#71717A]">{filtered.length} of {presets.length} presets</span>
         </div>
       </div>
 
@@ -1018,7 +1021,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             className="mt-3 w-full flex flex-col items-center gap-1.5 py-3 rounded-lg border border-dashed border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.015)] hover:border-[rgba(37,99,235,0.30)] hover:bg-[rgba(37,99,235,0.04)] transition-colors duration-200 cursor-pointer disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2563EB]/40 group/play"
           >
             {/* waveform bars — animate when hovering or generating */}
-            <div className="flex items-end justify-center gap-[2px] h-6 opacity-30 group-hover/play:opacity-70 transition-opacity duration-200" aria-hidden="true">
+            <div className="flex items-end justify-center gap-[2px] h-6 opacity-40 group-hover/play:opacity-80 transition-opacity duration-200" aria-hidden="true">
               {[5, 9, 6, 13, 7, 11, 4, 14, 8, 10, 5, 12, 7, 9, 4].map((h, i) => (
                 <div
                   key={i}
@@ -1057,20 +1060,21 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             />
             <div className="flex items-center justify-between">
               <span className="text-[10px] text-[#71717A]">{testText.length}/300</span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <button
                   type="button"
                   onClick={() => { setEditMode(false); onTest(); }}
-                  className="text-[10px] text-[#52525B] hover:text-[#1D4ED8] cursor-pointer"
+                  className="flex items-center gap-1 rounded-lg bg-[#2563EB] px-2.5 py-1 text-[10px] font-medium text-white hover:bg-[#1D4ED8] transition-colors cursor-pointer"
                 >
-                  Preview
+                  <Play size={9} />
+                  Hear it
                 </button>
                 <button
                   type="button"
                   onClick={() => setEditMode(false)}
-                  className="text-[10px] text-[#71717A] hover:text-[#52525B] cursor-pointer"
+                  className="rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2.5 py-1 text-[10px] text-[#52525B] hover:text-text-primary cursor-pointer"
                 >
-                  Done
+                  Cancel
                 </button>
               </div>
             </div>
