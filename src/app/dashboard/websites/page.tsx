@@ -1,7 +1,8 @@
 ﻿"use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback, useMemo, Suspense } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
 import {
   Globe, Sparkles, Loader, ExternalLink, Copy, Eye, Plus,
   Palette, Layout, Trash2, Wand2, Briefcase, Users, Store,
@@ -10,7 +11,7 @@ import {
   Link2, ShoppingBag, ShieldCheck, Megaphone, Clock,
   Crown, X, Share2, DollarSign, BarChart3, FlaskConical,
   EyeOff, Check, Rocket, Calendar, Monitor, Tablet, Smartphone,
-  TrendingUp, ArrowRight,
+  TrendingUp, ArrowRight, Cpu,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
@@ -18,6 +19,16 @@ import { createClient } from "@/lib/supabase/client";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { VercelIcon, GoDaddyIcon } from "@/components/ui/platform-icons";
 import { MotionPage } from "@/components/motion/motion-page";
+
+// Spline — browser-only (no SSR), lazy-loaded only when needed
+const Spline = dynamic(() => import("@splinetool/react-spline"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+      <div className="w-5 h-5 rounded-full border-2 border-blue-400/40 border-t-blue-400 animate-spin" />
+    </div>
+  ),
+});
 
 interface WebsiteProject {
   id: string;
@@ -287,6 +298,25 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       sections: ["features", "testimonials"],
     },
   },
+  {
+    id: "3d-interactive",
+    niche: "3D Interactive",
+    name: "3D Hero Experience",
+    tagline: "Spline 3D scene in the hero + copy + conversion CTA",
+    cvr: "Avg 3.4% CVR",
+    avgLaunch: "4 min to live",
+    image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=600&h=400&fit=crop",
+    accent: "from-blue-600/70 to-cyan-500/70",
+    preset: {
+      business_type: "saas",
+      style_vibe: "dark-cinematic",
+      hero_style: "3d-spline",
+      cta_goal: "schedule-demo",
+      brand_primary: "#2563EB",
+      brand_accent: "#0F172A",
+      sections: ["features", "testimonials", "pricing"],
+    },
+  },
 ];
 
 type ViewportMode = "desktop" | "tablet" | "mobile";
@@ -320,8 +350,9 @@ export default function WebsitesPage() {
   const [deploying, setDeploying] = useState(false);
   const [viewport, setViewport] = useState<ViewportMode>("desktop");
 
-  // Template gallery niche filter
+  // Template gallery niche filter + hover for 3D live preview
   const [nicheFilter, setNicheFilter] = useState<string>("all");
+  const [hoveredTemplate, setHoveredTemplate] = useState<string | null>(null);
   const NICHE_FILTERS = useMemo(() => {
     const niches = NICHE_TEMPLATES.map((t) => t.niche);
     return ["All", ...niches];
@@ -953,11 +984,16 @@ export default function WebsitesPage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 [perspective:1200px]">
-                {filteredTemplates.map((t) => (
+                {filteredTemplates.map((t) => {
+                  const is3D = t.id === "3d-interactive";
+                  const isHovered = hoveredTemplate === t.id;
+                  return (
                   <button
                     key={t.id}
                     onClick={() => pickTemplate(t)}
-                    className="group relative text-left  overflow-hidden border border-border bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 hover:-translate-y-1 hover:border-[rgba(37,99,235,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(37,99,235,0.6)] [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
+                    onMouseEnter={() => setHoveredTemplate(t.id)}
+                    onMouseLeave={() => setHoveredTemplate(null)}
+                    className="group relative text-left overflow-hidden border border-border bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-[rgba(37,99,235,0.12)] hover:-translate-y-1 hover:border-[rgba(37,99,235,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(37,99,235,0.6)] [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
                   >
                     {/* Preview image */}
                     <div className="relative aspect-[3/2] overflow-hidden">
@@ -966,10 +1002,35 @@ export default function WebsitesPage() {
                         src={t.image}
                         alt={`${t.niche} template preview`}
                         loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.08]"
+                        className={`w-full h-full object-cover transition-all duration-500 ${is3D ? (isHovered ? "opacity-0 scale-110" : "opacity-100 scale-100") : "group-hover:scale-[1.08]"}`}
                       />
                       <div className={`absolute inset-0 bg-gradient-to-tr ${t.accent} mix-blend-multiply opacity-70`} />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+                      {/* 3D Live Spline preview — mounts on hover, unmounts on leave */}
+                      {is3D && (
+                        <div
+                          className={`absolute inset-0 transition-opacity duration-500 ${isHovered ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                        >
+                          {isHovered && (
+                            <Suspense fallback={
+                              <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+                                <div className="w-5 h-5 rounded-full border-2 border-blue-400/40 border-t-blue-400 animate-spin" />
+                              </div>
+                            }>
+                              <Spline
+                                scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"
+                                className="w-full h-full"
+                              />
+                            </Suspense>
+                          )}
+                          {/* "LIVE" badge overlay */}
+                          <span className="absolute top-2.5 left-1/2 -translate-x-1/2 text-[9px] px-2.5 py-0.5 rounded-full bg-blue-500/90 backdrop-blur-md text-white font-semibold tracking-widest uppercase flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                            Live 3D
+                          </span>
+                        </div>
+                      )}
 
                       {/* Niche chip */}
                       <span className="absolute top-2.5 left-2.5 text-[9px] px-2 py-0.5 rounded-full bg-black/55 backdrop-blur-md text-white border border-border font-medium tracking-wide uppercase">
@@ -980,55 +1041,57 @@ export default function WebsitesPage() {
                         <TrendingUp size={9} /> {t.cvr}
                       </span>
 
-                      {/* Bottom overlay content ï¿½ hidden when wireframe preview is shown */}
+                      {/* Bottom overlay content — hidden when wireframe/Spline preview is shown */}
                       <div className="absolute bottom-0 left-0 right-0 p-3 transition-opacity duration-200 group-hover:opacity-0">
                         <p className="text-[13px] font-bold text-white drop-shadow-sm">{t.name}</p>
                         <p className="text-[10px] text-foreground mt-0.5 line-clamp-2">{t.tagline}</p>
                       </div>
 
-                      {/* Wireframe mini-preview ï¿½ slides up from bottom on hover */}
-                      <div className="absolute inset-x-0 bottom-0 h-[72%] translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out pointer-events-none">
-                        <div className="absolute inset-0 bg-black/88 backdrop-blur-sm" />
-                        <div className="relative h-full flex flex-col p-2.5 gap-2">
-                          {/* Mini wireframe sketch */}
-                          <div className="flex-1 rounded-lg border border-border overflow-hidden flex flex-col gap-1 p-1.5 bg-white/[0.03]">
-                            {/* Nav bar */}
-                            <div className="flex items-center gap-1 pb-1 border-b border-border">
-                              <div className="h-1.5 w-6 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.9 }} />
-                              <div className="flex-1" />
-                              {[...Array(3)].map((_, i) => (
-                                <div key={i} className="h-1 w-3 rounded-full bg-black/10" />
+                      {/* Wireframe mini-preview — only for non-3D templates; slides up from bottom on hover */}
+                      {!is3D && (
+                        <div className="absolute inset-x-0 bottom-0 h-[72%] translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out pointer-events-none">
+                          <div className="absolute inset-0 bg-black/88 backdrop-blur-sm" />
+                          <div className="relative h-full flex flex-col p-2.5 gap-2">
+                            {/* Mini wireframe sketch */}
+                            <div className="flex-1 rounded-lg border border-border overflow-hidden flex flex-col gap-1 p-1.5 bg-white/[0.03]">
+                              {/* Nav bar */}
+                              <div className="flex items-center gap-1 pb-1 border-b border-border">
+                                <div className="h-1.5 w-6 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.9 }} />
+                                <div className="flex-1" />
+                                {[...Array(3)].map((_, i) => (
+                                  <div key={i} className="h-1 w-3 rounded-full bg-black/10" />
+                                ))}
+                              </div>
+                              {/* Hero block */}
+                              <div className="h-5 rounded flex items-center justify-center" style={{ backgroundColor: `${t.preset.brand_primary}22` }}>
+                                <div className="h-1 w-10 rounded-full" style={{ backgroundColor: `${t.preset.brand_primary}99` }} />
+                              </div>
+                              {/* Feature row */}
+                              <div className="flex gap-1">
+                                {[...Array(3)].map((_, i) => (
+                                  <div key={i} className="flex-1 h-3 rounded bg-white/[0.06] border border-border" />
+                                ))}
+                              </div>
+                              {/* CTA strip */}
+                              <div className="flex items-center justify-center gap-1">
+                                <div className="h-2.5 w-10 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.85 }} />
+                                <div className="h-2.5 w-6 rounded-full bg-black/10" />
+                              </div>
+                            </div>
+                            {/* Section chips */}
+                            <div className="flex flex-wrap gap-1 shrink-0">
+                              {t.preset.sections.slice(0, 5).map((s) => (
+                                <span
+                                  key={s}
+                                  className="text-[8px] px-1.5 py-0.5 rounded-full bg-white/[0.08] text-muted border border-border capitalize"
+                                >
+                                  {s.replace(/_/g, " ")}
+                                </span>
                               ))}
                             </div>
-                            {/* Hero block */}
-                            <div className="h-5 rounded flex items-center justify-center" style={{ backgroundColor: `${t.preset.brand_primary}22` }}>
-                              <div className="h-1 w-10 rounded-full" style={{ backgroundColor: `${t.preset.brand_primary}99` }} />
-                            </div>
-                            {/* Feature row */}
-                            <div className="flex gap-1">
-                              {[...Array(3)].map((_, i) => (
-                                <div key={i} className="flex-1 h-3 rounded bg-white/[0.06] border border-border" />
-                              ))}
-                            </div>
-                            {/* CTA strip */}
-                            <div className="flex items-center justify-center gap-1">
-                              <div className="h-2.5 w-10 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.85 }} />
-                              <div className="h-2.5 w-6 rounded-full bg-black/10" />
-                            </div>
-                          </div>
-                          {/* Section chips */}
-                          <div className="flex flex-wrap gap-1 shrink-0">
-                            {t.preset.sections.slice(0, 5).map((s) => (
-                              <span
-                                key={s}
-                                className="text-[8px] px-1.5 py-0.5 rounded-full bg-white/[0.08] text-muted border border-border capitalize"
-                              >
-                                {s.replace(/_/g, " ")}
-                              </span>
-                            ))}
                           </div>
                         </div>
-                      </div>
+                      )}
                     </div>
 
                     {/* Footer bar */}
@@ -1041,7 +1104,8 @@ export default function WebsitesPage() {
                       </span>
                     </div>
                   </button>
-                ))}
+                  );
+                })}
               </div>
             </div>{/* Demo-ready banner ï¿½ shown while demo is live and not yet subscribed */}{active && effectiveStatus(active) === "preview" && (
               <div className="card p-4 bg-gradient-to-br from-emerald-500/[0.06] to-transparent border-emerald-500/30 fade-in">
