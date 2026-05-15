@@ -30,7 +30,7 @@ interface ActivityItem { id: string; type: "lead" | "payment" | "post" | "deal" 
 const TT = {
   contentStyle: {
     background: "#FFFFFF",
-    border: "1px solid rgba(255,255,255,0.70)",
+    border: "1px solid rgba(0,0,0,0.08)",
     borderRadius: "8px",
     fontSize: "11px",
     color: "#0A0A0B",
@@ -828,8 +828,7 @@ export default function AnalyticsPage() {
 
             {/* Top industries */}
             <motion.div
-              className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5"
-              
+              className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white px-6 pt-5 pb-5"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.44, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
@@ -921,8 +920,7 @@ export default function AnalyticsPage() {
 
             {/* Benchmarks */}
             <motion.div
-              className="rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5"
-              
+              className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white px-6 pt-5 pb-5"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.44, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
