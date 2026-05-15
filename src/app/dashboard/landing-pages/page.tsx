@@ -100,14 +100,14 @@ const COLOR_SCHEMES = [
 ];
 
 const TEMPLATES = [
-  { id: "saas", name: "SaaS Landing", desc: "Hero + features + pricing + testimonials", icon: Monitor, color: "#2563EB", gradient: "from-blue-600 to-cyan-500" },
-  { id: "agency", name: "Agency Portfolio", desc: "Hero + services + case studies + contact", icon: Building2, color: "#8b5cf6", gradient: "from-purple-600 to-pink-500" },
-  { id: "restaurant", name: "Restaurant", desc: "Hero + menu highlights + location + reservations", icon: UtensilsCrossed, color: "#f59e0b", gradient: "from-amber-500 to-orange-500" },
-  { id: "realestate", name: "Real Estate", desc: "Property showcase + search + agent contact", icon: Home, color: "#2563EB", gradient: "from-emerald-500 to-teal-500" },
-  { id: "fitness", name: "Fitness Studio", desc: "Classes + trainers + pricing + schedule", icon: Dumbbell, color: "#ef4444", gradient: "from-red-500 to-rose-500" },
-  { id: "ecommerce", name: "E-commerce", desc: "Product hero + features + reviews + CTA", icon: ShoppingBag, color: "#f97316", gradient: "from-orange-500 to-yellow-500" },
-  { id: "consultant", name: "Consultant", desc: "About + services + testimonials + booking", icon: Briefcase, color: "#2563EB", gradient: "from-indigo-500 to-purple-500" },
-  { id: "event", name: "Event", desc: "Countdown + speakers + schedule + tickets", icon: CalendarDays, color: "#ec4899", gradient: "from-pink-500 to-rose-500" },
+  { id: "saas", name: "SaaS Landing", desc: "Hero + features + pricing + testimonials", icon: Monitor, color: "#2563EB", gradient: "from-blue-600 to-cyan-500", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop", tagline: "Hero + pricing + testimonials + CTA", cvr: "Avg 2.8% CVR", avgLaunch: "6 min to live" },
+  { id: "agency", name: "Agency Portfolio", desc: "Hero + services + case studies + contact", icon: Building2, color: "#8b5cf6", gradient: "from-purple-600 to-pink-500", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop", tagline: "Services + case studies + contact", cvr: "Avg 3.1% CVR", avgLaunch: "5 min to live" },
+  { id: "restaurant", name: "Restaurant", desc: "Hero + menu highlights + location + reservations", icon: UtensilsCrossed, color: "#f59e0b", gradient: "from-amber-500 to-orange-500", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop", tagline: "Menu highlights + reservations + location", cvr: "Avg 4.2% CVR", avgLaunch: "4 min to live" },
+  { id: "realestate", name: "Real Estate", desc: "Property showcase + search + agent contact", icon: Home, color: "#2563EB", gradient: "from-emerald-500 to-teal-500", image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop", tagline: "Property showcase + agent contact", cvr: "Avg 2.4% CVR", avgLaunch: "7 min to live" },
+  { id: "fitness", name: "Fitness Studio", desc: "Classes + trainers + pricing + schedule", icon: Dumbbell, color: "#ef4444", gradient: "from-red-500 to-rose-500", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop", tagline: "Classes + trainers + schedule + pricing", cvr: "Avg 3.6% CVR", avgLaunch: "5 min to live" },
+  { id: "ecommerce", name: "E-commerce", desc: "Product hero + features + reviews + CTA", icon: ShoppingBag, color: "#f97316", gradient: "from-orange-500 to-yellow-500", image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&h=400&fit=crop", tagline: "Product hero + features + reviews", cvr: "Avg 2.9% CVR", avgLaunch: "6 min to live" },
+  { id: "consultant", name: "Consultant", desc: "About + services + testimonials + booking", icon: Briefcase, color: "#2563EB", gradient: "from-indigo-500 to-purple-500", image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=400&fit=crop", tagline: "About + services + testimonials + booking", cvr: "Avg 3.4% CVR", avgLaunch: "5 min to live" },
+  { id: "event", name: "Event", desc: "Countdown + speakers + schedule + tickets", icon: CalendarDays, color: "#ec4899", gradient: "from-pink-500 to-rose-500", image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=400&fit=crop", tagline: "Countdown + speakers + schedule + tickets", cvr: "Avg 5.1% CVR", avgLaunch: "4 min to live" },
 ];
 
 const EMPTY_ANALYTICS = {
@@ -226,6 +226,7 @@ export default function LandingPagesPage() {
   const [guidedOffer, setGuidedOffer] = useState("");
   const [guidedAudience, setGuidedAudience] = useState("");
   const [guidedTemplate, setGuidedTemplate] = useState<string>("saas");
+  const [hoveredLPTemplate, setHoveredLPTemplate] = useState<string | null>(null);
   const [guidedHeadline, setGuidedHeadline] = useState("");
   const [guidedSubhead, setGuidedSubhead] = useState("");
 
@@ -490,22 +491,79 @@ export default function LandingPagesPage() {
       description: "This sets the structure � sections and overall vibe. You can change colour & copy after.",
       icon: <Layout size={18} />,
       component: (
-        <ChoiceCards
-          columns={4}
-          size="sm"
-          value={guidedTemplate}
-          onChange={(id) => setGuidedTemplate(id as string)}
-          ariaLabel="Landing page template"
-          items={TEMPLATES.map((tpl): ChoiceCardItem => {
-            const Icon = tpl.icon;
-            return {
-              id: tpl.id,
-              title: tpl.name,
-              description: tpl.desc,
-              icon: <Icon size={16} style={{ color: tpl.color }} />,
-            };
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {TEMPLATES.map(t => {
+            const isSelected = guidedTemplate === t.id;
+            const isHovered = hoveredLPTemplate === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setGuidedTemplate(t.id)}
+                onMouseEnter={() => setHoveredLPTemplate(t.id)}
+                onMouseLeave={() => setHoveredLPTemplate(null)}
+                className={`relative group overflow-hidden rounded-xl border-2 transition-all duration-200 cursor-pointer text-left ${
+                  isSelected
+                    ? "border-[#2563EB] ring-2 ring-[rgba(37,99,235,0.25)] shadow-lg"
+                    : "border-border hover:border-[rgba(37,99,235,0.4)] hover:shadow-md"
+                }`}
+              >
+                {/* Thumbnail area */}
+                <div className="relative h-28 overflow-hidden bg-slate-100">
+                  {/* Photo */}
+                  <img
+                    src={t.image}
+                    alt={t.name}
+                    className={`w-full h-full object-cover transition-all duration-500 ${
+                      isHovered ? "scale-[1.06] opacity-60" : "scale-100 opacity-100"
+                    }`}
+                  />
+                  {/* Gradient overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-t ${t.gradient} opacity-40`} />
+                  {/* Hover wireframe slide-up */}
+                  {isHovered && (
+                    <div className="absolute inset-0 flex flex-col gap-1.5 p-2.5 justify-center pointer-events-none">
+                      {[
+                        { w: "w-full",  h: "h-2.5" },
+                        { w: "w-full",  h: "h-5"   },
+                        { w: "w-3/4",  h: "h-1.5" },
+                        { w: "w-1/2",  h: "h-1.5" },
+                        { w: "w-full",  h: "h-px"  },
+                        { w: "w-full",  h: "h-3"   },
+                      ].map((b, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ scaleX: 0, opacity: 0 }}
+                          animate={{ scaleX: 1, opacity: 0.35 }}
+                          transition={{ delay: i * 0.04, duration: 0.22, ease: "easeOut" }}
+                          style={{ originX: 0 }}
+                          className={`${b.w} ${b.h} rounded-sm bg-white`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  {/* CVR badge */}
+                  <span className="absolute top-1.5 right-1.5 text-[8px] px-1.5 py-0.5 rounded-full bg-black/60 backdrop-blur-sm text-white font-semibold leading-none">
+                    {t.cvr}
+                  </span>
+                  {/* Selection checkmark */}
+                  {isSelected && (
+                    <span className="absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-[#2563EB] flex items-center justify-center shadow-sm">
+                      <Check size={10} className="text-white" strokeWidth={3} />
+                    </span>
+                  )}
+                </div>
+                {/* Label row */}
+                <div className="px-2.5 py-2 bg-white">
+                  <p className={`text-xs font-semibold truncate ${isSelected ? "text-[#2563EB]" : "text-text-primary"}`}>
+                    {t.name}
+                  </p>
+                  <p className="text-[10px] text-muted truncate">{t.avgLaunch}</p>
+                </div>
+              </button>
+            );
           })}
-        />
+        </div>
       ),
     },
     {
