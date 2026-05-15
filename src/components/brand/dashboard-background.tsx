@@ -37,18 +37,16 @@ export default function DashboardBackground() {
         className="fixed inset-0 -z-20 pointer-events-none"
         style={{
           background: [
-            // Top-left: warm blue cloud
-            "radial-gradient(ellipse 85% 65% at 8% 8%, rgba(59,130,246,0.065) 0%, transparent 62%)",
-            // Bottom-right: soft indigo bloom
-            "radial-gradient(ellipse 75% 60% at 92% 88%, rgba(99,102,241,0.055) 0%, transparent 58%)",
-            // Center-right: sky highlight
-            "radial-gradient(ellipse 55% 45% at 82% 25%, rgba(14,165,233,0.04) 0%, transparent 52%)",
-            // Bottom-left: periwinkle accent
-            "radial-gradient(ellipse 60% 45% at 15% 85%, rgba(147,197,253,0.045) 0%, transparent 50%)",
-            // Center: neutral anchor (keeps base light)
-            "radial-gradient(ellipse 70% 55% at 50% 50%, rgba(248,250,252,0.6) 0%, transparent 65%)",
-            // Base
-            "#F3F6FA",
+            // Top-left: lavender-purple haze
+            "radial-gradient(ellipse 80% 60% at 30% 40%, rgba(188,180,255,0.12) 0%, transparent 60%)",
+            // Bottom-right: indigo-slate bloom
+            "radial-gradient(ellipse 60% 50% at 70% 70%, rgba(147,130,230,0.08) 0%, transparent 55%)",
+            // Center-right: periwinkle cloud
+            "radial-gradient(ellipse 50% 40% at 80% 20%, rgba(196,204,255,0.07) 0%, transparent 50%)",
+            // Bottom-left: light lavender
+            "radial-gradient(ellipse 40% 40% at 20% 80%, rgba(165,180,252,0.06) 0%, transparent 50%)",
+            // Base — lavender-white
+            "#ECF0F8",
           ].join(", "),
         }}
       />
@@ -56,7 +54,7 @@ export default function DashboardBackground() {
       {/* Animated drift layer — mounted client-side */}
       {mounted && (
         <>
-          {/* Blob 1 — primary blue, top-left drift */}
+          {/* Blob 1 — lavender-purple, top-left drift */}
           <div
             aria-hidden="true"
             className="fixed pointer-events-none -z-19 dashboard-blob-1"
@@ -68,11 +66,11 @@ export default function DashboardBackground() {
               top: "-15%",
               left: "-10%",
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(37,99,235,0.055) 0%, transparent 70%)",
+              background: "radial-gradient(circle, rgba(147,130,230,0.06) 0%, transparent 70%)",
               filter: "blur(100px)",
             }}
           />
-          {/* Blob 2 — indigo, bottom-right drift */}
+          {/* Blob 2 — indigo-slate, bottom-right drift */}
           <div
             aria-hidden="true"
             className="fixed pointer-events-none -z-19 dashboard-blob-2"
@@ -84,11 +82,11 @@ export default function DashboardBackground() {
               bottom: "-12%",
               right: "-8%",
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(79,70,229,0.05) 0%, transparent 68%)",
+              background: "radial-gradient(circle, rgba(108,114,172,0.05) 0%, transparent 68%)",
               filter: "blur(90px)",
             }}
           />
-          {/* Blob 3 — sky blue, center right */}
+          {/* Blob 3 — light lavender, center right */}
           <div
             aria-hidden="true"
             className="fixed pointer-events-none -z-19 dashboard-blob-3"
@@ -100,11 +98,11 @@ export default function DashboardBackground() {
               top: "20%",
               right: "5%",
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(14,165,233,0.042) 0%, transparent 65%)",
+              background: "radial-gradient(circle, rgba(186,178,255,0.045) 0%, transparent 65%)",
               filter: "blur(80px)",
             }}
           />
-          {/* Blob 4 — periwinkle, center-left */}
+          {/* Blob 4 — indigo, center-left */}
           <div
             aria-hidden="true"
             className="fixed pointer-events-none -z-19 dashboard-blob-4"
@@ -116,11 +114,11 @@ export default function DashboardBackground() {
               top: "55%",
               left: "8%",
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(129,140,248,0.04) 0%, transparent 62%)",
+              background: "radial-gradient(circle, rgba(99,102,241,0.04) 0%, transparent 62%)",
               filter: "blur(85px)",
             }}
           />
-          {/* Blob 5 — soft warm highlight, top-right corner */}
+          {/* Blob 5 — periwinkle-white, top-right corner */}
           <div
             aria-hidden="true"
             className="fixed pointer-events-none -z-19 dashboard-blob-5"
@@ -132,7 +130,7 @@ export default function DashboardBackground() {
               top: "-5%",
               right: "10%",
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(186,230,253,0.055) 0%, transparent 60%)",
+              background: "radial-gradient(circle, rgba(196,200,235,0.055) 0%, transparent 60%)",
               filter: "blur(75px)",
             }}
           />

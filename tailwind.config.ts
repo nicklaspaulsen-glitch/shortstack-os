@@ -78,6 +78,15 @@ const config: Config = {
         "border-light": "rgb(var(--color-border-rgb, 232 229 224) / <alpha-value>)",
 
         // ─────────────────────────────────────────────────────────────────
+        // PERIWINKLE + GLASS — May 16 glass overhaul tokens
+        // ─────────────────────────────────────────────────────────────────
+        "periwinkle": "#6C72AC",
+        "periwinkle-soft": "#9CA7DE",
+        "periwinkle-bg": "rgba(108,114,172,0.09)",
+        "glass-surface": "rgba(255,255,255,0.75)",
+        "glass-surface-strong": "rgba(255,255,255,0.88)",
+
+        // ─────────────────────────────────────────────────────────────────
         // BACK-COMPAT SHADE PALETTES — many pages use Tailwind-default
         // `text-amber-300`, `bg-purple-500/20`, etc. We re-register those
         // shade keys so existing utilities keep resolving, but we point them

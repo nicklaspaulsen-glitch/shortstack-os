@@ -387,11 +387,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* Floating glass pill header — fixed, detached from sidebar */}
           <div className="fixed z-40 electron-drag top-3 left-3 right-3 lg:left-[240px] rounded-2xl overflow-hidden floating-nav-pill"
             style={{
-              background: "rgba(255,255,255,0.78)",
-              backdropFilter: "blur(40px) saturate(1.8) brightness(1.02)",
-              WebkitBackdropFilter: "blur(40px) saturate(1.8) brightness(1.02)",
+              background: "rgba(255,255,255,0.80)",
+              backdropFilter: "blur(20px) saturate(140%)",
+              WebkitBackdropFilter: "blur(20px) saturate(140%)",
               border: "1px solid rgba(255,255,255,0.72)",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.92)",
+              boxShadow: "0 0 0 1px rgba(156,167,222,0.18), 0 4px 24px rgba(108,114,172,0.08), 0 1px 4px rgba(0,0,0,0.04)",
             }}>
             <div className="flex items-center justify-between px-5 lg:px-6 h-12">
               {/* Left — mobile menu */}

@@ -65,7 +65,7 @@ function ClientInitialsBadge({ name }: { name: string }) {
   const initials = words.length>= 2
     ? (words[0][0] + words[1][0]).toUpperCase()
     : (name || "?").slice(0, 2).toUpperCase();
- // Deterministic red-family tint from name hash
+ // Deterministic periwinkle-family tint from name hash
   const TINTS = [0.10, 0.13, 0.08, 0.12, 0.11, 0.09, 0.14, 0.10];
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) & 0xffffff;
@@ -73,11 +73,11 @@ function ClientInitialsBadge({ name }: { name: string }) {
   return (
     <div style={{
       width: 36, height: 36, borderRadius: 8, flexShrink: 0,
-      background: `rgba(37,99,235,${alpha})`,
-      border: `1.5px solid rgba(37,99,235,${alpha * 2.2})`,
+      background: `rgba(108,114,172,${alpha})`,
+      border: `1.5px solid rgba(156,167,222,${alpha * 2.2})`,
       display: "flex", alignItems: "center", justifyContent: "center",
     }}>
-      <span style={{ fontSize: 12, fontWeight: 700, color: "#1D4ED8", letterSpacing: "0.05em" }}>
+      <span style={{ fontSize: 12, fontWeight: 700, color: "#6C72AC", letterSpacing: "0.05em" }}>
         {initials}
       </span>
     </div>

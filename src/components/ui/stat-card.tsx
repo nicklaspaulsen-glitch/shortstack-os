@@ -172,8 +172,8 @@ export default function StatCard({
   index = 0,
   progress,
 }: StatCardProps) {
-  // May 10 v3: blue accent system — cycles through blue/teal/indigo variants
-  const PRISM_CYCLE = ["#2563EB", "#0EA5E9", "#6366F1", "#14B8A6", "#3B82F6", "#8B5CF6"];
+  // May 16 v4: periwinkle-extended cycle — blue + indigo + periwinkle variants
+  const PRISM_CYCLE = ["#2563EB", "#6C72AC", "#9CA7DE", "#3B82F6", "#6366F1", "#8B5CF6"];
   const accent = accentColor ?? PRISM_CYCLE[index % PRISM_CYCLE.length];
   const changeColor = {
     positive: tokens.status.success,
@@ -222,20 +222,16 @@ export default function StatCard({
       onMouseMove={handleMouseMove}
       className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden flex flex-col gap-1.5 tilt-3d`}
       style={{
-        background: "rgba(255,255,255,0.86)",
-        backdropFilter: "blur(24px) saturate(1.8)",
-        WebkitBackdropFilter: "blur(24px) saturate(1.8)",
-        border: "1px solid rgba(255,255,255,0.8)",
-        borderTopColor: "rgba(255,255,255,0.96)",
-        borderRadius: "20px",
+        background: "rgba(255,255,255,0.78)",
+        backdropFilter: "blur(14px) saturate(140%)",
+        WebkitBackdropFilter: "blur(14px) saturate(140%)",
+        border: "1px solid rgba(255,255,255,0.72)",
+        borderRadius: "18px",
         minHeight: size === "bento-1x1" ? "110px" : undefined,
         boxShadow: [
-          "inset 0 1.5px 0 rgba(255,255,255,0.98)",
-          "inset 0 0 0 1px rgba(0,0,0,0.06)",
-          "0 1px 3px rgba(0,0,0,0.06)",
-          "0 4px 16px -4px rgba(0,0,0,0.10)",
-          "0 16px 40px -8px rgba(0,0,0,0.12)",
-          "0 0 64px -16px rgba(37,99,235,0.12)",
+          "0 0 0 1px rgba(156,167,222,0.20)",
+          "0 4px 24px rgba(108,114,172,0.10)",
+          "0 1px 4px rgba(0,0,0,0.04)",
         ].join(", "),
       }}
       initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}

@@ -61,6 +61,25 @@ export const tokens = {
 export type BrandTokens = typeof tokens;
 
 /**
+ * Glass design tokens — May 16 glassmorphism overhaul.
+ * Matches the lavender/periwinkle glass aesthetic targeting the Dribbble reference.
+ * Source of truth for card.tsx, button.tsx, and any new glass surface.
+ */
+export const glassTokens = {
+  bg: "rgba(255,255,255,0.75)",
+  borderInner: "rgba(255,255,255,0.70)",
+  borderOuter: "rgba(156,167,222,0.22)",
+  shadow: "0 4px 24px rgba(108,114,172,0.10), 0 1px 4px rgba(0,0,0,0.04)",
+  shadowHover: "0 8px 32px rgba(108,114,172,0.14), 0 2px 8px rgba(0,0,0,0.05)",
+  radius: "18px",
+  blur: "blur(14px) saturate(140%)",
+  periwinkle: "#6C72AC",
+  periwinkleSoft: "#9CA7DE",
+  periwinkleBg: "rgba(108,114,172,0.09)",
+  periwinkleBorder: "rgba(156,167,222,0.30)",
+} as const;
+
+/**
  * CSS-var-backed sibling tokens (Apr 28 v4).
  *
  * The hex values in `tokens` above are baked-in defaults. Components that

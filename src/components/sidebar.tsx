@@ -672,7 +672,7 @@ export default function Sidebar() {
           } ${
             isActive
               ? "active text-brand-accent font-semibold bg-[rgba(37,99,235,0.09)] shadow-[inset_0_0_0_1px_rgba(37,99,235,0.13),0_1px_4px_rgba(37,99,235,0.06)]"
-              : "text-text-secondary hover:text-text-primary hover:bg-[rgba(0,0,0,0.04)]"
+              : "text-text-secondary hover:text-text-primary hover:bg-[rgba(108,114,172,0.07)]"
           }`}
         >
           <span className={`shrink-0 transition-all duration-220 ease-out-expo-foundation ${isActive ? "text-brand-accent scale-[1.06]" : hoveredItem === item.href ? "text-text-primary scale-[1.04]" : "scale-100"}`}>
@@ -745,11 +745,11 @@ export default function Sidebar() {
         collapsed ? "w-[56px]" : "w-60"
       } ${hoverExpanded && !pinned ? "shadow-[8px_0_36px_-10px_rgba(0,0,0,0.55)]" : ""}`}
       style={{
-        background: "rgba(255,255,255,0.88)",
-        backdropFilter: "blur(36px) saturate(1.8)",
-        WebkitBackdropFilter: "blur(36px) saturate(1.8)",
-        borderRight: "1px solid rgba(255,255,255,0.60)",
-        boxShadow: "inset -1px 0 0 rgba(0,0,0,0.06), 2px 0 24px rgba(0,0,0,0.06)",
+        background: "rgba(240,242,248,0.90)",
+        backdropFilter: "blur(20px) saturate(140%)",
+        WebkitBackdropFilter: "blur(20px) saturate(140%)",
+        borderRight: "1px solid rgba(156,167,222,0.18)",
+        boxShadow: "inset -1px 0 0 rgba(156,167,222,0.10), 2px 0 24px rgba(108,114,172,0.06)",
       }}
     >
       {/* LED light strip — lives on the sidebar's right edge, theme-colored */}

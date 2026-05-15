@@ -54,7 +54,7 @@ function Accordion({
     >
       <button
         onClick={onToggle}
-        className="flex items-center justify-between w-full px-6 py-4 hover:bg-[rgba(0,0,0,0.04)] transition-colors duration-150"
+        className="flex items-center justify-between w-full px-6 py-4 hover:bg-[rgba(108,114,172,0.07)] transition-colors duration-150"
 >
         <div className="flex items-center gap-2.5">
           <span className="text-[#6F6D7A]">{icon}</span>
@@ -75,7 +75,7 @@ function Accordion({
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
             style={{ overflow: "hidden" }}
 >
-            <div className="px-6 pb-6 border-t border-[rgba(0,0,0,0.08)]">
+            <div className="px-6 pb-6 border-t border-[rgba(156,167,222,0.18)]">
               {children}
             </div>
           </motion.div>
