@@ -213,7 +213,7 @@ export default function AIVideoPage() {
                   key={cat.label}
                   type="button"
                   onClick={() => setPrompt(cat.prompt)}
-                  className="inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-[rgba(0,0,0,0.05)] hover:border-[rgba(0,0,0,0.15)] px-3 py-1.5 rounded-full border border-border/50 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-white/[0.05] hover:border-border px-3 py-1.5 rounded-full border border-border/50 transition-all cursor-pointer"
                 >
                   <span className="text-[10px] leading-none">{cat.icon}</span>
                   {cat.label}
@@ -507,7 +507,7 @@ export default function AIVideoPage() {
       {/* Scorecard strip */}
       <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
         <motion.div
-          className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
         >
@@ -519,7 +519,7 @@ export default function AIVideoPage() {
           </div>
         </motion.div>
         <motion.div
-          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
         >
@@ -528,7 +528,7 @@ export default function AIVideoPage() {
           <p className="text-[11px] text-text-muted mt-1.5">current plan</p>
         </motion.div>
         <motion.div
-          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
         >
@@ -597,7 +597,7 @@ export default function AIVideoPage() {
                     key={cat.label}
                     type="button"
                     onClick={() => setPrompt(cat.prompt)}
-                    className="inline-flex items-center gap-1.5 text-[11px] text-black/40 hover:text-black/80 px-3 py-1.5 rounded-full border border-black/10 hover:border-[rgba(0,0,0,0.25)] hover:bg-[rgba(0,0,0,0.04)] transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-[11px] text-white/40 hover:text-white/80 px-3 py-1.5 rounded-full border border-border-subtle hover:border-border hover:bg-white/[0.05] transition-all cursor-pointer"
                   >
                     <span className="text-[10px] leading-none">{cat.icon}</span>
                     {cat.label}
@@ -715,7 +715,7 @@ export default function AIVideoPage() {
                     <span>Estimated 45�90 seconds � Frame {Math.round((progress / 100) * numFrames)}/{numFrames}</span>
                     <span>{Math.round(progress)}%</span>
                   </div>
-                  <div className="h-1 rounded-full bg-[rgba(0,0,0,0.06)] overflow-hidden">
+                  <div className="h-1 rounded-full bg-white/[0.06] overflow-hidden">
                     <motion.div
                       className="h-full rounded-full bg-gradient-to-r from-[#2563EB] to-[#3B82F6]"
                       animate={{ width: `${progress}%` }}
@@ -731,7 +731,7 @@ export default function AIVideoPage() {
           <div>
             <button
               onClick={() => setAdvancedOpen(v => !v)}
-              className="flex items-center gap-1.5 text-[11px] text-text-muted hover:text-[#374151] transition-colors px-1"
+              className="flex items-center gap-1.5 text-[11px] text-text-muted hover:text-text-primary transition-colors px-1"
             >
               {advancedOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
               Advanced settings
@@ -740,7 +740,7 @@ export default function AIVideoPage() {
               </span>
             </button>
             {advancedOpen && (
-              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 p-4  border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)]">
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 border border-border-subtle bg-white/[0.03] rounded-xl">
                 <div>
                   <label className="block text-[9px] text-text-muted uppercase tracking-[0.16em] mb-1.5">
                     Frames
@@ -758,7 +758,7 @@ export default function AIVideoPage() {
                       const capped = Number.isFinite(maxFrames) ? Math.min(raw, maxFrames) : raw;
                       setNumFrames(capped);
                     }}
-                    className="input w-full text-xs bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)]"
+                    className="input w-full text-xs bg-surface-light border-border"
                   />
                   <p className="text-[9px] text-text-muted mt-1">~{(numFrames / 24).toFixed(1)}s @ 24fps</p>
                 </div>
@@ -767,7 +767,7 @@ export default function AIVideoPage() {
                   <input
                     type="number" min={1} max={20} step={0.5} value={guidanceScale}
                     onChange={e => setGuidanceScale(parseFloat(e.target.value) || 7.5)}
-                    className="input w-full text-xs bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)]"
+                    className="input w-full text-xs bg-surface-light border-border"
                   />
                   <p className="text-[9px] text-text-muted mt-1">Higher = stricter prompt adherence</p>
                 </div>
@@ -906,7 +906,7 @@ export default function AIVideoPage() {
                       </div>
                     </div>
                     {result.plan && (
-                      <details className="absolute inset-x-0 bottom-0 p-3 bg-black/95 text-[#374151] text-[10px] max-h-[70%] overflow-y-auto">
+                      <details className="absolute inset-x-0 bottom-0 p-3 bg-black/95 text-white/70 text-[10px] max-h-[70%] overflow-y-auto">
                         <summary className="cursor-pointer text-brand-accent font-semibold mb-1">Scene plan</summary>
                         <pre className="whitespace-pre-wrap font-sans leading-snug mt-1.5">{result.plan}</pre>
                       </details>
