@@ -1345,7 +1345,7 @@ export default function CRMPage() {
                                   initial={{ opacity: 0, x: -8 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ duration: 0.18, delay: index * 0.04 }}
-                                  whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                                  whileHover={{ backgroundColor: "rgba(255,255,255,0.03)" }}
                                   onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                                   {columns.filter(c => c.visible).map(col => {
                                     if (col.key === "select") return (
@@ -1527,12 +1527,12 @@ export default function CRMPage() {
                       return (
                         <motion.div
                           key={lead.id}
-                          className={`rounded-xl border border-[rgba(0,0,0,0.08)] ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : ""}`}
+                          className={`rounded-xl border border-border-subtle ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : ""}`}
                           
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.18, delay: index * 0.04 }}
-                          whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                          whileHover={{ backgroundColor: "rgba(255,255,255,0.03)" }}
                           onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                           <div className="flex items-start justify-between">
                             <div className="flex items-center gap-1.5 min-w-0">
@@ -1623,11 +1623,11 @@ export default function CRMPage() {
                               return (
                                 <motion.div
                                   key={lead.id}
-                                  className="glass rounded-lg p-2.5 space-y-1.5 cursor-pointer border border-[rgba(255,255,255,0.70)]" 
+                                  className="glass rounded-lg p-2.5 space-y-1.5 cursor-pointer border border-border-subtle"
                                   initial={{ opacity: 0, x: -8 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ duration: 0.18, delay: index * 0.04 }}
-                                  whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                                  whileHover={{ backgroundColor: "rgba(255,255,255,0.03)" }}
                                   onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                                   <div className="flex items-start justify-between">
                                     <div className="min-w-0">
