@@ -13,7 +13,6 @@ import toast from "react-hot-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
-import StatStrip from "@/components/ui/stat-strip";
 import Link from "next/link";
 import { ALLOWED_CSV, buildAccept, validateFile } from "@/lib/file-types";
 import { motion } from "framer-motion";
@@ -846,16 +845,73 @@ export default function LeadEnginePage() {
                 </>
               }
             >
-              <StatStrip
-                focal={{ label: "Total Leads", value: String(totalLeads), icon: <Users size={14} />, color: "text-[#2563EB]" }}
-                support={[
-                  { label: "Hot Leads", value: String(hotLeads), icon: <Flame size={12} />, color: "text-red-400" },
-                  { label: "Qualified", value: String(qualifiedLeads), icon: <CheckCircle size={12} />, color: "text-green-400" },
-                  { label: "Converted", value: String(convertedLeads), icon: <Star size={12} />, color: "text-purple-400" },
-                  { label: "Avg Score", value: String(totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length || 0) : 0), icon: <Target size={12} />, color: "text-blue-400" },
-                  { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-[#2563EB]" },
-                ]}
-              />
+              <div className="space-y-3 mb-4">
+                <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3">
+                  <motion.div
+                    className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                    <div>
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Leads</p>
+                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-[#2563EB] tabular-nums">{totalLeads}</p>
+                      <p className="text-[11px] text-text-muted mt-1.5">in pipeline</p>
+                    </div>
+                  </motion.div>
+                  <motion.div
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Hot Leads</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-red-500 tabular-nums">{hotLeads}</p>
+                    <p className="text-[11px] text-text-muted mt-1.5">score ≥ 80</p>
+                  </motion.div>
+                  <motion.div
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Qualified</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-600 tabular-nums">{qualifiedLeads}</p>
+                    <p className="text-[11px] text-text-muted mt-1.5">ready to close</p>
+                  </motion.div>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  <motion.div
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Converted</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-purple-600 tabular-nums">{convertedLeads}</p>
+                    <p className="text-[11px] text-text-muted mt-1.5">deals won</p>
+                  </motion.div>
+                  <motion.div
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.38, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Score</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">
+                      {totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length) : 0}
+                    </p>
+                    <p className="text-[11px] text-text-muted mt-1.5">lead quality</p>
+                  </motion.div>
+                  <motion.div
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.38, delay: 0.26, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Conv Rate</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-600 tabular-nums">
+                      {totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%
+                    </p>
+                    <p className="text-[11px] text-text-muted mt-1.5">close rate</p>
+                  </motion.div>
+                </div>
+              </div>
             </CollapsibleStats>{/* Tabs (sticky) */}<div className="glass sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]">
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}

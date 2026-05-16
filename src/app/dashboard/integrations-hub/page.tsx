@@ -31,7 +31,6 @@ import { motion } from "framer-motion";
 import { Plug, Sparkles, RefreshCw, ExternalLink, Key } from "lucide-react";
 import toast from "react-hot-toast";
 import StatCard from "@/components/ui/stat-card";
-import StatStrip from "@/components/ui/stat-strip";
 import ConnectModal from "@/components/integrations/connect-modal";
 import IntegrationCard, {
   type IntegrationCardData,
@@ -640,14 +639,47 @@ export default function IntegrationsHubPage() {
                   <span className="font-medium">Refresh</span>
                 </button>
       </div>
-    </div>{/* Hero stat strip */}<StatStrip
-              focal={{ label: "Connected", value: String(connectedCount), icon: <Plug size={14} /> }}
-              support={[
-                { label: "Available", value: String(availableCount), icon: <Sparkles size={14} /> },
-                { label: "Powered by", value: "Nango + Zernio", icon: <Sparkles size={14} /> },
-                { label: "Last sync", value: String(lastSyncLabel) },
-              ]}
-            />{/* Category filter pills */}<motion.div
+    </div>{/* Hero stat bento */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+  <motion.div
+    className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+  >
+    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+    <div>
+      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Connected</p>
+      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-emerald-600 tabular-nums">{connectedCount}</p>
+      <p className="text-[11px] text-text-muted mt-1.5">active integrations</p>
+    </div>
+  </motion.div>
+  <motion.div
+    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
+  >
+    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Available</p>
+    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{availableCount}</p>
+    <p className="text-[11px] text-text-muted mt-1.5">in catalog</p>
+  </motion.div>
+  <motion.div
+    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+  >
+    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Powered by</p>
+    <p className="font-display text-lg font-bold tracking-[-0.02em] text-text-primary leading-tight">Nango + Zernio</p>
+    <p className="text-[11px] text-text-muted mt-1.5">sync engine</p>
+  </motion.div>
+  <motion.div
+    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+  >
+    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Last Sync</p>
+    <p className="font-display text-xl font-bold tracking-[-0.02em] text-text-primary leading-tight">{lastSyncLabel}</p>
+    <p className="text-[11px] text-text-muted mt-1.5">most recent</p>
+  </motion.div>
+</div>{/* Category filter pills */}<motion.div
               className="flex items-center gap-2 flex-wrap glass rounded-lg px-3 py-2"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
