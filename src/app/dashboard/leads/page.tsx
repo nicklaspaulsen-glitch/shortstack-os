@@ -187,7 +187,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
       <div className="card w-full max-w-2xl p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold flex items-center gap-2"><Upload size={14} className="text-brand-accent" /> Import CSV</h2>
-          <button onClick={onClose} className="p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-foreground"><X size={14} /></button>
+          <button onClick={onClose} className="p-1 rounded hover:bg-white/[0.06] text-muted hover:text-foreground"><X size={14} /></button>
         </div>
 
         {/* Upload step */}
@@ -332,7 +332,7 @@ function AddLeadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
       <div className="card w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold flex items-center gap-2"><UserPlus size={14} className="text-brand-accent" /> Add Lead</h2>
-          <button onClick={onClose} className="p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-foreground"><X size={14} /></button>
+          <button onClick={onClose} className="p-1 rounded hover:bg-white/[0.06] text-muted hover:text-foreground"><X size={14} /></button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -424,7 +424,7 @@ function ScoreBadge({ score, onClick }: { score: number | null; onClick?: () => 
     return (
       <button
         onClick={(e) => { e.stopPropagation(); onClick?.(); }}
-        className="text-[9px] px-2 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent border border-dashed border-border transition-all"
+        className="text-[9px] px-2 py-0.5 rounded bg-white/[0.04] text-muted hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent border border-dashed border-border transition-all"
         title="Score this lead with AI"
       >
         Score
@@ -494,12 +494,12 @@ function LeadDetailPanel({
   const qualScore = qualChecks.filter((q) => q.ok).length;
 
   return (
-    <div className="relative flex flex-col gap-3 rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-4 shadow-2xl">
+    <div className="relative flex flex-col gap-3 rounded-xl border border-border bg-[#131827] p-4 shadow-2xl">
       {/* Close */}
       <button
         type="button"
         onClick={onClose}
-        className="absolute right-3 top-3 rounded-lg p-1 text-[#71717A] hover:text-text-primary hover:bg-[rgba(0,0,0,0.04)] transition-colors cursor-pointer"
+        className="absolute right-3 top-3 rounded-lg p-1 text-text-muted hover:text-text-primary hover:bg-white/[0.06] transition-colors cursor-pointer"
         aria-label="Close preview"
       >
         <X size={14} />
@@ -509,7 +509,7 @@ function LeadDetailPanel({
       <div className="pr-6">
         <h3 className="text-sm font-semibold text-text-primary leading-snug">{lead.business_name}</h3>
         {lead.industry && (
-          <span className="mt-1 inline-block rounded-full bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] px-2 py-0.5 text-[10px] text-[#71717A]">
+          <span className="mt-1 inline-block rounded-full bg-white/[0.05] border border-border-subtle px-2 py-0.5 text-[10px] text-text-muted">
             {lead.industry}
           </span>
         )}
@@ -517,16 +517,16 @@ function LeadDetailPanel({
 
       {/* Score row */}
       <div className="flex items-center justify-between">
-        <span className="text-[10px] text-[#71717A] uppercase tracking-wider">AI Score</span>
+        <span className="text-[10px] text-text-muted uppercase tracking-wider">AI Score</span>
         {lead.score !== null ? (
           <span className={`text-sm font-bold ${lead.score >= 70 ? "text-brand-accent" : lead.score >= 40 ? "text-yellow-600" : "text-red-500"}`}>
-            {lead.score}<span className="text-[#71717A]">/100</span>
+            {lead.score}<span className="text-text-muted">/100</span>
           </span>
         ) : (
           <button
             onClick={() => onScore(lead)}
             disabled={scoring}
-            className="flex items-center gap-1 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] px-2.5 py-1 text-[10px] font-medium text-brand-accent hover:bg-[rgba(0,0,0,0.08)] disabled:opacity-50 transition-colors cursor-pointer"
+            className="flex items-center gap-1 rounded-lg bg-white/[0.06] border border-border-subtle px-2.5 py-1 text-[10px] font-medium text-brand-accent hover:bg-white/[0.10] disabled:opacity-50 transition-colors cursor-pointer"
           >
             {scoring ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
             Score with AI
@@ -537,26 +537,26 @@ function LeadDetailPanel({
       {/* Score breakdown bars */}
       {lead.score_breakdown && <ScoreBreakdownBars breakdown={lead.score_breakdown} />}
       {lead.score_reasoning && (
-        <p className="text-[10px] text-[#71717A] italic leading-relaxed">{lead.score_reasoning}</p>
+        <p className="text-[10px] text-text-muted italic leading-relaxed">{lead.score_reasoning}</p>
       )}
 
       {/* Contact info */}
-      <div className="space-y-1.5 border-t border-[rgba(0,0,0,0.08)] pt-3">
+      <div className="space-y-1.5 border-t border-border-subtle pt-3">
         {lead.phone && (
-          <a href={`tel:${lead.phone}`} className="flex items-center gap-2 text-[11px] text-[#52525B] hover:text-brand-accent transition-colors">
+          <a href={`tel:${lead.phone}`} className="flex items-center gap-2 text-[11px] text-text-secondary hover:text-brand-accent transition-colors">
             <Phone size={11} className="text-[#71717A] flex-shrink-0" />
             <span className="truncate">{lead.phone}</span>
           </a>
         )}
         {lead.email && (
-          <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-[11px] text-[#52525B] hover:text-brand-accent transition-colors">
+          <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-[11px] text-text-secondary hover:text-brand-accent transition-colors">
             <Mail size={11} className="text-[#71717A] flex-shrink-0" />
             <span className="truncate">{lead.email}</span>
           </a>
         )}
         {location && (
-          <div className="flex items-center gap-2 text-[11px] text-[#71717A]">
-            <MapPin size={11} className="text-[#71717A] flex-shrink-0" />
+          <div className="flex items-center gap-2 text-[11px] text-text-muted">
+            <MapPin size={11} className="text-text-muted flex-shrink-0" />
             <span>{location}</span>
           </div>
         )}
@@ -572,18 +572,18 @@ function LeadDetailPanel({
           </a>
         )}
         {lead.google_rating && (
-          <div className="flex items-center gap-1 text-[11px] text-[#71717A]">
+          <div className="flex items-center gap-1 text-[11px] text-text-muted">
             <Star size={11} className="text-brand-accent flex-shrink-0" />
             <span>{lead.google_rating} rating</span>
-            {lead.review_count ? <span className="text-[#71717A]">({lead.review_count} reviews)</span> : null}
+            {lead.review_count ? <span className="text-text-muted">({lead.review_count} reviews)</span> : null}
           </div>
         )}
       </div>
 
       {/* Qualification checklist */}
-      <div className="border-t border-[rgba(0,0,0,0.08)] pt-3">
+      <div className="border-t border-border-subtle pt-3">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] uppercase tracking-wider text-[#71717A]">Qualification</span>
+          <span className="text-[10px] uppercase tracking-wider text-text-muted">Qualification</span>
           <span className="text-[10px] font-semibold text-brand-accent">{qualScore}/{qualChecks.length}</span>
         </div>
         <div className="grid grid-cols-2 gap-1">
@@ -591,22 +591,22 @@ function LeadDetailPanel({
             <div key={q.label} className="flex items-center gap-1.5 text-[10px]">
               {q.ok
                 ? <CheckCircle size={9} className="text-brand-accent flex-shrink-0" />
-                : <div className="w-2.5 h-2.5 rounded-full border border-[rgba(0,0,0,0.16)] flex-shrink-0" />}
-              <span className={q.ok ? "text-[#52525B]" : "text-[#71717A]"}>{q.label}</span>
+                : <div className="w-2.5 h-2.5 rounded-full border border-white/20 flex-shrink-0" />}
+              <span className={q.ok ? "text-text-secondary" : "text-text-muted"}>{q.label}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Quick action buttons */}
-      <div className="flex gap-2 border-t border-[rgba(0,0,0,0.08)] pt-3">
+      <div className="flex gap-2 border-t border-border-subtle pt-3">
         <a
           href={lead.phone ? `tel:${lead.phone}` : undefined}
           onClick={(e) => { if (!lead.phone) e.preventDefault(); }}
           className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-medium transition-colors ${
             lead.phone
-              ? "border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] text-brand-accent hover:bg-[rgba(0,0,0,0.07)]"
-              : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] text-[#71717A] cursor-not-allowed opacity-50"
+              ? "border-border-subtle bg-white/[0.05] text-brand-accent hover:bg-white/[0.09]"
+              : "border-border-subtle bg-white/[0.02] text-text-muted cursor-not-allowed opacity-50"
           }`}
           title={lead.phone || "No phone"}
         >
@@ -617,8 +617,8 @@ function LeadDetailPanel({
           onClick={(e) => { if (!lead.email) e.preventDefault(); }}
           className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-medium transition-colors ${
             lead.email
-              ? "border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.03)] text-[#52525B] hover:bg-[rgba(0,0,0,0.06)]"
-              : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] text-[#71717A] cursor-not-allowed opacity-50"
+              ? "border-border-subtle bg-white/[0.04] text-text-secondary hover:bg-white/[0.08]"
+              : "border-border-subtle bg-white/[0.02] text-text-muted cursor-not-allowed opacity-50"
           }`}
           title={lead.email || "No email"}
         >
@@ -626,7 +626,7 @@ function LeadDetailPanel({
         </a>
         <a
           href="/dashboard/dm-controller"
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] py-1.5 text-[11px] font-medium text-[#71717A] hover:bg-[rgba(0,0,0,0.05)] hover:text-[#52525B] transition-colors"
+          className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-border-subtle bg-white/[0.02] py-1.5 text-[11px] font-medium text-text-muted hover:bg-white/[0.06] hover:text-text-secondary transition-colors"
         >
           <MessageSquare size={10} /> DM
         </a>
@@ -635,7 +635,7 @@ function LeadDetailPanel({
       {/* Source + status row */}
       <div className="flex flex-wrap items-center gap-1.5">
         {lead.source && (
-          <span className="rounded-full bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] px-2 py-0.5 text-[10px] text-[#71717A]">
+          <span className="rounded-full bg-white/[0.05] border border-border-subtle px-2 py-0.5 text-[10px] text-text-muted">
             via {lead.source}
           </span>
         )}
@@ -645,7 +645,7 @@ function LeadDetailPanel({
             lead.status === "booked" ? "bg-green-400/10 text-green-400" :
             lead.status === "qualified" ? "bg-blue-400/10 text-blue-400" :
             lead.status === "contacted" ? "bg-yellow-400/10 text-yellow-400" :
-            "bg-[rgba(0,0,0,0.05)] text-[#71717A]"
+            "bg-white/[0.05] text-text-muted"
           }`}>
             {lead.status}
           </span>
@@ -848,7 +848,7 @@ export default function LeadEnginePage() {
               <div className="space-y-3 mb-4">
                 <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3">
                   <motion.div
-                    className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -860,7 +860,7 @@ export default function LeadEnginePage() {
                     </div>
                   </motion.div>
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -869,7 +869,7 @@ export default function LeadEnginePage() {
                     <p className="text-[11px] text-text-muted mt-1.5">score ≥ 80</p>
                   </motion.div>
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -880,7 +880,7 @@ export default function LeadEnginePage() {
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -889,7 +889,7 @@ export default function LeadEnginePage() {
                     <p className="text-[11px] text-text-muted mt-1.5">deals won</p>
                   </motion.div>
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -900,7 +900,7 @@ export default function LeadEnginePage() {
                     <p className="text-[11px] text-text-muted mt-1.5">lead quality</p>
                   </motion.div>
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.26, ease: [0.22, 1, 0.36, 1] }}
                   >
