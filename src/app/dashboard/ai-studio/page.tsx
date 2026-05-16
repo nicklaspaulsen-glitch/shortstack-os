@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -8,6 +8,7 @@ import {
   Wand2, Zap, Copy, Palette, AlertTriangle,
   ArrowUpRight, FileAudio, Brain,
   Target, Edit3, Type as TypeIcon, Ratio, Loader2,
+  Heart, MoreHorizontal, Search, ChevronDown,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -92,6 +93,8 @@ export default function AIStudioPage() {
   const [guidedIntent, setGuidedIntent] = useState<ToolId>("image-gen");
   const [guidedPrompt, setGuidedPrompt] = useState("");
   const [toolCategory, setToolCategory] = useState<ToolCategory>("all");
+  // Higgsfield studio tab
+  const [studioTab, setStudioTab] = useState<"image" | "video">("image");
 
   // Auto-open the legacy modal only on advanced-mode first visit
   useEffect(() => {
@@ -183,161 +186,67 @@ export default function AIStudioPage() {
 
       {/* -- GUIDED MODE ------------------------------------------- */}
       {!advancedMode && (
-        <div className="px-6 py-6 max-w-4xl mx-auto">
-        <Wizard
-          className=""
-          steps={[
-            {
-              id: "intent",
-              title: "What do you want to make?",
-              description: "Pick the thing � we'll hand you the right tool with the right defaults.",
-              icon: <Sparkles size={18} />,
-              component: (
-                <motion.div
-                  className="grid grid-cols-2 md:grid-cols-4 gap-2.5"
-                  initial="hidden"
-                  animate="visible"
-                  variants={staggerContainerFast}
-                >
-                  {TOOLS.map(t => {
-                    const Icon = t.icon;
-                    const selected = guidedIntent === t.id;
-                    // Featured bento cells: image-gen and train-lora span 2 cols on md+
-                    const isFeatured = t.id === "image-gen" || t.id === "train-lora";
-                    return (
-                      <motion.button
-                        key={t.id}
-                        variants={fadeUp}
-                        transition={{ duration: 0.2 }}
-                        onClick={() => { setGuidedIntent(t.id); setActiveTool(t.id); }}
-                        className={`relative text-left rounded-xl border transition-all ${
-                          isFeatured ? "md:col-span-2 p-5" : "p-4"
-                        } ${
-                          selected
-                            ? "border-[#2563EB]/50 bg-[rgba(37,99,235,0.07)] shadow-lg shadow-[rgba(37,99,235,0.12)]"
-                            : isFeatured
-                              ? "border-[rgba(37,99,235,0.18)] bg-[rgba(37,99,235,0.03)] hover:border-[#2563EB]/40"
-                              : "border-border hover:border-[#2563EB]/35 bg-surface-light"
-                        }`}
-                      >
-                        {/* featured tile accent handled by border-brand on parent */}
-                        {/* ambient glow on featured tiles */}
-                        {isFeatured && (
-                          <>
-                            <div className="pointer-events-none absolute -right-10 -bottom-10 w-36 h-36 rounded-full bg-[#2563EB] opacity-[0.05] blur-3xl" />
-                            <div className="pointer-events-none absolute -left-4 -top-4 w-20 h-20 rounded-full bg-[#3B82F6] opacity-[0.03] blur-2xl" />
-                          </>
-                        )}
-                        {"badge" in t && t.badge && (
-                          <span className="absolute top-2.5 right-2.5 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.1)] text-[#1D4ED8]">
-                            {t.badge}
-                          </span>
-                        )}
-                        {selected && (
-                          <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-xl bg-[#2563EB]" />
-                        )}
-                        <div className={`rounded-lg flex items-center justify-center mb-2.5 ${isFeatured ? "w-12 h-12" : "w-10 h-10"}`}
-                          style={{ background: `${t.color}22` }}>
-                          <Icon size={isFeatured ? 22 : 18} style={{ color: selected ? "#2563EB" : t.color }} />
-                        </div>
-                        <div className="flex items-baseline gap-1.5 mb-0.5">
-                          <p className={`font-bold ${isFeatured ? "text-[15px]" : "text-sm"}`}>{t.name}</p>
-                          <span className="text-[8px] font-mono text-muted">{t.tag}</span>
-                        </div>
-                        <p className={`text-muted mt-0.5 ${isFeatured ? "text-[11px] line-clamp-2" : "text-[10px] line-clamp-2"}`}>{t.desc}</p>
-                      </motion.button>
-                    );
-                  })}
-                </motion.div>
-              ),
-            },
-            {
-              id: "prompt",
-              title: guidedIntent === "transcribe" || guidedIntent === "upscale" || guidedIntent === "remove-bg" || guidedIntent === "voice-clone" || guidedIntent === "img-to-video" || guidedIntent === "train-lora"
-                ? "Ready to upload?"
-                : "Describe what you want",
-              description: guidedIntent === "transcribe" || guidedIntent === "upscale" || guidedIntent === "remove-bg" || guidedIntent === "voice-clone" || guidedIntent === "img-to-video" || guidedIntent === "train-lora"
-                ? "We'll hand you the upload tool. You'll be able to drop files on the next screen."
-                : "One line is enough. The more detail, the better the output.",
-              icon: <TypeIcon size={18} />,
-              optional: true,
-              component: guidedIntent === "image-gen" || guidedIntent === "music-gen" || guidedIntent === "batch-gen" ? (
-                <textarea
-                  value={guidedPrompt}
-                  onChange={e => setGuidedPrompt(e.target.value)}
-                  placeholder={
-                    guidedIntent === "music-gen"
-                      ? "e.g., Chill lofi beat with warm piano and soft drums, 60 seconds"
-                      : guidedIntent === "batch-gen"
-                      ? "e.g., 10 product shots of a leather wallet on neutral backgrounds"
-                      : "e.g., A minimalist logo mockup on a black marble surface, studio lighting"
-                  }
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[rgba(0,0,0,0.08)] transition-all resize-none"
-                  autoFocus
+        <div className="space-y-4 px-6 py-6">
+          {/* Tab bar: Image | Video | AI Tools */}
+          <div
+            className="flex items-center gap-1 p-1 rounded-xl w-fit"
+            style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.06)" }}
+          >
+            {(["image", "video"] as const).map(tab => (
+              <button
+                key={tab}
+                onClick={() => setStudioTab(tab)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all ${
+                  studioTab === tab
+                    ? "bg-white text-[#1D4ED8] shadow-sm"
+                    : "text-text-muted hover:text-text-secondary"
+                }`}
+              >
+                {tab === "image" ? <ImagePlus size={11} /> : <Film size={11} />}
+                {tab === "image" ? "Image" : "Video"}
+              </button>
+            ))}
+            <button
+              onClick={() => setAdvancedMode(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-text-muted hover:text-text-secondary transition-all"
+            >
+              <Sparkles size={11} /> AI Tools
+            </button>
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={studioTab}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.18 }}
+            >
+              {studioTab === "image" && (
+                <GuidedImagePanel
+                  processing={processing}
+                  setProcessing={setProcessing}
+                  history={history}
+                  setHistory={setHistory}
                 />
-              ) : (
-                <div className="card bg-[rgba(0,0,0,0.02)] border-border-subtle text-center py-8">
-                  <Upload size={28} className="mx-auto mb-2 text-[#2563EB]" />
-                  <p className="text-sm font-semibold">
-                    {TOOLS.find(t => t.id === guidedIntent)?.name} uses files � hit Finish to open the tool.
-                  </p>
-                </div>
-              ),
-            },
-            {
-              id: "go",
-              title: "Ready to go?",
-              description: "We'll take you to the tool with everything pre-filled.",
-              icon: <Wand2 size={18} />,
-              component: (
-                <div className="card bg-[rgba(0,0,0,0.02)] border-border-subtle space-y-2">
-                  <div className="flex items-center gap-2">
-                    {(() => {
-                      const t = TOOLS.find(x => x.id === guidedIntent);
-                      if (!t) return null;
-                      const Icon = t.icon;
-                      return (
-                        <>
-                          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${t.color}22` }}>
-                            <Icon size={16} style={{ color: t.color }} />
-                          </div>
-                          <div>
-                            <p className="text-sm font-bold">{t.name}</p>
-                            <p className="text-[10px] text-muted">{t.tag}</p>
-                          </div>
-                        </>
-                      );
-                    })()}
+              )}
+              {studioTab === "video" && (
+                <div className="flex items-center justify-center min-h-[420px] rounded-2xl border border-border-subtle bg-surface-light">
+                  <div className="text-center space-y-3">
+                    <Film size={32} className="mx-auto text-[#2563EB] opacity-50" />
+                    <p className="text-sm font-semibold text-text-secondary">Video generation coming soon</p>
+                    <p className="text-xs text-text-muted">Use the AI Tools tab for image-to-video now</p>
+                    <button
+                      onClick={() => { setActiveTool("img-to-video"); setAdvancedMode(true); }}
+                      className="text-xs text-[#2563EB] hover:underline font-medium"
+                    >
+                      Open Image-to-Video tool
+                    </button>
                   </div>
-                  {guidedPrompt && (
-                    <p className="text-[11px] text-muted pt-2 border-t border-border/50 line-clamp-3">
-                      <span className="text-[#3B82F6] font-semibold">Prompt:</span> {guidedPrompt}
-                    </p>
-                  )}
                 </div>
-              ),
-            },
-          ]}
-          activeIdx={guidedStep}
-          onStepChange={setGuidedStep}
-          finishLabel="Open tool"
-          onFinish={() => {
-            setActiveTool(guidedIntent);
-            if (guidedIntent === "image-gen" && guidedPrompt.trim()) {
-              setImageGenInit({
-                prompt: guidedPrompt,
-                style: "",
-                size: "1024x1024",
-                autoGenerateToken: Date.now(),
-              });
-            }
-            setAdvancedMode(true);
-            toast.success(`Opening ${TOOLS.find(t => t.id === guidedIntent)?.name}�`);
-          }}
-          onCancel={() => setAdvancedMode(true)}
-          cancelLabel="Advanced mode"
-        />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       )}
 
@@ -780,6 +689,357 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
     </div>
   );
 }
+
+// -- GUIDED IMAGE PANEL -------------------------------------------
+// Higgsfield-style: controls left, preview + history right
+function GuidedImagePanel({ processing, setProcessing, history, setHistory }: ToolProps) {
+  const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
+  const [prompt, setPrompt] = useState("");
+  const [style, setStyle] = useState("");
+  const [size, setSize] = useState("1024x1024");
+  const [images, setImages] = useState<string[]>([]);
+  const [historySearch, setHistorySearch] = useState("");
+  const [expandedSection, setExpandedSection] = useState<"style" | "aspect" | null>(null);
+  const [liked, setLiked] = useState<Record<string, boolean>>({});
+  const [handoffingIdx, setHandoffingIdx] = useState<number | null>(null);
+
+  const panelStyles = [
+    { value: "", label: "None" },
+    { value: "photorealistic", label: "Photorealistic" },
+    { value: "modern", label: "Modern" },
+    { value: "minimalist", label: "Minimalist" },
+    { value: "bold", label: "Bold" },
+    { value: "luxury", label: "Luxury" },
+    { value: "dark", label: "Dark" },
+    { value: "vintage", label: "Vintage" },
+    { value: "playful", label: "Playful" },
+  ];
+
+  const panelSizes = [
+    { value: "1024x1024", label: "Square 1:1" },
+    { value: "1024x1792", label: "Portrait 9:16" },
+    { value: "1792x1024", label: "Landscape 16:9" },
+    { value: "768x1024", label: "Portrait 3:4" },
+  ];
+
+  const runGenerate = async () => {
+    if (!prompt.trim()) return toast.error("Enter a prompt first");
+    setProcessing(true);
+    setImages([]);
+    try {
+      const [w, h] = size.split("x").map(Number);
+      const res = await fetch("/api/ai-studio/image-gen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, width: w, height: h, style: style || undefined }),
+      });
+      const data = await res.json();
+      if (data.images) {
+        setImages(data.images);
+        if (setHistory) {
+          const newJobs: JobResult[] = data.images.map((url: string, i: number) => ({
+            id: `guided-${Date.now()}-${i}`,
+            type: "image-gen" as const,
+            status: "completed" as const,
+            result: url,
+            timestamp: new Date(),
+            meta: { prompt, style, size },
+          }));
+          setHistory([...(history ?? []), ...newJobs]);
+        }
+        toast.success(`Generated ${data.images.length} image(s)`);
+      } else if (data.error === "setup_required") {
+        toast.error("Image generation not configured");
+      } else {
+        toast.error(data.error || "Generation failed");
+      }
+    } catch (err) {
+      console.error("[guided-image-panel] failed:", err);
+      toast.error("Generation failed");
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const filteredHistory = (history ?? []).filter(j =>
+    j.type === "image-gen" && j.status === "completed" && j.result &&
+    (historySearch === "" || (j.meta?.prompt as string | undefined)?.toLowerCase().includes(historySearch.toLowerCase()))
+  );
+
+  return (
+    <div className="flex gap-5 items-start">
+      {/* ---- LEFT: Controls ---- */}
+      <div className="w-[280px] shrink-0 space-y-4">
+        {/* Orb + title */}
+        <div
+          className="relative flex flex-col items-center pt-6 pb-4 rounded-2xl overflow-hidden"
+          style={{ background: "rgba(37,99,235,0.04)", border: "1px solid rgba(37,99,235,0.10)" }}
+        >
+          <div
+            className="w-24 h-24 rounded-full mb-3 shrink-0"
+            style={{
+              background: "radial-gradient(circle at 35% 30%, #BFDBFE 0%, #60A5FA 35%, #2563EB 65%, #1e3a8a 100%)",
+              boxShadow: "0 0 32px rgba(37,99,235,0.35), 0 0 64px rgba(37,99,235,0.12)",
+            }}
+          />
+          <p className="text-sm font-bold text-text-primary font-display">AI Image Generation</p>
+          <p className="text-[10px] text-text-muted mt-0.5">Smart Creativity Starts Here</p>
+        </div>
+
+        {/* Prompt */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <label className="text-[10px] font-semibold text-text-secondary uppercase tracking-wide">Describe your image</label>
+            <button
+              onClick={() => {
+                if (!prompt.trim()) {
+                  const suggestions = [
+                    "A minimalist product mockup on white marble, studio lighting",
+                    "A futuristic city skyline at dusk with neon reflections",
+                    "A cozy coffee shop interior with warm lighting and bokeh",
+                  ];
+                  setPrompt(suggestions[Math.floor(Math.random() * suggestions.length)]);
+                }
+              }}
+              className="text-[10px] text-[#2563EB] hover:underline font-medium"
+            >
+              Suggest
+            </button>
+          </div>
+          <AIPromptBox
+            defaultValue={prompt}
+            onChange={setPrompt}
+            onSubmit={async (p) => { setPrompt(p); await runGenerate(); }}
+            placeholder="A minimalist logo mockup on black marble, studio lighting..."
+            loading={processing}
+            modelLabel="FLUX / DALL-E"
+            suggestions={["Minimalist product shot", "City skyline at dusk", "Studio portrait"]}
+            maxRows={4}
+          />
+        </div>
+
+        {/* Style accordion */}
+        <div className="rounded-xl border border-border-subtle overflow-hidden">
+          <button
+            onClick={() => setExpandedSection(expandedSection === "style" ? null : "style")}
+            className="w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold text-text-secondary hover:bg-black/[0.02] transition-colors"
+          >
+            <span>Style{style ? ` — ${panelStyles.find(s => s.value === style)?.label}` : ""}</span>
+            <ChevronDown size={12} className={`transition-transform ${expandedSection === "style" ? "rotate-180" : ""}`} />
+          </button>
+          <AnimatePresence>
+            {expandedSection === "style" && (
+              <motion.div
+                initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }}
+                transition={{ duration: 0.18 }}
+                className="overflow-hidden"
+              >
+                <div className="px-3 pb-3 flex flex-wrap gap-1.5">
+                  {panelStyles.map(s => (
+                    <button
+                      key={s.value}
+                      onClick={() => { setStyle(s.value); setExpandedSection(null); }}
+                      className={`text-[10px] px-2 py-1 rounded-lg transition-all ${
+                        style === s.value
+                          ? "bg-[#2563EB] text-white font-semibold"
+                          : "bg-surface-light text-text-muted hover:bg-black/[0.04]"
+                      }`}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Aspect ratio accordion */}
+        <div className="rounded-xl border border-border-subtle overflow-hidden">
+          <button
+            onClick={() => setExpandedSection(expandedSection === "aspect" ? null : "aspect")}
+            className="w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold text-text-secondary hover:bg-black/[0.02] transition-colors"
+          >
+            <span>Aspect Ratio — {panelSizes.find(s => s.value === size)?.label}</span>
+            <ChevronDown size={12} className={`transition-transform ${expandedSection === "aspect" ? "rotate-180" : ""}`} />
+          </button>
+          <AnimatePresence>
+            {expandedSection === "aspect" && (
+              <motion.div
+                initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }}
+                transition={{ duration: 0.18 }}
+                className="overflow-hidden"
+              >
+                <div className="px-3 pb-3 space-y-1">
+                  {panelSizes.map(s => (
+                    <button
+                      key={s.value}
+                      onClick={() => { setSize(s.value); setExpandedSection(null); }}
+                      className={`w-full text-left text-[11px] px-2 py-1.5 rounded-lg transition-all ${
+                        size === s.value
+                          ? "bg-[#2563EB] text-white font-semibold"
+                          : "hover:bg-black/[0.03] text-text-secondary"
+                      }`}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Generate */}
+        <motion.button
+          onClick={runGenerate}
+          disabled={processing || !prompt.trim()}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full py-2.5 bg-[#2563EB] text-white text-xs font-semibold rounded-xl hover:bg-[#1D4ED8] disabled:opacity-40 flex items-center justify-center gap-2 transition-colors"
+        >
+          {processing ? <Loader size={13} className="animate-spin" /> : <Sparkles size={13} />}
+          {processing ? "Generating..." : "Generate Image"}
+        </motion.button>
+      </div>
+
+      {/* ---- RIGHT: Preview + History ---- */}
+      <div className="flex-1 min-w-0 space-y-4">
+        {/* Preview */}
+        <div
+          className="relative rounded-2xl overflow-hidden flex items-center justify-center"
+          style={{
+            minHeight: 380,
+            background: "linear-gradient(135deg, #EFF6FF 0%, #F0F4FF 50%, #EEF2FF 100%)",
+            border: "1px solid rgba(37,99,235,0.10)",
+          }}
+        >
+          {/* Ambient orbs */}
+          <div className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full opacity-20"
+            style={{ background: "radial-gradient(circle, #93C5FD 0%, transparent 70%)" }} />
+          <div className="pointer-events-none absolute -bottom-8 -left-8 w-36 h-36 rounded-full opacity-15"
+            style={{ background: "radial-gradient(circle, #A5B4FC 0%, transparent 70%)" }} />
+
+          {processing ? (
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center"
+                style={{ background: "rgba(37,99,235,0.10)" }}>
+                <Loader size={22} className="text-[#2563EB] animate-spin" />
+              </div>
+              <p className="text-sm font-medium text-text-secondary">Generating your image...</p>
+              <p className="text-xs text-text-muted">This takes about 10 seconds</p>
+            </div>
+          ) : images.length > 0 ? (
+            <div className="relative w-full h-full flex items-center justify-center p-4">
+              <SafeThumb
+                src={images[0]}
+                alt="Generated image"
+                className="max-h-[360px] max-w-full rounded-xl object-contain"
+                wrapperClassName="inline-block"
+              />
+              {/* Overlay buttons */}
+              <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                <button
+                  onClick={() => setLiked(prev => ({ ...prev, [images[0]]: !prev[images[0]] }))}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+                  style={{
+                    background: liked[images[0]] ? "rgba(239,68,68,0.15)" : "rgba(255,255,255,0.85)",
+                    backdropFilter: "blur(8px)",
+                    border: "1px solid rgba(0,0,0,0.06)",
+                  }}
+                >
+                  <Heart size={14} className={liked[images[0]] ? "text-red-500 fill-red-500" : "text-text-muted"} />
+                </button>
+                <a
+                  href={images[0]}
+                  download="generated.png"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+                  style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(8px)", border: "1px solid rgba(0,0,0,0.06)" }}
+                >
+                  <Download size={14} className="text-text-muted" />
+                </a>
+                <button
+                  disabled={handoffingIdx === 0}
+                  onClick={async () => {
+                    setHandoffingIdx(0);
+                    try {
+                      const id = await createHandoff(supabase, { imageUrl: images[0], prompt, style, size });
+                      router.push(handoffUrl(id, "/dashboard/ai-studio"));
+                    } catch (err) {
+                      toast.error(err instanceof Error ? err.message : "Handoff failed");
+                    } finally {
+                      setHandoffingIdx(null);
+                    }
+                  }}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+                  style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(8px)", border: "1px solid rgba(0,0,0,0.06)" }}
+                >
+                  {handoffingIdx === 0
+                    ? <Loader2 size={14} className="text-text-muted animate-spin" />
+                    : <MoreHorizontal size={14} className="text-text-muted" />
+                  }
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-3 opacity-60">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                style={{ background: "rgba(37,99,235,0.08)" }}>
+                <ImagePlus size={28} className="text-[#2563EB]" />
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-semibold text-text-secondary">Your image will appear here</p>
+                <p className="text-xs text-text-muted mt-0.5">Describe something and hit Generate</p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* History grid */}
+        {filteredHistory.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <h3 className="text-[11px] font-semibold text-text-secondary uppercase tracking-wide">History</h3>
+              <div className="flex-1 relative">
+                <Search size={10} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted" />
+                <input
+                  value={historySearch}
+                  onChange={e => setHistorySearch(e.target.value)}
+                  placeholder="Search..."
+                  className="w-full pl-6 pr-3 py-1 text-[10px] rounded-lg bg-surface-light border border-border-subtle focus:outline-none focus:border-[#2563EB]/30"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-4 gap-2">
+              {filteredHistory.slice(0, 8).map(j => (
+                <motion.div
+                  key={j.id}
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.18 }}
+                  className="aspect-square rounded-xl overflow-hidden relative group cursor-pointer"
+                  onClick={() => { if (j.result) setImages([j.result]); }}
+                >
+                  <SafeThumb
+                    src={j.result!}
+                    alt="History thumbnail"
+                    className="w-full h-full object-cover"
+                    wrapperClassName="w-full h-full"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-xl" />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 
 // -- IMAGE GEN TOOL ----------------------------------------------
 interface ImageGenInit {
@@ -2134,5 +2394,3 @@ function formatTime(seconds: number): string {
   const s = Math.floor(seconds % 60);
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
-
-
