@@ -483,7 +483,7 @@ export default function WebsitesPage() {
         type: "choice-cards",
         key: "business_type",
         options: [
-          { value: "local_service", label: "Local Service", description: "HVAC, plumbing, dentalï¿½", icon: <Home size={14} />, preview: "bg-gradient-to-br from-sky-500/40 to-cyan-500/40" },
+          { value: "local_service", label: "Local Service", description: "HVAC, plumbing, dental…", icon: <Home size={14} />, preview: "bg-gradient-to-br from-sky-500/40 to-cyan-500/40" },
           { value: "ecommerce", label: "E-commerce", description: "Online store", icon: <ShoppingBag size={14} />, preview: "bg-gradient-to-br from-pink-500/40 to-rose-500/40" },
           { value: "saas", label: "SaaS", description: "Software product", icon: <MonitorSmartphone size={14} />, preview: "bg-gradient-to-br from-blue-500/40 to-indigo-500/40" },
           { value: "portfolio", label: "Portfolio", description: "Creative showcase", icon: <Camera size={14} />, preview: "bg-gradient-to-br from-orange-500/40 to-amber-500/40" },
@@ -726,7 +726,7 @@ export default function WebsitesPage() {
         return;
       }
 
-      toast.success("Website generated! Deploying demoï¿½");
+      toast.success("Website generated! Deploying demo…");
       // Auto-deploy to free demo subdomain
       await deployDemo(out.project_id);
       await loadData();
@@ -739,9 +739,9 @@ export default function WebsitesPage() {
         const wp = row as WebsiteProject;
         setActive(wp);
         setWizardOpen(false);
-        // Let the user SEE the demo first ï¿½ they open pricing when ready
+        // Let the user SEE the demo first — they open pricing when ready
         toast.success(
-          "Your demo is live! Try it out ï¿½ go live when you're ready.",
+          "Your demo is live! Try it out — go live when you’re ready.",
           { duration: 6000 },
         );
       }
@@ -767,7 +767,7 @@ export default function WebsitesPage() {
       const out = await res.json();
       toast.dismiss("regen");
       if (out.success) {
-        toast.success("Regenerated ï¿½ redeploying demoï¿½");
+        toast.success("Regenerated — redeploying demo…");
         await deployDemo(project.id);
         const { data: row } = await supabase.from("website_projects").select("*").eq("id", project.id).single();
         if (row) setActive(row as WebsiteProject);
@@ -784,7 +784,7 @@ export default function WebsitesPage() {
 
   async function deploy(project: WebsiteProject) {
     setDeploying(true);
-    toast.loading("Deploying to Vercelï¿½", { id: "dep" });
+    toast.loading("Deploying to Vercel…", { id: "dep" });
     try {
       const res = await fetch("/api/websites/deploy", {
         method: "POST",
@@ -824,7 +824,7 @@ export default function WebsitesPage() {
     }
     try {
       await navigator.clipboard.writeText(url);
-      toast.success("Demo URL copied ï¿½ share with your client!");
+      toast.success("Demo URL copied — share with your client!");
     } catch {
       toast.error("Failed to copy");
     }
@@ -832,7 +832,7 @@ export default function WebsitesPage() {
 
   async function extendDemo(p: WebsiteProject) {
     if (!confirm("Extend demo by 7 days for $2?")) return;
-    toast.loading("Extending demoï¿½", { id: "ext" });
+    toast.loading("Extending demo…", { id: "ext" });
     try {
       const res = await fetch(`/api/websites/${p.id}/extend-demo`, { method: "POST" });
       const out = await res.json();
@@ -939,7 +939,7 @@ export default function WebsitesPage() {
                 </div>
                 <button
                   onClick={startBlank}
-                  className="text-xs px-3 py-1.5 rounded-lg bg-[#2563EB] text-white hover:bg-[#1D4ED8] flex items-center gap-1.5 font-medium transition-all"
+                  className="btn-pill flex items-center gap-1.5"
                 >
                   <Plus size={13} /> New Site
                 </button>
@@ -1006,7 +1006,7 @@ export default function WebsitesPage() {
                 </button>
               </div>
 
-              {/* Niche filter tabs ï¿½ spring indicator via layoutId */}
+              {/* Niche filter tabs — spring indicator via layoutId */}
               <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter templates by niche">
                 {NICHE_FILTERS.map((niche) => {
                   const filterKey = niche === "All" ? "all" : niche;
@@ -1156,7 +1156,7 @@ export default function WebsitesPage() {
                   );
                 })}
               </div>
-            </div>{/* Demo-ready banner ï¿½ shown while demo is live and not yet subscribed */}{active && effectiveStatus(active) === "preview" && (
+            </div>{/* Demo-ready banner — shown while demo is live and not yet subscribed */}{active && effectiveStatus(active) === "preview" && (
               <div className="card p-4 bg-gradient-to-br from-emerald-500/[0.06] to-transparent border-emerald-500/30 fade-in">
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
@@ -1174,14 +1174,14 @@ export default function WebsitesPage() {
                         href={active.preview_url || active.vercel_url || "#"}
                         target="_blank"
                         rel="noopener"
-                        className="text-[10px] px-3 py-2 rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/8 flex items-center gap-1"
+                        className="btn-pill-ghost text-xs flex items-center gap-1"
                       >
                         <ExternalLink size={11} /> View demo
                       </a>
                     )}
                     <button
                       onClick={() => openPricing(active)}
-                      className="text-[10px] px-3 py-2 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white font-bold flex items-center gap-1 hover:shadow-lg hover:shadow-[#2563EB]/30"
+                      className="btn-pill text-xs flex items-center gap-1"
                     >
                       <Rocket size={11} /> See pricing
                     </button>
@@ -1207,20 +1207,20 @@ export default function WebsitesPage() {
                       onClick={() => regenerate(active)}
                       disabled={regenerating}
                       aria-label="Regenerate website"
-                      className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1 disabled:opacity-50"
+                      className="btn-pill-ghost text-xs flex items-center gap-1 disabled:opacity-50"
                     >
                       {regenerating ? <Loader size={10} className="animate-spin" /> : <RefreshCw size={10} />}
                       Regenerate
                     </button>
                     <button
                       onClick={() => shareDemo(active)}
-                      className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1"
+                      className="btn-pill-ghost text-xs flex items-center gap-1"
                     >
                       <Share2 size={10} /> Share Demo
                     </button>
                     <button
                       onClick={() => openPricing(active)}
-                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white font-bold flex items-center gap-1"
+                      className="btn-pill text-xs flex items-center gap-1"
                     >
                       <Rocket size={10} /> Go Live
                     </button>
@@ -1254,34 +1254,29 @@ export default function WebsitesPage() {
                 {/* Viewport toggle + open-in-new-tab */}
                 {indexHtml && (
                   <div className="flex items-center justify-between gap-2">
-                    <div className="inline-flex items-center rounded-lg border border-border bg-surface-light p-0.5">
+                    <div className="tab-pill-strip">
                       {[
                         { id: "desktop" as const, label: "Desktop", Icon: Monitor },
                         { id: "tablet" as const, label: "Tablet", Icon: Tablet },
                         { id: "mobile" as const, label: "Mobile", Icon: Smartphone },
-                      ].map((v) => {
-                        const on = viewport === v.id;
-                        return (
-                          <button
-                            key={v.id}
-                            onClick={() => setViewport(v.id)}
-                            aria-label={v.label}
-                            aria-pressed={on}
-                            className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] transition ${
-                              on ? "bg-[#2563EB] text-white font-semibold" : "text-muted hover:text-foreground"
-                            }`}
-                          >
-                            <v.Icon size={11} /> {v.label}
-                          </button>
-                        );
-                      })}
+                      ].map((v) => (
+                        <button
+                          key={v.id}
+                          onClick={() => setViewport(v.id)}
+                          aria-label={v.label}
+                          aria-pressed={viewport === v.id}
+                          className={`tab-pill flex items-center gap-1 text-xs ${viewport === v.id ? "active" : ""}`}
+                        >
+                          <v.Icon size={11} /> {v.label}
+                        </button>
+                      ))}
                     </div>
                     {(active.preview_url || active.vercel_url) && (
                       <a
                         href={active.preview_url || active.vercel_url || "#"}
                         target="_blank"
                         rel="noopener"
-                        className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] flex items-center gap-1"
+                        className="btn-pill-ghost text-xs flex items-center gap-1"
                       >
                         <ExternalLink size={10} /> Open in new tab
                       </a>
@@ -1323,7 +1318,7 @@ export default function WebsitesPage() {
                   <p className="text-xs text-muted mb-3">No websites yet. Pick a niche template above and you&apos;ll have a live demo URL in 3 minutes &mdash; no card required.</p>
                   <button
                     onClick={startBlank}
-                    className="text-xs px-4 py-2 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] inline-flex items-center gap-1.5"
+                    className="btn-pill-ghost inline-flex items-center gap-1.5"
                   >
                     <Plus size={12} /> Or build from scratch
                   </button>
@@ -1381,7 +1376,7 @@ export default function WebsitesPage() {
                           <div>
                             <p className="text-xs font-semibold truncate">{p.name}</p>
                             <p className="text-[9px] text-muted truncate">
-                              {clientName ? `${clientName} ï¿½ ` : ""}
+                              {clientName ? `${clientName} — ` : ""}
                               {p.industry || p.template_style || "uncategorized"}
                             </p>
                           </div>
@@ -1430,12 +1425,12 @@ export default function WebsitesPage() {
 
                           <div className="flex items-center justify-between pt-1 gap-1">
                             <div className="flex items-center gap-1 flex-wrap">
-                              <button onClick={() => setActive(p)} className="text-[10px] px-2 py-1 rounded-md bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
+                              <button onClick={() => setActive(p)} className="btn-pill-ghost text-[10px] px-3 py-1 flex items-center gap-1">
                                 <Eye size={10} /> Open
                               </button>
                               {status === "preview" && (
                                 <>
-                                  <button onClick={() => openPricing(p)} className="text-[10px] px-2 py-1 rounded-md bg-[#2563EB] hover:bg-[#3B82F6] text-white font-semibold flex items-center gap-1">
+                                  <button onClick={() => openPricing(p)} className="btn-pill text-[10px] px-3 py-1 flex items-center gap-1">
                                     <Rocket size={10} /> Go Live
                                   </button>
                                   <button onClick={() => shareDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-border text-muted hover:text-foreground flex items-center gap-1">
@@ -1444,7 +1439,7 @@ export default function WebsitesPage() {
                                 </>
                               )}
                               {status === "expired" && (
-                                <button onClick={() => extendDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] flex items-center gap-1">
+                                <button onClick={() => extendDemo(p)} className="btn-pill-ghost text-[10px] px-3 py-1 flex items-center gap-1">
                                   <Calendar size={10} /> Extend
                                 </button>
                               )}
@@ -1467,7 +1462,7 @@ export default function WebsitesPage() {
             </div>{/* How it works */}<div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {[
                 { icon: <Layout size={12} />, title: "1. Pick a niche", body: "Nine battle-tested templates, each one prewired for the conversion pattern that niche responds to." },
-                { icon: <Rocket size={12} />, title: "2. Share the demo", body: "Auto-deployed to a live URL in under 3 minutes. Send it to your client ï¿½ free for 14 days, no card." },
+                { icon: <Rocket size={12} />, title: "2. Share the demo", body: "Auto-deployed to a live URL in under 3 minutes. Send it to your client — free for 14 days, no card." },
                 { icon: <DollarSign size={12} />, title: "3. Go live, get paid", body: "Connect a domain and subscribe. Transparent monthly pricing based on what's actually in the site." },
               ].map((item, index) => (
                 <motion.div
@@ -1555,7 +1550,7 @@ function PricingModal({
             <h2 className="text-base font-bold flex items-center gap-2">
               <Rocket size={16} className="text-[#2563EB]" /> Your Website is Ready!
             </h2>
-            <p className="text-[11px] text-muted">{project.name} ï¿½ pick a plan to go live.</p>
+            <p className="text-[11px] text-muted">{project.name} &mdash; pick a plan to go live.</p>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-black/5"><X size={14} /></button>
         </div>
@@ -1583,31 +1578,31 @@ function PricingModal({
                   <Loader size={20} className="animate-spin" />
                 ) : (
                   <>
-                    <span className="text-3xl font-bold">${display ?? "ï¿½"}</span>
+                    <span className="text-3xl font-bold">${display ?? "…"}</span>
                     <span className="text-xs opacity-90">{cyclePer}</span>
                   </>
                 )}
               </div>
               {billingCycle === "yearly" && quote && (
                 <p className="text-[10px] opacity-90 mt-1">
-                  Save 17% ï¿½ equiv ${(quote.yearly_price / 12).toFixed(2)}/mo
+                  Save 17% &mdash; equiv ${(quote.yearly_price / 12).toFixed(2)}/mo
                 </p>
               )}
             </div>
 
             {/* Billing cycle toggle */}
-            <div className="flex items-center bg-surface-light border border-border rounded-lg p-0.5">
+            <div className="tab-pill-strip">
               <button
-                className={`flex-1 text-[10px] py-1.5 rounded-md transition ${billingCycle === "monthly" ? "bg-[#2563EB] text-white font-semibold" : "text-muted"}`}
+                className={`tab-pill flex-1 text-xs ${billingCycle === "monthly" ? "active" : ""}`}
                 onClick={() => onCycleChange("monthly")}
               >
                 Monthly
               </button>
               <button
-                className={`flex-1 text-[10px] py-1.5 rounded-md transition ${billingCycle === "yearly" ? "bg-[#2563EB] text-white font-semibold" : "text-muted"}`}
+                className={`tab-pill flex-1 text-xs ${billingCycle === "yearly" ? "active" : ""}`}
                 onClick={() => onCycleChange("yearly")}
               >
-                Yearly <span className="text-[9px] opacity-80">(-17%)</span>
+                Yearly <span className="text-[9px] opacity-80 ml-0.5">(-17%)</span>
               </button>
             </div>
 
@@ -1622,7 +1617,7 @@ function PricingModal({
                   </div>
                 ))}
                 {!quote?.breakdown?.length && !quoteLoading && (
-                  <p className="text-[11px] text-muted">Calculatingï¿½</p>
+                  <p className="text-[11px] text-muted">Calculating…</p>
                 )}
               </div>
             </div>
@@ -1660,14 +1655,14 @@ function PricingModal({
               <button
                 onClick={onSubscribe}
                 disabled={subscribing || quoteLoading || !quote}
-                className="w-full text-xs px-4 py-3 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white font-bold flex items-center justify-center gap-1.5 disabled:opacity-50"
+                className="btn-pill w-full flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
                 {subscribing ? <Loader size={12} className="animate-spin" /> : <Rocket size={12} />}
-                Go Live ï¿½ ${display}{cyclePer}
+                Go Live &mdash; ${display}{cyclePer}
               </button>
               <button
                 onClick={onClose}
-                className="w-full text-[11px] px-4 py-2 rounded-lg border border-border text-muted hover:text-foreground"
+                className="btn-pill-ghost w-full"
               >
                 Continue Demo (14 days free)
               </button>

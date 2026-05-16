@@ -670,8 +670,8 @@ export default function ClientsPage() {
           {/* Live count + MRR badges beside the title */}
           {clients.length> 0 && (
             <div className="hidden sm:flex items-center gap-1.5 ml-1">
-              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[10px] font-medium text-[#1D4ED8]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#1D4ED8] animate-pulse" />
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[10px] font-medium text-brand-accent">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
                 {clients.length}
               </span>
               {totalMRR> 0 && (
@@ -689,20 +689,20 @@ export default function ClientsPage() {
               <button
                 onClick={() => setScope("all")}
                 className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                  scope === "all" ? "bg-[#1D4ED8] text-white" : "text-text-muted hover:text-text-primary"
+                  scope === "all" ? "bg-brand-accent text-white" : "text-text-muted hover:text-text-primary"
                 }`}
 >All</button>
               <button
                 onClick={() => setScope("mine")}
                 className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                  scope === "mine" ? "bg-[#1D4ED8] text-white" : "text-text-muted hover:text-text-primary"
+                  scope === "mine" ? "bg-brand-accent text-white" : "text-text-muted hover:text-text-primary"
                 }`}
 >Mine</button>
             </div>
           )}
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#2563EB] transition-all"
+            className="btn-pill flex items-center gap-1.5 text-xs"
 >
             <Plus size={13} /> Add Client
           </button>
@@ -792,7 +792,7 @@ export default function ClientsPage() {
             aria-selected={tab === t}
             onClick={() => setTab(t)}
             className={`px-4 py-2 text-sm rounded-md capitalize transition-all flex items-center gap-1.5 ${
-              tab === t ? "bg-[#1D4ED8] text-white font-medium" : "text-muted hover:text-foreground"
+              tab === t ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
             }`}
 >
             {t === "billing" && <CreditCard size={14} />}
@@ -820,10 +820,10 @@ export default function ClientsPage() {
 
             {/* Feature 9: Advanced Filters Toggle */}
             <button onClick={() => setShowFilters(!showFilters)}
-              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border-[rgba(37,99,235,0.25)]" : ""}`}>
+              className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-brand-accent/10 text-brand-accent border-brand-accent/25" : ""}`}>
               <Filter size={14} /> Filters
               {(filterIndustry || filterStatus !== "all" || filterTag || filterMrrMin || filterMrrMax) && (
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-accent" />
               )}
             </button>
 
@@ -839,7 +839,7 @@ export default function ClientsPage() {
               ]).map(s => (
                 <button key={s.field} onClick={() => handleSort(s.field)}
                   className={`px-2 py-1 text-[10px] rounded-md transition-all flex items-center gap-0.5 ${
-                    sortField === s.field ? "bg-[#1D4ED8] text-white font-medium" : "text-muted hover:text-foreground"
+                    sortField === s.field ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {s.label}
                   {sortField === s.field && (
@@ -852,11 +852,11 @@ export default function ClientsPage() {
             {/* Feature 15: View Mode Toggle */}
             <div className="flex items-center gap-0.5 bg-surface rounded-lg p-0.5">
               <button onClick={() => setViewMode("table")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-[#1D4ED8] text-white" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-brand-accent text-white" : "text-muted hover:text-foreground"}`}>
                 <LayoutList size={14} />
               </button>
               <button onClick={() => setViewMode("card")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-[#1D4ED8] text-white" : "text-muted hover:text-foreground"}`}>
+                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-brand-accent text-white" : "text-muted hover:text-foreground"}`}>
                 <LayoutGrid size={14} />
               </button>
             </div>
@@ -945,7 +945,7 @@ export default function ClientsPage() {
               <div className="flex items-center justify-between mt-3 pt-2 border-t border-border">
                 <span className="text-[10px] text-muted">{filteredClients.length} clients matched</span>
                 <button onClick={() => { setFilterIndustry(""); setFilterStatus("all"); setFilterTag(""); setFilterMrrMin(""); setFilterMrrMax(""); }}
-                  className="text-[10px] text-[#1D4ED8] hover:underline">Clear all filters</button>
+                  className="text-[10px] text-brand-accent hover:underline">Clear all filters</button>
               </div>
             </div>
           )}
@@ -1021,7 +1021,7 @@ export default function ClientsPage() {
                 <div className="absolute top-3 left-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
+                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1031,7 +1031,7 @@ export default function ClientsPage() {
                 <div className="absolute top-3 right-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleCompare(c.id)}
                     className={`text-[9px] px-1.5 py-0.5 rounded transition-all ${
-                      compareClients.includes(c.id) ? "bg-[rgba(37,99,235,0.12)] text-[#1D4ED8]" : "text-muted hover:text-foreground"
+                      compareClients.includes(c.id) ? "bg-brand-accent/10 text-brand-accent" : "text-muted hover:text-foreground"
                     }`}>
                     <Columns size={10} />
                   </button>
@@ -1059,7 +1059,7 @@ export default function ClientsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <p className={`font-semibold truncate ${isFeatured ? "text-base" : "text-sm"}`}>{c.business_name}</p>
-                      {isFeatured && <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-[#1D4ED8] bg-[rgba(37,99,235,0.10)] px-2 py-0.5 rounded-full">Top Account</span>}
+                      {isFeatured && <span className="text-[9px] font-bold tracking-[0.15em] uppercase text-brand-accent bg-brand-accent/10 px-2 py-0.5 rounded-full">Top Account</span>}
                       <span className={`inline-flex items-center gap-1 text-[8px] px-1.5 py-0.5 rounded-full font-medium border ${statusStyles.pill}`}>
                         <span className={`w-1 h-1 rounded-full ${statusStyles.dot}`} aria-hidden="true" />
                         {statusStyles.label}
@@ -1080,7 +1080,7 @@ export default function ClientsPage() {
                   {isFeatured && (
                     <div className="hidden md:flex flex-col items-end shrink-0 ml-auto">
                       <span className="text-[9px] uppercase tracking-[0.15em] text-text-muted">MRR</span>
-                      <span className="font-display text-2xl font-bold text-[#1D4ED8] tracking-tight tabular-nums">{formatCurrency(c.mrr)}</span>
+                      <span className="font-display text-2xl font-bold text-brand-accent tracking-tight tabular-nums">{formatCurrency(c.mrr)}</span>
                     </div>
                   )}
                 </div>
@@ -1099,7 +1099,7 @@ export default function ClientsPage() {
                 <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-border-subtle overflow-hidden">
                   <div className="px-3 py-2 flex flex-col gap-0.5">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">MRR</p>
-                    <p className="text-xs font-bold text-[#1D4ED8]">{formatCurrency(c.mrr)}</p>
+                    <p className="text-xs font-bold text-brand-accent">{formatCurrency(c.mrr)}</p>
                   </div>
                   <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-border-subtle">
                     <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Paid</p>
@@ -1120,7 +1120,7 @@ export default function ClientsPage() {
                     <span className="text-[9px] font-mono font-medium">{onboarding}%</span>
                   </div>
                   <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full transition-all ${onboarding>= 100 ? "bg-[#2563EB]" : onboarding>= 60 ? "bg-[#2563EB]" : "bg-[#1D4ED8]"}`}
+                    <div className={`h-full rounded-full transition-all ${onboarding>= 100 ? "bg-brand-accent" : onboarding>= 60 ? "bg-brand-accent" : "bg-brand-accent"}`}
                       style={{ width: `${onboarding}%` }} />
                   </div>
                 </div>
@@ -1227,12 +1227,12 @@ export default function ClientsPage() {
         </div>
       )}
       {tab === "clients" && viewMode === "table" && filteredClients.length> 0 && (
-        <div className="space-y-0 [&_tbody_tr:hover]:border-l-2 [&_tbody_tr:hover]:border-l-[#2563EB]/40">
+        <div className="space-y-0 [&_tbody_tr:hover]:border-l-2 [&_tbody_tr:hover]:border-l-brand-accent/40">
           <DataTable
             columns={[
               { key: "select", label: (
                 <button onClick={selectAllClients} className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                  selectedClients.size === filteredClients.length && filteredClients.length> 0 ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
+                  selectedClients.size === filteredClients.length && filteredClients.length> 0 ? "bg-brand-accent border-brand-accent text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
                 }`}>
                   {selectedClients.size === filteredClients.length && filteredClients.length> 0 && <Check size={10} />}
                 </button>
@@ -1240,7 +1240,7 @@ export default function ClientsPage() {
                 <div onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-[#2563EB] border-[#1D4ED8] text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
+                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1282,7 +1282,7 @@ export default function ClientsPage() {
                 </div>
               )},
               { key: "package_tier", label: "Package", render: (c: Client) => (
-                <span className="text-[#2563EB] font-medium">{c.package_tier || "-"}</span>
+                <span className="text-brand-accent font-medium">{c.package_tier || "-"}</span>
               )},
               { key: "mrr", label: "MRR", render: (c: Client) => {
                 const rev = getClientRevenue(c.id);
@@ -1318,7 +1318,7 @@ export default function ClientsPage() {
                 return (
                   <div className="flex items-center gap-1.5">
                     <div className="w-10 bg-surface-light rounded-full h-1.5">
-                      <div className={`h-full rounded-full ${pct>= 100 ? "bg-success" : "bg-[#2563EB]"}`} style={{ width: `${pct}%` }} />
+                      <div className={`h-full rounded-full ${pct>= 100 ? "bg-success" : "bg-brand-accent"}`} style={{ width: `${pct}%` }} />
                     </div>
                     <span className="text-[10px] text-muted">{pct}%</span>
                   </div>
@@ -1367,7 +1367,7 @@ export default function ClientsPage() {
                     <StickyNote size={12} />
                   </button>
                   <button onClick={() => toggleCompare(c.id)}
-                    className={`p-1 rounded hover:bg-surface-light transition-colors ${compareClients.includes(c.id) ? "text-[#2563EB]" : "text-muted hover:text-foreground"}`} title="Compare">
+                    className={`p-1 rounded hover:bg-surface-light transition-colors ${compareClients.includes(c.id) ? "text-brand-accent" : "text-muted hover:text-foreground"}`} title="Compare">
                     <Columns size={12} />
                   </button>
                   {/* Feature 5: Expand row for activity timeline */}
@@ -1416,8 +1416,8 @@ export default function ClientsPage() {
                       {[
                         { action: "Invoice sent", time: "2 hours ago", icon: <FileText size={10} className="text-info" /> },
                         { action: "Content published", time: "1 day ago", icon: <CheckCircle size={10} className="text-success" /> },
-                        { action: "Meeting scheduled", time: "3 days ago", icon: <Phone size={10} className="text-[#1D4ED8]" /> },
-                        { action: "Contract signed", time: "1 week ago", icon: <FileText size={10} className="text-[#2563EB]" /> },
+                        { action: "Meeting scheduled", time: "3 days ago", icon: <Phone size={10} className="text-brand-accent" /> },
+                        { action: "Contract signed", time: "1 week ago", icon: <FileText size={10} className="text-brand-accent" /> },
                       ].map((item, i) => (
                         <div key={i} className="flex items-center gap-2 text-[10px]">
                           <div className="w-5 h-5 rounded-full bg-surface flex items-center justify-center shrink-0">{item.icon}</div>
@@ -1434,7 +1434,7 @@ export default function ClientsPage() {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-muted">Monthly Recurring</span>
-                        <span className="font-bold text-[#2563EB]">{formatCurrency(revenue.mrr)}/mo</span>
+                        <span className="font-bold text-brand-accent">{formatCurrency(revenue.mrr)}/mo</span>
                       </div>
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-muted">Total Paid</span>
@@ -1458,7 +1458,7 @@ export default function ClientsPage() {
                       <div className="text-xs bg-surface rounded-lg p-2.5">
                         <p>{note}</p>
                         <button onClick={() => { setEditingNote(expandedRow); setNoteText(note); }}
-                          className="text-[10px] text-[#2563EB] hover:underline mt-2">Edit note</button>
+                          className="text-[10px] text-brand-accent hover:underline mt-2">Edit note</button>
                       </div>
                     ) : (
                       <button onClick={() => { setEditingNote(expandedRow); setNoteText(""); }}
@@ -1485,7 +1485,7 @@ export default function ClientsPage() {
             { key: "start_date", label: "Start", render: (c: Contract) => c.start_date ? formatDate(c.start_date) : "-" },
             { key: "end_date", label: "End", render: (c: Contract) => c.end_date ? formatDate(c.end_date) : "-" },
             { key: "document_url", label: "Doc", render: (c: Contract) => c.document_url ? (
-              <a href={c.document_url} target="_blank" rel="noopener" className="text-[#2563EB]"><ArrowUpRight size={16} /></a>
+              <a href={c.document_url} target="_blank" rel="noopener" className="text-brand-accent"><ArrowUpRight size={16} /></a>
             ) : "-" },
           ]}
           data={contracts}
@@ -1559,7 +1559,7 @@ export default function ClientsPage() {
                           ) : (
                             <span className="text-muted flex items-center gap-0.5"><span className="w-1.5 h-1.5 rounded-full bg-muted inline-block" /> No Stripe</span>
                           )}
-                          {hasSub && <span className="text-[#2563EB]">Subscribed</span>}
+                          {hasSub && <span className="text-brand-accent">Subscribed</span>}
                           {client.mrr> 0 && <span>{formatCurrency(client.mrr)}/mo</span>}
                         </div>
                       </div>
@@ -1688,7 +1688,7 @@ export default function ClientsPage() {
               </div>
               <div>
                 <p className="text-xs text-muted">Package</p>
-                <p className="text-[#2563EB] font-medium">{selectedClient.package_tier || "-"}</p>
+                <p className="text-brand-accent font-medium">{selectedClient.package_tier || "-"}</p>
               </div>
               <div>
                 <p className="text-xs text-muted">MRR</p>
@@ -1705,7 +1705,7 @@ export default function ClientsPage() {
               <p className="text-xs text-muted mb-2">Services</p>
               <div className="flex flex-wrap gap-2">
                 {(selectedClient.services || []).map((s, i) => (
-                  <span key={i} className="badge bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{s}</span>
+                  <span key={i} className="badge bg-brand-accent/10 text-brand-accent">{s}</span>
                 ))}
               </div>
             </div>
@@ -1736,7 +1736,7 @@ export default function ClientsPage() {
                       </button>
                     )}
                     {selectedClient.stripe_subscription_id && (
-                      <span className="badge bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-xs flex items-center gap-1">
+                      <span className="badge bg-brand-accent/10 text-brand-accent text-xs flex items-center gap-1">
                         <Zap size={12} /> Subscribed
                       </span>
                     )}
@@ -1817,8 +1817,8 @@ export default function ClientsPage() {
           }} className="space-y-4">
             <p className="text-sm text-muted">
               {showInviteModal.profile_id
-                ? <>Update password for <span className="text-[#2563EB] font-medium">{showInviteModal.business_name}</span>. They already have portal access.</>
-                : <>Create a login for <span className="text-[#2563EB] font-medium">{showInviteModal.business_name}</span> so they can access their portal.</>
+                ? <>Update password for <span className="text-brand-accent font-medium">{showInviteModal.business_name}</span>. They already have portal access.</>
+                : <>Create a login for <span className="text-brand-accent font-medium">{showInviteModal.business_name}</span> so they can access their portal.</>
               }
             </p>
             <div>
@@ -1863,7 +1863,7 @@ export default function ClientsPage() {
             setShowSubscribeModal(null);
           }} className="space-y-4">
             <p className="text-sm text-muted">
-              Set up recurring billing for <span className="text-[#2563EB] font-medium">{showSubscribeModal.business_name}</span>.
+              Set up recurring billing for <span className="text-brand-accent font-medium">{showSubscribeModal.business_name}</span>.
               This creates a Stripe Checkout link you can send to the client.
             </p>
             <div>
@@ -1906,7 +1906,7 @@ export default function ClientsPage() {
           return (
             <div className="space-y-4">
               <p className="text-sm text-muted">
-                Assign tags to <span className="text-[#2563EB] font-medium">{client?.business_name}</span>
+                Assign tags to <span className="text-brand-accent font-medium">{client?.business_name}</span>
               </p>
               <div className="flex flex-wrap gap-2">
                 {TAG_PRESETS.map(tag => {
@@ -1954,7 +1954,7 @@ export default function ClientsPage() {
           return (
             <div className="space-y-4">
               <p className="text-sm text-muted">
-                Notes for <span className="text-[#2563EB] font-medium">{client?.business_name}</span>
+                Notes for <span className="text-brand-accent font-medium">{client?.business_name}</span>
               </p>
               <textarea
                 value={noteText}
@@ -2017,7 +2017,7 @@ export default function ClientsPage() {
                         const val = row.getValue(c);
                         const isBest = row.getNum && row.getNum(c) === bestVal && nums.filter(n => n === bestVal).length === 1;
                         return (
-                          <td key={c.id} className={`py-2 text-center ${isBest ? "text-[#2563EB] font-bold" : ""}`}>
+                          <td key={c.id} className={`py-2 text-center ${isBest ? "text-brand-accent font-bold" : ""}`}>
                             {val}
                           </td>
                         );

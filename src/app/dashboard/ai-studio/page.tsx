@@ -174,7 +174,7 @@ export default function AIStudioPage() {
                 setActiveTool("image-gen");
                 setCreationWizardOpen(true);
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-xs font-bold hover:bg-[#1D4ED8] transition-all"
+              className="btn-pill text-xs flex items-center gap-1.5"
             >
               <Sparkles size={13} />
               New with AI
@@ -188,18 +188,13 @@ export default function AIStudioPage() {
         <div className="space-y-4 px-6 py-6">
           {/* Tab bar: Image | Video | AI Tools */}
           <div
-            className="flex items-center gap-1 p-1 rounded-xl w-fit"
-            style={{ background: "rgba(19,24,39,0.70)", border: "1px solid rgba(59,130,246,0.12)" }}
+            className="tab-pill-strip"
           >
             {(["image", "video"] as const).map(tab => (
               <button
                 key={tab}
                 onClick={() => setStudioTab(tab)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all ${
-                  studioTab === tab
-                    ? "bg-blue-500/20 text-blue-300 shadow-sm"
-                    : "text-text-muted hover:text-text-secondary"
-                }`}
+                className={`tab-pill${studioTab === tab ? " active" : ""} text-[11px]`}
               >
                 {tab === "image" ? <ImagePlus size={11} /> : <Film size={11} />}
                 {tab === "image" ? "Image" : "Video"}
@@ -207,7 +202,7 @@ export default function AIStudioPage() {
             ))}
             <button
               onClick={() => setAdvancedMode(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-text-muted hover:text-text-secondary transition-all"
+              className="tab-pill text-[11px]"
             >
               <Sparkles size={11} /> AI Tools
             </button>
@@ -672,7 +667,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
             </select>
             <motion.button onClick={handleTranscribe} disabled={processing || !file}
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-              className="px-4 py-2 bg-[#2563EB] text-white text-xs font-semibold rounded-lg hover:bg-[#1D4ED8] disabled:opacity-40 flex items-center gap-1.5">
+              className="btn-pill text-xs flex items-center gap-1.5">
               {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
               Transcribe
             </motion.button>
@@ -929,7 +924,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
           disabled={processing || !prompt.trim()}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="w-full py-3 bg-blue-600 text-white text-xs font-semibold rounded-xl hover:bg-blue-500 disabled:opacity-40 flex items-center justify-center gap-2 transition-colors"
+          className="btn-pill w-full text-xs flex items-center justify-center gap-2"
           style={{ boxShadow: "0 0 20px rgba(59,130,246,0.22)" }}
         >
           {processing ? <Loader size={13} className="animate-spin" /> : <Sparkles size={13} />}
@@ -1283,7 +1278,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
 
           <motion.button onClick={handleGenerate} disabled={processing || !prompt.trim()}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full px-4 py-2.5 bg-[#2563EB] text-white text-xs font-semibold rounded-lg hover:bg-[#5E5BFF] disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
             Generate Image
           </motion.button>
@@ -1679,7 +1674,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
           </div>
           <motion.button onClick={handleGenerate} disabled={processing || !file}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full mt-3 px-4 py-2.5 bg-[#2563EB] text-white text-xs font-semibold rounded-lg hover:bg-[#1D4ED8] disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="btn-pill w-full mt-3 text-xs flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
             Animate Image
           </motion.button>
@@ -1784,7 +1779,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
 
           <motion.button onClick={handleGenerate} disabled={processing || !prompt}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full px-4 py-2.5 bg-[#2563EB] text-white text-xs font-semibold rounded-lg hover:bg-[#1D4ED8] disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Music size={12} />}
             Generate Music
           </motion.button>
@@ -1899,10 +1894,10 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
         <span className="text-[9px] bg-orange-500/10 text-orange-400 px-2 py-0.5 rounded-full">XTTS v2</span>
       </motion.div>
 
-      <div className="flex gap-2 mb-4">
+      <div className="tab-pill-strip mb-4">
         {(["clone", "speak"] as const).map(m => (
           <button key={m} onClick={() => setMode(m)}
-            className={`text-xs px-3 py-1.5 rounded-lg font-medium capitalize ${mode === m ? "bg-orange-500 text-white" : "bg-surface-light text-muted"}`}>
+            className={`tab-pill${mode === m ? " active" : ""} text-xs capitalize`}>
             {m === "clone" ? "Clone Voice" : "Generate Speech"}
           </button>
         ))}
@@ -2090,7 +2085,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
 
           <motion.button onClick={handleTrain} disabled={processing || images.length < 5}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full px-4 py-2.5 bg-[#2563EB] text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} />}
             Start Training (~{Math.ceil(steps / 100)} min)
           </motion.button>

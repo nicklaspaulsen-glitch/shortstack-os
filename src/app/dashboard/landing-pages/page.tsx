@@ -1229,12 +1229,12 @@ export default function LandingPagesPage() {
                 <button
                   onClick={handleGenerate}
                   disabled={generating}
-                  className="px-6 py-3 bg-[#2563EB] text-white rounded-lg text-sm font-bold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="btn-pill flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {generating ? <RotateCcw className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                   {generating ? "Generating..." : "Generate with AI"}
                 </button>
-                <button onClick={() => setStep(2)} className="px-6 py-3 bg-surface-light border border-border rounded-lg text-sm font-medium text-muted hover:text-text-primary hover:border-[rgba(37,99,235,0.25)] transition-colors">
+                <button onClick={() => setStep(2)} className="btn-pill-ghost">
                   Skip to Templates
                 </button>
               </div>
@@ -1333,7 +1333,7 @@ export default function LandingPagesPage() {
                     >
                       {COLOR_SCHEMES.map(cs => <option key={cs.id} value={cs.id}>{cs.name}</option>)}
                     </select>
-                    <button className="px-3 py-1.5 bg-[#2563EB] text-white rounded text-xs font-semibold hover:bg-[#1D4ED8] transition-colors flex items-center gap-1">
+                    <button className="btn-pill text-xs flex items-center gap-1">
                       <Rocket className="w-3 h-3" /> Publish
                     </button>
                   </div>
@@ -1446,7 +1446,7 @@ export default function LandingPagesPage() {
               <button
                 onClick={handleDeploy}
                 disabled={deploying}
-                className="w-full py-3 bg-[#2563EB] text-white rounded-lg text-sm font-bold hover:bg-[#1D4ED8] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="btn-pill w-full flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {deploying ? <RotateCcw className="w-4 h-4 animate-spin" /> : <Rocket className="w-4 h-4" />}
                 {deploying ? "Deploying..." : "Deploy to Vercel"}
