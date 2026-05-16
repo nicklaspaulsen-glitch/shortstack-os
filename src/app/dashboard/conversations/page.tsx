@@ -385,8 +385,8 @@ export default function ConversationsPage() {
   const selected = conversations.find((c) => c.id === selectedId) || null;
 
   return (
-    <MotionPage className="flex h-[calc(100vh-4rem)] bg-[#FAFAFB] text-text-primary">{/* -- LEFT: conversation list � hidden on mobile when viewing a thread -- */}<aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-[rgba(0,0,0,0.08)] flex-col`}>
-              <div className="p-4 border-b border-[rgba(0,0,0,0.08)]">
+    <MotionPage className="flex h-[calc(100vh-4rem)] bg-[#0D1120] text-text-primary">{/* -- LEFT: conversation list � hidden on mobile when viewing a thread -- */}<aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-border-subtle flex-col`}>
+              <div className="p-4 border-b border-border-subtle">
                 <h1 className="text-lg font-semibold mb-3 flex items-center gap-2">
                   <Inbox size={18} className="text-indigo-400" />
                   Conversations
@@ -394,20 +394,20 @@ export default function ConversationsPage() {
                 <div className="relative">
                   <Search
                     size={14}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[#71717A]"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
                   />
                   <input
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search�"
-                    className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg pl-9 pr-3 py-2 text-sm placeholder-[#71717A] focus:outline-none focus:border-[#1D4ED8]/40"
+                    className="w-full bg-surface-light border border-border rounded-lg pl-9 pr-3 py-2 text-sm placeholder-white/30 focus:outline-none focus:border-brand-accent/40"
                   />
                 </div>
               </div>
 
               {/* Filter tabs */}
-              <div className="tab-pill-strip px-3 py-2 border-b border-[rgba(0,0,0,0.08)] flex-wrap">
+              <div className="tab-pill-strip px-3 py-2 border-b border-border-subtle flex-wrap">
                 {FILTERS.map((f, i) => (
                   <button
                     key={f.key}
@@ -440,12 +440,12 @@ export default function ConversationsPage() {
                   </div>
                 ) : conversations.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-3">
-                    <div className="w-12 h-12 bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.08)] flex items-center justify-center">
+                    <div className="w-12 h-12 bg-white/[0.05] border border-border-subtle flex items-center justify-center">
                       <Inbox size={20} className="text-brand-accent/60" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#71717A] mb-1">No conversations yet</p>
-                      <p className="text-[10px] text-[#71717A] leading-relaxed max-w-[180px]">
+                      <p className="text-sm font-medium text-text-muted mb-1">No conversations yet</p>
+                      <p className="text-[10px] text-text-muted leading-relaxed max-w-[180px]">
                         Inbound messages from email, SMS, and social will appear here.
                       </p>
                     </div>
@@ -467,18 +467,18 @@ export default function ConversationsPage() {
               </div>
             </aside>{/* -- MIDDLE: thread � hidden on mobile when showing the list -- */}<main className={`${mobileView === "list" ? "hidden" : "flex"} md:flex flex-1 flex-col min-w-0`}>
               {!selected ? (
-                <div className="flex-1 flex items-center justify-center text-[#71717A] text-sm">
+                <div className="flex-1 flex items-center justify-center text-text-muted text-sm">
                   Select a conversation to view
                 </div>
               ) : (
                 <>
                   {/* Header */}
-                  <header className="px-5 py-3 border-b border-[rgba(0,0,0,0.08)] flex items-center justify-between gap-3">
+                  <header className="px-5 py-3 border-b border-border-subtle flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         {/* Back button � mobile only */}
                         <button
-                          className="flex md:hidden items-center gap-1 text-[#52525B] hover:text-[#111827] mr-1"
+                          className="flex md:hidden items-center gap-1 text-text-secondary hover:text-text-primary mr-1"
                           onClick={() => setMobileView("list")}
                           aria-label="Back to conversations"
                         >
@@ -492,15 +492,15 @@ export default function ConversationsPage() {
                         </span>
                       </div>
                       {selected.subject && (
-                        <div className="text-xs text-[#71717A] mt-0.5 truncate">{selected.subject}</div>
+                        <div className="text-xs text-text-muted mt-0.5 truncate">{selected.subject}</div>
                       )}
                     </div>
-                    <div className="flex items-center gap-1 text-[#374151]">
+                    <div className="flex items-center gap-1 text-text-secondary">
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => setStatus(selected.id, "snoozed")}
-                        className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)]"
+                        className="p-1.5 rounded hover:bg-white/[0.05]"
                         title="Snooze (s)"
                       >
                         <Clock size={15} />
@@ -509,7 +509,7 @@ export default function ConversationsPage() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => setStatus(selected.id, "archived")}
-                        className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)]"
+                        className="p-1.5 rounded hover:bg-white/[0.05]"
                         title="Archive (e)"
                       >
                         <Archive size={15} />
@@ -518,7 +518,7 @@ export default function ConversationsPage() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => setStatus(selected.id, "closed")}
-                        className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)]"
+                        className="p-1.5 rounded hover:bg-white/[0.05]"
                         title="Close (c)"
                       >
                         <CheckCircle2 size={15} />
@@ -542,7 +542,7 @@ export default function ConversationsPage() {
                     ) : messages.length === 0 ? (
                       <div className="flex flex-col items-center justify-center h-full gap-2 py-16 text-center">
                         <MessageCircle size={28} className="text-text-muted" />
-                        <p className="text-xs text-[#71717A]">No messages yet � say hello</p>
+                        <p className="text-xs text-text-muted">No messages yet � say hello</p>
                       </div>
                     ) : (
                       messages.map((m) => <MessageBubble key={m.id} m={m} />)
@@ -550,18 +550,18 @@ export default function ConversationsPage() {
                   </div>
 
                   {/* Composer */}
-                  <div className="border-t border-[rgba(0,0,0,0.08)] p-3">
-                    <div className="flex items-end gap-2 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg p-2">
+                  <div className="border-t border-border-subtle p-3">
+                    <div className="flex items-end gap-2 bg-surface-light border border-border-subtle rounded-lg p-2">
                       <button
                         type="button"
-                        className="p-1.5 text-[#71717A] hover:text-[#374151] rounded"
+                        className="p-1.5 text-text-muted hover:text-text-secondary rounded"
                         title="Attach"
                       >
                         <Paperclip size={16} />
                       </button>
                       <button
                         type="button"
-                        className="p-1.5 text-[#71717A] hover:text-[#374151] rounded"
+                        className="p-1.5 text-text-muted hover:text-text-secondary rounded"
                         title="Emoji"
                       >
                         <Smile size={16} />
@@ -578,7 +578,7 @@ export default function ConversationsPage() {
                         }}
                         placeholder={`Reply via ${CHANNEL_META[selected.channel].label}… (Cmd/Ctrl+Enter to send)`}
                         rows={2}
-                        className="flex-1 bg-transparent outline-none resize-none text-sm text-[#374151] placeholder-[#9CA3AF]"
+                        className="flex-1 bg-transparent outline-none resize-none text-sm text-text-primary placeholder-white/30"
                       />
                       <motion.button
                         whileHover={{ scale: 1.02 }}
@@ -591,14 +591,14 @@ export default function ConversationsPage() {
                         Send
                       </motion.button>
                     </div>
-                    <div className="text-[11px] text-[#71717A] mt-1.5 pl-2">
+                    <div className="text-[11px] text-text-muted mt-1.5 pl-2">
                       Sending as {CHANNEL_META[selected.channel].label}
                     </div>
                   </div>
                 </>
               )}
             </main>{/* -- RIGHT: contact + actions � desktop only -- */}{selected && (
-              <aside className="hidden md:block w-[280px] flex-shrink-0 border-l border-[rgba(0,0,0,0.08)] overflow-y-auto bg-white">
+              <aside className="hidden md:block w-[280px] flex-shrink-0 border-l border-border-subtle overflow-y-auto bg-[#131827]">
                 <ContactPanel conversation={selected} contact={contact} onStatus={(s) => setStatus(selected.id, s)} />
               </aside>
             )}</MotionPage>
@@ -625,9 +625,9 @@ function ConversationRow({
       initial={{ opacity: 0, x: -8 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.18, delay: index * 0.04 }}
-      whileHover={{ backgroundColor: active ? undefined : "rgba(0,0,0,0.03)" }}
+      whileHover={{ backgroundColor: active ? undefined : "rgba(255,255,255,0.04)" }}
       onClick={onClick}
-      className={`w-full text-left px-4 py-3 border-b border-[rgba(0,0,0,0.08)] transition-colors ${
+      className={`w-full text-left px-4 py-3 border-b border-border-subtle transition-colors ${
         active ? "bg-brand-accent/80/5 border-l-2 border-l-[#1D4ED8]/40" : ""
       }`}
     >
@@ -636,7 +636,7 @@ function ConversationRow({
           <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] border ${meta.tone}`}>
             {meta.icon}
           </span>
-          <span className={`text-sm truncate ${c.unread_count > 0 ? "font-semibold text-[#111827]" : "text-[#374151]"}`}>
+          <span className={`text-sm truncate ${c.unread_count > 0 ? "font-semibold text-text-primary" : "text-text-secondary"}`}>
             {name}
           </span>
         </div>
@@ -644,14 +644,14 @@ function ConversationRow({
           {c.unread_count > 0 && (
             <span className="w-2 h-2 rounded-full bg-brand-accent/80" />
           )}
-          <span className="text-[11px] text-[#71717A]">{fmtTime(c.last_message_at)}</span>
+          <span className="text-[11px] text-text-muted">{fmtTime(c.last_message_at)}</span>
         </div>
       </div>
-      <div className="text-xs text-[#71717A] truncate pl-0.5">
-        {c.last_message_preview || <em className="text-[#71717A]">No preview</em>}
+      <div className="text-xs text-text-muted truncate pl-0.5">
+        {c.last_message_preview || <em className="text-text-muted">No preview</em>}
       </div>
       {c.status !== "open" && (
-        <div className="mt-1 text-[10px] uppercase tracking-wider text-[#71717A]">
+        <div className="mt-1 text-[10px] uppercase tracking-wider text-text-muted">
           {c.status}
         </div>
       )}
@@ -683,12 +683,12 @@ function MessageBubble({ m }: { m: Message }) {
       <div
         className={`max-w-[70%]  px-4 py-2.5 text-sm leading-relaxed ${
           inbound
-            ? "bg-[#F2F2F4] text-text-primary border border-[rgba(0,0,0,0.08)]"
+            ? "bg-white/[0.08] text-text-primary border border-border-subtle"
             : "bg-brand-accent/80 text-white"
         }`}
       >
         <div className="whitespace-pre-wrap break-words">{m.body || <em className="opacity-60">No content</em>}</div>
-        <div className={`text-[10px] mt-1 ${inbound ? "text-[#6B7280]" : "text-muted"}`}>
+        <div className={`text-[10px] mt-1 ${inbound ? "text-text-muted" : "text-muted"}`}>
           {fmtTime(m.sent_at)}
         </div>
       </div>
@@ -708,46 +708,46 @@ function ContactPanel({
 }) {
   return (
     <div className="p-4 space-y-4">
-      <section className="bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] rounded-xl p-3">
-        <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Contact</h3>
+      <section className="bg-white/[0.03] border border-border-subtle rounded-xl p-3">
+        <h3 className="text-[11px] uppercase tracking-wider text-text-muted mb-2">Contact</h3>
         {contact ? (
           <div className="space-y-1 text-sm">
             <div className="font-medium">{contact.business_name}</div>
             {contact.contact_name && (
-              <div className="text-[#52525B] text-xs">{contact.contact_name}</div>
+              <div className="text-text-secondary text-xs">{contact.contact_name}</div>
             )}
             {contact.email && (
-              <div className="text-[#52525B] text-xs flex items-center gap-1.5">
+              <div className="text-text-secondary text-xs flex items-center gap-1.5">
                 <Mail size={11} /> {contact.email}
               </div>
             )}
             {contact.phone && (
-              <div className="text-[#52525B] text-xs flex items-center gap-1.5">
+              <div className="text-text-secondary text-xs flex items-center gap-1.5">
                 <Phone size={11} /> {contact.phone}
               </div>
             )}
           </div>
         ) : (
-          <div className="text-xs text-[#71717A] space-y-1">
+          <div className="text-xs text-text-muted space-y-1">
             <div>Unknown sender</div>
-            <div className="font-mono text-[11px] text-[#71717A]">
+            <div className="font-mono text-[11px] text-text-muted">
               {conversation.external_thread_id}
             </div>
           </div>
         )}
       </section>
 
-      <section className="bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] rounded-xl p-3">
-        <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Thread</h3>
-        <div className="text-xs space-y-1.5 text-[#52525B]">
+      <section className="bg-white/[0.03] border border-border-subtle rounded-xl p-3">
+        <h3 className="text-[11px] uppercase tracking-wider text-text-muted mb-2">Thread</h3>
+        <div className="text-xs space-y-1.5 text-text-secondary">
           <div className="flex items-center gap-2">
-            <Circle size={8} className={conversation.status === "open" ? "text-emerald-500 fill-emerald-500" : "text-[#71717A] fill-[#71717A]"} />
+            <Circle size={8} className={conversation.status === "open" ? "text-emerald-500 fill-emerald-500" : "text-text-muted fill-current"} />
             <span className="capitalize">{conversation.status}</span>
           </div>
           {conversation.tags && conversation.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-1">
               {conversation.tags.map((t) => (
-                <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.10)]">
+                <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] border border-border">
                   {t}
                 </span>
               ))}
@@ -756,37 +756,37 @@ function ContactPanel({
         </div>
       </section>
 
-      <section className="bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] rounded-xl p-3">
-        <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Actions</h3>
+      <section className="bg-white/[0.03] border border-border-subtle rounded-xl p-3">
+        <h3 className="text-[11px] uppercase tracking-wider text-text-muted mb-2">Actions</h3>
         <div className="space-y-1">
           <button
             onClick={() => onStatus("snoozed")}
-            className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-[rgba(0,0,0,0.04)] flex items-center gap-2"
+            className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-white/[0.05] flex items-center gap-2"
           >
             <Clock size={12} /> Snooze thread
           </button>
           <button
             onClick={() => onStatus("closed")}
-            className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-[rgba(0,0,0,0.04)] flex items-center gap-2"
+            className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-white/[0.05] flex items-center gap-2"
           >
             <CheckCircle2 size={12} /> Mark closed
           </button>
           <button
             onClick={() => onStatus("archived")}
-            className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-[rgba(0,0,0,0.04)] flex items-center gap-2"
+            className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-white/[0.05] flex items-center gap-2"
           >
             <Archive size={12} /> Archive
           </button>
           <button
             disabled
-            className="w-full text-left px-2.5 py-1.5 rounded text-xs text-[#71717A] flex items-center gap-2 cursor-not-allowed"
+            className="w-full text-left px-2.5 py-1.5 rounded text-xs text-text-muted flex items-center gap-2 cursor-not-allowed"
             title="Coming soon"
           >
             <UserPlus size={12} /> Assign to teammate
           </button>
           <button
             disabled
-            className="w-full text-left px-2.5 py-1.5 rounded text-xs text-[#71717A] flex items-center gap-2 cursor-not-allowed"
+            className="w-full text-left px-2.5 py-1.5 rounded text-xs text-text-muted flex items-center gap-2 cursor-not-allowed"
             title="Coming soon"
           >
             <Tag size={12} /> Add tag
@@ -796,17 +796,17 @@ function ContactPanel({
 
       {contact && (
         <section>
-          <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Jump to</h3>
+          <h3 className="text-[11px] uppercase tracking-wider text-text-muted mb-2">Jump to</h3>
           <div className="space-y-1">
             <Link
               href={`/dashboard/clients`}
-              className="block text-xs px-2.5 py-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-[#52525B]"
+              className="block text-xs px-2.5 py-1.5 rounded hover:bg-white/[0.05] text-text-secondary"
             >
               Client record ?
             </Link>
             <Link
               href={`/dashboard/deals`}
-              className="block text-xs px-2.5 py-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-[#52525B]"
+              className="block text-xs px-2.5 py-1.5 rounded hover:bg-white/[0.05] text-text-secondary"
             >
               Create deal ?
             </Link>
@@ -815,16 +815,16 @@ function ContactPanel({
       )}
 
       <section>
-        <h3 className="text-[11px] uppercase tracking-wider text-[#71717A] mb-2">Shortcuts</h3>
-        <div className="text-[11px] text-[#71717A] space-y-0.5">
+        <h3 className="text-[11px] uppercase tracking-wider text-text-muted mb-2">Shortcuts</h3>
+        <div className="text-[11px] text-text-muted space-y-0.5">
           <div>
-            <kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">j</kbd> / <kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">k</kbd> next / prev
+            <kbd className="px-1 rounded bg-white/[0.06]">j</kbd> / <kbd className="px-1 rounded bg-white/[0.06]">k</kbd> next / prev
           </div>
-          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">r</kbd> reply</div>
-          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">e</kbd> archive</div>
-          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">s</kbd> snooze</div>
-          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">c</kbd> close</div>
-          <div><kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">1</kbd>�<kbd className="px-1 rounded bg-[rgba(0,0,0,0.04)]">9</kbd> jump filter</div>
+          <div><kbd className="px-1 rounded bg-white/[0.06]">r</kbd> reply</div>
+          <div><kbd className="px-1 rounded bg-white/[0.06]">e</kbd> archive</div>
+          <div><kbd className="px-1 rounded bg-white/[0.06]">s</kbd> snooze</div>
+          <div><kbd className="px-1 rounded bg-white/[0.06]">c</kbd> close</div>
+          <div><kbd className="px-1 rounded bg-white/[0.06]">1</kbd>�<kbd className="px-1 rounded bg-white/[0.06]">9</kbd> jump filter</div>
         </div>
       </section>
     </div>
