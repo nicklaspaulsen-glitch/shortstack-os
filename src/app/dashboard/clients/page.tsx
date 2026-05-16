@@ -714,7 +714,7 @@ export default function ClientsPage() {
         <div className="grid grid-cols-2 lg:grid-cols-[5fr_2fr_2fr_2fr] gap-3">
           {/* MRR focal tile */}
           <motion.div
-            className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+            className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
@@ -733,7 +733,7 @@ export default function ClientsPage() {
 
           {/* Support tile: Total Clients */}
           <motion.div
-            className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+            className="glass rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
@@ -749,7 +749,7 @@ export default function ClientsPage() {
 
           {/* Support tile: Active */}
           <motion.div
-            className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+            className="glass rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
@@ -766,7 +766,7 @@ export default function ClientsPage() {
             const atRiskCount = clients.filter(c => c.health_score < 40).length;
             return (
               <motion.div
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
@@ -1065,11 +1065,20 @@ export default function ClientsPage() {
                     {isFeatured && c.industry && (
                       <p className="text-[10px] text-muted mt-0.5">{c.industry}</p>
                     )}
-                    {/* Revenue badge � compact cards only (featured has dedicated MRR callout) */}
-                    {!isFeatured && c.mrr> 0 && (
-                      <span className="inline-block mt-0.5 text-[9px] font-semibold bg-[rgba(0,0,0,0.04)] text-text-muted px-2 py-0.5 rounded-full border border-border-subtle">
-                        {formatCurrency(c.mrr)}/mo
-                      </span>
+                    {/* Revenue + industry chips on compact cards */}
+                    {!isFeatured && (
+                      <div className="flex items-center gap-1 flex-wrap mt-0.5">
+                        {c.mrr > 0 && (
+                          <span className="text-[9px] font-semibold bg-brand-accent/10 text-brand-accent px-1.5 py-0.5 rounded-full">
+                            {formatCurrency(c.mrr)}/mo
+                          </span>
+                        )}
+                        {c.industry && (
+                          <span className="text-[9px] text-text-muted bg-white/[0.04] border border-border-subtle px-1.5 py-0.5 rounded-full truncate max-w-[80px]">
+                            {c.industry}
+                          </span>
+                        )}
+                      </div>
                     )}
                   </div>
                   {/* Featured: big MRR callout */}
