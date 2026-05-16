@@ -13,6 +13,10 @@ import {
   EyeOff, Check, Rocket, Calendar, Monitor, Tablet, Smartphone,
   TrendingUp, ArrowRight, Cpu,
 } from "lucide-react";
+import {
+  Home2, ShoppingBag as IxShoppingBag, MonitorMobbile, Camera as IxCamera,
+  Teacher, People, Buildings, Shop, Category,
+} from "iconsax-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
@@ -483,16 +487,16 @@ export default function WebsitesPage() {
         type: "choice-cards",
         key: "business_type",
         options: [
-          { value: "local_service", label: "Local Service", description: "HVAC, plumbing, dental…", icon: <Home size={14} />, preview: "bg-gradient-to-br from-sky-500/40 to-cyan-500/40" },
-          { value: "ecommerce", label: "E-commerce", description: "Online store", icon: <ShoppingBag size={14} />, preview: "bg-gradient-to-br from-pink-500/40 to-rose-500/40" },
-          { value: "saas", label: "SaaS", description: "Software product", icon: <MonitorSmartphone size={14} />, preview: "bg-gradient-to-br from-blue-500/40 to-indigo-500/40" },
-          { value: "portfolio", label: "Portfolio", description: "Creative showcase", icon: <Camera size={14} />, preview: "bg-gradient-to-br from-orange-500/40 to-amber-500/40" },
-          { value: "coach", label: "Coach / Course", description: "Coaching, personal brand", icon: <GraduationCap size={14} />, preview: "bg-gradient-to-br from-purple-500/40 to-fuchsia-500/40" },
+          { value: "local_service", label: "Local Service", description: "HVAC, plumbing, dental…", icon: <Home2 size={16} variant="Bulk" color="#38bdf8" />, preview: "bg-gradient-to-br from-sky-500/40 to-cyan-500/40" },
+          { value: "ecommerce", label: "E-commerce", description: "Online store", icon: <IxShoppingBag size={16} variant="Bulk" color="#f472b6" />, preview: "bg-gradient-to-br from-pink-500/40 to-rose-500/40" },
+          { value: "saas", label: "SaaS", description: "Software product", icon: <MonitorMobbile size={16} variant="Bulk" color="#818cf8" />, preview: "bg-gradient-to-br from-blue-500/40 to-indigo-500/40" },
+          { value: "portfolio", label: "Portfolio", description: "Creative showcase", icon: <IxCamera size={16} variant="Bulk" color="#fb923c" />, preview: "bg-gradient-to-br from-orange-500/40 to-amber-500/40" },
+          { value: "coach", label: "Coach / Course", description: "Coaching, personal brand", icon: <Teacher size={16} variant="Bulk" color="#c084fc" />, preview: "bg-gradient-to-br from-purple-500/40 to-fuchsia-500/40" },
           { value: "blog", label: "Blog / Content", description: "Editorial & newsletter", icon: <Newspaper size={14} />, preview: "bg-gradient-to-br from-emerald-500/40 to-teal-500/40" },
-          { value: "agency", label: "Agency", description: "Services company", icon: <Users size={14} />, preview: "bg-gradient-to-br from-red-500/40 to-orange-500/40" },
+          { value: "agency", label: "Agency", description: "Services company", icon: <People size={16} variant="Bulk" color="#f87171" />, preview: "bg-gradient-to-br from-red-500/40 to-orange-500/40" },
           { value: "restaurant", label: "Restaurant", description: "Menu, reservations", icon: <UtensilsCrossed size={14} />, preview: "bg-gradient-to-br from-amber-500/40 to-red-500/40" },
-          { value: "real_estate", label: "Real Estate", description: "Listings, agent brand", icon: <Building2 size={14} />, preview: "bg-gradient-to-br from-slate-600/40 to-amber-500/40" },
-          { value: "other", label: "Other", description: "Something else", icon: <Store size={14} />, preview: "bg-gradient-to-br from-slate-500/40 to-slate-700/40" },
+          { value: "real_estate", label: "Real Estate", description: "Listings, agent brand", icon: <Buildings size={16} variant="Bulk" color="#94a3b8" />, preview: "bg-gradient-to-br from-slate-600/40 to-amber-500/40" },
+          { value: "other", label: "Other", description: "Something else", icon: <Shop size={16} variant="Bulk" color="#9ca3af" />, preview: "bg-gradient-to-br from-slate-500/40 to-slate-700/40" },
         ],
       },
     },
@@ -991,7 +995,7 @@ export default function WebsitesPage() {
               <div className="flex items-end justify-between flex-wrap gap-2">
                 <div>
                   <h2 className="text-sm font-semibold flex items-center gap-2">
-                    <Layout size={14} className="text-brand-accent" />
+                    <Category size={16} variant="Bulk" color="#3B82F6" />
                     Pick a niche. Ship in 30 seconds.
                   </h2>
                   <p className="text-[11px] text-muted mt-0.5">
