@@ -34,6 +34,7 @@ import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, getPlanConfig, type PlanTier } from "@/lib/plan-config";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
+import { PricingInteraction, type PricingPlan } from "@/components/ui/pricing-interaction";
 
 // -- Types --------------------------------------------------------------------
 type UsageMap = Record<string, number>;
@@ -73,6 +74,59 @@ const RESOURCE_META: Array<{
   { key: "clients", label: "Active Clients", icon: <Users size={14} />, accent: "#2563EB" },
   { key: "sms", label: "SMS Sent", icon: <Smartphone size={14} />, accent: "#f59e0b" },
   { key: "call_minutes", label: "Call Minutes", icon: <Phone size={14} />, accent: "#ef4444", suffix: "min" },
+];
+
+// -- Pricing plans for PricingInteraction -------------------------------------
+const BILLING_PLANS: PricingPlan[] = [
+  {
+    id: "Starter",
+    name: "Starter",
+    price: "$497",
+    period: "mo",
+    description: "For solo agency owners just getting started.",
+    features: [
+      "Up to 5 clients",
+      "1 team member",
+      "250K AI tokens / mo",
+      "3 social platforms",
+      "60 caller minutes / mo",
+    ],
+    cta: "Get started",
+  },
+  {
+    id: "Growth",
+    name: "Growth",
+    price: "$997",
+    period: "mo",
+    description: "For growing agencies ready to scale.",
+    features: [
+      "Up to 15 clients",
+      "3 team members",
+      "1M AI tokens / mo",
+      "Unlimited social platforms",
+      "AI Agents + Workflows",
+      "300 caller minutes / mo",
+    ],
+    cta: "Upgrade to Growth",
+    featured: true,
+    badge: "Most popular",
+  },
+  {
+    id: "Pro",
+    name: "Pro",
+    price: "$2,497",
+    period: "mo",
+    description: "For established agencies managing many clients.",
+    features: [
+      "Up to 50 clients",
+      "10 team members",
+      "5M AI tokens / mo",
+      "API access",
+      "Video editor + Design studio",
+      "2,000 caller minutes / mo",
+    ],
+    cta: "Upgrade to Pro",
+  },
 ];
 
 // -- Token packs (ids match /api/billing/buy-tokens) --------------------------
@@ -461,6 +515,16 @@ export default function BillingPage() {
                   );
                 })}
               </div>
+            </section>{/* --- Plan comparison ---------------------------------------- */}<section>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm font-bold text-foreground">Compare plans</h2>
+                <span className="text-[11px] text-muted">Monthly pricing</span>
+              </div>
+              <PricingInteraction
+                currentPlanId={planTier}
+                plans={BILLING_PLANS}
+                onSelect={(id) => { window.location.href = `/dashboard/upgrade?plan=${id}`; }}
+              />
             </section>{/* --- Invoices ------------------------------------------------ */}<section>
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-sm font-bold text-foreground">Recent invoices</h2>

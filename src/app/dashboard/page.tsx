@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import toast from "react-hot-toast";
 import { Briefcase, FileText, Send, Sparkles } from "lucide-react";
 
@@ -18,6 +17,8 @@ import BentoGrid from "@/components/dashboard-home/bento-grid";
 import OnboardingChecklist from "@/components/dashboard-home/onboarding-checklist";
 import type { BentoData } from "@/components/dashboard-home/types";
 import { MotionPage } from "@/components/motion/motion-page";
+import { ShineBorder } from "@/components/ui/shine-border";
+import { FlowButton } from "@/components/ui/flow-button";
 
 /**
  * Dashboard home — Phase 3 command center.
@@ -126,7 +127,14 @@ export default function DashboardPage() {
       {/* Below-the-fold enhancers — discoverable on scroll, not blocking data */}
       <TrinityOrb firstName={firstName} />
       <TrinityHero3D greeting={firstName} suggestionSurface="script_lab" />
-      <AgentOfficeTile />
+      <ShineBorder
+        borderWidth={1.5}
+        borderRadius="16px"
+        color={["#2563EB", "#93C5FD", "#DBEAFE", "#818CF8", "#2563EB"]}
+        background="transparent"
+      >
+        <AgentOfficeTile />
+      </ShineBorder>
 
       <AiRecommender />
       <RecentGenerations />
@@ -172,12 +180,11 @@ function BentoFallback() {
       <p className="font-editorial text-base text-text-secondary max-w-md">
         Couldn&apos;t reach the dashboard service. Refresh the page or check the system status if this keeps happening.
       </p>
-      <Link
-        href="/dashboard/monitor"
-        className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-brand-accent text-white"
-      >
-        Check system status
-      </Link>
+      <FlowButton
+        text="Check system status"
+        onClick={() => { window.location.href = "/dashboard/monitor"; }}
+        className="text-sm"
+      />
     </div>
   );
 }

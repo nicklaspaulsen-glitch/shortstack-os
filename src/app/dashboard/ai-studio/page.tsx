@@ -22,6 +22,7 @@ import StatStrip from "@/components/ui/stat-strip";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
+import { AIPromptBox } from "@/components/ui/ai-prompt-box";
 
 
 // -- Types --------------------------------------------------------
@@ -917,11 +918,15 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
-          <textarea
-            value={prompt}
-            onChange={e => setPrompt(e.target.value)}
-            placeholder="Describe the image you want to create... e.g. 'A modern tech startup office with warm lighting, clean desks, and large windows overlooking a city skyline'"
-            className="w-full h-24 text-xs bg-surface-light border border-border rounded-xl px-3 py-2 text-foreground resize-none"
+          <AIPromptBox
+            defaultValue={prompt}
+            onChange={setPrompt}
+            onSubmit={async (p) => { setPrompt(p); await runGenerate({ prompt: p }); }}
+            placeholder="Describe the image you want to create… e.g. 'A modern tech startup office with warm lighting'"
+            loading={processing}
+            modelLabel="FLUX / DALL-E"
+            suggestions={["Minimalist product shot on marble", "City skyline at golden hour", "Studio portrait, soft light"]}
+            maxRows={4}
           />
 
           <div>
