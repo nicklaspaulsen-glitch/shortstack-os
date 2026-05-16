@@ -800,19 +800,19 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
   );
 
   return (
-    <div className="flex gap-5 items-start">
-      {/* ---- LEFT: Controls ---- */}
-      <div className="w-[280px] shrink-0 space-y-4">
+    <div className="flex gap-4 items-stretch min-h-[560px]">
+      {/* ---- LEFT: Controls sidebar ---- */}
+      <div className="w-[256px] shrink-0 flex flex-col gap-3">
         {/* Orb + title */}
         <div
           className="relative flex flex-col items-center pt-6 pb-4 rounded-2xl overflow-hidden"
-          style={{ background: "rgba(37,99,235,0.04)", border: "1px solid rgba(37,99,235,0.10)" }}
+          style={{ background: "rgba(37,99,235,0.06)", border: "1px solid rgba(59,130,246,0.15)" }}
         >
           <div
-            className="w-24 h-24 rounded-full mb-3 shrink-0"
+            className="w-20 h-20 rounded-full mb-3 shrink-0"
             style={{
               background: "radial-gradient(circle at 35% 30%, #BFDBFE 0%, #60A5FA 35%, #2563EB 65%, #1e3a8a 100%)",
-              boxShadow: "0 0 32px rgba(37,99,235,0.35), 0 0 64px rgba(37,99,235,0.12)",
+              boxShadow: "0 0 32px rgba(37,99,235,0.40), 0 0 64px rgba(37,99,235,0.15)",
             }}
           />
           <p className="text-sm font-bold text-text-primary font-display">AI Image Generation</p>
@@ -834,7 +834,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                   setPrompt(suggestions[Math.floor(Math.random() * suggestions.length)]);
                 }
               }}
-              className="text-[10px] text-[#2563EB] hover:underline font-medium"
+              className="text-[10px] text-blue-400 hover:text-blue-300 hover:underline font-medium transition-colors"
             >
               Suggest
             </button>
@@ -852,10 +852,10 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
         </div>
 
         {/* Style accordion */}
-        <div className="rounded-xl border border-border-subtle overflow-hidden">
+        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(59,130,246,0.12)", background: "rgba(19,24,39,0.60)" }}>
           <button
             onClick={() => setExpandedSection(expandedSection === "style" ? null : "style")}
-            className="w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold text-text-secondary hover:bg-black/[0.02] transition-colors"
+            className="w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold text-text-secondary hover:bg-white/[0.04] transition-colors"
           >
             <span>Style{style ? ` — ${panelStyles.find(s => s.value === style)?.label}` : ""}</span>
             <ChevronDown size={12} className={`transition-transform ${expandedSection === "style" ? "rotate-180" : ""}`} />
@@ -874,8 +874,8 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                       onClick={() => { setStyle(s.value); setExpandedSection(null); }}
                       className={`text-[10px] px-2 py-1 rounded-lg transition-all ${
                         style === s.value
-                          ? "bg-[#2563EB] text-white font-semibold"
-                          : "bg-surface-light text-text-muted hover:bg-black/[0.04]"
+                          ? "bg-blue-500/80 text-white font-semibold"
+                          : "bg-white/[0.06] text-text-muted hover:bg-white/[0.10] hover:text-text-secondary"
                       }`}
                     >
                       {s.label}
@@ -888,10 +888,10 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
         </div>
 
         {/* Aspect ratio accordion */}
-        <div className="rounded-xl border border-border-subtle overflow-hidden">
+        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(59,130,246,0.12)", background: "rgba(19,24,39,0.60)" }}>
           <button
             onClick={() => setExpandedSection(expandedSection === "aspect" ? null : "aspect")}
-            className="w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold text-text-secondary hover:bg-black/[0.02] transition-colors"
+            className="w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold text-text-secondary hover:bg-white/[0.04] transition-colors"
           >
             <span>Aspect Ratio — {panelSizes.find(s => s.value === size)?.label}</span>
             <ChevronDown size={12} className={`transition-transform ${expandedSection === "aspect" ? "rotate-180" : ""}`} />
@@ -910,8 +910,8 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                       onClick={() => { setSize(s.value); setExpandedSection(null); }}
                       className={`w-full text-left text-[11px] px-2 py-1.5 rounded-lg transition-all ${
                         size === s.value
-                          ? "bg-[#2563EB] text-white font-semibold"
-                          : "hover:bg-black/[0.03] text-text-secondary"
+                          ? "bg-blue-500/80 text-white font-semibold"
+                          : "hover:bg-white/[0.04] text-text-secondary"
                       }`}
                     >
                       {s.label}
@@ -929,145 +929,177 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
           disabled={processing || !prompt.trim()}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="w-full py-2.5 bg-[#2563EB] text-white text-xs font-semibold rounded-xl hover:bg-[#1D4ED8] disabled:opacity-40 flex items-center justify-center gap-2 transition-colors"
+          className="w-full py-3 bg-blue-600 text-white text-xs font-semibold rounded-xl hover:bg-blue-500 disabled:opacity-40 flex items-center justify-center gap-2 transition-colors"
+          style={{ boxShadow: "0 0 20px rgba(59,130,246,0.22)" }}
         >
           {processing ? <Loader size={13} className="animate-spin" /> : <Sparkles size={13} />}
           {processing ? "Generating..." : "Generate Image"}
         </motion.button>
       </div>
 
-      {/* ---- RIGHT: Preview + History ---- */}
-      <div className="flex-1 min-w-0 space-y-4">
-        {/* Preview */}
-        <div
-          className="relative rounded-2xl overflow-hidden flex items-center justify-center"
-          style={{
-            minHeight: 380,
-            background: "linear-gradient(135deg, #EFF6FF 0%, #F0F4FF 50%, #EEF2FF 100%)",
-            border: "1px solid rgba(37,99,235,0.10)",
-          }}
-        >
-          {/* Ambient orbs */}
-          <div className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full opacity-20"
-            style={{ background: "radial-gradient(circle, #93C5FD 0%, transparent 70%)" }} />
-          <div className="pointer-events-none absolute -bottom-8 -left-8 w-36 h-36 rounded-full opacity-15"
-            style={{ background: "radial-gradient(circle, #A5B4FC 0%, transparent 70%)" }} />
+      {/* ---- CENTER: Cinematic preview canvas ---- */}
+      <div
+        className="flex-1 min-w-0 relative rounded-2xl overflow-hidden flex items-center justify-center"
+        style={{
+          background: "linear-gradient(160deg, #080B14 0%, #0A0E1A 60%, #0D1120 100%)",
+          border: "1px solid rgba(59,130,246,0.12)",
+          minHeight: 520,
+        }}
+      >
+        {/* Ambient orbs */}
+        <div className="pointer-events-none absolute -top-16 -right-16 w-64 h-64 rounded-full opacity-15"
+          style={{ background: "radial-gradient(circle, #60A5FA 0%, transparent 70%)" }} />
+        <div className="pointer-events-none absolute -bottom-12 -left-12 w-48 h-48 rounded-full opacity-10"
+          style={{ background: "radial-gradient(circle, #818CF8 0%, transparent 70%)" }} />
+        {/* Subtle grid texture for depth */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.025]"
+          style={{ backgroundImage: "linear-gradient(rgba(148,163,184,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.6) 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
 
-          {processing ? (
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{ background: "rgba(37,99,235,0.10)" }}>
-                <Loader size={22} className="text-[#2563EB] animate-spin" />
-              </div>
-              <p className="text-sm font-medium text-text-secondary">Generating your image...</p>
-              <p className="text-xs text-text-muted">This takes about 10 seconds</p>
+        {processing ? (
+          <div className="flex flex-col items-center gap-4 relative z-10">
+            <div className="relative w-16 h-16">
+              <div className="absolute inset-0 rounded-full"
+                style={{ background: "rgba(59,130,246,0.12)", boxShadow: "0 0 40px rgba(59,130,246,0.20)" }} />
+              <Loader size={26} className="text-blue-400 animate-spin absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             </div>
-          ) : images.length > 0 ? (
-            <div className="relative w-full h-full flex items-center justify-center p-4">
+            <div className="text-center">
+              <p className="text-sm font-semibold text-text-primary">Generating your image</p>
+              <p className="text-xs text-text-muted mt-1">Usually takes about 10 seconds</p>
+            </div>
+            <div className="w-40 h-[3px] rounded-full overflow-hidden bg-white/[0.06]">
+              <motion.div
+                className="h-full rounded-full bg-blue-500"
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </div>
+          </div>
+        ) : images.length > 0 ? (
+          <div className="relative w-full h-full flex items-center justify-center p-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.28 }}
+              className="relative inline-block"
+            >
               <SafeThumb
                 src={images[0]}
                 alt="Generated image"
-                className="max-h-[360px] max-w-full rounded-xl object-contain"
+                className="max-h-[460px] max-w-full rounded-2xl object-contain shadow-[0_8px_48px_rgba(0,0,0,0.60)]"
                 wrapperClassName="inline-block"
               />
-              {/* Overlay buttons */}
-              <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                <button
-                  onClick={() => setLiked(prev => ({ ...prev, [images[0]]: !prev[images[0]] }))}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-                  style={{
-                    background: liked[images[0]] ? "rgba(239,68,68,0.15)" : "rgba(19,24,39,0.85)",
-                    backdropFilter: "blur(8px)",
-                    border: "1px solid rgba(0,0,0,0.06)",
-                  }}
-                >
-                  <Heart size={14} className={liked[images[0]] ? "text-red-500 fill-red-500" : "text-text-muted"} />
-                </button>
-                <a
-                  href={images[0]}
-                  download="generated.png"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-                  style={{ background: "rgba(19,24,39,0.85)", backdropFilter: "blur(8px)", border: "1px solid rgba(59,130,246,0.18)" }}
-                >
-                  <Download size={14} className="text-text-muted" />
-                </a>
-                <button
-                  disabled={handoffingIdx === 0}
-                  onClick={async () => {
-                    setHandoffingIdx(0);
-                    try {
-                      const id = await createHandoff(supabase, { imageUrl: images[0], prompt, style, size });
-                      router.push(handoffUrl(id, "/dashboard/ai-studio"));
-                    } catch (err) {
-                      toast.error(err instanceof Error ? err.message : "Handoff failed");
-                    } finally {
-                      setHandoffingIdx(null);
-                    }
-                  }}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-                  style={{ background: "rgba(19,24,39,0.85)", backdropFilter: "blur(8px)", border: "1px solid rgba(59,130,246,0.18)" }}
-                >
-                  {handoffingIdx === 0
-                    ? <Loader2 size={14} className="text-text-muted animate-spin" />
-                    : <MoreHorizontal size={14} className="text-text-muted" />
-                  }
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center gap-3 opacity-60">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center"
-                style={{ background: "rgba(37,99,235,0.08)" }}>
-                <ImagePlus size={28} className="text-[#2563EB]" />
-              </div>
-              <div className="text-center">
-                <p className="text-sm font-semibold text-text-secondary">Your image will appear here</p>
-                <p className="text-xs text-text-muted mt-0.5">Describe something and hit Generate</p>
-              </div>
-            </div>
-          )}
-        </div>
+              {/* Glow beneath image */}
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-3/4 h-8 rounded-full blur-xl opacity-25"
+                style={{ background: "rgba(59,130,246,0.5)" }} />
+            </motion.div>
 
-        {/* History grid */}
-        {filteredHistory.length > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <h3 className="text-[11px] font-semibold text-text-secondary uppercase tracking-wide">History</h3>
-              <div className="flex-1 relative">
-                <Search size={10} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted" />
-                <input
-                  value={historySearch}
-                  onChange={e => setHistorySearch(e.target.value)}
-                  placeholder="Search..."
-                  className="w-full pl-6 pr-3 py-1 text-[10px] rounded-lg bg-surface-light border border-border-subtle focus:outline-none focus:border-[#2563EB]/30"
-                />
+            {/* Overlay action buttons — top right */}
+            <div className="absolute top-4 right-4 flex items-center gap-1.5">
+              <button
+                onClick={() => setLiked(prev => ({ ...prev, [images[0]]: !prev[images[0]] }))}
+                className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+                style={{
+                  background: liked[images[0]] ? "rgba(239,68,68,0.20)" : "rgba(19,24,39,0.85)",
+                  backdropFilter: "blur(12px)",
+                  border: `1px solid ${liked[images[0]] ? "rgba(239,68,68,0.30)" : "rgba(59,130,246,0.18)"}`,
+                }}
+              >
+                <Heart size={14} className={liked[images[0]] ? "text-red-400 fill-red-400" : "text-text-muted"} />
+              </button>
+              <a
+                href={images[0]}
+                download="generated.png"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+                style={{ background: "rgba(19,24,39,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(59,130,246,0.18)" }}
+              >
+                <Download size={14} className="text-text-muted" />
+              </a>
+              <button
+                disabled={handoffingIdx === 0}
+                onClick={async () => {
+                  setHandoffingIdx(0);
+                  try {
+                    const id = await createHandoff(supabase, { imageUrl: images[0], prompt, style, size });
+                    router.push(handoffUrl(id, "/dashboard/ai-studio"));
+                  } catch (err) {
+                    toast.error(err instanceof Error ? err.message : "Handoff failed");
+                  } finally {
+                    setHandoffingIdx(null);
+                  }
+                }}
+                className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+                style={{ background: "rgba(19,24,39,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(59,130,246,0.18)" }}
+              >
+                {handoffingIdx === 0
+                  ? <Loader2 size={14} className="text-text-muted animate-spin" />
+                  : <MoreHorizontal size={14} className="text-text-muted" />
+                }
+              </button>
+            </div>
+
+            {/* Prompt caption — bottom */}
+            <div className="absolute bottom-4 left-4 right-4">
+              <div className="px-3 py-2 rounded-xl text-[10px] text-text-muted truncate"
+                style={{ background: "rgba(13,17,32,0.82)", backdropFilter: "blur(8px)", border: "1px solid rgba(59,130,246,0.10)" }}>
+                {prompt}
               </div>
             </div>
-            <div className="grid grid-cols-4 gap-2">
-              {filteredHistory.slice(0, 8).map(j => (
-                <motion.div
-                  key={j.id}
-                  initial={{ opacity: 0, scale: 0.92 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.18 }}
-                  className="aspect-square rounded-xl overflow-hidden relative group cursor-pointer"
-                  onClick={() => { if (j.result) setImages([j.result]); }}
-                >
-                  <SafeThumb
-                    src={j.result!}
-                    alt="History thumbnail"
-                    className="w-full h-full object-cover"
-                    wrapperClassName="w-full h-full"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-xl" />
-                </motion.div>
-              ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-4 opacity-50 relative z-10">
+            <div className="w-20 h-20 rounded-3xl flex items-center justify-center"
+              style={{ background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.12)" }}>
+              <ImagePlus size={32} className="text-blue-400" />
+            </div>
+            <div className="text-center">
+              <p className="text-base font-semibold text-text-secondary">Your image will appear here</p>
+              <p className="text-xs text-text-muted mt-1">Describe something creative and hit Generate</p>
             </div>
           </div>
         )}
       </div>
+
+      {/* ---- RIGHT: History strip ---- */}
+      {filteredHistory.length > 0 && (
+        <div className="w-[176px] shrink-0 flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <h3 className="text-[10px] font-semibold text-text-secondary uppercase tracking-wider">History</h3>
+          </div>
+          <div className="relative">
+            <Search size={10} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+            <input
+              value={historySearch}
+              onChange={e => setHistorySearch(e.target.value)}
+              placeholder="Search..."
+              className="w-full pl-7 pr-3 py-1.5 text-[10px] rounded-lg focus:outline-none focus:border-blue-500/30 transition-colors"
+              style={{ background: "rgba(19,24,39,0.70)", border: "1px solid rgba(59,130,246,0.12)", color: "var(--text-secondary)" }}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-1.5 overflow-y-auto">
+            {filteredHistory.slice(0, 12).map(j => (
+              <motion.div
+                key={j.id}
+                initial={{ opacity: 0, scale: 0.90 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.16 }}
+                className="aspect-square rounded-lg overflow-hidden relative group cursor-pointer"
+                onClick={() => { if (j.result) setImages([j.result]); }}
+                style={{ border: "1px solid rgba(59,130,246,0.08)" }}
+              >
+                <SafeThumb
+                  src={j.result!}
+                  alt="History thumbnail"
+                  className="w-full h-full object-cover"
+                  wrapperClassName="w-full h-full"
+                />
+                <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/15 transition-colors rounded-lg" />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
