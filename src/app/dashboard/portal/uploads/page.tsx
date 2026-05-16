@@ -190,9 +190,9 @@ export default function ClientUploadsPage() {
     if (type.startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(type)) return <MotionPage>
                                                                                                               <ImageIcon size={14} className="text-blue-600" />
                                                                                                             </MotionPage>;
-    if (type.startsWith("video") || ["mp4", "mov", "avi", "webm"].includes(type)) return <Film size={14} className="text-purple-700" />;
-    if (type.startsWith("audio") || ["mp3", "wav", "ogg"].includes(type)) return <Music size={14} className="text-pink-700" />;
-    if (["pdf", "doc", "docx", "txt"].includes(type)) return <FileText size={14} className="text-[#374151]" />;
+    if (type.startsWith("video") || ["mp4", "mov", "avi", "webm"].includes(type)) return <Film size={14} className="text-purple-400" />;
+    if (type.startsWith("audio") || ["mp3", "wav", "ogg"].includes(type)) return <Music size={14} className="text-pink-400" />;
+    if (["pdf", "doc", "docx", "txt"].includes(type)) return <FileText size={14} className="text-text-secondary" />;
     return <File size={14} className="text-muted" />;
   }
 
@@ -276,7 +276,7 @@ export default function ClientUploadsPage() {
           <h3 className="text-[10px] text-muted uppercase tracking-wider mb-2">Platform Distribution</h3>
           <div className="flex flex-wrap gap-3">
             {Object.entries(analytics.platformBreakdown).map(([platform, count]) => (
-              <div key={platform} className="flex items-center gap-2 bg-black/[0.04] px-3 py-1.5 rounded-lg">
+              <div key={platform} className="flex items-center gap-2 bg-white/[0.04] px-3 py-1.5 rounded-lg">
                 <span className="text-[10px] font-medium capitalize">{platform.replace(/_/g, " ")}</span>
                 <span className="text-[10px] text-brand-accent font-bold font-mono">{count}</span>
               </div>
@@ -307,7 +307,7 @@ export default function ClientUploadsPage() {
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
             className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${
-              dragOver ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "border-black/[0.08] hover:border-[rgba(59,130,246,0.25)]"
+              dragOver ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
             }`}
             onClick={() => {
               const input = document.createElement("input");
@@ -348,7 +348,7 @@ export default function ClientUploadsPage() {
             <div className="space-y-2">
               {uploads.map(upload => (
                 <div key={upload.id} className="card card-hover p-3 flex items-center gap-3">
-                  <div className="w-9 h-9 bg-black/[0.04] rounded-lg flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 bg-white/[0.04] rounded-lg flex items-center justify-center shrink-0">
                     {getFileIcon(upload.file_type)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -438,7 +438,7 @@ export default function ClientUploadsPage() {
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">{item.title}</p>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[9px] bg-black/[0.04] px-1.5 py-0.5 rounded text-[#6B7280]">{item.script_type}</span>
+                    <span className="text-[9px] bg-white/[0.06] px-1.5 py-0.5 rounded text-text-muted">{item.script_type}</span>
                     {item.target_platform && (
                       <span className="text-[9px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded capitalize">
                         {item.target_platform.replace(/_/g, " ")}
@@ -474,7 +474,7 @@ export default function ClientUploadsPage() {
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-sm mx-auto">
                 {["Instagram", "TikTok", "YouTube", "Facebook", "LinkedIn", "Twitter/X"].map(p => (
-                  <div key={p} className="p-3 rounded-xl border border-black/[0.06] text-center">
+                  <div key={p} className="p-3 rounded-xl border border-border-subtle text-center">
                     <Globe size={16} className="text-muted mx-auto mb-1" />
                     <p className="text-[10px] text-muted">{p}</p>
                   </div>
@@ -487,7 +487,7 @@ export default function ClientUploadsPage() {
                 <h3 className="text-[10px] text-muted uppercase tracking-wider mb-3">Connected Accounts</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {zernioProfiles.map(p => (
-                    <div key={p.id} className="flex items-center gap-3 p-3 bg-black/[0.04] rounded-xl">
+                    <div key={p.id} className="flex items-center gap-3 p-3 bg-white/[0.04] rounded-xl">
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                         p.status === "active" ? "bg-success/10" : "bg-warning/10"
                       }`}>
@@ -511,22 +511,22 @@ export default function ClientUploadsPage() {
               <div className="card p-4">
                 <h3 className="text-[10px] text-muted uppercase tracking-wider mb-3">Social Performance</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="text-center p-3 bg-black/[0.04] rounded-xl">
+                  <div className="text-center p-3 bg-white/[0.04] rounded-xl">
                     <Eye size={16} className="text-blue-600 mx-auto mb-1" />
                     <p className="text-[9px] text-muted">Impressions</p>
                     <p className="text-sm font-bold font-mono">—</p>
                   </div>
-                  <div className="text-center p-3 bg-black/[0.04] rounded-xl">
-                    <Users size={16} className="text-purple-700 mx-auto mb-1" />
+                  <div className="text-center p-3 bg-white/[0.04] rounded-xl">
+                    <Users size={16} className="text-purple-400 mx-auto mb-1" />
                     <p className="text-[9px] text-muted">Reach</p>
                     <p className="text-sm font-bold font-mono">—</p>
                   </div>
-                  <div className="text-center p-3 bg-black/[0.04] rounded-xl">
-                    <Heart size={16} className="text-pink-700 mx-auto mb-1" />
+                  <div className="text-center p-3 bg-white/[0.04] rounded-xl">
+                    <Heart size={16} className="text-pink-400 mx-auto mb-1" />
                     <p className="text-[9px] text-muted">Engagement</p>
                     <p className="text-sm font-bold font-mono">—</p>
                   </div>
-                  <div className="text-center p-3 bg-black/[0.04] rounded-xl">
+                  <div className="text-center p-3 bg-white/[0.04] rounded-xl">
                     <ChevronRight size={16} className="text-brand-accent mx-auto mb-1" />
                     <p className="text-[9px] text-muted">Clicks</p>
                     <p className="text-sm font-bold font-mono">—</p>

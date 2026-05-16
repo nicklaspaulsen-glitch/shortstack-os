@@ -15,7 +15,7 @@ import { MotionPage } from "@/components/motion/motion-page";
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   instagram: <Camera size={10} className="text-pink-700" />,
-  tiktok: <Film size={10} className="text-[#111827]" />,
+  tiktok: <Film size={10} className="text-text-secondary" />,
   facebook: <Send size={10} className="text-blue-700" />,
   youtube: <Film size={10} className="text-red-400" />,
   linkedin: <Globe size={10} className="text-blue-700" />,
@@ -198,7 +198,7 @@ export default function ContentCalendarPage() {
         {/* Day cells */}
         <div className="grid grid-cols-7 gap-px">
           {calendarDays.map((day, i) => {
-            if (day === null) return <div key={i} className="min-h-[90px] bg-black/[0.04] rounded-lg" />;
+            if (day === null) return <div key={i} className="min-h-[90px] bg-white/[0.03] rounded-lg" />;
             const dayEntries = getEntriesForDay(day);
             const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
 
@@ -206,11 +206,11 @@ export default function ContentCalendarPage() {
               <button
                 key={i}
                 onClick={() => { setSelectedDay(new Date(year, month, day)); setShowAddPost(true); }}
-                className={`min-h-[90px] p-1.5 rounded-lg text-left transition-all duration-200 hover:bg-black/[0.04] hover:border-black/[0.06] border ${
+                className={`min-h-[90px] p-1.5 rounded-lg text-left transition-all duration-200 hover:bg-white/[0.04] hover:border-border-subtle border ${
                   isToday ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.04)]" : "border-transparent"
                 }`}
               >
-                <div className={`text-[10px] font-medium mb-1 ${isToday ? "text-brand-accent" : "text-[#6B7280]"}`}>
+                <div className={`text-[10px] font-medium mb-1 ${isToday ? "text-brand-accent" : "text-text-muted"}`}>
                   {day}
                 </div>
                 <div className="space-y-0.5">
@@ -219,7 +219,7 @@ export default function ContentCalendarPage() {
                       entry.status === "published" ? "bg-success/10 text-success" :
                       entry.status === "scheduled" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
                       entry.status === "idea" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
-                      "bg-black/[0.04] text-[#6B7280]"
+                      "bg-white/[0.06] text-text-muted"
                     }`}>
                       {PLATFORM_ICONS[entry.platform] || null}
                       <span className="truncate">{entry.title}</span>

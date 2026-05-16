@@ -56,8 +56,7 @@ export default function ClientOutreachFeedPage() {
   if (loading) {
     return (
       <MotionPage
-                className="rounded-xl border border-[rgba(0,0,0,0.08)] p-10 text-center text-[#6B7280] text-sm"
-                style={{ background: "rgba(255,255,255,0.88)" }}
+                className="rounded-xl border border-border-subtle p-10 text-center text-text-muted text-sm bg-white/[0.04]"
               >Loading…
               </MotionPage>
     );
@@ -66,7 +65,7 @@ export default function ClientOutreachFeedPage() {
   return (
     <div className="space-y-4">
       <div
-        className="glass rounded-xl border border-[rgba(0,0,0,0.08)] px-6 py-5 sm:py-6"
+        className="glass rounded-xl border border-border-subtle px-6 py-5 sm:py-6"
       >
         <div className="flex items-start gap-3">
           <div
@@ -83,8 +82,8 @@ export default function ClientOutreachFeedPage() {
             <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-brand-accent">
               Your conversations
             </div>
-            <h1 className="text-2xl font-bold text-[#111827] tracking-tight mt-1">Outreach Feed</h1>
-            <p className="text-sm text-[#374151] mt-1.5 max-w-2xl">
+            <h1 className="text-2xl font-bold text-text-primary tracking-tight mt-1">Outreach Feed</h1>
+            <p className="text-sm text-text-secondary mt-1.5 max-w-2xl">
               Every conversation your agency has had with leads on your behalf — calls, emails, SMS,
               and social DMs. AI summarizes each interaction so you can see what&apos;s working at a glance.
             </p>

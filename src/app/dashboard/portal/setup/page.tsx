@@ -14,10 +14,10 @@ import { MotionPage } from "@/components/motion/motion-page";
 const SOCIAL_PLATFORMS = [
   { id: "instagram", name: "Instagram", icon: <Camera size={24} />, color: "text-pink-500" },
   { id: "facebook", name: "Facebook", icon: <Globe size={24} />, color: "text-blue-500" },
-  { id: "tiktok", name: "TikTok", icon: <Hash size={24} />, color: "text-[#111827]" },
+  { id: "tiktok", name: "TikTok", icon: <Hash size={24} />, color: "text-text-primary" },
   { id: "youtube", name: "YouTube", icon: <Video size={24} />, color: "text-red-500" },
   { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={24} />, color: "text-blue-700" },
-  { id: "twitter", name: "X (Twitter)", icon: <AtSign size={24} />, color: "text-[#111827]" },
+  { id: "twitter", name: "X (Twitter)", icon: <AtSign size={24} />, color: "text-text-primary" },
 ];
 
 export default function ClientSetupPage() {
@@ -49,7 +49,7 @@ export default function ClientSetupPage() {
     <div key="welcome" className="text-center space-y-6">
       <Image src="/icons/shortstack-logo.svg" alt="Trinity" width={80} height={80} className="mx-auto" />
       <div>
-        <h1 className="text-3xl font-bold text-[#111827]">Welcome aboard</h1>
+        <h1 className="text-3xl font-bold text-text-primary">Welcome aboard</h1>
         <p className="text-muted mt-2 max-w-md mx-auto">
           Hi {profile?.full_name || "there"}! Let&apos;s get your account set up so our AI agents can start working for you.
         </p>
@@ -59,7 +59,7 @@ export default function ClientSetupPage() {
 
     // Step 1: Tell us about your business
     <div key="business" className="space-y-4">
-      <h2 className="text-xl font-bold text-[#111827]">Tell us about your business</h2>
+      <h2 className="text-xl font-bold text-text-primary">Tell us about your business</h2>
       <p className="text-sm text-muted">This helps our AI personalize everything for you.</p>
       <div>
         <label className="block text-sm text-muted mb-1">What does your business do? *</label>
@@ -90,7 +90,7 @@ export default function ClientSetupPage() {
 
     // Step 2: Connect social media
     <div key="social" className="space-y-4">
-      <h2 className="text-xl font-bold text-[#111827]">Connect Your Social Media</h2>
+      <h2 className="text-xl font-bold text-text-primary">Connect Your Social Media</h2>
       <p className="text-sm text-muted">Select the platforms you use. We&apos;ll manage content and publishing for you.</p>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {SOCIAL_PLATFORMS.map(platform => (
@@ -98,7 +98,7 @@ export default function ClientSetupPage() {
             className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${
               connectedPlatforms.includes(platform.id)
                 ? "border-brand-accent bg-[rgba(59,130,246,0.08)]"
-                : "border-black/[0.06] hover:border-[rgba(59,130,246,0.25)]"
+                : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
             }`}>
             <span className={platform.color}>{platform.icon}</span>
             <span className="text-sm font-medium">{platform.name}</span>
@@ -125,12 +125,12 @@ export default function ClientSetupPage() {
         <MessageSquare size={32} className="text-brand-accent" />
       </div>
       <div>
-        <h2 className="text-xl font-bold text-[#111827]">Meet Your AI Assistant</h2>
+        <h2 className="text-xl font-bold text-text-primary">Meet Your AI Assistant</h2>
         <p className="text-muted mt-2 max-w-md mx-auto">
           Trinity is your personal AI assistant. Ask questions about your account, request content, check progress, or get marketing advice — anytime.
         </p>
       </div>
-      <div className="bg-[rgba(0,0,0,0.04)] rounded-xl p-4 max-w-md mx-auto text-left">
+      <div className="bg-white/[0.04] rounded-xl p-4 max-w-md mx-auto text-left">
         <p className="text-sm text-brand-accent mb-2">Try asking Trinity:</p>
         <ul className="space-y-1.5 text-sm text-muted">
           <li>&quot;What&apos;s the status of my content?&quot;</li>
@@ -154,7 +154,7 @@ export default function ClientSetupPage() {
           Our AI agents are now configured for your business. Here&apos;s what happens next:
         </p>
       </div>
-      <div className="bg-[rgba(0,0,0,0.04)] rounded-xl p-6 max-w-md mx-auto text-left space-y-3">
+      <div className="bg-white/[0.04] rounded-xl p-6 max-w-md mx-auto text-left space-y-3">
         <div className="flex items-center gap-3">
           <Check size={16} className="text-brand-accent shrink-0" />
           <span className="text-sm">Your account manager will reach out within 24 hours</span>
@@ -178,7 +178,7 @@ export default function ClientSetupPage() {
   return (
     <MotionPage className="fade-in max-w-2xl mx-auto py-8 space-y-6">{/* Progress */}<div className="flex gap-1">
               {steps.map((_, i) => (
-                <div key={i} className={`flex-1 h-1.5 rounded-full transition-all ${i <= step ? "bg-brand-accent" : "bg-black/[0.08]"}`} />
+                <div key={i} className={`flex-1 h-1.5 rounded-full transition-all ${i <= step ? "bg-brand-accent" : "bg-white/[0.10]"}`} />
               ))}
             </div>{/* Step content */}<div className="card min-h-[400px] flex flex-col justify-center">
               {steps[step]}

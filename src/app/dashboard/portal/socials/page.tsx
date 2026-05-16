@@ -192,11 +192,11 @@ export default function ClientSocialsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold flex items-center gap-2 text-gray-900">
-            <Link2 size={20} className="text-blue-600" />
+          <h1 className="text-xl font-bold flex items-center gap-2 text-text-primary">
+            <Link2 size={20} className="text-blue-400" />
             Connected Accounts
           </h1>
-          <p className="text-xs text-gray-500 mt-1">Connect your social media accounts to enable posting, DMs, and analytics</p>
+          <p className="text-xs text-text-muted mt-1">Connect your social media accounts to enable posting, DMs, and analytics</p>
         </div>
         <button onClick={syncAccounts} className="btn-secondary text-xs px-3 py-1.5 flex items-center gap-1.5">
           <RefreshCw size={12} /> Sync All
@@ -206,24 +206,24 @@ export default function ClientSocialsPage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
         <div className="card flex items-center gap-3 py-3">
-          <Check size={14} className="text-green-700" />
+          <Check size={14} className="text-emerald-400" />
           <div>
-            <p className="text-lg font-bold text-gray-900">{accounts.filter((a) => a.is_active).length}</p>
-            <p className="text-[9px] text-gray-500 uppercase tracking-wider">Connected</p>
+            <p className="text-lg font-bold text-text-primary">{accounts.filter((a) => a.is_active).length}</p>
+            <p className="text-[9px] text-text-muted uppercase tracking-wider">Connected</p>
           </div>
         </div>
         <div className="card flex items-center gap-3 py-3">
-          <MessageSquare size={14} className="text-blue-600" />
+          <MessageSquare size={14} className="text-blue-400" />
           <div>
-            <p className="text-lg font-bold text-gray-900">{accounts.filter((a) => a.is_active && PLATFORMS.find((p) => p.id === a.platform)?.dm).length}</p>
-            <p className="text-[9px] text-gray-500 uppercase tracking-wider">DM Enabled</p>
+            <p className="text-lg font-bold text-text-primary">{accounts.filter((a) => a.is_active && PLATFORMS.find((p) => p.id === a.platform)?.dm).length}</p>
+            <p className="text-[9px] text-text-muted uppercase tracking-wider">DM Enabled</p>
           </div>
         </div>
         <div className="card flex items-center gap-3 py-3">
-          <Globe size={14} className="text-blue-600" />
+          <Globe size={14} className="text-blue-400" />
           <div>
-            <p className="text-lg font-bold text-gray-900">{PLATFORMS.length - accounts.filter((a) => a.is_active).length}</p>
-            <p className="text-[9px] text-gray-500 uppercase tracking-wider">Available</p>
+            <p className="text-lg font-bold text-text-primary">{PLATFORMS.length - accounts.filter((a) => a.is_active).length}</p>
+            <p className="text-[9px] text-text-muted uppercase tracking-wider">Available</p>
           </div>
         </div>
       </div>
@@ -238,7 +238,7 @@ export default function ClientSocialsPage() {
             <div
               key={platform.id}
               className={`card flex items-center gap-4 transition-all ${
-                isConnected ? "border-green-200 bg-green-50/30" : ""
+                isConnected ? "border-emerald-500/[0.20] bg-emerald-500/[0.06]" : ""
               }`}
             >
               {/* Platform icon circle */}
@@ -254,17 +254,17 @@ export default function ClientSocialsPage() {
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-gray-900">{platform.name}</span>
+                  <span className="text-xs font-semibold text-text-primary">{platform.name}</span>
                   {platform.dm && (
-                    <span className="text-[7px] px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded-full uppercase font-bold tracking-wider">DM</span>
+                    <span className="text-[7px] px-1.5 py-0.5 bg-blue-500/[0.10] text-blue-400 rounded-full uppercase font-bold tracking-wider">DM</span>
                   )}
                 </div>
                 {isConnected ? (
-                  <p className="text-[10px] text-green-700 flex items-center gap-1 mt-0.5">
+                  <p className="text-[10px] text-emerald-400 flex items-center gap-1 mt-0.5">
                     <Check size={9} /> {account.account_name || "Connected"}
                   </p>
                 ) : (
-                  <p className="text-[10px] text-gray-500 mt-0.5">{platform.desc}</p>
+                  <p className="text-[10px] text-text-muted mt-0.5">{platform.desc}</p>
                 )}
               </div>
 
@@ -281,7 +281,7 @@ export default function ClientSocialsPage() {
                   onClick={() => connectPlatform(platform.id)}
                   aria-disabled
                   title={`${platform.name} support is coming soon`}
-                  className="text-[10px] px-3 py-1.5 rounded-lg border border-gray-200 text-text-muted bg-gray-50 hover:bg-gray-100 flex items-center gap-1.5 cursor-not-allowed"
+                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border-subtle text-text-muted bg-white/[0.06] hover:bg-white/[0.10] flex items-center gap-1.5 cursor-not-allowed"
                 >
                   <Link2 size={10} /> Coming soon
                 </button>
@@ -306,11 +306,11 @@ export default function ClientSocialsPage() {
       </div>
 
       {/* Security note */}
-      <div className="card bg-blue-50 border-blue-200">
-        <p className="text-[10px] text-blue-700 flex items-center gap-1.5 mb-1">
+      <div className="card bg-blue-500/[0.10] border-blue-500/[0.20]">
+        <p className="text-[10px] text-blue-400 flex items-center gap-1.5 mb-1">
           <Shield size={11} /> Secure OAuth Connection
         </p>
-        <p className="text-[9px] text-gray-500">
+        <p className="text-[9px] text-text-muted">
           Your accounts are connected via Zernio OAuth. We never store your passwords.
           You can disconnect any account at any time.
         </p>

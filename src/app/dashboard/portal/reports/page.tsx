@@ -70,8 +70,8 @@ export default function ClientReportsPage() {
   return (
     <div className="fade-in space-y-5">
       <div>
-        <h1 className="page-header mb-0 flex items-center gap-2"><BarChart3 size={18} className="text-green-700" /> Reports</h1>
-        <p className="text-xs text-gray-500 mt-0.5">Performance overview and activity log</p>
+        <h1 className="page-header mb-0 flex items-center gap-2"><BarChart3 size={18} className="text-emerald-400" /> Reports</h1>
+        <p className="text-xs text-text-muted mt-0.5">Performance overview and activity log</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
@@ -85,29 +85,29 @@ export default function ClientReportsPage() {
       <div className="card">
         <div className="flex items-center justify-between mb-2">
           <h2 className="section-header mb-0">Project Progress</h2>
-          <span className="text-[10px] font-mono text-blue-600">{stats.tasksCompleted}/{stats.totalTasks} tasks</span>
+          <span className="text-[10px] font-mono text-blue-400">{stats.tasksCompleted}/{stats.totalTasks} tasks</span>
         </div>
-        <div className="w-full bg-gray-100 rounded-full h-2.5">
-          <div className="bg-blue-600 rounded-full h-2.5 transition-all" style={{ width: `${completionRate}%` }} />
+        <div className="w-full bg-white/[0.10] rounded-full h-2.5">
+          <div className="bg-blue-500 rounded-full h-2.5 transition-all" style={{ width: `${completionRate}%` }} />
         </div>
       </div>
 
       {/* Activity log */}
       <div className="card">
         <h2 className="section-header flex items-center gap-2">
-          <Calendar size={13} className="text-blue-600" /> Activity Log
+          <Calendar size={13} className="text-blue-400" /> Activity Log
         </h2>
         <div className="space-y-2 max-h-[400px] overflow-y-auto">
           {recentActions.length === 0 ? (
-            <p className="text-xs text-gray-500 py-4 text-center">No activity recorded yet</p>
+            <p className="text-xs text-text-muted py-4 text-center">No activity recorded yet</p>
           ) : (
             recentActions.map((a, i) => (
-              <div key={i} className="flex items-start gap-2.5 py-2 border-b border-gray-100 last:border-0">
-                <div className="w-6 h-6 bg-blue-50 rounded-md flex items-center justify-center shrink-0 mt-0.5">
-                  <Zap size={10} className="text-blue-600" />
+              <div key={i} className="flex items-start gap-2.5 py-2 border-b border-border-subtle last:border-0">
+                <div className="w-6 h-6 bg-blue-500/[0.10] rounded-md flex items-center justify-center shrink-0 mt-0.5">
+                  <Zap size={10} className="text-blue-400" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-700">{a.description as string}</p>
+                  <p className="text-xs text-text-secondary">{a.description as string}</p>
                   <p className="text-[9px] text-text-muted mt-0.5">{formatRelativeTime(a.created_at as string)}</p>
                 </div>
               </div>

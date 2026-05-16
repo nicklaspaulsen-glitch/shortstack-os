@@ -252,7 +252,7 @@ export default function ClientLeadEnginePage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.04, duration: 0.36 }}
-                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="flex items-start gap-3 glass rounded-2xl p-5 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
               >
                 <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                 <div>
@@ -264,7 +264,7 @@ export default function ClientLeadEnginePage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.10, duration: 0.36 }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">With Email</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.withEmail}</p>
@@ -273,7 +273,7 @@ export default function ClientLeadEnginePage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.14, duration: 0.36 }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">With Phone</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.withPhone}</p>
@@ -282,7 +282,7 @@ export default function ClientLeadEnginePage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.18, duration: 0.36 }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Score</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.avgScore}%</p>
@@ -479,7 +479,7 @@ export default function ClientLeadEnginePage() {
                                 {lead.instagram_url && <span className="w-4 h-4 rounded-full bg-[#e4405f]/10 flex items-center justify-center" title="Instagram"><span className="text-[7px]">IG</span></span>}
                                 {lead.facebook_url && <span className="w-4 h-4 rounded-full bg-[#1877f2]/10 flex items-center justify-center" title="Facebook"><span className="text-[7px]">FB</span></span>}
                                 {lead.linkedin_url && <span className="w-4 h-4 rounded-full bg-[#0a66c2]/10 flex items-center justify-center" title="LinkedIn"><span className="text-[7px]">LI</span></span>}
-                                {lead.tiktok_url && <span className="w-4 h-4 rounded-full bg-[rgba(0,0,0,0.06)] flex items-center justify-center" title="TikTok"><span className="text-[7px]">TT</span></span>}
+                                {lead.tiktok_url && <span className="w-4 h-4 rounded-full bg-white/[0.08] flex items-center justify-center" title="TikTok"><span className="text-[7px]">TT</span></span>}
                               </div>
                             </td>
                             <td className="px-3 py-2.5">
