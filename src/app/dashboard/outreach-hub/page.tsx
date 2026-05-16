@@ -154,7 +154,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
           {template.variables.length > 0 && (
             <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">{template.variables.length} vars</span>
           )}
-          <button onClick={e => { e.stopPropagation(); copyContent(); }} className="p-1 hover:bg-[rgba(0,0,0,0.03)] rounded" aria-label="Copy template">
+          <button onClick={e => { e.stopPropagation(); copyContent(); }} className="p-1 hover:bg-white/[0.06] rounded" aria-label="Copy template">
             {copied ? <Check size={10} className="text-green-400" /> : <Copy size={10} className="text-muted" />}
           </button>
           <button onClick={e => { e.stopPropagation(); onDelete(); }} className="p-1 hover:bg-red-500/10 rounded" aria-label="Delete template">
@@ -1190,7 +1190,7 @@ export default function OutreachHubPage() {
                       transition={{ duration: 0.2, delay: index * 0.05 }}
                       whileHover={{ scale: 1.01, y: -2 }}
                       className={`text-left p-4 rounded-xl border transition-all ${
-                        activeSequence === seq.id ? "bg-[rgba(0,0,0,0.03)] backdrop-blur-[20px] border-[rgba(0,0,0,0.12)]" : "bg-[rgba(255,255,255,0.9)] backdrop-blur-[16px] border-[rgba(0,0,0,0.10)] hover:border-black/20"
+                        activeSequence === seq.id ? "bg-white/[0.10] backdrop-blur-[20px] border-border" : "bg-white/[0.04] backdrop-blur-[16px] border-border-subtle hover:border-border"
                       }`}>
                       <div className="flex items-center justify-between mb-1">
                         <h3 className={`text-xs font-semibold ${activeSequence === seq.id ? "text-brand-accent" : ""}`}>{seq.name}</h3>
@@ -1346,7 +1346,7 @@ export default function OutreachHubPage() {
                         whileTap={{ scale: 0.97 }}
                         className={`tab-pill flex items-center gap-1.5${templateSubTab === t.key ? " active" : ""}`}>
                         {t.icon} {t.label}
-                        <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${templateSubTab === t.key ? "bg-[rgba(59,130,246,0.12)]" : "bg-[rgba(0,0,0,0.04)]"}`}>{t.count}</span>
+                        <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${templateSubTab === t.key ? "bg-[rgba(59,130,246,0.12)]" : "bg-white/[0.05]"}`}>{t.count}</span>
                       </motion.button>
                     ))}
                   </div>
@@ -1706,7 +1706,7 @@ export default function OutreachHubPage() {
                 <div className="space-y-3 mb-4">
                   <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3">
                     <motion.div
-                      className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -1718,7 +1718,7 @@ export default function OutreachHubPage() {
                       </div>
                     </motion.div>
                     <motion.div
-                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -1727,7 +1727,7 @@ export default function OutreachHubPage() {
                       <p className="text-[11px] text-text-muted mt-1.5">outreach sent</p>
                     </motion.div>
                     <motion.div
-                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -1738,7 +1738,7 @@ export default function OutreachHubPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <motion.div
-                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -1747,7 +1747,7 @@ export default function OutreachHubPage() {
                       <p className="text-[11px] text-text-muted mt-1.5">calls scheduled</p>
                     </motion.div>
                     <motion.div
-                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
                     >
