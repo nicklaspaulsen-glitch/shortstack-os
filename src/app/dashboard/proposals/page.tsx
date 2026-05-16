@@ -45,8 +45,8 @@ const STORAGE_KEY = "ss_proposals_v1";
 const STATUS_STYLES: Record<Proposal["status"], { label: string; tint: string }> = {
   draft: { label: "Draft", tint: "bg-muted/20 text-muted" },
   sent: { label: "Sent", tint: "bg-[rgba(59,130,246,0.08)] text-brand-accent" },
-  signed: { label: "Signed", tint: "bg-emerald-500/15 text-emerald-700" },
-  declined: { label: "Declined", tint: "bg-rose-500/15 text-rose-700" },
+  signed: { label: "Signed", tint: "bg-emerald-500/15 text-emerald-400" },
+  declined: { label: "Declined", tint: "bg-rose-500/15 text-rose-400" },
 };
 
 const STAT_BARS = [
@@ -139,7 +139,7 @@ export default function ProposalsPage() {
               {/* Stats bento */}
               <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
                 <motion.div
-                  className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
                 >
@@ -151,16 +151,16 @@ export default function ProposalsPage() {
                   </div>
                 </motion.div>
                 <motion.div
-                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Signed</p>
-                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-700 tabular-nums">{stats.signed}</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{stats.signed}</p>
                   <p className="text-[11px] text-text-muted mt-1.5">{`$${stats.signedValue.toLocaleString()} closed`}</p>
                 </motion.div>
                 <motion.div
-                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
                 >
@@ -325,7 +325,7 @@ function ProposalCard({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onDelete}
-            className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-700 hover:bg-rose-500/20"
+            className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-400 hover:bg-rose-500/20"
             title="Delete"
             aria-label="Delete proposal"
           >
@@ -334,7 +334,7 @@ function ProposalCard({
         </div>
       </div>
       {proposal.summary && (
-        <div className="border-t border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-3 rounded-b-xl">
+        <div className="border-t border-border-subtle bg-white/[0.04] p-3 rounded-b-xl">
           <p className="text-[12px] leading-relaxed text-muted">{proposal.summary}</p>
         </div>
       )}
@@ -406,7 +406,7 @@ function NewProposalForm({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Q2 Social Media Retainer"
-            className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-border-subtle bg-white/[0.04] px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -418,7 +418,7 @@ function NewProposalForm({
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
             placeholder="Acme Inc."
-            className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-border-subtle bg-white/[0.04] px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -430,7 +430,7 @@ function NewProposalForm({
             value={clientEmail}
             onChange={(e) => setClientEmail(e.target.value)}
             placeholder="hello@acme.com"
-            className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-border-subtle bg-white/[0.04] px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -442,7 +442,7 @@ function NewProposalForm({
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="5000"
-            className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-border-subtle bg-white/[0.04] px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -452,7 +452,7 @@ function NewProposalForm({
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
-            className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-border-subtle bg-white/[0.04] px-3 py-2 text-sm"
           >
             <option value="USD">USD</option>
             <option value="EUR">EUR</option>
@@ -469,7 +469,7 @@ function NewProposalForm({
             onChange={(e) => setSummary(e.target.value)}
             placeholder="One-paragraph pitch — scope, deliverables, timeline."
             rows={4}
-            className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-border-subtle bg-white/[0.04] px-3 py-2 text-sm"
           />
         </div>
       </div>
