@@ -344,6 +344,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* CSS animated mesh gradient blobs — zero JS per frame, pure compositor */}
       <DashboardBackground />
       <DashboardAmbient3D />
+      {/* Volectra-style aurora light bleed — deep blue/indigo radial fixed at
+          viewport top. Signals premium OLED depth. Dark theme only (CSS hides
+          it on light). pointer-events: none, z-1, CSS-only breathing. */}
+      <div className="dashboard-aurora" aria-hidden="true" />
       {/* `bg-background/85` instead of opaque `bg-background` lets the
           ambient 3D shapes peek through at 15% intensity — atmospheric
           but doesn't fight content readability. */}

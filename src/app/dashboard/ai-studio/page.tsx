@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
+import { tabSwitch } from "@/components/motion/motion-page";
 import { staggerContainerFast, fadeUp } from "@/lib/motion-variants";
 
 import { MotionPage } from "@/components/motion/motion-page";
@@ -94,6 +95,8 @@ export default function AIStudioPage() {
   const [toolCategory, setToolCategory] = useState<ToolCategory>("all");
   // Higgsfield studio tab
   const [studioTab, setStudioTab] = useState<"image" | "video" | "tools">("image");
+  const [tabDir, setTabDir] = useState(0);
+  const TAB_ORDER = ["image", "video", "tools"] as const;
 
   // Auto-open the legacy modal only on advanced-mode first visit
   useEffect(() => {
@@ -193,7 +196,12 @@ export default function AIStudioPage() {
             {(["image", "video"] as const).map(tab => (
               <button
                 key={tab}
-                onClick={() => setStudioTab(tab)}
+                onClick={() => {
+                  const curIdx = TAB_ORDER.indexOf(studioTab);
+                  const newIdx = TAB_ORDER.indexOf(tab);
+                  setTabDir(newIdx > curIdx ? 1 : -1);
+                  setStudioTab(tab);
+                }}
                 className={`tab-pill${studioTab === tab ? " active" : ""} text-[11px]`}
               >
                 {tab === "image" ? <ImagePlus size={11} /> : <Film size={11} />}
@@ -201,20 +209,26 @@ export default function AIStudioPage() {
               </button>
             ))}
             <button
-              onClick={() => setStudioTab("tools")}
+              onClick={() => {
+                const curIdx = TAB_ORDER.indexOf(studioTab);
+                const newIdx = TAB_ORDER.indexOf("tools");
+                setTabDir(newIdx > curIdx ? 1 : -1);
+                setStudioTab("tools");
+              }}
               className={`tab-pill${studioTab === "tools" ? " active" : ""} text-[11px]`}
             >
               <Sparkles size={11} /> AI Tools
             </button>
           </div>
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" custom={tabDir}>
             <motion.div
               key={studioTab}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.18 }}
+              custom={tabDir}
+              variants={tabSwitch}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
             >
               {studioTab === "image" && (
                 <GuidedImagePanel

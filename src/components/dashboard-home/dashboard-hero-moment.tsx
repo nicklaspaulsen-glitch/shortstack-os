@@ -161,9 +161,67 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
           <p className="font-editorial text-sm mb-3 italic text-brand-accent opacity-95">
             Moment of the day
           </p>
-          <h2 className="font-display tracking-[-0.025em] leading-[1.02] text-[clamp(2rem,1.4rem+2.4vw,3.75rem)] text-text-primary [text-shadow:0_1px_2px_rgba(0,0,0,0.08)]">
-            {hero.headline}
-          </h2>
+
+          {/* ── SAPENCE z-split: headline physically threaded through BrainMark ──
+           *
+           * Design reference: SAPENCE portfolio site — a 3D element clips through
+           * the large display headline using CSS z-layer stacking + mask-image.
+           *
+           * Three-layer sandwich (lg screens only):
+           *   z-10 (back):  Full headline — visible BEHIND the BrainMark.
+           *   z-20 (mid):   BrainMark absolutely positioned over the right portion
+           *                 of the text area — floats between the two text layers.
+           *   z-30 (front): Same headline text, but masked to reveal ONLY the
+           *                 rightward slice — appears IN FRONT of the BrainMark.
+           *
+           * The mask gradient threshold (60→78%) is calibrated so the transition
+           * point falls roughly where the BrainMark right-edge sits. Adjust if
+           * the headline length changes dramatically.
+           *
+           * Mobile: no z-split — just the plain headline (BrainMark hidden). */}
+          <div className="relative" style={{ isolation: "isolate" }}>
+            {/* Back layer — z-10, full headline, readable behind BrainMark */}
+            <h2
+              className="font-display tracking-[-0.025em] leading-[1.02] text-[clamp(2rem,1.4rem+2.4vw,3.75rem)] text-text-primary [text-shadow:0_1px_2px_rgba(0,0,0,0.08)] relative"
+              style={{ zIndex: 10 }}
+            >
+              {hero.headline}
+            </h2>
+
+            {/* BrainMark — z-20, sits between the two text layers.
+                Positioned at the right side of the headline area so the
+                trailing words of the headline appear in front of the mark. */}
+            <div
+              className="absolute hidden lg:flex items-center justify-center z-20"
+              style={{
+                top: "50%",
+                right: "-2.5rem",
+                transform: "translateY(-50%)",
+              }}
+              aria-hidden="true"
+            >
+              <BrainMark size="lg" glowing />
+            </div>
+
+            {/* Front layer — z-30, same text masked to RIGHT slice only.
+                This copy is aria-hidden because the back layer carries semantics.
+                The mask gradient reveals only the portion that should appear
+                in front of the BrainMark, creating the "slice through" illusion. */}
+            <h2
+              aria-hidden="true"
+              className="font-display tracking-[-0.025em] leading-[1.02] text-[clamp(2rem,1.4rem+2.4vw,3.75rem)] text-text-primary [text-shadow:0_1px_2px_rgba(0,0,0,0.08)] hidden lg:block absolute inset-0"
+              style={{
+                zIndex: 30,
+                maskImage: "linear-gradient(to right, transparent 58%, rgba(0,0,0,0.6) 70%, black 80%)",
+                WebkitMaskImage: "linear-gradient(to right, transparent 58%, rgba(0,0,0,0.6) 70%, black 80%)",
+                /* Fractionally brighter — being "in front" = closer to the viewer */
+                filter: "brightness(1.06)",
+              }}
+            >
+              {hero.headline}
+            </h2>
+          </div>
+
           <p className="text-sm mt-3 max-w-2xl leading-relaxed text-text-secondary">
             {hero.subhead}
           </p>
@@ -200,10 +258,10 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
         </div>
       </div>
 
-      {/* Floating brain mark — hidden on small screens to keep the headline readable */}
-      <div className="hidden lg:flex relative z-10 items-center justify-center pr-8 shrink-0">
-        <BrainMark size="md" glowing />
-      </div>
+      {/* BrainMark is now embedded in the SAPENCE z-split headline above —
+          see the three-layer sandwich comment in the headline section.
+          The old side-by-side version has been replaced with the z-threading
+          technique (BrainMark floats between two layers of the headline text). */}
     </motion.section>
   );
 }

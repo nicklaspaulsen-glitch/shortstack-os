@@ -2799,3 +2799,109 @@ body {
   }
 }
 
+/* ═══════════ VOLECTRA AURORA LIGHT BLEED ═══════════
+ * Cinematic depth signal fixed at the top of every dark dashboard page.
+ * Inspired by Volectra/Linear aurora effect — a radial gradient that
+ * bleeds from the top edge of the viewport, giving the nav area a
+ * luminous source quality (like there's an actual backlight behind it).
+ *
+ * Design intent:
+ *   - NOT decorative. The aurora signals "premium OLED surface with depth."
+ *   - z-index: 1 — above background blobs, below all content.
+ *   - pointer-events: none — fully non-interactive.
+ *   - Breathing animation: opacity pulses 0.65 → 0.85, scale 1 → 1.05.
+ *     Period: 8s. Subtle — viewer shouldn't consciously notice it moving.
+ *
+ * Color story: deep indigo-to-blue radial, matching the brand accent
+ * (#3B82F6 blue → #6366F1 indigo). On OLED screens the gradient
+ * disappears into true-black seamlessly below ~34% of the viewport.
+ *
+ * Reduced-motion: animation stripped, opacity locked at 50%.
+ */
+@keyframes auroraShift {
+  0%, 100% { opacity: 0.65; transform: scale(1) translateY(0); }
+  50%       { opacity: 0.82; transform: scale(1.04) translateY(-2%); }
+}
+
+.dashboard-aurora {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 360px;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    ellipse 90% 55% at 50% -10%,
+    rgba(59, 130, 246, 0.20) 0%,
+    rgba(99, 102, 241, 0.09) 42%,
+    rgba(29, 78, 216, 0.04) 62%,
+    transparent 80%
+  );
+  animation: auroraShift 8s ease-in-out infinite;
+  /* Ensure it's invisible on light theme */
+}
+[data-theme="light"] .dashboard-aurora,
+.theme-light .dashboard-aurora {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-aurora {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+/* ═══════════ SECTION HEADER — EDITORIAL ITALIC ACCENT ═══════════
+ * PrimeStay-inspired Bodoni Moda italic accent on one word per heading.
+ * The .section-header-italic span injects a serif italic accent into any
+ * heading, creating the "editorial one word pop" effect from the design
+ * reference file (memory/design_references_may8.md → PrimeStay pattern).
+ *
+ * NOTE: font-editorial in globals maps to Satoshi since Apr 28. This
+ * class uses an explicit font-family override to bring Bodoni back only
+ * for this specific accent treatment. The rest of the heading stays
+ * Satoshi via font-display.
+ */
+.section-header-italic {
+  font-family: 'Bodoni Moda', 'Playfair Display', 'Georgia', serif;
+  font-style: italic;
+  font-weight: 400;
+  /* Slight letter-spacing tightening — serif italics at large size can
+   * look loose. This matches how PrimeStay's accent words sit snugly
+   * within the Satoshi heading. */
+  letter-spacing: -0.02em;
+  /* Color: slightly warmer/softer than the surrounding Satoshi text so
+   * the word reads as accent, not emphasis. Uses the indigo link color
+   * from brand spec. */
+  color: oklch(72% 0.12 260);
+}
+
+/* Dark theme override — indigo reads well on OLED surfaces */
+:root .section-header-italic {
+  color: rgba(148, 163, 249, 0.9);
+}
+[data-theme="light"] .section-header-italic,
+.theme-light .section-header-italic {
+  color: oklch(48% 0.14 265);
+}
+
+/* whileInView stagger helper — fade-up on scroll without JS complexity.
+ * Used as a CSS fallback for components that can't use Framer Motion. */
+@keyframes fadeUpStagger {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stagger-item {
+  animation: fadeUpStagger 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+.stagger-item:nth-child(1) { animation-delay: 0ms; }
+.stagger-item:nth-child(2) { animation-delay: 60ms; }
+.stagger-item:nth-child(3) { animation-delay: 120ms; }
+.stagger-item:nth-child(4) { animation-delay: 180ms; }
+.stagger-item:nth-child(5) { animation-delay: 240ms; }
+.stagger-item:nth-child(6) { animation-delay: 300ms; }
+.stagger-item:nth-child(7) { animation-delay: 360ms; }
+.stagger-item:nth-child(8) { animation-delay: 420ms; }
+@media (prefers-reduced-motion: reduce) {
+  .stagger-item { animation: none; opacity: 1; transform: none; }
+}
+

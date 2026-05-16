@@ -17,6 +17,7 @@ import { MotionPage } from "@/components/motion/motion-page";
 import { StatSkeleton, CardSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import Link from "next/link";
+import { SectionHeader } from "@/components/ui/section-header";
 
 const CHART_COLORS = ["#2563EB", "#3B82F6", "#1D4ED8", "#64748B", "#94A3B8", "#475569"];
 
@@ -642,13 +643,12 @@ export default function AnalyticsPage() {
             {/* Lead velocity area chart */}
             <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-4">
               <div className="flex items-start justify-between mb-4">
-                <div>
-                  <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Acquisition</p>
-                  <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5">
-                    Lead Velocity
-                    <span className="ml-2 text-[10px] font-normal text-[#6F6D7A]">� {dateRange === "custom" ? "Custom" : dateRange}</span>
-                  </h2>
-                </div>
+                <SectionHeader
+                  eyebrow="Acquisition"
+                  heading="Lead"
+                  accent="Velocity"
+                  as="h2"
+                />
               </div>
               {leadsByDay.length === 0 ? (
                 <div className="h-48 flex items-center justify-center text-[11px] text-[#6F6D7A]">
@@ -682,7 +682,7 @@ export default function AnalyticsPage() {
             {/* Lead sources */}
             <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-5">
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Channels</p>
-              <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Lead Sources</h2>
+              <SectionHeader heading="Lead" accent="Sources" as="h2" className="mb-5" />
               {leadsBySource.length === 0 ? (
                 <div className="flex items-center justify-center h-40 text-[11px] text-[#6F6D7A]">
                   No source data yet
@@ -731,7 +731,7 @@ export default function AnalyticsPage() {
             {/* Conversion funnel */}
             <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-5">
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Sales Pipeline</p>
-              <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Conversion Funnel</h2>
+              <SectionHeader heading="Conversion" accent="Funnel" as="h2" className="mb-5" />
               <div className="space-y-3">
                 {funnelData.map((stage, i) => {
                   const maxVal = funnelData[0].value;
@@ -785,8 +785,7 @@ export default function AnalyticsPage() {
 
             {/* Outreach performance */}
             <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-4">
-              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Engagement</p>
-              <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-4">Outreach Performance</h2>
+              <SectionHeader eyebrow="Engagement" heading="Outreach" accent="Performance" as="h2" className="mb-4" />
               {outreachByDay.length === 0 ? (
                 <div className="h-48 flex items-center justify-center text-[11px] text-[#6F6D7A]">
                   No outreach data for this period
@@ -829,7 +828,7 @@ export default function AnalyticsPage() {
               transition={{ duration: 0.44, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
 >
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Verticals</p>
-              <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Top Industries</h2>
+              <SectionHeader heading="Top" accent="Industries" as="h2" className="mb-5" />
               {leadsByIndustry.length === 0 ? (
                 <p className="text-[11px] text-[#6F6D7A] py-4">No industry data yet</p>
               ) : (
@@ -881,7 +880,7 @@ export default function AnalyticsPage() {
 >
               {/* No pseudo accent div needed � top border handles it */}
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Progress</p>
-              <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Monthly Goals</h2>
+              <SectionHeader heading="Monthly" accent="Goals" as="h2" className="mb-5" />
               <div className="space-y-3.5">
                 {goals.map(goal => {
                   const pct = goal.target> 0 ? Math.min((goal.current / goal.target) * 100, 100) : 0;
@@ -920,7 +919,7 @@ export default function AnalyticsPage() {
               transition={{ duration: 0.44, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
 >
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">vs Industry</p>
-              <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Benchmarks</h2>
+              <SectionHeader heading="Industry" accent="Benchmarks" as="h2" className="mb-5" />
               <div className="space-y-3">
                 {benchmarks.map(b => {
                   const isAbove = b.yours>= b.industry;
@@ -1014,10 +1013,7 @@ export default function AnalyticsPage() {
           <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-5">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Live Stream</p>
-                <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5">
-                  Real-time Activity
-                </h2>
+                <SectionHeader eyebrow="Live Stream" heading="Real-time" accent="Activity" as="h2" />
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />

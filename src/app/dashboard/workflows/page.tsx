@@ -23,6 +23,7 @@ import { TelegramIcon, SlackIcon } from "@/components/ui/platform-icons";
 import AiWorkflowHero from "@/components/workflows/ai-workflow-hero";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
+import { staggerContainerFast, fadeUp } from "@/lib/motion-variants";
 
 interface WorkflowStep {
   id: string;
@@ -53,8 +54,9 @@ const NODE_TYPES: Record<string, { icon: React.ReactNode; color: string; bg: str
   condition: { icon: <GitBranch size={14} />, color: "text-amber-400", bg: "border-amber-400/20 bg-amber-400/5" },
 };
 
-const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
-const itemVariants = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } };
+// Motion variants sourced from shared system for consistency across pages
+const containerVariants = staggerContainerFast;
+const itemVariants = fadeUp;
 
 export default function WorkflowsPage() {
   const { profile } = useAuth();
