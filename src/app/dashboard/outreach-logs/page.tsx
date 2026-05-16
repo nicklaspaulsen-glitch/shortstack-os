@@ -19,7 +19,6 @@ import {
 import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { motion } from "framer-motion";
-import StatStrip from "@/components/ui/stat-strip";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -551,19 +550,35 @@ export default function OutreachLogsPage() {
                   <Download size={12} /> Export
                 </button>
               </div>
-            </div>{/* Stats */}<StatStrip
-              focal={{ label: "Total", value: String(stats.total), icon: <Send size={12} />, color: "text-[#2563EB]" }}
-              support={[
-                { label: "Sent", value: String(stats.sent), icon: <CheckCircle size={12} />, color: "text-blue-400" },
-                { label: "Replied", value: String(stats.replied), icon: <ThumbsUp size={12} />, color: "text-green-400" },
-                { label: "Failed", value: String(stats.failed), icon: <XCircle size={12} />, color: "text-red-400" },
-                { label: "Reply Rate", value: `${replyRate}%`, icon: <BarChart3 size={12} />, color: "text-green-400" },
-                { label: "Book Rate", value: `${bookRate}%`, icon: <BookCheck size={12} />, color: "text-emerald-400" },
-                { label: "Emails", value: String(stats.byPlatform?.email || 0), icon: <Mail size={12} />, color: "text-[#2563EB]" },
-                { label: "SMS", value: String(stats.byPlatform?.sms || 0), icon: <Phone size={12} />, color: "text-emerald-400" },
-                { label: "Calls", value: String(stats.byPlatform?.call || 0), icon: <PhoneCall size={12} />, color: "text-blue-400" },
-              ]}
-            />{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1">
+            </div>
+            {/* Stats */}
+            <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">TOTAL OUTREACH</p>
+                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{stats.total}</p>
+                  <p className="text-[11px] text-text-muted mt-1.5">{replyRate}% reply · {bookRate}% booked</p>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">SENT</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.sent}</p>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">REPLIED</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.replied}</p>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">FAILED</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.failed}</p>
+              </motion.div>
+            </div>
+            {/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1">
               {([
                 { key: "outreach" as Tab, label: "All Logs", icon: <Send size={13} /> },
                 { key: "analytics" as Tab, label: "Analytics", icon: <BarChart3 size={13} /> },

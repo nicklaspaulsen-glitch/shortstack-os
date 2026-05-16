@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { ContentScript, ContentRequest, PublishQueueItem, PersonalBrandIdea, ContentCalendarEntry, PublishPlatform } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
-import StatStrip from "@/components/ui/stat-strip";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import Modal from "@/components/ui/modal";
@@ -1057,13 +1056,27 @@ export default function ContentPage() {
           {/* Publish Queue — Pre-Publishing Editor */}
           {tab === "publish" && (
             <div className="space-y-4">
-              <StatStrip
-                focal={{ label: "Pending Review", value: String(publishQueue.filter((p) => p.status === "pending").length), icon: <Clock size={14} />, color: "text-amber-600" }}
-                support={[
-                  { label: "Approved", value: String(publishQueue.filter((p) => p.status === "approved").length), icon: <Check size={12} />, color: "text-emerald-700" },
-                  { label: "Published", value: String(publishQueue.filter((p) => p.status === "published").length), icon: <Send size={12} />, color: "text-[#2563EB]" },
-                ]}
-              />
+              <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                  <div>
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">PENDING REVIEW</p>
+                    <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{publishQueue.filter((p) => p.status === "pending").length}</p>
+                    <p className="text-[11px] text-text-muted mt-1.5">awaiting approval</p>
+                  </div>
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">APPROVED</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{publishQueue.filter((p) => p.status === "approved").length}</p>
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">PUBLISHED</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{publishQueue.filter((p) => p.status === "published").length}</p>
+                </motion.div>
+              </div>
               <DataTable
                 columns={[
                   { key: "video_title", label: "Video Title" },
@@ -1293,14 +1306,32 @@ export default function ContentPage() {
           {/* Analytics Tab */}
           {tab === "analytics" && (
             <div className="space-y-4">
-              <StatStrip
-                focal={{ label: "Total Content", value: String(contentAnalytics.total_pieces), icon: <FileText size={14} />, color: "text-[#2563EB]" }}
-                support={[
-                  { label: "Published This Month", value: String(contentAnalytics.published_this_month), icon: <Check size={12} />, color: "text-emerald-700" },
-                  { label: "Avg Engagement", value: contentAnalytics.avg_engagement, icon: <TrendingUp size={12} /> },
-                  { label: "AI Enhanced", value: `${contentAnalytics.ai_enhanced}%`, icon: <Sparkles size={12} />, color: "text-purple-700" },
-                ]}
-              />
+              <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                  <div>
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">TOTAL CONTENT</p>
+                    <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{contentAnalytics.total_pieces}</p>
+                    <p className="text-[11px] text-text-muted mt-1.5">pieces created</p>
+                  </div>
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">PUBLISHED THIS MONTH</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{contentAnalytics.published_this_month}</p>
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">AVG ENGAGEMENT</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{contentAnalytics.avg_engagement}</p>
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">AI ENHANCED</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{contentAnalytics.ai_enhanced}%</p>
+                </motion.div>
+              </div>
               <div className="card">
                 <h3 className="text-sm font-medium mb-3">Content by Type</h3>
                 <div className="grid grid-cols-4 gap-3">

@@ -6,11 +6,10 @@ import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
 import {
-  GitBranch, Plus, Eye, TrendingUp, BarChart3, Search,
+  Plus, Eye, Search,
   Clock, CheckCircle2, Archive, Trash2, Copy, Pencil,
-  ChevronRight, Filter, Layers,
+  ChevronRight, Layers,
 } from "lucide-react";
-import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type FunnelStatus = "draft" | "published" | "archived";
@@ -270,20 +269,32 @@ export default function FunnelsPage() {
                 })}
               </div>
             )}{/* Stats summary */}{funnels.length > 0 && (
-              <StatStrip
-                focal={{
-                  label: "Total Views",
-                  value: funnels.reduce((a, f) => a + f.total_views, 0).toLocaleString(),
-                  sub: `${funnels.length} funnels`,
-                  icon: <Eye size={14} />,
-                }}
-                support={[
-                  { label: "Published", value: String(funnels.filter((f) => f.status === "published").length), color: "text-emerald-700", icon: <CheckCircle2 size={12} /> },
-                  { label: "Avg Conversion", value: funnels.length ? `${Math.round(funnels.reduce((a, f) => a + f.conversion_rate, 0) / funnels.length)}%` : "0%", icon: <TrendingUp size={12} /> },
-                  { label: "Total Funnels", value: String(funnels.length), icon: <Filter size={12} /> },
-                ]}
-                className="pt-2"
-              />
+              <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4 pt-2">
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                  <div>
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Views</p>
+                    <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{funnels.reduce((a, f) => a + f.total_views, 0).toLocaleString()}</p>
+                    <p className="text-[11px] text-text-muted mt-1.5">{funnels.length} funnels</p>
+                  </div>
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Published</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{funnels.filter((f) => f.status === "published").length}</p>
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Conversion</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{funnels.length ? `${Math.round(funnels.reduce((a, f) => a + f.conversion_rate, 0) / funnels.length)}%` : "0%"}</p>
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Funnels</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{funnels.length}</p>
+                </motion.div>
+              </div>
             )}</MotionPage>
   );
 }
