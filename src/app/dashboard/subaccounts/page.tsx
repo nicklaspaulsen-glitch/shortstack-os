@@ -4,11 +4,9 @@ import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   Building2, Plus, X, Loader2, Mail, Pause, Play, Trash2,
-  Users, DollarSign, CheckCircle2, AlertCircle,
+  AlertCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import StatCard from "@/components/ui/stat-card";
-import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface Subaccount {
@@ -151,13 +149,41 @@ export default function SubaccountsPage() {
                   Invite Subaccount
                 </button>
       </div>
-    </div><StatStrip
-              focal={{ label: "Monthly Recurring Revenue", value: String(formatMrr(stats.mrr_cents)), icon: <DollarSign className="w-4 h-4" /> }}
-              support={[
-                { label: "Total Subaccounts", value: String(stats.total), icon: <Users className="w-4 h-4" /> },
-                { label: "Active", value: String(stats.active), icon: <CheckCircle2 className="w-4 h-4" /> },
-              ]}
-            />{loading ? (
+    </div><div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
+              {/* Focal tile — MRR */}
+              <motion.div
+                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.04, duration: 0.3 }}
+              >
+                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Recurring Revenue</p>
+                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatMrr(stats.mrr_cents)}</p>
+                </div>
+              </motion.div>
+              {/* Support — Total Subaccounts */}
+              <motion.div
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.10, duration: 0.3 }}
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Subaccounts</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.total}</p>
+              </motion.div>
+              {/* Support — Active */}
+              <motion.div
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.14, duration: 0.3 }}
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.active}</p>
+              </motion.div>
+            </div>{loading ? (
               <div className="flex items-center justify-center py-16">
                 <Loader2 className="w-6 h-6 animate-spin text-[#2563EB]" />
               </div>

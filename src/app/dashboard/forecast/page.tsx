@@ -5,7 +5,6 @@ import { motion, type Variants } from "framer-motion";
 import { TrendingUp, Loader2, AlertCircle } from "lucide-react";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { PrismPanel } from "@/components/prism";
-import StatStrip from "@/components/ui/stat-strip";
 import { createClient } from "@/lib/supabase/client";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -167,27 +166,46 @@ export default function ForecastPage() {
             ) : (
               <>
                 {/* Hero stats */}
-                <StatStrip
-                  focal={{
-                    label: "Total Weighted Pipeline",
-                    value: fmt(totalPipeline),
-                    sub: `across ${deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length} open deals`,
-                  }}
-                  support={[
-                    {
-                      label: "Likely This Month",
-                      value: fmt(likelyClose.reduce((s, d) => s + d.value * (d.probability / 100), 0)),
-                      sub: `${likelyClose.length} deal${likelyClose.length !== 1 ? "s" : ""} =70% probability`,
-                      color: "text-blue-700",
-                    },
-                    {
-                      label: "Closed Won (All Time)",
-                      value: fmt(wonTotal),
-                      sub: `${deals.filter((d) => d.stage === "closed_won").length} deals won`,
-                      color: "text-green-700",
-                    },
-                  ]}
-                />
+                <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
+                  {/* Focal tile */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.04, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                    <div>
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Weighted Pipeline</p>
+                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{fmt(totalPipeline)}</p>
+                      <p className="text-[10px] text-text-muted mt-1">across {deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length} open deals</p>
+                    </div>
+                  </motion.div>
+                  {/* Likely This Month */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.10, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Likely This Month</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">
+                      {fmt(likelyClose.reduce((s, d) => s + d.value * (d.probability / 100), 0))}
+                    </p>
+                    <p className="text-[10px] text-text-muted mt-1">{likelyClose.length} deal{likelyClose.length !== 1 ? "s" : ""} ≥70% probability</p>
+                  </motion.div>
+                  {/* Closed Won */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.14, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Closed Won (All Time)</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{fmt(wonTotal)}</p>
+                    <p className="text-[10px] text-text-muted mt-1">{deals.filter((d) => d.stage === "closed_won").length} deals won</p>
+                  </motion.div>
+                </div>
 
                 {deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length === 0 ? (
                   <PrismPanel padding="p-10" className="flex flex-col items-center gap-3 text-center">

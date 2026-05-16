@@ -9,7 +9,6 @@ import {
   Trash2, Eye, EyeOff, Activity, ToggleLeft, ToggleRight, RefreshCw
 } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
-import StatStrip from "@/components/ui/stat-strip";
 
 /* ── Types ── */
 interface Endpoint {
@@ -282,15 +281,51 @@ export default function ApiDocsPage() {
                   <span>{totalEndpoints} endpoints</span>
                 </div>
       </div>
-    </div>{/* Stats Strip */}<StatStrip
-              focal={{ label: "Endpoints", value: String(totalEndpoints), color: "text-[#2563EB]" }}
-              support={[
-                { label: "Categories", value: String(API_CATEGORIES.length), color: "text-[#2563EB]" },
-                { label: "Auth Methods", value: "2", color: "text-green-400" },
-                { label: "SDKs", value: String(SDK_DOWNLOADS.length), color: "text-[#2563EB]" },
-                { label: "API Version", value: "v2.4", color: "text-cyan-400" },
-              ]}
-            />{/* Tab Navigation */}<div className="flex gap-1 border-b border-border overflow-x-auto pb-px">
+    </div>{/* Stats Bento */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+              {/* Focal tile — Endpoints */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.04, duration: 0.28 }}
+                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Endpoints</p>
+                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{totalEndpoints}</p>
+                </div>
+              </motion.div>
+              {/* Support tile — Categories */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.10, duration: 0.28 }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Categories</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{API_CATEGORIES.length}</p>
+              </motion.div>
+              {/* Support tile — SDKs */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.14, duration: 0.28 }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">SDKs</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{SDK_DOWNLOADS.length}</p>
+              </motion.div>
+              {/* Support tile — API Version */}
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.18, duration: 0.28 }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">API Version</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">v2.4</p>
+              </motion.div>
+            </div>{/* Tab Navigation */}<div className="flex gap-1 border-b border-border overflow-x-auto pb-px">
               {TABS.map(t => (
                 <button key={t} onClick={() => setActiveTab(t)}
                   className={`px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${
@@ -789,15 +824,52 @@ const valid = signature === expected;`}</pre>
                   </div>
                 )}
 
-                {/* Stats Row */}
-                <StatStrip
-                  focal={{ label: "Total Keys", value: String(apiKeys.length), color: "text-[#2563EB]", icon: <Key size={14} /> }}
-                  support={[
-                    { label: "Active", value: String(apiKeys.filter(k => k.is_active).length), color: "text-green-400", icon: <CheckCircle size={12} /> },
-                    { label: "Revoked", value: String(apiKeys.filter(k => !k.is_active).length), color: "text-red-400", icon: <Shield size={12} /> },
-                    { label: "Full Access", value: String(apiKeys.filter(k => k.permissions === "full" && k.is_active).length), color: "text-orange-400", icon: <AlertTriangle size={12} /> },
-                  ]}
-                />
+                {/* Stats Bento */}
+                <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                  {/* Focal tile — Total Keys */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.04, duration: 0.28 }}
+                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                    <div>
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Keys</p>
+                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{apiKeys.length}</p>
+                    </div>
+                  </motion.div>
+                  {/* Support tile — Active */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.10, duration: 0.28 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{apiKeys.filter(k => k.is_active).length}</p>
+                  </motion.div>
+                  {/* Support tile — Revoked */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.14, duration: 0.28 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Revoked</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{apiKeys.filter(k => !k.is_active).length}</p>
+                  </motion.div>
+                  {/* Support tile — Full Access */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.18, duration: 0.28 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Full Access</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{apiKeys.filter(k => k.permissions === "full" && k.is_active).length}</p>
+                  </motion.div>
+                </div>
 
                 {/* Key Management Card */}
                 <div className="glass rounded-xl p-4">

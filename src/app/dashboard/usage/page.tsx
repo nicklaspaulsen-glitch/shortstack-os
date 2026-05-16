@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import StatStrip from "@/components/ui/stat-strip";
 import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, type PlanTier, isValidPlanTier } from "@/lib/plan-config";
 import Link from "next/link";
@@ -256,14 +255,57 @@ export default function UsagePage() {
                 {[1,2,3,4].map(k => <div key={k} className="h-16 flex-1 bg-surface-light animate-pulse rounded-lg" />)}
               </div>
             ) : (
-              <StatStrip
-                focal={{ label: "Tokens Used", value: fmt(used), icon: <Activity size={10} />, sub: "this month" }}
-                support={[
-                  { label: "Remaining", value: isUnlimited ? "∞" : fmt(remaining), icon: <Zap size={10} />, sub: isUnlimited ? "unlimited" : `of ${fmtShort(effectiveLimit)}`, color: isUnlimited ? "text-[#2563EB]" : remaining < effectiveLimit * 0.1 ? "text-red-400" : undefined },
-                  { label: "Resets In", value: String(tokenData.days_remaining), icon: <Clock size={10} />, sub: "days" },
-                  { label: "Daily Avg", value: fmtShort(tokenData.daily_average), icon: <TrendingUp size={10} />, sub: "tokens / day" },
-                ]}
-              />
+              <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                {/* Focal tile */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.04, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+                  className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                >
+                  <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                  <div>
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Tokens Used</p>
+                    <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{fmt(used)}</p>
+                    <p className="text-[10px] text-text-muted mt-1">this month</p>
+                  </div>
+                </motion.div>
+                {/* Remaining */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.10, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                >
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Remaining</p>
+                  <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${isUnlimited ? "text-[#2563EB]" : remaining < effectiveLimit * 0.1 ? "text-red-400" : "text-text-primary"}`}>
+                    {isUnlimited ? "∞" : fmt(remaining)}
+                  </p>
+                  <p className="text-[10px] text-text-muted mt-1">{isUnlimited ? "unlimited" : `of ${fmtShort(effectiveLimit)}`}</p>
+                </motion.div>
+                {/* Resets In */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.14, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                >
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Resets In</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{tokenData.days_remaining}</p>
+                  <p className="text-[10px] text-text-muted mt-1">days</p>
+                </motion.div>
+                {/* Daily Avg */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.18, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                >
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Daily Avg</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{fmtShort(tokenData.daily_average)}</p>
+                  <p className="text-[10px] text-text-muted mt-1">tokens / day</p>
+                </motion.div>
+              </div>
             )}{/* ── Progress Bar ── */}{!isUnlimited && (
               <div className="glass rounded-xl p-5 space-y-3">
                 <div className="flex items-center justify-between text-xs">

@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { Copy, Phone, Building2, CheckCircle, Loader2, RefreshCw, AlertTriangle } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
-import StatStrip from "@/components/ui/stat-strip";
 
 interface Lead {
   id: string;
@@ -161,16 +160,30 @@ export default function DedupPage() {
                   Re-scan
                 </button>
       </div>
-    </div>{/* Summary */}<StatStrip
-              focal={{
-                label: "Leads Scanned",
-                value: leads.length.toLocaleString(),
-              }}
-              support={[
-                { label: "Duplicate Groups", value: String(pendingGroups.length), color: pendingGroups.length > 0 ? "text-amber-700" : "text-emerald-700" },
-                { label: "Merged", value: String(merged.size), sub: "this session", color: "text-emerald-700" },
-              ]}
-            />{loading ? (
+    </div>{/* Summary */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
+              {/* Focal tile */}
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.36 }}
+                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Leads Scanned</p>
+                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{leads.length.toLocaleString()}</p>
+                </div>
+              </motion.div>
+              {/* Support tile: Duplicate Groups */}
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.36 }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Duplicate Groups</p>
+                <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${pendingGroups.length > 0 ? "text-amber-700" : "text-emerald-700"}`}>{pendingGroups.length}</p>
+              </motion.div>
+              {/* Support tile: Merged */}
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.36 }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Merged</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-700 tabular-nums">{merged.size}</p>
+                <p className="text-[10px] text-text-muted mt-1">this session</p>
+              </motion.div>
+            </div>{loading ? (
               <div className="space-y-4">
                 {Array.from({ length: 3 }).map((_, i) => (
                   <div key={i} className="glass rounded-xl p-5 animate-pulse">

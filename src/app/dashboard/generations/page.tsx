@@ -11,7 +11,6 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { MotionPage } from "@/components/motion/motion-page";
-import StatStrip from "@/components/ui/stat-strip";
 
 /* ── Types ── */
 
@@ -137,14 +136,56 @@ export default function GenerationsPage() {
         >
           <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
         </button>
-      </div>{/* Stats Strip */}<StatStrip
-              focal={{ label: "Total Items", value: String(total), icon: <Layers size={14} />, color: "text-[#2563EB]" }}
-              support={[
-                { label: "This Week", value: String(thisWeekCount), icon: <TrendingUp size={14} />, color: "text-emerald-700" },
-                { label: "Categories", value: String(uniqueCategories), icon: <Calendar size={14} />, color: "text-blue-700" },
-                { label: "Latest", value: latest, icon: <Clock size={14} />, color: "text-purple-700" },
-              ]}
-            />{/* Search */}<div className="relative max-w-md">
+      </div>
+
+      {/* Editorial Bento — 4-col stat grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+        {/* Focal tile */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.04, duration: 0.36 }}
+          className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        >
+          <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Items</p>
+            <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{total}</p>
+          </div>
+        </motion.div>
+        {/* Support tile: This Week */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.10, duration: 0.36 }}
+          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        >
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">This Week</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{thisWeekCount}</p>
+        </motion.div>
+        {/* Support tile: Categories */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.14, duration: 0.36 }}
+          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        >
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Categories</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{uniqueCategories}</p>
+        </motion.div>
+        {/* Support tile: Latest */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.18, duration: 0.36 }}
+          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        >
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Latest</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{latest}</p>
+        </motion.div>
+      </div>
+
+      {/* Search */}<div className="relative max-w-md">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
               <input
                 value={search}

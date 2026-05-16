@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { PrismPanel } from "@/components/prism";
-import StatStrip from "@/components/ui/stat-strip";
 import { useAuth } from "@/lib/auth-context";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -207,19 +206,51 @@ export default function DiscordPage() {
       </div>
 
       {/* Stats Row */}
-      <StatStrip
-        focal={{
-          label: "Bot Status",
-          value: "Online",
-          icon: <Zap size={12} />,
-          color: "text-green-400",
-        }}
-        support={[
-          { label: "Servers", value: "0", icon: <Server size={12} />, color: "text-[#5865F2]" },
-          { label: "Total Members", value: "0", icon: <Users size={12} />, color: "text-[#2563EB]" },
-          { label: "Total Channels", value: "0", icon: <Hash size={12} />, color: "text-purple-400" },
-        ]}
-      />
+      <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+        {/* Focal tile */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.04, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+          className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        >
+          <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Bot Status</p>
+            <p className="font-display text-3xl font-bold tracking-[-0.03em] text-green-500 tabular-nums">Online</p>
+          </div>
+        </motion.div>
+        {/* Servers */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.10, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        >
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Servers</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">0</p>
+        </motion.div>
+        {/* Total Members */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.14, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        >
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Members</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">0</p>
+        </motion.div>
+        {/* Total Channels */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.18, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        >
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Channels</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">0</p>
+        </motion.div>
+      </div>
 
       {/* Tabs */}
       <div className="flex gap-1 overflow-x-auto border-b border-border pb-px">
@@ -674,19 +705,51 @@ export default function DiscordPage() {
       {activeTab === "Analytics" && (
         <div className="space-y-4">
           <PreviewBanner />
-          <StatStrip
-            focal={{
-              label: "Messages Today",
-              value: "—",
-              icon: <MessageSquare size={12} />,
-              color: "text-[#5865F2]",
-            }}
-            support={[
-              { label: "Active Members", value: "—", icon: <Users size={12} />, color: "text-green-400" },
-              { label: "New Members (7d)", value: "—", icon: <UserCheck size={12} />, color: "text-[#2563EB]" },
-              { label: "Voice Hours (7d)", value: "—", icon: <Volume2 size={12} />, color: "text-purple-400" },
-            ]}
-          />
+          <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+            {/* Focal tile */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.04, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+              className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+            >
+              <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+              <div>
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Messages Today</p>
+                <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">—</p>
+              </div>
+            </motion.div>
+            {/* Active Members */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.10, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+            >
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active Members</p>
+              <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">—</p>
+            </motion.div>
+            {/* New Members */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.14, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+            >
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">New Members (7d)</p>
+              <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">—</p>
+            </motion.div>
+            {/* Voice Hours */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.18, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+            >
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Voice Hours (7d)</p>
+              <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">—</p>
+            </motion.div>
+          </div>
           {/* Daily Activity Chart */}
           <div className="card p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-[#2563EB]" /> Daily Activity</h3>
@@ -931,17 +994,51 @@ export default function DiscordPage() {
           {/* Engagement trends */}
           <div className="card p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><TrendingUp size={14} className="text-green-400" /> Engagement Trends</h3>
-            <StatStrip
-              focal={{
-                label: "Avg Messages/Day",
-                value: "0",
-              }}
-              support={[
-                { label: "Avg Active/Day", value: "0" },
-                { label: "Retention (30d)", value: "--" },
-                { label: "Avg Session", value: "--" },
-              ]}
-            />
+            <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+              {/* Focal tile */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.04, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Messages/Day</p>
+                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">0</p>
+                </div>
+              </motion.div>
+              {/* Avg Active/Day */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.10, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Active/Day</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">0</p>
+              </motion.div>
+              {/* Retention */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.14, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Retention (30d)</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">--</p>
+              </motion.div>
+              {/* Avg Session */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.18, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Session</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">--</p>
+              </motion.div>
+            </div>
           </div>
         </div>
       )}

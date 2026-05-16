@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import StatStrip from "@/components/ui/stat-strip";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { formatCurrency } from "@/lib/utils";
@@ -521,25 +520,98 @@ export default function FinancialsPage() {
             )}{activeTab === "overview" && !loading && (
               <>
                 {/* Key Metrics */}
-                <StatStrip
-                  focal={{ label: "MRR", value: formatCurrency(totalMRR), icon: <DollarSign size={14} />, color: "text-[#2563EB]", sub: `${activeClients.length} active clients` }}
-                  support={[
-                    { label: "ARR", value: formatCurrency(annualRecurringRevenue), color: "text-blue-400", sub: "annualized", icon: <Globe size={12} /> },
-                    { label: "Net Profit", value: formatCurrency(netProfit), color: netProfit >= 0 ? "text-emerald-700" : "text-rose-700", sub: `${marginPct.toFixed(1)}% margin`, subOk: marginPct >= 0, icon: <TrendingUp size={12} /> },
-                    { label: "Churn Rate", value: `${churnRate.toFixed(1)}%`, color: churnRate > 5 ? "text-rose-700" : "text-amber-600", sub: `${churnedThisMonth} churned / ${totalClients} total`, icon: <AlertTriangle size={12} /> },
-                  ]}
-                />
+                <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.04 }}
+                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">MRR</p>
+                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatCurrency(totalMRR)}</p>
+                      <p className="text-[10px] text-text-muted mt-1">{activeClients.length} active clients</p>
+                    </div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.10 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">ARR</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(annualRecurringRevenue)}</p>
+                    <p className="text-[10px] text-text-muted mt-1">Annualized</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.14 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Net Profit</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(netProfit)}</p>
+                    <p className="text-[10px] text-text-muted mt-1">{marginPct.toFixed(1)}% margin</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.18 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Churn Rate</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{churnRate.toFixed(1)}%</p>
+                    <p className="text-[10px] text-text-muted mt-1">{churnedThisMonth} churned / {totalClients} total</p>
+                  </motion.div>
+                </div>
 
                 {/* Extended Metrics Row */}
-                <StatStrip
-                  focal={{ label: "Monthly Expenses", value: formatCurrency(totalMonthlyExpenses), icon: <Minus size={14} />, color: "text-rose-700", sub: `${expenses.length} subscriptions` }}
-                  support={[
-                    { label: "Avg / Client", value: formatCurrency(avgRevenue), color: "text-purple-400", sub: `${activeClients.length} clients`, icon: <Users size={12} /> },
-                    { label: "Client LTV", value: formatCurrency(clv), color: "text-[#2563EB]", sub: `avg ${avgClientLifeMonths} months`, icon: <Zap size={12} /> },
-                    { label: "Est. Annual Tax", value: formatCurrency(estimatedTax), color: "text-orange-400", sub: `${estimatedTaxRate}% effective rate`, icon: <Shield size={12} /> },
-                  ]}
-                  baseDelay={0.25}
-                />
+                <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.29 }}
+                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Expenses</p>
+                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatCurrency(totalMonthlyExpenses)}</p>
+                      <p className="text-[10px] text-text-muted mt-1">{expenses.length} subscriptions</p>
+                    </div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.35 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg / Client</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(avgRevenue)}</p>
+                    <p className="text-[10px] text-text-muted mt-1">{activeClients.length} clients</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.39 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Client LTV</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(clv)}</p>
+                    <p className="text-[10px] text-text-muted mt-1">avg {avgClientLifeMonths} months</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.43 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Est. Annual Tax</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(estimatedTax)}</p>
+                    <p className="text-[10px] text-text-muted mt-1">{estimatedTaxRate}% effective rate</p>
+                  </motion.div>
+                </div>
 
                 {/* Revenue vs Expenses Bar */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
@@ -651,14 +723,47 @@ export default function FinancialsPage() {
             )}{/* ================================================================== */}{/* EXPENSES TAB                                                        */}{/* ================================================================== */}{activeTab === "expenses" && (
               <>
                 {/* Expense Summary Cards */}
-                <StatStrip
-                  focal={{ label: "Monthly Total", value: formatCurrency(totalMonthlyExpenses), icon: <Minus size={14} />, color: "text-rose-700" }}
-                  support={[
-                    { label: "Annual Total", value: formatCurrency(totalMonthlyExpenses * 12), color: "text-orange-400", icon: <Calendar size={12} /> },
-                    { label: "Categories", value: String(categoryTotals.length), color: "text-blue-400", icon: <Layers size={12} /> },
-                    { label: "Profit Margin", value: `${marginPct.toFixed(1)}%`, color: marginPct >= 0 ? "text-emerald-700" : "text-rose-700", icon: <Percent size={12} /> },
-                  ]}
-                />
+                <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.04 }}
+                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Total</p>
+                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatCurrency(totalMonthlyExpenses)}</p>
+                    </div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.10 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Annual Total</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(totalMonthlyExpenses * 12)}</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.14 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Categories</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{categoryTotals.length}</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.18 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Profit Margin</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{marginPct.toFixed(1)}%</p>
+                  </motion.div>
+                </div>
 
                 {/* Budget vs Actual */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
@@ -799,15 +904,51 @@ export default function FinancialsPage() {
             )}{/* ================================================================== */}{/* SUBSCRIPTIONS TAB                                                   */}{/* ================================================================== */}{activeTab === "subscriptions" && (
               <>
                 {/* Summary cards */}
-                <StatStrip
-                  focal={{ label: "Monthly Spend", value: formatCurrency(totalMonthlySubs), color: "text-rose-700", sub: `${activeSubs} active tools` }}
-                  support={[
-                    { label: "Annual Spend", value: formatCurrency(totalAnnualSubs), sub: "Projected" },
-                    { label: "Active", value: String(activeSubs), color: "text-emerald-700", sub: `of ${subscriptions.length} total` },
-                    { label: "Renewals ≤7d", value: String(upcomingRenewals), color: "text-amber-600", sub: "Upcoming charges" },
-                    { label: "Top Cost", value: mostExpensive?.tool_name || "—", color: "text-[#2563EB]", sub: mostExpensive ? formatCurrency(mostExpensive.cost_monthly) + "/mo" : "No data" },
-                  ]}
-                />
+                <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.04 }}
+                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Spend</p>
+                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatCurrency(totalMonthlySubs)}</p>
+                      <p className="text-[10px] text-text-muted mt-1">{activeSubs} active tools</p>
+                    </div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.10 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Annual Spend</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(totalAnnualSubs)}</p>
+                    <p className="text-[10px] text-text-muted mt-1">Projected</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.14 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{activeSubs}</p>
+                    <p className="text-[10px] text-text-muted mt-1">of {subscriptions.length} total</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.18 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Renewals ≤7d</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{upcomingRenewals}</p>
+                    <p className="text-[10px] text-text-muted mt-1">Upcoming charges</p>
+                  </motion.div>
+                </div>
 
                 {/* Header + Add button */}
                 <div className="flex items-center justify-between">
@@ -923,14 +1064,51 @@ export default function FinancialsPage() {
             )}{/* ================================================================== */}{/* INVOICING TAB                                                       */}{/* ================================================================== */}{activeTab === "invoicing" && (
               <>
                 {/* Invoice Summary */}
-                <StatStrip
-                  focal={{ label: "Overdue", value: formatCurrency(invoiceTotals.overdue), icon: <AlertTriangle size={14} />, color: "text-rose-700", sub: `${invoices.filter(i => i.status === "overdue").length} invoices` }}
-                  support={[
-                    { label: "Due Soon", value: formatCurrency(invoiceTotals.dueSoon), color: "text-amber-600", sub: `${invoices.filter(i => i.status === "due_soon").length} invoices`, icon: <Clock size={12} /> },
-                    { label: "Pending", value: formatCurrency(invoiceTotals.pending), color: "text-blue-400", sub: `${invoices.filter(i => i.status === "pending").length} invoices`, icon: <FileText size={12} /> },
-                    { label: "Paid", value: formatCurrency(invoiceTotals.paid), color: "text-emerald-700", sub: `${invoices.filter(i => i.status === "paid").length} invoices`, icon: <CheckCircle size={12} /> },
-                  ]}
-                />
+                <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.04 }}
+                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Overdue</p>
+                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatCurrency(invoiceTotals.overdue)}</p>
+                      <p className="text-[10px] text-text-muted mt-1">{invoices.filter(i => i.status === "overdue").length} invoices</p>
+                    </div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.10 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Due Soon</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(invoiceTotals.dueSoon)}</p>
+                    <p className="text-[10px] text-text-muted mt-1">{invoices.filter(i => i.status === "due_soon").length} invoices</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.14 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Pending</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(invoiceTotals.pending)}</p>
+                    <p className="text-[10px] text-text-muted mt-1">{invoices.filter(i => i.status === "pending").length} invoices</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: 0.18 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Paid</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(invoiceTotals.paid)}</p>
+                    <p className="text-[10px] text-text-muted mt-1">{invoices.filter(i => i.status === "paid").length} invoices</p>
+                  </motion.div>
+                </div>
 
                 {/* Invoice Aging Chart */}
                 <div className="card p-4">

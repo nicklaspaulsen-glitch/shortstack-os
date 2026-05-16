@@ -19,12 +19,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import {
-  Gift,
   Copy,
   RefreshCw,
-  TrendingUp,
-  Wallet,
-  Clock,
   Sparkles,
   MessageCircle,
   Check,
@@ -61,7 +57,6 @@ function LinkedinIcon({ size = 14 }: { size?: number }) {
   );
 }
 import { motion } from "framer-motion";
-import StatStrip from "@/components/ui/stat-strip";
 import { COMMISSION_RATES } from "@/lib/referral-commission";
 import { PLAN_TIERS, getPlanConfig, type PlanTier } from "@/lib/plan-config";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -359,13 +354,50 @@ export default function ReferralsPage() {
                 Commission paid monthly for 12 months on every active subscription. Payout sent on the 1st of each month via Stripe Connect.
               </p>
             </motion.section>{/* ─── Stat cards ─────────────────────────────────────────────── */}<section>
-              <StatStrip
-                focal={{ label: "This month", value: meLoading ? "—" : fmtCents(me?.stats.this_month_cents ?? 0), icon: <TrendingUp size={14} />, color: "text-[#2563EB]", sub: "Current cycle" }}
-                support={[
-                  { label: "All time earned", value: meLoading ? "—" : fmtCents(me?.stats.total_earned_cents ?? 0), icon: <Wallet size={14} />, sub: `${me?.stats.total_referrals ?? 0} total referral${me?.stats.total_referrals === 1 ? "" : "s"}` },
-                  { label: "Pending payout", value: meLoading ? "—" : fmtCents(me?.stats.pending_payout_cents ?? 0), icon: <Clock size={14} />, sub: "Paid on the 1st" },
-                ]}
-              />
+              <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
+                {/* Focal tile */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: 0.04 }}
+                  className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                >
+                  <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">This month</p>
+                    <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">
+                      {meLoading ? "—" : fmtCents(me?.stats.this_month_cents ?? 0)}
+                    </p>
+                    <p className="text-[10px] text-text-muted mt-1">Current cycle</p>
+                  </div>
+                </motion.div>
+                {/* Support tile: All time earned */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: 0.10 }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                >
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">All time earned</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">
+                    {meLoading ? "—" : fmtCents(me?.stats.total_earned_cents ?? 0)}
+                  </p>
+                  <p className="text-[10px] text-text-muted mt-1">{me?.stats.total_referrals ?? 0} total referral{me?.stats.total_referrals === 1 ? "" : "s"}</p>
+                </motion.div>
+                {/* Support tile: Pending payout */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: 0.14 }}
+                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                >
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Pending payout</p>
+                  <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">
+                    {meLoading ? "—" : fmtCents(me?.stats.pending_payout_cents ?? 0)}
+                  </p>
+                  <p className="text-[10px] text-text-muted mt-1">Paid on the 1st</p>
+                </motion.div>
+              </div>
             </section>{/* ─── Bottom: referred users + leaderboard ──────────────────── */}<section className="grid grid-cols-1 lg:grid-cols-3 gap-5">
               {/* Referrals table */}
               <div className="lg:col-span-2 glass rounded-xl overflow-hidden">

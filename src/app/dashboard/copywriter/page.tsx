@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import StatStrip from "@/components/ui/stat-strip";
 import {
   PenTool, Sparkles, FileText, Globe, Mail, MessageSquare,
   ShoppingBag, Megaphone, Copy, BookmarkPlus, Loader, Clock,
@@ -1488,13 +1487,41 @@ export default function CopywriterPage() {
                     transition={{ delay: 0.12, duration: 0.35 }}
                     className="glass rounded-xl p-4"
                   >
-                    <StatStrip
-                      focal={{ label: "Generated", value: String(history.length), icon: <FileText size={14} /> }}
-                      support={[
-                        { label: "Total Words", value: history.reduce((sum, h) => sum + h.wordCount, 0).toLocaleString() },
-                        { label: "Saved", value: String(savedItems.size) },
-                      ]}
-                    />
+                    <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
+                      {/* Focal tile — Generated */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.04, duration: 0.28 }}
+                        className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      >
+                        <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                        <div>
+                          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Generated</p>
+                          <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{history.length}</p>
+                        </div>
+                      </motion.div>
+                      {/* Support tile — Total Words */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.10, duration: 0.28 }}
+                        className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      >
+                        <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Words</p>
+                        <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{history.reduce((sum, h) => sum + h.wordCount, 0).toLocaleString()}</p>
+                      </motion.div>
+                      {/* Support tile — Saved */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.14, duration: 0.28 }}
+                        className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      >
+                        <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Saved</p>
+                        <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{savedItems.size}</p>
+                      </motion.div>
+                    </div>
                   </motion.div>
                 )}
               </div>
