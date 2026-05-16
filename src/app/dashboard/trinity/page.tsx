@@ -231,7 +231,7 @@ export default function TrinityPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
                   <motion.div
-                    className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -243,16 +243,16 @@ export default function TrinityPage() {
                     </div>
                   </motion.div>
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active Now</p>
-                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-700 tabular-nums">{activeAgentCount}</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{activeAgentCount}</p>
                     <p className="text-[11px] text-text-muted mt-1.5">running</p>
                   </motion.div>
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -261,12 +261,12 @@ export default function TrinityPage() {
                     <p className="text-[11px] text-text-muted mt-1.5">completed</p>
                   </motion.div>
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Errors</p>
-                    <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${errorAgentCount > 0 ? "text-rose-700" : "text-emerald-700"}`}>{errorAgentCount}</p>
+                    <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${errorAgentCount > 0 ? "text-rose-400" : "text-emerald-400"}`}>{errorAgentCount}</p>
                     <p className="text-[11px] text-text-muted mt-1.5">agent errors</p>
                   </motion.div>
                 </div>
@@ -362,7 +362,7 @@ export default function TrinityPage() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
                     <motion.div
-                      className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -374,7 +374,7 @@ export default function TrinityPage() {
                       </div>
                     </motion.div>
                     <motion.div
-                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -383,7 +383,7 @@ export default function TrinityPage() {
                       <p className="text-[11px] text-text-muted mt-1.5">this month</p>
                     </motion.div>
                     <motion.div
-                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -392,7 +392,7 @@ export default function TrinityPage() {
                       <p className="text-[11px] text-text-muted mt-1.5">with spend</p>
                     </motion.div>
                     <motion.div
-                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -490,7 +490,7 @@ export default function TrinityPage() {
                   <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><BarChart3 size={14} className="text-brand-accent" /> Trinity Analytics</h2>
                   <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
                     <motion.div
-                      className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -502,16 +502,16 @@ export default function TrinityPage() {
                       </div>
                     </motion.div>
                     <motion.div
-                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Success Rate</p>
-                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-700 tabular-nums">{successRateAvg}%</p>
+                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{successRateAvg}%</p>
                       <p className="text-[11px] text-text-muted mt-1.5">this month</p>
                     </motion.div>
                     <motion.div
-                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -520,7 +520,7 @@ export default function TrinityPage() {
                       <p className="text-[11px] text-text-muted mt-1.5">pending</p>
                     </motion.div>
                     <motion.div
-                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
                     >
