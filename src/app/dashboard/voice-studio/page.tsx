@@ -857,7 +857,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
     <div className="space-y-4">
       {/* Filter bar */}
       <div className="glass space-y-2.5 rounded-xl p-3">
-        {/* Search row â€” count badge here so it does not compete with lang select */}
+        {/* Search row - count badge here so it does not compete with lang select */}
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
             <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#71717A]" />
@@ -1094,10 +1094,10 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             type="button"
             onClick={() => { if (!testing) onTest(); }}
             disabled={testing}
-            aria-label={testing ? "Generating previewâ€¦" : "Click to preview this voice"}
+            aria-label={testing ? "Generating preview..." : "Click to preview this voice"}
             className="mt-3 w-full flex flex-col items-center gap-1.5 py-3 rounded-lg border border-dashed border-border-subtle bg-white/[0.02] hover:border-[rgba(59,130,246,0.30)] hover:bg-[rgba(59,130,246,0.04)] transition-colors duration-200 cursor-pointer disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2563EB]/40 group/play"
           >
-            {/* waveform bars â€” animate when hovering or generating */}
+            {/* waveform bars - animate when hovering or generating */}
             <div className="flex items-end justify-center gap-[2px] h-6 opacity-40 group-hover/play:opacity-80 transition-opacity duration-200" aria-hidden="true">
               {[5, 9, 6, 13, 7, 11, 4, 14, 8, 10, 5, 12, 7, 9, 4].map((h, i) => (
                 <div
@@ -1118,7 +1118,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             </div>
             <span className="text-[10px] text-[#71717A] group-hover/play:text-brand-accent transition-colors duration-200 flex items-center gap-1">
               {testing
-                ? <><Loader2 size={10} className="animate-spin" />{" "}Generatingâ€¦</>
+                ? <><Loader2 size={10} className="animate-spin" />{" "}Generating...</>
                 : <><Play size={10} />{" "}Click to preview</>}
             </span>
           </button>
@@ -1173,7 +1173,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           </div>
         )}
 
-        {/* Audio player â€” shown above actions; kept visible while re-generating */}
+        {/* Audio player - shown above actions; kept visible while re-generating */}
         {(testUrl || (testing && prevUrlRef.current)) && (
           <div className="relative mt-3 rounded-lg border border-[rgba(59,130,246,0.18)] bg-[rgba(59,130,246,0.05)] py-2 px-1">
             <AudioPlayer src={testUrl ?? prevUrlRef.current ?? ""} />
@@ -1198,7 +1198,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             ) : (
               <Play size={12} />
             )}
-            {testing ? "Generatingâ€¦" : testUrl ? "Re-generate" : "Preview"}
+            {testing ? "Generating..." : testUrl ? "Re-generate" : "Preview"}
           </button>
 
           {/* Save to My Voices */}

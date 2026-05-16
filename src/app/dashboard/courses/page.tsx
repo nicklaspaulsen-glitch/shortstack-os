@@ -189,7 +189,7 @@ export default function CoursesPage() {
                         value={newDescription}
                         onChange={e => setNewDescription(e.target.value)}
                         rows={2}
-                        placeholder="Brief descriptionâ€¦"
+                        placeholder="Brief description..."
                         className="w-full glass rounded-lg px-3 py-2 text-text-primary placeholder-black/35 text-sm focus:outline-none focus:border-purple-500 resize-none"
                       />
                     </div>
@@ -229,7 +229,7 @@ export default function CoursesPage() {
                       disabled={creating}
                       className="flex-1 px-4 py-2 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors"
                     >
-                      {creating ? "Creatingâ€¦" : "Create Course"}
+                      {creating ? "Creating..." : "Create Course"}
                     </button>
                   </div>
                 </div>
