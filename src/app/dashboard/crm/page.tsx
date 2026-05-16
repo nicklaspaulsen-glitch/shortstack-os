@@ -1250,10 +1250,10 @@ export default function CRMPage() {
             </div>
 
             {/* -- Status Tabs -- */}
-            <div className="tab-group w-fit">
+            <div className="tab-pill-strip w-fit">
               {STATUS_TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
-                  className={`${activeTab === t.key ? "tab-item-active" : "tab-item-inactive"} flex items-center gap-1`}>
+                  className={`tab-pill${activeTab === t.key ? " active" : ""} flex items-center gap-1`}>
                   {t.label}
                   <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${activeTab === t.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light text-muted"}`}>
                     {statusCounts[t.key] || 0}

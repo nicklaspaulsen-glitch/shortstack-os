@@ -662,10 +662,10 @@ export default function SocialManagerPage() {
       </Modal>
 
       {/* Tabs */}
-      <div className="tab-group w-fit flex-wrap">
+      <div className="tab-pill-strip w-fit flex-wrap">
         {(["dashboard", "calendar", "scheduled", "published", "hashtags", "tools", "analytics", "inbox", "collabs", "config"] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
-            className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
+            className={`tab-pill${tab === t ? " active" : ""}`}>
             {t === "dashboard" ? "Dashboard" : t === "calendar" ? "Calendar" : t === "scheduled" ? `Queue (${scheduledPosts.length})` : t === "published" ? "Published" : t === "hashtags" ? "Hashtags" : t === "tools" ? "AI Tools" : t === "analytics" ? "Analytics" : t === "inbox" ? "Inbox" : t === "collabs" ? "Collabs" : "Settings"}
           </button>
         ))}

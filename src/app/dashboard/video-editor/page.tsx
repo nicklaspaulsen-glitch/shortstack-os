@@ -3734,10 +3734,10 @@ export default function VideoEditorPage() {
             />{advancedMode && (
             <>
             {/* Tabs */}
-            <div className="tab-group w-fit">
+            <div className="tab-pill-strip w-fit">
               {(["create", "storyboard", "templates", "assets", "export"] as const).map(t => (
                 <button key={t} onClick={() => setTab(t)}
-                  className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
+                  className={`tab-pill${tab === t ? " active" : ""}`}>
                   {t === "create" ? "Create Video" : t === "storyboard" ? "Storyboard" : t === "templates" ? "Quick Templates" : t === "assets" ? "Assets & Effects" : "Export & Review"}
                 </button>
               ))}
@@ -5856,7 +5856,7 @@ export default function VideoEditorPage() {
                    *  tab-switcher. Only one group renders at a time � this is the
                    *  biggest win against the "every section is the same weight"
                    *  complaint from the audit. */}
-                  <div className="tab-group">
+                  <div className="tab-pill-strip">
                     {([
                       { id: "style" as const, label: "Style", icon: <Palette size={11} /> },
                       { id: "brand" as const, label: "Brand", icon: <Paintbrush size={11} /> },
@@ -5866,7 +5866,7 @@ export default function VideoEditorPage() {
                       <button
                         key={t.id}
                         onClick={() => setEditorLeftTab(t.id)}
-                        className={editorLeftTab === t.id ? "tab-item-active" : "tab-item-inactive"}
+                        className={`tab-pill${editorLeftTab === t.id ? " active" : ""}`}
                       >
                         <span className="flex items-center gap-1.5">{t.icon}{t.label}</span>
                       </button>

@@ -286,10 +286,10 @@ export default function ClientUploadsPage() {
       )}
 
       {/* Tabs */}
-      <div className="tab-group w-fit">
+      <div className="tab-pill-strip w-fit">
         {(["uploads", "published", "content", "social"] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
-            className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
+            className={`tab-pill${tab === t ? " active" : ""}`}>
             {t === "uploads" ? `Uploads (${uploads.length})` :
              t === "published" ? `Published (${published.length})` :
              t === "content" ? `Content (${content.length})` :
