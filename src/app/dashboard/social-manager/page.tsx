@@ -678,7 +678,7 @@ export default function SocialManagerPage() {
           <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
             {/* Focal tile — Published */}
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+              className="flex items-start gap-3 glass rounded-2xl p-5 shadow-[0_2px_16px_rgba(0,0,0,0.35)]">
               <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Published</p>
@@ -688,19 +688,19 @@ export default function SocialManagerPage() {
             </motion.div>
             {/* Scheduled */}
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+              className="glass rounded-2xl p-5 shadow-[0_2px_16px_rgba(0,0,0,0.35)]">
               <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Scheduled</p>
               <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{scheduledPosts.length}</p>
             </motion.div>
             {/* Platforms */}
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+              className="glass rounded-2xl p-5 shadow-[0_2px_16px_rgba(0,0,0,0.35)]">
               <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Platforms</p>
               <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{currentClient?.accounts.length || 0}</p>
             </motion.div>
             {/* Autopilot */}
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+              className="glass rounded-2xl p-5 shadow-[0_2px_16px_rgba(0,0,0,0.35)]">
               <p className={`text-[10px] font-medium uppercase tracking-[0.14em] mb-1.5 ${isAutopilot ? "text-emerald-600" : "text-text-muted"}`}>Autopilot</p>
               <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${isAutopilot ? "text-emerald-600" : "text-text-primary"}`}>{isAutopilot ? "Active" : "Off"}</p>
             </motion.div>
@@ -1587,7 +1587,7 @@ export default function SocialManagerPage() {
                     <Video size={32} className="text-foreground/20" />
                     <div className="absolute bottom-3 left-3 right-10">
                       <p className="text-[10px] text-white font-semibold">@your_brand</p>
-                      <p className="text-[9px] text-[#374151] mt-0.5">Your TikTok caption here... #fyp #viral</p>
+                      <p className="text-[9px] text-text-secondary mt-0.5">Your TikTok caption here... #fyp #viral</p>
                     </div>
                     <div className="absolute right-2 bottom-3 flex flex-col gap-3 items-center">
                       <Heart size={16} className="text-white" />
