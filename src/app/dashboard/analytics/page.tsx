@@ -29,16 +29,17 @@ interface ActivityItem { id: string; type: "lead" | "payment" | "post" | "deal" 
 // --- Tooltip style (shared) ------------------------------------------------
 const TT = {
   contentStyle: {
-    background: "#FFFFFF",
-    border: "1px solid rgba(0,0,0,0.08)",
+    background: "rgba(13,17,32,0.95)",
+    border: "1px solid rgba(99,146,255,0.12)",
     borderRadius: "8px",
     fontSize: "11px",
-    color: "#0A0A0B",
-    boxShadow: "0 4px 16px rgba(0,0,0,0.10)",
+    color: "#F0F0F4",
+    boxShadow: "0 8px 32px rgba(0,0,0,0.60)",
     padding: "8px 10px",
+    backdropFilter: "blur(16px)",
   },
-  labelStyle: { color: "#52525B", fontSize: "9px", marginBottom: "4px", textTransform: "uppercase" as const, letterSpacing: "0.1em" },
-  itemStyle: { color: "#0A0A0B", fontSize: "11px" },
+  labelStyle: { color: "#6F6D7A", fontSize: "9px", marginBottom: "4px", textTransform: "uppercase" as const, letterSpacing: "0.1em" },
+  itemStyle: { color: "#F0F0F4", fontSize: "11px" },
 };
 
 // --- Accordion item -------------------------------------------------------
@@ -62,8 +63,8 @@ function Accordion({
           {badge}
         </div>
         {expanded
-          ? <ChevronDown size={13} className="text-[#4F4D58]" />
-          : <ChevronRight size={13} className="text-[#4F4D58]" />}
+          ? <ChevronDown size={13} className="text-[#6F6D7A]" />
+          : <ChevronRight size={13} className="text-[#6F6D7A]" />}
       </button>
       <AnimatePresence initial={false}>
         {expanded && (
@@ -442,7 +443,7 @@ export default function AnalyticsPage() {
           {/* Export */}
           <button
             onClick={handleExport}
-            className="flex items-center gap-1 text-[10px] text-[#71717A] hover:text-text-primary transition-colors border border-[rgba(0,0,0,0.08)] px-2.5 py-1.5 rounded-md"
+            className="flex items-center gap-1 text-[10px] text-[#71717A] hover:text-text-primary transition-colors border border-border-subtle px-2.5 py-1.5 rounded-md"
             title="Export report as JSON"
 >
             <Download size={11} />
@@ -516,7 +517,7 @@ export default function AnalyticsPage() {
             <div className="flex items-center gap-2 flex-wrap">
               <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)}
                 className="input text-[10px] px-2 py-1 w-32" aria-label="Start date" />
-              <span className="text-[#4F4D58] text-[10px]">&rarr;</span>
+              <span className="text-[#6F6D7A] text-[10px]">&rarr;</span>
               <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)}
                 className="input text-[10px] px-2 py-1 w-32" aria-label="End date" />
             </div>
@@ -539,7 +540,7 @@ export default function AnalyticsPage() {
 
             <div className="relative px-8 pt-8 pb-7">
               {/* MRR label */}
-              <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#52525B] mb-2">
+              <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#6F6D7A] mb-2">
                 Monthly Recurring Revenue
               </p>
               {/* Giant MRR */}
@@ -554,7 +555,7 @@ export default function AnalyticsPage() {
               </motion.p>
 
               {/* Divider */}
-              <div className="my-6 h-px bg-gradient-to-r from-transparent via-[rgba(0,0,0,0.08)] to-transparent" />
+              <div className="my-6 h-px bg-gradient-to-r from-transparent via-white/[0.05] to-transparent" />
 
               {/* Stats � editorial split: hero first stat + 3-stat support strip */}
               <div className="flex flex-col md:flex-row gap-0 md:items-stretch">
@@ -565,7 +566,7 @@ export default function AnalyticsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.38, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
 >
-                  <p className="text-xs text-[#52525B] uppercase tracking-widest font-normal">Total Leads</p>
+                  <p className="text-xs text-[#6F6D7A] uppercase tracking-widest font-normal">Total Leads</p>
                   <p
                     className="font-display text-4xl font-bold tracking-[-0.04em] mt-1 text-text-primary"
                     style={{ fontVariantNumeric: "tabular-nums" }}
@@ -578,8 +579,8 @@ export default function AnalyticsPage() {
                 </motion.div>
 
                 {/* Divider */}
-                <div className="hidden md:block w-px self-stretch bg-[rgba(0,0,0,0.08)] mx-0" />
-                <div className="block md:hidden h-px w-full bg-[rgba(0,0,0,0.08)] my-3" />
+                <div className="hidden md:block w-px self-stretch bg-white/[0.10] mx-0" />
+                <div className="block md:hidden h-px w-full bg-white/[0.10] my-3" />
 
                 {/* Support stats strip � 3 remaining */}
                 <div className="flex flex-1 grid-cols-3 md:pl-6">
@@ -592,12 +593,12 @@ export default function AnalyticsPage() {
                   ].map((stat, i) => (
                     <motion.div
                       key={stat.label}
-                      className={`flex-1 py-1 ${i> 0 ? "pl-6 border-l border-[rgba(0,0,0,0.08)]" : ""} ${i < 2 ? "pr-6" : ""}`}
+                      className={`flex-1 py-1 ${i> 0 ? "pl-6 border-l border-border-subtle" : ""} ${i < 2 ? "pr-6" : ""}`}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.22 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
 >
-                      <p className="text-xs text-[#52525B] uppercase tracking-widest font-normal">{stat.label}</p>
+                      <p className="text-xs text-[#6F6D7A] uppercase tracking-widest font-normal">{stat.label}</p>
                       <div className="flex items-end justify-between gap-2 mt-1">
                         <p className="font-display text-xl font-semibold tracking-[-0.03em] text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {stat.value}
@@ -614,13 +615,13 @@ export default function AnalyticsPage() {
 
               {/* Footer context */}
               {(stats.activeClients> 0 || stats.contentPublished> 0) && (
-                <div className="mt-5 pt-4 border-t border-[rgba(0,0,0,0.08)] flex items-center gap-4">
-                  <span className="text-[10px] text-[#52525B]">
+                <div className="mt-5 pt-4 border-t border-border-subtle flex items-center gap-4">
+                  <span className="text-[10px] text-[#6F6D7A]">
                     <span className="text-[#71717A] font-medium [font-variant-numeric:tabular-nums]">{stats.activeClients}</span>{" "}
                     active client{stats.activeClients !== 1 ? "s" : ""}
                   </span>
                   {stats.contentPublished> 0 && (
-                    <span className="text-[10px] text-[#52525B]">
+                    <span className="text-[10px] text-[#6F6D7A]">
                       <span className="text-[#71717A] font-medium [font-variant-numeric:tabular-nums]">{stats.contentPublished}</span>{" "}
                       posts published
                     </span>
@@ -639,18 +640,18 @@ export default function AnalyticsPage() {
 >
 
             {/* Lead velocity area chart */}
-            <div className="glass rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-4">
+            <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-4">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Acquisition</p>
                   <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5">
                     Lead Velocity
-                    <span className="ml-2 text-[10px] font-normal text-[#4F4D58]">� {dateRange === "custom" ? "Custom" : dateRange}</span>
+                    <span className="ml-2 text-[10px] font-normal text-[#6F6D7A]">� {dateRange === "custom" ? "Custom" : dateRange}</span>
                   </h2>
                 </div>
               </div>
               {leadsByDay.length === 0 ? (
-                <div className="h-48 flex items-center justify-center text-[11px] text-[#4F4D58]">
+                <div className="h-48 flex items-center justify-center text-[11px] text-[#6F6D7A]">
                   No lead data for this period
                 </div>
               ) : (
@@ -663,9 +664,9 @@ export default function AnalyticsPage() {
                           <stop offset="85%" stopColor="#2563EB" stopOpacity={0} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="2 6" stroke="rgba(0,0,0,0.08)" vertical={false} />
-                      <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} />
-                      <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={28} />
+                      <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                      <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} />
+                      <YAxis tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} width={28} />
                       <Tooltip {...TT} cursor={{ stroke: "rgba(0,0,0,0.12)", strokeDasharray: "2 4" }} />
                       <Area
                         type="monotone" dataKey="count" name="Leads"
@@ -679,11 +680,11 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Lead sources */}
-            <div className="glass rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5">
+            <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-5">
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Channels</p>
               <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Lead Sources</h2>
               {leadsBySource.length === 0 ? (
-                <div className="flex items-center justify-center h-40 text-[11px] text-[#4F4D58]">
+                <div className="flex items-center justify-center h-40 text-[11px] text-[#6F6D7A]">
                   No source data yet
                 </div>
               ) : (
@@ -696,7 +697,7 @@ export default function AnalyticsPage() {
                         <span className="text-[10px] text-text-muted w-20 text-right shrink-0 capitalize truncate">
                           {s.source.replace(/_/g, " ")}
                         </span>
-                        <div className="flex-1 h-1.5 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
+                        <div className="flex-1 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
                           <motion.div
                             className="h-full rounded-full"
                             style={{ background: CHART_COLORS[i % CHART_COLORS.length] }}
@@ -728,7 +729,7 @@ export default function AnalyticsPage() {
 >
 
             {/* Conversion funnel */}
-            <div className="glass rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5">
+            <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-5">
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Sales Pipeline</p>
               <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Conversion Funnel</h2>
               <div className="space-y-3">
@@ -750,13 +751,13 @@ export default function AnalyticsPage() {
                             {stage.value.toLocaleString()}
                           </span>
                           {convRate !== null && (
-                            <span className="text-[9px] text-[#4F4D58]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                            <span className="text-[9px] text-[#6F6D7A]" style={{ fontVariantNumeric: "tabular-nums" }}>
                               {convRate}%
                             </span>
                           )}
                         </div>
                       </div>
-                      <div className="h-1.5 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
                         <motion.div
                           className="h-full rounded-full"
                           style={{ background: stage.fill }}
@@ -769,7 +770,7 @@ export default function AnalyticsPage() {
                   );
                 })}
               </div>
-              <div className="mt-5 pt-4 border-t border-[rgba(0,0,0,0.08)] flex items-baseline justify-between">
+              <div className="mt-5 pt-4 border-t border-border-subtle flex items-baseline justify-between">
                 <span className="text-[10px] text-[#6F6D7A]">Overall conversion</span>
                 <span
                   className="font-display text-xl font-bold text-text-primary tracking-[-0.02em]"
@@ -783,20 +784,20 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Outreach performance */}
-            <div className="glass rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-4">
+            <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-4">
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Engagement</p>
               <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-4">Outreach Performance</h2>
               {outreachByDay.length === 0 ? (
-                <div className="h-48 flex items-center justify-center text-[11px] text-[#4F4D58]">
+                <div className="h-48 flex items-center justify-center text-[11px] text-[#6F6D7A]">
                   No outreach data for this period
                 </div>
               ) : (
                 <div className="h-48">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={outreachByDay} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="2 6" stroke="rgba(0,0,0,0.08)" vertical={false} />
-                      <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} />
-                      <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={28} />
+                      <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                      <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} />
+                      <YAxis tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} width={28} />
                       <Tooltip {...TT} />
                       <Line type="monotone" dataKey="sent" stroke="#2563EB" strokeWidth={1.5} dot={false} name="Sent" />
                       <Line type="monotone" dataKey="replies" stroke="#1D4ED8" strokeWidth={1.5} dot={false} name="Replies" />
@@ -822,7 +823,7 @@ export default function AnalyticsPage() {
 
             {/* Top industries */}
             <motion.div
-              className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white px-6 pt-5 pb-5"
+              className="glass rounded-xl px-6 pt-5 pb-5"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.44, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
@@ -830,7 +831,7 @@ export default function AnalyticsPage() {
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Verticals</p>
               <h2 className="font-display text-[15px] font-semibold text-text-primary tracking-[-0.02em] mt-0.5 mb-5">Top Industries</h2>
               {leadsByIndustry.length === 0 ? (
-                <p className="text-[11px] text-[#4F4D58] py-4">No industry data yet</p>
+                <p className="text-[11px] text-[#6F6D7A] py-4">No industry data yet</p>
               ) : (
                 <div className="space-y-2.5">
                   {leadsByIndustry.slice(0, 6).map((ind, i) => {
@@ -847,7 +848,7 @@ export default function AnalyticsPage() {
                         <span className="text-[10px] text-text-muted w-20 shrink-0 truncate capitalize">
                           {ind.industry.replace(/_/g, " ")}
                         </span>
-                        <div className="flex-1 h-1 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
+                        <div className="flex-1 h-1 bg-white/[0.06] rounded-full overflow-hidden">
                           <motion.div
                             className="h-full rounded-full bg-[#3B82F6]"
                             initial={{ width: 0 }}
@@ -870,9 +871,8 @@ export default function AnalyticsPage() {
 
             {/* Monthly goals */}
             <motion.div
-              className="relative rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5 overflow-hidden"
+              className="relative glass rounded-xl px-6 pt-5 pb-5 overflow-hidden"
               style={{
-                background: "rgba(59,130,246,0.03)",
                 borderTop: "2px solid rgba(59,130,246,0.4)",
               }}
               initial={{ opacity: 0, y: 12 }}
@@ -897,7 +897,7 @@ export default function AnalyticsPage() {
                           {Math.round(pct)}%
                         </span>
                       </div>
-                      <div className="h-1 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
+                      <div className="h-1 bg-white/[0.06] rounded-full overflow-hidden">
                         <motion.div
                           className="h-full rounded-full"
                           style={{ background: barColor }}
@@ -914,7 +914,7 @@ export default function AnalyticsPage() {
 
             {/* Benchmarks */}
             <motion.div
-              className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white px-6 pt-5 pb-5"
+              className="glass rounded-xl px-6 pt-5 pb-5"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.44, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
@@ -929,10 +929,10 @@ export default function AnalyticsPage() {
                   return (
                     <div key={b.metric} className="flex items-center gap-2.5">
                       <span className="text-[10px] text-[#6F6D7A] w-24 shrink-0 truncate">{b.metric}</span>
-                      <div className="flex-1 relative h-1.5 bg-[rgba(0,0,0,0.07)] rounded-full overflow-hidden">
+                      <div className="flex-1 relative h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
                         {/* Industry avg */}
                         <div
-                          className="absolute h-full rounded-full bg-[rgba(0,0,0,0.08)]"
+                          className="absolute h-full rounded-full bg-white/[0.10]"
                           style={{ width: `${indPct}%` }}
  />
                         {/* Your score */}
@@ -954,14 +954,14 @@ export default function AnalyticsPage() {
                   );
                 })}
               </div>
-              <div className="flex items-center gap-3 mt-4 pt-3 border-t border-[rgba(0,0,0,0.08)]">
+              <div className="flex items-center gap-3 mt-4 pt-3 border-t border-border-subtle">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-1.5 rounded-full bg-[rgba(0,0,0,0.08)]" />
-                  <span className="text-[9px] text-[#4F4D58]">Industry avg</span>
+                  <div className="w-3 h-1.5 rounded-full bg-white/[0.10]" />
+                  <span className="text-[9px] text-[#6F6D7A]">Industry avg</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-1.5 rounded-full bg-brand-accent" />
-                  <span className="text-[9px] text-[#4F4D58]">Yours</span>
+                  <span className="text-[9px] text-[#6F6D7A]">Yours</span>
                 </div>
               </div>
             </motion.div>
@@ -969,12 +969,12 @@ export default function AnalyticsPage() {
 
           {/* -- Zone 5: Scorecard strip (prism glass, staggered entrance) -- */}
           <motion.div
-            className="glass relative rounded-xl border border-[rgba(255,255,255,0.70)] overflow-hidden"
+            className="glass relative rounded-xl border border-border-subtle overflow-hidden"
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.44, ease: [0.22, 1, 0.36, 1] }}
 >
-            <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-[rgba(0,0,0,0.08)]">
+            <div className="grid grid-cols-2 md:grid-cols-4 md:divide-x divide-white/[0.06]">
               {[
                 { label: "Revenue Closed", value: formatCurrency(stats.dealValue), sub: `${stats.totalDeals} deal${stats.totalDeals !== 1 ? "s" : ""} won`, color: "#2563EB",
                   sparkData: revenueByMonth.length> 1 ? revenueByMonth.map(r => r.mrr) : undefined },
@@ -1011,7 +1011,7 @@ export default function AnalyticsPage() {
           </motion.div>
 
           {/* -- Zone 6: Real-time activity feed ---------------------------- */}
-          <div className="glass rounded-xl border border-[rgba(255,255,255,0.70)] px-6 pt-5 pb-5">
+          <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-5">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Live Stream</p>
@@ -1028,7 +1028,7 @@ export default function AnalyticsPage() {
               {activityFeed.length> 0 ? activityFeed.map((item, idx) => (
                 <motion.div
                   key={item.id}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[rgba(0,0,0,0.04)] transition-colors duration-100"
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/[0.03] transition-colors duration-100"
                   initial={{ opacity: 0, x: -4 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.2, delay: idx * 0.025 }}
@@ -1038,7 +1038,7 @@ export default function AnalyticsPage() {
                   </div>
                   <p className="text-[11px] text-text-muted flex-1 min-w-0 truncate">{item.message}</p>
                   <span
-                    className="text-[9px] text-[#4F4D58] shrink-0"
+                    className="text-[9px] text-[#6F6D7A] shrink-0"
                     style={{ fontVariantNumeric: "tabular-nums" }}
 >
                     {formatRelativeTime(item.time)}
@@ -1047,7 +1047,7 @@ export default function AnalyticsPage() {
               )) : (
                 <div className="flex flex-col items-center justify-center py-8 gap-2 text-center">
                   <Activity size={16} className="text-[#3A3840]" />
-                  <p className="text-[11px] text-[#4F4D58]">No recent activity. New events appear here in real-time.</p>
+                  <p className="text-[11px] text-[#6F6D7A]">No recent activity. New events appear here in real-time.</p>
                 </div>
               )}
             </div>
@@ -1094,9 +1094,9 @@ export default function AnalyticsPage() {
                             <stop offset="85%" stopColor="#2563EB" stopOpacity={0} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="2 6" stroke="rgba(0,0,0,0.08)" vertical={false} />
-                        <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} />
-                        <YAxis tick={{ fontSize: 9, fill: "#3A3840" }} axisLine={false} tickLine={false} width={32} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
+                        <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                        <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} />
+                        <YAxis tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} width={32} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
                         <Tooltip {...TT} formatter={(v) => formatCurrency(Number(v) || 0)} />
                         <Area type="monotone" dataKey="optimistic" stroke="#1D4ED8" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Optimistic" />
                         <Area type="monotone" dataKey="projected" stroke="#2563EB" fill="url(#forecastGrad)" strokeWidth={1.5} name="Projected" />
@@ -1105,11 +1105,11 @@ export default function AnalyticsPage() {
                     </ResponsiveContainer>
                   </div>
                   {revenueForecast.length> 0 && (
-                    <div className="grid grid-cols-3 mt-4 pt-4 border-t border-[rgba(0,0,0,0.08)]">
+                    <div className="grid grid-cols-3 mt-4 pt-4 border-t border-border-subtle">
                       {revenueForecast.map((f, i) => (
                         <div
                           key={f.month}
-                          className={`${i> 0 ? "border-l border-[rgba(0,0,0,0.08)] pl-4" : ""} ${i < 2 ? "pr-4" : ""}`}
+                          className={`${i> 0 ? "border-l border-border-subtle pl-4" : ""} ${i < 2 ? "pr-4" : ""}`}
 >
                           <p className="text-[9px] text-[#6F6D7A] uppercase tracking-wider">{f.month}</p>
                           <p
@@ -1118,7 +1118,7 @@ export default function AnalyticsPage() {
 >
                             {formatCurrency(f.projected)}
                           </p>
-                          <p className="text-[9px] text-[#4F4D58] mt-0.5">
+                          <p className="text-[9px] text-[#6F6D7A] mt-0.5">
                             {formatCurrency(f.conservative)} � {formatCurrency(f.optimistic)}
                           </p>
                         </div>
@@ -1141,7 +1141,7 @@ export default function AnalyticsPage() {
             <div className="mt-4 overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-[rgba(0,0,0,0.08)]">
+                  <tr className="border-b border-border-subtle">
                     {["Platform", "Spend", "Revenue", "ROI", "CPL"].map((h, i) => (
                       <th
                         key={h}
@@ -1163,7 +1163,7 @@ export default function AnalyticsPage() {
                       </td>
                     </tr>
                   ) : platformROI.map(p => (
-                    <tr key={p.platform} className="border-b border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.04)] transition-colors group">
+                    <tr key={p.platform} className="border-b border-border-subtle hover:bg-white/[0.03] transition-colors group">
 
                       <td className="py-3 font-medium text-text-primary">{p.platform}</td>
                       <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.spend)}</td>
@@ -1197,11 +1197,11 @@ export default function AnalyticsPage() {
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <CheckCircle size={16} className="text-text-muted" />
                   <p className="text-[11px] text-text-muted">All clients healthy</p>
-                  <p className="text-[9px] text-[#4F4D58] max-w-[200px] mx-auto">No churn signals detected. At-risk clients appear here when engagement drops.</p>
+                  <p className="text-[9px] text-[#6F6D7A] max-w-[200px] mx-auto">No churn signals detected. At-risk clients appear here when engagement drops.</p>
                 </div>
               ) : churnRiskClients.map(client => (
-                <div key={client.name} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
-                  <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F59E0B]" : client.risk === "medium" ? "bg-[#3B82F6]" : "bg-[rgba(0,0,0,0.2)]"}`} />
+                <div key={client.name} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
+                  <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F59E0B]" : client.risk === "medium" ? "bg-[#3B82F6]" : "bg-white/[0.20]"}`} />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-text-primary truncate">{client.name}</p>
                     <p className="text-[9px] text-[#6F6D7A]">{client.reason}</p>
@@ -1228,7 +1228,7 @@ export default function AnalyticsPage() {
             <div className="mt-4 overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-[rgba(0,0,0,0.08)]">
+                  <tr className="border-b border-border-subtle">
                     {["Metric", "3 mo. ago", "Last month", "This month", "Trend"].map((h, i) => (
                       <th
                         key={h}
@@ -1248,9 +1248,9 @@ export default function AnalyticsPage() {
                   ].map(row => {
                     const growth = row.last> 0 ? Math.round(((row.current - row.last) / row.last) * 100) : 0;
                     return (
-                      <tr key={row.label} className="border-b border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.04)] transition-colors">
+                      <tr key={row.label} className="border-b border-border-subtle hover:bg-white/[0.03] transition-colors">
                         <td className="py-3 font-medium text-text-primary">{row.label}</td>
-                        <td className="py-3 text-right text-[#4F4D58]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                        <td className="py-3 text-right text-[#6F6D7A]" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {row.isCurrency ? formatCurrency(row.three) : row.three}
                         </td>
                         <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
@@ -1293,8 +1293,8 @@ export default function AnalyticsPage() {
                   </Link>
                 </div>
               ) : teamMembers.map((member, i) => (
-                <div key={member.name} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
-                  <span className="text-[9px] font-mono text-[#4F4D58] w-4 shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
+                <div key={member.name} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
+                  <span className="text-[9px] font-mono text-[#6F6D7A] w-4 shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
                     {i + 1}
                   </span>
                   <div className="flex-1 min-w-0">
@@ -1373,10 +1373,10 @@ export default function AnalyticsPage() {
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <Target size={16} className="text-[#3A3840]" />
                   <p className="text-[11px] text-text-muted">No campaign data yet</p>
-                  <p className="text-[9px] text-[#4F4D58] max-w-[200px]">Attribution appears once campaigns are live and conversions tracked</p>
+                  <p className="text-[9px] text-[#6F6D7A] max-w-[200px]">Attribution appears once campaigns are live and conversions tracked</p>
                 </div>
               ) : campaignData.map((c, i) => (
-                <div key={c.campaign} className="flex items-center gap-3 p-3 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
+                <div key={c.campaign} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
                   <div
                     className="w-5 h-5 rounded flex items-center justify-center text-[9px] font-bold shrink-0"
                     style={{ background: CHART_COLORS[i % CHART_COLORS.length] + "22", color: CHART_COLORS[i % CHART_COLORS.length] }}
@@ -1409,7 +1409,7 @@ export default function AnalyticsPage() {
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <DollarSign size={16} className="text-[#3A3840]" />
                   <p className="text-[11px] text-text-muted">No CLV data yet</p>
-                  <p className="text-[9px] text-[#4F4D58] max-w-[200px]">CLV tiers appear once clients have payment records attached</p>
+                  <p className="text-[9px] text-[#6F6D7A] max-w-[200px]">CLV tiers appear once clients have payment records attached</p>
                   <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
                     Add clients <ArrowUp size={9} className="rotate-45" />
                   </Link>
@@ -1417,7 +1417,7 @@ export default function AnalyticsPage() {
               ) : (
                 <div className="space-y-2">
                   {clvData.map(tier => (
-                    <div key={tier.name} className="p-3 rounded-xl bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
+                    <div key={tier.name} className="p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-medium text-text-primary">{tier.name}</span>
                         <span className="text-[10px] text-[#6F6D7A]">{tier.count} clients</span>
@@ -1452,7 +1452,7 @@ export default function AnalyticsPage() {
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <BarChart3 size={16} className="text-[#3A3840]" />
                   <p className="text-[11px] text-text-muted">No service breakdown yet</p>
-                  <p className="text-[9px] text-[#4F4D58] max-w-[200px]">Revenue by service type appears once deals are tagged to a service category</p>
+                  <p className="text-[9px] text-[#6F6D7A] max-w-[200px]">Revenue by service type appears once deals are tagged to a service category</p>
                 </div>
               ) : (
                 <div className="space-y-2">
