@@ -43,7 +43,7 @@ const AgentScene3D = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex aspect-video w-full items-center justify-center  border border-[rgba(0,0,0,0.08)] bg-[#FAFAFB]">
+      <div className="flex aspect-video w-full items-center justify-center border border-border-subtle bg-white/[0.03]">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600/30 border-t-blue-600" />
           <p className="text-xs font-medium text-text-primary/40 tracking-widest uppercase">Loading 3D scene…</p>
@@ -188,7 +188,7 @@ export default function AgentOfficePage() {
 
   if (authLoading) {
     return (
-      <MotionPage className="fade-in space-y-5"><div className="h-24 animate-pulse  bg-[rgba(0,0,0,0.05)]" /><div className="h-[60vh] animate-pulse  bg-[rgba(0,0,0,0.05)]" /></MotionPage>
+      <MotionPage className="fade-in space-y-5"><div className="h-24 animate-pulse  bg-white/[0.05]" /><div className="h-[60vh] animate-pulse  bg-white/[0.05]" /></MotionPage>
     );
   }
 
@@ -306,7 +306,7 @@ export default function AgentOfficePage() {
       </div>
 
       {/* Legend strip below canvas */}
-      <div className=" border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] p-3">
+      <div className="border border-border-subtle bg-white/[0.04] p-3">
         <div className="mb-2 flex items-center justify-between px-1">
           <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-text-primary/55">
             Roster

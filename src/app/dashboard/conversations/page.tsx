@@ -102,14 +102,14 @@ interface Message {
 
 // -- Channel chrome ---------------------------------------------------
 const CHANNEL_META: Record<Channel, { label: string; icon: React.ReactNode; tone: string }> = {
-  email: { label: "Email", icon: <Mail size={14} />, tone: "text-sky-700 bg-sky-500/10 border-sky-500/30" },
-  sms: { label: "SMS", icon: <MessageSquare size={14} />, tone: "text-emerald-700 bg-emerald-500/10 border-emerald-500/30" },
-  whatsapp: { label: "WhatsApp", icon: <MessageCircle size={14} />, tone: "text-green-700 bg-green-500/10 border-green-500/30" },
-  telegram: { label: "Telegram", icon: <Send size={14} />, tone: "text-cyan-700 bg-cyan-500/10 border-cyan-500/30" },
-  instagram: { label: "Instagram", icon: <Camera size={14} />, tone: "text-pink-700 bg-pink-500/10 border-pink-500/30" },
-  slack: { label: "Slack", icon: <Hash size={14} />, tone: "text-violet-700 bg-violet-500/10 border-violet-500/30" },
-  discord: { label: "Discord", icon: <Hash size={14} />, tone: "text-indigo-700 bg-indigo-500/10 border-indigo-500/30" },
-  web_chat: { label: "Web Chat", icon: <Globe size={14} />, tone: "text-amber-700 bg-amber-500/10 border-amber-500/30" },
+  email: { label: "Email", icon: <Mail size={14} />, tone: "text-sky-400 bg-sky-500/10 border-sky-500/30" },
+  sms: { label: "SMS", icon: <MessageSquare size={14} />, tone: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" },
+  whatsapp: { label: "WhatsApp", icon: <MessageCircle size={14} />, tone: "text-green-400 bg-green-500/10 border-green-500/30" },
+  telegram: { label: "Telegram", icon: <Send size={14} />, tone: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30" },
+  instagram: { label: "Instagram", icon: <Camera size={14} />, tone: "text-pink-400 bg-pink-500/10 border-pink-500/30" },
+  slack: { label: "Slack", icon: <Hash size={14} />, tone: "text-violet-400 bg-violet-500/10 border-violet-500/30" },
+  discord: { label: "Discord", icon: <Hash size={14} />, tone: "text-indigo-400 bg-indigo-500/10 border-indigo-500/30" },
+  web_chat: { label: "Web Chat", icon: <Globe size={14} />, tone: "text-amber-400 bg-amber-500/10 border-amber-500/30" },
 };
 
 const FILTERS: { key: FilterKey; label: string }[] = [
