@@ -219,7 +219,7 @@ export default function DealsPage() {
               <div className="space-y-3 mb-4">
                 <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3">
                   <motion.div
-                    className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -231,7 +231,7 @@ export default function DealsPage() {
                     </div>
                   </motion.div>
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -240,7 +240,7 @@ export default function DealsPage() {
                     <p className="text-[11px] text-text-muted mt-1.5">closed won</p>
                   </motion.div>
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -251,7 +251,7 @@ export default function DealsPage() {
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -260,7 +260,7 @@ export default function DealsPage() {
                     <p className="text-[11px] text-text-muted mt-1.5">probability-adj.</p>
                   </motion.div>
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -269,7 +269,7 @@ export default function DealsPage() {
                     <p className="text-[11px] text-text-muted mt-1.5">close rate</p>
                   </motion.div>
                   <motion.div
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.26, ease: [0.22, 1, 0.36, 1] }}
                   >
@@ -292,7 +292,7 @@ export default function DealsPage() {
               <motion.div
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white border border-[rgba(59,130,246,0.15)] rounded-xl p-4 space-y-3 shadow-sm"
+                className="glass border border-brand-accent/15 rounded-xl p-4 space-y-3"
 >
                 <h3 className="text-sm font-semibold">Quick Create Deal</h3>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
@@ -351,7 +351,7 @@ export default function DealsPage() {
                               draggable
                               onDragStart={() => onDragStart(deal.id)}
                               onClick={() => setExpandedDeal(expandedDeal === deal.id ? null : deal.id)}
-                              className="glass rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-[rgba(0,0,0,0.12)] transition-colors border border-[rgba(255,255,255,0.70)]">
+                              className="glass rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-border transition-colors border border-[rgba(255,255,255,0.70)]">
                               <p className="text-[11px] font-semibold truncate">{deal.title}</p>
                               <p className="text-[9px] text-muted">{deal.client_name}</p>
                               <p className="text-sm font-bold mt-1" style={{ color: stage.color }}>{formatCurrency(Number(deal.value))}</p>
@@ -360,7 +360,7 @@ export default function DealsPage() {
                                 <span className="text-[8px] text-muted">{deal.probability}% prob</span>
                               </div>
                               {expandedDeal === deal.id && (
-                                <div className="mt-2 pt-2 border-t border-[rgba(0,0,0,0.08)] space-y-1.5">
+                                <div className="mt-2 pt-2 border-t border-border-subtle space-y-1.5">
                                   <p className="text-[9px]"><span className="text-muted">Source:</span> {deal.source || "N/A"}</p>
                                   <p className="text-[9px]"><span className="text-muted">Email:</span> {deal.contact_email || "N/A"}</p>
                                   <p className="text-[9px]"><span className="text-muted">Close:</span> {deal.expected_close_date || "N/A"}</p>
@@ -437,7 +437,7 @@ export default function DealsPage() {
                     {(["month", "quarter"] as const).map(p => (
                       <button key={p} onClick={() => setForecastPeriod(p)}
                         className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                          forecastPeriod === p ? "bg-brand-accent/80/10 text-brand-accent border border-[#1D4ED8]/20" : "text-muted border border-[rgba(0,0,0,0.08)]"
+                          forecastPeriod === p ? "bg-brand-accent/80/10 text-brand-accent border border-[#1D4ED8]/20" : "text-muted border border-border-subtle"
                         }`}>{p}</button>
                     ))}
                   </div>
@@ -524,7 +524,7 @@ export default function DealsPage() {
                             <p className="text-xs font-semibold truncate">{deal.title}</p>
                             <span className="text-[9px] text-muted">({deal.client_name})</span>
                           </div>
-                          <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 mt-1.5">
+                          <div className="w-full bg-white/[0.06] rounded-full h-1.5 mt-1.5">
                             <div className={`${scoreBg} rounded-full h-1.5`} style={{ width: `${score}%` }} />
                           </div>
                           <div className="flex gap-4 mt-1.5 text-[9px] text-muted">
@@ -556,7 +556,7 @@ export default function DealsPage() {
                       { trigger: "Proposal viewed 3+ times", action: "Notify owner + move to Negotiation" },
                       { trigger: "Deal value> $5,000", action: "Require manager approval before close" },
                     ].map((rule, i) => (
-                      <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-[rgba(0,0,0,0.08)] opacity-60" style={{ background: "rgba(255,255,255,0.88)" }}>
+                      <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border-subtle opacity-60" style={{ background: "rgba(255,255,255,0.05)" }}>
                         <div className="flex items-center gap-2">
                           <Zap size={12} className="text-brand-accent" />
                           <div>
@@ -564,7 +564,7 @@ export default function DealsPage() {
                             <p className="text-[9px] text-muted">Then: {rule.action}</p>
                           </div>
                         </div>
-                        <div className="w-8 h-4 rounded-full bg-[rgba(0,0,0,0.06)]">
+                        <div className="w-8 h-4 rounded-full bg-white/[0.06]">
                           <div className="w-3 h-3 bg-white rounded-full mt-0.5 ml-0.5" />
                         </div>
                       </div>
@@ -591,7 +591,7 @@ export default function DealsPage() {
                           key={i}
                           whileHover={{ y: -2 }}
                           onClick={() => toast("Contract templates coming soon � needs API")}
-                          className="flex items-center justify-between p-3 rounded-lg hover:border-[rgba(0,0,0,0.12)] transition-all cursor-pointer border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)" }}
+                          className="flex items-center justify-between p-3 rounded-lg hover:border-border transition-all cursor-pointer border border-border-subtle" style={{ background: "rgba(255,255,255,0.05)" }}
 >
                           <div className="flex items-center gap-2">
                             <FileText size={14} className="text-muted" />
@@ -626,7 +626,7 @@ export default function DealsPage() {
                           <button
                             key={s}
                             onClick={() => toast(`${s} service selection coming soon � needs proposal builder`)}
-                            className="text-[9px] px-2 py-1 rounded border border-[rgba(0,0,0,0.10)] hover:border-[#1D4ED8]/30 hover:bg-brand-accent/80/5 text-muted hover:text-brand-accent transition-all"
+                            className="text-[9px] px-2 py-1 rounded border border-border hover:border-[#1D4ED8]/30 hover:bg-brand-accent/80/5 text-muted hover:text-brand-accent transition-all"
 >{s}</button>
                         ))}
                       </div>
@@ -667,7 +667,7 @@ export default function DealsPage() {
                 </motion.div>
                 {/* Deal-by-deal breakdown */}
                 <PrismPanel rainbow padding="p-0" className="overflow-hidden">
-                  <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.08)]">
+                  <div className="px-4 py-3 border-b border-border-subtle">
                     <h4 className="text-xs font-semibold">Commission Breakdown</h4>
                   </div>
                   <div className="p-4 space-y-1.5">
@@ -691,14 +691,14 @@ export default function DealsPage() {
                           <motion.div
                             key={deal.id}
                             variants={slideX}
-                            className="grid grid-cols-5 text-[10px] py-2 px-2 rounded-lg hover:bg-[rgba(0,0,0,0.02)] items-center transition-colors border border-[rgba(0,0,0,0.06)]" style={{ background: "rgba(255,255,255,0.88)" }}
+                            className="grid grid-cols-5 text-[10px] py-2 px-2 rounded-lg hover:bg-white/[0.03] items-center transition-colors border border-border-subtle" style={{ background: "rgba(255,255,255,0.05)" }}
 >
                             <span className="font-medium truncate">{deal.title}</span>
                             <span>{formatCurrency(amt)}</span>
                             <span className="text-brand-accent">{(rate * 100).toFixed(0)}%</span>
                             <span className="font-bold text-emerald-700">{formatCurrency(commission)}</span>
                             <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
-                              deal.stage === "closed_won" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-amber-50 text-amber-700 border border-amber-200"
+                              deal.stage === "closed_won" ? "bg-emerald-400/10 text-emerald-400 border border-emerald-400/20" : "bg-amber-400/10 text-amber-400 border border-amber-400/20"
                             }`}>{deal.stage === "closed_won" ? "Paid" : "Pending"}</span>
                           </motion.div>
                         );
