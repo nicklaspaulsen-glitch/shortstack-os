@@ -216,6 +216,7 @@ const navItems: NavItem[] = [
   { label: "API Keys", href: "/dashboard/api/keys", icon: <NavIcon3D name="Key" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
   { label: "API Webhooks", href: "/dashboard/api/webhooks", icon: <NavIcon3D name="Webhook" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
   { label: "Activity Log", href: "/dashboard/activity-log", icon: <NavIcon3D name="ClipboardList" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
+  { label: "Audit Trail", href: "/dashboard/audit", icon: <NavIcon3D name="ShieldCheck" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
 
   // ── Workspace (team collaboration — internal team tools) ──
   // Apr 28: positioned between Automate and Manage. Not at the very
