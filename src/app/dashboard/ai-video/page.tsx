@@ -8,7 +8,7 @@ import {
   Film, Sparkles, Play, Download,
   Clock, Monitor, Zap, Layers,
   Wand2, Palette, Camera, Music, Type, Lock,
-  ChevronDown, ChevronRight, AlertCircle, Edit3, Loader2,
+  ChevronDown, ChevronRight, AlertCircle, Edit3, Loader2, Image,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
@@ -141,6 +141,7 @@ export default function AIVideoPage() {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const [handoffingId, setHandoffingId] = useState<string | null>(null);
+  const [thumbnailCapturingId, setThumbnailCapturingId] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
   const [aspectRatio, setAspectRatio] = useState("9:16");
   const [style, setStyle] = useState("cinematic");
@@ -491,6 +492,99 @@ export default function AIVideoPage() {
       toast.error("Connection error");
     }
     setGenerating(false);
+  }
+
+  /**
+   * extractBestFrame — peepshow-style thumbnail auto-select.
+   *
+   * 1. Loads the video URL into a hidden <video> element.
+   * 2. Seeks to N evenly-spaced timestamps and captures each frame via <canvas>.
+   * 3. Sends the frames (as JPEG data URLs) to /api/video/best-frame (Claude Vision).
+   * 4. Stores the winning frame in sessionStorage under "ss-thumb-seed-image".
+   * 5. Navigates to /dashboard/thumbnail-generator which reads the seed on mount.
+   */
+  async function extractBestFrame(resultId: string, videoUrl: string, videoPrompt: string) {
+    setThumbnailCapturingId(resultId);
+    try {
+      const NUM_SAMPLES = 6; // balance quality vs. payload size
+
+      const frames = await new Promise<string[]>((resolve, reject) => {
+        const video = document.createElement("video");
+        video.crossOrigin = "anonymous";
+        video.muted = true;
+        video.preload = "auto";
+        video.src = videoUrl;
+
+        video.addEventListener("error", () => reject(new Error("Video load failed")));
+
+        video.addEventListener("loadedmetadata", () => {
+          const duration = video.duration;
+          if (!Number.isFinite(duration) || duration <= 0) {
+            reject(new Error("Invalid video duration"));
+            return;
+          }
+
+          const canvas = document.createElement("canvas");
+          // Cap frame size — 320px wide keeps payload small while Claude Vision handles it fine
+          canvas.width = 320;
+          canvas.height = Math.round(320 * (video.videoHeight / (video.videoWidth || 1)));
+          const ctx = canvas.getContext("2d");
+          if (!ctx) { reject(new Error("Canvas unavailable")); return; }
+
+          const captured: string[] = [];
+          let seeking = false;
+          let sampleIdx = 0;
+
+          // Timestamps: skip the very first and last 5% (often black frames)
+          const timestamps = Array.from({ length: NUM_SAMPLES }, (_, i) =>
+            duration * (0.05 + (i / (NUM_SAMPLES - 1)) * 0.90)
+          );
+
+          const captureNext = () => {
+            if (sampleIdx >= timestamps.length) { resolve(captured); return; }
+            if (seeking) return;
+            seeking = true;
+            video.currentTime = timestamps[sampleIdx];
+          };
+
+          video.addEventListener("seeked", () => {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            captured.push(canvas.toDataURL("image/jpeg", 0.75));
+            seeking = false;
+            sampleIdx++;
+            captureNext();
+          });
+
+          captureNext();
+        });
+      });
+
+      const res = await fetch("/api/video/best-frame", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ frames, prompt: videoPrompt }),
+      });
+
+      if (!res.ok) throw new Error(`best-frame API ${res.status}`);
+      const data = await res.json() as { best_index: number; reason: string; best_frame: string };
+
+      // Store the winning frame so the thumbnail generator can seed itself
+      try {
+        sessionStorage.setItem("ss-thumb-seed-image", data.best_frame);
+        sessionStorage.setItem("ss-thumb-seed-reason", data.reason);
+        sessionStorage.removeItem("thumbnail-ai-starter-skipped"); // re-show the AI starter
+      } catch {
+        // sessionStorage unavailable — still navigate, generator will open empty
+      }
+
+      toast.success(`Best frame selected — ${data.reason}`);
+      router.push("/dashboard/thumbnail-generator");
+    } catch (err) {
+      console.error("[ai-video] extractBestFrame error:", err);
+      toast.error("Could not extract frames. Try again.");
+    } finally {
+      setThumbnailCapturingId(null);
+    }
   }
 
   return (
@@ -900,6 +994,22 @@ export default function AIVideoPage() {
                                 ? <Loader2 size={10} className="animate-spin" />
                                 : <Edit3 size={10} />}
                               Edit
+                            </button>
+                            <button
+                              disabled={thumbnailCapturingId === result.id}
+                              title="Auto-select best thumbnail frame with AI"
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                if (result.url) {
+                                  await extractBestFrame(result.id, result.url, result.prompt);
+                                }
+                              }}
+                              className="flex items-center gap-1 hover:text-[#3B82F6] transition-colors disabled:opacity-40"
+                            >
+                              {thumbnailCapturingId === result.id
+                                ? <Loader2 size={10} className="animate-spin" />
+                                : <Image size={10} />}
+                              Thumb
                             </button>
                           </div>
                         )}

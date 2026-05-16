@@ -82,6 +82,45 @@ export default function ThumbnailEditorProPage() {
     setHasElectron(typeof window !== "undefined" && !!window.electron);
   }, []);
 
+  // ── Seed from AI-video "Thumb" action (peepshow auto-select) ────────────
+  // When the user clicks "Thumb" on a generated video, the best frame is
+  // stored in sessionStorage under "ss-thumb-seed-image". We read it once
+  // on mount, add it as a full-canvas image layer, and clear the key so
+  // subsequent visits start with a blank canvas.
+  useEffect(() => {
+    try {
+      const seedDataUrl = sessionStorage.getItem("ss-thumb-seed-image");
+      if (!seedDataUrl || !seedDataUrl.startsWith("data:image/")) return;
+
+      // Clear immediately so a refresh/back-nav doesn't re-seed
+      sessionStorage.removeItem("ss-thumb-seed-image");
+      sessionStorage.removeItem("ss-thumb-seed-reason");
+
+      const img = new window.Image();
+      img.onload = () => {
+        const maxW = state.canvasWidth;
+        const maxH = state.canvasHeight;
+        // Cover-fill: scale up to fill the canvas while preserving aspect
+        const scale = Math.max(maxW / img.width, maxH / img.height);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        const layer = createImageLayer(seedDataUrl, {
+          x: (maxW - w) / 2,
+          y: (maxH - h) / 2,
+          width: w,
+          height: h,
+          name: "AI Video Frame",
+        });
+        commit({ type: "ADD_LAYER", layer }, "Seed from AI video");
+      };
+      img.src = seedDataUrl;
+    } catch {
+      // sessionStorage unavailable — silently skip
+    }
+    // Run only once on mount; state.canvasWidth/Height are stable after init
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Commit helper — dispatch + commit snapshot under the given label
   const commit = useCallback(
     (action: EditorAction, label: string) => {
