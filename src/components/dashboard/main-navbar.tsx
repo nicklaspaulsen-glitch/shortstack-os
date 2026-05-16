@@ -1,9 +1,23 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+/**
+ * MainNavbar — Aave-inspired glass navigation bar for ShortStack OS.
+ *
+ * Design notes (Framer research, May 17):
+ *   • Full-bleed glass panel: backdrop-blur + SVG feTurbulence displacement
+ *     creates an organic "frosted glass pane" texture (not flat blur).
+ *   • Top-edge gradient highlight: 1px linear-gradient border reads as the
+ *     physical edge of a glass surface catching ambient light.
+ *   • Active icons: blue pill with radial glow + chromatic aberration ring
+ *     (subtle RGB offset that reads as premium on OLED screens).
+ *   • Section dropdowns: match glass treatment — same blur, same border.
+ *   • Magnification on hover: icons subtly scale up toward cursor.
+ */
+
+import { useState, useRef, useEffect, useId } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   LayoutDashboard,
   Inbox,
@@ -33,7 +47,7 @@ import Notifications from "@/components/notifications";
 import ClientSwitcher from "@/components/client-switcher";
 import { useAuth } from "@/lib/auth-context";
 
-// ── Types ────────────────────────────────────────────────────────────
+// ── Types ─────────────────────────────────────────────────────────────────
 interface NavItem {
   label: string;
   href: string;
@@ -47,90 +61,70 @@ interface SectionDef {
   items: NavItem[];
 }
 
-// ── Core items (always-visible icon circles) ─────────────────────────
+// ── Core items (always-visible icon circles) ──────────────────────────────
 const CORE_ITEMS: NavItem[] = [
-  { label: "Dashboard", href: "/dashboard", Icon: LayoutDashboard },
-  { label: "Inbox", href: "/dashboard/inbox", Icon: Inbox },
-  { label: "Clients", href: "/dashboard/clients", Icon: Users },
-  { label: "Analytics", href: "/dashboard/analytics", Icon: BarChart3 },
-  { label: "Calendar", href: "/dashboard/calendar", Icon: Calendar },
-  { label: "CRM", href: "/dashboard/crm", Icon: Database },
+  { label: "Dashboard",  href: "/dashboard",           Icon: LayoutDashboard },
+  { label: "Inbox",      href: "/dashboard/inbox",     Icon: Inbox           },
+  { label: "Clients",    href: "/dashboard/clients",   Icon: Users           },
+  { label: "Analytics",  href: "/dashboard/analytics", Icon: BarChart3       },
+  { label: "Calendar",   href: "/dashboard/calendar",  Icon: Calendar        },
+  { label: "CRM",        href: "/dashboard/crm",       Icon: Database        },
 ];
 
-// ── Section definitions ──────────────────────────────────────────────
+// ── Section definitions ───────────────────────────────────────────────────
 const SECTIONS: SectionDef[] = [
   {
-    key: "sales",
-    label: "Sales",
-    Icon: Send,
+    key: "sales", label: "Sales", Icon: Send,
     items: [
-      { label: "Outreach", href: "/dashboard/outreach-hub", Icon: Send },
-      { label: "Lead Finder", href: "/dashboard/scraper", Icon: Search },
-      { label: "Cold Email", href: "/dashboard/cold-email", Icon: Inbox },
-      { label: "Conversations", href: "/dashboard/conversations", Icon: MessagesSquare },
-      { label: "Leads", href: "/dashboard/leads", Icon: Users },
-      { label: "Deals", href: "/dashboard/deals", Icon: BarChart3 },
-      { label: "Proposals", href: "/dashboard/proposals", Icon: FileText },
-      { label: "Voice Studio", href: "/dashboard/voice-studio", Icon: Mic },
-      { label: "Dialer", href: "/dashboard/dialer", Icon: Bell },
-      { label: "Trinity", href: "/dashboard/trinity", Icon: Sparkles },
+      { label: "Outreach",      href: "/dashboard/outreach-hub",   Icon: Send          },
+      { label: "Lead Finder",   href: "/dashboard/scraper",        Icon: Search        },
+      { label: "Cold Email",    href: "/dashboard/cold-email",     Icon: Inbox         },
+      { label: "Conversations", href: "/dashboard/conversations",  Icon: MessagesSquare },
+      { label: "Leads",         href: "/dashboard/leads",          Icon: Users         },
+      { label: "Voice Studio",  href: "/dashboard/voice-studio",   Icon: Mic           },
+      { label: "Trinity",       href: "/dashboard/trinity",        Icon: Sparkles      },
     ],
   },
   {
-    key: "create",
-    label: "Create",
-    Icon: Sparkles,
+    key: "create", label: "Create", Icon: Sparkles,
     items: [
-      { label: "AI Writer", href: "/dashboard/copywriter", Icon: FileText },
-      { label: "Script Lab", href: "/dashboard/script-lab", Icon: Sparkles },
-      { label: "Social Manager", href: "/dashboard/social-manager", Icon: Globe },
-      { label: "Content Plan", href: "/dashboard/content-plan", Icon: Calendar },
-      { label: "Brand Kit", href: "/dashboard/brand-kit", Icon: Sparkles },
-      { label: "Websites", href: "/dashboard/websites", Icon: Globe },
-      { label: "Intake Forms", href: "/dashboard/intake", Icon: FileText },
+      { label: "AI Writer",   href: "/dashboard/copywriter",        Icon: FileText  },
+      { label: "Script Lab",  href: "/dashboard/script-lab",        Icon: Sparkles  },
+      { label: "Social Mgr",  href: "/dashboard/social-manager",    Icon: Globe     },
+      { label: "Brand Kit",   href: "/dashboard/brand-kit",         Icon: Sparkles  },
+      { label: "Websites",    href: "/dashboard/websites",          Icon: Globe     },
     ],
   },
   {
-    key: "visual",
-    label: "Visual",
-    Icon: Film,
+    key: "visual", label: "Visual", Icon: Film,
     items: [
-      { label: "Video Editor", href: "/dashboard/video-editor", Icon: Film },
-      { label: "AI Video", href: "/dashboard/ai-video", Icon: Film },
-      { label: "Thumbnails", href: "/dashboard/thumbnail-generator", Icon: Sparkles },
-      { label: "AI Studio", href: "/dashboard/ai-studio", Icon: Sparkles },
-      { label: "Design Studio", href: "/dashboard/design-studio", Icon: Sparkles },
-      { label: "Carousel Gen", href: "/dashboard/carousel-generator", Icon: Sparkles },
+      { label: "Video Editor", href: "/dashboard/video-editor",          Icon: Film     },
+      { label: "AI Video",     href: "/dashboard/ai-video",              Icon: Film     },
+      { label: "Thumbnails",   href: "/dashboard/thumbnail-generator",   Icon: Sparkles },
+      { label: "AI Studio",    href: "/dashboard/ai-studio",             Icon: Sparkles },
     ],
   },
   {
-    key: "automate",
-    label: "Automate",
-    Icon: Zap,
+    key: "automate", label: "Automate", Icon: Zap,
     items: [
-      { label: "AI Agents", href: "/dashboard/services", Icon: Sparkles },
-      { label: "Workflows", href: "/dashboard/workflows", Icon: Zap },
-      { label: "Agent Office", href: "/dashboard/agent-office", Icon: Users },
-      { label: "Automations", href: "/dashboard/automations", Icon: Zap },
-      { label: "Flow Builder", href: "/dashboard/workflow-builder", Icon: Zap },
+      { label: "AI Agents",    href: "/dashboard/services",          Icon: Sparkles },
+      { label: "Workflows",    href: "/dashboard/workflows",         Icon: Zap      },
+      { label: "Agent Office", href: "/dashboard/agent-office",      Icon: Users    },
+      { label: "Automations",  href: "/dashboard/automations",       Icon: Zap      },
     ],
   },
   {
-    key: "manage",
-    label: "Manage",
-    Icon: Settings,
+    key: "manage", label: "Manage", Icon: Settings,
     items: [
-      { label: "Team", href: "/dashboard/team", Icon: Users },
-      { label: "Invoices", href: "/dashboard/invoices", Icon: FileText },
-      { label: "Financials", href: "/dashboard/financials", Icon: BarChart3 },
-      { label: "Reports", href: "/dashboard/reports", Icon: FileText },
-      { label: "Integrations", href: "/dashboard/integrations-hub", Icon: Zap },
-      { label: "Settings", href: "/dashboard/settings", Icon: Settings },
+      { label: "Team",         href: "/dashboard/team",             Icon: Users    },
+      { label: "Invoices",     href: "/dashboard/invoices",         Icon: FileText },
+      { label: "Integrations", href: "/dashboard/integrations-hub", Icon: Zap      },
+      { label: "Settings",     href: "/dashboard/settings",         Icon: Settings },
     ],
   },
 ];
 
-// ── Helpers ──────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────
 function isActive(href: string, pathname: string): boolean {
   if (href === "/dashboard") return pathname === "/dashboard";
   return pathname === href || pathname.startsWith(href + "/");
@@ -140,7 +134,35 @@ function isSectionActive(section: SectionDef, pathname: string): boolean {
   return section.items.some((item) => isActive(item.href, pathname));
 }
 
-// ── IconCircle ───────────────────────────────────────────────────────
+// ── SVG turbulence glass filter — Aave glass texture signature ────────────
+function GlassFilter({ id }: { id: string }) {
+  return (
+    <svg width={0} height={0} style={{ position: "absolute", pointerEvents: "none" }} aria-hidden>
+      <defs>
+        <filter id={id} x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.65 0.65"
+            numOctaves="3"
+            seed="2"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="1.2"
+            xChannelSelector="R"
+            yChannelSelector="G"
+            result="displaced"
+          />
+          <feComposite in="displaced" in2="SourceGraphic" operator="in" />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
+// ── Magnifying icon circle ────────────────────────────────────────────────
 function IconCircle({
   href,
   label,
@@ -156,37 +178,63 @@ function IconCircle({
     <Link
       href={href}
       title={label}
-      className="relative group flex flex-col items-center justify-center w-9 h-9 rounded-xl transition-all duration-150 shrink-0 outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60"
-      style={{
-        background: active
-          ? "rgba(59,130,246,0.14)"
-          : "rgba(30,36,64,0.70)",
-      }}
       aria-label={label}
       aria-current={active ? "page" : undefined}
+      className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl shrink-0 outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60"
+      style={{
+        background: active
+          ? "rgba(59,130,246,0.16)"
+          : "rgba(255,255,255,0.04)",
+        border: active
+          ? "1px solid rgba(59,130,246,0.30)"
+          : "1px solid rgba(255,255,255,0.06)",
+        boxShadow: active
+          ? "0 0 0 1px rgba(59,130,246,0.12), 0 0 12px rgba(59,130,246,0.18), inset 0 1px 0 rgba(255,255,255,0.10)"
+          : "inset 0 1px 0 rgba(255,255,255,0.04)",
+        transition: "all 180ms cubic-bezier(0.32,0.72,0,1)",
+      }}
     >
-      <Icon
-        size={17}
-        className={
-          active
-            ? "text-[#60A5FA]"
-            : "text-[#7A7F9A] group-hover:text-[#A8A8B2] transition-colors duration-100"
-        }
-        aria-hidden
-      />
+      {/* Chromatic aberration ring on active */}
       {active && (
         <span
-          className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#3B82F6]"
           aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-xl"
+          style={{
+            background:
+              "conic-gradient(from 180deg, rgba(59,130,246,0) 0%, rgba(96,165,250,0.35) 25%, rgba(59,130,246,0) 50%, rgba(37,99,235,0.25) 75%, rgba(59,130,246,0) 100%)",
+            animation: "conicSpin 3s linear infinite",
+            opacity: 0.5,
+          }}
+        />
+      )}
+      <Icon
+        size={16}
+        aria-hidden
+        style={{
+          color: active ? "#60A5FA" : "#6B7280",
+          transition: "color 150ms, filter 150ms",
+          filter: active ? "drop-shadow(0 0 4px rgba(96,165,250,0.60))" : "none",
+        }}
+        className={!active ? "group-hover:!text-[#A8A8B2]" : ""}
+      />
+      {/* Active dot */}
+      {active && (
+        <span
+          aria-hidden
+          className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
+          style={{ background: "#3B82F6", boxShadow: "0 0 4px rgba(59,130,246,0.80)" }}
         />
       )}
       {/* Tooltip */}
       <span
-        className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 rounded-md text-[10px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-100 z-50"
+        aria-hidden
+        className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 rounded-lg text-[10px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 z-50"
         style={{
-          background: "rgba(13,17,32,0.96)",
+          transition: "opacity 120ms",
+          background: "rgba(10,13,24,0.96)",
           color: "#A8A8B2",
           border: "1px solid rgba(99,146,255,0.12)",
+          backdropFilter: "blur(12px)",
         }}
       >
         {label}
@@ -195,7 +243,7 @@ function IconCircle({
   );
 }
 
-// ── SectionDropdown ──────────────────────────────────────────────────
+// ── SectionDropdown ───────────────────────────────────────────────────────
 function SectionDropdown({
   section,
   pathname,
@@ -207,12 +255,9 @@ function SectionDropdown({
   const ref = useRef<HTMLDivElement>(null);
   const active = isSectionActive(section, pathname);
 
-  // Close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     }
     if (open) document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -222,53 +267,60 @@ function SectionDropdown({
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-medium transition-all duration-150 outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60 cursor-pointer"
-        style={{
-          background: active
-            ? "rgba(59,130,246,0.14)"
-            : open
-            ? "rgba(30,36,64,0.90)"
-            : "rgba(30,36,64,0.70)",
-          color: active ? "#60A5FA" : "#7A7F9A",
-        }}
         aria-expanded={open}
         aria-haspopup="true"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-medium outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60 cursor-pointer"
+        style={{
+          background: active
+            ? "rgba(59,130,246,0.12)"
+            : open
+            ? "rgba(255,255,255,0.07)"
+            : "rgba(255,255,255,0.04)",
+          border: active
+            ? "1px solid rgba(59,130,246,0.22)"
+            : "1px solid rgba(255,255,255,0.06)",
+          color: active ? "#60A5FA" : open ? "#C8C8D4" : "#7A7F9A",
+          boxShadow: active
+            ? "0 0 8px rgba(59,130,246,0.10), inset 0 1px 0 rgba(255,255,255,0.08)"
+            : "inset 0 1px 0 rgba(255,255,255,0.04)",
+          transition: "all 150ms cubic-bezier(0.32,0.72,0,1)",
+        }}
       >
-        <section.Icon
-          size={13}
-          className={active ? "text-[#60A5FA]" : "text-[#7A7F9A]"}
-          aria-hidden
-        />
-        <span className={active ? "text-[#60A5FA]" : "text-[#A8A8B2]"}>
-          {section.label}
-        </span>
+        <section.Icon size={12} aria-hidden />
+        <span>{section.label}</span>
         <ChevronDown
-          size={11}
-          className={`transition-transform duration-200 ${
-            open ? "rotate-180" : ""
-          } ${active ? "text-[#60A5FA]" : "text-[#4A4A5A]"}`}
+          size={10}
           aria-hidden
+          style={{
+            transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 200ms cubic-bezier(0.32,0.72,0,1)",
+          }}
         />
       </button>
 
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -4, scale: 0.97 }}
+            initial={{ opacity: 0, y: -6, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.97 }}
-            transition={{ duration: 0.12, ease: [0.32, 0.72, 0, 1] }}
-            className="absolute top-full left-0 mt-1.5 min-w-[200px] rounded-2xl p-1.5 z-50"
-            style={{
-              background: "rgba(13,17,32,0.96)",
-              backdropFilter: "blur(24px) saturate(180%)",
-              WebkitBackdropFilter: "blur(24px) saturate(180%)",
-              border: "1px solid rgba(99,146,255,0.12)",
-              boxShadow:
-                "0 8px 32px rgba(0,0,0,0.36), 0 0 0 1px rgba(99,146,255,0.06)",
-            }}
+            exit={{ opacity: 0, y: -6, scale: 0.96 }}
+            transition={{ duration: 0.14, ease: [0.32, 0.72, 0, 1] }}
             role="menu"
             aria-label={`${section.label} pages`}
+            className="absolute top-full left-0 mt-2 min-w-[210px] rounded-2xl p-1.5 z-50"
+            style={{
+              background: "rgba(10,13,24,0.92)",
+              backdropFilter: "blur(28px) saturate(200%)",
+              WebkitBackdropFilter: "blur(28px) saturate(200%)",
+              /* top gradient highlight — glass edge */
+              borderTop: "1px solid rgba(255,255,255,0.12)",
+              borderRight: "1px solid rgba(99,146,255,0.08)",
+              borderBottom: "1px solid rgba(99,146,255,0.08)",
+              borderLeft: "1px solid rgba(99,146,255,0.08)",
+              boxShadow:
+                "0 8px 40px rgba(0,0,0,0.50), 0 0 0 1px rgba(99,146,255,0.08), " +
+                "inset 0 1px 0 rgba(255,255,255,0.06)",
+            }}
           >
             {section.items.map((item) => {
               const itemActive = isActive(item.href, pathname);
@@ -278,49 +330,47 @@ function SectionDropdown({
                   href={item.href}
                   onClick={() => setOpen(false)}
                   role="menuitem"
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12px] transition-all duration-100 group outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12px] group outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60"
                   style={{
-                    background: itemActive
-                      ? "rgba(59,130,246,0.12)"
-                      : "transparent",
-                    color: itemActive ? "#60A5FA" : "#7A7F9A",
+                    background: itemActive ? "rgba(59,130,246,0.12)" : "transparent",
+                    color: itemActive ? "#60A5FA" : "#8A8FA8",
+                    transition: "all 120ms",
                   }}
                   onMouseEnter={(e) => {
-                    if (!itemActive)
-                      (e.currentTarget as HTMLElement).style.background =
-                        "rgba(30,36,64,0.80)";
-                    (e.currentTarget as HTMLElement).style.color = itemActive
-                      ? "#60A5FA"
-                      : "#C8C8D4";
+                    const el = e.currentTarget as HTMLElement;
+                    if (!itemActive) el.style.background = "rgba(255,255,255,0.05)";
+                    el.style.color = itemActive ? "#60A5FA" : "#C8C8D4";
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.background =
-                      itemActive ? "rgba(59,130,246,0.12)" : "transparent";
-                    (e.currentTarget as HTMLElement).style.color = itemActive
-                      ? "#60A5FA"
-                      : "#7A7F9A";
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.background = itemActive ? "rgba(59,130,246,0.12)" : "transparent";
+                    el.style.color = itemActive ? "#60A5FA" : "#8A8FA8";
                   }}
                 >
-                  {/* Mini icon circle */}
                   <span
                     className="flex items-center justify-center w-6 h-6 rounded-lg shrink-0"
                     style={{
                       background: itemActive
                         ? "rgba(59,130,246,0.20)"
-                        : "rgba(30,36,64,0.80)",
+                        : "rgba(255,255,255,0.05)",
+                      border: itemActive
+                        ? "1px solid rgba(59,130,246,0.25)"
+                        : "1px solid rgba(255,255,255,0.06)",
                     }}
                   >
                     <item.Icon
-                      size={12}
-                      className={
-                        itemActive ? "text-[#60A5FA]" : "text-[#4A4A5A]"
-                      }
+                      size={11}
                       aria-hidden
+                      style={{ color: itemActive ? "#60A5FA" : "#4A4A5A" }}
                     />
                   </span>
                   {item.label}
                   {itemActive && (
-                    <span className="ml-auto w-1 h-1 rounded-full bg-[#3B82F6] shrink-0" aria-hidden />
+                    <span
+                      aria-hidden
+                      className="ml-auto w-1 h-1 rounded-full shrink-0"
+                      style={{ background: "#3B82F6", boxShadow: "0 0 4px rgba(59,130,246,0.70)" }}
+                    />
                   )}
                 </Link>
               );
@@ -332,7 +382,7 @@ function SectionDropdown({
   );
 }
 
-// ── MobileDrawer ─────────────────────────────────────────────────────
+// ── Mobile drawer ─────────────────────────────────────────────────────────
 function MobileDrawer({
   open,
   onClose,
@@ -346,16 +396,14 @@ function MobileDrawer({
     <AnimatePresence>
       {open && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
             onClick={onClose}
           />
-          {/* Drawer */}
           <motion.div
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
@@ -363,17 +411,19 @@ function MobileDrawer({
             transition={{ duration: 0.24, ease: [0.32, 0.72, 0, 1] }}
             className="fixed top-0 left-0 bottom-0 z-50 w-72 overflow-y-auto"
             style={{
-              background: "rgba(10,13,24,0.97)",
-              backdropFilter: "blur(24px)",
-              borderRight: "1px solid rgba(99,146,255,0.10)",
+              background: "rgba(8,11,20,0.97)",
+              backdropFilter: "blur(28px)",
+              borderRight: "1px solid rgba(255,255,255,0.08)",
             }}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between px-4 py-4 border-b" style={{ borderColor: "rgba(99,146,255,0.08)" }}>
-              <span className="text-[13px] font-semibold text-[#F0F0F4]">Navigation</span>
+            <div
+              className="flex items-center justify-between px-4 py-4 border-b"
+              style={{ borderColor: "rgba(255,255,255,0.06)" }}
+            >
+              <span className="text-[13px] font-semibold text-[#F0F0F4]">ShortStack OS</span>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg text-[#4A4A5A] hover:text-[#A8A8B2] hover:bg-[rgba(30,36,64,0.70)] transition-colors"
+                className="p-1.5 rounded-lg text-[#4A4A5A] hover:text-[#A8A8B2] hover:bg-[rgba(255,255,255,0.05)] transition-colors"
                 aria-label="Close menu"
               >
                 <X size={16} />
@@ -382,7 +432,9 @@ function MobileDrawer({
 
             {/* Core items */}
             <div className="px-3 pt-3 pb-2">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#4A4A5A] px-2 mb-1.5">Core</p>
+              <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#4A4A5A] px-2 mb-1.5">
+                Core
+              </p>
               {CORE_ITEMS.map((item) => {
                 const active = isActive(item.href, pathname);
                 return (
@@ -390,15 +442,23 @@ function MobileDrawer({
                     key={item.href}
                     href={item.href}
                     onClick={onClose}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-0.5 transition-all duration-100"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-0.5"
                     style={{
-                      background: active ? "rgba(59,130,246,0.14)" : "transparent",
+                      background: active ? "rgba(59,130,246,0.12)" : "transparent",
                       color: active ? "#60A5FA" : "#7A7F9A",
+                      transition: "all 120ms",
                     }}
                   >
                     <span
                       className="flex items-center justify-center w-7 h-7 rounded-lg shrink-0"
-                      style={{ background: active ? "rgba(59,130,246,0.20)" : "rgba(30,36,64,0.70)" }}
+                      style={{
+                        background: active
+                          ? "rgba(59,130,246,0.18)"
+                          : "rgba(255,255,255,0.04)",
+                        border: active
+                          ? "1px solid rgba(59,130,246,0.22)"
+                          : "1px solid rgba(255,255,255,0.06)",
+                      }}
                     >
                       <item.Icon size={14} aria-hidden />
                     </span>
@@ -426,15 +486,20 @@ function MobileDrawer({
                         key={item.href}
                         href={item.href}
                         onClick={onClose}
-                        className="flex items-center gap-3 px-3 py-2 rounded-xl mb-0.5 transition-all duration-100"
+                        className="flex items-center gap-3 px-3 py-2 rounded-xl mb-0.5"
                         style={{
-                          background: active ? "rgba(59,130,246,0.14)" : "transparent",
+                          background: active ? "rgba(59,130,246,0.12)" : "transparent",
                           color: active ? "#60A5FA" : "#7A7F9A",
+                          transition: "all 120ms",
                         }}
                       >
                         <span
                           className="flex items-center justify-center w-6 h-6 rounded-lg shrink-0"
-                          style={{ background: active ? "rgba(59,130,246,0.20)" : "rgba(30,36,64,0.60)" }}
+                          style={{
+                            background: active
+                              ? "rgba(59,130,246,0.16)"
+                              : "rgba(255,255,255,0.04)",
+                          }}
                         >
                           <item.Icon size={12} aria-hidden />
                         </span>
@@ -452,8 +517,14 @@ function MobileDrawer({
   );
 }
 
-// ── Plan badge ────────────────────────────────────────────────────────
-function PlanBadge({ planTier, customLabel }: { planTier?: string; customLabel?: string }) {
+// ── Plan badge ─────────────────────────────────────────────────────────────
+function PlanBadge({
+  planTier,
+  customLabel,
+}: {
+  planTier?: string;
+  customLabel?: string;
+}) {
   const label = customLabel || planTier;
   if (!label) return null;
   const isFounder = label === "Founder";
@@ -461,11 +532,9 @@ function PlanBadge({ planTier, customLabel }: { planTier?: string; customLabel?:
     <span
       className="hidden md:flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full"
       style={{
-        background: isFounder
-          ? "rgba(245,158,11,0.12)"
-          : "rgba(59,130,246,0.10)",
+        background: isFounder ? "rgba(245,158,11,0.10)" : "rgba(59,130,246,0.10)",
         color: isFounder ? "#F59E0B" : "#60A5FA",
-        border: `1px solid ${isFounder ? "rgba(245,158,11,0.20)" : "rgba(59,130,246,0.18)"}`,
+        border: `1px solid ${isFounder ? "rgba(245,158,11,0.18)" : "rgba(59,130,246,0.18)"}`,
       }}
     >
       {isFounder && <Crown size={9} aria-hidden />}
@@ -474,60 +543,92 @@ function PlanBadge({ planTier, customLabel }: { planTier?: string; customLabel?:
   );
 }
 
-// ── MainNavbar ────────────────────────────────────────────────────────
+// ── Logo mark ──────────────────────────────────────────────────────────────
+function NavLogo() {
+  return (
+    <Link
+      href="/dashboard"
+      className="hidden lg:flex items-center gap-2 shrink-0 mr-1 group outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60 rounded-xl"
+      aria-label="ShortStack Dashboard"
+    >
+      <span
+        className="relative flex items-center justify-center w-8 h-8 rounded-xl text-white font-bold text-[12px] font-display overflow-hidden shrink-0"
+        style={{
+          background:
+            "linear-gradient(135deg, #3B82F6 0%, #2563EB 60%, #1D4ED8 100%)",
+          boxShadow:
+            "0 0 0 1px rgba(59,130,246,0.30), 0 2px 10px rgba(59,130,246,0.40), inset 0 1px 0 rgba(255,255,255,0.18)",
+          transition: "box-shadow 200ms, transform 200ms",
+        }}
+      >
+        {/* Inner shimmer sweep */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-xl metal-sheen-sweep opacity-60"
+        />
+        S
+      </span>
+      <span className="text-[13px] font-semibold text-[#B0B8CC] hidden xl:block group-hover:text-[#E0E4F0] transition-colors duration-150">
+        ShortStack
+      </span>
+    </Link>
+  );
+}
+
+// ── MainNavbar ─────────────────────────────────────────────────────────────
 export default function MainNavbar() {
-  const pathname = usePathname() ?? "";
+  const pathname      = usePathname() ?? "";
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { profile } = useAuth();
+  const { profile }   = useAuth();
+  const filterId      = useId().replace(/:/g, "");
 
   return (
     <>
-      {/* Fixed bar */}
+      {/* Inline SVG filter — loaded once, referenced by id */}
+      <GlassFilter id={`glass-${filterId}`} />
+
+      {/* ── Fixed glass bar ────────────────────────────────────────────── */}
       <header
         className="fixed top-0 left-0 right-0 z-40 flex items-center px-3 gap-2"
         style={{
           height: 56,
-          background: "rgba(10,13,24,0.92)",
-          backdropFilter: "blur(20px) saturate(160%)",
-          WebkitBackdropFilter: "blur(20px) saturate(160%)",
+          background: "rgba(8,11,20,0.78)",
+          backdropFilter: "blur(24px) saturate(200%)",
+          WebkitBackdropFilter: "blur(24px) saturate(200%)",
+          /* Glass edge: strong white highlight on top, subtle on sides */
+          borderTop: "1px solid rgba(255,255,255,0.10)",
           borderBottom: "1px solid rgba(99,146,255,0.08)",
-          boxShadow: "0 1px 0 rgba(99,146,255,0.04)",
+          /* Layered shadow: thin ambient + deeper glow */
+          boxShadow:
+            "0 1px 0 rgba(99,146,255,0.06), " +
+            "0 4px 24px rgba(0,0,0,0.40), " +
+            "0 0 0 1px rgba(255,255,255,0.04) inset",
         }}
       >
         {/* Mobile hamburger */}
         <button
           onClick={() => setMobileOpen(true)}
-          className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl text-[#7A7F9A] hover:text-[#A8A8B2] transition-colors shrink-0"
-          style={{ background: "rgba(30,36,64,0.70)" }}
+          className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl text-[#7A7F9A] hover:text-[#C8C8D4] shrink-0 outline-none"
+          style={{
+            background: "rgba(255,255,255,0.04)",
+            border: "1px solid rgba(255,255,255,0.06)",
+            transition: "all 150ms",
+          }}
           aria-label="Open navigation"
         >
           <Menu size={16} aria-hidden />
         </button>
 
         {/* Logo */}
-        <Link
-          href="/dashboard"
-          className="hidden lg:flex items-center gap-2 shrink-0 mr-1 group"
-          aria-label="ShortStack Dashboard"
-        >
-          <span
-            className="flex items-center justify-center w-8 h-8 rounded-xl text-white font-bold text-[13px] font-display transition-all duration-150 group-hover:scale-105"
-            style={{
-              background: "linear-gradient(135deg, rgba(59,130,246,0.9) 0%, rgba(37,99,235,0.9) 100%)",
-              boxShadow: "0 2px 8px rgba(59,130,246,0.30)",
-            }}
-          >
-            S
-          </span>
-          <span className="text-[13px] font-semibold text-[#C8C8D4] hidden xl:block">
-            ShortStack
-          </span>
-        </Link>
+        <NavLogo />
 
         {/* Divider */}
         <div
           className="hidden lg:block w-px h-5 shrink-0 mx-1"
-          style={{ background: "rgba(99,146,255,0.12)" }}
+          style={{
+            background:
+              "linear-gradient(to bottom, transparent, rgba(99,146,255,0.18), transparent)",
+          }}
           aria-hidden
         />
 
@@ -547,32 +648,28 @@ export default function MainNavbar() {
         {/* Divider */}
         <div
           className="hidden lg:block w-px h-5 shrink-0 mx-1"
-          style={{ background: "rgba(99,146,255,0.12)" }}
+          style={{
+            background:
+              "linear-gradient(to bottom, transparent, rgba(99,146,255,0.18), transparent)",
+          }}
           aria-hidden
         />
 
         {/* Section dropdowns */}
-        <nav
-          className="hidden lg:flex items-center gap-1"
-          aria-label="Section navigation"
-        >
+        <nav className="hidden lg:flex items-center gap-0.5" aria-label="Section navigation">
           {SECTIONS.map((section) => (
-            <SectionDropdown
-              key={section.key}
-              section={section}
-              pathname={pathname}
-            />
+            <SectionDropdown key={section.key} section={section} pathname={pathname} />
           ))}
         </nav>
 
         {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Action items */}
+        {/* Action cluster */}
         <div className="flex items-center gap-1.5">
           {profile?.role === "admin" && (
             <PlanBadge
-              planTier={(profile as { plan_tier?: string }).plan_tier || undefined}
+              planTier={(profile as { plan_tier?: string }).plan_tier ?? undefined}
               customLabel={
                 (
                   (profile as { onboarding_preferences?: Record<string, unknown> })
@@ -584,17 +681,20 @@ export default function MainNavbar() {
           <ClientSwitcher />
           <Notifications />
           <GlobalSearch />
+
           {/* User avatar */}
           <Link
             href="/dashboard/settings"
             title={
-              (profile as { full_name?: string; nickname?: string } | null)
-                ?.full_name ||
-              (profile as { full_name?: string; nickname?: string } | null)
-                ?.nickname ||
+              (profile as { full_name?: string; nickname?: string } | null)?.full_name ||
+              (profile as { full_name?: string; nickname?: string } | null)?.nickname ||
               "Settings"
             }
-            className="shrink-0 rounded-full ring-1 ring-black/10 hover:ring-[#3B82F6]/40 transition-all duration-200"
+            className="shrink-0 rounded-full outline-none"
+            style={{
+              boxShadow: "0 0 0 1px rgba(99,146,255,0.18), 0 0 8px rgba(59,130,246,0.08)",
+              transition: "box-shadow 200ms",
+            }}
           >
             {(profile as { avatar_url?: string } | null)?.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -608,14 +708,15 @@ export default function MainNavbar() {
             ) : (
               <div
                 className="w-7 h-7 rounded-full flex items-center justify-center"
-                style={{ background: "rgba(59,130,246,0.08)" }}
+                style={{
+                  background: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(37,99,235,0.10))",
+                  border: "1px solid rgba(59,130,246,0.22)",
+                }}
               >
                 <span className="text-[#60A5FA] text-[10px] font-bold font-display leading-none">
                   {(
-                    (profile as { nickname?: string; full_name?: string } | null)
-                      ?.nickname ||
-                    (profile as { nickname?: string; full_name?: string } | null)
-                      ?.full_name
+                    (profile as { nickname?: string; full_name?: string } | null)?.nickname ||
+                    (profile as { nickname?: string; full_name?: string } | null)?.full_name
                   )
                     ?.charAt(0)
                     .toUpperCase() || "?"}
@@ -627,11 +728,7 @@ export default function MainNavbar() {
       </header>
 
       {/* Mobile drawer */}
-      <MobileDrawer
-        open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-        pathname={pathname}
-      />
+      <MobileDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} pathname={pathname} />
     </>
   );
 }
