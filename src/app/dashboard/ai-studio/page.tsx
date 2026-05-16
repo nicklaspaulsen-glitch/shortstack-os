@@ -37,15 +37,15 @@ interface JobResult {
 
 // -- Tool configs -------------------------------------------------
 const TOOLS = [
-  { id: "transcribe", name: "Transcribe", desc: "Audio/video to text with timestamps", icon: Mic, color: "#3B82F6", tag: "Whisper V3" },
-  { id: "image-gen", name: "Image Gen", desc: "Generate images from text prompts", icon: Palette, color: "#3B82F6", tag: "FLUX/DALL-E" },
-  { id: "upscale", name: "Upscale", desc: "4x AI image upscaling", icon: ArrowUpRight, color: "#3B82F6", tag: "Real-ESRGAN" },
-  { id: "remove-bg", name: "Remove BG", desc: "One-click background removal", icon: Scissors, color: "#3B82F6", tag: "REMBG/SAM" },
-  { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video", icon: Film, color: "#3B82F6", tag: "SVD" },
-  { id: "music-gen", name: "Music Gen", desc: "AI background music for videos", icon: Music, color: "#1D4ED8", tag: "MusicGen", newBadge: true },
-  { id: "voice-clone", name: "Voice Clone", desc: "Clone voice from 6 sec audio", icon: Volume2, color: "#3B82F6", tag: "XTTS v2" },
-  { id: "train-lora", name: "Brand LoRA", desc: "Train custom image style models", icon: Brain, color: "#1D4ED8", tag: "LoRA", badge: "Business+" },
-  { id: "batch-gen", name: "Batch Generate", desc: "50+ images in one go", icon: Layers, color: "#3B82F6", tag: "FLUX/SDXL" },
+  { id: "transcribe",  name: "Transcribe",      desc: "Audio/video to text with timestamps",  icon: Mic,        color: "#3B82F6", tag: "Whisper V3",   inputLabel: "Audio / Video file",     outputLabel: "Text transcript"       },
+  { id: "image-gen",  name: "Image Gen",        desc: "Generate images from text prompts",    icon: Palette,    color: "#3B82F6", tag: "FLUX/DALL-E",  inputLabel: "Text prompt",            outputLabel: "Generated image"       },
+  { id: "upscale",    name: "Upscale",          desc: "4× AI image upscaling",                icon: ArrowUpRight, color: "#3B82F6", tag: "Real-ESRGAN", inputLabel: "Low-res image",          outputLabel: "4× sharp image"        },
+  { id: "remove-bg",  name: "Remove BG",        desc: "One-click background removal",         icon: Scissors,   color: "#3B82F6", tag: "REMBG/SAM",    inputLabel: "Photo with background",  outputLabel: "Transparent PNG"       },
+  { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video",      icon: Film,       color: "#3B82F6", tag: "SVD",          inputLabel: "Still image",            outputLabel: "Short video clip"      },
+  { id: "music-gen",  name: "Music Gen",        desc: "AI background music for videos",       icon: Music,      color: "#1D4ED8", tag: "MusicGen",     inputLabel: "Style description",      outputLabel: "Background track",     newBadge: true },
+  { id: "voice-clone", name: "Voice Clone",     desc: "Clone voice from 6s audio sample",    icon: Volume2,    color: "#3B82F6", tag: "XTTS v2",      inputLabel: "6s voice sample",        outputLabel: "Cloned voice model"    },
+  { id: "train-lora", name: "Brand LoRA",       desc: "Train custom image style models",      icon: Brain,      color: "#1D4ED8", tag: "LoRA",         inputLabel: "15–20 reference photos", outputLabel: "Custom style model",   badge: "Business+" },
+  { id: "batch-gen",  name: "Batch Generate",   desc: "50+ images in one go",                 icon: Layers,     color: "#3B82F6", tag: "FLUX/SDXL",   inputLabel: "Prompt + variants",      outputLabel: "50+ images"            },
 ] as const;
 
 type ToolId = typeof TOOLS[number]["id"];
@@ -93,7 +93,7 @@ export default function AIStudioPage() {
   const [guidedPrompt, setGuidedPrompt] = useState("");
   const [toolCategory, setToolCategory] = useState<ToolCategory>("all");
   // Higgsfield studio tab
-  const [studioTab, setStudioTab] = useState<"image" | "video">("image");
+  const [studioTab, setStudioTab] = useState<"image" | "video" | "tools">("image");
 
   // Auto-open the legacy modal only on advanced-mode first visit
   useEffect(() => {
@@ -201,8 +201,8 @@ export default function AIStudioPage() {
               </button>
             ))}
             <button
-              onClick={() => setAdvancedMode(true)}
-              className="tab-pill text-[11px]"
+              onClick={() => setStudioTab("tools")}
+              className={`tab-pill${studioTab === "tools" ? " active" : ""} text-[11px]`}
             >
               <Sparkles size={11} /> AI Tools
             </button>
@@ -238,6 +238,9 @@ export default function AIStudioPage() {
                     </button>
                   </div>
                 </div>
+              )}
+              {studioTab === "tools" && (
+                <ToolDiscoveryGrid onSelect={(id) => { setActiveTool(id); setAdvancedMode(true); }} />
               )}
             </motion.div>
           </AnimatePresence>
@@ -353,7 +356,7 @@ export default function AIStudioPage() {
         </div>
 
         {/* COMMAND CENTER: tool rail left + workspace center + history right */}
-        <div className={`grid grid-cols-1 gap-3 items-start ${history.length > 0 ? "md:grid-cols-[200px_1fr_188px]" : "md:grid-cols-[200px_1fr]"}`}>
+        <div className={`grid grid-cols-1 gap-3 items-start ${history.length > 0 ? "md:grid-cols-[240px_1fr_188px]" : "md:grid-cols-[240px_1fr]"}`}>
 
           {/* Left: vertical tool list */}
           <div className="glass overflow-hidden">
@@ -405,6 +408,7 @@ export default function AIStudioPage() {
                         {tool.name}
                       </p>
                       <p className="text-[8px] font-mono text-text-muted truncate">{tool.tag}</p>
+                      <p className="text-[8px] text-text-muted/60 truncate leading-snug mt-0.5">{tool.desc}</p>
                     </div>
                     {"newBadge" in tool && tool.newBadge && (
                       <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.1)] text-brand-accent shrink-0 uppercase tracking-wide">
@@ -441,6 +445,9 @@ export default function AIStudioPage() {
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-bold text-text-primary leading-tight">{t.name}</p>
                       <p className="text-[9px] font-mono text-text-muted">{t.tag}</p>
+                      <p className="text-[9px] text-text-muted mt-0.5">
+                        {t.inputLabel}{" → "}<span className="text-brand-accent/80 font-medium">{t.outputLabel}</span>
+                      </p>
                     </div>
                     {"badge" in t && t.badge && (
                       <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(59,130,246,0.12)] text-blue-300 border border-[rgba(59,130,246,0.20)]">
@@ -560,6 +567,55 @@ export default function AIStudioPage() {
         }}
       />
     </MotionPage>
+  );
+}
+
+// -- Tool discovery grid (guided "AI Tools" tab) ------------------
+function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
+  return (
+    <div className="space-y-3">
+      <p className="text-[11px] text-text-muted">Choose a tool — click to open it in Advanced mode</p>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {TOOLS.map((tool, i) => {
+          const Icon = tool.icon;
+          return (
+            <motion.button
+              key={tool.id}
+              onClick={() => onSelect(tool.id)}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: i * 0.045, ease: [0.22, 1, 0.36, 1] }}
+              className="glass text-left p-4 rounded-2xl border border-border-subtle hover:border-[rgba(59,130,246,0.28)] transition-all hover:bg-white/[0.015] group"
+            >
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform duration-200"
+                style={{ background: `${tool.color}1c` }}
+              >
+                <Icon size={16} style={{ color: tool.color }} />
+              </div>
+              <p className="text-[12px] font-bold text-text-primary mb-1 leading-tight">{tool.name}</p>
+              <p className="text-[10px] text-text-muted leading-snug mb-3">{tool.desc}</p>
+              {/* Input → Output flow */}
+              <div className="flex items-center gap-1 flex-wrap">
+                <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/[0.05] text-text-muted font-mono">{tool.inputLabel}</span>
+                <span className="text-[8px] text-text-muted">→</span>
+                <span className="text-[8px] px-1.5 py-0.5 rounded bg-brand-accent/10 text-brand-accent/80 font-mono">{tool.outputLabel}</span>
+              </div>
+              {"badge" in tool && tool.badge && (
+                <span className="mt-2 inline-block text-[8px] font-bold px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.12)] text-blue-300">
+                  {tool.badge}
+                </span>
+              )}
+              {"newBadge" in tool && tool.newBadge && (
+                <span className="mt-2 inline-block text-[8px] font-semibold px-1.5 py-0.5 rounded-full bg-brand-accent/10 text-brand-accent uppercase tracking-wide">
+                  New
+                </span>
+              )}
+            </motion.button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
