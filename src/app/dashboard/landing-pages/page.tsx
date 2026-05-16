@@ -553,7 +553,7 @@ export default function LandingPagesPage() {
                   )}
                 </div>
                 {/* Label row */}
-                <div className="px-2.5 py-2 bg-white">
+                <div className="px-2.5 py-2 bg-surface border-t border-border">
                   <p className={`text-xs font-semibold truncate ${isSelected ? "text-[#2563EB]" : "text-text-primary"}`}>
                     {t.name}
                   </p>
@@ -1499,7 +1499,7 @@ export default function LandingPagesPage() {
           <div className="space-y-3 mb-4">
             <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3">
               <motion.div
-                className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
               >
@@ -1511,7 +1511,7 @@ export default function LandingPagesPage() {
                 </div>
               </motion.div>
               <motion.div
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
               >
@@ -1520,7 +1520,7 @@ export default function LandingPagesPage() {
                 <p className="text-[11px] text-text-muted mt-1.5">distinct sessions</p>
               </motion.div>
               <motion.div
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
               >
@@ -1531,7 +1531,7 @@ export default function LandingPagesPage() {
             </div>
             <div className="grid grid-cols-3 gap-3">
               <motion.div
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
               >
@@ -1540,7 +1540,7 @@ export default function LandingPagesPage() {
                 <p className="text-[11px] text-text-muted mt-1.5">on page</p>
               </motion.div>
               <motion.div
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.38, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
               >
@@ -1549,7 +1549,7 @@ export default function LandingPagesPage() {
                 <p className="text-[11px] text-text-muted mt-1.5">goal completions</p>
               </motion.div>
               <motion.div
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.38, delay: 0.26, ease: [0.22, 1, 0.36, 1] }}
               >

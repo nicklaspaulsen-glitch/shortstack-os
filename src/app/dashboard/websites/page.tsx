@@ -66,14 +66,14 @@ interface PriceQuote {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  draft: "bg-gray-100 text-gray-600 border-gray-200",
-  generating: "bg-blue-50 text-blue-700 border-blue-200",
-  preview: "bg-amber-50 text-amber-700 border-amber-200",
-  deploying: "bg-blue-50 text-blue-700 border-blue-200",
-  live: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  failed: "bg-red-50 text-red-700 border-red-200",
-  archived: "bg-gray-100 text-gray-600 border-gray-200",
-  expired: "bg-orange-50 text-orange-700 border-orange-200",
+  draft:      "bg-white/[0.05] text-[#A8A8B2] border-white/10",
+  generating: "bg-blue-500/15 text-blue-300 border-blue-500/25",
+  preview:    "bg-amber-500/15 text-amber-300 border-amber-500/25",
+  deploying:  "bg-blue-500/15 text-blue-300 border-blue-500/25",
+  live:       "bg-emerald-500/15 text-emerald-300 border-emerald-500/25",
+  failed:     "bg-red-500/15 text-red-300 border-red-500/25",
+  archived:   "bg-white/[0.05] text-[#A8A8B2] border-white/10",
+  expired:    "bg-orange-500/15 text-orange-300 border-orange-500/25",
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -1017,12 +1017,12 @@ export default function WebsitesPage() {
                       type="button"
                       onClick={() => setNicheFilter(filterKey)}
                       className="relative px-3 py-1 text-[11px] font-medium rounded-full transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/60"
-                      style={{ color: isActive ? "#1D4ED8" : "rgba(0,0,0,0.40)" }}
+                      style={{ color: isActive ? "#60A5FA" : "#6B7280" }}
                     >
                       {isActive && (
                         <motion.span
                           layoutId="niche-filter-pill"
-                          className="absolute inset-0 rounded-full border border-[rgba(0,0,0,0.12)] bg-[rgba(0,0,0,0.06)]"
+                          className="absolute inset-0 rounded-full border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.12)]"
                           transition={{ type: "spring", stiffness: 380, damping: 30 }}
                         />
                       )}
@@ -1227,7 +1227,7 @@ export default function WebsitesPage() {
                     <button
                       onClick={() => deploy(active)}
                       disabled={deploying || !indexHtml}
-                      className="text-[10px] px-3 py-1.5 rounded-lg bg-black text-white hover:bg-black/80 flex items-center gap-1 disabled:opacity-50"
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-white/[0.08] border border-white/10 text-white hover:bg-white/[0.14] flex items-center gap-1 disabled:opacity-50"
                     >
                       {deploying ? <Loader size={10} className="animate-spin" /> : <VercelIcon size={10} />}
                       Deploy

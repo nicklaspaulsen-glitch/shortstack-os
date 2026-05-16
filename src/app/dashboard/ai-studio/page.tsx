@@ -153,7 +153,7 @@ export default function AIStudioPage() {
               AI Studio
             </h1>
           </div>
-          <span className="hidden sm:flex items-center gap-1 text-[10px] font-medium px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-border-subtle text-text-muted">
+          <span className="hidden sm:flex items-center gap-1 text-[10px] font-medium px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-text-muted">
             {TOOLS.length} tools
           </span>
           {history.length > 0 && (
@@ -164,7 +164,7 @@ export default function AIStudioPage() {
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className="hidden md:flex items-center gap-1 text-[10px] text-text-muted px-2.5 py-1 rounded-md bg-[rgba(0,0,0,0.02)] border border-border-subtle">
+          <span className="hidden md:flex items-center gap-1 text-[10px] text-text-muted px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/8">
             {TOOLS.find(t => t.id === activeTool)?.name ?? "Select tool"}
           </span>
           <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
@@ -189,7 +189,7 @@ export default function AIStudioPage() {
           {/* Tab bar: Image | Video | AI Tools */}
           <div
             className="flex items-center gap-1 p-1 rounded-xl w-fit"
-            style={{ background: "rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.06)" }}
+            style={{ background: "rgba(19,24,39,0.70)", border: "1px solid rgba(59,130,246,0.12)" }}
           >
             {(["image", "video"] as const).map(tab => (
               <button
@@ -197,7 +197,7 @@ export default function AIStudioPage() {
                 onClick={() => setStudioTab(tab)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all ${
                   studioTab === tab
-                    ? "bg-white text-[#1D4ED8] shadow-sm"
+                    ? "bg-blue-500/20 text-blue-300 shadow-sm"
                     : "text-text-muted hover:text-text-secondary"
                 }`}
               >
@@ -291,7 +291,7 @@ export default function AIStudioPage() {
           <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
             {/* Jobs Run focal tile */}
             <motion.div
-              className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
             >
@@ -304,7 +304,7 @@ export default function AIStudioPage() {
             </motion.div>
             {/* Completed support tile */}
             <motion.div
-              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
             >
@@ -318,7 +318,7 @@ export default function AIStudioPage() {
             </motion.div>
             {/* Active Tool support tile */}
             <motion.div
-              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
             >
@@ -333,7 +333,7 @@ export default function AIStudioPage() {
 
         {/* Category filter pills */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1.5 p-1 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.06)" }}>
+          <div className="flex items-center gap-1.5 p-1 rounded-xl" style={{ background: "rgba(19,24,39,0.70)", border: "1px solid rgba(59,130,246,0.12)" }}>
             {(["all", "visual", "audio", "utility"] as ToolCategory[]).map(cat => (
               <button
                 key={cat}
@@ -381,15 +381,15 @@ export default function AIStudioPage() {
                     }}
                     className={`relative w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl border transition-shadow duration-200 ${
                       active
-                        ? "border-[rgba(0,0,0,0.12)] shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
-                        : "hover:bg-[rgba(0,0,0,0.02)] border-transparent hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+                        ? "border-[rgba(59,130,246,0.25)] shadow-[0_4px_20px_rgba(59,130,246,0.08)]"
+                        : "hover:bg-white/[0.04] border-transparent hover:shadow-[0_2px_12px_rgba(0,0,0,0.20)]"
                     }`}
                   >
                     {active && (
                       <>
                         <motion.div
                           layoutId="tool-active-bg"
-                          className="absolute inset-0 rounded-xl bg-[rgba(0,0,0,0.04)]"
+                          className="absolute inset-0 rounded-xl bg-[rgba(59,130,246,0.08)]"
                           transition={{ type: "spring", stiffness: 380, damping: 32 }}
                         />
                         <motion.div
@@ -417,7 +417,7 @@ export default function AIStudioPage() {
                       </span>
                     )}
                     {"badge" in tool && tool.badge && (
-                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(0,0,0,0.05)] text-[#2563EB] shrink-0">
+                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(59,130,246,0.12)] text-blue-300 shrink-0">
                         Biz+
                       </span>
                     )}
@@ -448,7 +448,7 @@ export default function AIStudioPage() {
                       <p className="text-[9px] font-mono text-text-muted">{t.tag}</p>
                     </div>
                     {"badge" in t && t.badge && (
-                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.05)] text-[#1D4ED8] border border-[rgba(0,0,0,0.10)]">
+                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(59,130,246,0.12)] text-blue-300 border border-[rgba(59,130,246,0.20)]">
                         {t.badge}
                       </span>
                     )}
@@ -503,8 +503,8 @@ export default function AIStudioPage() {
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.18, delay: i * 0.04 }}
-                    className="relative rounded-xl overflow-hidden border border-border-subtle cursor-pointer hover:border-[rgba(0,0,0,0.12)] transition-all"
-                    style={{ background: "rgba(0,0,0,0.02)" }}
+                    className="relative rounded-xl overflow-hidden border border-border-subtle cursor-pointer hover:border-[rgba(59,130,246,0.25)] transition-all"
+                    style={{ background: "rgba(19,24,39,0.60)" }}
                   >
                     {job.result && (job.type === "image-gen" || job.type === "upscale" || job.type === "remove-bg" || job.type === "img-to-video") ? (
                       <SafeThumb
@@ -525,7 +525,7 @@ export default function AIStudioPage() {
                     )}
                     {/* Status overlay on visual jobs */}
                     {job.result && (
-                      <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1" style={{ background: "linear-gradient(transparent, rgba(255,255,255,0.85))" }}>
+                      <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1" style={{ background: "linear-gradient(transparent, rgba(13,17,32,0.92))" }}>
                         <p className="text-[7px] font-mono text-text-muted truncate">{job.type}</p>
                       </div>
                     )}
@@ -976,7 +976,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                   onClick={() => setLiked(prev => ({ ...prev, [images[0]]: !prev[images[0]] }))}
                   className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
                   style={{
-                    background: liked[images[0]] ? "rgba(239,68,68,0.15)" : "rgba(255,255,255,0.85)",
+                    background: liked[images[0]] ? "rgba(239,68,68,0.15)" : "rgba(19,24,39,0.85)",
                     backdropFilter: "blur(8px)",
                     border: "1px solid rgba(0,0,0,0.06)",
                   }}
@@ -989,7 +989,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-                  style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(8px)", border: "1px solid rgba(0,0,0,0.06)" }}
+                  style={{ background: "rgba(19,24,39,0.85)", backdropFilter: "blur(8px)", border: "1px solid rgba(59,130,246,0.18)" }}
                 >
                   <Download size={14} className="text-text-muted" />
                 </a>
@@ -1007,7 +1007,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                     }
                   }}
                   className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
-                  style={{ background: "rgba(255,255,255,0.85)", backdropFilter: "blur(8px)", border: "1px solid rgba(0,0,0,0.06)" }}
+                  style={{ background: "rgba(19,24,39,0.85)", backdropFilter: "blur(8px)", border: "1px solid rgba(59,130,246,0.18)" }}
                 >
                   {handoffingIdx === 0
                     ? <Loader2 size={14} className="text-text-muted animate-spin" />
@@ -1611,13 +1611,13 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
       >
         <Film size={16} className="text-[#3B82F6]" />
         <h2 className="text-sm font-bold text-foreground">Image to Video</h2>
-        <span className="text-[9px] bg-[rgba(0,0,0,0.05)] text-[#1D4ED8] px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
+        <span className="text-[9px] bg-[rgba(59,130,246,0.12)] text-blue-300 px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(0,0,0,0.20)] transition-all">
+            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(59,130,246,0.35)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) { setFile(f); setPreview(URL.createObjectURL(f)); setResult(null); } }} />
             {preview ? (
               /* eslint-disable-next-line @next/next/no-img-element */
@@ -2009,7 +2009,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
       >
         <Brain size={16} className="text-[#3B82F6]" />
         <h2 className="text-sm font-bold text-foreground">Brand LoRA Training</h2>
-        <span className="text-[9px] bg-[rgba(0,0,0,0.05)] text-[#1D4ED8] px-2 py-0.5 rounded-full">Business+ Only</span>
+        <span className="text-[9px] bg-[rgba(59,130,246,0.12)] text-blue-300 px-2 py-0.5 rounded-full">Business+ Only</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2078,7 +2078,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
               { step: 4, text: "Use the trained LoRA in Design Studio & Thumbnail Generator" },
             ].map(({ step, text }) => (
               <div key={step} className="flex items-start gap-2">
-                <div className="w-5 h-5 rounded-full bg-[rgba(0,0,0,0.05)] flex items-center justify-center shrink-0">
+                <div className="w-5 h-5 rounded-full bg-[rgba(59,130,246,0.12)] flex items-center justify-center shrink-0">
                   <span className="text-[9px] font-bold text-[#3B82F6]">{step}</span>
                 </div>
                 <p className="text-[10px] text-muted leading-relaxed">{text}</p>
