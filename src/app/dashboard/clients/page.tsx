@@ -47,7 +47,7 @@ function HealthArc({ score }: { score: number }) {
   const color = pct>= 70 ? "#3B82F6" : pct>= 40 ? "#1D4ED8" : "#F59E0B";
   return (
     <svg width="42" height="42" viewBox="0 0 42 42" className="-rotate-90">
-      <circle cx="21" cy="21" r={r} fill="none" stroke="rgba(0,0,0,0.08)" strokeWidth="3" />
+      <circle cx="21" cy="21" r={r} fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="3" />
       <circle cx="21" cy="21" r={r} fill="none" stroke={color} strokeWidth="3"
         strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" />
       <text x="21" y="21" textAnchor="middle" dominantBaseline="central"
@@ -675,7 +675,7 @@ export default function ClientsPage() {
                 {clients.length}
               </span>
               {totalMRR> 0 && (
-                <span className="px-2.5 py-1 rounded-full bg-[rgba(0,0,0,0.04)] border border-border-subtle text-[10px] font-medium text-text-muted">
+                <span className="px-2.5 py-1 rounded-full bg-white/[0.04] border border-border-subtle text-[10px] font-medium text-text-muted">
                   {formatCurrency(totalMRR)}
                 </span>
               )}
@@ -1005,9 +1005,9 @@ export default function ClientsPage() {
             return (
               <motion.div key={c.id}
                 className={`glass card card-accent ${accentClass} ${isFeatured ? "md:col-span-2" : ""} p-4 transition-all cursor-pointer group relative overflow-hidden`}
-                style={{ boxShadow: "0 1px 0 rgba(255,255,255,0.9) inset, 0 4px 12px -4px rgba(0,0,0,0.06)" }}
+                style={{ boxShadow: "0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 12px -4px rgba(0,0,0,0.35)" }}
                 variants={fadeUp}
-                whileHover={{ y: -4, borderColor: "rgba(0,0,0,0.16)", boxShadow: "0 12px 40px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.08)", transition: { duration: 0.22 } }}
+                whileHover={{ y: -4, borderColor: "rgba(99,146,255,0.22)", boxShadow: "0 12px 40px rgba(0,0,0,0.50), 0 4px 16px rgba(0,0,0,0.35)", transition: { duration: 0.22 } }}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
                 onMouseEnter={() => setHoveredClient(c.id)}
                 onMouseLeave={() => setHoveredClient(null)}>
