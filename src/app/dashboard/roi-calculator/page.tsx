@@ -142,8 +142,6 @@ export default function RoiCalculatorPage() {
     setInputs(prev => ({ ...prev, [key]: parseFloat(val) || 0 }));
   }
 
-  /* metric cards removed — now rendered inline via <StatStrip> */
-
   return (
     <MotionPage className="space-y-6">{/* -- ROI Calculator command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
