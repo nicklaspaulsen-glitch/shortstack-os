@@ -680,33 +680,30 @@ export default function IntegrationsHubPage() {
     <p className="text-[11px] text-text-muted mt-1.5">most recent</p>
   </motion.div>
 </div>{/* Category filter pills */}<motion.div
-              className="flex items-center gap-2 flex-wrap glass rounded-lg px-3 py-2"
+              className="glass rounded-lg px-3 py-2"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, duration: 0.35, ease: "easeOut" }}
               role="tablist"
               aria-label="Integration category filter"
             >
-              {FILTER_CATEGORIES.map((cat) => {
-                const active = cat === activeFilter;
-                return (
-                  <button
-                    key={cat}
-                    type="button"
-                    role="tab"
-                    aria-selected={active}
-                    onClick={() => setActiveFilter(cat)}
-                    className={[
-                      "px-3 py-1.5 text-[11px] font-semibold rounded-full border transition-all",
-                      active
-                        ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent"
-                        : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] hover:border-[rgba(59,130,246,0.14)]",
-                    ].join(" ")}
-                  >
-                    {cat}
-                  </button>
-                );
-              })}
+              <div className="tab-pill-strip">
+                {FILTER_CATEGORIES.map((cat) => {
+                  const active = cat === activeFilter;
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      role="tab"
+                      aria-selected={active}
+                      onClick={() => setActiveFilter(cat)}
+                      className={`tab-pill${active ? " active" : ""}`}
+                    >
+                      {cat}
+                    </button>
+                  );
+                })}
+              </div>
             </motion.div>{/* Integration grid */}<div>
               <div className="flex items-center justify-between mb-3">
                 <h2 className="section-header mb-0">

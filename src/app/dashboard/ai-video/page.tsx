@@ -951,7 +951,7 @@ export default function AIVideoPage() {
                 </div>
                 {result.url && (
                   <div className="flex items-center gap-2">
-                    <a href={result.url} download className="btn-secondary text-[10px] flex items-center gap-1">
+                    <a href={result.url} download className="btn-pill-ghost text-[10px] flex items-center gap-1">
                       <Download size={10} /> Download
                     </a>
                     <button
@@ -972,7 +972,7 @@ export default function AIVideoPage() {
                           setHandoffingId(null);
                         }
                       }}
-                      className="btn-secondary text-[10px] flex items-center gap-1"
+                      className="btn-pill text-[10px] flex items-center gap-1"
                     >
                       {handoffingId === result.id
                         ? <Loader2 size={10} className="animate-spin" />

@@ -153,7 +153,7 @@ export default function MeetingsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <Link
                   href="/dashboard/meetings/new"
-                  className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all"
+                  className="btn-pill-ghost text-xs flex items-center gap-1.5"
                 >
                   <Upload size={12} /> Upload audio
                 </Link>

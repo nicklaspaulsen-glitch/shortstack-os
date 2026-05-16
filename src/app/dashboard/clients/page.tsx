@@ -784,16 +784,14 @@ export default function ClientsPage() {
 
       {/* Tabs (sticky) */}
       <div className="overflow-x-auto max-w-full">
-      <div role="tablist" aria-label="Client sections" className="glass sticky top-0 z-10 flex gap-1 rounded-xl p-1 w-fit min-w-max">
+      <div role="tablist" aria-label="Client sections" className="tab-pill-strip sticky top-0 z-10 w-fit min-w-max">
         {(["clients", "contracts", "invoices", "billing"] as const).map((t) => (
           <button
             key={t}
             role="tab"
             aria-selected={tab === t}
             onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm rounded-md capitalize transition-all flex items-center gap-1.5 ${
-              tab === t ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
-            }`}
+            className={`tab-pill capitalize flex items-center gap-1.5${tab === t ? " active" : ""}`}
 >
             {t === "billing" && <CreditCard size={14} />}
             {t}
@@ -828,7 +826,7 @@ export default function ClientsPage() {
             </button>
 
             {/* Feature 11: Sort Options */}
-            <div className="flex items-center gap-1 flex-wrap bg-surface rounded-lg p-0.5">
+            <div className="tab-pill-strip">
               <span className="text-[10px] text-muted px-1.5">Sort:</span>
               {([
                 { field: "business_name" as SortField, label: "Name" },
@@ -838,9 +836,7 @@ export default function ClientsPage() {
                 { field: "last_activity" as SortField, label: "Activity" },
               ]).map(s => (
                 <button key={s.field} onClick={() => handleSort(s.field)}
-                  className={`px-2 py-1 text-[10px] rounded-md transition-all flex items-center gap-0.5 ${
-                    sortField === s.field ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
-                  }`}>
+                  className={`tab-pill flex items-center gap-0.5${sortField === s.field ? " active" : ""}`}>
                   {s.label}
                   {sortField === s.field && (
                     <ArrowUpDown size={8} className={sortDir === "desc" ? "rotate-180" : ""} />
@@ -850,13 +846,13 @@ export default function ClientsPage() {
             </div>
 
             {/* Feature 15: View Mode Toggle */}
-            <div className="flex items-center gap-0.5 bg-surface rounded-lg p-0.5">
+            <div className="tab-pill-strip">
               <button onClick={() => setViewMode("table")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "table" ? "bg-brand-accent text-white" : "text-muted hover:text-foreground"}`}>
+                className={`tab-pill p-1.5${viewMode === "table" ? " active" : ""}`}>
                 <LayoutList size={14} />
               </button>
               <button onClick={() => setViewMode("card")}
-                className={`p-1.5 rounded-md transition-all ${viewMode === "card" ? "bg-brand-accent text-white" : "text-muted hover:text-foreground"}`}>
+                className={`tab-pill p-1.5${viewMode === "card" ? " active" : ""}`}>
                 <LayoutGrid size={14} />
               </button>
             </div>
@@ -1658,8 +1654,8 @@ export default function ClientsPage() {
             <input id="client-services" name="services" className="input w-full" placeholder="Social Media, Ads, Website" />
           </div>
           <div className="flex justify-end gap-3 pt-4">
-            <button type="button" onClick={() => setShowAddModal(false)} className="btn-secondary">Cancel</button>
-            <button type="submit" className="btn-primary">Add Client</button>
+            <button type="button" onClick={() => setShowAddModal(false)} className="btn-pill-ghost">Cancel</button>
+            <button type="submit" className="btn-pill">Add Client</button>
           </div>
         </form>
       </Modal>
@@ -1837,8 +1833,8 @@ export default function ClientsPage() {
               The client will be able to log in at shortstack.work and see: their active services, task checklist, invoices, contracts, and deliverables.
             </div>
             <div className="flex justify-end gap-3">
-              <button type="button" onClick={() => setShowInviteModal(null)} className="btn-secondary">Cancel</button>
-              <button type="submit" className="btn-primary flex items-center gap-2">
+              <button type="button" onClick={() => setShowInviteModal(null)} className="btn-pill-ghost">Cancel</button>
+              <button type="submit" className="btn-pill flex items-center gap-2">
                 <UserPlus size={16} /> {showInviteModal.profile_id ? "Update Password" : "Create Account"}
               </button>
             </div>
@@ -1888,8 +1884,8 @@ export default function ClientsPage() {
               A Stripe Checkout link will be generated and copied to your clipboard. Send it to the client to complete payment setup.
             </div>
             <div className="flex justify-end gap-3">
-              <button type="button" onClick={() => setShowSubscribeModal(null)} className="btn-secondary">Cancel</button>
-              <button type="submit" disabled={!!billingLoading} className="btn-primary flex items-center gap-2">
+              <button type="button" onClick={() => setShowSubscribeModal(null)} className="btn-pill-ghost">Cancel</button>
+              <button type="submit" disabled={!!billingLoading} className="btn-pill flex items-center gap-2">
                 {billingLoading ? <Loader size={14} className="animate-spin" /> : <CreditCard size={16} />}
                 Create Checkout Link
               </button>

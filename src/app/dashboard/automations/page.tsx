@@ -122,14 +122,14 @@ export default function AutomationsPage() {
         <div className="flex items-center gap-2">
                   <Link
                     href="/dashboard/automations/library"
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent text-sm font-medium transition-colors border border-[rgba(59,130,246,0.25)]"
+                    className="btn-pill-ghost text-sm flex items-center gap-2"
                   >
                     Browse template library
                   </Link>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Link
                       href="/dashboard/workflow-builder"
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.10)] text-text-primary text-sm font-medium transition-colors border border-[rgba(0,0,0,0.10)]"
+                      className="btn-pill text-sm flex items-center gap-2"
                     >
                       <Plus size={15} /> New Automation
                     </Link>
@@ -196,7 +196,7 @@ export default function AutomationsPage() {
                   !search ? (
                     <Link
                       href="/dashboard/workflow-builder"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent text-sm font-medium transition-colors border border-[rgba(59,130,246,0.25)]"
+                      className="btn-pill text-sm inline-flex items-center gap-2"
                     >
                       <Plus size={14} /> Create your first automation
                     </Link>

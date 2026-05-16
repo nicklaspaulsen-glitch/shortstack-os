@@ -144,8 +144,8 @@ export default function InvoicesPage() {
                   <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                     <Link
                       href="/dashboard/invoices/new"
-                      className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold text-black font-medium hover:bg-gold/90 transition-all"
->
+                      className="btn-pill text-xs flex items-center gap-1.5"
+                    >
                       <Sparkles size={12} /> AI Smart Invoice
                     </Link>
                   </motion.div>
@@ -153,8 +153,8 @@ export default function InvoicesPage() {
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setActiveTab("builder")}
-                    className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-text-primary font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all"
->
+                    className="btn-pill-ghost text-xs flex items-center gap-1.5"
+                  >
                     <Plus size={12} /> New Invoice
                   </motion.button>
                 </div>
@@ -214,12 +214,15 @@ export default function InvoicesPage() {
       <p className="text-[11px] text-text-muted mt-1.5">active subscriptions</p>
     </motion.div>
   </div>
-</div>{/* Tabs */}<div className="glass flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]">
+</div>{/* Tabs */}<div className="tab-pill-strip">
               {TABS.map(t => (
-                <button key={t.key} onClick={() => setActiveTab(t.key)}
-                  className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-                    activeTab === t.key ? "bg-[rgba(59,130,246,0.10)] text-brand-accent border border-[rgba(59,130,246,0.25)] font-medium" : "text-muted hover:text-foreground"
-                  }`}>{t.icon} {t.label}</button>
+                <button
+                  key={t.key}
+                  onClick={() => setActiveTab(t.key)}
+                  className={`tab-pill${activeTab === t.key ? " active" : ""}`}
+                >
+                  {t.icon} {t.label}
+                </button>
               ))}
             </div>{/* ===== ALL INVOICES ===== */}{activeTab === "all" && (
               <div className="space-y-4">
@@ -234,12 +237,15 @@ export default function InvoicesPage() {
                       aria-label="Search invoices"
  />
                   </div>
-                  <div className="flex gap-1.5">
+                  <div className="tab-pill-strip">
                     {(["all", "sent", "paid", "overdue", "draft"] as const).map(f => (
-                      <button key={f} onClick={() => setFilter(f)}
-                        className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                          filter === f ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "text-muted border border-[rgba(0,0,0,0.06)]"
-                        }`}>{f}</button>
+                      <button
+                        key={f}
+                        onClick={() => setFilter(f)}
+                        className={`tab-pill capitalize${filter === f ? " active" : ""}`}
+                      >
+                        {f}
+                      </button>
                     ))}
                   </div>
                 </div>

@@ -1061,7 +1061,7 @@ export default function LandingPagesPage() {
           <>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             {advancedMode && (
-              <button onClick={() => { setStep(1); setMainTab("create"); }} className="px-4 py-2 rounded-lg bg-black/10 border border-border text-foreground text-sm font-semibold hover:bg-black/15 transition-colors flex items-center gap-2">
+              <button onClick={() => { setStep(1); setMainTab("create"); }} className="btn-pill flex items-center gap-2">
                 <Plus className="w-4 h-4" /> New Page
               </button>
             )}
@@ -1085,7 +1085,7 @@ export default function LandingPagesPage() {
 
       {advancedMode && (<>
       {/* Tabs */}
-      <div className="flex gap-1 glass rounded-xl p-1">
+      <div className="tab-pill-strip">
         {([
           { id: "create" as MainTab, label: "Create", icon: Sparkles },
           { id: "pages" as MainTab, label: "Generated Pages", icon: FileText },
@@ -1095,7 +1095,7 @@ export default function LandingPagesPage() {
           <button
             key={tab.id}
             onClick={() => setMainTab(tab.id)}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-colors ${mainTab === tab.id ? "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30" : "text-muted hover:text-text-primary"}`}
+            className={`tab-pill flex items-center gap-2${mainTab === tab.id ? " active" : ""}`}
           >
             <tab.icon className="w-4 h-4" />
             {tab.label}

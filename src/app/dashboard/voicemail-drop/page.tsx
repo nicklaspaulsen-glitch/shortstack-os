@@ -145,7 +145,7 @@ export default function VoicemailDropPage() {
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <button
                     onClick={() => setShowUpload(true)}
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-indigo-500 hover:bg-indigo-500/90 text-white transition-all"
+                    className="btn-pill flex items-center gap-1.5"
                   >
                     <Plus className="w-4 h-4" />
                     Upload
@@ -194,7 +194,7 @@ export default function VoicemailDropPage() {
                   <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-black/8">
                     <button
                       onClick={() => setShowUpload(false)}
-                      className="px-4 py-2 rounded-lg text-sm font-medium text-black/60 hover:text-text-primary bg-black/5 hover:bg-black/8"
+                      className="btn-pill-ghost"
                     >
                       Cancel
                     </button>
@@ -203,7 +203,7 @@ export default function VoicemailDropPage() {
                       whileTap={{ scale: 0.98 }}
                       onClick={handleUpload}
                       disabled={uploading || !name.trim() || !file}
-                      className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold bg-indigo-500 text-white disabled:opacity-50"
+                      className="btn-pill flex items-center gap-1.5 disabled:opacity-50"
                     >
                       {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                       {uploading ? "Uploading…" : "Upload"}
@@ -264,7 +264,7 @@ export default function VoicemailDropPage() {
                   <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-black/8">
                     <button
                       onClick={() => { setShowDrop(null); setTcpaConsent(false); }}
-                      className="px-4 py-2 rounded-lg text-sm font-medium text-black/60 hover:text-text-primary bg-black/5 hover:bg-black/8"
+                      className="btn-pill-ghost"
                     >
                       Cancel
                     </button>
@@ -273,7 +273,7 @@ export default function VoicemailDropPage() {
                       whileTap={{ scale: 0.98 }}
                       onClick={handleDrop}
                       disabled={dropping || !dropTo.trim() || !tcpaConsent}
-                      className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold bg-indigo-500 text-white disabled:opacity-50"
+                      className="btn-pill flex items-center gap-1.5 disabled:opacity-50"
                     >
                       {dropping ? <Loader2 className="w-4 h-4 animate-spin" /> : <Phone className="w-4 h-4" />}
                       {dropping ? "Dropping…" : "Drop voicemail"}
@@ -298,7 +298,7 @@ export default function VoicemailDropPage() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setShowUpload(true)}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-indigo-500 text-white"
+                  className="btn-pill flex items-center gap-1.5"
                 >
                   <Upload className="w-4 h-4" />
                   Upload your first

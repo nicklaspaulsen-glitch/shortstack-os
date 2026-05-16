@@ -735,14 +735,12 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
               className="input w-full pl-7 text-xs"
             />
           </div>
-          <div className="flex flex-wrap gap-1">
+          <div className="tab-pill-strip flex-wrap">
             {sections.map(s => (
               <button
                 key={s}
                 onClick={() => setFilterSection(s)}
-                className={`text-[10px] px-2 py-1 rounded-md transition-colors ${
-                  filterSection === s ? "bg-[#2563EB] text-white font-semibold" : "text-muted hover:text-foreground bg-surface-light/50"
-                }`}
+                className={`tab-pill${filterSection === s ? " active" : ""}`}
               >
                 {s}
               </button>
@@ -974,11 +972,11 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
           <div className="card flex items-center gap-3 shadow-2xl border-[rgba(59,130,246,0.25)]">
             <span className="text-xs text-muted">You have unsaved changes.</span>
             <div className="flex-1" />
-            <button onClick={discard} className="btn-secondary text-xs flex items-center gap-1.5"><X size={12} /> Discard</button>
+            <button onClick={discard} className="btn-pill-ghost text-xs flex items-center gap-1.5"><X size={12} /> Discard</button>
             <button
               onClick={save}
               disabled={saving}
-              className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50"
+              className="btn-pill text-xs flex items-center gap-1.5 disabled:opacity-50"
             >
               {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
               {saving ? "Saving..." : "Save Changes"}
@@ -1459,11 +1457,11 @@ function NewGroupModal({
           )}
         </div>
         <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/30">
-          <button onClick={onClose} className="btn-secondary text-xs">Cancel</button>
+          <button onClick={onClose} className="btn-pill-ghost text-xs">Cancel</button>
           <button
             onClick={() => onCreate({ name: name.trim(), icon, color, parentGroupId })}
             disabled={!name.trim()}
-            className="btn-primary text-xs flex items-center gap-1 disabled:opacity-50"
+            className="btn-pill text-xs flex items-center gap-1 disabled:opacity-50"
           >
             <Plus size={12} /> Create
           </button>
@@ -1507,9 +1505,9 @@ function RenameModal({
           <p className="text-[10px] text-muted">Leave blank or set back to &quot;{defaultName}&quot; to restore the default label.</p>
         </div>
         <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/30">
-          <button onClick={() => onSave("")} className="btn-secondary text-xs">Reset</button>
-          <button onClick={onClose} className="btn-secondary text-xs">Cancel</button>
-          <button onClick={() => onSave(name)} className="btn-primary text-xs flex items-center gap-1">
+          <button onClick={() => onSave("")} className="btn-pill-ghost text-xs">Reset</button>
+          <button onClick={onClose} className="btn-pill-ghost text-xs">Cancel</button>
+          <button onClick={() => onSave(name)} className="btn-pill text-xs flex items-center gap-1">
             <Check size={12} /> Save
           </button>
         </div>
@@ -1564,8 +1562,8 @@ function IconPickerModal({
           </div>
         </div>
         <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/30">
-          <button onClick={() => onPick("")} className="btn-secondary text-xs">Reset</button>
-          <button onClick={onClose} className="btn-secondary text-xs">Close</button>
+          <button onClick={() => onPick("")} className="btn-pill-ghost text-xs">Reset</button>
+          <button onClick={onClose} className="btn-pill-ghost text-xs">Close</button>
         </div>
       </div>
     </div>

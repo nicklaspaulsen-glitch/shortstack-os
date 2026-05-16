@@ -134,7 +134,7 @@ export default function AccountSettings({
                   }
                   setSavingProfile(false);
                 }}
-                className="btn-secondary text-[10px] px-3 py-1 flex items-center gap-1"
+                className="btn-pill text-[10px] flex items-center gap-1"
               >
                 <Save size={10} /> {savingProfile ? "Saving..." : "Save"}
               </button>
@@ -194,7 +194,7 @@ export default function AccountSettings({
                       toast.error(data.error || "Could not open billing portal");
                     }
                   }}
-                  className="btn-secondary text-[10px] px-3 py-1.5 flex items-center gap-1"
+                  className="btn-pill text-[10px] flex items-center gap-1"
                 >
                   {plan.price_monthly === 0 ? "Change Plan" : "Manage"} <ExternalLink size={9} />
                 </button>

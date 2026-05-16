@@ -1448,7 +1448,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
             </label>
             <motion.button onClick={handleUpscale} disabled={processing || !file}
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-              className="ml-auto px-4 py-2 bg-green-500 text-white text-xs font-semibold rounded-lg hover:bg-green-600 disabled:opacity-40 flex items-center gap-1.5">
+              className="ml-auto btn-pill text-xs flex items-center gap-1.5">
               {processing ? <Loader size={12} className="animate-spin" /> : <Wand2 size={12} />}
               Upscale
             </motion.button>
@@ -1566,7 +1566,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
             </div>
             <motion.button onClick={handleRemoveBg} disabled={processing || !file}
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-              className="ml-auto px-4 py-2 bg-pink-500 text-white text-xs font-semibold rounded-lg hover:bg-pink-600 disabled:opacity-40 flex items-center gap-1.5">
+              className="ml-auto btn-pill text-xs flex items-center gap-1.5">
               {processing ? <Loader size={12} className="animate-spin" /> : <Scissors size={12} />}
               Remove BG
             </motion.button>
@@ -1933,7 +1933,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
             className="w-full text-xs bg-surface-light border border-border rounded-lg px-3 py-2 text-foreground" />
           <motion.button onClick={handleClone} disabled={processing || voiceFiles.length === 0}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full px-4 py-2.5 bg-orange-500 text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Volume2 size={12} />}
             Clone {voiceFiles.length > 1 ? `${voiceFiles.length} Voices` : "Voice"}
           </motion.button>
@@ -1952,7 +1952,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
               className="w-full h-32 text-xs bg-surface-light border border-border rounded-xl px-3 py-2 text-foreground resize-none" />
             <motion.button onClick={handleSpeak} disabled={processing || !text}
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-              className="w-full px-4 py-2.5 bg-orange-500 text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
+              className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
               {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
               Generate Speech
             </motion.button>
@@ -2219,7 +2219,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
 
           <motion.button onClick={handleGenerate} disabled={processing}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            className="w-full px-4 py-2.5 bg-cyan-500 text-black text-xs font-semibold rounded-lg hover:bg-cyan-400 disabled:opacity-40 flex items-center justify-center gap-1.5">
+            className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} />}
             Generate {prompts.filter(p => p.trim()).length} Images
           </motion.button>

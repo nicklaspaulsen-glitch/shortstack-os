@@ -600,12 +600,12 @@ export default function SequencesPage() {
       <div className="flex items-center gap-2 shrink-0">
         <>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
+                    <button onClick={() => setShowAiModal(true)} className="btn-pill-ghost flex items-center gap-1.5">
                       <Sparkles size={12} /> Generate with AI
                     </button>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <button className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5" onClick={() => {
+                    <button className="btn-pill flex items-center gap-1.5" onClick={() => {
                       const draft: Sequence = {
                         id: `tmp_${Date.now()}`,
                         name: "Untitled Sequence",
@@ -714,18 +714,16 @@ export default function SequencesPage() {
                 </div>
                 <div className="flex items-center justify-end gap-2 pt-2">
                   <button onClick={() => setShowAiModal(false)} className="btn-ghost text-xs">Cancel</button>
-                  <button onClick={handleGenerateSequence} disabled={aiGenerating} className="btn-primary text-xs flex items-center gap-1.5">
+                  <button onClick={handleGenerateSequence} disabled={aiGenerating} className="btn-pill flex items-center gap-1.5">
                     {aiGenerating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
                     {aiGenerating ? "Generating..." : "Generate"}
                   </button>
                 </div>
               </div>
-            </Modal>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+            </Modal>{/* Tabs */}<div className="tab-pill-strip">
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
-                  className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-                    activeTab === t.key ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
-                  }`}>{t.icon} {t.label}</button>
+                  className={`tab-pill flex items-center gap-2 ${activeTab === t.key ? "active" : ""}`}>{t.icon} {t.label}</button>
               ))}
             </div>{/* ===== SEQUENCE BUILDER ===== */}{activeTab === "builder" && (
               <div className="space-y-4">
@@ -962,12 +960,10 @@ export default function SequencesPage() {
               </div>
             )}{/* ===== TEMPLATE LIBRARY ===== */}{activeTab === "templates" && (
               <div className="space-y-4">
-                <div className="flex gap-1.5 flex-wrap">
+                <div className="tab-pill-strip">
                   {templateCategories.map(c => (
                     <button key={c} onClick={() => setTemplateFilter(c)}
-                      className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                        templateFilter === c ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-muted border border-black/[0.08]"
-                      }`}>{c}</button>
+                      className={`tab-pill capitalize ${templateFilter === c ? "active" : ""}`}>{c}</button>
                   ))}
                 </div>
                 <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-3" variants={containerVariants} initial="hidden" animate="visible">

@@ -873,7 +873,7 @@ export default function VoiceReceptionistPage() {
                     whileTap={{ scale: 0.98 }}
                     onClick={saveConfig}
                     disabled={savingConfig}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-3 py-2 text-[12px] font-medium text-foreground hover:bg-surface-light disabled:opacity-50"
+                    className="btn-pill-ghost inline-flex items-center gap-1.5 disabled:opacity-50"
                   >
                     {savingConfig ? (
                       <Loader2 size={12} className="animate-spin" />
@@ -887,7 +887,7 @@ export default function VoiceReceptionistPage() {
                     whileTap={{ scale: 0.98 }}
                     onClick={createAgent}
                     disabled={creatingAgent}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500 px-4 py-2 text-[12px] font-semibold text-white transition hover:bg-indigo-500/90 disabled:opacity-50"
+                    className="btn-pill inline-flex items-center gap-1.5 disabled:opacity-50"
                   >
                     {creatingAgent ? (
                       <>

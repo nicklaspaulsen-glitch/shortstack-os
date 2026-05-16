@@ -268,7 +268,7 @@ export default function TeamPage() {
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setShowInvite(true)}
-                  className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-text-primary text-xs font-semibold hover:bg-[rgba(0,0,0,0.10)] transition-all flex items-center gap-1.5"
+                  className="btn-pill flex items-center gap-1.5"
 >
                   <UserPlus size={12} /> Invite Member
                 </motion.button>
@@ -315,12 +315,10 @@ export default function TeamPage() {
         <p className="text-[11px] text-text-muted mt-1.5">{STATS[3].sub}</p>
       </motion.div>
     </div>
-    {/* Tabs */}<div className="glass flex gap-1 rounded-lg p-1 w-fit flex-wrap border border-[rgba(255,255,255,0.70)]">
+    {/* Tabs */}<div className="tab-pill-strip">
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
-                  }`}>
+                  className={`tab-pill flex items-center gap-1.5${tab === t.id ? " active" : ""}`}>
                   {t.icon} {t.label}
                 </button>
               ))}
@@ -814,9 +812,9 @@ export default function TeamPage() {
                   </div>
 
                   <div className="flex justify-end gap-2 pt-1">
-                    <button onClick={() => setShowInvite(false)} className="btn-secondary text-xs">Cancel</button>
+                    <button onClick={() => setShowInvite(false)} className="btn-pill-ghost text-xs">Cancel</button>
                     <button onClick={createMember} disabled={creating || !createForm.email || !createForm.password}
-                      className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
+                      className="btn-pill text-xs flex items-center gap-1.5 disabled:opacity-50">
                       <UserPlus size={12} /> {creating ? "Creating..." : "Create Member"}
                     </button>
                   </div>
@@ -864,9 +862,9 @@ export default function TeamPage() {
                     ))}
                   </div>
                   <div className="flex justify-end gap-2 pt-1">
-                    <button onClick={() => setShowCustomRole(false)} className="btn-secondary text-xs">Cancel</button>
+                    <button onClick={() => setShowCustomRole(false)} className="btn-pill-ghost text-xs">Cancel</button>
                     <button
-                      className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50"
+                      className="btn-pill text-xs flex items-center gap-1.5 disabled:opacity-50"
                       disabled={!customRoleName.trim()}
                       onClick={() => {
                         const name = customRoleName.trim();
@@ -1021,8 +1019,8 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
         </div>
 
         <div className="flex justify-end gap-2 pt-1">
-          <button onClick={onClose} className="btn-secondary text-xs">Cancel</button>
-          <button onClick={handleSave} disabled={saving} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
+          <button onClick={onClose} className="btn-pill-ghost text-xs">Cancel</button>
+          <button onClick={handleSave} disabled={saving} className="btn-pill text-xs flex items-center gap-1.5 disabled:opacity-50">
             {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>

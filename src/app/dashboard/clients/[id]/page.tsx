@@ -168,7 +168,7 @@ export default function ClientDetailPage() {
                 toast.success("Welcome doc downloaded!", { id: tid });
               } else toast.error("Failed", { id: tid });
             } catch { toast.error("Failed", { id: tid }); }
-          }} className="btn-secondary flex items-center gap-2 text-sm">
+          }} className="btn-pill-ghost flex items-center gap-2 text-sm">
             <Download size={14} /> Welcome Doc
           </button>
           <button onClick={async () => {
@@ -189,7 +189,7 @@ export default function ClientDetailPage() {
                 toast.success("Contract downloaded!", { id: tid });
               } else toast.error("Failed", { id: tid });
             } catch { toast.error("Failed", { id: tid }); }
-          }} className="btn-primary flex items-center gap-2 text-sm">
+          }} className="btn-pill flex items-center gap-2 text-sm">
             <FileText size={14} /> Contract PDF
           </button>
         </div>
@@ -233,10 +233,10 @@ export default function ClientDetailPage() {
       <ClientFilesSection clientId={client.id} />
 
       {/* Tabs */}
-      <div className="tab-group w-fit">
+      <div className="tab-pill-strip w-fit overflow-x-auto max-w-full flex-wrap">
         {tabs.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={tab === t.key ? "tab-item-active" : "tab-item-inactive"}
+            className={`tab-pill${tab === t.key ? " active" : ""}`}
           >{t.label}</button>
         ))}
       </div>
@@ -1092,13 +1092,13 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
       </div>
 
       {/* View toggle */}
-      <div className="tab-group w-fit">
+      <div className="tab-pill-strip w-fit">
         <button onClick={() => setTaskView("checklist")}
-          className={taskView === "checklist" ? "tab-item-active" : "tab-item-inactive"}>
+          className={`tab-pill${taskView === "checklist" ? " active" : ""}`}>
           Onboarding Checklist
         </button>
         <button onClick={() => setTaskView("custom")}
-          className={taskView === "custom" ? "tab-item-active" : "tab-item-inactive"}>
+          className={`tab-pill${taskView === "custom" ? " active" : ""}`}>
           Custom Tasks ({customTasks.length})
         </button>
       </div>

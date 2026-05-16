@@ -1000,7 +1000,7 @@ export default function WebsitesPage() {
                 </div>
                 <button
                   onClick={startBlank}
-                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.25)] flex items-center gap-1"
+                  className="btn-pill-ghost text-xs flex items-center gap-1"
                 >
                   Start from a blank canvas <ArrowRight size={10} />
                 </button>
