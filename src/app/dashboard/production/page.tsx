@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import StatStrip from "@/components/ui/stat-strip";
 import toast from "react-hot-toast";
 import {
   Film, CheckCircle, MessageSquare,
@@ -112,15 +111,37 @@ export default function ProductionPage() {
                   <Plus size={12} /> New Request
                 </button>
       </div>
-    </div>{/* Stats */}<StatStrip
-              focal={{ label: "Total Items", value: String(items.length) }}
-              support={[
-                { label: "In Progress", value: String(items.filter(i => i.status === "in_progress").length), color: "text-[#2563EB]" },
-                { label: "In Review", value: String(inReview), color: "text-[#2563EB]" },
-                { label: "Overdue", value: String(overdue), color: "text-red-400" },
-                { label: "Hours", value: `${totalActual.toFixed(1)}h`, sub: `of ${totalEstimated}h est.`, color: "text-emerald-400" },
-              ]}
-            />{/* Filters */}<div className="flex gap-2 flex-wrap">
+    </div>{/* Editorial Bento */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Items</p>
+                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{items.length}</p>
+                  <p className="text-[11px] text-text-muted mt-1.5">production tasks</p>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">In Progress</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{items.filter(i => i.status === "in_progress").length}</p>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">In Review</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{inReview}</p>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Overdue</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-red-500 tabular-nums">{overdue}</p>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Hours</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-600 tabular-nums">{totalActual.toFixed(1)}h</p>
+              </motion.div>
+            </div>{/* Filters */}<div className="flex gap-2 flex-wrap">
               <select value={filterClient} onChange={e => setFilterClient(e.target.value)} className="input text-xs">
                 {clients.map(c => <option key={c} value={c}>{c === "All" ? "All Clients" : c}</option>)}
               </select>

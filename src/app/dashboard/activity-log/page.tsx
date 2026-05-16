@@ -10,7 +10,6 @@ import {
   ClipboardList, Loader2,
 } from "lucide-react";
 import { PrismPanel } from "@/components/prism";
-import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type ActivityTab = "feed" | "heatmap" | "users" | "audit" | "security";
@@ -201,15 +200,32 @@ export default function ActivityLogPage() {
                     className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"><Download size={12} /> Export Log</button>
                 </>
       </div>
-    </div>{/* Stats */}<StatStrip
-              focal={{ label: "Total Events", value: logs.length.toLocaleString() }}
-              support={[
-                { label: "Today", value: String(logs.filter(l => l.timestamp.startsWith(new Date().toISOString().slice(0, 10))).length), color: "text-[#2563EB]" },
-                { label: "Active Users", value: String(Object.keys(userActivity).filter(u => u !== "System" && u !== "API").length), color: "text-[#2563EB]" },
-                { label: "Automations", value: String(logs.filter(l => l.type === "automation").length), color: "text-[#2563EB]" },
-                { label: "Suspicious", value: String(suspicious.length), color: suspicious.length > 0 ? "text-red-400" : "text-emerald-400" },
-              ]}
-            />{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit flex-wrap">
+    </div>{/* Stats */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Events</p>
+                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{logs.length.toLocaleString()}</p>
+                  <p className="text-[11px] text-text-muted mt-1.5">all time activity</p>
+                </div>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Today</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{logs.filter(l => l.timestamp.startsWith(new Date().toISOString().slice(0, 10))).length}</p>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active Users</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{Object.keys(userActivity).filter(u => u !== "System" && u !== "API").length}</p>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Suspicious</p>
+                <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${suspicious.length > 0 ? "text-red-500" : "text-emerald-500"}`}>{suspicious.length}</p>
+              </motion.div>
+            </div>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit flex-wrap">
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${

@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
-import StatStrip from "@/components/ui/stat-strip";
 
 type CommissionStatus = "pending" | "approved" | "paid";
 
@@ -212,13 +211,46 @@ export default function CommissionTrackerPage() {
                   </button>
                 </div>
       </div>
-    </div>{/* Stat strip */}<StatStrip
-              focal={{ label: "Total", value: fmtUSD(totals.total) }}
-              support={[
-                { label: "Paid", value: fmtUSD(totals.paid), color: "text-emerald-400" },
-                { label: "Pending", value: fmtUSD(totals.pending), color: "text-yellow-400" },
-              ]}
-            />{/* Filters */}<motion.div
+    </div>
+
+      {/* Editorial bento — commission totals */}
+      <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+          className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        >
+          <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total</p>
+            <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{fmtUSD(totals.total)}</p>
+            <p className="text-[11px] text-text-muted mt-1.5">{filtered.length} commission{filtered.length !== 1 ? "s" : ""}</p>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        >
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Paid</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{fmtUSD(totals.paid)}</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        >
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Pending</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{fmtUSD(totals.pending)}</p>
+        </motion.div>
+      </div>
+
+      {/* Filters */}<motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.18 }}
