@@ -164,39 +164,39 @@ export default function InvoicesPage() {
             )}{/* Stats */}<div className="space-y-3 mb-4">
   <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3">
     <motion.div
-      className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+      className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
       <div>
         <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Collected</p>
-        <p className="font-display text-3xl font-bold tracking-[-0.03em] text-emerald-700 tabular-nums">{formatCurrency(totalPaid)}</p>
+        <p className="font-display text-3xl font-bold tracking-[-0.03em] text-emerald-400 tabular-nums">{formatCurrency(totalPaid)}</p>
         <p className="text-[11px] text-text-muted mt-1.5">payments received</p>
       </div>
     </motion.div>
     <motion.div
-      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
     >
       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Outstanding</p>
-      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-amber-600 tabular-nums">{formatCurrency(totalSent)}</p>
+      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-amber-400 tabular-nums">{formatCurrency(totalSent)}</p>
       <p className="text-[11px] text-text-muted mt-1.5">awaiting payment</p>
     </motion.div>
     <motion.div
-      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
     >
       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Overdue</p>
-      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-rose-700 tabular-nums">{formatCurrency(totalOverdue)}</p>
+      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-rose-400 tabular-nums">{formatCurrency(totalOverdue)}</p>
       <p className="text-[11px] text-text-muted mt-1.5">past due date</p>
     </motion.div>
   </div>
   <div className="grid grid-cols-2 gap-3">
     <motion.div
-      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
     >
@@ -205,7 +205,7 @@ export default function InvoicesPage() {
       <p className="text-[11px] text-text-muted mt-1.5">not yet sent</p>
     </motion.div>
     <motion.div
-      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+      className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.38, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
     >
@@ -232,7 +232,7 @@ export default function InvoicesPage() {
                     <input
                       value={search}
                       onChange={e => setSearch(e.target.value)}
-                      className="glass rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-[rgba(255,255,255,0.70)] focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" 
+                      className="glass rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-border-subtle focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" 
                       placeholder="Search invoices..."
                       aria-label="Search invoices"
  />
@@ -265,7 +265,7 @@ export default function InvoicesPage() {
  />
                     </div>
                   ) : (
-                    <motion.div className="divide-y divide-[rgba(0,0,0,0.06)]" variants={containerVariants} initial="hidden" animate="visible">
+                    <motion.div className="divide-y divide-border-subtle" variants={containerVariants} initial="hidden" animate="visible">
                       {filtered.map((inv) => {
                         const isOverdue = (inv.status === "sent" && inv.dueDate < today) || inv.status === "overdue";
                         return (
@@ -274,17 +274,17 @@ export default function InvoicesPage() {
                               variants={itemVariants}
                               onClick={() => setExpandedInvoice(expandedInvoice === inv.id ? null : inv.id)}
                               className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-[rgba(59,130,246,0.05)] ${
-                                isOverdue ? "bg-rose-50" : ""
+                                isOverdue ? "bg-rose-400/10" : ""
                               }`}
 >
                               <div className="flex items-center gap-3">
                                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                                  inv.status === "paid" ? "bg-emerald-50" : isOverdue ? "bg-rose-50" : inv.status === "draft" ? "bg-surface" : "bg-amber-50"
+                                  inv.status === "paid" ? "bg-emerald-400/10" : isOverdue ? "bg-rose-400/10" : inv.status === "draft" ? "bg-surface" : "bg-amber-400/10"
                                 }`}>
-                                  {inv.status === "paid" ? <CheckCircle size={16} className="text-emerald-700" /> :
-                                   isOverdue ? <AlertTriangle size={16} className="text-rose-700" /> :
+                                  {inv.status === "paid" ? <CheckCircle size={16} className="text-emerald-400" /> :
+                                   isOverdue ? <AlertTriangle size={16} className="text-rose-400" /> :
                                    inv.status === "draft" ? <FileText size={16} className="text-muted" /> :
-                                   <Clock size={16} className="text-amber-600" />}
+                                   <Clock size={16} className="text-amber-400" />}
                                 </div>
                                 <div>
                                   <div className="flex items-center gap-2">
@@ -302,11 +302,11 @@ export default function InvoicesPage() {
                                   <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
                                 </div>
                                 <span className={`text-[9px] px-2 py-0.5 rounded-full ${
-                                  inv.status === "paid" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
-                                  isOverdue ? "bg-rose-50 text-rose-700 border border-rose-200" :
-                                  inv.status === "draft" ? "bg-[rgba(0,0,0,0.05)] text-muted border border-[rgba(0,0,0,0.08)]" :
-                                  inv.status === "sent" ? "bg-blue-50 text-blue-700 border border-blue-200" :
-                                  "bg-amber-50 text-amber-700 border border-amber-200"
+                                  inv.status === "paid" ? "bg-emerald-400/10 text-emerald-400 border border-emerald-400/20" :
+                                  isOverdue ? "bg-rose-400/10 text-rose-400 border border-rose-400/20" :
+                                  inv.status === "draft" ? "bg-white/[0.05] text-text-muted border border-border-subtle" :
+                                  inv.status === "sent" ? "bg-blue-400/10 text-blue-400 border border-blue-400/20" :
+                                  "bg-amber-400/10 text-amber-400 border border-amber-400/20"
                                 }`}>{isOverdue ? "overdue" : inv.status}</span>
                                 <ChevronRight size={14} className="text-muted" />
                               </div>
@@ -397,7 +397,7 @@ export default function InvoicesPage() {
                               <span className="col-span-2 text-right font-bold">{formatCurrency(item.qty * item.rate, selectedCurrency)}</span>
                               <button
                                 onClick={() => toast("The in-app invoice builder is being replaced with Stripe's hosted invoices. Use /dashboard/billing ? Stripe portal to create real invoices today.", { icon: "??", duration: 6000 })}
-                                className="col-span-1 text-right text-muted hover:text-rose-700"><X size={10} /></button>
+                                className="col-span-1 text-right text-muted hover:text-rose-400"><X size={10} /></button>
                             </div>
                           ))}
                           <button
@@ -432,7 +432,7 @@ export default function InvoicesPage() {
                       <div className="space-y-2 text-[10px]">
                         <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatCurrency(2497, selectedCurrency)}</span></div>
                         <div className="flex justify-between"><span className="text-muted">Tax ({taxRate}%)</span><span>{formatCurrency(Math.round(2497 * taxRate / 100), selectedCurrency)}</span></div>
-                        <div className="border-t border-[rgba(0,0,0,0.08)] pt-2 flex justify-between font-bold">
+                        <div className="border-t border-border-subtle pt-2 flex justify-between font-bold">
                           <span>Total</span><span className="text-brand-accent font-bold">{formatCurrency(Math.round(2497 * (1 + taxRate / 100)), selectedCurrency)}</span>
                         </div>
                       </div>
@@ -497,7 +497,7 @@ export default function InvoicesPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.05 }}
-                      className="glass rounded-xl p-4 flex items-center justify-between border border-[rgba(255,255,255,0.70)]" 
+                      className="glass rounded-xl p-4 flex items-center justify-between border border-border-subtle" 
 >
                       <div className="flex items-center gap-3">
                         <RefreshCw size={14} className="text-brand-accent" />
@@ -515,10 +515,10 @@ export default function InvoicesPage() {
                           <p className="font-medium">1st of month</p>
                           <p className="text-[8px] text-muted">Next invoice</p>
                         </div>
-                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">Active</span>
                         <button
                           onClick={() => toast("Pause recurring from the Stripe customer portal � use Billing ? Manage subscription.", { icon: "??", duration: 6000 })}
-                          className="text-[9px] text-muted hover:text-rose-700">Pause</button>
+                          className="text-[9px] text-muted hover:text-rose-400">Pause</button>
                       </div>
                     </motion.div>
                   ))}
@@ -546,11 +546,11 @@ export default function InvoicesPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: i * 0.05 }}
-                      className={`glass rounded-xl p-4 flex items-center justify-between border border-[rgba(255,255,255,0.70)] ${!reminder.enabled ? "opacity-50" : ""}`} 
+                      className={`glass rounded-xl p-4 flex items-center justify-between border border-border-subtle ${!reminder.enabled ? "opacity-50" : ""}`} 
 >
                       <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${i < 2 ? "bg-amber-50" : i < 4 ? "bg-orange-50" : "bg-rose-50"}`}>
-                          <Clock size={14} className={i < 2 ? "text-amber-600" : i < 4 ? "text-orange-600" : "text-rose-700"} />
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${i < 2 ? "bg-amber-400/10" : i < 4 ? "bg-orange-400/10" : "bg-rose-400/10"}`}>
+                          <Clock size={14} className={i < 2 ? "text-amber-400" : i < 4 ? "text-orange-400" : "text-rose-400"} />
                         </div>
                         <div>
                           <p className="text-xs font-semibold">{reminder.delay}</p>
@@ -565,20 +565,20 @@ export default function InvoicesPage() {
                 </div>
                 {/* Currently overdue */}
                 <PrismPanel padding="p-4">
-                  <h4 className="text-xs font-semibold mb-3 flex items-center gap-2 text-rose-700">
+                  <h4 className="text-xs font-semibold mb-3 flex items-center gap-2 text-rose-400">
                     <AlertTriangle size={12} /> Currently Overdue
                   </h4>
                   <div className="space-y-1.5">
                     {invoicesData.filter(i => i.status === "overdue").length === 0 ? (
                       <p className="text-[10px] text-muted text-center py-4">No overdue invoices</p>
                     ) : invoicesData.filter(i => i.status === "overdue").map(inv => (
-                      <div key={inv.id} className="flex items-center justify-between p-2.5 rounded bg-rose-50 border border-rose-200 text-[10px]">
+                      <div key={inv.id} className="flex items-center justify-between p-2.5 rounded bg-rose-400/10 border border-rose-400/20 text-[10px]">
                         <div>
                           <p className="font-semibold">{inv.client} - {inv.id}</p>
                           <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
                         </div>
                         <div className="flex items-center gap-3">
-                          <p className="font-bold text-rose-700">{formatCurrency(inv.amount)}</p>
+                          <p className="font-bold text-rose-400">{formatCurrency(inv.amount)}</p>
                           <button
                             onClick={() => toast("Automated reminders are coming. For now, contact the client directly or use Stripe's payment reminder emails.", { icon: "??", duration: 6000 })}
                             className="text-[9px] px-2 py-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.14)]">Send Reminder</button>
@@ -605,7 +605,7 @@ export default function InvoicesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -3 }}
-                      className="glass rounded-xl p-4 cursor-pointer border border-[rgba(255,255,255,0.70)]" 
+                      className="glass rounded-xl p-4 cursor-pointer border border-border-subtle" 
 >
                       <div className="flex items-center gap-3 mb-2">
                         <div className="w-10 h-10 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
@@ -618,7 +618,7 @@ export default function InvoicesPage() {
                       </div>
                       <div className="flex gap-1.5 mt-2">
                         {t.sections.map(s => (
-                          <span key={s} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.03)] text-muted">{s}</span>
+                          <span key={s} className="text-[8px] px-1.5 py-0.5 rounded bg-white/[0.03] text-text-muted">{s}</span>
                         ))}
                       </div>
                       <button
@@ -635,11 +635,11 @@ export default function InvoicesPage() {
                 </h3>
                 <div className="grid grid-cols-5 gap-3">
                   {[
-                    { range: "Current", amount: totalSent - totalOverdue, count: invoicesData.filter(i => i.status === "sent" && i.dueDate>= today).length, color: "text-emerald-700" },
-                    { range: "1-7 days", amount: 0, count: 0, color: "text-amber-600" },
-                    { range: "8-14 days", amount: 0, count: 0, color: "text-orange-600" },
-                    { range: "15-30 days", amount: 0, count: 0, color: "text-rose-700" },
-                    { range: "30+ days", amount: 0, count: 0, color: "text-rose-700" },
+                    { range: "Current", amount: totalSent - totalOverdue, count: invoicesData.filter(i => i.status === "sent" && i.dueDate>= today).length, color: "text-emerald-400" },
+                    { range: "1-7 days", amount: 0, count: 0, color: "text-amber-400" },
+                    { range: "8-14 days", amount: 0, count: 0, color: "text-orange-400" },
+                    { range: "15-30 days", amount: 0, count: 0, color: "text-rose-400" },
+                    { range: "30+ days", amount: 0, count: 0, color: "text-rose-400" },
                   ].map((bucket, i) => (
                     <motion.div
                       key={i}
@@ -647,7 +647,7 @@ export default function InvoicesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: i * 0.06 }}
                       whileHover={{ y: -2 }}
-                      className="glass rounded-xl text-center p-3 overflow-hidden border border-[rgba(255,255,255,0.70)]" 
+                      className="glass rounded-xl text-center p-3 overflow-hidden border border-border-subtle" 
 >
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                       <p className="text-[9px] text-muted uppercase mb-1">{bucket.range}</p>
@@ -657,10 +657,10 @@ export default function InvoicesPage() {
                   ))}
                 </div>
                 <PrismPanel padding="p-0" className="overflow-hidden">
-                  <div className="p-3 border-b border-[rgba(0,0,0,0.08)]">
+                  <div className="p-3 border-b border-border-subtle">
                     <h4 className="text-xs font-semibold">Invoice History</h4>
                   </div>
-                  <div className="divide-y divide-[rgba(0,0,0,0.06)]">
+                  <div className="divide-y divide-border-subtle">
                     <div className="grid grid-cols-6 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-3">
                       <span>Invoice</span><span>Client</span><span>Amount</span><span>Due Date</span><span>Status</span><span>Age</span>
                     </div>
@@ -684,11 +684,11 @@ export default function InvoicesPage() {
                           <span className="font-bold">{formatCurrency(inv.amount, inv.currency)}</span>
                           <span className="text-muted">{inv.dueDate}</span>
                           <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
-                            inv.status === "paid" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
-                            inv.status === "overdue" ? "bg-rose-50 text-rose-700 border border-rose-200" :
-                            "bg-amber-50 text-amber-700 border border-amber-200"
+                            inv.status === "paid" ? "bg-emerald-400/10 text-emerald-400 border border-emerald-400/20" :
+                            inv.status === "overdue" ? "bg-rose-400/10 text-rose-400 border border-rose-400/20" :
+                            "bg-amber-400/10 text-amber-400 border border-amber-400/20"
                           }`}>{inv.status}</span>
-                          <span className={ageDays> 7 ? "text-rose-700" : "text-muted"}>{ageDays}d</span>
+                          <span className={ageDays> 7 ? "text-rose-400" : "text-muted"}>{ageDays}d</span>
                         </motion.div>
                       );
                     })}
@@ -702,9 +702,9 @@ export default function InvoicesPage() {
                 </h3>
                 <div className="grid grid-cols-3 gap-4">
                   {[
-                    { label: "Paid Invoices", value: formatCurrency(totalPaid), sub: "All-time collected", color: "text-emerald-700" },
+                    { label: "Paid Invoices", value: formatCurrency(totalPaid), sub: "All-time collected", color: "text-emerald-400" },
                     { label: "Outstanding", value: formatCurrency(totalSent), sub: "Sent, not paid", color: "text-brand-accent" },
-                    { label: "Overdue", value: formatCurrency(totalOverdue), sub: "Needs chasing", color: "text-rose-700" },
+                    { label: "Overdue", value: formatCurrency(totalOverdue), sub: "Needs chasing", color: "text-rose-400" },
                   ].map((card, index) => (
                     <motion.div
                       key={card.label}
@@ -712,7 +712,7 @@ export default function InvoicesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -2 }}
-                      className="glass rounded-xl text-center p-5 overflow-hidden border border-[rgba(255,255,255,0.70)]" 
+                      className="glass rounded-xl text-center p-5 overflow-hidden border border-border-subtle" 
 >
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                       <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>
@@ -748,7 +748,7 @@ export default function InvoicesPage() {
                   <h4 className="text-xs font-semibold mb-3">Collection Metrics</h4>
                   <div className="grid grid-cols-3 gap-3">
                     <div className="bg-surface-light rounded-lg p-3 text-center">
-                      <p className="text-xl font-bold text-emerald-700">--</p>
+                      <p className="text-xl font-bold text-emerald-400">--</p>
                       <p className="text-[9px] text-muted">Collection Rate</p>
                     </div>
                     <div className="bg-surface-light rounded-lg p-3 text-center">
