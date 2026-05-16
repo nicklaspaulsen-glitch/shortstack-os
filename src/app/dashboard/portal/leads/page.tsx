@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   Search, Zap, Download, Filter, MapPin, Star,
   Mail, Phone, MessageSquare, Globe,
@@ -11,7 +12,6 @@ import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { MotionPage } from "@/components/motion/motion-page";
-import StatStrip from "@/components/ui/stat-strip";
 
 const NICHES = [
   "Dentist", "Lawyer", "Plumber", "Electrician", "Gym", "Roofer",
@@ -247,14 +247,47 @@ export default function ClientLeadEnginePage() {
                   <Download size={12} /> Export
                 </button>
               </div>
-            </div>{/* Stats Row */}<StatStrip
-              focal={{ label: "Total Leads", value: String(stats.total), icon: <Users size={14} />, color: "text-info" }}
-              support={[
-                { label: "With Email", value: String(stats.withEmail), icon: <Mail size={14} />, color: "text-success" },
-                { label: "With Phone", value: String(stats.withPhone), icon: <Phone size={14} />, color: "text-[#2563EB]" },
-                { label: "Avg Score", value: `${stats.avgScore}%`, icon: <Target size={14} />, color: "text-[#2563EB]" },
-              ]}
-            />{/* Search Bar — The Engine */}<div className="card border-[rgba(37,99,235,0.2)]">
+            </div>{/* Stats Row */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.04, duration: 0.36 }}
+                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Leads</p>
+                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{stats.total}</p>
+                </div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.10, duration: 0.36 }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">With Email</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.withEmail}</p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.14, duration: 0.36 }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">With Phone</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.withPhone}</p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.18, duration: 0.36 }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Score</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.avgScore}%</p>
+              </motion.div>
+            </div>{/* Search Bar — The Engine */}<div className="card border-[rgba(37,99,235,0.2)]">
               <div className="flex items-center gap-2 mb-3">
                 <Zap size={14} className="text-[#2563EB]" />
                 <span className="text-xs font-semibold">Find New Leads</span>

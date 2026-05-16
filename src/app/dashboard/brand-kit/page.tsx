@@ -13,7 +13,6 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
-import StatStrip from "@/components/ui/stat-strip";
 import WebsiteScraper from "@/components/ui/website-scraper";
 import { useAutoSave } from "@/lib/use-auto-save";
 import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
@@ -467,14 +466,51 @@ export default function BrandKitPage() {
                       </div>
                     </div>
 
-                    <StatStrip
-                      focal={{ label: "Colors", value: String(brand.colors.length), icon: <Palette size={14} /> }}
-                      support={[
-                        { label: "Fonts", value: String(brand.fonts.length), icon: <Type size={14} /> },
-                        { label: "Images", value: String(brand.images.length), icon: <ImageIcon size={14} /> },
-                        { label: "Socials", value: String(brand.socialLinks.length), icon: <Share2 size={14} /> },
-                      ]}
- />
+                    <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                      {/* Focal tile */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.28, delay: 0.04 }}
+                        className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      >
+                        <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                        <div>
+                          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Colors</p>
+                          <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{brand.colors.length}</p>
+                        </div>
+                      </motion.div>
+                      {/* Support: Fonts */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.28, delay: 0.10 }}
+                        className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      >
+                        <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Fonts</p>
+                        <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{brand.fonts.length}</p>
+                      </motion.div>
+                      {/* Support: Images */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.28, delay: 0.14 }}
+                        className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      >
+                        <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Images</p>
+                        <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{brand.images.length}</p>
+                      </motion.div>
+                      {/* Support: Socials */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.28, delay: 0.18 }}
+                        className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      >
+                        <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Socials</p>
+                        <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{brand.socialLinks.length}</p>
+                      </motion.div>
+                    </div>
 
                     <div className="flex items-center gap-2">
                       <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setTab("colors")} className="btn-primary text-xs px-4 py-2 flex items-center gap-1.5">

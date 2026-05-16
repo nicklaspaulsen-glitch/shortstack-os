@@ -20,7 +20,6 @@ import Modal from "@/components/ui/modal";
 import InlineSocialConnect from "@/components/inline-social-connect";
 import { Lightbulb, Megaphone, Loader2, ChevronsRight } from "lucide-react";
 import { motion } from "framer-motion";
-import StatStrip from "@/components/ui/stat-strip";
 import toast from "react-hot-toast";
 import ErrorBoundary from "@/components/error-boundary";
 import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
@@ -1268,14 +1267,42 @@ export default function ScraperPage() {
                 )}
                 {results.length > 0 ? (
                   <>
-                    <div className="flex items-center justify-between">
-                      <StatStrip
-                        focal={{ label: "Leads Found", value: String(stats.scraped), icon: <Target size={14} />, color: "text-[#2563EB]" }}
-                        support={[
-                          { label: "Duplicates", value: String(stats.skipped) },
-                          { label: "Selected", value: String(selectedLeads.size), color: "text-emerald-400" },
-                        ]}
-                      />
+                    <div className="flex flex-col gap-3">
+                      <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
+                        {/* Focal tile — Leads Found */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.22, delay: 0.04 }}
+                          className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                        >
+                          <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                          <div>
+                            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Leads Found</p>
+                            <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{stats.scraped}</p>
+                          </div>
+                        </motion.div>
+                        {/* Duplicates */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.22, delay: 0.10 }}
+                          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                        >
+                          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Duplicates</p>
+                          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.skipped}</p>
+                        </motion.div>
+                        {/* Selected */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.22, delay: 0.14 }}
+                          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                        >
+                          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Selected</p>
+                          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{selectedLeads.size}</p>
+                        </motion.div>
+                      </div>
                       <div className="flex items-center gap-1.5">
                         <button onClick={selectAllLeads} className="btn-secondary text-[10px] py-1.5"><CheckCircle size={12} /> {selectedLeads.size === results.length ? "Deselect All" : "Select All"}</button>
                         <button onClick={openPushToCampaign} className="btn-secondary flex items-center gap-1.5 text-[10px] py-1.5"><Megaphone size={12} /> Push to campaign</button>
@@ -1397,14 +1424,51 @@ export default function ScraperPage() {
                   </div>
                 </div>
                 {/* Enrichment stats */}
-                <StatStrip
-                  focal={{ label: "With Email", value: String(results.filter(r => r.email).length), icon: <Mail size={14} />, color: "text-[#2563EB]" }}
-                  support={[
-                    { label: "Tech Detected", value: String(results.filter(r => r.tech_stack).length), color: "text-[#2563EB]" },
-                    { label: "Decision Makers", value: String(results.filter(r => r.decision_maker).length), color: "text-violet-400" },
-                    { label: "Hot Leads", value: String(results.filter(r => (r.lead_score || 0) >= 70).length), color: "text-emerald-400" },
-                  ]}
-                />
+                <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                  {/* Focal tile — With Email */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, delay: 0.04 }}
+                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                    <div>
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">With Email</p>
+                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{results.filter(r => r.email).length}</p>
+                    </div>
+                  </motion.div>
+                  {/* Tech Detected */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, delay: 0.10 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Tech Detected</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{results.filter(r => r.tech_stack).length}</p>
+                  </motion.div>
+                  {/* Decision Makers */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, delay: 0.14 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Decision Makers</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{results.filter(r => r.decision_maker).length}</p>
+                  </motion.div>
+                  {/* Hot Leads */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, delay: 0.18 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Hot Leads</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{results.filter(r => (r.lead_score || 0) >= 70).length}</p>
+                  </motion.div>
+                </div>
 
                 {/* Single-URL website enrichment (optional) */}
                 <WebsiteScraper

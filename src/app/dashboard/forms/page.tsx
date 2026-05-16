@@ -22,7 +22,6 @@ import {
   computeFieldVisibility,
 } from "@/lib/forms/conditional-logic";
 import { MotionPage } from "@/components/motion/motion-page";
-import StatStrip from "@/components/ui/stat-strip";
 
 type AiFormType = "contact" | "signup" | "survey" | "booking" | "application" | "feedback" | "quote" | "custom";
 
@@ -419,14 +418,47 @@ export default function FormsPage() {
                   </button>
                 </div>
               </div>
-            </Modal>{/* Stats */}<StatStrip
-              focal={{ label: "Total Forms", value: String(forms.length) }}
-              support={[
-                { label: "Submissions", value: String(totalSubmissions), color: "text-[#2563EB]" },
-                { label: "Avg Completion", value: `${avgCompletionRate}%`, color: "text-emerald-700" },
-                { label: "Total Views", value: String(forms.reduce((s, f) => s + f.views, 0)), color: "text-blue-700" },
-              ]}
-            />{/* Tabs */}<div className="flex gap-1 rounded-lg border p-1 w-fit" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+            </Modal>{/* Stats */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.04 }}
+                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Forms</p>
+                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{forms.length}</p>
+                </div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.10 }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Submissions</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{totalSubmissions}</p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.14 }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Completion</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{avgCompletionRate}%</p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.18 }}
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Views</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{forms.reduce((s, f) => s + f.views, 0)}</p>
+              </motion.div>
+            </div>{/* Tabs */}<div className="flex gap-1 rounded-lg border p-1 w-fit" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${

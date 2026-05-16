@@ -13,7 +13,6 @@ import Modal from "@/components/ui/modal";
 import { Smartphone } from "lucide-react";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import { PrismPanel } from "@/components/prism";
-import StatStrip from "@/components/ui/stat-strip";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type SmsIntent = "reminder" | "promo" | "confirmation" | "welcome" | "winback" | "abandon_cart" | "appointment" | "custom";
@@ -513,20 +512,49 @@ export default function SMSTemplatesPage() {
             )}{/* ===== SMS ANALYTICS ===== */}{activeTab === "analytics" && (
               <div className="space-y-4">
                 {/* Overview Stats */}
-                <StatStrip
-                  focal={{
-                    label: "Total Sent",
-                    value: totalSends.toLocaleString(),
-                    icon: <Send size={12} />,
-                    color: "text-[#2563EB]",
-                  }}
-                  support={[
-                    { label: "Delivered", value: totalDelivered.toLocaleString(), icon: <CheckCircle size={12} />, color: "text-green-400" },
-                    { label: "Delivery Rate", value: `${deliveryRate}%`, icon: <TrendingUp size={12} />, color: "text-blue-400" },
-                    { label: "Total Replies", value: totalReplies.toLocaleString(), icon: <MessageSquare size={12} />, color: "text-[#2563EB]" },
-                    { label: "Reply Rate", value: `${replyRate}%`, icon: <BarChart3 size={12} />, color: "text-[#2563EB]" },
-                  ]}
-                />
+                <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                  {/* Focal tile */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.04 }}
+                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                    <div>
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Sent</p>
+                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{totalSends.toLocaleString()}</p>
+                    </div>
+                  </motion.div>
+                  {/* Support tiles */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.10 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Delivered</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{totalDelivered.toLocaleString()}</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.14 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Delivery Rate</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{deliveryRate}%</p>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.18 }}
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Replies</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{totalReplies.toLocaleString()}</p>
+                  </motion.div>
+                </div>
 
                 {/* Delivery Rate Monitor */}
                 <PrismPanel padding="p-4">
