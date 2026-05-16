@@ -17,6 +17,7 @@ import {
   Home2, ShoppingBag as IxShoppingBag, MonitorMobbile, Camera as IxCamera,
   Teacher, People, Buildings, Shop, Category,
 } from "iconsax-react";
+import { GeneratingRiveIcon, LiveRiveIcon } from "@/components/ui/rive-status-icon";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
@@ -371,19 +372,6 @@ function GeneratingAnimation() {
         <span className="w-1 h-1 rounded-full bg-brand-accent animate-bounce [animation-delay:240ms]" />
       </div>
     </div>
-  );
-}
-
-/** Pulsing live indicator dot — shown inline next to Live / Deploying badges */
-function LiveDot({ color = "#10b981" }: { color?: string }) {
-  return (
-    <span className="relative flex items-center justify-center w-2 h-2 shrink-0">
-      <span
-        className="absolute inline-flex w-full h-full rounded-full opacity-60 animate-ping"
-        style={{ backgroundColor: color }}
-      />
-      <span className="relative inline-flex w-1 h-1 rounded-full" style={{ backgroundColor: color }} />
-    </span>
   );
 }
 
@@ -1360,8 +1348,8 @@ export default function WebsitesPage() {
                             </div>
                           )}
                           <span className={`absolute top-2 right-2 text-[9px] px-2 py-0.5 rounded-full border backdrop-blur inline-flex items-center gap-1 ${STATUS_BADGE[status] || STATUS_BADGE.draft}`}>
-                            {(status === "live") && <LiveDot color="#10b981" />}
-                            {(status === "generating" || status === "deploying") && <LiveDot color="#2563EB" />}
+                            {(status === "live") && <LiveRiveIcon color="#10b981" />}
+                            {(status === "generating" || status === "deploying") && <GeneratingRiveIcon />}
                             {STATUS_LABEL[status] || p.status}
                           </span>
                           {status === "preview" && days !== null && (
