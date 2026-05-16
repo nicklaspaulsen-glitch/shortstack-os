@@ -178,13 +178,13 @@ export default function TrinityPage() {
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">TRINITY AI</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Trinity AI</h1>
       </div>
-    </div>{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
-              {TABS.map(t => (
-                <button key={t} onClick={() => setTab(t)}
-                  className={`px-3 py-1.5 rounded-lg text-[10px] font-medium whitespace-nowrap transition-all ${
-                    tab === t ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.2)]" : "text-muted border border-transparent hover:text-foreground"
-                  }`}>{t}</button>
-              ))}
+    </div>{/* Tabs */}<div className="overflow-x-auto pb-1">
+              <div className="tab-pill-strip">
+                {TABS.map(t => (
+                  <button key={t} onClick={() => setTab(t)}
+                    className={`tab-pill${tab === t ? " active" : ""}`}>{t}</button>
+                ))}
+              </div>
             </div>{/* ═══ CHAT TAB ═══ */}{tab === "Chat" && (
               <div className="glass rounded-xl p-0 flex flex-col" style={{ height: "calc(100vh - 280px)", minHeight: 400 }}>
                 <div className="flex-1 overflow-y-auto p-5 space-y-3">

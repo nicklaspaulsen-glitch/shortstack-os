@@ -333,7 +333,7 @@ export default function Tab2AIUpload() {
             type="button"
             onClick={handleAnalyze}
             disabled={analyzing || uploading || (!asset && !textInput.trim())}
-            className="px-4 py-1.5 rounded-md bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.4)] text-brand-accent inline-flex items-center gap-2 text-xs font-medium hover:bg-[rgba(37,99,235,0.18)] disabled:opacity-50"
+            className="btn-pill-ghost text-xs inline-flex items-center gap-2 disabled:opacity-50"
           >
             {analyzing ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
             {analyzing ? "AI thinking..." : "Run AI"}
@@ -492,7 +492,7 @@ export default function Tab2AIUpload() {
               type="button"
               onClick={() => handleScheduleAll(false)}
               disabled={scheduling}
-              className="px-4 py-2 rounded-md bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.4)] text-brand-accent text-xs font-medium inline-flex items-center gap-2 disabled:opacity-50"
+              className="btn-pill-ghost text-xs inline-flex items-center gap-2 disabled:opacity-50"
             >
               {scheduling ? <Loader2 size={12} className="animate-spin" /> : <CalendarIcon size={12} />}
               Schedule all

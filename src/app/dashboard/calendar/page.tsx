@@ -315,19 +315,17 @@ export default function CalendarPage() {
               </h1>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-text-primary text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all flex items-center gap-1.5">
+              <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="btn-pill-ghost flex items-center gap-1.5">
                 <Filter size={12} /> Filters
               </button>
-              <button onClick={() => setShowCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-accent/80 text-white text-xs font-semibold hover:bg-brand-accent/80 transition-all">
+              <button onClick={() => setShowCreate(true)} className="btn-pill flex items-center gap-1.5">
                 <Plus size={12} /> New Event
               </button>
             </div>
-          </div>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
+          </div>{/* Tabs */}<div className="tab-pill-strip w-fit">
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
-                  }`}>
+                  className={`tab-pill${tab === t.id ? " active" : ""}`}>
                   {t.icon} {t.label}
                 </button>
               ))}

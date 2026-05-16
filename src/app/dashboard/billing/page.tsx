@@ -284,7 +284,7 @@ export default function BillingPage() {
       <div className="flex items-center gap-2 shrink-0">
         <Link
                   href="/dashboard/upgrade"
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-black/10 border border-border text-foreground text-xs font-medium hover:bg-black/15 transition-colors"
+                  className="btn-pill-ghost flex items-center gap-1.5"
                 >
                   <ArrowUpRight size={12} />
                   Upgrade plan
@@ -344,7 +344,7 @@ export default function BillingPage() {
                   <button
                     onClick={handleManageSubscription}
                     disabled={portalLoading}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(37,99,235,0.08)] hover:text-brand-accent transition-colors disabled:opacity-60"
+                    className="btn-pill-ghost flex items-center gap-1.5 disabled:opacity-60"
                   >
                     {portalLoading ? <Loader2 size={12} className="animate-spin" /> : <ExternalLink size={12} />}
                     Manage subscription
@@ -353,7 +353,7 @@ export default function BillingPage() {
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <Link
                     href="/dashboard/upgrade"
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-brand-accent text-white text-xs font-semibold hover:bg-brand-accent/80 transition-colors"
+                    className="btn-pill flex items-center gap-1.5"
                   >
                     <ArrowUpRight size={12} />
                     Upgrade
@@ -498,10 +498,8 @@ export default function BillingPage() {
                       <button
                         onClick={() => handleTopUp(pack.id)}
                         disabled={isLoading || topUpLoading !== null}
-                        className={`w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors disabled:opacity-60 ${
-                          pack.popular
-                            ? "bg-brand-accent text-white hover:bg-brand-accent/80 shadow-sm"
-                            : "bg-surface-light text-foreground border border-border hover:bg-[rgba(37,99,235,0.08)] hover:text-brand-accent"
+                        className={`w-full flex items-center justify-center gap-1.5 disabled:opacity-60 ${
+                          pack.popular ? "btn-pill" : "btn-pill-ghost"
                         }`}
                       >
                         {isLoading ? (

@@ -361,19 +361,17 @@ export default function WorkflowsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <button onClick={() => setShowAiGen(true)} className="px-3 py-1.5 rounded-lg bg-brand-accent hover:bg-[#3B82F6] text-white text-xs font-semibold hover:shadow-lg transition-all flex items-center gap-1.5">
+                    <button onClick={() => setShowAiGen(true)} className="btn-pill flex items-center gap-1.5">
                       <Sparkles size={13} /> Generate with AI
                     </button>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
+                    <button onClick={() => setShowCreate(true)} className="btn-pill-ghost flex items-center gap-1.5">
                       <Plus size={13} /> New
                     </button>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <button onClick={() => setTab("agent")} className={`flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg font-medium transition-all ${
-                      tab === "agent" ? "bg-black/15 text-foreground" : "bg-black/5 text-foreground hover:text-foreground border border-border"
-                    }`}>
+                    <button onClick={() => setTab("agent")} className="btn-pill-ghost flex items-center gap-1.5">
                       <Bot size={13} /> Agent Mode
                     </button>
                   </motion.div>
@@ -387,26 +385,24 @@ export default function WorkflowsPage() {
                 workflows. */}<AiWorkflowHero
               clients={clients}
               onPreview={(wf) => setPreviewWorkflow(wf)}
-            />{/* Tabs (sticky) */}<div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 overflow-x-auto border-b border-border pb-0">
-              {([
-                { id: "builder" as const, label: "Builder", icon: Zap },
-                { id: "presets" as const, label: `Presets (${WORKFLOW_PRESETS.length})`, icon: BookOpen },
-                { id: "triggers" as const, label: "Triggers & Actions", icon: GitBranch },
-                { id: "agent" as const, label: "AI Agent", icon: Bot },
-                { id: "n8n" as const, label: "n8n Live", icon: Globe },
-                { id: "analytics" as const, label: "Analytics", icon: BarChart3 },
-                { id: "sharing" as const, label: "Sharing", icon: Users },
-                { id: "history" as const, label: "History", icon: Clock },
-              ]).map(t => (
-                <button key={t.id} onClick={() => { setTab(t.id); if (t.id === "n8n") fetchN8n(); }}
-                  className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-colors whitespace-nowrap ${
-                    tab === t.id
-                      ? "bg-surface-light text-brand-accent border border-border border-b-transparent -mb-px"
-                      : "text-muted hover:text-foreground"
-                  }`}>
-                  <t.icon size={12} /> {t.label}
-                </button>
-              ))}
+            />{/* Tabs (sticky) */}<div className="sticky top-0 z-10 bg-background/95 backdrop-blur pb-0 overflow-x-auto">
+              <div className="tab-pill-strip">
+                {([
+                  { id: "builder" as const, label: "Builder", icon: Zap },
+                  { id: "presets" as const, label: `Presets (${WORKFLOW_PRESETS.length})`, icon: BookOpen },
+                  { id: "triggers" as const, label: "Triggers & Actions", icon: GitBranch },
+                  { id: "agent" as const, label: "AI Agent", icon: Bot },
+                  { id: "n8n" as const, label: "n8n Live", icon: Globe },
+                  { id: "analytics" as const, label: "Analytics", icon: BarChart3 },
+                  { id: "sharing" as const, label: "Sharing", icon: Users },
+                  { id: "history" as const, label: "History", icon: Clock },
+                ]).map(t => (
+                  <button key={t.id} onClick={() => { setTab(t.id); if (t.id === "n8n") fetchN8n(); }}
+                    className={`tab-pill${tab === t.id ? " active" : ""}`}>
+                    <t.icon size={12} /> {t.label}
+                  </button>
+                ))}
+              </div>
             </div>{/* Builder Tab */}{tab === "builder" && (
               <div className="space-y-4">
                 {/* Quick prompts */}

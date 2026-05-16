@@ -427,20 +427,14 @@ export default function AnalyticsPage() {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {/* Date-range pills */}
-          <div
-            className="hidden sm:flex items-center gap-0.5 rounded-lg p-0.5 border border-[rgba(0,0,0,0.08)]"
-            style={{ background: "rgba(255,255,255,0.80)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
->
+          <div className="hidden sm:flex tab-pill-strip">
             {(["7d", "30d", "90d"] as const).map(r => (
               <button
                 key={r}
+                type="button"
                 onClick={() => setDateRange(r)}
-                className={`px-2.5 py-1 text-[10px] rounded-md transition-colors duration-150 ${
-                  dateRange === r
-                    ? "bg-brand-accent/80 text-white font-semibold"
-                    : "text-[#6F6D7A] hover:text-text-primary"
-                }`}
->
+                className={`tab-pill${dateRange === r ? " active" : ""}`}
+              >
                 {r}
               </button>
             ))}

@@ -39,7 +39,7 @@ export default function SocialStudioPage() {
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">POST STUDIO</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Social Studio</h1>
       </div>
-    </div><div className="glass rounded-xl p-1 flex flex-wrap gap-1">
+    </div><div className="tab-pill-strip flex-wrap">
               {TABS.map((t, index) => {
                 const active = tab === t.key;
                 return (
@@ -50,14 +50,9 @@ export default function SocialStudioPage() {
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.05 }}
-                    whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.97 }}
-                    className={`flex-1 min-w-[140px] px-3 py-2 rounded-md text-xs font-medium inline-flex items-center justify-center gap-2 transition-all ${
-                      active
-                        ? "bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] text-brand-accent shadow-inner"
-                        : "border border-transparent text-muted hover:text-foreground hover:bg-[rgba(0,0,0,0.03)]"
-                    }`}
-                    aria-pressed={active}
+                    className={`tab-pill flex items-center gap-2${active ? " active" : ""}`}
+                    aria-current={active ? "page" : undefined}
                     title={t.description}
                   >
                     {t.icon}

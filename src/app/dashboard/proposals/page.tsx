@@ -183,7 +183,7 @@ export default function ProposalsPage() {
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => setShowNew(true)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#3B82F6]"
+                  className="btn-pill inline-flex items-center gap-1.5"
                 >
                   <Plus size={14} /> New proposal
                 </motion.button>
@@ -217,7 +217,7 @@ export default function ProposalsPage() {
                         whileHover={{ scale: 1.04 }}
                         whileTap={{ scale: 0.96 }}
                         onClick={() => setShowNew(true)}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white"
+                        className="btn-pill inline-flex items-center gap-1.5"
                       >
                         <Plus size={14} /> Create proposal
                       </motion.button>
@@ -486,7 +486,7 @@ function NewProposalForm({
           whileTap={{ scale: 0.97 }}
           onClick={submit}
           disabled={!canSubmit || submitting}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#3B82F6] disabled:opacity-40"
+          className="btn-pill inline-flex items-center gap-1.5 disabled:opacity-40"
         >
           {submitting ? (
             <Loader size={14} className="animate-spin" />

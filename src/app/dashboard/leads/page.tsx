@@ -816,14 +816,14 @@ export default function LeadEnginePage() {
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <button onClick={() => setShowImportModal(true)} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.03)] text-xs font-medium text-[#52525B] hover:text-text-primary hover:bg-[rgba(0,0,0,0.06)] transition-colors">
+          <button onClick={() => setShowImportModal(true)} className="btn-pill-ghost flex items-center gap-1.5">
             <Upload size={12} /> Import
           </button>
-          <button onClick={handleExport} disabled={exporting} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.03)] text-xs font-medium text-[#52525B] hover:text-text-primary hover:bg-[rgba(0,0,0,0.06)] transition-colors disabled:opacity-40">
+          <button onClick={handleExport} disabled={exporting} className="btn-pill-ghost flex items-center gap-1.5 disabled:opacity-40">
             {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
             {exporting ? "…" : "Export"}
           </button>
-          <button onClick={() => setShowAddModal(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-accent/80 text-white text-xs font-semibold hover:bg-brand-accent/80/90 transition-all">
+          <button onClick={() => setShowAddModal(true)} className="btn-pill flex items-center gap-1.5">
             <UserPlus size={12} /> Add Lead
           </button>
         </div>
@@ -912,12 +912,10 @@ export default function LeadEnginePage() {
                   </motion.div>
                 </div>
               </div>
-            </CollapsibleStats>{/* Tabs (sticky) */}<div className="glass sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]">
+            </CollapsibleStats>{/* Tabs (sticky) */}<div className="tab-pill-strip sticky top-0 z-10 overflow-x-auto">
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
-                  className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-                    activeTab === t.key ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
-                  }`}>{t.icon} {t.label}</button>
+                  className={`tab-pill flex items-center gap-2 whitespace-nowrap${activeTab === t.key ? " active" : ""}`}>{t.icon} {t.label}</button>
               ))}
             </div>{/* ===== ALL LEADS TAB ===== */}{activeTab === "leads" && (
               <div className="space-y-3">

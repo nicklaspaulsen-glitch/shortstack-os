@@ -407,22 +407,16 @@ export default function ConversationsPage() {
               </div>
 
               {/* Filter tabs */}
-              <div className="flex flex-wrap gap-1 px-3 py-2 border-b border-[rgba(0,0,0,0.08)]">
+              <div className="tab-pill-strip px-3 py-2 border-b border-[rgba(0,0,0,0.08)] flex-wrap">
                 {FILTERS.map((f, i) => (
-                  <motion.button
+                  <button
                     key={f.key}
-                    whileHover={{ scale: 1.04 }}
-                    whileTap={{ scale: 0.96 }}
                     onClick={() => setFilter(f.key)}
-                    className={`text-xs px-2.5 py-1 rounded-md transition ${
-                      filter === f.key
-                        ? "bg-brand-accent/80/10 text-brand-accent border border-[#1D4ED8]/20"
-                        : "text-[#52525B] hover:text-[#111827] hover:bg-[rgba(0,0,0,0.04)] border border-transparent"
-                    }`}
+                    className={`tab-pill${filter === f.key ? " active" : ""}`}
                     title={`Shortcut: ${i + 1}`}
                   >
                     {f.label}
-                  </motion.button>
+                  </button>
                 ))}
               </div>
 
@@ -591,7 +585,7 @@ export default function ConversationsPage() {
                         whileTap={{ scale: 0.98 }}
                         onClick={handleSend}
                         disabled={sending || !composerText.trim()}
-                        className="px-3 py-1.5 rounded bg-brand-accent text-white text-sm font-medium disabled:opacity-40 hover:bg-[#3B82F6] flex items-center gap-1.5"
+                        className="btn-pill flex items-center gap-1.5 disabled:opacity-40"
                       >
                         {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                         Send
