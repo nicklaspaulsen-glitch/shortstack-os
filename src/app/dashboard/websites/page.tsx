@@ -932,7 +932,7 @@ export default function WebsitesPage() {
                 <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Sites That Convert</h1>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <div className="flex items-center gap-1.5 text-[10px] text-black/65 bg-black/[0.06] border border-black/[0.12] px-2 py-1 rounded-lg">
+                <div className="flex items-center gap-1.5 text-[10px] text-white/60 bg-white/[0.05] border border-border-subtle px-2 py-1 rounded-lg">
                   <VercelIcon size={12} /> Vercel
                   <span className="opacity-40">&middot;</span>
                   <GoDaddyIcon size={12} /> GoDaddy
@@ -1397,7 +1397,7 @@ export default function WebsitesPage() {
                                     <div key={step} className="flex items-center gap-0.5 flex-1">
                                       <div
                                         className={`h-1 rounded-full flex-1 transition-all ${
-                                          done ? "bg-brand-accent/60" : active ? "bg-brand-accent/30" : "bg-[rgba(0,0,0,0.06)]"
+                                          done ? "bg-brand-accent/60" : active ? "bg-brand-accent/30" : "bg-white/[0.06]"
                                         }`}
                                       />
                                       {i === STEPS.length - 1 && (
@@ -1552,7 +1552,7 @@ function PricingModal({
             </h2>
             <p className="text-[11px] text-muted">{project.name} &mdash; pick a plan to go live.</p>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-black/5"><X size={14} /></button>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/[0.05]"><X size={14} /></button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
