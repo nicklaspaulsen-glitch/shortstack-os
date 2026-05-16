@@ -1251,49 +1251,71 @@ export default function LandingPagesPage() {
               <div className="grid grid-cols-4 gap-4">
                 {TEMPLATES.map((tpl, index) => {
                   const Icon = tpl.icon;
+                  const isSelected = selectedTemplate === tpl.id;
                   return (
                     <motion.div
                       key={tpl.id}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
-                      whileHover={{ y: -4, scale: 1.01 }}
-                      className={`glass rounded-xl group cursor-pointer overflow-hidden ${selectedTemplate === tpl.id ? "border-indigo-500/40 ring-1 ring-indigo-500/20" : ""}`}
+                      whileHover={{ y: -3 }}
+                      onClick={() => handleTemplateSelect(tpl.id)}
+                      className={`glass rounded-xl group cursor-pointer overflow-hidden ${isSelected ? "border-brand-accent/40 ring-1 ring-brand-accent/20" : ""}`}
                     >
-                      {/* Preview thumbnail mockup */}
+                      {/* Photo thumbnail with perspective tilt on hover */}
                       <div
-                        className={`h-36 relative overflow-hidden bg-gradient-to-br ${tpl.gradient}`}
-                        style={{ opacity: 0.9 }}
+                        className="h-40 relative overflow-hidden"
+                        onMouseMove={e => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          const x = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
+                          const y = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
+                          e.currentTarget.style.transform = `perspective(600px) rotateX(${y}deg) rotateY(${x}deg)`;
+                          e.currentTarget.style.transition = "none";
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.transform = "";
+                          e.currentTarget.style.transition = "transform 300ms cubic-bezier(0.16,1,0.3,1)";
+                        }}
                       >
-                        {/* Miniature page mockup */}
-                        <div className="absolute inset-3 bg-black/5 backdrop-blur-sm rounded-lg p-3 flex flex-col">
-                          <div className="flex gap-1 mb-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-black/20" />
-                            <div className="w-1.5 h-1.5 rounded-full bg-black/20" />
-                            <div className="w-1.5 h-1.5 rounded-full bg-black/20" />
-                          </div>
-                          <div className="flex-1 flex flex-col items-center justify-center gap-1.5">
-                            <Icon className="w-6 h-6 text-muted" />
-                            <div className="w-16 h-1.5 bg-black/15 rounded-full" />
-                            <div className="w-12 h-1 bg-black/10 rounded-full" />
-                            <div className="w-10 h-3 bg-black/15 rounded-md mt-1" />
-                          </div>
-                          <div className="flex gap-1 mt-auto">
-                            <div className="flex-1 h-4 bg-black/5 rounded" />
-                            <div className="flex-1 h-4 bg-black/5 rounded" />
-                            <div className="flex-1 h-4 bg-black/5 rounded" />
-                          </div>
+                        {/* Actual template photo */}
+                        <div
+                          className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                          style={{ backgroundImage: `url(${tpl.image})` }}
+                        />
+                        {/* Gradient overlay for readability */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                        {/* Template icon chip */}
+                        <div className="absolute top-3 left-3 p-1.5 rounded-lg bg-black/30 backdrop-blur-sm border border-white/10">
+                          <Icon className="w-3.5 h-3.5 text-white" />
                         </div>
+                        {/* CVR badge */}
+                        <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-brand-accent/90 text-white text-[10px] font-bold">
+                          {tpl.cvr}
+                        </div>
+                        {/* Selected overlay */}
+                        {isSelected && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="absolute inset-0 bg-brand-accent/20 flex items-center justify-center"
+                          >
+                            <div className="w-8 h-8 rounded-full bg-brand-accent flex items-center justify-center">
+                              <Check className="w-4 h-4 text-white" />
+                            </div>
+                          </motion.div>
+                        )}
+                        {/* Avg launch time */}
+                        <div className="absolute bottom-3 left-3 text-[10px] text-white/70 font-medium">{tpl.avgLaunch}</div>
                       </div>
 
-                      <div className="p-4">
-                        <h3 className="text-sm font-bold text-text-primary mb-1">{tpl.name}</h3>
-                        <p className="text-xs text-muted mb-3">{tpl.desc}</p>
+                      <div className="p-3.5">
+                        <h3 className="text-sm font-bold text-text-primary mb-0.5">{tpl.name}</h3>
+                        <p className="text-xs text-muted mb-3 line-clamp-2">{tpl.desc}</p>
                         <button
-                          onClick={() => handleTemplateSelect(tpl.id)}
-                          className="w-full py-2 bg-surface-light border border-border rounded-lg text-xs font-semibold text-muted hover:text-brand-accent hover:border-brand-accent transition-colors group-hover:border-[rgba(59,130,246,0.25)]"
+                          onClick={e => { e.stopPropagation(); handleTemplateSelect(tpl.id); }}
+                          className={`w-full py-1.5 rounded-lg text-xs font-semibold transition-colors ${isSelected ? "bg-brand-accent text-white" : "bg-surface-light border border-border text-muted hover:text-brand-accent hover:border-brand-accent"}`}
                         >
-                          Use Template
+                          {isSelected ? "Selected" : "Use Template"}
                         </button>
                       </div>
                     </motion.div>
