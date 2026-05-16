@@ -72,7 +72,7 @@ const RESOURCE_META: Array<{
   { key: "emails", label: "Emails", icon: <Mail size={14} />, accent: "#2563EB" },
   { key: "tokens", label: "AI Tokens", icon: <Bot size={14} />, accent: "#a855f7" },
   { key: "clients", label: "Active Clients", icon: <Users size={14} />, accent: "#2563EB" },
-  { key: "sms", label: "SMS Sent", icon: <Smartphone size={14} />, accent: "#f59e0b" },
+  { key: "sms", label: "SMS Sent", icon: <Smartphone size={14} />, accent: "#3B82F6" },
   { key: "call_minutes", label: "Call Minutes", icon: <Phone size={14} />, accent: "#ef4444", suffix: "min" },
 ];
 

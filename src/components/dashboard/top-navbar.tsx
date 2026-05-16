@@ -200,7 +200,7 @@ export default function TopNavbar() {
     <>
       {/* ── Row 1: breadcrumbs + Ask Trinity ── */}
       <div
-        className="sticky top-[60px] z-20 border-b"
+        className="sticky top-14 z-20 border-b"
         style={{
           background: "rgba(243,246,250,0.88)",
           backdropFilter: "blur(20px) saturate(1.5)",

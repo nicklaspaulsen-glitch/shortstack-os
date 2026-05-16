@@ -130,10 +130,10 @@ const navItems: NavItem[] = [
   { label: "CRM", href: "/dashboard/crm", icon: <NavIcon3D name="Users" size={16} />, roles: ["admin", "team_member"], tier: 1, sub: "Pipeline" },
   { label: "Calendar", href: "/dashboard/calendar", icon: <NavIcon3D name="Calendar" size={16} />, roles: ["admin", "team_member"], tier: 1, sub: "Scheduling" },
 
-  // ── Advanced core (tier 2 — visible by default) ──
-  { label: "Generations", href: "/dashboard/generations", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], tier: 2 },
-  { label: "Community", href: "/dashboard/community", icon: <NavIcon3D name="Users" size={16} />, roles: ["admin", "team_member", "client"], tier: 2 },
-  { label: "Reports", href: "/dashboard/reports", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], tier: 2 },
+  // ── Advanced core (tier 3 — demoted to reduce default nav to ~20 core pages) ──
+  { label: "Generations", href: "/dashboard/generations", icon: <NavIcon3D name="Sparkles" size={16} />, roles: ["admin", "team_member"], tier: 3 },
+  { label: "Community", href: "/dashboard/community", icon: <NavIcon3D name="Users" size={16} />, roles: ["admin", "team_member", "client"], tier: 3 },
+  { label: "Reports", href: "/dashboard/reports", icon: <NavIcon3D name="FileText" size={16} />, roles: ["admin"], tier: 3 },
 
   // ── Sales (full revenue pipeline) ──
   // Workspace section moved to the BOTTOM (search for `section: "Workspace"`

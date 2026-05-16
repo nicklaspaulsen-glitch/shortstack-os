@@ -7,9 +7,25 @@ Playwright tests that exercise full authenticated flows against ShortStack OS.
 | File | What it tests |
 |---|---|
 | `journeys/auth.spec.ts` | Sign in, verify dashboard loads, sign out |
-| `journeys/clients.spec.ts` | Add a sentinel client, verify it appears in the table, deactivate (clean up) |
+| `journeys/clients.spec.ts` | Add a sentinel client, verify it appears in the table, delete (clean up) |
+| `journeys/client-onboarding.spec.ts` | Full onboarding: add → view profile → invite to portal → delete |
+| `journeys/dashboard.spec.ts` | Core nav, page h1s, sidebar links |
 | `journeys/team-members.spec.ts` | Open invite modal, create a sentinel team member, verify list, delete |
 | `journeys/self-test.spec.ts` | Navigate to `/dashboard/admin/self-test`, run sweep, assert >= 30 routes and 0 failures |
+| `journeys/voice-studio.spec.ts` | Tab navigation, header, presets tab, API call on load |
+| `journeys/voice-dialer-flow.spec.ts` | Voice Studio → clone form → Dialer voice picker flow |
+| `journeys/ai-studio.spec.ts` | Tool rail, category filters, advanced mode, job history |
+| `journeys/ai-generate-social.spec.ts` | AI Studio → image-gen → post to social / social-manager |
+| `journeys/website-builder.spec.ts` | Template gallery, niche cards, wizard, status badges |
+| `journeys/website-generate-deploy.spec.ts` | Generate → API call → preview → deploy button flow |
+| `journeys/thumbnail-generator.spec.ts` | Thumbnail generation wizard |
+| `journeys/ai-video.spec.ts` | AI Video page structure and generation trigger |
+| `journeys/video-editor.spec.ts` | Video editor timeline loads |
+| `journeys/agent-office.spec.ts` | Pixel agent office renders |
+| `journeys/api-health.spec.ts` | Core API routes return valid responses |
+| `journeys/integration-health-audit.spec.ts` | Integration connectivity checks |
+| `journeys/sidebar-crawl.spec.ts` | Crawl sidebar links, verify no 404s |
+| `journeys/sidebar.spec.ts` | Sidebar rendering and expand/collapse |
 
 The existing public smoke tests in `playwright/smoke.spec.ts` still run alongside these.
 

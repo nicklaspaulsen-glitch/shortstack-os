@@ -1,19 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { LayoutGroup } from "framer-motion";
 import { PageTransition } from "@/components/ui/page-transition";
 import { SkipToContent } from "@/components/a11y/SkipToContent";
-import Sidebar from "@/components/sidebar";
-import GlobalSearch from "@/components/global-search";
-import ClientSwitcher from "@/components/client-switcher";
-import Notifications from "@/components/notifications";
 import ErrorBoundary from "@/components/ui/error-boundary";
 import ManagedClientBanner from "@/components/managed-client-banner";
 import { QuotaWallProvider } from "@/components/billing/quota-wall";
 import { useAuth } from "@/lib/auth-context";
 import { useAppStore } from "@/lib/store";
-import { getPlanConfig } from "@/lib/plan-config";
 import {
   consumeDeepLink,
   isDesktop,
@@ -26,11 +20,10 @@ import {
 import { subscribeDesktopNotifications } from "@/lib/notifications/desktop-subscriber";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
-import { Menu, X, Crown } from "lucide-react";
-import Link from "next/link";
 import toast from "react-hot-toast";
 
 // Lazy-load overlay/modal components — not needed on initial render
+const MainNavbar = dynamic(() => import("@/components/dashboard/main-navbar"), { ssr: false });
 const TopNavbar = dynamic(() => import("@/components/dashboard/top-navbar"), { ssr: false });
 const DashboardAmbient3D = dynamic(() => import("@/components/brand/dashboard-ambient-3d"), { ssr: false });
 const DashboardBackground = dynamic(() => import("@/components/brand/dashboard-background"), { ssr: false });
@@ -135,7 +128,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { user, profile, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [zoom, setZoom] = useState(100);
 
   useEffect(() => {
@@ -357,107 +349,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           but doesn't fight content readability. */}
       <div className="flex min-h-screen bg-background/40 relative">
 
-        {/* Desktop sidebar — wrapped in its own LayoutGroup so the
-            layoutId="sidebar-active-accent" inside Sidebar doesn't
-            collide with the mobile copy when the menu opens
-            (framer-motion shared-layout bug per codex round-2 review). */}
-        <div className="hidden lg:block">
-          <LayoutGroup id="sidebar-desktop">
-            <Sidebar />
-          </LayoutGroup>
-        </div>
+        {/* Full-width top navigation (icon circles + section dropdowns + actions) */}
+        <MainNavbar />
 
-        {/* Mobile sidebar overlay */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 z-50">
-            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
-            <div className="relative w-56 h-full">
-              <LayoutGroup id="sidebar-mobile">
-                <Sidebar />
-              </LayoutGroup>
-              <button onClick={() => setMobileMenuOpen(false)}
-                className="absolute top-3 right-3 p-1.5 rounded-lg bg-surface-light text-muted hover:text-foreground z-50">
-                <X size={16} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        <main id="main" className="flex-1 lg:ml-56 min-w-0 overflow-x-hidden">
-          {/* Floating glass pill header — fixed, detached from sidebar */}
-          <div className="fixed z-40 electron-drag top-3 left-3 right-3 lg:left-[240px] rounded-2xl overflow-hidden floating-nav-pill"
-            style={{
-              background: "rgba(255,255,255,0.80)",
-              backdropFilter: "blur(20px) saturate(140%)",
-              WebkitBackdropFilter: "blur(20px) saturate(140%)",
-              border: "1px solid rgba(255,255,255,0.72)",
-              boxShadow: "0 0 0 1px rgba(156,167,222,0.18), 0 4px 24px rgba(108,114,172,0.08), 0 1px 4px rgba(0,0,0,0.04)",
-            }}>
-            <div className="flex items-center justify-between px-5 lg:px-6 h-12">
-              {/* Left — mobile menu */}
-              <div className="electron-no-drag flex items-center gap-2 lg:hidden">
-                <button onClick={() => setMobileMenuOpen(true)} className="p-1.5 rounded-md text-muted hover:text-foreground hover:bg-surface-light transition-colors">
-                  <Menu size={16} />
-                </button>
-              </div>
-
-              <div className="flex-1" />
-
-              {/* Right — actions */}
-              <div className="electron-no-drag flex items-center gap-1.5">
-                {zoom !== 100 && (
-                  <button onClick={() => setZoom(100)} className="text-[9px] text-muted bg-surface-light px-2 py-0.5 rounded hover:text-foreground transition-colors font-mono">
-                    {zoom}%
-                  </button>
-                )}
-                {/* Subscription badge for admin */}
-                {profile?.role === "admin" && (
-                  <PlanBadge
-                    planTier={profile.plan_tier || undefined}
-                    customLabel={
-                      ((profile as unknown as { onboarding_preferences?: Record<string, unknown> })
-                        .onboarding_preferences?.custom_plan_label) as string | undefined
-                    }
-                  />
-                )}
-                <ClientSwitcher />
-                <Notifications />
-                <GlobalSearch />
-                {/* User avatar — links to settings */}
-                <Link
-                  href="/dashboard/settings"
-                  title={profile?.full_name || profile?.nickname || "Settings"}
-                  className="shrink-0 rounded-full ring-1 ring-black/10 hover:ring-brand-accent/40 transition-all duration-200"
-                >
-                  {profile?.avatar_url ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={profile.avatar_url}
-                      alt=""
-                      width={28}
-                      height={28}
-                      className="rounded-full object-cover w-7 h-7"
-                    />
-                  ) : (
-                    <div className="w-7 h-7 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
-                      <span className="text-brand-accent text-[10px] font-bold font-display leading-none">
-                        {(profile?.nickname || profile?.full_name)?.charAt(0).toUpperCase() || "?"}
-                      </span>
-                    </div>
-                  )}
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Spacer — compensates for the fixed floating header (h-12 + top-3 gap) */}
-          <div className="h-[60px]" aria-hidden="true" />
+        <main id="main" className="flex-1 min-w-0 overflow-x-hidden">
+          {/* Spacer — compensates for the fixed MainNavbar (h-14 = 56px) */}
+          <div className="h-14" aria-hidden="true" />
 
           {/* Managed client banner */}
           <ManagedClientBanner />
 
-          {/* P9 top navbar — breadcrumbs + Trinity Cmd+K quick-prompt */}
+          {/* Sub-nav — breadcrumbs + Trinity Cmd+K + contextual section pills */}
           <TopNavbar />
+
+          {/* Zoom reset pill — appears bottom-right when Ctrl+scroll zoom is active */}
+          {zoom !== 100 && (
+            <button
+              onClick={() => setZoom(100)}
+              className="fixed bottom-4 right-4 z-50 text-[10px] font-mono px-2.5 py-1 rounded-lg transition-colors"
+              style={{
+                background: "rgba(13,17,32,0.92)",
+                border: "1px solid rgba(99,146,255,0.15)",
+                color: "#60A5FA",
+              }}
+            >
+              {zoom}% — click to reset
+            </button>
+          )}
 
           {/* Page content — Apr 28: "stagger-shatter" entry transition
               retired (user described as "weird flicker"). Replaced with
@@ -491,21 +409,3 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 }
 
-/* ─── Plan Badge (header) ───────────────────────────────────────── */
-/* Apr 28: now supports a custom label override stored in
- * `profile.onboarding_preferences.custom_plan_label`. Lets the user
- * (or admin/founder) replace the generic plan name with whatever
- * they want — e.g. "Founder" → "OG #1" or "Lifetime VIP". Falls back
- * to the canonical `plan.badge_label` when the override isn't set. */
-function PlanBadge({ planTier, customLabel }: { planTier?: string; customLabel?: string }) {
-  const plan = getPlanConfig(planTier);
-  const label = (customLabel && customLabel.trim()) || plan.badge_label;
-  return (
-    <Link href="/dashboard/settings"
-      className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg transition-colors"
-      style={{ background: `${plan.color}12`, color: plan.color, border: `1px solid ${plan.color}25` }}
-      title={`Plan: ${plan.badge_label}${customLabel ? ` (custom label: ${customLabel})` : ""}`}>
-      <Crown size={10} /> {label}
-    </Link>
-  );
-}
