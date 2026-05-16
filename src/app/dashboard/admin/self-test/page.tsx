@@ -219,7 +219,7 @@ export default function SelfTestDashboard() {
       {/* Verdict banner */}
       {!latest_run ? (
         <div className=" border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-4 flex items-start gap-3">
-          <AlertTriangle size={20} className="text-[#2563EB] shrink-0 mt-0.5" />
+          <AlertTriangle size={20} className="text-brand-accent shrink-0 mt-0.5" />
           <div>
             <div className="text-sm font-bold text-foreground">No runs yet</div>
             <div className="text-[11px] text-muted mt-0.5">

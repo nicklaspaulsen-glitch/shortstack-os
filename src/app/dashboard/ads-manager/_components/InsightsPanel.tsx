@@ -140,7 +140,7 @@ export default function InsightsPanel() {
       <div className="rounded-lg border border-black/[0.06] bg-white p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Sparkles className="text-[#2563EB]" size={16} />
+            <Sparkles className="text-brand-accent" size={16} />
             <h3 className="text-sm font-medium">AI Optimization Suggestions</h3>
             {suggestions.length > 0 && (
               <span className="text-[11px] text-muted">
@@ -151,7 +151,7 @@ export default function InsightsPanel() {
           <button
             onClick={() => void generate()}
             disabled={generating}
-            className="inline-flex items-center gap-1.5 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-3 py-1.5 text-xs text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)] disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-3 py-1.5 text-xs text-brand-accent hover:bg-[rgba(37,99,235,0.14)] disabled:opacity-50"
           >
             {generating ? (
               <Loader2 className="animate-spin" size={12} />

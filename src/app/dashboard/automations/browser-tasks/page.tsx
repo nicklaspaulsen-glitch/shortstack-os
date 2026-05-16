@@ -44,7 +44,7 @@ interface BrowserTaskTemplate {
 
 const STATUS_STYLES: Record<BrowserTask["status"], { label: string; bg: string; fg: string; icon: React.ReactNode }> = {
   queued: { label: "Queued", bg: "bg-amber-50", fg: "text-amber-700", icon: <Clock size={12} /> },
-  running: { label: "Running", bg: "bg-[rgba(37,99,235,0.08)]", fg: "text-[#2563EB]", icon: <Loader2 size={12} className="animate-spin" /> },
+  running: { label: "Running", bg: "bg-[rgba(37,99,235,0.08)]", fg: "text-brand-accent", icon: <Loader2 size={12} className="animate-spin" /> },
   completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-700", icon: <CheckCircle2 size={12} /> },
   failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-700", icon: <XCircle size={12} /> },
   cancelled: { label: "Cancelled", bg: "bg-zinc-500/15", fg: "text-text-muted", icon: <XCircle size={12} /> },
@@ -187,7 +187,7 @@ export default function BrowserTasksPage() {
                         onChange={(e) =>
                           setTemplateValues((prev) => ({ ...prev, [v.name]: e.target.value }))
                         }
-                        className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
+                        className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-brand-accent focus:outline-none"
                         placeholder={`{{${v.name}}}`}
                       />
                     </label>
@@ -202,7 +202,7 @@ export default function BrowserTasksPage() {
                       onChange={(e) => setGoal(e.target.value)}
                       rows={3}
                       placeholder="Visit example.com/pricing and extract every tier as JSON…"
-                      className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
+                      className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-brand-accent focus:outline-none"
                     />
                   </label>
                   <label className="block">
@@ -212,7 +212,7 @@ export default function BrowserTasksPage() {
                       value={startUrl}
                       onChange={(e) => setStartUrl(e.target.value)}
                       placeholder="https://example.com"
-                      className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
+                      className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-brand-accent focus:outline-none"
                     />
                   </label>
                 </div>
@@ -222,7 +222,7 @@ export default function BrowserTasksPage() {
                 <button
                   onClick={submit}
                   disabled={submitting}
-                  className="inline-flex items-center gap-1.5 rounded-md bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[rgba(37,99,235,0.30)] transition hover:bg-[#3B82F6] disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[rgba(37,99,235,0.30)] transition hover:bg-[#3B82F6] disabled:opacity-50"
                 >
                   {submitting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
                   Queue task

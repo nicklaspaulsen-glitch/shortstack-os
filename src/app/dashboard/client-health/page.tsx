@@ -209,7 +209,7 @@ export default function ClientHealthPage() {
               {tabs.map(t => (
                 <button key={t.id} onClick={() => setActiveTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${
-                    activeTab === t.id ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)] text-[#2563EB] font-medium" : "border-border text-muted hover:text-foreground"
+                    activeTab === t.id ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)] text-brand-accent font-medium" : "border-border text-muted hover:text-foreground"
                   }`}>
                   <t.icon size={12} /> {t.label}
                 </button>
@@ -219,7 +219,7 @@ export default function ClientHealthPage() {
                 {/* Engagement Trend Chart */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
-                    <TrendingUp size={14} className="text-[#2563EB]" /> Engagement Trend (Last 6 Months)
+                    <TrendingUp size={14} className="text-brand-accent" /> Engagement Trend (Last 6 Months)
                   </h3>
                   <div className="flex items-end gap-1 h-24">
                     {HEALTH_HISTORY.map((m, i) => (
@@ -242,7 +242,7 @@ export default function ClientHealthPage() {
                     {(["all", "critical", "warning", "healthy"] as const).map(f => (
                       <button key={f} onClick={() => setFilter(f)}
                         className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${
-                          filter === f ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] font-medium" : "border-border text-muted hover:text-foreground"
+                          filter === f ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent font-medium" : "border-border text-muted hover:text-foreground"
                         }`}>
                         {f === "all" ? `All (${clients.length})` :
                          f === "critical" ? `Critical (${criticalCount})` :
@@ -287,7 +287,7 @@ export default function ClientHealthPage() {
                             <span className={`text-[8px] px-1.5 py-0.5 rounded font-medium ${getHealthBg(client.health_score)} ${getHealthColor(client.health_score)}`}>
                               {getHealthLabel(client.health_score)}
                             </span>
-                            <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">{client.package_tier}</span>
+                            <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{client.package_tier}</span>
                             {client.trend > 0 ? (
                               <span className="flex items-center text-[8px] text-green-400"><TrendingUp size={8} /> +{client.trend}%</span>
                             ) : client.trend < 0 ? (
@@ -355,7 +355,7 @@ export default function ClientHealthPage() {
 
                           {/* Revenue Trend */}
                           <div>
-                            <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><DollarSign size={10} className="text-[#2563EB]" /> Revenue Trend</h4>
+                            <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><DollarSign size={10} className="text-brand-accent" /> Revenue Trend</h4>
                             <div className="flex items-end gap-0.5 h-12">
                               {client.revenue_trend.map((v, i) => (
                                 <div key={i} className="flex-1 rounded-t bg-[rgba(37,99,235,0.12)]" style={{ height: `${(v / Math.max(...client.revenue_trend)) * 100}%` }} />
@@ -366,11 +366,11 @@ export default function ClientHealthPage() {
 
                           {/* Action Recommendations */}
                           <div>
-                            <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><Lightbulb size={10} className="text-[#2563EB]" /> Recommendations</h4>
+                            <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><Lightbulb size={10} className="text-brand-accent" /> Recommendations</h4>
                             <div className="space-y-1">
                               {(RECOMMENDATIONS[client.health_score < 50 ? "critical" : client.health_score < 75 ? "warning" : "healthy"] || []).slice(0, 3).map((r, i) => (
                                 <div key={i} className="text-[10px] text-muted flex items-start gap-1">
-                                  <Target size={9} className="shrink-0 mt-0.5 text-[#2563EB]" /> {r}
+                                  <Target size={9} className="shrink-0 mt-0.5 text-brand-accent" /> {r}
                                 </div>
                               ))}
                             </div>
@@ -392,7 +392,7 @@ export default function ClientHealthPage() {
               <div className="space-y-4">
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
                   <h3 className="text-sm font-semibold mb-1 flex items-center gap-2">
-                    <Zap size={14} className="text-[#2563EB]" /> Health Score Algorithm
+                    <Zap size={14} className="text-brand-accent" /> Health Score Algorithm
                   </h3>
                   <p className="text-xs text-muted mb-4">The health score is calculated as a weighted average of these factors (0-100 scale).</p>
                   <div className="space-y-3">
@@ -400,7 +400,7 @@ export default function ClientHealthPage() {
                       <div key={w.factor}>
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-xs font-medium">{w.factor}</span>
-                          <span className="text-xs text-[#2563EB] font-mono">{w.weight}%</span>
+                          <span className="text-xs text-brand-accent font-mono">{w.weight}%</span>
                         </div>
                         <div className="w-full bg-black/5 rounded-full h-2 overflow-hidden">
                           <div className="h-full rounded-full bg-[rgba(37,99,235,0.40)]" style={{ width: `${w.weight}%` }} />
@@ -414,7 +414,7 @@ export default function ClientHealthPage() {
                 {/* Score Breakdown Per Client */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-xl p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <BarChart3 size={14} className="text-[#2563EB]" /> Client Score Breakdown
+                    <BarChart3 size={14} className="text-brand-accent" /> Client Score Breakdown
                   </h3>
                   <div className="overflow-x-auto">
                     <table className="w-full text-[10px]">
@@ -456,7 +456,7 @@ export default function ClientHealthPage() {
               <div className="space-y-4">
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <Bell size={14} className="text-[#2563EB]" /> Automated Health Alerts
+                    <Bell size={14} className="text-brand-accent" /> Automated Health Alerts
                   </h3>
                   <div className="space-y-2">
                     {HEALTH_ALERTS.map(alert => (
@@ -493,7 +493,7 @@ export default function ClientHealthPage() {
                 {/* Activity Frequency Monitor */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-xl p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <Clock size={14} className="text-[#2563EB]" /> Last Contact Tracker
+                    <Clock size={14} className="text-brand-accent" /> Last Contact Tracker
                   </h3>
                   <div className="space-y-2">
                     {clients.sort((a, b) => new Date(a.last_contact).getTime() - new Date(b.last_contact).getTime()).map(c => {
@@ -521,7 +521,7 @@ export default function ClientHealthPage() {
                 {/* NPS Overview */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {[
-                    { icon: <Star size={20} className="text-[#2563EB] mx-auto mb-2" />, value: avgNPS, color: "text-[#2563EB]", label: "Average NPS Score" },
+                    { icon: <Star size={20} className="text-brand-accent mx-auto mb-2" />, value: avgNPS, color: "text-brand-accent", label: "Average NPS Score" },
                     { icon: <ThumbsUp size={20} className="text-green-400 mx-auto mb-2" />, value: clients.filter(c => c.nps >= 9).length, color: "text-green-400", label: "Promoters (9-10)" },
                     { icon: <MessageSquare size={20} className="text-yellow-400 mx-auto mb-2" />, value: clients.filter(c => c.nps >= 7 && c.nps < 9).length, color: "text-yellow-400", label: "Passives (7-8)" },
                   ].map((tile, i) => (
@@ -556,13 +556,13 @@ export default function ClientHealthPage() {
                 {/* Satisfaction Survey */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass rounded-xl p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <Calendar size={14} className="text-[#2563EB]" /> Client Satisfaction Survey
+                    <Calendar size={14} className="text-brand-accent" /> Client Satisfaction Survey
                   </h3>
                   {surveySubmitted ? (
                     <div className="text-center py-6">
                       <CheckCircle size={32} className="text-green-400 mx-auto mb-2" />
                       <p className="text-sm font-medium">Survey recorded!</p>
-                      <button onClick={() => { setSurveySubmitted(false); setSurveyFeedback(""); }} className="text-xs text-[#2563EB] mt-2 underline">Submit another</button>
+                      <button onClick={() => { setSurveySubmitted(false); setSurveyFeedback(""); }} className="text-xs text-brand-accent mt-2 underline">Submit another</button>
                     </div>
                   ) : (
                     <div className="space-y-3">
@@ -586,7 +586,7 @@ export default function ClientHealthPage() {
                           className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-20" placeholder="Any additional feedback..." />
                       </div>
                       <button onClick={() => { if (surveyClient) setSurveySubmitted(true); }}
-                        className="px-4 py-2 rounded-lg bg-[#2563EB] text-white text-xs font-semibold">
+                        className="px-4 py-2 rounded-lg bg-brand-accent text-white text-xs font-semibold">
                         Submit Survey
                       </button>
                     </div>
@@ -597,7 +597,7 @@ export default function ClientHealthPage() {
               <div className="space-y-4">
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <BarChart3 size={14} className="text-[#2563EB]" /> Health Score History
+                    <BarChart3 size={14} className="text-brand-accent" /> Health Score History
                   </h3>
                   <div className="flex items-end gap-2 h-32">
                     {HEALTH_HISTORY.map((m, i) => (

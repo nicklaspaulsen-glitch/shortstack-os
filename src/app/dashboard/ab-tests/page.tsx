@@ -57,12 +57,12 @@ const STATUS_CONFIG: Record<Status, { label: string; color: string; icon: React.
   },
   paused: {
     label: "Paused",
-    color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]",
+    color: "text-brand-accent bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]",
     icon: <Pause size={11} />,
   },
   completed: {
     label: "Completed",
-    color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]",
+    color: "text-brand-accent bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]",
     icon: <CheckCircle2 size={11} />,
   },
 };
@@ -165,8 +165,8 @@ export default function AbTestsPage() {
       </div>
     </div><div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               <SummaryTile label="Running" value={summary.running} icon={<Clock size={16} />} color="text-emerald-600" index={0} />
-              <SummaryTile label="Completed" value={summary.completed} icon={<Trophy size={16} />} color="text-[#2563EB]" index={1} />
-              <SummaryTile label="Total Lift" value={`+${summary.totalLift}%`} icon={<TrendingUp size={16} />} color="text-[#2563EB]" index={2} />
+              <SummaryTile label="Completed" value={summary.completed} icon={<Trophy size={16} />} color="text-brand-accent" index={1} />
+              <SummaryTile label="Total Lift" value={`+${summary.totalLift}%`} icon={<TrendingUp size={16} />} color="text-brand-accent" index={2} />
             </div>{loading ? (
               <div className="grid grid-cols-1 gap-3">
                 {[...Array(3)].map((_, i) => (
@@ -176,7 +176,7 @@ export default function AbTestsPage() {
             ) : tests.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 gap-4">
                 <div className="w-16 h-16  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center">
-                  <FlaskConical size={28} className="text-[#2563EB]" />
+                  <FlaskConical size={28} className="text-brand-accent" />
                 </div>
                 <div className="text-center">
                   <p className="text-[#111827] font-semibold text-lg">No A/B tests yet</p>
@@ -186,7 +186,7 @@ export default function AbTestsPage() {
                 </div>
                 <button
                   onClick={() => setShowCreate(true)}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white text-sm font-semibold transition-colors"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-[#3B82F6] text-white text-sm font-semibold transition-colors"
                 >
                   <Plus size={15} />
                   Start Test
@@ -237,7 +237,7 @@ export default function AbTestsPage() {
                               key={v.id}
                               className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs border ${
                                 isWinner
-                                  ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                                  ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent"
                                   : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#374151]"
                               }`}
                             >
@@ -262,7 +262,7 @@ export default function AbTestsPage() {
                           {test.status === "running" && (
                             <button
                               onClick={() => void handleStatusChange(test.id, "paused")}
-                              className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-[#2563EB] transition-colors"
+                              className="p-1.5 rounded-md hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-brand-accent transition-colors"
                               title="Pause"
                             >
                               <Pause size={13} />
@@ -387,7 +387,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Homepage hero v2"
-              className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] placeholder-[#9CA3AF] text-sm focus:outline-none focus:border-[#2563EB] bg-white"
+              className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] placeholder-[#9CA3AF] text-sm focus:outline-none focus:border-brand-accent bg-white"
             />
           </div>
           <div>
@@ -395,7 +395,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
             <select
               value={parentType}
               onChange={(e) => setParentType(e.target.value as ParentType)}
-              className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB] bg-white"
+              className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent bg-white"
             >
               <option value="landing_page">Landing Page</option>
               <option value="funnel_step">Funnel Step</option>
@@ -408,7 +408,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
               value={parentId}
               onChange={(e) => setParentId(e.target.value)}
               placeholder="UUID of the surface to test"
-              className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] placeholder-[#9CA3AF] text-sm focus:outline-none focus:border-[#2563EB] font-mono bg-white"
+              className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] placeholder-[#9CA3AF] text-sm focus:outline-none focus:border-brand-accent font-mono bg-white"
             />
             <p className="text-[11px] text-text-muted mt-1">
               Find this id from the URL of the landing page / funnel step / email.
@@ -425,7 +425,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
           <button
             onClick={() => void submit()}
             disabled={submitting}
-            className="flex-1 px-4 py-2 bg-[#2563EB] hover:bg-[#3B82F6] disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors"
+            className="flex-1 px-4 py-2 bg-brand-accent hover:bg-[#3B82F6] disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors"
           >
             {submitting ? "Creating…" : "Create Test"}
           </button>

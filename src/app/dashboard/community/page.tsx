@@ -101,11 +101,11 @@ interface Badge {
 /* ------------------------------------------------------------------ */
 
 const TYPE_CONFIG: Record<string, { bg: string; icon: typeof MessageSquare }> = {
-  announcement: { bg: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]", icon: Megaphone },
+  announcement: { bg: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.2)]", icon: Megaphone },
   discussion: { bg: "bg-blue-400/10 text-blue-400 border-blue-400/20", icon: Users },
   question: { bg: "bg-yellow-400/10 text-yellow-400 border-yellow-400/20", icon: HelpCircle },
   resource: { bg: "bg-green-400/10 text-green-400 border-green-400/20", icon: BookOpen },
-  showcase: { bg: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]", icon: Sparkles },
+  showcase: { bg: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)]", icon: Sparkles },
 };
 
 const MEMBERS: { name: string; role: string; level: string; badge: string; posts: number; joined: string; online: boolean; points: number; streak: number; bio: string }[] = [];
@@ -120,9 +120,9 @@ const BADGES: Badge[] = [];
 
 const DISCUSSION_CATEGORIES = [
   { id: "general", label: "General", icon: MessageSquare, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20", description: "Open discussion about anything Trinity", threads: 48 },
-  { id: "tips", label: "Tips & Tricks", icon: Sparkles, color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]", description: "Share your best workflows and hacks", threads: 32 },
+  { id: "tips", label: "Tips & Tricks", icon: Sparkles, color: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]", description: "Share your best workflows and hacks", threads: 32 },
   { id: "features", label: "Feature Requests", icon: Target, color: "text-green-400", bg: "bg-green-400/10 border-green-400/20", description: "Request and vote on new features", threads: 27 },
-  { id: "showcase", label: "Show & Tell", icon: Gift, color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)]", description: "Show off what you've built", threads: 19 },
+  { id: "showcase", label: "Show & Tell", icon: Gift, color: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)]", description: "Show off what you've built", threads: 19 },
 ];
 
 /* Current user gamification stats */
@@ -184,7 +184,7 @@ function activityColor(type: ActivityItem["type"]) {
     case "post": return "text-blue-400";
     case "comment": return "text-cyan-400";
     case "like": return "text-red-400";
-    case "achievement": return "text-[#2563EB]";
+    case "achievement": return "text-brand-accent";
     case "join": return "text-green-400";
   }
 }
@@ -765,23 +765,23 @@ export default function CommunityPage() {
             Community
           </h1>
         </div>
-        <button onClick={() => openQuickAction("new-post")} className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all">
+        <button onClick={() => openQuickAction("new-post")} className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-accent/80 text-white text-xs font-semibold hover:bg-brand-accent/80 transition-all">
           <Plus size={14} /> New Post
         </button>
       </div>{/* Gamification Bar -- Your Stats */}<div className="glass rounded-xl p-4 border-[rgba(37,99,235,0.1)]">
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-sm font-bold text-[#2563EB]">
+                  <div className="w-10 h-10 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-sm font-bold text-brand-accent">
                     {MY_STATS.name.charAt(0)}
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-semibold">{MY_STATS.level}</span>
-                      <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] font-medium">Rank #{MY_STATS.rank}</span>
+                      <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] font-medium">Rank #{MY_STATS.rank}</span>
                     </div>
                     <div className="flex items-center gap-1.5 mt-1">
                       <div className="w-32 h-1.5 rounded-full bg-[rgba(0,0,0,0.04)] overflow-hidden">
-                        <div className="h-full rounded-full bg-[#2563EB] transition-all" style={{ width: `${xpPct}%` }} />
+                        <div className="h-full rounded-full bg-brand-accent transition-all" style={{ width: `${xpPct}%` }} />
                       </div>
                       <span className="text-[9px] text-muted">{MY_STATS.xpCurrent.toLocaleString()} / {MY_STATS.xpNeeded.toLocaleString()} XP to {MY_STATS.nextLevel}</span>
                     </div>
@@ -797,14 +797,14 @@ export default function CommunityPage() {
                   </div>
                   <div className="text-center">
                     <div className="flex items-center gap-1">
-                      <Star size={12} className="text-[#2563EB]" />
+                      <Star size={12} className="text-brand-accent" />
                       <span className="text-sm font-bold font-mono">{MY_STATS.points.toLocaleString()}</span>
                     </div>
                     <p className="text-[9px] text-muted">Points</p>
                   </div>
                   <div className="text-center">
                     <div className="flex items-center gap-1">
-                      <Trophy size={12} className="text-[#2563EB]" />
+                      <Trophy size={12} className="text-brand-accent" />
                       <span className="text-sm font-bold font-mono">{MY_STATS.badgesEarned}/{MY_STATS.totalBadges}</span>
                     </div>
                     <p className="text-[9px] text-muted">Badges</p>
@@ -814,7 +814,7 @@ export default function CommunityPage() {
             </div>{/* Quick Actions */}<div className="grid grid-cols-3 gap-2">
               {[
                 { action: "new-post", icon: Plus, color: "text-blue-400", bg: "bg-blue-400/10", hover: "group-hover:bg-blue-400/20", label: "New Post", sub: "Start a discussion" },
-                { action: "share-win", icon: Trophy, color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]", hover: "group-hover:bg-[rgba(37,99,235,0.12)]", label: "Share a Win", sub: "Celebrate success" },
+                { action: "share-win", icon: Trophy, color: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.08)]", hover: "group-hover:bg-[rgba(37,99,235,0.12)]", label: "Share a Win", sub: "Celebrate success" },
                 { action: "ask-question", icon: HelpCircle, color: "text-yellow-400", bg: "bg-yellow-400/10", hover: "group-hover:bg-yellow-400/20", label: "Ask a Question", sub: "Get community help" },
               ].map((qa, i) => (
                 <motion.button
@@ -877,7 +877,7 @@ export default function CommunityPage() {
               {tabs.map(t => (
                 <button key={t.id} onClick={() => setActiveTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${
-                    activeTab === t.id ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)] text-[#2563EB] font-medium" : "border-border text-muted hover:text-foreground"
+                    activeTab === t.id ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)] text-brand-accent font-medium" : "border-border text-muted hover:text-foreground"
                   }`}>
                   <t.icon size={12} /> {t.label}
                 </button>
@@ -903,7 +903,7 @@ export default function CommunityPage() {
                   {POST_TYPES.map(t => (
                     <button key={t.id} onClick={() => setFilter(t.id)}
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${
-                        filter === t.id ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)] text-[#2563EB] font-medium" : "border-border text-muted hover:text-foreground"
+                        filter === t.id ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.2)] text-brand-accent font-medium" : "border-border text-muted hover:text-foreground"
                       }`}>
                       <t.icon size={12} /> {t.label}
                     </button>
@@ -913,7 +913,7 @@ export default function CommunityPage() {
                 {/* Discussion Categories */}
                 <div className="card p-4">
                   <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
-                    <Hash size={10} className="text-[#2563EB]" /> Discussion Topics
+                    <Hash size={10} className="text-brand-accent" /> Discussion Topics
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {DISCUSSION_CATEGORIES.map(cat => (
@@ -933,14 +933,14 @@ export default function CommunityPage() {
                   <div className="lg:col-span-2 space-y-3">
                     {/* Trending Topics */}
                     <div className="card p-3">
-                      <h3 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><TrendingUp size={10} className="text-[#2563EB]" /> Trending</h3>
+                      <h3 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><TrendingUp size={10} className="text-brand-accent" /> Trending</h3>
                       {TRENDING.length === 0 ? (
                         <p className="text-[9px] text-muted text-center py-2">No trending topics yet</p>
                       ) : (
                         <div className="flex gap-2 overflow-x-auto">
                           {TRENDING.map(t => (
                             <div key={t.topic} className="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-border text-[9px] whitespace-nowrap shrink-0 hover:border-[rgba(37,99,235,0.2)] transition-colors cursor-pointer">
-                              <Hash size={8} className="text-[#2563EB]" />
+                              <Hash size={8} className="text-brand-accent" />
                               <span>{t.topic}</span>
                               <span className="text-green-400 font-mono">{t.trend}</span>
                             </div>
@@ -953,7 +953,7 @@ export default function CommunityPage() {
                     {showNewPost && (
                       <div className="card p-4 border-[rgba(37,99,235,0.2)]">
                         <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
-                          {quickAction === "share-win" && <><Trophy size={12} className="text-[#2563EB]" /> Share a Win</>}
+                          {quickAction === "share-win" && <><Trophy size={12} className="text-brand-accent" /> Share a Win</>}
                           {quickAction === "ask-question" && <><HelpCircle size={12} className="text-yellow-400" /> Ask a Question</>}
                           {(!quickAction || quickAction === "new-post") && <>Create New Post</>}
                         </h3>
@@ -986,7 +986,7 @@ export default function CommunityPage() {
                             <button
                               onClick={handleCreatePost}
                               disabled={creating || !newTitle.trim() || !newContent.trim()}
-                              className="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold flex items-center gap-1 disabled:opacity-50"
+                              className="px-3 py-1.5 rounded-lg bg-brand-accent text-white text-xs font-semibold flex items-center gap-1 disabled:opacity-50"
                             >
                               {creating ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
                               {creating ? "Posting..." : "Post"}
@@ -1019,14 +1019,14 @@ export default function CommunityPage() {
                         return (
                           <div key={post.id} className={`card p-4 transition-all ${post.pinned ? "border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.02)]" : ""}`}>
                             <div className="flex items-start gap-3">
-                              <div className="w-8 h-8 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-xs font-bold text-[#2563EB] shrink-0">
+                              <div className="w-8 h-8 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-xs font-bold text-brand-accent shrink-0">
                                 {post.author_avatar || post.author_name.charAt(0).toUpperCase()}
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 flex-wrap">
                                   <span className="text-xs font-semibold">{post.author_name}</span>
                                   <span className={`text-[8px] px-1.5 py-0.5 rounded border ${tc.bg}`}><TypeIcon size={8} className="inline mr-0.5" />{post.category}</span>
-                                  {post.pinned && <Pin size={10} className="text-[#2563EB]" />}
+                                  {post.pinned && <Pin size={10} className="text-brand-accent" />}
                                   <span className="text-[9px] text-muted ml-auto">{timeAgo(post.created_at)}</span>
                                 </div>
                                 <h3 className="text-sm font-medium mt-0.5">{post.title}</h3>
@@ -1048,7 +1048,7 @@ export default function CommunityPage() {
                                     <ChevronDown size={10} className={expandedPost === post.id ? "rotate-180" : ""} />
                                   </button>
                                   <button onClick={() => toggleBookmark(post.id)}
-                                    className={`flex items-center gap-1 text-[10px] transition-colors ${bookmarkedPosts.has(post.id) ? "text-[#2563EB]" : "text-muted hover:text-[#2563EB]"}`}>
+                                    className={`flex items-center gap-1 text-[10px] transition-colors ${bookmarkedPosts.has(post.id) ? "text-brand-accent" : "text-muted hover:text-brand-accent"}`}>
                                     <Pin size={12} fill={bookmarkedPosts.has(post.id) ? "currentColor" : "none"} />
                                   </button>
                                   <button onClick={() => {
@@ -1084,7 +1084,7 @@ export default function CommunityPage() {
                                       </button>
                                     </div>
                                     {replyingTo && (
-                                      <p className="text-[9px] text-muted">Replying to a comment — <button onClick={() => setReplyingTo(null)} className="text-[#2563EB] hover:underline">cancel</button></p>
+                                      <p className="text-[9px] text-muted">Replying to a comment — <button onClick={() => setReplyingTo(null)} className="text-brand-accent hover:underline">cancel</button></p>
                                     )}
 
                                     {/* Comments list */}
@@ -1099,7 +1099,7 @@ export default function CommunityPage() {
                                           return (
                                             <div key={comment.id} className="space-y-2">
                                               <div className="flex gap-2">
-                                                <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[10px] font-bold text-[#2563EB] shrink-0">
+                                                <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[10px] font-bold text-brand-accent shrink-0">
                                                   {(comment.author_name || "?").charAt(0).toUpperCase()}
                                                 </div>
                                                 <div className="flex-1 bg-surface-light/50 rounded-lg p-2.5">
@@ -1169,7 +1169,7 @@ export default function CommunityPage() {
                     {/* Activity Feed */}
                     <div className="card p-4">
                       <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
-                        <Zap size={10} className="text-[#2563EB]" /> Recent Activity
+                        <Zap size={10} className="text-brand-accent" /> Recent Activity
                       </h3>
                       {ACTIVITY_FEED.length === 0 ? (
                         <p className="text-[9px] text-muted text-center py-4">No recent activity</p>
@@ -1201,7 +1201,7 @@ export default function CommunityPage() {
                     {/* Mini Leaderboard */}
                     <div className="card p-4">
                       <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
-                        <Trophy size={10} className="text-[#2563EB]" /> Top Contributors
+                        <Trophy size={10} className="text-brand-accent" /> Top Contributors
                       </h3>
                       {LEADERBOARD.length === 0 ? (
                         <p className="text-[9px] text-muted text-center py-4">No contributors yet</p>
@@ -1210,16 +1210,16 @@ export default function CommunityPage() {
                           {LEADERBOARD.slice(0, 5).map((m, i) => (
                             <div key={m.name} className="flex items-center gap-2">
                               <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold ${
-                                i === 0 ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : i === 1 ? "bg-border-strong/20 text-border-strong" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
+                                i === 0 ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : i === 1 ? "bg-border-strong/20 text-border-strong" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
                               }`}>{i + 1}</span>
-                              <div className="w-5 h-5 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[8px] font-bold text-[#2563EB] shrink-0">{m.avatar}</div>
+                              <div className="w-5 h-5 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[8px] font-bold text-brand-accent shrink-0">{m.avatar}</div>
                               <span className="text-[10px] font-medium flex-1 truncate">{m.name}</span>
-                              <span className="text-[9px] font-mono text-[#2563EB]">{m.points.toLocaleString()}</span>
+                              <span className="text-[9px] font-mono text-brand-accent">{m.points.toLocaleString()}</span>
                             </div>
                           ))}
                         </div>
                       )}
-                      <button onClick={() => setActiveTab("members")} className="w-full text-center text-[9px] text-[#2563EB] mt-3 hover:underline">
+                      <button onClick={() => setActiveTab("members")} className="w-full text-center text-[9px] text-brand-accent mt-3 hover:underline">
                         View full leaderboard
                       </button>
                     </div>
@@ -1227,7 +1227,7 @@ export default function CommunityPage() {
                     {/* Your Badges mini */}
                     <div className="card p-4">
                       <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
-                        <Award size={10} className="text-[#2563EB]" /> Your Badges
+                        <Award size={10} className="text-brand-accent" /> Your Badges
                       </h3>
                       {BADGES.length === 0 ? (
                         <p className="text-[9px] text-muted text-center py-4">No badges available yet</p>
@@ -1260,7 +1260,7 @@ export default function CommunityPage() {
               <div className="space-y-4">
                 {/* Full Leaderboard */}
                 <div className="card p-4">
-                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Award size={12} className="text-[#2563EB]" /> Activity Leaderboard</h3>
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Award size={12} className="text-brand-accent" /> Activity Leaderboard</h3>
                   {LEADERBOARD.length === 0 ? (
                     <p className="text-xs text-muted text-center py-6">No leaderboard data yet. Start participating to earn points!</p>
                   ) : (
@@ -1270,9 +1270,9 @@ export default function CommunityPage() {
                         i < 3 ? "border-[rgba(37,99,235,0.1)] bg-[rgba(37,99,235,0.02)]" : "border-border"
                       }`}>
                         <span className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                          i === 0 ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : i === 1 ? "bg-border-strong/20 text-border-strong" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
+                          i === 0 ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : i === 1 ? "bg-border-strong/20 text-border-strong" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
                         }`}>{i + 1}</span>
-                        <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-xs font-bold text-[#2563EB] shrink-0">{m.avatar}</div>
+                        <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-xs font-bold text-brand-accent shrink-0">{m.avatar}</div>
                         <span className="text-xs font-medium flex-1">{m.name}</span>
                         <div className="flex items-center gap-1 text-[10px] text-muted">
                           <Flame size={10} className="text-orange-400" />
@@ -1280,7 +1280,7 @@ export default function CommunityPage() {
                         </div>
                         <span className="text-[10px] text-muted">{m.posts} posts</span>
                         <span className="text-[10px] text-muted">{m.helpful} helpful</span>
-                        <span className="text-xs font-bold font-mono text-[#2563EB]">{m.points.toLocaleString()} pts</span>
+                        <span className="text-xs font-bold font-mono text-brand-accent">{m.points.toLocaleString()} pts</span>
                       </div>
                     ))}
                   </div>
@@ -1289,7 +1289,7 @@ export default function CommunityPage() {
 
                 {/* Member Directory with Rich Cards */}
                 <div className="card p-4">
-                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Users size={12} className="text-[#2563EB]" /> Member Directory</h3>
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Users size={12} className="text-brand-accent" /> Member Directory</h3>
                   {MEMBERS.length === 0 ? (
                     <p className="text-xs text-muted text-center py-6">No community members yet</p>
                   ) : (
@@ -1302,20 +1302,20 @@ export default function CommunityPage() {
                         }`}>
                         <div className="flex items-center gap-3">
                           <div className="relative">
-                            <div className="w-10 h-10 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-sm font-bold text-[#2563EB]">{m.name.charAt(0)}</div>
+                            <div className="w-10 h-10 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-sm font-bold text-brand-accent">{m.name.charAt(0)}</div>
                             {m.online && <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-400 border-2 border-surface" />}
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
                               <p className="text-xs font-semibold">{m.name}</p>
-                              {m.badge === "gold" && <Award size={10} className="text-[#2563EB]" />}
+                              {m.badge === "gold" && <Award size={10} className="text-brand-accent" />}
                               {m.badge === "silver" && <Award size={10} className="text-border-strong" />}
                               {m.badge === "bronze" && <Award size={10} className="text-orange-400" />}
                             </div>
                             <p className="text-[10px] text-muted">{m.role}</p>
                           </div>
                           <div className="text-right">
-                            <p className="text-[10px] font-mono text-[#2563EB]">{m.points.toLocaleString()} pts</p>
+                            <p className="text-[10px] font-mono text-brand-accent">{m.points.toLocaleString()} pts</p>
                             <p className="text-[9px] text-muted">{m.level}</p>
                           </div>
                         </div>
@@ -1331,12 +1331,12 @@ export default function CommunityPage() {
                             <div className="flex items-center gap-1.5 mt-1">
                               {m.badge === "gold" && (
                                 <>
-                                  <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]">Top Contributor</span>
+                                  <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)]">Top Contributor</span>
                                   <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-blue-400/10 text-blue-400 border border-blue-400/20">Early Adopter</span>
                                 </>
                               )}
                               {m.badge === "silver" && (
-                                <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]">Helpful Hand</span>
+                                <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.25)]">Helpful Hand</span>
                               )}
                               {m.badge === "bronze" && (
                                 <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-green-400/10 text-green-400 border border-green-400/20">Rising Star</span>
@@ -1355,7 +1355,7 @@ export default function CommunityPage() {
 
                 {/* Achievement Badges Gallery */}
                 <div className="card p-4">
-                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Trophy size={12} className="text-[#2563EB]" /> Achievement Badges</h3>
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Trophy size={12} className="text-brand-accent" /> Achievement Badges</h3>
                   {BADGES.length === 0 ? (
                     <p className="text-xs text-muted text-center py-6">No badges available yet</p>
                   ) : (
@@ -1386,8 +1386,8 @@ export default function CommunityPage() {
               <div className="space-y-4">
                 <div className="card p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-xs font-semibold flex items-center gap-2"><Calendar size={12} className="text-[#2563EB]" /> Upcoming Events</h3>
-                    <button onClick={() => setShowNewEvent(s => !s)} className="px-2.5 py-1 rounded-lg bg-[#2563EB] text-white text-[10px] font-semibold flex items-center gap-1">
+                    <h3 className="text-xs font-semibold flex items-center gap-2"><Calendar size={12} className="text-brand-accent" /> Upcoming Events</h3>
+                    <button onClick={() => setShowNewEvent(s => !s)} className="px-2.5 py-1 rounded-lg bg-brand-accent text-white text-[10px] font-semibold flex items-center gap-1">
                       <Plus size={10} /> Create event
                     </button>
                   </div>
@@ -1449,7 +1449,7 @@ export default function CommunityPage() {
                         <button
                           onClick={handleCreateEvent}
                           disabled={creatingEvent || !newEvent.title.trim() || !newEvent.event_date}
-                          className="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold disabled:opacity-50 flex items-center gap-1"
+                          className="px-3 py-1.5 rounded-lg bg-brand-accent text-white text-xs font-semibold disabled:opacity-50 flex items-center gap-1"
                         >
                           {creatingEvent ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
                           {creatingEvent ? "Creating..." : "Create"}
@@ -1493,7 +1493,7 @@ export default function CommunityPage() {
                                       ? "bg-green-400 text-black"
                                       : isFull
                                         ? "bg-[rgba(0,0,0,0.04)] text-muted cursor-not-allowed"
-                                        : "bg-[#2563EB] text-white hover:brightness-110"
+                                        : "bg-brand-accent text-white hover:brightness-110"
                                   }`}
                                 >
                                   {ev.my_rsvp === "going" ? "Going" : isFull ? "Full" : "RSVP"}
@@ -1528,8 +1528,8 @@ export default function CommunityPage() {
                 {/* Add resource form */}
                 <div className="card p-4 border-[rgba(37,99,235,0.1)]">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-xs font-semibold flex items-center gap-2"><Pin size={12} className="text-[#2563EB]" /> Pinned Resources</h3>
-                    <button onClick={() => setShowNewResource(s => !s)} className="px-2.5 py-1 rounded-lg bg-[#2563EB] text-white text-[10px] font-semibold flex items-center gap-1">
+                    <h3 className="text-xs font-semibold flex items-center gap-2"><Pin size={12} className="text-brand-accent" /> Pinned Resources</h3>
+                    <button onClick={() => setShowNewResource(s => !s)} className="px-2.5 py-1 rounded-lg bg-brand-accent text-white text-[10px] font-semibold flex items-center gap-1">
                       <Plus size={10} /> Add resource
                     </button>
                   </div>
@@ -1570,7 +1570,7 @@ export default function CommunityPage() {
                         <button
                           onClick={handleCreateResource}
                           disabled={creatingResource || !newResource.title.trim() || !newResource.url.trim()}
-                          className="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold disabled:opacity-50 flex items-center gap-1"
+                          className="px-3 py-1.5 rounded-lg bg-brand-accent text-white text-xs font-semibold disabled:opacity-50 flex items-center gap-1"
                         >
                           {creatingResource ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
                           {creatingResource ? "Adding..." : "Add"}
@@ -1590,12 +1590,12 @@ export default function CommunityPage() {
                         return (
                           <div key={r.id} className="p-3 rounded-lg border border-[rgba(37,99,235,0.1)] bg-[rgba(37,99,235,0.02)] hover:border-[rgba(37,99,235,0.2)] transition-all">
                             <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center shrink-0"><RIcon size={16} className="text-[#2563EB]" /></div>
+                              <div className="w-9 h-9 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center shrink-0"><RIcon size={16} className="text-brand-accent" /></div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-xs font-medium truncate">{r.title}</p>
                                 <p className="text-[10px] text-muted">{r.type} &middot; {r.downloads} downloads</p>
                               </div>
-                              <button onClick={() => handleResourceOpen(r)} className="text-[10px] text-[#2563EB] hover:underline flex items-center gap-0.5 shrink-0">
+                              <button onClick={() => handleResourceOpen(r)} className="text-[10px] text-brand-accent hover:underline flex items-center gap-0.5 shrink-0">
                                 <ExternalLink size={8} /> Open
                               </button>
                             </div>
@@ -1609,19 +1609,19 @@ export default function CommunityPage() {
                 {/* Full Library */}
                 {resources.length > 0 && (
                   <div className="card p-4">
-                    <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><BookOpen size={12} className="text-[#2563EB]" /> Resource Library</h3>
+                    <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><BookOpen size={12} className="text-brand-accent" /> Resource Library</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {resources.map(r => {
                         const RIcon = resourceIcon(r.type);
                         return (
                           <div key={r.id} className="p-3 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
                             <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center"><RIcon size={14} className="text-[#2563EB]" /></div>
+                              <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center"><RIcon size={14} className="text-brand-accent" /></div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-xs font-medium truncate">{r.title}</p>
                                 <p className="text-[10px] text-muted">{r.type} &middot; {r.downloads} downloads{r.description ? ` · ${r.description}` : ""}</p>
                               </div>
-                              <button onClick={() => handleResourceOpen(r)} className="text-[10px] text-[#2563EB] hover:underline">
+                              <button onClick={() => handleResourceOpen(r)} className="text-[10px] text-brand-accent hover:underline">
                                 {r.type === "pdf" || r.type === "template" ? "Download" : "Open"}
                               </button>
                             </div>
@@ -1634,7 +1634,7 @@ export default function CommunityPage() {
 
                 {/* Helpful Links — point at real in-app destinations */}
                 <div className="card p-4">
-                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Link2 size={12} className="text-[#2563EB]" /> Helpful Links</h3>
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Link2 size={12} className="text-brand-accent" /> Helpful Links</h3>
                   <div className="space-y-2">
                     {[
                       { label: "API Documentation", url: "/dashboard/api-docs", desc: "Full API reference for integrations" },
@@ -1643,7 +1643,7 @@ export default function CommunityPage() {
                       { label: "Marketplace", url: "/dashboard/marketplace", desc: "Plugins and templates from the community" },
                     ].map(link => (
                       <a key={link.label} href={link.url} className="flex items-center gap-3 p-2.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
-                        <ExternalLink size={12} className="text-[#2563EB] shrink-0" />
+                        <ExternalLink size={12} className="text-brand-accent shrink-0" />
                         <div>
                           <p className="text-xs font-medium">{link.label}</p>
                           <p className="text-[9px] text-muted">{link.desc}</p>
@@ -1656,8 +1656,8 @@ export default function CommunityPage() {
             )}{/* ---- TAB: Polls ---- */}{activeTab === "polls" && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-semibold flex items-center gap-2"><Vote size={12} className="text-[#2563EB]" /> Active Polls</h3>
-                  <button onClick={() => setShowNewPoll(s => !s)} className="px-2.5 py-1 rounded-lg bg-[#2563EB] text-white text-[10px] font-semibold flex items-center gap-1">
+                  <h3 className="text-xs font-semibold flex items-center gap-2"><Vote size={12} className="text-brand-accent" /> Active Polls</h3>
+                  <button onClick={() => setShowNewPoll(s => !s)} className="px-2.5 py-1 rounded-lg bg-brand-accent text-white text-[10px] font-semibold flex items-center gap-1">
                     <Plus size={10} /> Create poll
                   </button>
                 </div>
@@ -1693,7 +1693,7 @@ export default function CommunityPage() {
                       ))}
                       <button
                         onClick={() => setNewPoll(s => ({ ...s, options: [...s.options, ""] }))}
-                        className="text-[10px] text-[#2563EB] hover:underline"
+                        className="text-[10px] text-brand-accent hover:underline"
                       >
                         + Add option
                       </button>
@@ -1712,7 +1712,7 @@ export default function CommunityPage() {
                       <button
                         onClick={handleCreatePoll}
                         disabled={creatingPoll || !newPoll.question.trim() || newPoll.options.filter(o => o.trim()).length < 2}
-                        className="px-3 py-1.5 rounded-lg bg-[#2563EB] text-white text-xs font-semibold disabled:opacity-50 flex items-center gap-1"
+                        className="px-3 py-1.5 rounded-lg bg-brand-accent text-white text-xs font-semibold disabled:opacity-50 flex items-center gap-1"
                       >
                         {creatingPoll ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
                         {creatingPoll ? "Creating..." : "Create"}
@@ -1758,11 +1758,11 @@ export default function CommunityPage() {
             )}{/* ---- TAB: Moderation ---- */}{activeTab === "moderation" && (
               <div className="space-y-4">
                 <div className="card p-4">
-                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Shield size={12} className="text-[#2563EB]" /> Community Guidelines</h3>
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Shield size={12} className="text-brand-accent" /> Community Guidelines</h3>
                   <div className="space-y-2">
                     {GUIDELINES.map((g, i) => (
                       <div key={i} className="flex items-start gap-2 text-[10px] text-muted">
-                        <span className="w-4 h-4 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-[8px] flex items-center justify-center font-bold shrink-0">{i + 1}</span>
+                        <span className="w-4 h-4 rounded-full bg-[rgba(37,99,235,0.08)] text-brand-accent text-[8px] flex items-center justify-center font-bold shrink-0">{i + 1}</span>
                         {g}
                       </div>
                     ))}
@@ -1770,7 +1770,7 @@ export default function CommunityPage() {
                 </div>
 
                 <div className="card p-4">
-                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Bell size={12} className="text-[#2563EB]" /> Notification Preferences</h3>
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Bell size={12} className="text-brand-accent" /> Notification Preferences</h3>
                   <div className="space-y-2">
                     {[
                       { label: "New announcements", enabled: true },
@@ -1781,7 +1781,7 @@ export default function CommunityPage() {
                     ].map(n => (
                       <div key={n.label} className="flex items-center justify-between p-2 rounded-lg border border-border">
                         <span className="text-[10px]">{n.label}</span>
-                        <div className={`w-8 h-4 rounded-full transition-all relative cursor-pointer ${n.enabled ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.06)]"}`}>
+                        <div className={`w-8 h-4 rounded-full transition-all relative cursor-pointer ${n.enabled ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.06)]"}`}>
                           <div className="w-3 h-3 rounded-full bg-white absolute top-0.5 transition-all" style={{ left: n.enabled ? "18px" : "2px" }} />
                         </div>
                       </div>

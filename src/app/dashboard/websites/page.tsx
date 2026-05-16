@@ -362,9 +362,9 @@ function GeneratingAnimation() {
         />
       ))}
       <div className="absolute bottom-2 left-0 right-0 flex items-center justify-center gap-1.5">
-        <span className="w-1 h-1 rounded-full bg-[#2563EB] animate-bounce [animation-delay:0ms]" />
-        <span className="w-1 h-1 rounded-full bg-[#2563EB] animate-bounce [animation-delay:120ms]" />
-        <span className="w-1 h-1 rounded-full bg-[#2563EB] animate-bounce [animation-delay:240ms]" />
+        <span className="w-1 h-1 rounded-full bg-brand-accent animate-bounce [animation-delay:0ms]" />
+        <span className="w-1 h-1 rounded-full bg-brand-accent animate-bounce [animation-delay:120ms]" />
+        <span className="w-1 h-1 rounded-full bg-brand-accent animate-bounce [animation-delay:240ms]" />
       </div>
     </div>
   );
@@ -954,7 +954,7 @@ export default function WebsitesPage() {
                 </div>
                 <span className="w-px h-4 bg-border" />
                 <div className="flex items-center gap-1.5 text-[11px] text-foreground/90">
-                  <Target size={12} className="text-[#2563EB]" />
+                  <Target size={12} className="text-brand-accent" />
                   <span className="font-semibold">4.6% avg CVR</span>
                   <span className="text-muted">across templates</span>
                 </div>
@@ -991,7 +991,7 @@ export default function WebsitesPage() {
               <div className="flex items-end justify-between flex-wrap gap-2">
                 <div>
                   <h2 className="text-sm font-semibold flex items-center gap-2">
-                    <Layout size={14} className="text-[#2563EB]" />
+                    <Layout size={14} className="text-brand-accent" />
                     Pick a niche. Ship in 30 seconds.
                   </h2>
                   <p className="text-[11px] text-muted mt-0.5">
@@ -1148,7 +1148,7 @@ export default function WebsitesPage() {
                       <span className="text-[10px] text-muted flex items-center gap-1">
                         <Clock size={10} className="text-[rgba(37,99,235,0.7)]" /> {t.avgLaunch}
                       </span>
-                      <span className="text-[10px] text-[#2563EB] font-semibold flex items-center gap-1 transition-transform duration-200 group-hover:translate-x-0.5">
+                      <span className="text-[10px] text-brand-accent font-semibold flex items-center gap-1 transition-transform duration-200 group-hover:translate-x-0.5">
                         Use this <ArrowRight size={11} />
                       </span>
                     </div>
@@ -1197,7 +1197,7 @@ export default function WebsitesPage() {
                       {STATUS_LABEL[effectiveStatus(active)] || active.status}
                     </span>
                     {effectiveStatus(active) === "preview" && active.demo_expires_at && (
-                      <span className="text-[9px] px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] inline-flex items-center gap-1">
+                      <span className="text-[9px] px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent inline-flex items-center gap-1">
                         <Clock size={9} /> {daysUntil(active.demo_expires_at)} days left
                       </span>
                     )}
@@ -1242,7 +1242,7 @@ export default function WebsitesPage() {
 
                 {(active.preview_url || active.vercel_url) && (
                   <div className="flex items-center justify-between p-2 rounded-lg bg-surface-light border border-border">
-                    <a href={active.preview_url || active.vercel_url || "#"} target="_blank" rel="noopener" className="text-[11px] text-[#2563EB] hover:text-[#3B82F6] truncate">
+                    <a href={active.preview_url || active.vercel_url || "#"} target="_blank" rel="noopener" className="text-[11px] text-brand-accent hover:text-[#3B82F6] truncate">
                       {active.preview_url || active.vercel_url}
                     </a>
                     <button onClick={() => { navigator.clipboard.writeText(active.preview_url || active.vercel_url || ""); toast.success("Copied"); }}>
@@ -1307,7 +1307,7 @@ export default function WebsitesPage() {
             )}{/* Projects list */}<div className="glass rounded-xl overflow-hidden">
               <div className="px-4 pt-4 pb-3">
                 <h2 className="section-header flex items-center gap-2">
-                  <Layout size={13} className="text-[#2563EB]" /> Your websites ({projects.length})
+                  <Layout size={13} className="text-brand-accent" /> Your websites ({projects.length})
                 </h2>
               </div>
               {loading ? (
@@ -1361,7 +1361,7 @@ export default function WebsitesPage() {
                             {STATUS_LABEL[status] || p.status}
                           </span>
                           {status === "preview" && days !== null && (
-                            <span className="absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] backdrop-blur inline-flex items-center gap-1">
+                            <span className="absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent backdrop-blur inline-flex items-center gap-1">
                               <Clock size={9} /> {days}d
                             </span>
                           )}
@@ -1386,7 +1386,7 @@ export default function WebsitesPage() {
                             const STEPS = ["draft", "generating", "preview", "live"] as const;
                             const stepIdx = STEPS.indexOf(status as typeof STEPS[number]);
                             const currentIdx = stepIdx === -1 ? 0 : stepIdx;
-                            const stepColors = ["text-muted", "text-[#2563EB]", "text-[#2563EB]", "text-green-400"] as const;
+                            const stepColors = ["text-muted", "text-brand-accent", "text-brand-accent", "text-green-400"] as const;
                             const activeColor = stepColors[currentIdx] || stepColors[0];
                             return (
                               <div className="flex items-center gap-0.5">
@@ -1397,7 +1397,7 @@ export default function WebsitesPage() {
                                     <div key={step} className="flex items-center gap-0.5 flex-1">
                                       <div
                                         className={`h-1 rounded-full flex-1 transition-all ${
-                                          done ? "bg-[#2563EB]/60" : active ? "bg-[#2563EB]/30" : "bg-[rgba(0,0,0,0.06)]"
+                                          done ? "bg-brand-accent/60" : active ? "bg-brand-accent/30" : "bg-[rgba(0,0,0,0.06)]"
                                         }`}
                                       />
                                       {i === STEPS.length - 1 && (
@@ -1417,7 +1417,7 @@ export default function WebsitesPage() {
                               href={p.custom_domain ? `https://${p.custom_domain}` : (p.preview_url || p.vercel_url || "#")}
                               target="_blank"
                               rel="noopener"
-                              className="text-[10px] text-[#2563EB] hover:text-[#3B82F6] truncate block"
+                              className="text-[10px] text-brand-accent hover:text-[#3B82F6] truncate block"
                             >
                               {p.custom_domain || p.preview_url || p.vercel_url}
                             </a>
@@ -1473,13 +1473,13 @@ export default function WebsitesPage() {
                   whileHover={{ y: -2 }}
                   className="glass rounded-xl p-4 relative overflow-hidden"
                 >
-                  <h3 className="section-header flex items-center gap-2 text-[#2563EB]">{item.icon} {item.title}</h3>
+                  <h3 className="section-header flex items-center gap-2 text-brand-accent">{item.icon} {item.title}</h3>
                   <p className="text-[10px] text-muted">{item.body}</p>
                 </motion.div>
               ))}
             </div><div className="glass rounded-xl p-4">
               <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
-                <ShieldCheck size={11} className="text-[#2563EB]" /> Every template ships with
+                <ShieldCheck size={11} className="text-brand-accent" /> Every template ships with
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px] text-muted">
                 <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Bold hero headline + subheader</div>
@@ -1548,7 +1548,7 @@ function PricingModal({
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-base font-bold flex items-center gap-2">
-              <Rocket size={16} className="text-[#2563EB]" /> Your Website is Ready!
+              <Rocket size={16} className="text-brand-accent" /> Your Website is Ready!
             </h2>
             <p className="text-[11px] text-muted">{project.name} &mdash; pick a plan to go live.</p>
           </div>
@@ -1632,15 +1632,15 @@ function PricingModal({
                     <button
                       key={a.key}
                       onClick={() => onToggleAddon(a.key)}
-                      className={`w-full flex items-center justify-between p-2 rounded-lg border text-left transition ${active ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}
+                      className={`w-full flex items-center justify-between p-2 rounded-lg border text-left transition ${active ? "border-brand-accent bg-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}
                     >
                       <span className="flex items-center gap-2 text-[11px]">
-                        <span className={active ? "text-[#2563EB]" : "text-muted"}>{a.icon}</span>
+                        <span className={active ? "text-brand-accent" : "text-muted"}>{a.icon}</span>
                         {a.label}
                       </span>
                       <span className="flex items-center gap-2">
                         <span className="text-[10px] text-muted">+${a.price}/mo</span>
-                        <span className={`w-4 h-4 rounded-full border flex items-center justify-center ${active ? "bg-[#2563EB] border-[#2563EB]" : "border-border"}`}>
+                        <span className={`w-4 h-4 rounded-full border flex items-center justify-center ${active ? "bg-brand-accent border-brand-accent" : "border-border"}`}>
                           {active && <Check size={10} className="text-black" />}
                         </span>
                       </span>
@@ -1687,7 +1687,7 @@ function PricingModal({
           </div>
           <div className="card border-[rgba(37,99,235,0.25)] bg-gradient-to-br from-amber-500/5 to-orange-500/5">
             <h3 className="text-[11px] font-semibold mb-2 flex items-center gap-1.5">
-              <Crown size={11} className="text-[#2563EB]" /> Paid Plan
+              <Crown size={11} className="text-brand-accent" /> Paid Plan
             </h3>
             <ul className="text-[10px] text-muted space-y-1">
               <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Everything in demo</li>

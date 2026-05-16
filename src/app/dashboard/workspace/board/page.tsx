@@ -464,7 +464,7 @@ export default function WorkspaceBoardPage() {
                     onClick={() => setView(opt.v)}
                     className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
                       view === opt.v
-                        ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]"
+                        ? "bg-[rgba(37,99,235,0.12)] text-brand-accent"
                         : "text-muted hover:text-fg"
                     }`}
                   >
@@ -478,7 +478,7 @@ export default function WorkspaceBoardPage() {
                   <select
                     value={filterClient}
                     onChange={(e) => setFilterClient(e.target.value)}
-                    className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-[#2563EB] focus:outline-none"
+                    className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-brand-accent focus:outline-none"
                   >
                     <option value="">All clients</option>
                     {clientsList.map((c) => (
@@ -490,7 +490,7 @@ export default function WorkspaceBoardPage() {
                   <select
                     value={filterAssignee}
                     onChange={(e) => setFilterAssignee(e.target.value)}
-                    className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-[#2563EB] focus:outline-none"
+                    className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-brand-accent focus:outline-none"
                   >
                     <option value="">All assignees</option>
                     {membersList.map((m) => (

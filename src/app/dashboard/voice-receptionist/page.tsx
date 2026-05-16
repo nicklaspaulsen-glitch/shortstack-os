@@ -257,7 +257,7 @@ function outcomeMeta(outcome: CallOutcome): {
     case "qualified":
       return {
         label: "Qualified",
-        className: "bg-[rgba(37,99,235,0.10)] text-[#2563EB]",
+        className: "bg-[rgba(37,99,235,0.10)] text-brand-accent",
         icon: UserCheck,
       };
     case "unqualified":
@@ -275,13 +275,13 @@ function outcomeMeta(outcome: CallOutcome): {
     case "missed":
       return {
         label: "Missed",
-        className: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
+        className: "bg-[rgba(37,99,235,0.08)] text-brand-accent",
         icon: AlertCircle,
       };
     case "dropped":
       return {
         label: "Dropped",
-        className: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
+        className: "bg-[rgba(37,99,235,0.08)] text-brand-accent",
         icon: AlertCircle,
       };
     case "pending":
@@ -635,9 +635,9 @@ export default function VoiceReceptionistPage() {
                   transition={{ duration: 0.22 }}
                   className="flex items-start gap-3 rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] p-4"
                 >
-                  <AlertCircle size={18} className="mt-0.5 shrink-0 text-[#2563EB]" />
+                  <AlertCircle size={18} className="mt-0.5 shrink-0 text-brand-accent" />
                   <div className="text-[12px] leading-relaxed">
-                    <p className="font-semibold text-[#2563EB]">
+                    <p className="font-semibold text-brand-accent">
                       {liveBackend
                         ? "No real calls yet � showing sample data"
                         : "Connect ElevenLabs + a Twilio number to start tracking real calls"}
@@ -713,7 +713,7 @@ export default function VoiceReceptionistPage() {
               >
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.10)] text-[#2563EB]">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.10)] text-brand-accent">
                       <Mic size={14} />
                     </div>
                     <div>
@@ -911,7 +911,7 @@ export default function VoiceReceptionistPage() {
               >
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.10)] text-[#2563EB]">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.10)] text-brand-accent">
                       <FileText size={14} />
                     </div>
                     <div>
@@ -922,7 +922,7 @@ export default function VoiceReceptionistPage() {
                     </div>
                   </div>
                   {!liveBackend && calls.length > 0 && (
-                    <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[10px] font-semibold text-[#2563EB]">
+                    <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[10px] font-semibold text-brand-accent">
                       Demo data
                     </span>
                   )}
@@ -987,7 +987,7 @@ export default function VoiceReceptionistPage() {
                                 {c.crmLink ? (
                                   <Link
                                     href={c.crmLink}
-                                    className="inline-flex items-center gap-1 text-[11px] text-[#2563EB] hover:underline"
+                                    className="inline-flex items-center gap-1 text-[11px] text-brand-accent hover:underline"
                                   >
                                     Open <ExternalLink size={10} />
                                   </Link>
@@ -1035,14 +1035,14 @@ export default function VoiceReceptionistPage() {
                     Provision phone numbers under{" "}
                     <Link
                       href="/dashboard/phone-email"
-                      className="text-[#2563EB] underline"
+                      className="text-brand-accent underline"
                     >
                       Phone / Email
                     </Link>
                     . Browse every agent under{" "}
                     <Link
                       href="/dashboard/eleven-agents"
-                      className="text-[#2563EB] underline"
+                      className="text-brand-accent underline"
                     >
                       ElevenAgents
                     </Link>
@@ -1164,7 +1164,7 @@ function CalendarIntegrationCard() {
           <div className="flex items-start gap-2">
             <AlertCircle
               size={15}
-              className="mt-0.5 shrink-0 text-[#2563EB]"
+              className="mt-0.5 shrink-0 text-brand-accent"
             />
             <div>
               <p className="text-[12.5px] font-semibold text-foreground">
@@ -1211,7 +1211,7 @@ function QuotaCard({
       className="glass rounded-xl !p-5"
     >
       <div className="mb-3 flex items-center gap-2">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB]">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.08)] text-brand-accent">
           <Phone size={14} />
         </div>
         <div>
@@ -1229,7 +1229,7 @@ function QuotaCard({
           <div className="flex items-center justify-between text-[12px]">
             <span className="text-muted">
               Plan:{" "}
-              <span className="font-semibold text-[#2563EB]">
+              <span className="font-semibold text-brand-accent">
                 {planTier || "�"}
               </span>
             </span>
@@ -1271,7 +1271,7 @@ function QuotaCard({
             </p>
           )}
           {!quota.isUnlimited && quota.pct >= 80 && quota.pct < 100 && (
-            <p className="text-[11px] text-[#2563EB]">
+            <p className="text-[11px] text-brand-accent">
               {Math.max(0, quota.limitNum - quota.used).toLocaleString()} minutes
               left this month.
             </p>

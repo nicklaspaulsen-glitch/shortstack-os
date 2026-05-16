@@ -310,7 +310,7 @@ function TabButton({
       onClick={() => onClick(id)}
       className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition ${
         isActive
-          ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+          ? "bg-[rgba(37,99,235,0.08)] text-brand-accent"
           : "text-muted hover:text-foreground hover:bg-surface-light/60"
       }`}
     >
@@ -318,7 +318,7 @@ function TabButton({
       <span>{label}</span>
       <span
         className={`rounded px-1.5 py-0.5 text-[10px] ${
-          isActive ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-surface-light text-muted"
+          isActive ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "bg-surface-light text-muted"
         }`}
       >
         {count}
@@ -344,7 +344,7 @@ function CategoryChips({
         onClick={() => onChange("all")}
         className={`rounded-full px-2.5 py-1 text-[11px] transition ${
           active === "all"
-            ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
+            ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]"
             : "bg-surface-light/60 text-muted hover:text-foreground border border-transparent"
         }`}
       >
@@ -356,7 +356,7 @@ function CategoryChips({
           onClick={() => onChange(c)}
           className={`rounded-full px-2.5 py-1 text-[11px] transition ${
             active === c
-              ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
+              ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]"
               : "bg-surface-light/60 text-muted hover:text-foreground border border-transparent"
           }`}
         >
@@ -475,7 +475,7 @@ function FontCard({
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEdit}
-            className="rounded bg-surface-light/80 p-1 text-muted hover:text-[#2563EB] transition"
+            className="rounded bg-surface-light/80 p-1 text-muted hover:text-brand-accent transition"
             title="Edit example"
           >
             <ExternalLink size={12} />
@@ -610,7 +610,7 @@ function TransitionCard({
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEdit}
-            className="rounded bg-surface-light/80 p-1 text-muted hover:text-[#2563EB] transition"
+            className="rounded bg-surface-light/80 p-1 text-muted hover:text-brand-accent transition"
             title="Edit example"
           >
             <ExternalLink size={12} />
@@ -737,7 +737,7 @@ function EffectCard({
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEdit}
-            className="rounded bg-surface-light/80 p-1 text-muted hover:text-[#2563EB] transition"
+            className="rounded bg-surface-light/80 p-1 text-muted hover:text-brand-accent transition"
             title="Edit example"
           >
             <ExternalLink size={12} />
@@ -984,8 +984,8 @@ function AudioCard({
           error
             ? "bg-red-500/20 text-red-400"
             : playing
-              ? "bg-[#2563EB] text-white"
-              : "bg-[rgba(37,99,235,0.12)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.18)]"
+              ? "bg-brand-accent text-white"
+              : "bg-[rgba(37,99,235,0.12)] text-brand-accent hover:bg-[rgba(37,99,235,0.18)]"
         }`}
         title={error ? "Preview URL broken" : playing ? "Pause" : "Play"}
       >

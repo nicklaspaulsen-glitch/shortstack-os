@@ -243,7 +243,7 @@ export default function FinancialsPage() {
       { name: "Starter", price: 497, count: 0, color: "bg-blue-400" },
       { name: "Growth", price: 997, count: 0, color: "bg-green-400" },
       { name: "Pro", price: 2497, count: 0, color: "bg-purple-400" },
-      { name: "Business", price: 4997, count: 0, color: "bg-[#2563EB]" },
+      { name: "Business", price: 4997, count: 0, color: "bg-brand-accent" },
       { name: "Unlimited", price: 9997, count: 0, color: "bg-red-400" },
     ];
     activeClients.forEach(c => {
@@ -506,7 +506,7 @@ export default function FinancialsPage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-colors ${
                     activeTab === tab.id
-                      ? "bg-surface-light text-[#2563EB] border border-border border-b-transparent -mb-px"
+                      ? "bg-surface-light text-brand-accent border border-border border-b-transparent -mb-px"
                       : "text-muted hover:text-foreground"
                   }`}
                 >
@@ -616,13 +616,13 @@ export default function FinancialsPage() {
                 {/* Revenue vs Expenses Bar */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                   <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
-                    <BarChart3 size={13} className="text-[#2563EB]" /> Revenue vs Expenses vs Profit
+                    <BarChart3 size={13} className="text-brand-accent" /> Revenue vs Expenses vs Profit
                   </p>
                   <div className="space-y-3">
                     <div>
                       <div className="flex justify-between text-[10px] mb-1">
                         <span className="text-muted">Revenue</span>
-                        <span className="text-[#2563EB] font-semibold">{formatCurrency(totalMRR)}</span>
+                        <span className="text-brand-accent font-semibold">{formatCurrency(totalMRR)}</span>
                       </div>
                       <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
                         <div className="h-full rounded-lg transition-all duration-500" style={{ width: barWidth(totalMRR), background: "rgba(37,99,235,0.7)" }} />
@@ -653,7 +653,7 @@ export default function FinancialsPage() {
                 {mrrTrend.length > 1 && (
                   <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                     <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                      <TrendingUp size={13} className="text-[#2563EB]" /> MRR Growth Trend
+                      <TrendingUp size={13} className="text-brand-accent" /> MRR Growth Trend
                     </p>
                     <div className="flex items-end gap-1.5 h-32">
                       {mrrTrend.map((item, i) => {
@@ -676,7 +676,7 @@ export default function FinancialsPage() {
                 {/* Revenue by Plan Tier */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <Layers size={13} className="text-[#2563EB]" /> Revenue by Plan Tier
+                    <Layers size={13} className="text-brand-accent" /> Revenue by Plan Tier
                   </p>
                   <div className="space-y-2">
                     {revenueByTier.map(tier => (
@@ -698,7 +698,7 @@ export default function FinancialsPage() {
                 {/* Payment Method Distribution */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <CreditCard size={13} className="text-[#2563EB]" /> Payment Method Distribution
+                    <CreditCard size={13} className="text-brand-accent" /> Payment Method Distribution
                   </p>
                   {paymentMethods.length === 0 ? (
                     <p className="text-xs text-muted text-center py-6">Connect Stripe to see payment method data</p>
@@ -768,7 +768,7 @@ export default function FinancialsPage() {
                 {/* Budget vs Actual */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <Target size={13} className="text-[#2563EB]" /> Budget vs Actual
+                    <Target size={13} className="text-brand-accent" /> Budget vs Actual
                   </p>
                   <div className="space-y-2.5">
                     {budgetsWithActual.map(b => (
@@ -783,7 +783,7 @@ export default function FinancialsPage() {
                           </div>
                           {b.budget > 0 && (
                             <div
-                              className="absolute top-0 h-4 w-0.5 bg-[#2563EB]/80"
+                              className="absolute top-0 h-4 w-0.5 bg-brand-accent/80"
                               style={{ left: `${Math.min(100, 100)}%` }}
                             />
                           )}
@@ -803,7 +803,7 @@ export default function FinancialsPage() {
                 {categoryTotals.length > 0 && (
                   <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                     <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                      <Receipt size={13} className="text-[#2563EB]" /> Expense Categories
+                      <Receipt size={13} className="text-brand-accent" /> Expense Categories
                     </p>
                     <div className="space-y-2">
                       {categoryTotals.map((cat) => (
@@ -985,7 +985,7 @@ export default function FinancialsPage() {
                       {subscriptions.map(s => (
                         <div key={s.id} className="grid grid-cols-12 px-4 py-3 items-center hover:bg-surface-light/30 transition-colors text-xs">
                           <div className="col-span-4 flex items-center gap-2">
-                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8]" : "bg-surface-light text-muted"}`}>
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "bg-surface-light text-muted"}`}>
                               {s.tool_name.charAt(0).toUpperCase()}
                             </div>
                             <div>
@@ -1113,7 +1113,7 @@ export default function FinancialsPage() {
                 {/* Invoice Aging Chart */}
                 <div className="card p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <Clock size={13} className="text-[#2563EB]" /> Invoice Aging Report
+                    <Clock size={13} className="text-brand-accent" /> Invoice Aging Report
                   </p>
                   <div className="grid grid-cols-4 gap-2 mb-4">
                     {[
@@ -1185,7 +1185,7 @@ export default function FinancialsPage() {
                   <button
                     onClick={() => { window.location.href = "/dashboard/clients"; }}
                     className="card-hover p-3 text-left">
-                    <Plus size={14} className="text-[#2563EB] mb-1.5" />
+                    <Plus size={14} className="text-brand-accent mb-1.5" />
                     <p className="text-xs font-semibold">Create Invoice</p>
                     <p className="text-[10px] text-muted">Open a client → Billing tab</p>
                   </button>
@@ -1217,7 +1217,7 @@ export default function FinancialsPage() {
                 {/* Forecast Config */}
                 <div className="card p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <Target size={13} className="text-[#2563EB]" /> Forecast Parameters
+                    <Target size={13} className="text-brand-accent" /> Forecast Parameters
                   </p>
                   <div className="grid grid-cols-3 gap-4">
                     <div>
@@ -1238,7 +1238,7 @@ export default function FinancialsPage() {
                 {/* Forecast Chart */}
                 <div className="card p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <TrendingUp size={13} className="text-[#2563EB]" /> Revenue Forecast ({forecastMonths}-Month)
+                    <TrendingUp size={13} className="text-brand-accent" /> Revenue Forecast ({forecastMonths}-Month)
                   </p>
                   <div className="flex items-end gap-2 h-40">
                     {forecast.map((item, i) => {
@@ -1260,7 +1260,7 @@ export default function FinancialsPage() {
                 {/* Forecast Table */}
                 <div className="card p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <BarChart3 size={13} className="text-[#2563EB]" /> Projected P&L
+                    <BarChart3 size={13} className="text-brand-accent" /> Projected P&L
                   </p>
                   <div className="space-y-1.5">
                     <div className="grid grid-cols-4 gap-2 px-3 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
@@ -1272,7 +1272,7 @@ export default function FinancialsPage() {
                     {forecast.map((item, i) => (
                       <div key={i} className="grid grid-cols-4 gap-2 px-3 py-2 rounded-lg bg-surface-light border border-border">
                         <div className="text-xs font-semibold">{item.month}</div>
-                        <div className="text-xs text-right text-[#2563EB]">{formatCurrency(item.projected)}</div>
+                        <div className="text-xs text-right text-brand-accent">{formatCurrency(item.projected)}</div>
                         <div className="text-xs text-right text-rose-700">{formatCurrency(item.expenses)}</div>
                         <div className={`text-xs text-right font-semibold ${item.profit >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
                           {formatCurrency(item.profit)}
@@ -1286,7 +1286,7 @@ export default function FinancialsPage() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
                   <div className="card p-3">
                     <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Projected MRR ({forecastMonths}mo)</p>
-                    <p className="text-lg font-bold text-[#2563EB]">{formatCurrency(forecast[forecast.length - 1]?.projected || 0)}</p>
+                    <p className="text-lg font-bold text-brand-accent">{formatCurrency(forecast[forecast.length - 1]?.projected || 0)}</p>
                   </div>
                   <div className="card p-3">
                     <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Projected ARR ({forecastMonths}mo)</p>
@@ -1303,12 +1303,12 @@ export default function FinancialsPage() {
                 {/* Tax Summary */}
                 <div className="card p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <Shield size={13} className="text-[#2563EB]" /> Tax Summary (Estimated)
+                    <Shield size={13} className="text-brand-accent" /> Tax Summary (Estimated)
                   </p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
                       <p className="text-[10px] text-muted">Annual Revenue</p>
-                      <p className="text-sm font-bold text-[#2563EB]">{formatCurrency(annualRecurringRevenue)}</p>
+                      <p className="text-sm font-bold text-brand-accent">{formatCurrency(annualRecurringRevenue)}</p>
                     </div>
                     <div>
                       <p className="text-[10px] text-muted">Annual Expenses</p>
@@ -1330,7 +1330,7 @@ export default function FinancialsPage() {
                 {/* Export Config */}
                 <div className="card p-4">
                   <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
-                    <Download size={13} className="text-[#2563EB]" /> Financial Export
+                    <Download size={13} className="text-brand-accent" /> Financial Export
                   </p>
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
@@ -1341,7 +1341,7 @@ export default function FinancialsPage() {
                             key={fmt}
                             onClick={() => setExportFormat(fmt)}
                             className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
-                              exportFormat === fmt ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#1D4ED8]" : "border-border text-muted hover:text-foreground"
+                              exportFormat === fmt ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"
                             }`}
                           >
                             {fmt.toUpperCase()}
@@ -1357,7 +1357,7 @@ export default function FinancialsPage() {
                             key={range}
                             onClick={() => setExportRange(range)}
                             className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
-                              exportRange === range ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#1D4ED8]" : "border-border text-muted hover:text-foreground"
+                              exportRange === range ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"
                             }`}
                           >
                             {range.charAt(0).toUpperCase() + range.slice(1)}
@@ -1371,7 +1371,7 @@ export default function FinancialsPage() {
                 {/* Export Types */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
                   {[
-                    { label: "Revenue Report", desc: "MRR, ARR, growth trends", icon: TrendingUp, color: "text-[#2563EB]" },
+                    { label: "Revenue Report", desc: "MRR, ARR, growth trends", icon: TrendingUp, color: "text-brand-accent" },
                     { label: "Expense Report", desc: "All tracked subscriptions", icon: Receipt, color: "text-rose-700" },
                     { label: "Profit & Loss", desc: "Full P&L statement", icon: BarChart3, color: "text-emerald-700" },
                     { label: "Invoice Report", desc: "All invoices & aging", icon: FileText, color: "text-blue-400" },
@@ -1386,7 +1386,7 @@ export default function FinancialsPage() {
                       <report.icon size={16} className={`${report.color} mb-2`} />
                       <p className="text-xs font-semibold">{report.label}</p>
                       <p className="text-[10px] text-muted mt-0.5">{report.desc}</p>
-                      <p className="text-[10px] text-[#2563EB] mt-2 flex items-center gap-1">
+                      <p className="text-[10px] text-brand-accent mt-2 flex items-center gap-1">
                         <Download size={10} /> Coming soon
                       </p>
                     </button>
@@ -1396,7 +1396,7 @@ export default function FinancialsPage() {
                 {/* Payment Processors */}
                 <div className="card p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <CreditCard size={13} className="text-[#2563EB]" /> Payment Processors
+                    <CreditCard size={13} className="text-brand-accent" /> Payment Processors
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {/* Stripe */}
@@ -1412,7 +1412,7 @@ export default function FinancialsPage() {
                       </div>
                       <button
                         onClick={() => toast(stripeSynced ? "Syncing..." : "Configure Stripe in Settings > Integrations")}
-                        className="w-full text-[10px] py-1.5 rounded bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center justify-center gap-1"
+                        className="w-full text-[10px] py-1.5 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center justify-center gap-1"
                       >
                         <RefreshCw size={10} /> {stripeSynced ? "Sync Now" : "Connect"}
                       </button>
@@ -1455,7 +1455,7 @@ export default function FinancialsPage() {
                 {/* Import Section */}
                 <div className="card p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <FileText size={13} className="text-[#2563EB]" /> Import Financial Data
+                    <FileText size={13} className="text-brand-accent" /> Import Financial Data
                   </p>
                   <div className="grid grid-cols-2 gap-3">
                     <button
@@ -1547,7 +1547,7 @@ export default function FinancialsPage() {
 
                 {form.interval === "annual" && form.cost > 0 && (
                   <p className="text-[10px] text-muted bg-surface-light border border-border rounded-lg px-3 py-2">
-                    Monthly equivalent: <span className="text-[#2563EB] font-semibold">{formatCurrency(form.cost / 12)}</span>/mo
+                    Monthly equivalent: <span className="text-brand-accent font-semibold">{formatCurrency(form.cost / 12)}</span>/mo
                   </p>
                 )}
 

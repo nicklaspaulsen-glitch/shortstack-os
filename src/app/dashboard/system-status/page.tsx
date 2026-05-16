@@ -69,7 +69,7 @@ interface StatusResponse {
 
 const STATUS_META: Record<Status, { color: string; bg: string; border: string; icon: LucideIcon; label: string }> = {
   ok: { color: "text-success", bg: "bg-success/10", border: "border-success/30", icon: CheckCircle2, label: "Connected" },
-  configured: { color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]", border: "border-[rgba(37,99,235,0.25)]", icon: CheckCircle2, label: "Configured" },
+  configured: { color: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.08)]", border: "border-[rgba(37,99,235,0.25)]", icon: CheckCircle2, label: "Configured" },
   missing: { color: "text-muted", bg: "bg-muted/10", border: "border-border", icon: AlertTriangle, label: "Not set" },
   error: { color: "text-danger", bg: "bg-danger/10", border: "border-danger/30", icon: XCircle, label: "Error" },
 };
@@ -232,7 +232,7 @@ export default function SystemStatusPage() {
       >
         <div
           className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-            summary.ready_to_launch ? "bg-success/20 text-success" : summary.blockers > 0 ? "bg-danger/20 text-danger" : "bg-[rgba(37,99,235,0.12)] text-[#2563EB]"
+            summary.ready_to_launch ? "bg-success/20 text-success" : summary.blockers > 0 ? "bg-danger/20 text-danger" : "bg-[rgba(37,99,235,0.12)] text-brand-accent"
           }`}
         >
           {summary.ready_to_launch ? <CheckCircle2 size={20} /> : summary.blockers > 0 ? <XCircle size={20} /> : <AlertTriangle size={20} />}
@@ -264,7 +264,7 @@ export default function SystemStatusPage() {
           <motion.div key={group.category} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: gi * 0.06, duration: 0.4 }} className="bg-white border border-black/[0.06] rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <Zap size={14} className="text-[#2563EB]" />
+                <Zap size={14} className="text-brand-accent" />
                 {group.category}
               </h2>
               <span className="text-[10px] text-muted">
@@ -340,7 +340,7 @@ export default function SystemStatusPage() {
           href="https://vercel.com/dashboard"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.2)] font-medium"
+          className="inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.2)] font-medium"
         >
           Open Vercel <ExternalLink size={10} />
         </a>

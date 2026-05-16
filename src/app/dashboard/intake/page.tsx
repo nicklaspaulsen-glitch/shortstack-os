@@ -257,7 +257,7 @@ export default function IntakePage() {
                     onClick={() => setActiveTab(tab)}
                     className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
                       activeTab === tab
-                        ? "bg-[rgba(0,0,0,0.08)] text-[#2563EB]"
+                        ? "bg-[rgba(0,0,0,0.08)] text-brand-accent"
                         : "text-[rgba(0,0,0,0.4)] hover:text-[rgba(0,0,0,0.7)]"
                     }`}
                   >
@@ -268,7 +268,7 @@ export default function IntakePage() {
                   {activeTab === "forms" && (
                     <button
                       onClick={() => openBuilder()}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium rounded-lg transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-accent hover:bg-brand-accent/80 text-white text-sm font-medium rounded-lg transition-colors"
                     >
                       <Plus size={14} />
                       New Form
@@ -299,7 +299,7 @@ export default function IntakePage() {
                   ) : forms.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
                       <div className="w-14 h-14  bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] flex items-center justify-center">
-                        <Zap size={22} className="text-[#2563EB]/60" />
+                        <Zap size={22} className="text-brand-accent/60" />
                       </div>
                       <div>
                         <p className="text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1">No intake forms yet</p>
@@ -309,7 +309,7 @@ export default function IntakePage() {
                       </div>
                       <button
                         onClick={() => openBuilder()}
-                        className="flex items-center gap-1.5 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium rounded-lg transition-colors"
+                        className="flex items-center gap-1.5 px-4 py-2 bg-brand-accent hover:bg-brand-accent/80 text-white text-sm font-medium rounded-lg transition-colors"
                       >
                         <Plus size={14} />
                         Create your first form
@@ -491,7 +491,7 @@ export default function IntakePage() {
                     <input
                       value={bName}
                       onChange={(e) => setBName(e.target.value)}
-                      className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-[#2563EB]/50"
+                      className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-brand-accent/50"
                     />
                   </div>
 
@@ -501,7 +501,7 @@ export default function IntakePage() {
                       value={bWelcome}
                       onChange={(e) => setBWelcome(e.target.value)}
                       rows={2}
-                      className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-[#2563EB]/50 resize-none"
+                      className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-brand-accent/50 resize-none"
                     />
                   </div>
 
@@ -527,7 +527,7 @@ export default function IntakePage() {
                       <label className="text-xs text-[rgba(0,0,0,0.5)]">AI scoring</label>
                       <button
                         onClick={() => setBAI((p) => !p)}
-                        className={`relative w-11 h-6 rounded-full transition-colors ${bAI ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.10)]"}`}
+                        className={`relative w-11 h-6 rounded-full transition-colors ${bAI ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.10)]"}`}
                       >
                         <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${bAI ? "left-6" : "left-1"}`} />
                       </button>
@@ -542,7 +542,7 @@ export default function IntakePage() {
                         onChange={(e) => setBPrompt(e.target.value)}
                         rows={3}
                         placeholder="You are an expert lead qualifier for [your business]ï¿½"
-                        className="w-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-xs text-[rgba(0,0,0,0.65)] placeholder:text-[rgba(0,0,0,0.25)] outline-none focus:border-[#2563EB]/50 resize-none font-mono"
+                        className="w-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-xs text-[rgba(0,0,0,0.65)] placeholder:text-[rgba(0,0,0,0.25)] outline-none focus:border-brand-accent/50 resize-none font-mono"
                       />
                     </div>
                   )}
@@ -588,7 +588,7 @@ export default function IntakePage() {
                 <button
                   onClick={saveForm}
                   disabled={saving || !bName.trim()}
-                  className="flex items-center gap-2 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                  className="flex items-center gap-2 px-4 py-2 bg-brand-accent hover:bg-brand-accent/80 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
                 >
                   {saving && <Loader2 size={14} className="animate-spin" />}
                   {editingForm ? "Save changes" : "Create form"}
@@ -612,7 +612,7 @@ export default function IntakePage() {
 
                   {subDetail.ai_summary && (
                     <div className="bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] rounded-xl p-3">
-                      <p className="text-[10px] font-medium text-[#2563EB] mb-1.5 flex items-center gap-1">
+                      <p className="text-[10px] font-medium text-brand-accent mb-1.5 flex items-center gap-1">
                         <Sparkles size={10} /> AI Summary
                       </p>
                       <p className="text-xs text-[rgba(0,0,0,0.65)] leading-relaxed">{subDetail.ai_summary}</p>
@@ -624,7 +624,7 @@ export default function IntakePage() {
                       <p className="text-[10px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Follow-up questions</p>
                       {subDetail.ai_questions.map((q, i) => (
                         <div key={i} className="flex items-start gap-2">
-                          <span className="text-[10px] font-bold text-[#2563EB]/60 mt-0.5">{i + 1}.</span>
+                          <span className="text-[10px] font-bold text-brand-accent/60 mt-0.5">{i + 1}.</span>
                           <p className="text-xs text-[rgba(0,0,0,0.5)] leading-relaxed">{q}</p>
                         </div>
                       ))}

@@ -416,7 +416,7 @@ export default function ConversationsPage() {
                     onClick={() => setFilter(f.key)}
                     className={`text-xs px-2.5 py-1 rounded-md transition ${
                       filter === f.key
-                        ? "bg-[#1D4ED8]/10 text-[#1D4ED8] border border-[#1D4ED8]/20"
+                        ? "bg-brand-accent/80/10 text-brand-accent border border-[#1D4ED8]/20"
                         : "text-[#52525B] hover:text-[#111827] hover:bg-[rgba(0,0,0,0.04)] border border-transparent"
                     }`}
                     title={`Shortcut: ${i + 1}`}
@@ -447,7 +447,7 @@ export default function ConversationsPage() {
                 ) : conversations.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-3">
                     <div className="w-12 h-12 bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.08)] flex items-center justify-center">
-                      <Inbox size={20} className="text-[#1D4ED8]/60" />
+                      <Inbox size={20} className="text-brand-accent/60" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-[#71717A] mb-1">No conversations yet</p>
@@ -591,7 +591,7 @@ export default function ConversationsPage() {
                         whileTap={{ scale: 0.98 }}
                         onClick={handleSend}
                         disabled={sending || !composerText.trim()}
-                        className="px-3 py-1.5 rounded bg-[#2563EB] text-white text-sm font-medium disabled:opacity-40 hover:bg-[#3B82F6] flex items-center gap-1.5"
+                        className="px-3 py-1.5 rounded bg-brand-accent text-white text-sm font-medium disabled:opacity-40 hover:bg-[#3B82F6] flex items-center gap-1.5"
                       >
                         {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                         Send
@@ -634,7 +634,7 @@ function ConversationRow({
       whileHover={{ backgroundColor: active ? undefined : "rgba(0,0,0,0.03)" }}
       onClick={onClick}
       className={`w-full text-left px-4 py-3 border-b border-[rgba(0,0,0,0.08)] transition-colors ${
-        active ? "bg-[#1D4ED8]/5 border-l-2 border-l-[#1D4ED8]/40" : ""
+        active ? "bg-brand-accent/80/5 border-l-2 border-l-[#1D4ED8]/40" : ""
       }`}
     >
       <div className="flex items-start justify-between gap-2 mb-1">
@@ -648,7 +648,7 @@ function ConversationRow({
         </div>
         <div className="flex items-center gap-1 flex-shrink-0">
           {c.unread_count > 0 && (
-            <span className="w-2 h-2 rounded-full bg-[#1D4ED8]" />
+            <span className="w-2 h-2 rounded-full bg-brand-accent/80" />
           )}
           <span className="text-[11px] text-[#71717A]">{fmtTime(c.last_message_at)}</span>
         </div>
@@ -690,7 +690,7 @@ function MessageBubble({ m }: { m: Message }) {
         className={`max-w-[70%]  px-4 py-2.5 text-sm leading-relaxed ${
           inbound
             ? "bg-[#F2F2F4] text-text-primary border border-[rgba(0,0,0,0.08)]"
-            : "bg-[#1D4ED8] text-white"
+            : "bg-brand-accent/80 text-white"
         }`}
       >
         <div className="whitespace-pre-wrap break-words">{m.body || <em className="opacity-60">No content</em>}</div>

@@ -47,7 +47,7 @@ export default function DialerPage() {
                           whileHover={{ y: -1 }}
                           className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
                             isActive
-                              ? "border-[#2563EB] text-[#2563EB]"
+                              ? "border-brand-accent text-brand-accent"
                               : "border-transparent text-[#6B7280] hover:text-[#374151]"
                           }`}
                           aria-current={isActive ? "page" : undefined}

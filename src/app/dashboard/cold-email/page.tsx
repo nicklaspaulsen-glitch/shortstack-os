@@ -68,8 +68,8 @@ const DEPTH_COPY: Record<Depth, { label: string; desc: string; cost: string }> =
 
 const STATUS_PILLS: Record<JobRow["status"], string> = {
   pending: "bg-[rgba(0,0,0,0.06)] text-[#6B7280] border-[rgba(0,0,0,0.10)]",
-  researching: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",
-  generating: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",
+  researching: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)]",
+  generating: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)]",
   sending: "bg-amber-500/15 text-amber-700 border-amber-500/30",
   completed: "bg-green-500/15 text-green-700 border-green-500/30",
   failed: "bg-red-500/15 text-red-700 border-red-500/30",
@@ -221,8 +221,8 @@ export default function ColdEmailPage() {
                 style={{ borderColor: "rgba(0,0,0,0.12)" }}
               >
                 <div className="flex items-center gap-2">
-                  <Sparkles size={13} className="text-[#2563EB]" />
-                  <h2 className="text-xs font-semibold text-[#2563EB]">New Campaign</h2>
+                  <Sparkles size={13} className="text-brand-accent" />
+                  <h2 className="text-xs font-semibold text-brand-accent">New Campaign</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -234,7 +234,7 @@ export default function ColdEmailPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Q2 dental outreach"
-                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB]"
+                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-brand-accent"
                     />
                   </div>
                   <div>
@@ -245,7 +245,7 @@ export default function ColdEmailPage() {
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
                       placeholder="new"
-                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB]"
+                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-brand-accent"
                     />
                     <p className="text-[9px] text-muted mt-0.5">
                       We pull all leads with this status that have an email.
@@ -261,7 +261,7 @@ export default function ColdEmailPage() {
                     value={templateSeed}
                     onChange={(e) => setTemplateSeed(e.target.value)}
                     rows={4}
-                    className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-[#2563EB] font-mono"
+                    className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-brand-accent font-mono"
                   />
                   <p className="text-[9px] text-muted mt-0.5">
                     Tokens: <code>{"{{first_name}}"}</code>, <code>{"{{business_name}}"}</code>,{" "}
@@ -289,7 +289,7 @@ export default function ColdEmailPage() {
                           onClick={() => setDepth(d)}
                           className={`flex-1 text-[10px] px-2 py-1.5 rounded border transition-all ${
                             depth === d
-                              ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.10)] text-[#2563EB]"
+                              ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.10)] text-brand-accent"
                               : "border-border text-muted hover:text-foreground"
                           }`}
                         >
@@ -310,7 +310,7 @@ export default function ColdEmailPage() {
                       onChange={(e) => setThrottle(parseInt(e.target.value || "100") || 100)}
                       min={1}
                       max={5000}
-                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground focus:outline-none focus:border-[#2563EB]"
+                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground focus:outline-none focus:border-brand-accent"
                     />
                     <p className="text-[9px] text-muted mt-0.5">
                       Recommended: 100/hr to protect domain reputation.
@@ -329,7 +329,7 @@ export default function ColdEmailPage() {
                     <button
                       onClick={handleCreate}
                       disabled={creating || !name.trim() || !templateSeed.trim()}
-                      className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#1D4ED8] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                      className="text-[10px] px-4 py-1.5 rounded-lg bg-brand-accent text-white font-medium hover:bg-brand-accent/80 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                     >
                       {creating ? "Building�" : "Create Campaign"}
                     </button>
@@ -398,7 +398,7 @@ export default function ColdEmailPage() {
                               <button
                                 onClick={() => handlePreview(j.id)}
                                 disabled={previewing === j.id}
-                                className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
+                                className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
                               >
                                 {previewing === j.id ? (
                                   <Loader2 size={9} className="animate-spin" />
@@ -419,7 +419,7 @@ export default function ColdEmailPage() {
                           {(j.status === "researching" || j.status === "generating") && (
                             <button
                               onClick={() => handleSend(j.id)}
-                              className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1"
+                              className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1"
                             >
                               <Send size={9} />
                               Send
@@ -463,7 +463,7 @@ export default function ColdEmailPage() {
                               ) : (
                                 <>
                                   <div className="text-[10px] text-muted">
-                                    <span className="text-[#2563EB]">Subject:</span> {s.subject}
+                                    <span className="text-brand-accent">Subject:</span> {s.subject}
                                   </div>
                                   <pre className="text-[10px] text-foreground whitespace-pre-wrap font-sans leading-relaxed">
                                     {s.body}

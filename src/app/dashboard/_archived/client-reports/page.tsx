@@ -133,7 +133,7 @@ export default function ClientReportsPage() {
                   </p>
                   <Link
                     href="/dashboard/report-generator"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-sm font-medium transition-colors"
                   >
                     Go to Report Generator
                   </Link>
@@ -171,7 +171,7 @@ export default function ClientReportsPage() {
           <p className="text-[#6B7280] mb-2">No reports yet.</p>
           <Link
             href="/dashboard/report-generator"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-sm font-medium transition-colors"
           >
             Generate your first report
           </Link>
@@ -198,7 +198,7 @@ export default function ClientReportsPage() {
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center">
-                      <FileText size={14} className="text-[#2563EB]" />
+                      <FileText size={14} className="text-brand-accent" />
                     </div>
                     <div className="text-left">
                       <p className="font-medium text-[#111827] text-sm">{row.client_name}</p>
@@ -257,7 +257,7 @@ export default function ClientReportsPage() {
                           <button
                             onClick={() => resendEmail(r.id)}
                             disabled={resending === r.id}
-                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-xs transition-colors disabled:opacity-50"
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-xs transition-colors disabled:opacity-50"
                           >
                             <Mail size={11} />
                             {resending === r.id ? "Sending…" : "Resend"}

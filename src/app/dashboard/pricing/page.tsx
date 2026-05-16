@@ -157,7 +157,7 @@ export default function PricingPage() {
                   >
                     {plan.highlight && (
                       <div className={`absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-white text-[9px] font-bold uppercase tracking-wider ${
-                        plan.popular ? "bg-[#2563EB]" : "bg-gradient-to-r from-red-500 to-orange-500"
+                        plan.popular ? "bg-brand-accent" : "bg-gradient-to-r from-red-500 to-orange-500"
                       }`}>
                         {plan.highlight}
                       </div>
@@ -185,7 +185,7 @@ export default function PricingPage() {
                     </div>
                     <p className="text-[10px] text-muted mb-4">
                       {plan.tokens === "Unlimited" || plan.tokens === "∞" ? "Unlimited AI tokens" : `${plan.tokens} AI tokens included`}
-                      {annual && <span className="text-[#2563EB] ml-1">(${(monthlyPrice * 12).toLocaleString()}/yr)</span>}
+                      {annual && <span className="text-brand-accent ml-1">(${(monthlyPrice * 12).toLocaleString()}/yr)</span>}
                     </p>
 
                     <button
@@ -195,8 +195,8 @@ export default function PricingPage() {
                         isCurrentPlan
                           ? "bg-success/10 text-success border border-success/20 cursor-default"
                           : plan.popular
-                          ? "bg-[#2563EB] text-white hover:bg-[#1D4ED8] shadow-sm"
-                          : "bg-surface-light text-foreground hover:bg-[rgba(37,99,235,0.08)] hover:text-[#2563EB] border border-border"
+                          ? "bg-brand-accent text-white hover:bg-brand-accent/80 shadow-sm"
+                          : "bg-surface-light text-foreground hover:bg-[rgba(37,99,235,0.08)] hover:text-brand-accent border border-border"
                       } ${checkoutLoading === plan.key ? "opacity-60 cursor-wait" : ""}`}
                     >
                       {isCurrentPlan
@@ -212,7 +212,7 @@ export default function PricingPage() {
                     <div className="mt-4 pt-4 border-t border-border space-y-2">
                       {plan.features.map((f) => (
                         <div key={f} className="flex items-start gap-2">
-                          <Check size={12} className="mt-0.5 shrink-0 text-[#2563EB]" />
+                          <Check size={12} className="mt-0.5 shrink-0 text-brand-accent" />
                           <span className="text-[10px] text-foreground/80 leading-relaxed">{f}</span>
                         </div>
                       ))}
@@ -225,7 +225,7 @@ export default function PricingPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-xs font-medium text-foreground">
-                    <Users size={14} className="text-[#2563EB]" />
+                    <Users size={14} className="text-brand-accent" />
                     Clients
                   </div>
                   <div className="space-y-1">
@@ -243,7 +243,7 @@ export default function PricingPage() {
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-xs font-medium text-foreground">
-                    <Bot size={14} className="text-[#2563EB]" />
+                    <Bot size={14} className="text-brand-accent" />
                     AI Tokens
                   </div>
                   <div className="space-y-1">
@@ -257,7 +257,7 @@ export default function PricingPage() {
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-xs font-medium text-foreground">
-                    <Film size={14} className="text-[#2563EB]" />
+                    <Film size={14} className="text-brand-accent" />
                     Upload Limit
                   </div>
                   <div className="space-y-1">
@@ -305,10 +305,10 @@ export default function PricingPage() {
                 { icon: <Headphones size={16} />, label: "Dedicated Support", desc: "Named success manager", plans: "Business+" },
               ].map((item, i) => (
                 <motion.div key={item.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl p-4">
-                  <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[#2563EB] mb-2">{item.icon}</div>
+                  <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-brand-accent mb-2">{item.icon}</div>
                   <p className="text-xs font-medium text-foreground">{item.label}</p>
                   <p className="text-[10px] text-muted mt-0.5">{item.desc}</p>
-                  <p className="text-[9px] text-[#2563EB] font-medium mt-1.5">{item.plans}</p>
+                  <p className="text-[9px] text-brand-accent font-medium mt-1.5">{item.plans}</p>
                 </motion.div>
               ))}
             </div>{/* Token Usage Explainer */}<div className="glass  p-6">
@@ -327,13 +327,13 @@ export default function PricingPage() {
                   <div key={item.label} className="glass rounded-xl p-3">
                     <p className="text-xs font-medium text-foreground">{item.label}</p>
                     <p className="text-[11px] text-muted mt-0.5">{item.tokens} tokens</p>
-                    <p className="text-[10px] text-[#2563EB] mt-1">~{item.uses}/500K</p>
+                    <p className="text-[10px] text-brand-accent mt-1">~{item.uses}/500K</p>
                   </div>
                 ))}
               </div>
             </div>{/* Add-ons */}<div>
               <div className="flex items-center gap-2 mb-4">
-                <Plus size={16} className="text-[#2563EB]" />
+                <Plus size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-bold text-foreground">Add-ons</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -353,7 +353,7 @@ export default function PricingPage() {
                       <div className="flex items-center justify-between">
                         <p className="text-xs font-medium text-foreground">{addon.name}</p>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
-                          addon.type === "one-time" ? "bg-info/10 text-info" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                          addon.type === "one-time" ? "bg-info/10 text-info" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"
                         }`}>
                           {addon.type === "one-time" ? "One-time" : "Monthly"}
                         </span>
@@ -371,7 +371,7 @@ export default function PricingPage() {
               </p>
               <button
                 onClick={() => handleSubscribe("Starter")}
-                className="px-5 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-medium hover:bg-[#1D4ED8] transition-colors"
+                className="px-5 py-2 rounded-xl bg-brand-accent text-white text-xs font-medium hover:bg-brand-accent/80 transition-colors"
               >
                 Start Free Trial
               </button>

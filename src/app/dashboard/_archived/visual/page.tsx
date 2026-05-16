@@ -55,7 +55,7 @@ export default function VisualHubPage() {
             stats={[
               { label: "Thumbnails", key: "thumbnails", icon: ImageIcon, color: "text-emerald-400" },
               { label: "Videos", key: "videos", icon: Film, color: "text-blue-400" },
-              { label: "Images", key: "images", icon: Sparkles, color: "text-[#2563EB]" },
+              { label: "Images", key: "images", icon: Sparkles, color: "text-brand-accent" },
               { label: "Brand Assets", key: "brand_assets", icon: Palette, color: "text-rose-400" },
             ]}
             tools={[

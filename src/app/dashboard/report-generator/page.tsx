@@ -253,7 +253,7 @@ export default function ReportGeneratorPage() {
             onClick={() => setRangePreset(p.id)}
             className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all ${
               rangePreset === p.id
-                ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.4)] text-[#2563EB]"
+                ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.4)] text-brand-accent"
                 : "bg-surface-light border-border/30 text-muted hover:text-foreground"
             }`}
           >
@@ -298,7 +298,7 @@ export default function ReportGeneratorPage() {
           <button
             type="button"
             onClick={() => setMetrics(METRIC_OPTIONS.map(m => m.id))}
-            className="text-[#2563EB] hover:underline"
+            className="text-brand-accent hover:underline"
           >
             Select all
           </button>
@@ -344,8 +344,8 @@ export default function ReportGeneratorPage() {
     <div className="glass  overflow-hidden text-xs">
     <div className="p-5">
       <div className="flex items-center gap-2 mb-2">
-        <FileText size={12} className="text-[#2563EB]" />
-        <p className="text-[10px] uppercase tracking-wider font-semibold text-[#2563EB]">Report preview</p>
+        <FileText size={12} className="text-brand-accent" />
+        <p className="text-[10px] uppercase tracking-wider font-semibold text-brand-accent">Report preview</p>
       </div>
       <div className="space-y-1">
         <p className="text-base font-bold text-foreground">{selectedClientObj?.business_name || "No client selected"}</p>
@@ -363,7 +363,7 @@ export default function ReportGeneratorPage() {
             const meta = METRIC_OPTIONS.find(m => m.id === id);
             return (
               <div key={id} className="flex items-center gap-2 text-[11px]">
-                <Check size={11} className="text-[#2563EB]" />
+                <Check size={11} className="text-brand-accent" />
                 <span className="text-foreground">{meta?.label || id}</span>
               </div>
             );
@@ -379,7 +379,7 @@ export default function ReportGeneratorPage() {
             className="accent-[#2563EB]"
             disabled={!selectedClientObj?.email}
           />
-          <Mail size={11} className="text-[#2563EB]" />
+          <Mail size={11} className="text-brand-accent" />
           <span className={selectedClientObj?.email ? "text-foreground" : "text-muted"}>
             Email PDF to client{selectedClientObj?.email ? ` (${selectedClientObj.email})` : " (client email missing)"}
           </span>
@@ -466,15 +466,15 @@ export default function ReportGeneratorPage() {
               step === 3 ? undefined : (
                 <div className="text-[11px] text-muted flex flex-wrap items-center gap-3">
                   <span className="inline-flex items-center gap-1">
-                    <Users size={10} className="text-[#2563EB]" />
+                    <Users size={10} className="text-brand-accent" />
                     {selectedClientObj?.business_name || "No client"}
                   </span>
                   <span className="inline-flex items-center gap-1">
-                    <Calendar size={10} className="text-[#2563EB]" />
+                    <Calendar size={10} className="text-brand-accent" />
                     {fromDate} → {toDate}
                   </span>
                   <span className="inline-flex items-center gap-1">
-                    <ListChecks size={10} className="text-[#2563EB]" />
+                    <ListChecks size={10} className="text-brand-accent" />
                     {metrics.length} metric{metrics.length === 1 ? "" : "s"}
                   </span>
                 </div>
@@ -513,7 +513,7 @@ export default function ReportGeneratorPage() {
                   const c = clients.find(cl => cl.id === r.client_id);
                   return (
                     <li key={r.id} className="border border-border/30 rounded-xl px-3 py-2.5 flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#2563EB] shrink-0" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-brand-accent shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-[11px] font-medium text-foreground truncate">
                           {c?.business_name || "Unknown client"}
@@ -531,7 +531,7 @@ export default function ReportGeneratorPage() {
                           href={r.pdf_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-[10px] text-[#2563EB] hover:underline shrink-0"
+                          className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline shrink-0"
                           title="Download (signed URL, 7-day expiry)"
                         >
                           <Download size={10} />

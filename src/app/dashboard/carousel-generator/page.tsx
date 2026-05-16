@@ -712,7 +712,7 @@ export default function CarouselGeneratorPage() {
                               key={s.id}
                               onClick={() => setStyle(s.id)}
                               className={`text-left rounded-xl border overflow-hidden transition-all ${
-                                selected ? "border-[#2563EB] ring-2 ring-[rgba(37,99,235,0.25)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"
+                                selected ? "border-brand-accent ring-2 ring-[rgba(37,99,235,0.25)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"
                               }`}
                             >
                               <div className="h-16" style={{ background: s.preview }}>
@@ -743,7 +743,7 @@ export default function CarouselGeneratorPage() {
                             onClick={() => setSlideCount(n)}
                             className={`p-4 rounded-xl border text-center transition-all ${
                               slideCount === n
-                                ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.08)]"
+                                ? "border-brand-accent bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.08)]"
                                 : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                             }`}
                           >
@@ -795,11 +795,11 @@ export default function CarouselGeneratorPage() {
               <div className="card mb-6 space-y-3">
                 <div className="flex items-center justify-between">
                   <h2 className="section-header flex items-center gap-2">
-                    <LayoutGrid size={14} className="text-[#2563EB]" /> Your carousel ({slides.length} slides)
+                    <LayoutGrid size={14} className="text-brand-accent" /> Your carousel ({slides.length} slides)
                   </h2>
                   <button
                     onClick={handleCopyAll}
-                    className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors"
+                    className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] transition-colors"
                   >
                     {copied ? <Check size={11} /> : <Copy size={11} />} {copied ? "Copied!" : "Copy text"}
                   </button>
@@ -823,7 +823,7 @@ export default function CarouselGeneratorPage() {
                   ))}
                 </motion.div>
                 <p className="text-[11px] text-muted text-center pt-2">
-                  Need to edit slides or change brand colors? Flip to <span className="text-[#2563EB] font-semibold">Advanced mode</span>.
+                  Need to edit slides or change brand colors? Flip to <span className="text-brand-accent font-semibold">Advanced mode</span>.
                 </p>
               </div>
             )}{advancedMode && (
@@ -869,7 +869,7 @@ export default function CarouselGeneratorPage() {
                   transition={{ duration: 0.22, delay: 0 }}
                 >
                   <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
-                    <Type size={13} className="text-[#2563EB]" />
+                    <Type size={13} className="text-brand-accent" />
                     Topic
                   </label>
                   <textarea
@@ -917,7 +917,7 @@ export default function CarouselGeneratorPage() {
                   transition={{ duration: 0.22, delay: 0.06 }}
                 >
                   <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
-                    <Palette size={13} className="text-[#2563EB]" />
+                    <Palette size={13} className="text-brand-accent" />
                     Style
                   </label>
                   <div className="grid grid-cols-3 gap-2">
@@ -958,7 +958,7 @@ export default function CarouselGeneratorPage() {
                   transition={{ duration: 0.22, delay: 0.12 }}
                 >
                   <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
-                    <Palette size={13} className="text-[#2563EB]" />
+                    <Palette size={13} className="text-brand-accent" />
                     Brand Colors
                   </label>
 
@@ -1034,7 +1034,7 @@ export default function CarouselGeneratorPage() {
                   transition={{ duration: 0.22, delay: 0.18 }}
                 >
                   <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
-                    <LayoutGrid size={13} className="text-[#2563EB]" />
+                    <LayoutGrid size={13} className="text-brand-accent" />
                     Template
                     <span className="text-[9px] text-muted font-normal ml-1">(optional)</span>
                   </label>
@@ -1135,7 +1135,7 @@ export default function CarouselGeneratorPage() {
                   {/* Preview header */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <ImageIcon size={14} className="text-[#2563EB]" />
+                      <ImageIcon size={14} className="text-brand-accent" />
                       <span className="text-xs font-semibold text-foreground">Preview</span>
                       {slides.length > 0 && (
                         <span
@@ -1374,7 +1374,7 @@ export default function CarouselGeneratorPage() {
                       {/* Slide list (text view for quick editing) */}
                       <div className="mt-5 space-y-2">
                         <div className="flex items-center gap-2 mb-2">
-                          <Wand2 size={13} className="text-[#2563EB]" />
+                          <Wand2 size={13} className="text-brand-accent" />
                           <span className="text-xs font-semibold text-foreground">Slide Content</span>
                         </div>
                         {slides.map((slide, idx) => (

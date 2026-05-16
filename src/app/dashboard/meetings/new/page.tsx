@@ -164,7 +164,7 @@ export default function NewMeetingPage() {
                   onClick={() => inputRef.current?.click()}
                   className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
                     dragOver
-                      ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]"
+                      ? "border-brand-accent bg-[rgba(37,99,235,0.05)]"
                       : file
                       ? "border-green-400/30 bg-green-400/5"
                       : "border-border hover:border-[rgba(37,99,235,0.25)]"
@@ -201,7 +201,7 @@ export default function NewMeetingPage() {
                 <div className="space-y-2">
                   <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#2563EB] transition-all"
+                      className="h-full bg-brand-accent transition-all"
                       style={{ width: `${progress}%` }}
                     />
                   </div>

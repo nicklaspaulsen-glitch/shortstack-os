@@ -114,17 +114,17 @@ export default function ClientDetailPage() {
       <div className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.08)] rounded-xl px-4 py-2.5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center">
-            <span className="text-[#2563EB] text-sm font-bold">{client.business_name.charAt(0)}</span>
+            <span className="text-brand-accent text-sm font-bold">{client.business_name.charAt(0)}</span>
           </div>
           <div>
-            <p className="text-[10px] text-[#2563EB] uppercase tracking-wider font-bold">Managing Client Account</p>
+            <p className="text-[10px] text-brand-accent uppercase tracking-wider font-bold">Managing Client Account</p>
             <p className="text-xs font-semibold">{client.business_name}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setSmartManageOpen(true)}
-            className="text-[10px] px-2.5 py-1 rounded-full bg-[#2563EB] text-white font-bold flex items-center gap-1 hover:bg-[rgba(37,99,235,0.90)] transition-colors"
+            className="text-[10px] px-2.5 py-1 rounded-full bg-brand-accent text-white font-bold flex items-center gap-1 hover:bg-[rgba(37,99,235,0.90)] transition-colors"
             aria-label="Open Smart Manage"
           >
             <Sparkles size={10} /> Manage
@@ -212,7 +212,7 @@ export default function ClientDetailPage() {
         </div>
         <div className="flex flex-wrap gap-2">
           {(client.services || []).map((s, i) => (
-            <span key={i} className="bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded-lg px-3 py-1.5 text-[#2563EB] text-sm">{s}</span>
+            <span key={i} className="bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded-lg px-3 py-1.5 text-brand-accent text-sm">{s}</span>
           ))}
           {(client.services || []).length === 0 && <span className="text-muted text-sm">No services assigned</span>}
         </div>
@@ -246,7 +246,7 @@ export default function ClientDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* AI Actions */}
           <div className="card">
-            <h3 className="section-header flex items-center gap-2"><Sparkles size={16} className="text-[#2563EB]" /> AI Agent Activity</h3>
+            <h3 className="section-header flex items-center gap-2"><Sparkles size={16} className="text-brand-accent" /> AI Agent Activity</h3>
             <div className="space-y-3 max-h-80 overflow-y-auto">
               {aiActions.length === 0 ? (
                 <p className="text-muted text-sm">No AI actions for this client yet</p>
@@ -309,7 +309,7 @@ export default function ClientDetailPage() {
                     // the user downloads a script.
                     setTimeout(() => URL.revokeObjectURL(url), 1000);
                   }
-                }} aria-label={`Download ${s.title} as PDF`} className="text-[#2563EB] text-xs hover:text-[#3B82F6]"><Download size={14} /></button>
+                }} aria-label={`Download ${s.title} as PDF`} className="text-brand-accent text-xs hover:text-[#3B82F6]"><Download size={14} /></button>
               )},
             ]}
             data={scripts}
@@ -547,7 +547,7 @@ function ClientPhoneSection({
     return (
       <div className="card">
         <h3 className="section-header flex items-center gap-2">
-          <Phone size={13} className="text-[#2563EB]" /> Dedicated Phone Number
+          <Phone size={13} className="text-brand-accent" /> Dedicated Phone Number
         </h3>
         <p className="text-xs text-muted">Loading...</p>
       </div>
@@ -558,7 +558,7 @@ function ClientPhoneSection({
     return (
       <div className="card">
         <h3 className="section-header flex items-center gap-2">
-          <Phone size={13} className="text-[#2563EB]" /> Dedicated Phone Number
+          <Phone size={13} className="text-brand-accent" /> Dedicated Phone Number
         </h3>
         <p className="text-xs text-muted">Unable to load phone status.</p>
       </div>
@@ -576,10 +576,10 @@ function ClientPhoneSection({
     <div className="card">
       <div className="flex items-center justify-between mb-3">
         <h3 className="section-header flex items-center gap-2 mb-0">
-          <Phone size={13} className="text-[#2563EB]" /> Dedicated Phone Number
+          <Phone size={13} className="text-brand-accent" /> Dedicated Phone Number
         </h3>
         <span className="text-[10px] text-muted">
-          Plan: <span className="text-[#2563EB] font-semibold">{status.plan.plan_tier}</span>
+          Plan: <span className="text-brand-accent font-semibold">{status.plan.plan_tier}</span>
           <span className="mx-1.5 opacity-40">·</span>
           <span className={capHit ? "text-red-400" : ""}>{capLabel} numbers</span>
         </span>
@@ -594,7 +594,7 @@ function ClientPhoneSection({
                 <Phone size={9} /> Active
               </span>
               {status.eleven_agent_id ? (
-                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)] flex items-center gap-1">
+                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)] flex items-center gap-1">
                   <Bot size={9} /> AI agent ready
                 </span>
               ) : (
@@ -693,11 +693,11 @@ function fileIconFor(type: string) {
   if (t.startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(t))
     return <ImageIcon size={14} className="text-blue-400" />;
   if (t.startsWith("video") || ["mp4", "mov", "avi", "webm", "mkv"].includes(t))
-    return <Film size={14} className="text-[#2563EB]" />;
+    return <Film size={14} className="text-brand-accent" />;
   if (t.startsWith("audio") || ["mp3", "wav", "ogg", "m4a", "flac"].includes(t))
     return <Music size={14} className="text-pink-400" />;
   if (["pdf", "doc", "docx", "txt"].includes(t) || t.includes("document"))
-    return <FileText size={14} className="text-[#2563EB]" />;
+    return <FileText size={14} className="text-brand-accent" />;
   return <FileIcon size={14} className="text-muted" />;
 }
 
@@ -728,7 +728,7 @@ function ClientFilesSection({ clientId, readOnly = false }: { clientId: string; 
     <div className="card">
       <div className="flex items-center justify-between mb-3">
         <h3 className="section-header flex items-center gap-2 mb-0">
-          <FolderOpen size={13} className="text-[#2563EB]" /> Uploaded Files
+          <FolderOpen size={13} className="text-brand-accent" /> Uploaded Files
         </h3>
         <span className="text-[10px] text-muted">
           {loading ? "Loading..." : `${files.length} file${files.length === 1 ? "" : "s"}`}
@@ -885,7 +885,7 @@ const ONBOARDING_PHASES = [
   {
     phase: "Setup & Discovery",
     icon: <Rocket size={14} />,
-    color: "text-[#2563EB]",
+    color: "text-brand-accent",
     bg: "bg-[rgba(37,99,235,0.08)]",
     tasks: [
       { title: "Complete client onboarding form", description: "Fill in business details, goals, and preferences" },
@@ -900,7 +900,7 @@ const ONBOARDING_PHASES = [
   {
     phase: "Strategy & Planning",
     icon: <Target size={14} />,
-    color: "text-[#2563EB]",
+    color: "text-brand-accent",
     bg: "bg-[rgba(37,99,235,0.08)]",
     tasks: [
       { title: "Create content strategy document", description: "Define content pillars, posting frequency, and tone" },
@@ -914,7 +914,7 @@ const ONBOARDING_PHASES = [
   {
     phase: "Content Production",
     icon: <Palette size={14} />,
-    color: "text-[#2563EB]",
+    color: "text-brand-accent",
     bg: "bg-[rgba(37,99,235,0.08)]",
     tasks: [
       { title: "Write first 5 video scripts", description: "Use AI Script Lab to create platform-specific scripts" },
@@ -1055,7 +1055,7 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
             <p className="text-[10px] text-muted">{completedOnboarding} of {totalOnboarding} steps completed</p>
           </div>
           <div className="flex items-center gap-2">
-            <span className={`text-lg font-bold font-mono ${progressPercent === 100 ? "text-success" : "text-[#2563EB]"}`}>
+            <span className={`text-lg font-bold font-mono ${progressPercent === 100 ? "text-success" : "text-brand-accent"}`}>
               {progressPercent}%
             </span>
             {onboardingTasks.length === 0 && (
@@ -1069,7 +1069,7 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
         </div>
         <div className="h-2 bg-surface-light rounded-full overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-500 ${progressPercent === 100 ? "bg-success" : "bg-[#2563EB]"}`}
+            className={`h-full rounded-full transition-all duration-500 ${progressPercent === 100 ? "bg-success" : "bg-brand-accent"}`}
             style={{ width: `${progressPercent}%` }}
           />
         </div>

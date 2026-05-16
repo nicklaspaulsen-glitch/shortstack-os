@@ -457,7 +457,7 @@ export default function FunnelCanvasPage() {
                       ))}
                     </select>
                     <div className="flex gap-2">
-                      <button onClick={() => void addStep()} className="flex-1 py-1.5 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold transition-colors">
+                      <button onClick={() => void addStep()} className="flex-1 py-1.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-white text-xs font-semibold transition-colors">
                         Add
                       </button>
                       <button onClick={() => setAddingStep(false)} className="px-3 py-1.5 rounded-lg border border-black/[0.08] text-[#6B7280] text-xs transition-colors">
@@ -674,7 +674,7 @@ export default function FunnelCanvasPage() {
               <button
                 onClick={savePanel}
                 disabled={saving}
-                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 text-white font-semibold text-sm transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-white font-semibold text-sm transition-colors"
               >
                 <Save size={14} />
                 {saving ? "Saving…" : "Save Step"}

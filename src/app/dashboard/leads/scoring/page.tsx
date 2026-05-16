@@ -242,7 +242,7 @@ function ScoreDetailModal({
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Target size={14} className="text-[#2563EB]" />
+              <Target size={14} className="text-brand-accent" />
               Score detail · {lead.business_name}
             </h2>
             <p className="text-[10px] text-muted">
@@ -270,7 +270,7 @@ function ScoreDetailModal({
           <button
             onClick={handleRecompute}
             disabled={recomputing}
-            className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.12)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-50"
+            className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.12)] text-brand-accent hover:bg-[rgba(37,99,235,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-50"
           >
             {recomputing ? (
               <Loader size={11} className="animate-spin" />
@@ -305,7 +305,7 @@ function ScoreDetailModal({
           </h3>
           {historyLoading ? (
             <div className="flex justify-center py-8">
-              <Loader size={16} className="animate-spin text-[#2563EB]" />
+              <Loader size={16} className="animate-spin text-brand-accent" />
             </div>
           ) : history.length === 0 ? (
             <p className="text-[10px] text-muted italic">
@@ -564,7 +564,7 @@ export default function LeadScoringPage() {
       </div>
     </div><CollapsibleStats
               storageKey="lead-scoring"
-              icon={<Target size={14} className="text-[#2563EB]" />}
+              icon={<Target size={14} className="text-brand-accent" />}
               title="Grade Mix"
               summary={
                 <>
@@ -583,7 +583,7 @@ export default function LeadScoringPage() {
                   </span>
                   <span className="opacity-30">·</span>
                   <span>
-                    <span className="text-[#2563EB] font-semibold">
+                    <span className="text-brand-accent font-semibold">
                       {counts.cold}
                     </span>{" "}
                     cold
@@ -659,7 +659,7 @@ export default function LeadScoringPage() {
                     onClick={() => setGradeFilter(p.key)}
                     className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
                       gradeFilter === p.key
-                        ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.4)] text-[#2563EB]"
+                        ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.4)] text-brand-accent"
                         : "border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
                     }`}
                   >
@@ -670,7 +670,7 @@ export default function LeadScoringPage() {
                   onClick={() => setSortByScore((v) => !v)}
                   className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
                     sortByScore
-                      ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                      ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent"
                       : "border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
                   }`}
                 >
@@ -684,7 +684,7 @@ export default function LeadScoringPage() {
                 <button
                   onClick={handleBulkRecompute}
                   disabled={selected.size === 0 || bulkRunning}
-                  className="text-xs px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-40"
+                  className="text-xs px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-40"
                 >
                   {bulkRunning ? (
                     <Loader size={11} className="animate-spin" />
@@ -715,7 +715,7 @@ export default function LeadScoringPage() {
               </div>
               {loading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader size={20} className="animate-spin text-[#2563EB]" />
+                  <Loader size={20} className="animate-spin text-brand-accent" />
                 </div>
               ) : leads.length === 0 ? (
                 <EmptyState

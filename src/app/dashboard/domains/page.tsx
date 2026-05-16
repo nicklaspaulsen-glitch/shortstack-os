@@ -149,7 +149,7 @@ export default function DomainsPage() {
                       toast.dismiss(t.id);
                       window.location.href = `/dashboard/mail-setup?domain=${encodeURIComponent(domain)}`;
                     }}
-                    className="px-3 py-1 rounded-md bg-[#2563EB] text-white text-[11px] font-semibold"
+                    className="px-3 py-1 rounded-md bg-brand-accent text-white text-[11px] font-semibold"
                   >
                     Set up mail
                   </button>
@@ -442,18 +442,18 @@ export default function DomainsPage() {
               className="glass rounded-xl block bg-gradient-to-br from-[rgba(37,99,235,0.08)] to-[rgba(37,99,235,0.03)] border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.4)] transition p-4"
             >
               <div className="flex items-center gap-3">
-                <Sparkles size={18} className="text-[#2563EB] shrink-0" />
+                <Sparkles size={18} className="text-brand-accent shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold">One-click brand launch</p>
                   <p className="text-[10px] text-muted mt-0.5">
                     Provision email, phone, website, portal, and chat widget on your domain in one flow.
                   </p>
                 </div>
-                <ArrowUpRight size={14} className="text-[#2563EB] shrink-0" />
+                <ArrowUpRight size={14} className="text-brand-accent shrink-0" />
               </div>
             </a>{/* ── Domain search ────────────────────────────────────────────── */}<div className="glass rounded-xl p-4">
               <h2 className="section-header flex items-center gap-2">
-                <Search size={13} className="text-[#2563EB]" /> Find & buy a domain
+                <Search size={13} className="text-brand-accent" /> Find & buy a domain
               </h2>
               <div className="flex gap-2">
                 <input
@@ -530,7 +530,7 @@ export default function DomainsPage() {
                               <button
                                 onClick={() => purchaseDomain(r.domain, "yearly", r.price || undefined)}
                                 disabled={anyRowLoading}
-                                className="relative text-[10px] px-2 py-2 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white font-bold flex flex-col items-center hover:shadow-lg hover:shadow-[#2563EB]/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                                className="relative text-[10px] px-2 py-2 rounded-lg bg-brand-accent hover:bg-[#3B82F6] text-white font-bold flex flex-col items-center hover:shadow-lg hover:shadow-[#2563EB]/30 disabled:opacity-60 disabled:cursor-not-allowed"
                               >
                                 {rowYearlyLoading ? (
                                   <Loader size={12} className="animate-spin my-1" />
@@ -553,7 +553,7 @@ export default function DomainsPage() {
             </div>{/* ── Owned domains ────────────────────────────────────────────── */}<div className="glass rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="section-header flex items-center gap-2 mb-0">
-                  <Globe size={13} className="text-[#2563EB]" /> Your domains ({domains.length})
+                  <Globe size={13} className="text-brand-accent" /> Your domains ({domains.length})
                 </h2>
                 <button onClick={loadData} className="btn-ghost text-[10px] flex items-center gap-1">
                   <RefreshCw size={10} /> Refresh
@@ -609,7 +609,7 @@ export default function DomainsPage() {
                           {(d.status === "processing" || d.status === "purchased" || d.status === "pending_payment") && (
                             <button
                               onClick={() => retryAutoConfigure(d)}
-                              className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1"
+                              className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1"
                             >
                               <RefreshCw size={10} /> Finish setup
                             </button>
@@ -721,7 +721,7 @@ export default function DomainsPage() {
                       )}
                       {/* No mail yet — gentle nudge since this is the "agency flow" win */}
                       {!d.resend_status && (d.status === "active" || d.status === "dns_configured" || d.status === "purchased") && (
-                        <div className="mt-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] text-[10px] text-[#2563EB] flex items-center gap-2 flex-wrap">
+                        <div className="mt-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] text-[10px] text-brand-accent flex items-center gap-2 flex-wrap">
                           <Sparkles size={11} />
                           <span>
                             Send marketing email from{" "}
@@ -741,10 +741,10 @@ export default function DomainsPage() {
                         <div className="mt-3 pt-3 border-t border-border/60 space-y-2">
                           <div className="flex items-center justify-between flex-wrap gap-2">
                             <h3 className="text-[11px] font-semibold flex items-center gap-1.5">
-                              <ShieldCheck size={12} className="text-[#2563EB]" /> DNS Records
+                              <ShieldCheck size={12} className="text-brand-accent" /> DNS Records
                             </h3>
                             <div className="flex items-center gap-1.5">
-                              <button onClick={pointToVercel} className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
+                              <button onClick={pointToVercel} className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
                                 <VercelIcon size={10} /> Point to Vercel
                               </button>
                               <button onClick={addDnsRecord} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
@@ -807,7 +807,7 @@ export default function DomainsPage() {
               )}
             </div>{/* Tip card */}<div className="glass rounded-xl p-4 border-[rgba(37,99,235,0.1)]">
               <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
-                <AlertTriangle size={11} className="text-[#2563EB]" /> How domain ownership works
+                <AlertTriangle size={11} className="text-brand-accent" /> How domain ownership works
               </h3>
               <ul className="text-[10px] text-muted space-y-1 list-disc list-inside">
                 <li>Domains are registered under your ShortStack GoDaddy customer account.</li>
@@ -817,7 +817,7 @@ export default function DomainsPage() {
                 <li>Transfer out any time via the GoDaddy dashboard using the auth code.</li>
                 <li>
                   After purchase →{" "}
-                  <a href="/dashboard/mail-setup" className="text-[#2563EB] hover:underline">
+                  <a href="/dashboard/mail-setup" className="text-brand-accent hover:underline">
                     Mail Setup
                   </a>{" "}
                   writes Resend DKIM/SPF so the client can send email from their own domain.

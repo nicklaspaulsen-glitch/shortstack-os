@@ -262,7 +262,7 @@ export default function CommissionTrackerPage() {
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search rep or deal…"
-                  className="glass w-full rounded-lg pl-8 pr-3 py-2 text-[#374151] text-sm focus:outline-none focus:border-[#2563EB]"
+                  className="glass w-full rounded-lg pl-8 pr-3 py-2 text-[#374151] text-sm focus:outline-none focus:border-brand-accent"
                 />
               </div>
               <div className="flex gap-1">
@@ -272,7 +272,7 @@ export default function CommissionTrackerPage() {
                     onClick={() => setFilterStatus(s)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
                       filterStatus === s
-                        ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
+                        ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]"
                         : "bg-[rgba(0,0,0,0.04)] text-text-muted hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
                     }`}
                   >
@@ -413,7 +413,7 @@ export default function CommissionTrackerPage() {
                       value={form[key]}
                       onChange={e => setF(key, e.target.value)}
                       placeholder={placeholder}
-                      className="w-full glass rounded-lg px-3 py-2 text-[#374151] text-sm focus:outline-none focus:border-[#2563EB]"
+                      className="w-full glass rounded-lg px-3 py-2 text-[#374151] text-sm focus:outline-none focus:border-brand-accent"
                     />
                   </div>
                 ))}

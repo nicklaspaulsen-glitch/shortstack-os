@@ -140,11 +140,11 @@ export default function DesignStudioPage() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: i * 0.06, duration: 0.4 }}
                           whileHover={{ y: -4, scale: 1.02 }}
-                          className="rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-[#2563EB]/40 transition-colors group"
+                          className="rounded-xl overflow-hidden flex flex-col items-center gap-2 pt-0 px-4 pb-4 hover:border-brand-accent/40 transition-colors group"
 
                         >
                           <div
-                            className="border border-black/15 bg-black/5 rounded group-hover:border-[#2563EB]/50 transition-colors"
+                            className="border border-black/15 bg-black/5 rounded group-hover:border-brand-accent/50 transition-colors"
                             style={{
                               width: 48,
                               height: Math.round(48 * (preset.height / preset.width)),
@@ -174,7 +174,7 @@ export default function DesignStudioPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FAFAFB]">
-        <Loader2 size={32} className="animate-spin text-[#2563EB]" />
+        <Loader2 size={32} className="animate-spin text-brand-accent" />
       </div>
     );
   }
@@ -228,7 +228,7 @@ function RecentDesigns() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.05, duration: 0.35 }}
           whileHover={{ y: -4, scale: 1.01 }}
-          className="rounded-xl overflow-hidden hover:border-[#2563EB]/30 transition-colors group"
+          className="rounded-xl overflow-hidden hover:border-brand-accent/30 transition-colors group"
 
         >
           <div className="relative aspect-video bg-[#F2F2F4] flex items-center justify-center">

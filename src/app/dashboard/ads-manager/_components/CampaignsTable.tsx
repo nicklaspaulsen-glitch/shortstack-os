@@ -260,7 +260,7 @@ export default function CampaignsTable() {
 
       {selected.size > 0 && (
         <div className="flex items-center gap-2 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.04)] px-3 py-2 text-sm">
-          <span className="text-[#2563EB]">{selected.size} selected</span>
+          <span className="text-brand-accent">{selected.size} selected</span>
           <button
             onClick={() => void bulkPause("paused")}
             className="ml-auto inline-flex items-center gap-1 rounded border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-2 py-1 text-xs hover:bg-[rgba(0,0,0,0.06)]"
@@ -358,7 +358,7 @@ export default function CampaignsTable() {
                         c.status === "active"
                           ? "bg-success/15 text-success"
                           : c.status === "paused"
-                          ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                          ? "bg-[rgba(37,99,235,0.08)] text-brand-accent"
                           : "bg-[rgba(0,0,0,0.04)] text-muted"
                       }`}
                     >

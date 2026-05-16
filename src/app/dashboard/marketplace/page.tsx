@@ -140,7 +140,7 @@ function StarRating({ rating, size = 12 }: { rating: number; size?: number }) {
         <Star
           key={s}
           size={size}
-          className={s <= Math.round(rating) ? "text-[#2563EB] fill-[#2563EB]" : "text-muted/30"}
+          className={s <= Math.round(rating) ? "text-brand-accent fill-[#2563EB]" : "text-muted/30"}
         />
       ))}
       <span className="ml-1 text-xs text-muted">{rating.toFixed(1)}</span>
@@ -366,7 +366,7 @@ export default function MarketplacePage() {
                       onClick={() => setCategory(cat.key)}
                       className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
                         category === cat.key
-                          ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] ring-1 ring-[rgba(37,99,235,0.3)]"
+                          ? "bg-[rgba(37,99,235,0.08)] text-brand-accent ring-1 ring-[rgba(37,99,235,0.3)]"
                           : "bg-surface text-muted hover:bg-surface-light hover:text-[#111827]"
                       }`}
                     >
@@ -430,13 +430,13 @@ export default function MarketplacePage() {
                         {/* Name + author */}
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
-                            <h3 className="truncate text-sm font-semibold text-[#111827] group-hover:text-[#2563EB] transition-colors">
+                            <h3 className="truncate text-sm font-semibold text-[#111827] group-hover:text-brand-accent transition-colors">
                               {plugin.name}
                             </h3>
                             {plugin.verified && (
                               <div className="flex items-center gap-0.5 rounded-full bg-[rgba(37,99,235,0.08)] px-1.5 py-0.5" title="Verified">
-                                <Shield size={10} className="text-[#2563EB]" />
-                                <span className="text-[9px] font-bold text-[#2563EB]">VERIFIED</span>
+                                <Shield size={10} className="text-brand-accent" />
+                                <span className="text-[9px] font-bold text-brand-accent">VERIFIED</span>
                               </div>
                             )}
                           </div>
@@ -450,7 +450,7 @@ export default function MarketplacePage() {
                               Free
                             </span>
                           ) : (
-                            <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2.5 py-0.5 text-[11px] font-bold text-[#2563EB]">
+                            <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2.5 py-0.5 text-[11px] font-bold text-brand-accent">
                               ${plugin.price}/mo
                             </span>
                           )}
@@ -492,8 +492,8 @@ export default function MarketplacePage() {
                             isInstalled
                               ? "bg-emerald-500/10 text-emerald-400 cursor-default"
                               : isInstalling
-                              ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] cursor-wait"
-                              : "bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)]"
+                              ? "bg-[rgba(37,99,235,0.08)] text-brand-accent cursor-wait"
+                              : "bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)]"
                           }`}
                         >
                           {isInstalling ? (
@@ -536,7 +536,7 @@ export default function MarketplacePage() {
                     <p className="mt-1 text-xs text-muted">Browse the marketplace to discover plugins</p>
                     <button
                       onClick={() => setViewTab("browse")}
-                      className="mt-4 rounded-lg bg-[rgba(37,99,235,0.08)] px-4 py-2 text-sm font-medium text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors"
+                      className="mt-4 rounded-lg bg-[rgba(37,99,235,0.08)] px-4 py-2 text-sm font-medium text-brand-accent hover:bg-[rgba(37,99,235,0.12)] transition-colors"
                     >
                       Browse Marketplace
                     </button>
@@ -609,7 +609,7 @@ export default function MarketplacePage() {
                               setSelectedPlugin(plugin);
                               setDetailTab("settings");
                             }}
-                            className="rounded-lg border border-border p-2 text-muted hover:border-[rgba(37,99,235,0.25)] hover:text-[#2563EB] transition-colors"
+                            className="rounded-lg border border-border p-2 text-muted hover:border-[rgba(37,99,235,0.25)] hover:text-brand-accent transition-colors"
                             title="Settings"
                           >
                             <Settings size={14} />
@@ -653,7 +653,7 @@ export default function MarketplacePage() {
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }} className="glass rounded-xl border-dashed border-[rgba(37,99,235,0.2)] bg-gradient-to-br from-[rgba(37,99,235,0.05)] to-transparent p-5">
                 <div className="flex items-start gap-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(37,99,235,0.08)]">
-                    <Code2 size={24} className="text-[#2563EB]" />
+                    <Code2 size={24} className="text-brand-accent" />
                   </div>
                   <div className="flex-1">
                     <h3 className="text-base font-bold text-[#111827]">Build Your Own Plugin</h3>
@@ -664,7 +664,7 @@ export default function MarketplacePage() {
                     <div className="mt-4 flex flex-wrap gap-2">
                       <a
                         href="/dashboard/api-docs"
-                        className="flex items-center gap-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] px-3 py-1.5 text-xs font-semibold text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors">
+                        className="flex items-center gap-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] px-3 py-1.5 text-xs font-semibold text-brand-accent hover:bg-[rgba(37,99,235,0.12)] transition-colors">
                         <BookOpen size={12} />
                         API Docs
                       </a>
@@ -702,7 +702,7 @@ export default function MarketplacePage() {
                 </pre>
                 <button
                   onClick={() => toast("Plugin submissions open after marketplace launch.", { icon: "info" })}
-                  className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] py-2 text-xs font-semibold text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors">
+                  className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] py-2 text-xs font-semibold text-brand-accent hover:bg-[rgba(37,99,235,0.12)] transition-colors">
                   <Upload size={12} />
                   Submit Your Plugin
                 </button>
@@ -731,8 +731,8 @@ export default function MarketplacePage() {
                             <h2 className="text-lg font-bold text-text-primary">{selectedPlugin.name}</h2>
                             {selectedPlugin.verified && (
                               <div className="flex items-center gap-0.5 rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5">
-                                <Shield size={10} className="text-[#2563EB]" />
-                                <span className="text-[10px] font-bold text-[#2563EB]">VERIFIED</span>
+                                <Shield size={10} className="text-brand-accent" />
+                                <span className="text-[10px] font-bold text-brand-accent">VERIFIED</span>
                               </div>
                             )}
                           </div>
@@ -741,7 +741,7 @@ export default function MarketplacePage() {
                             {selectedPlugin.price === 0 ? (
                               <span className="text-emerald-400">Free</span>
                             ) : (
-                              <span className="text-[#2563EB]">${selectedPlugin.price}/mo</span>
+                              <span className="text-brand-accent">${selectedPlugin.price}/mo</span>
                             )}
                           </p>
                         </div>
@@ -762,7 +762,7 @@ export default function MarketplacePage() {
                           onClick={() => setDetailTab(tab)}
                           className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
                             detailTab === tab
-                              ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                              ? "bg-[rgba(37,99,235,0.08)] text-brand-accent"
                               : "text-muted hover:text-text-primary"
                           }`}
                         >
@@ -841,7 +841,7 @@ export default function MarketplacePage() {
                             <ul className="space-y-1.5">
                               {selectedPlugin.requirements.map((r, i) => (
                                 <li key={i} className="flex items-center gap-2 text-xs text-muted">
-                                  <AlertCircle size={12} className="text-[#2563EB]" />
+                                  <AlertCircle size={12} className="text-brand-accent" />
                                   {r}
                                 </li>
                               ))}
@@ -878,10 +878,10 @@ export default function MarketplacePage() {
                               return (
                                 <div key={stars} className="flex items-center gap-2">
                                   <span className="w-3 text-[10px] text-muted">{stars}</span>
-                                  <Star size={10} className="text-[#2563EB] fill-[#2563EB]" />
+                                  <Star size={10} className="text-brand-accent fill-[#2563EB]" />
                                   <div className="h-1.5 flex-1 rounded-full bg-surface-light overflow-hidden">
                                     <div
-                                      className="h-full rounded-full bg-[#2563EB]"
+                                      className="h-full rounded-full bg-brand-accent"
                                       style={{ width: `${pct}%` }}
                                     />
                                   </div>
@@ -897,7 +897,7 @@ export default function MarketplacePage() {
                           <div key={i} className="rounded-lg border border-border bg-surface p-4">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2.5">
-                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(37,99,235,0.08)] text-[11px] font-bold text-[#2563EB]">
+                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(37,99,235,0.08)] text-[11px] font-bold text-brand-accent">
                                   {review.avatar}
                                 </div>
                                 <div>
@@ -926,7 +926,7 @@ export default function MarketplacePage() {
                             <div
                               className={`absolute left-0 top-1.5 h-3.5 w-3.5 rounded-full border-2 ${
                                 i === 0
-                                  ? "border-[#2563EB] bg-[rgba(37,99,235,0.12)]"
+                                  ? "border-brand-accent bg-[rgba(37,99,235,0.12)]"
                                   : "border-border bg-surface"
                               }`}
                             />
@@ -935,7 +935,7 @@ export default function MarketplacePage() {
                                 <span className="text-sm font-semibold text-[#111827]">v{entry.version}</span>
                                 <span className="text-xs text-muted">{entry.date}</span>
                                 {i === 0 && (
-                                  <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[9px] font-bold text-[#2563EB]">LATEST</span>
+                                  <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[9px] font-bold text-brand-accent">LATEST</span>
                                 )}
                               </div>
                               <p className="mt-1 text-xs text-muted">{entry.notes}</p>
@@ -988,7 +988,7 @@ export default function MarketplacePage() {
                             ))}
                             <button
                               onClick={() => toast.success("Settings saved")}
-                              className="mt-2 w-full rounded-lg bg-[rgba(37,99,235,0.08)] py-2 text-xs font-semibold text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors">
+                              className="mt-2 w-full rounded-lg bg-[rgba(37,99,235,0.08)] py-2 text-xs font-semibold text-brand-accent hover:bg-[rgba(37,99,235,0.12)] transition-colors">
                               Save Configuration
                             </button>
                           </>
@@ -1041,7 +1041,7 @@ export default function MarketplacePage() {
                               handleInstall(selectedPlugin.id);
                               setSelectedPlugin(null);
                             }}
-                            className="rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-bold text-white hover:opacity-90 transition-colors"
+                            className="rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-white hover:opacity-90 transition-colors"
                           >
                             {selectedPlugin.price === 0 ? "Install Free" : `Install - $${selectedPlugin.price}/mo`}
                           </button>

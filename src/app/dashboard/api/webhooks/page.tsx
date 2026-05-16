@@ -177,8 +177,8 @@ export default function WebhooksPage() {
             )}{showCreate && (
               <div className="card p-4 space-y-3 border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)]">
                 <div className="flex items-center gap-2">
-                  <Webhook size={13} className="text-[#2563EB]" />
-                  <h2 className="text-xs font-semibold text-[#2563EB]">New Webhook</h2>
+                  <Webhook size={13} className="text-brand-accent" />
+                  <h2 className="text-xs font-semibold text-brand-accent">New Webhook</h2>
                 </div>
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
@@ -202,7 +202,7 @@ export default function WebhooksPage() {
                         onClick={() => toggleEvent(e)}
                         className={`text-[10px] px-2 py-1.5 rounded border font-mono transition-all text-left ${
                           newEvents.includes(e)
-                            ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.35)] text-[#2563EB]"
+                            ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.35)] text-brand-accent"
                             : "border-border text-muted hover:text-foreground"
                         }`}
                       >
@@ -221,7 +221,7 @@ export default function WebhooksPage() {
                   <button
                     onClick={handleCreate}
                     disabled={creating || !newUrl.trim() || newEvents.length === 0}
-                    className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#1D4ED8] disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="text-[10px] px-4 py-1.5 rounded-lg bg-brand-accent text-white font-medium hover:bg-brand-accent/80 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {creating ? "Creating…" : "Create Webhook"}
                   </button>
@@ -261,7 +261,7 @@ export default function WebhooksPage() {
                         <button
                           onClick={() => handleTest(w.id)}
                           disabled={testingId === w.id || !w.active}
-                          className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
+                          className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
                         >
                           <Send size={9} />
                           {testingId === w.id ? "Sending…" : "Test"}
@@ -323,7 +323,7 @@ export default function WebhooksPage() {
                         </button>
                         <button
                           onClick={() => copySecret(w.secret, w.id)}
-                          className="text-muted hover:text-[#2563EB]"
+                          className="text-muted hover:text-brand-accent"
                         >
                           {copiedId === w.id ? (
                             <CheckCircle size={10} className="text-green-400" />
@@ -339,10 +339,10 @@ export default function WebhooksPage() {
             </div><div className="card p-4">
               <h3 className="text-xs font-semibold mb-2">Verifying signatures</h3>
               <p className="text-[10px] text-muted mb-2">
-                Every delivery includes <code className="text-[#2563EB]">x-shortstack-signature</code> — HMAC-SHA256 of
+                Every delivery includes <code className="text-brand-accent">x-shortstack-signature</code> — HMAC-SHA256 of
                 the raw body using your subscription secret.
               </p>
-              <pre className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] rounded-lg p-3 text-[10px] font-mono text-[#1D4ED8] overflow-x-auto">
+              <pre className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] rounded-lg p-3 text-[10px] font-mono text-brand-accent overflow-x-auto">
       {`import crypto from "crypto";
 
 const signature = req.headers["x-shortstack-signature"];

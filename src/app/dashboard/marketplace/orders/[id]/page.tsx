@@ -158,7 +158,7 @@ export default function OrderDetailPage() {
         <p className="text-sm text-muted">Order not found.</p>
         <Link
           href="/dashboard/marketplace/orders"
-          className="mt-4 inline-block text-[#2563EB] hover:underline"
+          className="mt-4 inline-block text-brand-accent hover:underline"
         >
           Back to orders
         </Link>
@@ -185,7 +185,7 @@ export default function OrderDetailPage() {
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <Receipt size={16} className="text-[#2563EB]" />
+              <Receipt size={16} className="text-brand-accent" />
               <span className="font-mono text-xs text-muted">
                 Order #{order.id.slice(0, 8)}
               </span>
@@ -207,7 +207,7 @@ export default function OrderDetailPage() {
             )}
           </div>
           <div className="text-right">
-            <div className="text-2xl font-bold text-[#2563EB]">
+            <div className="text-2xl font-bold text-brand-accent">
               {formatPrice(order.amount_cents, order.currency)}
             </div>
             <div className="mt-1 text-[10px] text-muted">
@@ -256,7 +256,7 @@ export default function OrderDetailPage() {
           <button
             onClick={handleDeliver}
             disabled={delivering}
-            className="mt-3 flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-bold text-white hover:bg-[#3B82F6] disabled:opacity-50"
+            className="mt-3 flex items-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-white hover:bg-[#3B82F6] disabled:opacity-50"
           >
             {delivering ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
             Mark delivered
@@ -289,7 +289,7 @@ export default function OrderDetailPage() {
           <button
             onClick={handleReview}
             disabled={reviewing}
-            className="mt-3 flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-bold text-white hover:bg-[#3B82F6] disabled:opacity-50"
+            className="mt-3 flex items-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-white hover:bg-[#3B82F6] disabled:opacity-50"
           >
             {reviewing ? (
               <Loader2 size={12} className="animate-spin" />

@@ -77,8 +77,8 @@ const STORAGE_KEY = "ss_reviews_v1";
 const SOURCES = ["Google", "Yelp", "Trustpilot", "Facebook", "G2", "Other"];
 
 const STATUS_STYLES: Record<Review["status"], { label: string; tint: string }> = {
-  new: { label: "New", tint: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" },
-  replied: { label: "Replied", tint: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" },
+  new: { label: "New", tint: "bg-[rgba(37,99,235,0.08)] text-brand-accent" },
+  replied: { label: "Replied", tint: "bg-[rgba(37,99,235,0.08)] text-brand-accent" },
   resolved: { label: "Resolved", tint: "bg-emerald-500/15 text-emerald-700" },
 };
 
@@ -96,7 +96,7 @@ function Stars({ rating }: { rating: number }) {
         <Star
           key={n}
           size={12}
-          className={n <= rating ? "fill-[#2563EB] text-[#2563EB]" : "text-muted/40"}
+          className={n <= rating ? "fill-[#2563EB] text-brand-accent" : "text-muted/40"}
         />
       ))}
     </div>
@@ -124,7 +124,7 @@ export default function ReviewsPage() {
                   onClick={() => setTab("manager")}
                   className={`px-4 py-2 text-sm font-medium transition border-b-2 -mb-px ${
                     tab === "manager"
-                      ? "border-[#2563EB] text-[#2563EB]"
+                      ? "border-brand-accent text-brand-accent"
                       : "border-transparent text-muted hover:text-foreground"
                   }`}
                 >
@@ -134,7 +134,7 @@ export default function ReviewsPage() {
                   onClick={() => setTab("requests")}
                   className={`px-4 py-2 text-sm font-medium transition border-b-2 -mb-px flex items-center gap-1.5 ${
                     tab === "requests"
-                      ? "border-[#2563EB] text-[#2563EB]"
+                      ? "border-brand-accent text-brand-accent"
                       : "border-transparent text-muted hover:text-foreground"
                   }`}
                 >
@@ -205,7 +205,7 @@ function ReviewManager() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-5 px-6 pb-10">
-      <div className="rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-4 py-3 text-[12px] text-[#2563EB]">
+      <div className="rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-4 py-3 text-[12px] text-brand-accent">
         <span className="font-semibold">Beta:</span> reviews are logged locally on this device.
         Google Business Profile + Trustpilot auto-import lands next sprint.
       </div>
@@ -231,7 +231,7 @@ function ReviewManager() {
         <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
           className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
           <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Unreplied</p>
-          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{stats.unreplied}</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{stats.unreplied}</p>
         </motion.div>
         {/* Support tile — 1-2 Star */}
         <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
@@ -248,7 +248,7 @@ function ReviewManager() {
               key={f}
               onClick={() => setFilter(f)}
               className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition ${
-                filter === f ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-surface-light/40 text-muted hover:text-foreground"
+                filter === f ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "bg-surface-light/40 text-muted hover:text-foreground"
               }`}
             >
               {f}
@@ -257,7 +257,7 @@ function ReviewManager() {
         </div>
         <button
           onClick={() => setShowNew(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
         >
           <Plus size={14} /> Log review
         </button>
@@ -278,7 +278,7 @@ function ReviewManager() {
             icon={<Star size={36} />}
             title={reviews.length === 0 ? "No reviews yet" : "No reviews match this filter"}
             description={reviews.length === 0 ? "Log a review manually to track responses." : "Try a different filter, or log a new review."}
-            action={reviews.length === 0 ? <button onClick={() => setShowNew(true)} className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white"><Plus size={14} /> Log review</button> : null}
+            action={reviews.length === 0 ? <button onClick={() => setShowNew(true)} className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white"><Plus size={14} /> Log review</button> : null}
           />
         </div>
       ) : (
@@ -297,7 +297,7 @@ function ReviewManager() {
           <li>Auto-import from Google Business Profile, Yelp, Trustpilot, G2</li>
           <li>AI-drafted replies tuned to your brand voice</li>
           <li>Auto-route 1–2 star reviews to a human immediately</li>
-          <li><Link href="/dashboard/google-business" className="text-[#2563EB] underline">Google Business</Link> {" · "} <Link href="/dashboard/tickets" className="text-[#2563EB] underline">Tickets</Link></li>
+          <li><Link href="/dashboard/google-business" className="text-brand-accent underline">Google Business</Link> {" · "} <Link href="/dashboard/tickets" className="text-brand-accent underline">Tickets</Link></li>
         </ul>
       </div>
     </div>
@@ -379,13 +379,13 @@ function ReviewRequests() {
       <div className="flex gap-2">
         <button
           onClick={() => setSubTab("config")}
-          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${subTab === "config" ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-surface-light/40 text-muted hover:text-foreground"}`}
+          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${subTab === "config" ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "bg-surface-light/40 text-muted hover:text-foreground"}`}
         >
           <Settings2 size={12} /> Configs
         </button>
         <button
           onClick={() => setSubTab("history")}
-          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${subTab === "history" ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-surface-light/40 text-muted hover:text-foreground"}`}
+          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${subTab === "history" ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "bg-surface-light/40 text-muted hover:text-foreground"}`}
         >
           <History size={12} /> Sent History
         </button>
@@ -402,7 +402,7 @@ function ReviewRequests() {
             </p>
             <button
               onClick={() => { setEditing(null); setShowForm(true); }}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
             >
               <Plus size={14} /> New config
             </button>
@@ -425,7 +425,7 @@ function ReviewRequests() {
                 action={
                   <button
                     onClick={() => { setEditing(null); setShowForm(true); }}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white"
                   >
                     <Plus size={14} /> New config
                   </button>
@@ -455,7 +455,7 @@ function ReviewRequests() {
                     <div className="flex shrink-0 flex-col items-end gap-1">
                       <button
                         onClick={() => toggleEnabled(cfg)}
-                        className={`rounded px-2.5 py-1 text-[11px] font-medium transition ${cfg.enabled ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)]" : "bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/25"}`}
+                        className={`rounded px-2.5 py-1 text-[11px] font-medium transition ${cfg.enabled ? "bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.14)]" : "bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/25"}`}
                       >
                         {cfg.enabled ? "Disable" : "Enable"}
                       </button>
@@ -513,7 +513,7 @@ function ReviewRequests() {
                 <button
                   onClick={sendManual}
                   disabled={sending || !manualConfigId || !manualClientId}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
                 >
                   {sending ? <Loader size={13} className="animate-spin" /> : <Send size={13} />}
                   Send now
@@ -694,10 +694,10 @@ function ConfigForm({
             className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm font-mono"
           />
           <p className="mt-1 text-[10px] text-muted">
-            Variables: <code className="text-[#2563EB]">{"{{first_name}}"}</code>{" "}
-            <code className="text-[#2563EB]">{"{{last_name}}"}</code>{" "}
-            <code className="text-[#2563EB]">{"{{review_url}}"}</code>{" "}
-            <code className="text-[#2563EB]">{"{{business_name}}"}</code>
+            Variables: <code className="text-brand-accent">{"{{first_name}}"}</code>{" "}
+            <code className="text-brand-accent">{"{{last_name}}"}</code>{" "}
+            <code className="text-brand-accent">{"{{review_url}}"}</code>{" "}
+            <code className="text-brand-accent">{"{{business_name}}"}</code>
           </p>
         </div>
       </div>
@@ -707,7 +707,7 @@ function ConfigForm({
         <button
           onClick={save}
           disabled={saving || !reviewUrl.trim()}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-5 py-2 text-sm font-semibold text-white disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-5 py-2 text-sm font-semibold text-white disabled:opacity-40"
         >
           {saving ? <Loader size={13} className="animate-spin" /> : <CheckCircle2 size={13} />}
           Save config
@@ -740,7 +740,7 @@ function ReviewCard({
   return (
     <div className={`rounded-lg border bg-surface-light/20 transition hover:border-[rgba(37,99,235,0.4)] ${critical ? "border-rose-500/30" : "border-border/50"}`}>
       <div className="flex items-start gap-3 p-4">
-        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${critical ? "bg-rose-500/15 text-rose-700" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"}`}>
+        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${critical ? "bg-rose-500/15 text-rose-700" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"}`}>
           <Star size={16} />
         </div>
         <div className="min-w-0 flex-1">
@@ -754,7 +754,7 @@ function ReviewCard({
           <p className="mt-1 text-[10px] text-muted">{new Date(review.created_at).toLocaleDateString()}</p>
           {review.reply && !replying && (
             <div className="mt-2 rounded-lg border-l-2 border-[rgba(37,99,235,0.25)] bg-background/40 px-3 py-2">
-              <p className="mb-0.5 text-[10px] uppercase tracking-wider text-[#2563EB]">Your reply</p>
+              <p className="mb-0.5 text-[10px] uppercase tracking-wider text-brand-accent">Your reply</p>
               <p className="text-[12px] leading-relaxed text-foreground">{review.reply}</p>
             </div>
           )}
@@ -763,7 +763,7 @@ function ReviewCard({
               <textarea value={draft} onChange={(e) => setDraft(e.target.value)} rows={3} placeholder="Thanks for sharing your feedback…" className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm" />
               <div className="mt-2 flex items-center justify-end gap-2">
                 <button onClick={() => { setReplying(false); setDraft(review.reply); }} className="rounded-lg px-3 py-1.5 text-xs text-muted hover:text-foreground">Cancel</button>
-                <button onClick={() => { if (!draft.trim()) return; onReply(draft.trim()); setReplying(false); }} disabled={!draft.trim()} className="inline-flex items-center gap-1 rounded-lg bg-[#2563EB] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-40">
+                <button onClick={() => { if (!draft.trim()) return; onReply(draft.trim()); setReplying(false); }} disabled={!draft.trim()} className="inline-flex items-center gap-1 rounded-lg bg-brand-accent px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-40">
                   <MessageSquare size={11} /> Save reply
                 </button>
               </div>
@@ -772,7 +772,7 @@ function ReviewCard({
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1">
           {!replying && review.status !== "resolved" && (
-            <button onClick={() => setReplying(true)} className="inline-flex items-center gap-1 rounded bg-[rgba(37,99,235,0.08)] px-2.5 py-1.5 text-[11px] text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)]"><MessageSquare size={11} /> Reply</button>
+            <button onClick={() => setReplying(true)} className="inline-flex items-center gap-1 rounded bg-[rgba(37,99,235,0.08)] px-2.5 py-1.5 text-[11px] text-brand-accent hover:bg-[rgba(37,99,235,0.14)]"><MessageSquare size={11} /> Reply</button>
           )}
           {review.status !== "resolved" && review.reply && !replying && (
             <button onClick={onResolve} className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-2.5 py-1.5 text-[11px] text-emerald-700 hover:bg-emerald-500/25" title="Mark as resolved"><CheckCircle2 size={11} /> Resolve</button>
@@ -816,7 +816,7 @@ function NewReviewForm({ onClose, onCreated }: { onClose: () => void; onCreated:
           <button onClick={onClose} className="rounded p-1 text-muted hover:text-foreground" aria-label="Back to reviews list"><ArrowLeft size={14} /></button>
           <h3 className="text-base font-semibold">Log review</h3>
         </div>
-        <Link href="/dashboard/google-business" className="inline-flex items-center gap-1 text-[11px] text-muted hover:text-[#2563EB]"><ExternalLink size={11} /> Google Business</Link>
+        <Link href="/dashboard/google-business" className="inline-flex items-center gap-1 text-[11px] text-muted hover:text-brand-accent"><ExternalLink size={11} /> Google Business</Link>
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
@@ -834,7 +834,7 @@ function NewReviewForm({ onClose, onCreated }: { onClose: () => void; onCreated:
           <div className="flex items-center gap-1">
             {[1, 2, 3, 4, 5].map((n) => (
               <button key={n} type="button" onClick={() => setRating(n)} aria-label={`${n} stars`} className="p-1">
-                <Star size={22} className={n <= rating ? "fill-[#2563EB] text-[#2563EB]" : "text-muted/40 hover:text-[#2563EB]/60"} />
+                <Star size={22} className={n <= rating ? "fill-[#2563EB] text-brand-accent" : "text-muted/40 hover:text-brand-accent/60"} />
               </button>
             ))}
           </div>
@@ -846,7 +846,7 @@ function NewReviewForm({ onClose, onCreated }: { onClose: () => void; onCreated:
       </div>
       <div className="mt-4 flex items-center justify-end gap-2">
         <button onClick={onClose} className="rounded-lg px-4 py-2 text-sm text-muted hover:text-foreground">Cancel</button>
-        <button onClick={submit} disabled={!canSubmit} className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-5 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-40">
+        <button onClick={submit} disabled={!canSubmit} className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-5 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-40">
           <Plus size={14} /> Log review
         </button>
       </div>

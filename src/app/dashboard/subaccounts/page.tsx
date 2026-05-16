@@ -37,7 +37,7 @@ const PLAN_TIERS = [
 ];
 
 const STATUS_BADGE: Record<Subaccount["status"], string> = {
-  pending: "bg-[rgba(37,99,235,0.10)] text-[#2563EB]",
+  pending: "bg-[rgba(37,99,235,0.10)] text-brand-accent",
   active: "bg-emerald-500/20 text-emerald-700",
   suspended: "bg-orange-500/20 text-orange-600",
   cancelled: "bg-black/8 text-black/40",
@@ -143,7 +143,7 @@ export default function SubaccountsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={() => setShowInvite(true)}
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all"
+                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-[#d4b55d] text-black transition-all"
                 >
                   <Plus className="w-4 h-4" />
                   Invite Subaccount
@@ -185,7 +185,7 @@ export default function SubaccountsPage() {
               </motion.div>
             </div>{loading ? (
               <div className="flex items-center justify-center py-16">
-                <Loader2 className="w-6 h-6 animate-spin text-[#2563EB]" />
+                <Loader2 className="w-6 h-6 animate-spin text-brand-accent" />
               </div>
             ) : subs.length === 0 ? (
               <div className="rounded-xl border border-dashed border-black/10 p-10 text-center">
@@ -196,7 +196,7 @@ export default function SubaccountsPage() {
                 </p>
                 <button
                   onClick={() => setShowInvite(true)}
-                  className="mt-5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all"
+                  className="mt-5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-[#d4b55d] text-black transition-all"
                 >
                   <Plus className="w-4 h-4" />
                   Invite First Subaccount
@@ -268,7 +268,7 @@ export default function SubaccountsPage() {
                     <X className="w-4 h-4" />
                   </button>
                   <div className="flex items-center gap-2 mb-1">
-                    <Building2 className="w-5 h-5 text-[#2563EB]" />
+                    <Building2 className="w-5 h-5 text-brand-accent" />
                     <h2 className="text-lg font-bold text-text-primary">Invite Subaccount</h2>
                   </div>
                   <p className="text-xs text-black/50 mb-5">
@@ -326,7 +326,7 @@ export default function SubaccountsPage() {
                     <button onClick={() => setShowInvite(false)} className="flex-1 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/8 text-text-primary text-sm font-medium">
                       Cancel
                     </button>
-                    <button onClick={handleInvite} disabled={inviting} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[#2563EB] hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60">
+                    <button onClick={handleInvite} disabled={inviting} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-brand-accent hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60">
                       {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
                       Send Invite
                     </button>

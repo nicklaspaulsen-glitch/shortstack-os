@@ -274,7 +274,7 @@ export default function CoachAnalysisDetail() {
                   >
                     {m.message_text && (
                       <div className="mb-2">
-                        <div className="mb-1 text-[10px] uppercase tracking-wider text-[#2563EB]">
+                        <div className="mb-1 text-[10px] uppercase tracking-wider text-brand-accent">
                           Rep • {m.sent_at ? new Date(m.sent_at).toLocaleString() : ""}
                         </div>
                         <p className="whitespace-pre-wrap text-sm text-[#374151]">{m.message_text}</p>
@@ -404,7 +404,7 @@ export default function CoachAnalysisDetail() {
                         }`}
                       >
                         {done ? (
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2563EB]" />
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-accent" />
                         ) : (
                           <Circle className="mt-0.5 h-4 w-4 shrink-0 text-text-muted" />
                         )}

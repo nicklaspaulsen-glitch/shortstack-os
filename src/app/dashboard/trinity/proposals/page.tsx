@@ -338,7 +338,7 @@ export default function TrinityProposalsPage() {
                 onClick={() => setTab("pending")}
                 className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
                   tab === "pending"
-                    ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                    ? "bg-[rgba(37,99,235,0.08)] text-brand-accent"
                     : "text-muted hover:text-[#111827]"
                 }`}
               >
@@ -349,7 +349,7 @@ export default function TrinityProposalsPage() {
                 onClick={() => setTab("history")}
                 className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
                   tab === "history"
-                    ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                    ? "bg-[rgba(37,99,235,0.08)] text-brand-accent"
                     : "text-muted hover:text-[#111827]"
                 }`}
               >

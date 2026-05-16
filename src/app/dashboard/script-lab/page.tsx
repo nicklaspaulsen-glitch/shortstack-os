@@ -44,9 +44,9 @@ const SCRIPT_LAB_PREVIEW_FALLBACK: RollingPreviewItem[] = [
 ];
 
 const FRAMEWORKS = [
-  { id: "hook_story_offer", name: "Hook-Story-Offer", desc: "Stop scroll ? tell story ? make offer", color: "text-[#2563EB]" },
+  { id: "hook_story_offer", name: "Hook-Story-Offer", desc: "Stop scroll ? tell story ? make offer", color: "text-brand-accent" },
   { id: "pas", name: "PAS", desc: "Problem ? Agitate ? Solution", color: "text-danger" },
-  { id: "aida", name: "AIDA", desc: "Attention ? Interest ? Desire ? Action", color: "text-[#2563EB]" },
+  { id: "aida", name: "AIDA", desc: "Attention ? Interest ? Desire ? Action", color: "text-brand-accent" },
   { id: "before_after", name: "Before/After", desc: "Pain state ? transformation ? results", color: "text-success" },
   { id: "contrarian", name: "Contrarian", desc: "Challenge beliefs ? new perspective", color: "text-warning" },
   { id: "listicle", name: "Listicle", desc: "X things/mistakes/secrets that...", color: "text-purple-400" },
@@ -1162,7 +1162,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             value={config.topic}
             onChange={e => setConfig(prev => ({ ...prev, topic: e.target.value }))}
             placeholder="e.g., How to land your first freelance client without cold outreach"
-            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB]/50 focus:ring-2 focus:ring-[rgba(37,99,235,0.12)] transition-all"
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-[rgba(37,99,235,0.12)] transition-all"
             autoFocus
           />
           {/* AI auto-suggest: surface-aware topic ideas based on the user's
@@ -1204,11 +1204,11 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                                 key={st.id}
                                 onClick={() => setConfig(prev => ({ ...prev, script_type: st.id }))}
                                 className={`text-left p-3 rounded-xl border transition-all ${
-                                  selected ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                                  selected ? "border-brand-accent bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                                 }`}
                               >
                                 <div className="flex items-center gap-2 mb-1">
-                                  <span className="text-[#2563EB]">{st.icon}</span>
+                                  <span className="text-brand-accent">{st.icon}</span>
                                   <p className="text-xs font-semibold">{st.name}</p>
                                 </div>
                                 <p className="text-[10px] text-muted">{st.desc}</p>
@@ -1233,7 +1233,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 key={fw.id}
                 onClick={() => setConfig(prev => ({ ...prev, framework: fw.id }))}
                 className={`text-left p-3 rounded-xl border transition-all ${
-                  selected ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                  selected ? "border-brand-accent bg-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                 }`}
               >
                 <p className={`text-xs font-bold ${fw.color}`}>{fw.name}</p>
@@ -1328,26 +1328,26 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     navigator.clipboard.writeText(full);
                     toast.success("Copied!");
                   }}
-                  className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-colors"
+                  className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] transition-colors"
                 >
                   <Copy size={11} /> Copy script
                 </button>
               </div>
               <div className="space-y-3 text-sm">
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-[#2563EB] font-semibold mb-1">Hook</p>
+                  <p className="text-[10px] uppercase tracking-wider text-brand-accent font-semibold mb-1">Hook</p>
                   <p className="leading-relaxed">{activeScript.hook.text}</p>
                 </div>
                 {activeScript.script.sections.map((section, i) => (
                   <div key={i}>
-                    <p className="text-[10px] uppercase tracking-wider text-[#2563EB] font-semibold mb-1">
+                    <p className="text-[10px] uppercase tracking-wider text-brand-accent font-semibold mb-1">
                       {section.name} <span className="text-muted">� {section.duration}</span>
                     </p>
                     <p className="whitespace-pre-wrap leading-relaxed">{section.dialogue}</p>
                   </div>
                 ))}
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-[#2563EB] font-semibold mb-1">Call to action</p>
+                  <p className="text-[10px] uppercase tracking-wider text-brand-accent font-semibold mb-1">Call to action</p>
                   <p className="leading-relaxed">{activeScript.cta.text}</p>
                 </div>
               </div>
@@ -1370,7 +1370,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           />
         </div>
         <div className="relative text-center px-4">
-          <p className="text-[11px] uppercase tracking-widest text-[#2563EB]/80 font-semibold">
+          <p className="text-[11px] uppercase tracking-widest text-brand-accent/80 font-semibold">
             Script library
           </p>
           <h3 className="text-lg font-bold text-foreground mt-1">
@@ -1401,7 +1401,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           <button key={t.id} onClick={() => setTab(t.id)}
             className={`flex items-center gap-1.5 px-3 py-2 text-xs rounded-lg transition-all whitespace-nowrap ${
               tab === t.id
-                ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border border-[rgba(37,99,235,0.25)] font-medium"
+                ? "bg-[rgba(37,99,235,0.10)] text-brand-accent border border-[rgba(37,99,235,0.25)] font-medium"
                 : "text-muted hover:text-foreground"
             }`}>
             <t.icon size={12} /> {t.label}
@@ -1424,14 +1424,14 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               className="rounded-xl p-5"
 
             >
-              <h2 className="section-header flex items-center gap-2 mb-3"><Type size={13} className="text-[#2563EB]" /> Script Type</h2>
+              <h2 className="section-header flex items-center gap-2 mb-3"><Type size={13} className="text-brand-accent" /> Script Type</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {SCRIPT_TYPES.map(t => (
                   <button key={t.id} onClick={() => setConfig({ ...config, script_type: t.id })}
                     className={`flex items-center gap-2 p-2.5 rounded-xl border transition-all ${
                       config.script_type === t.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.14)]"
                     }`}>
-                    <span className={config.script_type === t.id ? "text-[#2563EB]" : "text-muted"}>{t.icon}</span>
+                    <span className={config.script_type === t.id ? "text-brand-accent" : "text-muted"}>{t.icon}</span>
                     <div>
                       <p className="text-[10px] font-semibold">{t.name}</p>
                       <p className="text-[8px] text-muted">{t.desc}</p>
@@ -1449,7 +1449,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               className="rounded-xl p-5"
 
             >
-              <h2 className="section-header flex items-center gap-2 mb-3"><Target size={13} className="text-[#2563EB]" /> Script Framework</h2>
+              <h2 className="section-header flex items-center gap-2 mb-3"><Target size={13} className="text-brand-accent" /> Script Framework</h2>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                 {FRAMEWORKS.map(f => (
                   <button key={f.id} onClick={() => setConfig({ ...config, framework: f.id })}
@@ -1476,21 +1476,21 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <div>
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Platform</label>
                   <select value={config.platform} onChange={e => setConfig({ ...config, platform: e.target.value })}
-                    className="glass w-full text-xs rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.15)] transition-all">
+                    className="glass w-full text-xs rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(37,99,235,0.15)] transition-all">
                     {PLATFORMS.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Tone</label>
                   <select value={config.tone} onChange={e => setConfig({ ...config, tone: e.target.value })}
-                    className="glass w-full text-xs rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.15)] transition-all">
+                    className="glass w-full text-xs rounded-lg px-3 py-2 text-foreground focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(37,99,235,0.15)] transition-all">
                     {TONES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Target Audience</label>
                   <input value={config.target_audience} onChange={e => setConfig({ ...config, target_audience: e.target.value })}
-                    className="w-full text-xs rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.15)] transition-all" placeholder="e.g., business owners 30-50"
+                    className="w-full text-xs rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(37,99,235,0.15)] transition-all" placeholder="e.g., business owners 30-50"
  />
                 </div>
               </div>
@@ -1507,7 +1507,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   </select>
                 </div>
                 <input value={config.topic} onChange={e => setConfig({ ...config, topic: e.target.value })}
-                  className="w-full text-xs rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.15)] transition-all" placeholder="e.g., Why most dental practices fail at social media"
+                  className="w-full text-xs rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(37,99,235,0.15)] transition-all" placeholder="e.g., Why most dental practices fail at social media"
  />
                 <div className="flex flex-wrap gap-1 mt-1.5">
                   {topicPresets.map((t, i) => (
@@ -1521,7 +1521,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               <div>
                 <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Pain Points to Address</label>
                 <input value={config.pain_points} onChange={e => setConfig({ ...config, pain_points: e.target.value })}
-                  className="w-full text-xs rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.15)] transition-all" placeholder="e.g., no time, don't know what to post, not getting engagement"
+                  className="w-full text-xs rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(37,99,235,0.15)] transition-all" placeholder="e.g., no time, don't know what to post, not getting engagement"
  />
               </div>
               <div>
@@ -1530,7 +1530,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   <AIEnhanceButton value={config.viral_reference} onResult={next => setConfig({ ...config, viral_reference: next })} context="short-form video concept" variant="inline" />
                 </div>
                 <textarea value={config.viral_reference} onChange={e => setConfig({ ...config, viral_reference: e.target.value })}
-                  className="w-full h-14 text-xs rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.15)] transition-all resize-none" placeholder="Paste a viral video concept, hook, or transcript to remix with your own angle..."
+                  className="w-full h-14 text-xs rounded-lg px-3 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(37,99,235,0.15)] transition-all resize-none" placeholder="Paste a viral video concept, hook, or transcript to remix with your own angle..."
  />
               </div>
             </motion.div>
@@ -1543,7 +1543,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               className="rounded-xl p-5"
 
             >
-              <h2 className="section-header flex items-center gap-2 mb-2"><Clapperboard size={13} className="text-[#2563EB]" /> Storyboard Format (for visual breakdown)</h2>
+              <h2 className="section-header flex items-center gap-2 mb-2"><Clapperboard size={13} className="text-brand-accent" /> Storyboard Format (for visual breakdown)</h2>
               <p className="text-[9px] text-muted mb-2">Pick the visual style your storyboard will follow. You can generate a shot-by-shot breakdown after your script is created.</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
                 {STORYBOARD_FORMATS.map(f => (
@@ -1551,7 +1551,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     className={`flex items-center gap-1.5 p-2 rounded-xl border text-left transition-all ${
                       storyboardFormat === f.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.14)]"
                     }`}>
-                    <span className={storyboardFormat === f.id ? "text-[#2563EB]" : "text-muted"}>{f.icon}</span>
+                    <span className={storyboardFormat === f.id ? "text-brand-accent" : "text-muted"}>{f.icon}</span>
                     <div className="min-w-0">
                       <p className="text-[10px] font-semibold truncate">{f.name}</p>
                       <p className="text-[8px] text-muted truncate">{f.desc}</p>
@@ -1569,18 +1569,18 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               className="rounded-xl p-5"
 
             >
-              <h2 className="section-header flex items-center gap-2 mb-3"><Wand2 size={13} className="text-[#2563EB]" /> AI Options</h2>
+              <h2 className="section-header flex items-center gap-2 mb-3"><Wand2 size={13} className="text-brand-accent" /> AI Options</h2>
               <div className="flex flex-wrap gap-3">
                 <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
                   <input type="checkbox" checked={config.include_voiceover_notes}
                     onChange={e => setConfig({ ...config, include_voiceover_notes: e.target.checked })}
-                    className="rounded border-border text-[#2563EB] focus:ring-[rgba(37,99,235,0.20)]" />
+                    className="rounded border-border text-brand-accent focus:ring-[rgba(37,99,235,0.20)]" />
                   <Volume2 size={11} /> Voiceover Notes
                 </label>
                 <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
                   <input type="checkbox" checked={config.include_b_roll_suggestions}
                     onChange={e => setConfig({ ...config, include_b_roll_suggestions: e.target.checked })}
-                    className="rounded border-border text-[#2563EB] focus:ring-[rgba(37,99,235,0.20)]" />
+                    className="rounded border-border text-brand-accent focus:ring-[rgba(37,99,235,0.20)]" />
                   <Film size={11} /> B-Roll Suggestions
                 </label>
                 <div className="flex items-center gap-2 ml-auto">
@@ -1589,7 +1589,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     {[1, 3, 5].map(n => (
                       <button key={n} onClick={() => setConfig({ ...config, batch_count: n })}
                         className={`text-[10px] px-2 py-0.5 rounded border transition-all ${
-                          config.batch_count === n ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-semibold" : "border-border text-muted hover:text-foreground"
+                          config.batch_count === n ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent font-semibold" : "border-border text-muted hover:text-foreground"
                         }`}>
                         {n}x
                       </button>
@@ -1620,13 +1620,13 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               className="rounded-xl p-5"
 
             >
-              <h3 className="section-header flex items-center gap-2 mb-2"><Zap size={12} className="text-[#2563EB]" /> Pro Tips</h3>
+              <h3 className="section-header flex items-center gap-2 mb-2"><Zap size={12} className="text-brand-accent" /> Pro Tips</h3>
               <div className="space-y-2 text-[10px] text-muted">
-                <p><span className="text-[#2563EB] font-medium">Hook:</span> First 3 seconds decide if someone watches or scrolls</p>
-                <p><span className="text-[#2563EB] font-medium">PAS:</span> Best for service businesses selling to pain points</p>
-                <p><span className="text-[#2563EB] font-medium">Contrarian:</span> Best for standing out and getting comments</p>
-                <p><span className="text-[#2563EB] font-medium">Batch:</span> Generate 3-5 variations and A/B test hooks</p>
-                <p><span className="text-[#2563EB] font-medium">Reference:</span> Find a viral video, paste the concept, AI creates your version</p>
+                <p><span className="text-brand-accent font-medium">Hook:</span> First 3 seconds decide if someone watches or scrolls</p>
+                <p><span className="text-brand-accent font-medium">PAS:</span> Best for service businesses selling to pain points</p>
+                <p><span className="text-brand-accent font-medium">Contrarian:</span> Best for standing out and getting comments</p>
+                <p><span className="text-brand-accent font-medium">Batch:</span> Generate 3-5 variations and A/B test hooks</p>
+                <p><span className="text-brand-accent font-medium">Reference:</span> Find a viral video, paste the concept, AI creates your version</p>
               </div>
             </motion.div>
 
@@ -1638,7 +1638,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 className="rounded-xl p-5"
 
               >
-                <h3 className="section-header flex items-center gap-2 mb-2"><Search size={12} className="text-[#2563EB]" /> From Research</h3>
+                <h3 className="section-header flex items-center gap-2 mb-2"><Search size={12} className="text-brand-accent" /> From Research</h3>
                 <div className="glass rounded-xl overflow-hidden">
                   {research.opportunities.slice(0, 4).map((opp, i) => (
                     <motion.button
@@ -1658,14 +1658,14 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             )}
 
             <div className="card border-[rgba(37,99,235,0.1)]">
-              <h3 className="section-header flex items-center gap-2"><TrendingUp size={12} className="text-[#2563EB]" /> Quick Stats</h3>
+              <h3 className="section-header flex items-center gap-2"><TrendingUp size={12} className="text-brand-accent" /> Quick Stats</h3>
               <div className="grid grid-cols-2 gap-2">
                 <div className="text-center p-2 rounded-lg bg-surface-light">
-                  <p className="text-lg font-bold text-[#2563EB]">{savedScripts.length}</p>
+                  <p className="text-lg font-bold text-brand-accent">{savedScripts.length}</p>
                   <p className="text-[8px] text-muted">Scripts Created</p>
                 </div>
                 <div className="text-center p-2 rounded-lg bg-surface-light">
-                  <p className="text-lg font-bold text-[#2563EB]">{FRAMEWORKS.length}</p>
+                  <p className="text-lg font-bold text-brand-accent">{FRAMEWORKS.length}</p>
                   <p className="text-[8px] text-muted">Frameworks</p>
                 </div>
               </div>
@@ -1681,7 +1681,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           <div className="card border-[rgba(37,99,235,0.1)] space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Eye size={14} className="text-[#2563EB]" />
+                <Eye size={14} className="text-brand-accent" />
                 <h3 className="text-xs font-semibold">My Watchlists</h3>
                 <span className="text-[9px] text-muted">Auto-refreshed daily at 6 AM</span>
               </div>
@@ -1708,13 +1708,13 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                         onClick={() => loadWatchlistTrending(w)}
                       >
                         <div className="flex items-start justify-between gap-1 mb-1">
-                          <h4 className="text-[11px] font-semibold line-clamp-1 group-hover:text-[#2563EB] transition-colors">{w.name}</h4>
+                          <h4 className="text-[11px] font-semibold line-clamp-1 group-hover:text-brand-accent transition-colors">{w.name}</h4>
                           {w.alert_on_new && (
-                            <span title="Alerts on" className="text-[9px] text-[#2563EB]"><Activity size={9} /></span>
+                            <span title="Alerts on" className="text-[9px] text-brand-accent"><Activity size={9} /></span>
                           )}
                         </div>
                         <p className="text-[9px] text-muted mb-1">
-                          <span className="text-[#2563EB]/80">#{w.niche}</span>
+                          <span className="text-brand-accent/80">#{w.niche}</span>
                           {w.platforms.length > 0 && <span> � {w.platforms.join(", ")}</span>}
                         </p>
                         <p className="text-[8px] text-muted">
@@ -1738,7 +1738,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                           onClick={() => toggleWatchlistAlerts(w)}
                           className={`text-[9px] py-1 px-1.5 rounded border transition-all ${
                             w.alert_on_new
-                              ? "border-[#2563EB]/40 bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                              ? "border-brand-accent/40 bg-[rgba(37,99,235,0.08)] text-brand-accent"
                               : "border-border text-muted hover:text-foreground"
                           }`}
                           title={w.alert_on_new ? "Alerts on" : "Alerts off"}
@@ -1768,11 +1768,11 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           </div>
 
           {/* Controls */}
-          <div className="card bg-gradient-to-br from-[rgba(37,99,235,0.05)] via-surface to-surface border-[#2563EB]/15 space-y-3">
+          <div className="card bg-gradient-to-br from-[rgba(37,99,235,0.05)] via-surface to-surface border-brand-accent/15 space-y-3">
             <div className="flex items-center gap-2">
-              <Flame size={16} className="text-[#2563EB] animate-pulse" />
+              <Flame size={16} className="text-brand-accent animate-pulse" />
               <h2 className="text-sm font-semibold">Find today&apos;s trending videos</h2>
-              <Sparkles size={12} className="text-[#2563EB]" />
+              <Sparkles size={12} className="text-brand-accent" />
             </div>
             <p className="text-[10px] text-muted">Discover what&apos;s going viral right now in your niche across YouTube, TikTok, and Instagram. Transcribe the top performers and remix them with your own twist.</p>
 
@@ -1784,7 +1784,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   <button key={n} onClick={() => setTrendingNiche(n)}
                     className={`text-[9px] px-2 py-0.5 rounded-full border transition-all ${
                       trendingNiche === n
-                        ? "border-[#2563EB]/40 bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                        ? "border-brand-accent/40 bg-[rgba(37,99,235,0.08)] text-brand-accent"
                         : "border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)]"
                     }`}>
                     {n}
@@ -1856,7 +1856,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           {/* Empty state */}
           {!loadingTrending && trendingVideos.length === 0 && (
             <div className="card text-center py-10">
-              <Flame size={32} className="text-[#2563EB]/40 mx-auto mb-3" />
+              <Flame size={32} className="text-brand-accent/40 mx-auto mb-3" />
               <p className="text-xs text-muted">Pick a niche + platform to see what&apos;s working today</p>
               <p className="text-[9px] text-muted mt-1">We&apos;ll surface up to 30 trending videos, then you can transcribe and remix any of them.</p>
             </div>
@@ -1880,7 +1880,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             <div className="fade-in">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-xs font-semibold flex items-center gap-1.5">
-                  <TrendingUp size={13} className="text-[#2563EB]" />
+                  <TrendingUp size={13} className="text-brand-accent" />
                   {trendingVideos.length} trending in {trendingNiche}
                 </h3>
                 <p className="text-[9px] text-muted">Click any card to transcribe + remix</p>
@@ -1910,21 +1910,21 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                       </div>
 
                       {/* Title + creator */}
-                      <h4 className="text-[11px] font-semibold line-clamp-2 mb-0.5 group-hover:text-[#2563EB] transition-colors">{v.title}</h4>
+                      <h4 className="text-[11px] font-semibold line-clamp-2 mb-0.5 group-hover:text-brand-accent transition-colors">{v.title}</h4>
                       <p className="text-[9px] text-muted mb-1.5 flex items-center gap-1">
-                        <UsersIcon size={8} /> {v.creator_name} <span className="text-[#2563EB]/70">{v.creator_handle}</span>
+                        <UsersIcon size={8} /> {v.creator_name} <span className="text-brand-accent/70">{v.creator_handle}</span>
                       </p>
 
                       {/* Metrics row */}
                       <div className="flex items-center gap-2 text-[9px] mb-2">
                         <span className="flex items-center gap-0.5 text-success"><Eye size={9} /> {v.view_count_label}</span>
-                        <span className="flex items-center gap-0.5 text-[#2563EB]"><Activity size={9} /> {v.engagement_rate.toFixed(1)}%</span>
+                        <span className="flex items-center gap-0.5 text-brand-accent"><Activity size={9} /> {v.engagement_rate.toFixed(1)}%</span>
                         <span className="flex items-center gap-0.5 text-muted"><Clock size={9} /> {daysAgoLabel(v.published_days_ago)}</span>
                       </div>
 
                       {/* Hook */}
                       <div className="bg-[rgba(37,99,235,0.03)] border border-[rgba(37,99,235,0.1)] rounded-lg p-2 mb-1.5">
-                        <p className="text-[8px] text-[#2563EB] uppercase tracking-wider font-medium mb-0.5">Hook</p>
+                        <p className="text-[8px] text-brand-accent uppercase tracking-wider font-medium mb-0.5">Hook</p>
                         <p className="text-[10px] italic line-clamp-2">&ldquo;{v.hook}&rdquo;</p>
                       </div>
 
@@ -1948,7 +1948,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                           {hasTranscript ? "Re-transcribe" : "Transcribe"}
                         </button>
                         <button onClick={() => openRemix(v)} disabled={isRemixing || isTranscribing}
-                          className="flex-1 text-[9px] py-1.5 rounded-lg bg-gradient-to-r from-[rgba(37,99,235,0.12)] to-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:from-[rgba(37,99,235,0.25)] hover:to-[rgba(37,99,235,0.12)] transition-all disabled:opacity-50 flex items-center justify-center gap-1">
+                          className="flex-1 text-[9px] py-1.5 rounded-lg bg-gradient-to-r from-[rgba(37,99,235,0.12)] to-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-brand-accent hover:from-[rgba(37,99,235,0.25)] hover:to-[rgba(37,99,235,0.12)] transition-all disabled:opacity-50 flex items-center justify-center gap-1">
                           {isRemixing ? <Loader size={9} className="animate-spin" /> : <Sparkles size={9} />}
                           Remix
                         </button>
@@ -1968,7 +1968,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                               Transcript {transcriptsById[v.id].is_estimated ? "(AI-estimated)" : "(real)"}
                             </span>
                             <button onClick={() => copyToClipboard(transcriptsById[v.id].transcript)}
-                              className="text-[8px] text-muted hover:text-[#2563EB] flex items-center gap-0.5">
+                              className="text-[8px] text-muted hover:text-brand-accent flex items-center gap-0.5">
                               <Copy size={8} /> Copy
                             </button>
                           </div>
@@ -1990,7 +1990,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           <div className="bg-surface border border-border  max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="sticky top-0 bg-surface/95 backdrop-blur-md border-b border-border p-4 flex items-center justify-between z-10">
               <div className="flex items-center gap-2">
-                <Repeat size={16} className="text-[#2563EB]" />
+                <Repeat size={16} className="text-brand-accent" />
                 <h3 className="text-sm font-semibold">Remix with my twist</h3>
               </div>
               <button onClick={() => setRemixModal(null)} className="text-muted hover:text-foreground text-xs">Close</button>
@@ -2029,7 +2029,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               {remixResult && (
                 <div className="space-y-3 fade-in">
                   <div className="card bg-[rgba(37,99,235,0.03)] border-[rgba(37,99,235,0.2)]">
-                    <p className="text-[9px] text-[#2563EB] uppercase tracking-wider mb-1">Suggested title</p>
+                    <p className="text-[9px] text-brand-accent uppercase tracking-wider mb-1">Suggested title</p>
                     <p className="text-sm font-semibold">{remixResult.suggested_title}</p>
                   </div>
 
@@ -2048,7 +2048,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     <div className="flex items-center justify-between mb-1.5">
                       <p className="text-[9px] text-muted uppercase tracking-wider">Remixed script</p>
                       <button onClick={() => copyToClipboard(remixResult.remixed_script)}
-                        className="text-[9px] text-[#2563EB] hover:text-[#2563EB]-light flex items-center gap-0.5">
+                        className="text-[9px] text-brand-accent hover:text-brand-accent-light flex items-center gap-0.5">
                         <Copy size={9} /> Copy
                       </button>
                     </div>
@@ -2072,7 +2072,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                       <ul className="space-y-1">
                         {remixResult.differences.map((d, i) => (
                           <li key={i} className="text-[10px] flex items-start gap-1.5">
-                            <ArrowRight size={9} className="text-[#2563EB] shrink-0 mt-0.5" />
+                            <ArrowRight size={9} className="text-brand-accent shrink-0 mt-0.5" />
                             <span>{d}</span>
                           </li>
                         ))}
@@ -2101,7 +2101,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       {tab === "research" && (
         <div className="space-y-4">
           <div className="card max-w-xl space-y-3">
-            <h2 className="section-header flex items-center gap-2"><Search size={13} className="text-[#2563EB]" /> Viral Content Research</h2>
+            <h2 className="section-header flex items-center gap-2"><Search size={13} className="text-brand-accent" /> Viral Content Research</h2>
             <p className="text-[10px] text-muted">Find what content is going viral in your niche and why</p>
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -2134,14 +2134,14 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                         <span className="text-[8px] text-success bg-success/10 px-1.5 py-0.5 rounded">{v.estimated_views}</span>
                       </div>
                       <div className="bg-[rgba(37,99,235,0.03)] border border-[rgba(37,99,235,0.1)] rounded-lg p-2 mb-2">
-                        <p className="text-[9px] text-[#2563EB] uppercase tracking-wider font-medium mb-0.5">Hook</p>
+                        <p className="text-[9px] text-brand-accent uppercase tracking-wider font-medium mb-0.5">Hook</p>
                         <p className="text-[10px] italic">&ldquo;{v.hook}&rdquo;</p>
                       </div>
                       <p className="text-[9px] text-muted mb-1">{v.why_it_works}</p>
                       <div className="flex items-center justify-between">
                         <span className="text-[8px] text-muted">{v.format}</span>
                         <button onClick={() => { setConfig({ ...config, viral_reference: `${v.title}: ${v.hook}`, topic: v.title }); setTab("generate"); }}
-                          className="text-[9px] text-[#2563EB] hover:text-[#2563EB]-light flex items-center gap-0.5">
+                          className="text-[9px] text-brand-accent hover:text-brand-accent-light flex items-center gap-0.5">
                           <Sparkles size={9} /> Use as reference
                         </button>
                       </div>
@@ -2196,12 +2196,12 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               </div>
 
               <div className="card border-[rgba(37,99,235,0.1)]">
-                <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-[#2563EB]" /> Content Opportunities</h2>
+                <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-brand-accent" /> Content Opportunities</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {research.opportunities?.map((opp, i) => (
                     <button key={i} onClick={() => { setConfig({ ...config, topic: opp }); setTab("generate"); }}
-                      className="text-left p-2.5 rounded-xl border border-border hover:border-[#2563EB]/15 transition-all flex items-center gap-2">
-                      <ArrowRight size={10} className="text-[#2563EB] shrink-0" />
+                      className="text-left p-2.5 rounded-xl border border-border hover:border-brand-accent/15 transition-all flex items-center gap-2">
+                      <ArrowRight size={10} className="text-brand-accent shrink-0" />
                       <span className="text-[10px]">{opp}</span>
                     </button>
                   ))}
@@ -2223,7 +2223,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   {batchScripts.map((_, i) => (
                     <button key={i} onClick={() => { setActiveBatchIndex(i); setScript(batchScripts[i]); }}
                       className={`text-[10px] w-6 h-6 rounded-lg border transition-all ${
-                        activeBatchIndex === i ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-bold" : "border-border text-muted hover:text-foreground"
+                        activeBatchIndex === i ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent font-bold" : "border-border text-muted hover:text-foreground"
                       }`}>
                       {i + 1}
                     </button>
@@ -2253,7 +2253,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           {/* AI Rewrite bar */}
           <div className="card border-[rgba(37,99,235,0.1)] py-2.5 px-4">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[9px] text-[#2563EB] uppercase tracking-wider font-bold flex items-center gap-1"><Wand2 size={10} /> AI Rewrite</span>
+              <span className="text-[9px] text-brand-accent uppercase tracking-wider font-bold flex items-center gap-1"><Wand2 size={10} /> AI Rewrite</span>
               {[
                 { label: "Make it shorter", icon: <ListChecks size={9} /> },
                 { label: "Make it bolder", icon: <Zap size={9} /> },
@@ -2266,7 +2266,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   {btn.icon} {btn.label}
                 </button>
               ))}
-              {rewriting && <Loader size={12} className="animate-spin text-[#2563EB] ml-2" />}
+              {rewriting && <Loader size={12} className="animate-spin text-brand-accent ml-2" />}
             </div>
           </div>
 
@@ -2274,7 +2274,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           <div className="card border-[rgba(37,99,235,0.1)] py-3 px-4">
             <div className="flex items-center gap-3 flex-wrap">
               <div className="flex items-center gap-2">
-                <Clapperboard size={14} className="text-[#2563EB]" />
+                <Clapperboard size={14} className="text-brand-accent" />
                 <div>
                   <p className="text-[11px] font-bold text-foreground">Turn this script into a shot-by-shot storyboard</p>
                   <p className="text-[9px] text-muted">AI director breaks your script down into camera shots, dialog, transitions, b-roll, and music cues.</p>
@@ -2286,7 +2286,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     <button key={f.id} onClick={() => setStoryboardFormat(f.id)}
                       title={f.name}
                       className={`p-1.5 rounded-lg border transition-all ${
-                        storyboardFormat === f.id ? "border-[#2563EB]/40 bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)]"
+                        storyboardFormat === f.id ? "border-brand-accent/40 bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)]"
                       }`}>
                       {f.icon}
                     </button>
@@ -2308,9 +2308,9 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             <div className="relative">
               <h2 className="text-sm font-bold mb-1">{activeScript.title}</h2>
               <p className="text-[10px] text-muted mb-3">{activeScript.value_delivered}</p>
-              <div className="bg-[rgba(37,99,235,0.05)] border border-[#2563EB]/15 rounded-xl p-3">
+              <div className="bg-[rgba(37,99,235,0.05)] border border-brand-accent/15 rounded-xl p-3">
                 <div className="flex items-center justify-between mb-1">
-                  <p className="text-[9px] text-[#2563EB] uppercase tracking-wider font-medium">The Hook</p>
+                  <p className="text-[9px] text-brand-accent uppercase tracking-wider font-medium">The Hook</p>
                   <div className="flex items-center gap-2">
                     <span className="text-[8px] bg-surface-light px-1.5 py-0.5 rounded">{activeScript.hook.type}</span>
                     <button onClick={() => copyToClipboard(activeScript.hook.text)}><Copy size={10} className="text-muted hover:text-foreground" /></button>
@@ -2334,7 +2334,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <div key={i} className="rounded-xl border border-border overflow-hidden">
                   <div className="flex items-center justify-between px-3 py-1.5 bg-surface-light">
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-bold text-[#2563EB]">{section.name}</span>
+                      <span className="text-[9px] font-bold text-brand-accent">{section.name}</span>
                       <span className="text-[8px] text-muted font-mono">{section.duration}</span>
                     </div>
                     <span className="text-[8px] text-muted italic">{section.emotion}</span>
@@ -2355,7 +2355,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="card">
-              <h3 className="section-header flex items-center gap-2"><Target size={12} className="text-[#2563EB]" /> CTA</h3>
+              <h3 className="section-header flex items-center gap-2"><Target size={12} className="text-brand-accent" /> CTA</h3>
               <p className="text-xs font-medium mb-1">&ldquo;{activeScript.cta.text}&rdquo;</p>
               <div className="flex items-center gap-2 text-[9px] text-muted">
                 <span className="bg-surface-light px-1.5 py-0.5 rounded">{activeScript.cta.type}</span>
@@ -2363,7 +2363,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               </div>
             </div>
             <div className="card">
-              <h3 className="section-header flex items-center gap-2"><Clock size={12} className="text-[#2563EB]" /> Posting Strategy</h3>
+              <h3 className="section-header flex items-center gap-2"><Clock size={12} className="text-brand-accent" /> Posting Strategy</h3>
               <div className="space-y-1 text-[10px]">
                 <p><span className="text-muted">Best time:</span> {activeScript.posting_strategy.best_time}</p>
                 <p><span className="text-muted">Best day:</span> {activeScript.posting_strategy.best_day}</p>
@@ -2419,7 +2419,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             </div>
             <div className="flex flex-wrap gap-1">
               {activeScript.hashtags?.map((h, i) => (
-                <span key={i} className="text-[9px] bg-surface-light px-1.5 py-0.5 rounded text-[#2563EB]">{h}</span>
+                <span key={i} className="text-[9px] bg-surface-light px-1.5 py-0.5 rounded text-brand-accent">{h}</span>
               ))}
             </div>
           </div>
@@ -2457,7 +2457,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 </div>
                 {storyboard.style_notes && (
                   <div className="relative mt-3 p-2.5 rounded-lg bg-surface-light/60 border border-[rgba(37,99,235,0.1)]">
-                    <p className="text-[9px] text-[#2563EB] uppercase tracking-wider font-medium mb-0.5">Style Notes</p>
+                    <p className="text-[9px] text-brand-accent uppercase tracking-wider font-medium mb-0.5">Style Notes</p>
                     <p className="text-[11px] leading-relaxed">{storyboard.style_notes}</p>
                   </div>
                 )}
@@ -2469,10 +2469,10 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   const theme = getShotTheme(idx, storyboard.shots.length);
                   const themeStyles =
                     theme === "opening"
-                      ? { border: "border-[rgba(37,99,235,0.25)]", accent: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.05)]", bar: "bg-[#2563EB]" }
+                      ? { border: "border-[rgba(37,99,235,0.25)]", accent: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.05)]", bar: "bg-brand-accent" }
                       : theme === "ending"
                         ? { border: "border-emerald-400/30", accent: "text-emerald-400", bg: "bg-emerald-400/[0.05]", bar: "bg-emerald-400" }
-                        : { border: "border-[rgba(37,99,235,0.25)]", accent: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.04)]", bar: "bg-[#2563EB]" };
+                        : { border: "border-[rgba(37,99,235,0.25)]", accent: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.04)]", bar: "bg-brand-accent" };
                   return (
                     <div key={idx} className={`card ${themeStyles.border} overflow-hidden relative`}>
                       <div className={`absolute inset-y-0 left-0 w-1 ${themeStyles.bar}`} />
@@ -2534,7 +2534,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                           <div className="mt-2 flex items-center gap-2 flex-wrap">
                             {shot.transition_in && (
                               <span className="inline-flex items-center gap-1 text-[9px] bg-surface-light border border-border rounded-full px-2 py-0.5">
-                                <ArrowRight size={9} className="text-[#2563EB]" />
+                                <ArrowRight size={9} className="text-brand-accent" />
                                 In: {shot.transition_in}
                               </span>
                             )}
@@ -2594,7 +2594,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             {templateCategories.map(cat => (
               <button key={cat} onClick={() => setTemplateCategory(cat)}
                 className={`px-3 py-1.5 rounded-lg text-[10px] border whitespace-nowrap transition-colors ${
-                  templateCategory === cat ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"
+                  templateCategory === cat ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"
                 }`}>
                 {cat === "all" ? "All" : cat.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}
               </button>
@@ -2611,7 +2611,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 }}>
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="text-xs font-semibold">{template.name}</h3>
-                    <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]">{template.framework.replace(/_/g, " ")}</span>
+                    <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)]">{template.framework.replace(/_/g, " ")}</span>
                   </div>
                   <p className="text-[10px] text-muted mb-2">{template.desc}</p>
                   <div className="flex items-center gap-2 text-[9px] text-muted">
@@ -2631,7 +2631,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
         <div className="space-y-4">
           <div className="card p-4">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-semibold flex items-center gap-1.5"><Type size={13} className="text-[#2563EB]" /> Tone Analyzer</p>
+              <p className="text-xs font-semibold flex items-center gap-1.5"><Type size={13} className="text-brand-accent" /> Tone Analyzer</p>
               <AIEnhanceButton value={toneAnalysisText} onResult={setToneAnalysisText} context="video script section" variant="inline" />
             </div>
             <textarea value={toneAnalysisText} onChange={e => setToneAnalysisText(e.target.value)} className="input w-full h-24 text-xs mb-3" placeholder="Paste your script text here to analyze tone, readability, and sentiment..." />
@@ -2644,8 +2644,8 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             {toneResult && (
               <div className="mt-4 space-y-3">
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="bg-surface-light rounded-lg p-2 text-center border border-border"><p className="text-lg font-bold text-[#2563EB]">{toneResult.wordCount}</p><p className="text-[9px] text-muted">Words</p></div>
-                  <div className="bg-surface-light rounded-lg p-2 text-center border border-border"><p className="text-sm font-bold text-[#2563EB]">{toneResult.readability}</p><p className="text-[9px] text-muted">Readability</p></div>
+                  <div className="bg-surface-light rounded-lg p-2 text-center border border-border"><p className="text-lg font-bold text-brand-accent">{toneResult.wordCount}</p><p className="text-[9px] text-muted">Words</p></div>
+                  <div className="bg-surface-light rounded-lg p-2 text-center border border-border"><p className="text-sm font-bold text-brand-accent">{toneResult.readability}</p><p className="text-[9px] text-muted">Readability</p></div>
                   <div className="bg-surface-light rounded-lg p-2 text-center border border-border"><p className="text-sm font-bold text-green-400">{toneResult.sentiment}</p><p className="text-[9px] text-muted">Sentiment</p></div>
                 </div>
                 <div className="space-y-1.5">
@@ -2662,7 +2662,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           </div>
 
           <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Search size={13} className="text-[#2563EB]" /> SEO Script Optimizer</p>
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Search size={13} className="text-brand-accent" /> SEO Script Optimizer</p>
             <div className="space-y-3">
               <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Target Keyword</label><input value={seoKeyword} onChange={e => setSeoKeyword(e.target.value)} className="input w-full text-xs" placeholder="e.g., dental marketing tips" /></div>
               <div>
@@ -2682,23 +2682,23 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           </div>
 
           <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Layers size={13} className="text-[#2563EB]" /> Multi-Platform Formatter</p>
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Layers size={13} className="text-brand-accent" /> Multi-Platform Formatter</p>
             <p className="text-[10px] text-muted mb-3">Reformat your script for different platforms with optimal length and style</p>
             <div className="flex gap-2 mb-3 flex-wrap">
               {PLATFORMS.map(p => (
-                <button key={p.id} onClick={() => setFormatPlatform(p.id)} className={`px-3 py-1.5 rounded-lg text-[10px] border transition-colors ${formatPlatform === p.id ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"}`}>{p.name}</button>
+                <button key={p.id} onClick={() => setFormatPlatform(p.id)} className={`px-3 py-1.5 rounded-lg text-[10px] border transition-colors ${formatPlatform === p.id ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"}`}>{p.name}</button>
               ))}
             </div>
             <button onClick={() => toast.success(`Script reformatted for ${PLATFORMS.find(p => p.id === formatPlatform)?.name} (demo)`)} className="btn-secondary text-xs flex items-center gap-1.5"><RefreshCw size={12} /> Reformat Script</button>
           </div>
 
           <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><TrendingUp size={13} className="text-[#2563EB]" /> Script Performance Tracker</p>
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><TrendingUp size={13} className="text-brand-accent" /> Script Performance Tracker</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
               {[
-                { label: "Scripts Generated", value: savedScripts.length.toString(), color: "text-[#2563EB]" },
+                { label: "Scripts Generated", value: savedScripts.length.toString(), color: "text-brand-accent" },
                 { label: "Avg. Hook Score", value: "8.4/10", color: "text-green-400" },
-                { label: "Most Used Framework", value: "Hook-Story-Offer", color: "text-[#2563EB]" },
+                { label: "Most Used Framework", value: "Hook-Story-Offer", color: "text-brand-accent" },
                 { label: "Top Platform", value: "Instagram", color: "text-purple-400" },
               ].map(stat => (
                 <div key={stat.label} className="bg-surface-light rounded-lg p-3 text-center border border-border"><p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p><p className="text-[9px] text-muted">{stat.label}</p></div>
@@ -2714,7 +2714,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       {tab === "voiceover" && (
         <div className="space-y-4">
           <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Volume2 size={13} className="text-[#2563EB]" /> Voice-Over Preview</p>
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Volume2 size={13} className="text-brand-accent" /> Voice-Over Preview</p>
             <div className="space-y-3">
               <div>
                 <div className="flex items-center justify-between mb-1">
@@ -2725,10 +2725,10 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Speed</label>
-                  <div className="flex gap-2">{(["slow", "normal", "fast"] as const).map(speed => (<button key={speed} onClick={() => setVoiceSpeed(speed)} className={`flex-1 py-1.5 rounded-lg text-[10px] border transition-colors ${voiceSpeed === speed ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted"}`}>{speed.charAt(0).toUpperCase() + speed.slice(1)}</button>))}</div>
+                  <div className="flex gap-2">{(["slow", "normal", "fast"] as const).map(speed => (<button key={speed} onClick={() => setVoiceSpeed(speed)} className={`flex-1 py-1.5 rounded-lg text-[10px] border transition-colors ${voiceSpeed === speed ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted"}`}>{speed.charAt(0).toUpperCase() + speed.slice(1)}</button>))}</div>
                 </div>
                 <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Voice Style</label>
-                  <div className="flex gap-2">{(["professional", "casual", "energetic", "calm"] as const).map(style => (<button key={style} onClick={() => setVoiceStyle(style)} className={`flex-1 py-1.5 rounded-lg text-[10px] border transition-colors ${voiceStyle === style ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted"}`}>{style.charAt(0).toUpperCase() + style.slice(1)}</button>))}</div>
+                  <div className="flex gap-2">{(["professional", "casual", "energetic", "calm"] as const).map(style => (<button key={style} onClick={() => setVoiceStyle(style)} className={`flex-1 py-1.5 rounded-lg text-[10px] border transition-colors ${voiceStyle === style ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted"}`}>{style.charAt(0).toUpperCase() + style.slice(1)}</button>))}</div>
                 </div>
               </div>
               <div className="flex gap-2">
@@ -2738,21 +2738,21 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             </div>
           </div>
           <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><PenTool size={13} className="text-[#2563EB]" /> Voiceover Notes</p>
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><PenTool size={13} className="text-brand-accent" /> Voiceover Notes</p>
             <div className="space-y-2">
               {(script?.script?.sections || []).map((section, i) => (
                 <div key={i} className="p-3 rounded-lg bg-surface-light border border-border">
-                  <div className="flex items-center justify-between mb-1"><span className="text-[10px] font-semibold text-[#2563EB]">{section.name}</span><span className="text-[9px] text-muted">{section.duration} | {section.emotion}</span></div>
+                  <div className="flex items-center justify-between mb-1"><span className="text-[10px] font-semibold text-brand-accent">{section.name}</span><span className="text-[9px] text-muted">{section.duration} | {section.emotion}</span></div>
                   <p className="text-[10px] text-muted">{section.dialogue}</p>
-                  {section.visual_direction && <p className="text-[9px] text-[#2563EB] mt-1">Visual: {section.visual_direction}</p>}
+                  {section.visual_direction && <p className="text-[9px] text-brand-accent mt-1">Visual: {section.visual_direction}</p>}
                 </div>
               ))}
               {(!script || !script.script?.sections?.length) && <p className="text-[10px] text-muted text-center py-6">Generate a script first to see voiceover notes</p>}
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2.5">
-            <div className="card p-3 text-center"><p className="text-lg font-bold text-[#2563EB]">{script ? getWordCount() : 0}</p><p className="text-[9px] text-muted">Total Words</p></div>
-            <div className="card p-3 text-center"><p className="text-lg font-bold text-[#2563EB]">{script ? getEstimatedDuration() : "---"}</p><p className="text-[9px] text-muted">Est. Duration</p></div>
+            <div className="card p-3 text-center"><p className="text-lg font-bold text-brand-accent">{script ? getWordCount() : 0}</p><p className="text-[9px] text-muted">Total Words</p></div>
+            <div className="card p-3 text-center"><p className="text-lg font-bold text-brand-accent">{script ? getEstimatedDuration() : "---"}</p><p className="text-[9px] text-muted">Est. Duration</p></div>
             <div className="card p-3 text-center"><p className="text-lg font-bold text-purple-400">{script?.script?.sections?.length || 0}</p><p className="text-[9px] text-muted">Sections</p></div>
           </div>
         </div>
@@ -2768,7 +2768,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             <button onClick={() => toast.success("Script submitted for approval (demo)")} className="btn-primary text-[10px] flex items-center gap-1"><ArrowRight size={10} /> Submit for Approval</button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Total</p><p className="text-lg font-bold text-[#2563EB]">{approvalScripts.length}</p></div>
+            <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Total</p><p className="text-lg font-bold text-brand-accent">{approvalScripts.length}</p></div>
             <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Pending</p><p className="text-lg font-bold text-yellow-400">{approvalScripts.filter(s => s.status === "pending").length}</p></div>
             <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Approved</p><p className="text-lg font-bold text-green-400">{approvalScripts.filter(s => s.status === "approved").length}</p></div>
             <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Revisions</p><p className="text-lg font-bold text-red-400">{approvalScripts.filter(s => s.status === "revision").length}</p></div>
@@ -2827,7 +2827,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 }}>
                   <h3 className="text-xs font-semibold mb-1 line-clamp-2">{s.title}</h3>
                   <div className="flex items-center gap-2 text-[9px] text-muted">
-                    <span className="bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">{s.framework.replace(/_/g, " ")}</span>
+                    <span className="bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{s.framework.replace(/_/g, " ")}</span>
                     <span>{s.platform}</span>
                     <span className="ml-auto">{new Date(s.created_at).toLocaleDateString()}</span>
                   </div>
@@ -2850,7 +2850,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           >
             <div className="border-b border-border p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Eye size={14} className="text-[#2563EB]" />
+                <Eye size={14} className="text-brand-accent" />
                 <h3 className="text-sm font-semibold">Save as watchlist</h3>
               </div>
               <button onClick={() => setSaveWatchlistModal(false)} className="text-muted hover:text-foreground text-xs">Close</button>
@@ -2870,9 +2870,9 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 />
               </div>
               <div className="text-[10px] text-muted bg-surface-light/50 rounded p-2 space-y-0.5">
-                <p><span className="text-[#2563EB]">Niche:</span> {trendingNiche || "�"}</p>
-                <p><span className="text-[#2563EB]">Keywords:</span> {trendingKeywords || "�"}</p>
-                <p><span className="text-[#2563EB]">Platforms:</span> {trendingPlatforms.join(", ") || "�"}</p>
+                <p><span className="text-brand-accent">Niche:</span> {trendingNiche || "�"}</p>
+                <p><span className="text-brand-accent">Keywords:</span> {trendingKeywords || "�"}</p>
+                <p><span className="text-brand-accent">Platforms:</span> {trendingPlatforms.join(", ") || "�"}</p>
               </div>
               <div className="flex gap-2 pt-1">
                 <button
@@ -2907,7 +2907,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           >
             <div className="sticky top-0 bg-surface/95 backdrop-blur-md border-b border-border p-4 flex items-center justify-between z-10">
               <div className="flex items-center gap-2">
-                <PenTool size={14} className="text-[#2563EB]" />
+                <PenTool size={14} className="text-brand-accent" />
                 <h3 className="text-sm font-semibold">Edit watchlist</h3>
               </div>
               <button onClick={() => setEditingWatchlist(null)} className="text-muted hover:text-foreground text-xs">Close</button>

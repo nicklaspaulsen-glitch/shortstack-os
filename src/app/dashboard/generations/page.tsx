@@ -28,7 +28,7 @@ interface Generation {
 /* ── Category Config ── */
 
 const CATEGORIES: { key: string; label: string; icon: React.ReactNode; color: string; bg: string }[] = [
-  { key: "all",          label: "All",          icon: <Layers size={14} />,    color: "text-[#2563EB]",        bg: "bg-[rgba(37,99,235,0.08)]" },
+  { key: "all",          label: "All",          icon: <Layers size={14} />,    color: "text-brand-accent",        bg: "bg-[rgba(37,99,235,0.08)]" },
   { key: "video",        label: "Videos",       icon: <Film size={14} />,      color: "text-blue-400",    bg: "bg-blue-500/10" },
   { key: "ad_copy",      label: "Ads & Copy",   icon: <Megaphone size={14} />, color: "text-purple-400",  bg: "bg-purple-500/10" },
   { key: "thumbnail",    label: "Images",       icon: <ImageIcon size={14} />, color: "text-emerald-400", bg: "bg-emerald-500/10" },
@@ -201,18 +201,18 @@ export default function GenerationsPage() {
                   onClick={() => { setCategory(c.key); setPage(1); }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all ${
                     category === c.key
-                      ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] font-medium"
+                      ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] font-medium"
                       : "bg-black/4 text-muted hover:text-foreground hover:bg-black/8 border border-transparent"
                   }`}
                 >
-                  <span className={category === c.key ? "text-[#2563EB]" : c.color}>{c.icon}</span>
+                  <span className={category === c.key ? "text-brand-accent" : c.color}>{c.icon}</span>
                   {c.label}
                 </button>
               ))}
             </div>{/* Generations List */}<div className="space-y-2">
               {loading ? (
                 <div className="flex items-center justify-center py-20">
-                  <Loader size={20} className="animate-spin text-[#2563EB]" />
+                  <Loader size={20} className="animate-spin text-brand-accent" />
                 </div>
               ) : filtered.length === 0 ? (
                 /* Empty State */

@@ -46,7 +46,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const CATEGORY_COLORS: Record<string, string> = {
   sales: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  onboarding: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",
+  onboarding: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)]",
   retention: "bg-violet-50 text-violet-700 border-violet-200",
   recovery: "bg-rose-50 text-rose-700 border-rose-200",
   social: "bg-pink-50 text-pink-700 border-pink-200",
@@ -146,7 +146,7 @@ export default function WorkflowLibraryPage() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search templates..."
-                    className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white pl-9 pr-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-[#2563EB] focus:outline-none"
+                    className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white pl-9 pr-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-brand-accent focus:outline-none"
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -154,7 +154,7 @@ export default function WorkflowLibraryPage() {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-sm text-[#111827] focus:border-[#2563EB] focus:outline-none"
+                    className="rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-sm text-[#111827] focus:border-brand-accent focus:outline-none"
                   >
                     <option value="all">All categories</option>
                     {Object.entries(CATEGORY_LABELS).map(([k, label]) => (
@@ -247,7 +247,7 @@ export default function WorkflowLibraryPage() {
                           <button
                             onClick={() => install(t.id)}
                             disabled={installing === t.id}
-                            className="flex-1 rounded-lg bg-[#2563EB] px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#3B82F6] disabled:opacity-60"
+                            className="flex-1 rounded-lg bg-brand-accent px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#3B82F6] disabled:opacity-60"
                           >
                             {installing === t.id ? "Installing..." : "Install"}
                           </button>

@@ -368,7 +368,7 @@ export default function InvoiceTemplatesPage() {
                         <div className="flex items-center gap-2">
                           <p className="text-[#111827] font-medium truncate">{t.name}</p>
                           {t.is_default && (
-                            <span className="flex items-center gap-1 text-[10px] bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] px-1.5 py-0.5 rounded-full shrink-0">
+                            <span className="flex items-center gap-1 text-[10px] bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.25)] px-1.5 py-0.5 rounded-full shrink-0">
                               <Star size={9} /> Default
                             </span>
                           )}

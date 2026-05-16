@@ -411,7 +411,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
             }}
           >
             <div className="text-sm text-[#374151]">
-              <Sparkles size={14} className="inline -mt-0.5 mr-1.5 text-[#2563EB]" />
+              <Sparkles size={14} className="inline -mt-0.5 mr-1.5 text-brand-accent" />
               {selected.size} module{selected.size === 1 ? "" : "s"} selected
             </div>
             <button

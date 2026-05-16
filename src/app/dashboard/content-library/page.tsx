@@ -151,7 +151,7 @@ const TYPE_ICON: Record<string, React.ReactNode> = {
   audio: <Music size={16} className="text-orange-400" />,
   document: <FileText size={16} className="text-green-400" />,
   template: <File size={16} className="text-pink-400" />,
-  brand: <Palette size={16} className="text-[#2563EB]" />,
+  brand: <Palette size={16} className="text-brand-accent" />,
 };
 
 const TYPE_BG: Record<string, string> = {
@@ -446,7 +446,7 @@ export default function ContentLibraryPage() {
   if (loading) {
     return (
       <MotionPage className="fade-in flex items-center justify-center py-20"><div className="text-center">
-                  <Loader size={24} className="animate-spin text-[#2563EB] mx-auto mb-3" />
+                  <Loader size={24} className="animate-spin text-brand-accent mx-auto mb-3" />
                   <p className="text-sm text-muted">Loading content library...</p>
                 </div></MotionPage>
     );
@@ -515,17 +515,17 @@ export default function ContentLibraryPage() {
         tabIndex={0}
         onKeyDown={e => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click(); }}
         className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer ${
-          dragging ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : "glass border-[rgba(0,0,0,0.10)] hover:border-[rgba(0,0,0,0.15)]"
+          dragging ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : "glass border-[rgba(0,0,0,0.10)] hover:border-[rgba(0,0,0,0.15)]"
         }`}
       >
         {uploading ? (
           <div className="flex items-center justify-center gap-2">
-            <Loader size={18} className="animate-spin text-[#2563EB]" />
+            <Loader size={18} className="animate-spin text-brand-accent" />
             <span className="text-sm text-muted">Uploading files...</span>
           </div>
         ) : (
           <>
-            <Upload size={24} className={`mx-auto mb-2 ${dragging ? "text-[#2563EB]" : "text-muted"}`} />
+            <Upload size={24} className={`mx-auto mb-2 ${dragging ? "text-brand-accent" : "text-muted"}`} />
             <p className="text-xs text-muted">Drop files here or click to upload</p>
             <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV � up to 100 MB</p>
           </>
@@ -537,10 +537,10 @@ export default function ContentLibraryPage() {
         <PrismPanel padding="p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Layers size={16} className="text-[#2563EB]" />
+              <Layers size={16} className="text-brand-accent" />
               <span className="text-sm font-semibold">Collections</span>
             </div>
-            <button onClick={() => setShowNewCollection(!showNewCollection)} className="text-xs text-[#2563EB] hover:underline flex items-center gap-1">
+            <button onClick={() => setShowNewCollection(!showNewCollection)} className="text-xs text-brand-accent hover:underline flex items-center gap-1">
               <FolderPlus size={12} /> New
             </button>
           </div>
@@ -595,7 +595,7 @@ export default function ContentLibraryPage() {
               key={c.key}
               onClick={() => setCategory(c.key)}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${
-                category === c.key ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "bg-black/5 text-muted hover:text-text-primary border border-black/10"
+                category === c.key ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]" : "bg-black/5 text-muted hover:text-text-primary border border-black/10"
               }`}
             >
               {c.icon} {c.label}
@@ -633,10 +633,10 @@ export default function ContentLibraryPage() {
 
         {/* View Toggle */}
         <div className="flex bg-black/5 rounded-lg p-0.5">
-          <button onClick={() => setViewMode("grid")} className={`p-1.5 rounded ${viewMode === "grid" ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>
+          <button onClick={() => setViewMode("grid")} className={`p-1.5 rounded ${viewMode === "grid" ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "text-muted"}`}>
             <Grid size={14} />
           </button>
-          <button onClick={() => setViewMode("list")} className={`p-1.5 rounded ${viewMode === "list" ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>
+          <button onClick={() => setViewMode("list")} className={`p-1.5 rounded ${viewMode === "list" ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "text-muted"}`}>
             <List size={14} />
           </button>
         </div>
@@ -700,7 +700,7 @@ export default function ContentLibraryPage() {
                 onClick={e => { e.stopPropagation(); toggleSelect(asset.id); }}
                 className="absolute top-2 left-2 z-10 opacity-0 group-hover:opacity-100 transition-all"
               >
-                {selectedAssets.has(asset.id) ? <CheckSquare size={14} className="text-[#2563EB]" /> : <Square size={14} className="text-muted" />}
+                {selectedAssets.has(asset.id) ? <CheckSquare size={14} className="text-brand-accent" /> : <Square size={14} className="text-muted" />}
               </button>
 
               {/* Star */}
@@ -708,7 +708,7 @@ export default function ContentLibraryPage() {
                 onClick={e => { e.stopPropagation(); toggleStar(asset.id); }}
                 className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-all"
               >
-                <Star size={14} className={asset.starred ? "fill-[#2563EB] text-[#2563EB]" : "text-muted"} />
+                <Star size={14} className={asset.starred ? "fill-[#2563EB] text-brand-accent" : "text-muted"} />
               </button>
 
               {/* Thumbnail */}
@@ -752,7 +752,7 @@ export default function ContentLibraryPage() {
               <tr className="border-b border-black/10">
                 <th className="text-left p-2 w-8">
                   <button onClick={selectAll}>
-                    {selectedAssets.size === filteredAssets.length ? <CheckSquare size={14} className="text-[#2563EB]" /> : <Square size={14} className="text-muted" />}
+                    {selectedAssets.size === filteredAssets.length ? <CheckSquare size={14} className="text-brand-accent" /> : <Square size={14} className="text-muted" />}
                   </button>
                 </th>
                 <th className="text-left p-2 text-[10px] text-muted uppercase tracking-wider">Name</th>
@@ -775,7 +775,7 @@ export default function ContentLibraryPage() {
                 >
                   <td className="p-2">
                     <button onClick={() => toggleSelect(asset.id)}>
-                      {selectedAssets.has(asset.id) ? <CheckSquare size={14} className="text-[#2563EB]" /> : <Square size={14} className="text-muted" />}
+                      {selectedAssets.has(asset.id) ? <CheckSquare size={14} className="text-brand-accent" /> : <Square size={14} className="text-muted" />}
                     </button>
                   </td>
                   <td className="p-2">
@@ -900,7 +900,7 @@ export default function ContentLibraryPage() {
                 {editText === null ? (
                   <button
                     onClick={() => setEditText(previewAsset.name)}
-                    className="btn-ghost text-xs flex items-center gap-1 text-[#2563EB]"
+                    className="btn-ghost text-xs flex items-center gap-1 text-brand-accent"
                   >
                     <Edit3 size={12} /> Edit content
                   </button>

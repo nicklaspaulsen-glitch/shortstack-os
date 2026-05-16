@@ -182,7 +182,7 @@ export default function TrinityPage() {
               {TABS.map(t => (
                 <button key={t} onClick={() => setTab(t)}
                   className={`px-3 py-1.5 rounded-lg text-[10px] font-medium whitespace-nowrap transition-all ${
-                    tab === t ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "text-muted border border-transparent hover:text-foreground"
+                    tab === t ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.2)]" : "text-muted border border-transparent hover:text-foreground"
                   }`}>{t}</button>
               ))}
             </div>{/* ═══ CHAT TAB ═══ */}{tab === "Chat" && (
@@ -191,7 +191,7 @@ export default function TrinityPage() {
                   {messages.map((msg, i) => (
                     <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                       <div className={`max-w-[70%]  px-4 py-3 ${
-                        msg.role === "user" ? "bg-[#2563EB] text-white rounded-br-sm" : "bg-surface-light text-foreground rounded-bl-sm"
+                        msg.role === "user" ? "bg-brand-accent text-white rounded-br-sm" : "bg-surface-light text-foreground rounded-bl-sm"
                       }`}>
                         <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                         <p className={`text-[10px] mt-1 ${msg.role === "user" ? "text-muted" : "text-muted"}`}>
@@ -203,9 +203,9 @@ export default function TrinityPage() {
                   {sending && (
                     <div className="flex justify-start">
                       <div className="bg-surface-light  rounded-bl-sm px-4 py-3 flex gap-1">
-                        <div className="w-2 h-2 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                        <div className="w-2 h-2 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                        <div className="w-2 h-2 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                        <div className="w-2 h-2 bg-brand-accent rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                        <div className="w-2 h-2 bg-brand-accent rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                        <div className="w-2 h-2 bg-brand-accent rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                       </div>
                     </div>
                   )}
@@ -238,7 +238,7 @@ export default function TrinityPage() {
                     <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div>
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Agents</p>
-                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-[#2563EB] tabular-nums">{agents.length}</p>
+                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-brand-accent tabular-nums">{agents.length}</p>
                       <p className="text-[11px] text-text-muted mt-1.5">in workspace</p>
                     </div>
                   </motion.div>
@@ -289,7 +289,7 @@ export default function TrinityPage() {
               </div>
             )}{/* ═══ AGENTS TAB ═══ */}{tab === "Agents" && (
               <div className="glass rounded-xl p-4">
-                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-[#2563EB]" /> Agent Status Grid</h2>
+                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-brand-accent" /> Agent Status Grid</h2>
                 {agents.length === 0 ? (
                   <p className="text-xs text-muted text-center py-8">No agents have run yet. Trigger a command in the Chat tab to populate agent activity.</p>
                 ) : (
@@ -305,7 +305,7 @@ export default function TrinityPage() {
                         <p className="text-[9px] text-muted mb-1 truncate">{a.lastAction}</p>
                         <div className="flex justify-between text-[9px]">
                           <span className="text-muted">{a.actionsToday} today</span>
-                          <span className={a.successRate >= 90 ? "text-emerald-400" : "text-[#2563EB]"}>{a.successRate}%</span>
+                          <span className={a.successRate >= 90 ? "text-emerald-400" : "text-brand-accent"}>{a.successRate}%</span>
                         </div>
                       </div>
                     ))}
@@ -314,7 +314,7 @@ export default function TrinityPage() {
               </div>
             )}{/* ═══ OUTPUTS TAB ═══ */}{tab === "Outputs" && (
               <div className="glass rounded-xl p-4">
-                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Eye size={14} className="text-[#2563EB]" /> Combined Output Viewer</h2>
+                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Eye size={14} className="text-brand-accent" /> Combined Output Viewer</h2>
                 <div className="space-y-2">
                   {history.length === 0 ? (
                     <p className="text-xs text-muted text-center py-8">No Trinity outputs yet. Run a command in the Chat tab to see results here.</p>
@@ -322,7 +322,7 @@ export default function TrinityPage() {
                     history.slice(0, 20).map(h => (
                       <div key={h.id} className="p-3 rounded-xl bg-surface-light border border-border">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[10px] font-semibold text-[#2563EB]">{h.agent}</span>
+                          <span className="text-[10px] font-semibold text-brand-accent">{h.agent}</span>
                           <span className="text-[9px] bg-surface px-1.5 py-0.5 rounded text-muted">{h.action_type}</span>
                           <span className="text-[9px] text-muted ml-auto">{h.created_at ? new Date(h.created_at).toLocaleString() : ""}</span>
                         </div>
@@ -334,7 +334,7 @@ export default function TrinityPage() {
               </div>
             )}{/* ═══ QUEUE TAB ═══ */}{tab === "Queue" && (
               <div className="glass rounded-xl p-4">
-                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Layers size={14} className="text-[#2563EB]" /> Unified Task Queue</h2>
+                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Layers size={14} className="text-brand-accent" /> Unified Task Queue</h2>
                 <div className="space-y-2">
                   {queue.length === 0 ? (
                     <p className="text-xs text-muted text-center py-8">Queue is empty. No Trinity actions are currently queued or running.</p>
@@ -342,10 +342,10 @@ export default function TrinityPage() {
                     queue.map(q => (
                       <div key={q.id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
                         <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-bold uppercase ${
-                          q.priority === "high" ? "bg-red-500/10 text-red-400" : q.priority === "medium" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                          q.priority === "high" ? "bg-red-500/10 text-red-400" : q.priority === "medium" ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"
                         }`}>{q.priority}</span>
                         <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium ${
-                          q.status === "running" ? "bg-emerald-500/10 text-emerald-400" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                          q.status === "running" ? "bg-emerald-500/10 text-emerald-400" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"
                         }`}>{q.status}</span>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium">{q.description}</p>
@@ -379,7 +379,7 @@ export default function TrinityPage() {
                       transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Events</p>
-                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{history.length}</p>
+                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{history.length}</p>
                       <p className="text-[11px] text-text-muted mt-1.5">this month</p>
                     </motion.div>
                     <motion.div
@@ -413,9 +413,9 @@ export default function TrinityPage() {
                             <div key={a.name} className="flex items-center gap-3">
                               <span className="text-[10px] w-28 shrink-0 truncate">{a.name}</span>
                               <div className="flex-1 h-2 rounded-full bg-surface-light">
-                                <div className="h-2 rounded-full bg-[#2563EB]" style={{ width: `${pct}%` }} />
+                                <div className="h-2 rounded-full bg-brand-accent" style={{ width: `${pct}%` }} />
                               </div>
-                              <span className="text-[10px] font-mono text-[#2563EB] w-16 text-right">${a.amount.toFixed(2)}</span>
+                              <span className="text-[10px] font-mono text-brand-accent w-16 text-right">${a.amount.toFixed(2)}</span>
                             </div>
                           );
                         })
@@ -426,7 +426,7 @@ export default function TrinityPage() {
               );
             })()}{/* ═══ QUALITY TAB ═══ */}{tab === "Quality" && (
               <div className="glass rounded-xl p-4">
-                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Star size={14} className="text-[#2563EB]" /> Quality Comparison</h2>
+                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Star size={14} className="text-brand-accent" /> Quality Comparison</h2>
                 {agents.length === 0 ? (
                   <p className="text-xs text-muted text-center py-8">No agent quality data yet.</p>
                 ) : (
@@ -435,10 +435,10 @@ export default function TrinityPage() {
                       <div key={a.name} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
                         <span className="text-[10px] w-28 shrink-0 font-medium truncate">{a.name}</span>
                         <div className="flex-1 h-2 rounded-full bg-surface">
-                          <div className={`h-2 rounded-full ${a.successRate >= 95 ? "bg-emerald-400" : a.successRate >= 80 ? "bg-[#2563EB]" : "bg-red-400"}`}
+                          <div className={`h-2 rounded-full ${a.successRate >= 95 ? "bg-emerald-400" : a.successRate >= 80 ? "bg-brand-accent" : "bg-red-400"}`}
                             style={{ width: `${a.successRate}%` }} />
                         </div>
-                        <span className={`text-[10px] font-mono w-10 text-right ${a.successRate >= 90 ? "text-emerald-400" : "text-[#2563EB]"}`}>{a.successRate}%</span>
+                        <span className={`text-[10px] font-mono w-10 text-right ${a.successRate >= 90 ? "text-emerald-400" : "text-brand-accent"}`}>{a.successRate}%</span>
                       </div>
                     ))}
                   </div>
@@ -446,13 +446,13 @@ export default function TrinityPage() {
               </div>
             )}{/* ═══ FALLBACK TAB ═══ */}{tab === "Fallback" && (
               <div className="glass rounded-xl p-4">
-                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-[#2563EB]" /> Fallback Chain Editor</h2>
+                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-brand-accent" /> Fallback Chain Editor</h2>
                 <div className="space-y-2">
                   {FALLBACK_CHAIN.map((f, i) => (
                     <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
                       <div className="bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded text-[10px] font-medium">{f.primary}</div>
                       <ArrowRight size={12} className="text-muted" />
-                      <div className="bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-2 py-1 rounded text-[10px] font-medium">{f.fallback}</div>
+                      <div className="bg-[rgba(37,99,235,0.08)] text-brand-accent px-2 py-1 rounded text-[10px] font-medium">{f.fallback}</div>
                       <span className="text-[9px] text-muted ml-auto">{f.trigger}</span>
                     </motion.div>
                   ))}
@@ -461,7 +461,7 @@ export default function TrinityPage() {
               </div>
             )}{/* ═══ HISTORY TAB ═══ */}{tab === "History" && (
               <div className="glass rounded-xl p-4">
-                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><History size={14} className="text-[#2563EB]" /> Action History</h2>
+                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><History size={14} className="text-brand-accent" /> Action History</h2>
                 <div className="space-y-1.5">
                   {history.length === 0 ? (
                     <p className="text-xs text-muted text-center py-8">No actions recorded yet.</p>
@@ -487,7 +487,7 @@ export default function TrinityPage() {
             )}{/* ═══ ANALYTICS TAB ═══ */}{tab === "Analytics" && (
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
-                  <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><BarChart3 size={14} className="text-[#2563EB]" /> Trinity Analytics</h2>
+                  <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><BarChart3 size={14} className="text-brand-accent" /> Trinity Analytics</h2>
                   <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
                     <motion.div
                       className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
@@ -497,7 +497,7 @@ export default function TrinityPage() {
                       <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                       <div>
                         <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Tasks This Month</p>
-                        <p className="font-display text-3xl font-bold tracking-[-0.03em] text-[#2563EB] tabular-nums">{history.length}</p>
+                        <p className="font-display text-3xl font-bold tracking-[-0.03em] text-brand-accent tabular-nums">{history.length}</p>
                         <p className="text-[11px] text-text-muted mt-1.5">completed</p>
                       </div>
                     </motion.div>
@@ -516,7 +516,7 @@ export default function TrinityPage() {
                       transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">In Queue</p>
-                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{queue.length}</p>
+                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{queue.length}</p>
                       <p className="text-[11px] text-text-muted mt-1.5">pending</p>
                     </motion.div>
                     <motion.div

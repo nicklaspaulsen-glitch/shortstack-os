@@ -284,9 +284,9 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
             style={{ background: "rgba(0,0,0,0.05)" }}
           >
             {isZernio ? (
-              <ExternalLink size={18} className="text-[#2563EB]" />
+              <ExternalLink size={18} className="text-brand-accent" />
             ) : (
-              <Key size={18} className="text-[#2563EB]" />
+              <Key size={18} className="text-brand-accent" />
             )}
           </div>
           <div>
@@ -332,7 +332,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
               {(integration.requiredEnv ?? []).map((envVar) => (
                 <code
                   key={envVar}
-                  className="block w-full bg-[#FAFAFB] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-[#1D4ED8] text-[11px] font-mono"
+                  className="block w-full bg-[#FAFAFB] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-brand-accent text-[11px] font-mono"
                 >
                   {envVar}
                 </code>
@@ -699,7 +699,7 @@ export default function IntegrationsHubPage() {
                     className={[
                       "px-3 py-1.5 text-[11px] font-semibold rounded-full border transition-all",
                       active
-                        ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                        ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent"
                         : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] hover:border-[rgba(37,99,235,0.14)]",
                     ].join(" ")}
                   >

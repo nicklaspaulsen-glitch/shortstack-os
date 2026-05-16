@@ -103,7 +103,7 @@ export default function NotionSyncPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" /></MotionPage>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-brand-accent" /></MotionPage>
     );
   }
 
@@ -151,7 +151,7 @@ export default function NotionSyncPage() {
             {/* Sync now */}
             <motion.div className="glass rounded-xl p-5 flex flex-col gap-3" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
               <div className="flex items-center gap-2">
-                <RefreshCw className="w-4 h-4 text-[#2563EB]" />
+                <RefreshCw className="w-4 h-4 text-brand-accent" />
                 <p className="text-sm font-semibold text-[#374151]">Sync Now</p>
               </div>
               <p className="text-xs text-[#6B7280]">
@@ -160,7 +160,7 @@ export default function NotionSyncPage() {
               <button
                 onClick={handleSyncNow}
                 disabled={syncing}
-                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-brand-accent hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
               >
                 {syncing ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -174,7 +174,7 @@ export default function NotionSyncPage() {
             {/* Auto-sync toggle */}
             <motion.div className="glass rounded-xl p-5 flex flex-col gap-3" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#2563EB]" />
+                <Clock className="w-4 h-4 text-brand-accent" />
                 <p className="text-sm font-semibold text-[#374151]">Auto-Sync</p>
               </div>
               <p className="text-xs text-[#6B7280]">
@@ -183,7 +183,7 @@ export default function NotionSyncPage() {
               <div className="flex items-center gap-3 mt-1">
                 <button onClick={handleToggleAutoSync} className="shrink-0">
                   {autoSync ? (
-                    <ToggleRight className="w-9 h-9 text-[#2563EB]" />
+                    <ToggleRight className="w-9 h-9 text-brand-accent" />
                   ) : (
                     <ToggleLeft className="w-9 h-9 text-text-muted" />
                   )}
@@ -253,7 +253,7 @@ export default function NotionSyncPage() {
               <motion.div key={f.label} className="glass-md rounded-xl overflow-hidden" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: fi * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
                 <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
                 <div className="p-4 flex flex-col gap-2">
-                  <div className="text-[#2563EB]">{f.icon}</div>
+                  <div className="text-brand-accent">{f.icon}</div>
                   <p className="text-sm font-semibold text-[#374151]">{f.label}</p>
                   <p className="text-xs text-[#6B7280]">{f.desc}</p>
                 </div>
@@ -283,7 +283,7 @@ export default function NotionSyncPage() {
             </p>
           </div>
 
-          <div className="flex items-start gap-2 text-xs text-[#2563EB] bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] rounded-lg px-4 py-3 max-w-md">
+          <div className="flex items-start gap-2 text-xs text-brand-accent bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] rounded-lg px-4 py-3 max-w-md">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             Notion OAuth is coming soon � join the waitlist to be notified when it goes live.
           </div>

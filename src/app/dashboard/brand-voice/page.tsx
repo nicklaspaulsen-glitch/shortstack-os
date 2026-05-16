@@ -308,7 +308,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                 className="rounded-xl p-4" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <Users size={16} className="text-[#2563EB]" />
+                  <Users size={16} className="text-brand-accent" />
                   <span className="text-sm font-semibold">Create New Voice Profile</span>
                 </div>
                 <div className="flex gap-2">
@@ -390,7 +390,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           key={t.key}
                           onClick={() => setTab(t.key)}
                           className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-all ${
-                            tab === t.key ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted hover:text-text-primary"
+                            tab === t.key ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "text-muted hover:text-text-primary"
                           }`}
                         >
                           {t.icon} {t.label}
@@ -405,7 +405,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         <div className="card">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
-                              <Palette size={16} className="text-[#2563EB]" />
+                              <Palette size={16} className="text-brand-accent" />
                               <span className="text-sm font-semibold">Voice Preset</span>
                             </div>
                             <div className="relative">
@@ -424,7 +424,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                       key={p.key}
                                       onClick={() => applyPreset(p.key)}
                                       className={`w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-[rgba(0,0,0,0.04)] transition-colors ${
-                                        profile.preset === p.key ? "text-[#2563EB]" : "text-text-primary"
+                                        profile.preset === p.key ? "text-brand-accent" : "text-text-primary"
                                       }`}
                                     >
                                       {p.icon} {p.label}
@@ -442,7 +442,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 onClick={() => applyPreset(p.key)}
                                 className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${
                                   profile.preset === p.key
-                                    ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
+                                    ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]"
                                     : "bg-[rgba(0,0,0,0.04)] text-muted hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
                                 }`}
                               >
@@ -455,7 +455,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         {/* Tone Sliders */}
                         <div className="card">
                           <div className="flex items-center gap-2 mb-4">
-                            <Sliders size={16} className="text-[#2563EB]" />
+                            <Sliders size={16} className="text-brand-accent" />
                             <span className="text-sm font-semibold">Tone Sliders</span>
                           </div>
                           <div className="space-y-4">
@@ -483,7 +483,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         <div className="card">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
-                              <Wand2 size={16} className="text-[#2563EB]" />
+                              <Wand2 size={16} className="text-brand-accent" />
                               <span className="text-sm font-semibold">AI-Generated Guidelines</span>
                             </div>
                             <button
@@ -518,7 +518,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         {/* Writing Samples */}
                         <div className="card">
                           <div className="flex items-center gap-2 mb-3">
-                            <BookOpen size={16} className="text-[#2563EB]" />
+                            <BookOpen size={16} className="text-brand-accent" />
                             <span className="text-sm font-semibold">Writing Style Samples</span>
                           </div>
                           <p className="text-[10px] text-muted mb-3">Paste example content that represents this brand&apos;s voice</p>
@@ -544,7 +544,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                               <button
                                 onClick={() => enhanceText(newSample, `Polish this writing sample for the "${profile?.clientName}" brand voice profile. Keep the core message but improve clarity, tone, and impact.`, setNewSample, "sample")}
                                 disabled={!newSample.trim() || enhancing === "sample"}
-                                className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-[#2563EB] transition-colors disabled:opacity-40"
+                                className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40"
                               >
                                 {enhancing === "sample" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
                                 AI Enhance
@@ -710,7 +710,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                       <div className="space-y-4">
                         <div className="card">
                           <div className="flex items-center gap-2 mb-3">
-                            <CheckCircle size={16} className="text-[#2563EB]" />
+                            <CheckCircle size={16} className="text-brand-accent" />
                             <span className="text-sm font-semibold">Voice Consistency Checker</span>
                           </div>
                           <p className="text-[10px] text-muted mb-3">
@@ -725,7 +725,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           <button
                             onClick={() => enhanceText(checkerText, `Rewrite this text to match the "${profile?.clientName}" brand voice. Tone: ${profile?.toneSliders.formalCasual && profile.toneSliders.formalCasual > 50 ? "casual" : "formal"}. ${profile?.dos.length ? `Do: ${profile.dos.join(", ")}` : ""} ${profile?.donts.length ? `Don't: ${profile.donts.join(", ")}` : ""}`, setCheckerText, "checker")}
                             disabled={!checkerText.trim() || enhancing === "checker"}
-                            className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-[#2563EB] transition-colors disabled:opacity-40 mb-3"
+                            className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mb-3"
                           >
                             {enhancing === "checker" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
                             AI Rewrite to Match Voice

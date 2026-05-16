@@ -231,7 +231,7 @@ export default function CoachPage() {
                   onClick={() => setTab(t.id)}
                   className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                     tab === t.id
-                      ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]"
+                      ? "bg-[rgba(37,99,235,0.10)] text-brand-accent border border-[rgba(37,99,235,0.25)]"
                       : "text-black/60 hover:bg-black/5 hover:text-text-primary"
                   }`}
                 >
@@ -301,7 +301,7 @@ export default function CoachPage() {
                             Talk {talkRatio}%
                           </div>
                           <ScoreBadge score={row.overall_score} />
-                          <ArrowRight className="h-4 w-4 text-black/35 transition-colors group-hover:text-[#2563EB]" />
+                          <ArrowRight className="h-4 w-4 text-black/35 transition-colors group-hover:text-brand-accent" />
                         </Link>
                       </motion.div>
                     );
@@ -379,7 +379,7 @@ export default function CoachPage() {
                       onClick={() => setPeriod(p.id)}
                       className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                         period === p.id
-                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent"
                           : "border-black/10 text-black/60 hover:border-black/15 hover:text-text-primary"
                       }`}
                     >

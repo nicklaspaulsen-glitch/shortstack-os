@@ -267,7 +267,7 @@ export default function WebhooksPage() {
               {TABS.map(t => (
                 <button key={t} onClick={() => setTab(t)}
                   className={`px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all ${
-                    tab === t ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "text-muted border border-transparent hover:text-foreground"
+                    tab === t ? "bg-[rgba(37,99,235,0.10)] text-brand-accent border border-[rgba(37,99,235,0.25)]" : "text-muted border border-transparent hover:text-foreground"
                   }`}>{t}</button>
               ))}
             </motion.div>{/* ═══ ENDPOINTS TAB ═══ */}{tab === "Endpoints" && (
@@ -291,7 +291,7 @@ export default function WebhooksPage() {
                           <div className="flex gap-1">
                             {categories.map(c => (
                               <button key={c} onClick={() => setFilterCategory(c)}
-                                className={`text-[8px] px-2 py-0.5 rounded capitalize ${filterCategory === c ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted"}`}>{c}</button>
+                                className={`text-[8px] px-2 py-0.5 rounded capitalize ${filterCategory === c ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "text-muted"}`}>{c}</button>
                             ))}
                           </div>
                         </div>
@@ -299,7 +299,7 @@ export default function WebhooksPage() {
                           {filteredEvents.map(event => (
                             <button key={event.id} onClick={() => toggleEvent(event.id)}
                               className={`flex items-center gap-2 p-2 rounded-lg text-[10px] transition-all text-left border ${
-                                form.events.includes(event.id) ? "border-[rgba(37,99,235,0.1)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
+                                form.events.includes(event.id) ? "border-[rgba(37,99,235,0.1)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted"
                               }`}>
                               {event.icon}
                               <span>{event.label}</span>
@@ -360,7 +360,7 @@ export default function WebhooksPage() {
                         </div>
                         <div className="flex flex-wrap gap-1 mb-2">
                           {wh.events.map(e => (
-                            <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{e}</span>
+                            <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent">{e}</span>
                           ))}
                         </div>
                         <div className="flex items-center gap-4 text-[9px] text-muted">
@@ -374,8 +374,8 @@ export default function WebhooksPage() {
                           <div className="mt-2 p-2 rounded-lg bg-black/5 border border-border">
                             <div className="flex items-center gap-2">
                               <span className="text-[9px] text-muted">Signing Secret:</span>
-                              <code className="text-[10px] font-mono text-[#2563EB]">{wh.secret}</code>
-                              <button onClick={() => navigator.clipboard.writeText(wh.secret)} className="text-muted hover:text-[#2563EB]"><Copy size={10} /></button>
+                              <code className="text-[10px] font-mono text-brand-accent">{wh.secret}</code>
+                              <button onClick={() => navigator.clipboard.writeText(wh.secret)} className="text-muted hover:text-brand-accent"><Copy size={10} /></button>
                             </div>
                           </div>
                         )}
@@ -404,7 +404,7 @@ export default function WebhooksPage() {
                 className="glass rounded-xl overflow-hidden p-4"
               >
                 <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-                  <FileText size={14} className="text-[#2563EB]" /> Delivery Log
+                  <FileText size={14} className="text-brand-accent" /> Delivery Log
                 </h2>
                 <div className="space-y-1.5">
                   {deliveries.map(d => (
@@ -412,12 +412,12 @@ export default function WebhooksPage() {
                       <button onClick={() => setExpandedDelivery(expandedDelivery === d.id ? null : d.id)}
                         className="w-full flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border hover:border-indigo-500/20 transition-all text-left">
                         <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
-                          d.statusCode < 300 ? "bg-emerald-500/10 text-emerald-400" : d.statusCode < 500 ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "bg-red-500/10 text-red-400"
+                          d.statusCode < 300 ? "bg-emerald-500/10 text-emerald-400" : d.statusCode < 500 ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "bg-red-500/10 text-red-400"
                         }`}>{d.statusCode}</span>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-medium">{d.webhookName}</span>
-                            <span className="text-[9px] text-[#2563EB]">{d.event}</span>
+                            <span className="text-[9px] text-brand-accent">{d.event}</span>
                           </div>
                         </div>
                         <span className="text-[9px] text-muted font-mono">{d.responseTime}ms</span>
@@ -447,7 +447,7 @@ export default function WebhooksPage() {
                 className="glass rounded-xl p-4"
               >
                 <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-                  <Send size={14} className="text-[#2563EB]" /> Test Webhook
+                  <Send size={14} className="text-brand-accent" /> Test Webhook
                 </h2>
                 <p className="text-[10px] text-muted mb-3">Send a test payload to any configured webhook endpoint.</p>
                 <div className="space-y-3">
@@ -502,7 +502,7 @@ export default function WebhooksPage() {
                 className="space-y-3"
               >
                 <h2 className="text-sm font-bold flex items-center gap-2">
-                  <FileText size={14} className="text-[#2563EB]" /> Webhook Templates
+                  <FileText size={14} className="text-brand-accent" /> Webhook Templates
                 </h2>
                 <p className="text-[10px] text-muted">Quick-start with pre-configured webhook templates.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -521,10 +521,10 @@ export default function WebhooksPage() {
                       </p>
                       <p className="text-[9px] text-muted font-mono mb-2">{t.url}</p>
                       <div className="flex flex-wrap gap-1 mb-2">
-                        {t.events.map(e => <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{e}</span>)}
+                        {t.events.map(e => <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent">{e}</span>)}
                       </div>
                       <button onClick={() => { setForm({ name: t.name, url: "", events: t.events }); setShowCreate(true); setTab("Endpoints"); }}
-                        className="text-[10px] text-[#2563EB] flex items-center gap-1 hover:underline">
+                        className="text-[10px] text-brand-accent flex items-center gap-1 hover:underline">
                         <ArrowRight size={10} /> Use Template
                       </button>
                     </motion.div>
@@ -540,7 +540,7 @@ export default function WebhooksPage() {
               >
                 <div className="glass rounded-xl p-4">
                   <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-                    <Shield size={14} className="text-[#2563EB]" /> Global Webhook Settings
+                    <Shield size={14} className="text-brand-accent" /> Global Webhook Settings
                   </h2>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -563,26 +563,26 @@ export default function WebhooksPage() {
                 </div>
                 <div className="glass rounded-xl p-4">
                   <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-                    <Filter size={14} className="text-[#2563EB]" /> Filter Rules
+                    <Filter size={14} className="text-brand-accent" /> Filter Rules
                   </h2>
                   <p className="text-[10px] text-muted mb-3">Add conditions to filter which payloads get delivered.</p>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]">
-                      <span className="text-[#2563EB] font-mono">IF</span>
+                      <span className="text-brand-accent font-mono">IF</span>
                       <span>lead.source</span>
                       <span className="text-muted">=</span>
                       <span className="text-emerald-400">&quot;google_maps&quot;</span>
                       <span className="text-muted ml-auto">Active</span>
                     </div>
                     <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]">
-                      <span className="text-[#2563EB] font-mono">IF</span>
+                      <span className="text-brand-accent font-mono">IF</span>
                       <span>deal.value</span>
                       <span className="text-muted">&gt;</span>
                       <span className="text-emerald-400">1000</span>
                       <span className="text-muted ml-auto">Active</span>
                     </div>
                   </div>
-                  <button className="mt-2 text-[10px] text-[#2563EB] flex items-center gap-1 hover:underline"><Plus size={10} /> Add Filter Rule</button>
+                  <button className="mt-2 text-[10px] text-brand-accent flex items-center gap-1 hover:underline"><Plus size={10} /> Add Filter Rule</button>
                 </div>
                 <div className="flex justify-end">
                   <button className="btn-primary text-xs flex items-center gap-1.5"><CheckCircle size={12} /> Save Settings</button>

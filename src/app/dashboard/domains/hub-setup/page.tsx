@@ -148,7 +148,7 @@ function HubSetupInner() {
       {!prefillDomain && (
         <div className="card">
           <h2 className="section-header flex items-center gap-2">
-            <Globe size={13} className="text-[#2563EB]" /> Which domain?
+            <Globe size={13} className="text-brand-accent" /> Which domain?
           </h2>
           <input
             value={domain}
@@ -163,7 +163,7 @@ function HubSetupInner() {
       )}
       {prefillDomain && (
         <div className="card flex items-center gap-3 bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.2)]">
-          <ShieldCheck size={18} className="text-[#2563EB]" />
+          <ShieldCheck size={18} className="text-brand-accent" />
           <div>
             <p className="text-xs font-semibold">{prefillDomain}</p>
             <p className="text-[10px] text-muted">Purchase confirmed — now picking services.</p>
@@ -175,7 +175,7 @@ function HubSetupInner() {
       <div className="card">
         <div className="flex items-center justify-between mb-3">
           <h2 className="section-header flex items-center gap-2 mb-0">
-            <Sparkles size={13} className="text-[#2563EB]" /> What should we set up?
+            <Sparkles size={13} className="text-brand-accent" /> What should we set up?
           </h2>
           <span className="text-[10px] text-muted">
             {enabledCount} / 5 selected
@@ -195,14 +195,14 @@ function HubSetupInner() {
             >
               <div
                 className={`w-5 h-5 shrink-0 rounded-md flex items-center justify-center mt-0.5 border ${
-                  enabled[t.key] ? "bg-[#2563EB] border-[#2563EB] text-white" : "border-border"
+                  enabled[t.key] ? "bg-brand-accent border-brand-accent text-white" : "border-border"
                 }`}
               >
                 {enabled[t.key] && <span className="text-[10px] leading-none font-black">✓</span>}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className={`${enabled[t.key] ? "text-[#2563EB]" : "text-muted"}`}>
+                  <span className={`${enabled[t.key] ? "text-brand-accent" : "text-muted"}`}>
                     {t.icon}
                   </span>
                   <span className="text-xs font-semibold">{t.label}</span>

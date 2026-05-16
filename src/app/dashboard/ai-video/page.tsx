@@ -237,7 +237,7 @@ export default function AIVideoPage() {
               onClick={() => setAspectRatio(ar.id)}
               className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
                 aspectRatio === ar.id
-                  ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.08)]"
+                  ? "border-brand-accent bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.08)]"
                   : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
               }`}
             >
@@ -280,13 +280,13 @@ export default function AIVideoPage() {
                                       locked
                                         ? "border-[rgba(37,99,235,0.25)] bg-surface-light/40 opacity-60 cursor-not-allowed"
                                         : numFrames === opt.f
-                                          ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]"
+                                          ? "border-brand-accent bg-[rgba(37,99,235,0.08)]"
                                           : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                                     }`}
                                   >
                                     {locked && (
                                       <span className="absolute top-1 right-1">
-                                        <Lock size={10} className="text-[#2563EB]" />
+                                        <Lock size={10} className="text-brand-accent" />
                                       </span>
                                     )}
                                     <p className="text-sm font-bold">{opt.label}</p>
@@ -299,7 +299,7 @@ export default function AIVideoPage() {
           {nextTierLabel && (
             <Link
               href="/dashboard/upgrade"
-              className="flex items-center justify-center gap-1.5 text-[10px] text-[#2563EB] hover:text-[#3B82F6] py-1.5 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] transition-all"
+              className="flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-[#3B82F6] py-1.5 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] transition-all"
             >
               <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
             </Link>
@@ -315,7 +315,7 @@ export default function AIVideoPage() {
       component: (
         <div className="space-y-3">
           <div className="card bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.2)]">
-            <p className="text-[10px] uppercase tracking-wider text-[#2563EB] font-semibold mb-2">Your prompt</p>
+            <p className="text-[10px] uppercase tracking-wider text-brand-accent font-semibold mb-2">Your prompt</p>
             <p className="text-sm text-foreground leading-relaxed">{prompt || <span className="text-muted italic">(no prompt set)</span>}</p>
             <div className="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-border/50">
               <div>
@@ -329,7 +329,7 @@ export default function AIVideoPage() {
             </div>
           </div>
           <p className="text-[11px] text-muted text-center">
-            Want finer control? Flip to <span className="text-[#2563EB] font-semibold">Advanced mode</span> at the top.
+            Want finer control? Flip to <span className="text-brand-accent font-semibold">Advanced mode</span> at the top.
           </p>
         </div>
       ),
@@ -514,7 +514,7 @@ export default function AIVideoPage() {
           <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
           <div>
             <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Videos Generated</p>
-            <p className="font-display text-3xl font-bold tracking-[-0.03em] text-[#2563EB] tabular-nums">{results.length}</p>
+            <p className="font-display text-3xl font-bold tracking-[-0.03em] text-brand-accent tabular-nums">{results.length}</p>
             <p className="text-[11px] text-text-muted mt-1.5">this session</p>
           </div>
         </motion.div>
@@ -774,7 +774,7 @@ export default function AIVideoPage() {
                 {nextTierLabel && (
                   <Link
                     href="/dashboard/upgrade"
-                    className="col-span-full flex items-center justify-center gap-1.5 text-[10px] text-[#2563EB] hover:text-[#3B82F6] py-1.5 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] transition-all"
+                    className="col-span-full flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-[#3B82F6] py-1.5 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] transition-all"
                   >
                     <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
                   </Link>
@@ -907,7 +907,7 @@ export default function AIVideoPage() {
                     </div>
                     {result.plan && (
                       <details className="absolute inset-x-0 bottom-0 p-3 bg-black/95 text-[#374151] text-[10px] max-h-[70%] overflow-y-auto">
-                        <summary className="cursor-pointer text-[#2563EB] font-semibold mb-1">Scene plan</summary>
+                        <summary className="cursor-pointer text-brand-accent font-semibold mb-1">Scene plan</summary>
                         <pre className="whitespace-pre-wrap font-sans leading-snug mt-1.5">{result.plan}</pre>
                       </details>
                     )}
@@ -923,7 +923,7 @@ export default function AIVideoPage() {
       {!advancedMode && results.length > 0 && (
         <div className="space-y-3">
           <h2 className="section-header flex items-center gap-2">
-            <Film size={14} className="text-[#2563EB]" /> Your generated videos
+            <Film size={14} className="text-brand-accent" /> Your generated videos
           </h2>
           {results.slice(0, 3).map(result => (
             <div key={result.id} className="card">
@@ -933,7 +933,7 @@ export default function AIVideoPage() {
                   <div className="flex items-center gap-2">
                     <span className="text-[8px] bg-surface-light text-muted px-1.5 py-0.5 rounded">{result.aspect_ratio}</span>
                     {result.status === "generating" && (
-                      <span className="text-[8px] text-[#2563EB] flex items-center gap-1">
+                      <span className="text-[8px] text-brand-accent flex items-center gap-1">
                         <ProgressRing progress={progress} size={10} /> {Math.round(progress)}%
                       </span>
                     )}

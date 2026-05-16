@@ -340,7 +340,7 @@ export default function ContentPlanPage() {
             onClick={() => setWizardClientId("")}
             className={`w-full text-left p-3.5 rounded-xl border transition-all ${
               wizardClientId === ""
-                ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                ? "border-brand-accent bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
                 : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
             }`}
           >
@@ -362,7 +362,7 @@ export default function ContentPlanPage() {
                                     onClick={() => setWizardClientId(c.id)}
                                     className={`w-full text-left p-3.5 rounded-xl border transition-all ${
                                       selected
-                                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                                        ? "border-brand-accent bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
                                         : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                                     }`}
                                   >
@@ -399,7 +399,7 @@ export default function ContentPlanPage() {
                     onClick={() => setWizardGoal(g.id)}
                     className={`p-3 rounded-xl border text-center text-sm font-semibold transition-all ${
                       sel
-                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                        ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent shadow-lg shadow-[rgba(37,99,235,0.1)]"
                         : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                     }`}
                   >
@@ -425,7 +425,7 @@ export default function ContentPlanPage() {
                     onClick={() => setWizardDuration(d.id)}
                     className={`p-3 rounded-xl border text-center text-sm font-semibold transition-all ${
                       sel
-                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB] shadow-lg shadow-[rgba(37,99,235,0.1)]"
+                        ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent shadow-lg shadow-[rgba(37,99,235,0.1)]"
                         : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
                     }`}
                   >
@@ -463,7 +463,7 @@ export default function ContentPlanPage() {
                     }
                     className={`p-2 rounded-lg border text-[11px] font-medium capitalize transition-all ${
                       sel
-                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                        ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent"
                         : "border-border text-muted hover:text-foreground"
                     }`}
                   >
@@ -485,7 +485,7 @@ export default function ContentPlanPage() {
       component: (
         <div className="card bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.2)] space-y-2">
           <div className="flex items-center gap-2 text-sm">
-            <Target size={14} className="text-[#2563EB]" />
+            <Target size={14} className="text-brand-accent" />
             <span className="font-semibold capitalize">{wizardGoal}</span>
             <span className="text-muted">ï¿½</span>
             <span>{wizardDuration === 7 ? "1 week" : wizardDuration === 30 ? "1 month" : "1 quarter"}</span>
@@ -571,7 +571,7 @@ export default function ContentPlanPage() {
                 key={s}
                 onClick={() => setStatusFilter(s)}
                 className={`px-3.5 py-2 text-xs rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
-                  statusFilter === s ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
+                  statusFilter === s ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
                 }`}
               >
                 {statusFilter === s && statusIcon(s === "needs_review" ? "ready_to_publish" : s === "posted" ? "published" : s)}
@@ -601,7 +601,7 @@ export default function ContentPlanPage() {
                   onClick={() => setPlatformFilter(p.id)}
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] border transition-all ${
                     platformFilter === p.id
-                      ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.4)] text-[#2563EB]"
+                      ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.4)] text-brand-accent"
                       : "bg-surface-light border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)]"
                   }`}
                 >
@@ -620,7 +620,7 @@ export default function ContentPlanPage() {
                   key={v.id}
                   onClick={() => setViewMode(v.id)}
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[10px] transition-all ${
-                    viewMode === v.id ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
+                    viewMode === v.id ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
                   }`}
                 >
                   {v.icon} {v.label}
@@ -721,12 +721,12 @@ export default function ContentPlanPage() {
           <PrismPanel rainbow padding="px-6 py-4">
             <div className="flex items-center justify-between mb-2.5">
               <h3 className="text-xs font-semibold flex items-center gap-1.5">
-                <Sparkles size={12} className="text-[#2563EB]" /> AI Insights
+                <Sparkles size={12} className="text-brand-accent" /> AI Insights
               </h3>
               <button
                 onClick={loadInsights}
                 disabled={insightsLoading}
-                className="text-[10px] text-muted hover:text-[#2563EB] transition-colors flex items-center gap-1 disabled:opacity-40"
+                className="text-[10px] text-muted hover:text-brand-accent transition-colors flex items-center gap-1 disabled:opacity-40"
               >
                 {insightsLoading ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
                 Refresh
@@ -774,7 +774,7 @@ export default function ContentPlanPage() {
                   </span>
                 </div>
                 <p className="text-[9px] text-muted leading-relaxed mb-1">{t.why_trending}</p>
-                <p className="text-[9px] text-[#2563EB]">{t.content_angle}</p>
+                <p className="text-[9px] text-brand-accent">{t.content_angle}</p>
               </div>
             ))}
           </InsightSection>
@@ -875,7 +875,7 @@ function PostGrid({
           transition={{ delay: i * 0.06, duration: 0.4 }}
           whileHover={{ y: -4, scale: 1.01 }}
           className={`rounded-xl overflow-hidden cursor-pointer group transition-shadow ${
-            selectedIds.has(p.id) ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : ""
+            selectedIds.has(p.id) ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : ""
           }`}
 
           onClick={() => onOpen(p)}
@@ -1021,7 +1021,7 @@ function PostList({
                 <td className="py-2 px-3 text-muted">{formatNum(p.shares)}</td>
                 <td className="py-2 px-3 text-muted max-w-[220px]">
                   {insightMap[p.id] ? (
-                    <span className="text-[10px] text-[#2563EB] line-clamp-2">{insightMap[p.id]}</span>
+                    <span className="text-[10px] text-brand-accent line-clamp-2">{insightMap[p.id]}</span>
                   ) : (
                     <span className="text-[10px] text-muted/50">ï¿½</span>
                   )}
@@ -1074,7 +1074,7 @@ function PostCalendar({
       {/* Calendar header */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-          <Calendar size={14} className="text-[#2563EB]" /> {monthLabel}
+          <Calendar size={14} className="text-brand-accent" /> {monthLabel}
         </h3>
         <div className="flex items-center gap-1">
           <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground">
@@ -1113,11 +1113,11 @@ function PostCalendar({
             >
               {c.date && (
                 <div className="flex items-start justify-between">
-                  <span className={`text-[10px] ${isToday ? "text-[#2563EB] font-semibold" : "text-muted"}`}>
+                  <span className={`text-[10px] ${isToday ? "text-brand-accent font-semibold" : "text-muted"}`}>
                     {c.date.getDate()}
                   </span>
                   {c.posts.length > 0 && (
-                    <span className="text-[8px] bg-[rgba(37,99,235,0.12)] text-[#2563EB] px-1 rounded">{c.posts.length}</span>
+                    <span className="text-[8px] bg-[rgba(37,99,235,0.12)] text-brand-accent px-1 rounded">{c.posts.length}</span>
                   )}
                 </div>
               )}
@@ -1226,7 +1226,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
                   href={post.live_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] text-[#2563EB] hover:underline"
+                  className="text-[10px] text-brand-accent hover:underline"
                 >
                   View live ?
                 </a>
@@ -1289,7 +1289,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
         <div className="card border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)]">
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-[11px] font-semibold flex items-center gap-1.5 text-foreground">
-              <Sparkles size={12} className="text-[#2563EB]" /> AI analysis
+              <Sparkles size={12} className="text-brand-accent" /> AI analysis
             </h4>
             <button
               onClick={analyzeWithAi}

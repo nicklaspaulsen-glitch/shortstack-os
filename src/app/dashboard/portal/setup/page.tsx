@@ -97,13 +97,13 @@ export default function ClientSetupPage() {
           <button key={platform.id} onClick={() => togglePlatform(platform.id)}
             className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${
               connectedPlatforms.includes(platform.id)
-                ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]"
+                ? "border-brand-accent bg-[rgba(37,99,235,0.08)]"
                 : "border-black/[0.06] hover:border-[rgba(37,99,235,0.25)]"
             }`}>
             <span className={platform.color}>{platform.icon}</span>
             <span className="text-sm font-medium">{platform.name}</span>
             {connectedPlatforms.includes(platform.id) && (
-              <Check size={14} className="text-[#2563EB]" />
+              <Check size={14} className="text-brand-accent" />
             )}
           </button>
         ))}
@@ -113,7 +113,7 @@ export default function ClientSetupPage() {
           <X size={14} /> No thanks, maybe later
         </button>
         <button onClick={() => toast("Contact your account manager for help connecting accounts.")}
-          className="text-sm text-[#2563EB] hover:text-[#3B82F6] flex items-center gap-1">
+          className="text-sm text-brand-accent hover:text-[#3B82F6] flex items-center gap-1">
           <HelpCircle size={14} /> Need help setting it up?
         </button>
       </div>
@@ -122,7 +122,7 @@ export default function ClientSetupPage() {
     // Step 3: Meet Trinity
     <div key="trinity" className="text-center space-y-6">
       <div className="w-16 h-16 bg-[rgba(37,99,235,0.08)] flex items-center justify-center mx-auto">
-        <MessageSquare size={32} className="text-[#2563EB]" />
+        <MessageSquare size={32} className="text-brand-accent" />
       </div>
       <div>
         <h2 className="text-xl font-bold text-[#111827]">Meet Your AI Assistant</h2>
@@ -131,7 +131,7 @@ export default function ClientSetupPage() {
         </p>
       </div>
       <div className="bg-[rgba(0,0,0,0.04)] rounded-xl p-4 max-w-md mx-auto text-left">
-        <p className="text-sm text-[#2563EB] mb-2">Try asking Trinity:</p>
+        <p className="text-sm text-brand-accent mb-2">Try asking Trinity:</p>
         <ul className="space-y-1.5 text-sm text-muted">
           <li>&quot;What&apos;s the status of my content?&quot;</li>
           <li>&quot;When is my next invoice due?&quot;</li>
@@ -156,19 +156,19 @@ export default function ClientSetupPage() {
       </div>
       <div className="bg-[rgba(0,0,0,0.04)] rounded-xl p-6 max-w-md mx-auto text-left space-y-3">
         <div className="flex items-center gap-3">
-          <Check size={16} className="text-[#2563EB] shrink-0" />
+          <Check size={16} className="text-brand-accent shrink-0" />
           <span className="text-sm">Your account manager will reach out within 24 hours</span>
         </div>
         <div className="flex items-center gap-3">
-          <Check size={16} className="text-[#2563EB] shrink-0" />
+          <Check size={16} className="text-brand-accent shrink-0" />
           <span className="text-sm">AI will analyze your competitors and create a strategy</span>
         </div>
         <div className="flex items-center gap-3">
-          <Check size={16} className="text-[#2563EB] shrink-0" />
+          <Check size={16} className="text-brand-accent shrink-0" />
           <span className="text-sm">Content creation starts within the first week</span>
         </div>
         <div className="flex items-center gap-3">
-          <Check size={16} className="text-[#2563EB] shrink-0" />
+          <Check size={16} className="text-brand-accent shrink-0" />
           <span className="text-sm">You can track everything from your portal</span>
         </div>
       </div>
@@ -178,7 +178,7 @@ export default function ClientSetupPage() {
   return (
     <MotionPage className="fade-in max-w-2xl mx-auto py-8 space-y-6">{/* Progress */}<div className="flex gap-1">
               {steps.map((_, i) => (
-                <div key={i} className={`flex-1 h-1.5 rounded-full transition-all ${i <= step ? "bg-[#2563EB]" : "bg-black/[0.08]"}`} />
+                <div key={i} className={`flex-1 h-1.5 rounded-full transition-all ${i <= step ? "bg-brand-accent" : "bg-black/[0.08]"}`} />
               ))}
             </div>{/* Step content */}<div className="card min-h-[400px] flex flex-col justify-center">
               {steps[step]}

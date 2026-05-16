@@ -67,19 +67,19 @@ interface AlertRule {
 
 // --- Change type metadata --------------------------------------------
 const CHANGE_TYPE_META: Record<ChangeType, { label: string; icon: typeof Globe; color: string }> = {
-  new_page:          { label: "New Page",          icon: Globe,          color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)]" },
+  new_page:          { label: "New Page",          icon: Globe,          color: "text-brand-accent bg-[rgba(37,99,235,0.08)]" },
   content_update:    { label: "Content Update",    icon: FileText,       color: "text-emerald-400 bg-emerald-500/10" },
   pricing_change:    { label: "Pricing Change",    icon: BarChart3,      color: "text-red-400 bg-red-500/10" },
-  new_feature:       { label: "New Feature",       icon: Zap,            color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)]" },
-  new_blog_post:     { label: "New Blog Post",     icon: FileText,       color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)]" },
+  new_feature:       { label: "New Feature",       icon: Zap,            color: "text-brand-accent bg-[rgba(37,99,235,0.08)]" },
+  new_blog_post:     { label: "New Blog Post",     icon: FileText,       color: "text-brand-accent bg-[rgba(37,99,235,0.08)]" },
   social_post:       { label: "Social Post",       icon: MessageSquare,  color: "text-pink-400 bg-pink-500/10" },
-  job_posting:       { label: "Job Posting",       icon: Briefcase,      color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)]" },
+  job_posting:       { label: "Job Posting",       icon: Briefcase,      color: "text-brand-accent bg-[rgba(37,99,235,0.08)]" },
   tech_stack_change: { label: "Tech Stack Change", icon: Code2,          color: "text-orange-400 bg-orange-500/10" },
 };
 
 const SEVERITY_META: Record<Severity, { label: string; color: string }> = {
   high:   { label: "High",   color: "text-red-400 bg-red-500/10 border-red-500/30" },
-  medium: { label: "Medium", color: "text-[#2563EB] bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]" },
+  medium: { label: "Medium", color: "text-brand-accent bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]" },
   low:    { label: "Low",    color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" },
 };
 
@@ -235,7 +235,7 @@ export default function CompetitiveMonitorPage() {
 
   const statusClasses: Record<MonitorStatus, string> = {
     active: "text-emerald-400 bg-emerald-500/10",
-    paused: "text-[#2563EB] bg-[rgba(37,99,235,0.08)]",
+    paused: "text-brand-accent bg-[rgba(37,99,235,0.08)]",
     error: "text-red-400 bg-red-500/10",
   };
 
@@ -320,7 +320,7 @@ export default function CompetitiveMonitorPage() {
                 transition={{ duration: 0.3 }}
                 className="glass rounded-xl p-5" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}
               >
-                <h3 className="section-header text-sm flex items-center gap-2 mb-4"><Plus className="w-4 h-4 text-[#2563EB]" /> Add New Competitor</h3>
+                <h3 className="section-header text-sm flex items-center gap-2 mb-4"><Plus className="w-4 h-4 text-brand-accent" /> Add New Competitor</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-muted mb-1">Company Name *</label>
@@ -345,7 +345,7 @@ export default function CompetitiveMonitorPage() {
                 </div>
               </motion.div>
             )}{/* --- Competitors Grid --- */}<div>
-              <h2 className="section-header text-sm mb-3 flex items-center gap-2"><Shield className="w-4 h-4 text-[#2563EB]" /> Monitored Competitors</h2>
+              <h2 className="section-header text-sm mb-3 flex items-center gap-2"><Shield className="w-4 h-4 text-brand-accent" /> Monitored Competitors</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
                 {competitors.map((comp, ci) => (
                   <motion.div
@@ -363,7 +363,7 @@ export default function CompetitiveMonitorPage() {
                         </div>
                         <div>
                           <div className="font-medium text-sm">{comp.name}</div>
-                          <a href={comp.url} target="_blank" rel="noopener noreferrer" className="text-xs text-muted hover:text-[#2563EB] flex items-center gap-1">
+                          <a href={comp.url} target="_blank" rel="noopener noreferrer" className="text-xs text-muted hover:text-brand-accent flex items-center gap-1">
                             {comp.url.replace("https://", "")} <ExternalLink className="w-3 h-3" />
                           </a>
                         </div>
@@ -375,7 +375,7 @@ export default function CompetitiveMonitorPage() {
                     <div className="flex items-center gap-2 mb-3">
                       <span className="text-[10px] px-2 py-0.5 bg-surface-light rounded-full text-muted">{comp.industry}</span>
                       {comp.changeCount > 0 && (
-                        <span className="text-[10px] px-2 py-0.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-full font-medium">{comp.changeCount} changes</span>
+                        <span className="text-[10px] px-2 py-0.5 bg-[rgba(37,99,235,0.08)] text-brand-accent rounded-full font-medium">{comp.changeCount} changes</span>
                       )}
                     </div>
                     <div className="flex items-center justify-between text-[10px] text-muted mb-3">
@@ -383,7 +383,7 @@ export default function CompetitiveMonitorPage() {
                       <span>{FREQUENCY_LABELS[comp.frequency]}</span>
                     </div>
                     <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition">
-                      <button onClick={() => checkNow(comp.id)} disabled={checkingId === comp.id} className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded text-[10px] font-medium hover:bg-[rgba(37,99,235,0.12)] transition disabled:opacity-50">
+                      <button onClick={() => checkNow(comp.id)} disabled={checkingId === comp.id} className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-[rgba(37,99,235,0.08)] text-brand-accent rounded text-[10px] font-medium hover:bg-[rgba(37,99,235,0.12)] transition disabled:opacity-50">
                         {checkingId === comp.id ? <Loader className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />} Check
                       </button>
                       <button onClick={() => togglePause(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-text-primary transition">
@@ -400,7 +400,7 @@ export default function CompetitiveMonitorPage() {
                 ))}
               </div>
             </div>{/* --- Monitoring Schedule --- */}<PrismPanel padding="p-4">
-              <h3 className="section-header text-xs flex items-center gap-2 mb-3"><Calendar className="w-3.5 h-3.5 text-[#2563EB]" /> Monitoring Schedule</h3>
+              <h3 className="section-header text-xs flex items-center gap-2 mb-3"><Calendar className="w-3.5 h-3.5 text-brand-accent" /> Monitoring Schedule</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {competitors.filter(c => c.status === "active").slice(0, 4).map(c => (
                   <div key={c.id} className="flex items-center gap-2 p-2 bg-surface-light rounded-lg">
@@ -409,14 +409,14 @@ export default function CompetitiveMonitorPage() {
                       <div className="text-xs font-medium truncate">{c.name}</div>
                       <div className="text-[10px] text-muted">{FREQUENCY_LABELS[c.frequency]}</div>
                     </div>
-                    <div className="text-[10px] text-[#2563EB] whitespace-nowrap">{c.nextCheck === "�" || c.nextCheck === "Retrying..." ? c.nextCheck : formatTime(c.nextCheck, true)}</div>
+                    <div className="text-[10px] text-brand-accent whitespace-nowrap">{c.nextCheck === "�" || c.nextCheck === "Retrying..." ? c.nextCheck : formatTime(c.nextCheck, true)}</div>
                   </div>
                 ))}
               </div>
             </PrismPanel>{/* --- Tabs --- */}<div className="flex gap-1 border-b border-border overflow-x-auto">
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setTab(t.key)}
-                  className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition whitespace-nowrap ${tab === t.key ? "border-[#2563EB] text-[#2563EB]" : "border-transparent text-muted hover:text-text-primary"}`}>
+                  className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition whitespace-nowrap ${tab === t.key ? "border-brand-accent text-brand-accent" : "border-transparent text-muted hover:text-text-primary"}`}>
                   <t.icon className="w-4 h-4" /> {t.label}
                 </button>
               ))}
@@ -440,7 +440,7 @@ export default function CompetitiveMonitorPage() {
                     <option value="low">Low</option>
                   </select>
                   {(filterCompetitor !== "all" || filterType !== "all" || filterSeverity !== "all") && (
-                    <button onClick={() => { setFilterCompetitor("all"); setFilterType("all"); setFilterSeverity("all"); }} className="text-xs text-[#2563EB] hover:underline">Clear filters</button>
+                    <button onClick={() => { setFilterCompetitor("all"); setFilterType("all"); setFilterSeverity("all"); }} className="text-xs text-brand-accent hover:underline">Clear filters</button>
                   )}
                   <span className="text-xs text-muted ml-auto">{filteredChanges.length} change{filteredChanges.length !== 1 ? "s" : ""}</span>
                 </div>
@@ -479,7 +479,7 @@ export default function CompetitiveMonitorPage() {
 
                             {/* AI Summary */}
                             <div className="mt-2 p-2.5 bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg">
-                              <div className="flex items-center gap-1.5 text-[10px] text-[#2563EB] font-medium mb-1">
+                              <div className="flex items-center gap-1.5 text-[10px] text-brand-accent font-medium mb-1">
                                 <Sparkles className="w-3 h-3" /> AI Analysis
                               </div>
                               <p className="text-xs text-muted leading-relaxed">{change.aiSummary}</p>
@@ -489,7 +489,7 @@ export default function CompetitiveMonitorPage() {
                             {(change.beforeText || change.afterText) && (
                               <button
                                 onClick={() => setExpandedChange(isExpanded ? null : change.id)}
-                                className="flex items-center gap-1 text-[10px] text-[#2563EB] mt-2 hover:underline"
+                                className="flex items-center gap-1 text-[10px] text-brand-accent mt-2 hover:underline"
                                 aria-expanded={isExpanded}
                                 aria-controls={`competitor-change-${change.id}`}
                               >
@@ -525,7 +525,7 @@ export default function CompetitiveMonitorPage() {
                       <thead>
                         <tr className="border-b border-border">
                           <th className="text-left p-3 text-muted font-medium sticky left-0 bg-surface z-10 min-w-[120px]">Metric</th>
-                          <th className="p-3 text-center text-[#2563EB] font-bold min-w-[100px]">You</th>
+                          <th className="p-3 text-center text-brand-accent font-bold min-w-[100px]">You</th>
                           {competitors.map(c => (
                             <th key={c.id} className="p-3 text-center font-medium min-w-[100px]">
                               <div className="flex items-center justify-center gap-1.5">
@@ -549,7 +549,7 @@ export default function CompetitiveMonitorPage() {
 
                 {/* Spider chart representation */}
                 <PrismPanel padding="p-5">
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-[#2563EB]" /> Competitive Positioning</h3>
+                  <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-brand-accent" /> Competitive Positioning</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Simple radar visualization */}
                     <div className="relative flex items-center justify-center py-8">
@@ -570,21 +570,21 @@ export default function CompetitiveMonitorPage() {
                           const angle = (i * 60 - 90) * (Math.PI / 180);
                           const x = 50 + dist * Math.cos(angle);
                           const y = 50 + dist * Math.sin(angle);
-                          return <div key={i} className="absolute w-2.5 h-2.5 bg-[#2563EB] rounded-full border-2 border-[rgba(37,99,235,0.3)] -translate-x-1/2 -translate-y-1/2" style={{ left: `${x}%`, top: `${y}%` }} />;
+                          return <div key={i} className="absolute w-2.5 h-2.5 bg-brand-accent rounded-full border-2 border-[rgba(37,99,235,0.3)] -translate-x-1/2 -translate-y-1/2" style={{ left: `${x}%`, top: `${y}%` }} />;
                         })}
                         {/* Top competitor dots */}
                         {[35, 40, 45, 32, 38, 42].map((dist, i) => {
                           const angle = (i * 60 - 90) * (Math.PI / 180);
                           const x = 50 + dist * Math.cos(angle);
                           const y = 50 + dist * Math.sin(angle);
-                          return <div key={`comp-${i}`} className="absolute w-2 h-2 bg-[#2563EB] rounded-full -translate-x-1/2 -translate-y-1/2 opacity-60" style={{ left: `${x}%`, top: `${y}%` }} />;
+                          return <div key={`comp-${i}`} className="absolute w-2 h-2 bg-brand-accent rounded-full -translate-x-1/2 -translate-y-1/2 opacity-60" style={{ left: `${x}%`, top: `${y}%` }} />;
                         })}
                       </div>
                     </div>
                     <div className="space-y-3">
                       <div className="flex items-center gap-2 text-xs">
-                        <div className="w-3 h-3 bg-[#2563EB] rounded-full" /> <span>Your company</span>
-                        <div className="w-3 h-3 bg-[#2563EB] rounded-full ml-4 opacity-60" /> <span className="text-muted">Top competitor avg.</span>
+                        <div className="w-3 h-3 bg-brand-accent rounded-full" /> <span>Your company</span>
+                        <div className="w-3 h-3 bg-brand-accent rounded-full ml-4 opacity-60" /> <span className="text-muted">Top competitor avg.</span>
                       </div>
                       <div className="p-3 bg-surface-light rounded-lg space-y-2">
                         <div className="text-xs font-medium">Strengths</div>
@@ -599,8 +599,8 @@ export default function CompetitiveMonitorPage() {
                 {/* AI Analysis */}
                 <PrismPanel padding="p-5">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="section-header text-sm flex items-center gap-2 mb-0"><Sparkles className="w-4 h-4 text-[#2563EB]" /> AI Competitive Analysis</h3>
-                    <button onClick={generateAiAnalysis} disabled={generatingAnalysis} className="flex items-center gap-2 px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-lg text-xs font-medium hover:bg-[rgba(37,99,235,0.12)] transition disabled:opacity-50">
+                    <h3 className="section-header text-sm flex items-center gap-2 mb-0"><Sparkles className="w-4 h-4 text-brand-accent" /> AI Competitive Analysis</h3>
+                    <button onClick={generateAiAnalysis} disabled={generatingAnalysis} className="flex items-center gap-2 px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-brand-accent rounded-lg text-xs font-medium hover:bg-[rgba(37,99,235,0.12)] transition disabled:opacity-50">
                       {generatingAnalysis ? <Loader className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
                       Generate AI Analysis
                     </button>
@@ -620,8 +620,8 @@ export default function CompetitiveMonitorPage() {
             )}{/* --- Alerts Tab --- */}{tab === "alerts" && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-0"><Bell className="w-4 h-4 text-[#2563EB]" /> Alert Rules</h3>
-                  <button onClick={() => setShowAddAlert(!showAddAlert)} className="flex items-center gap-2 px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-lg text-xs font-medium hover:bg-[rgba(37,99,235,0.12)] transition">
+                  <h3 className="section-header text-sm flex items-center gap-2 mb-0"><Bell className="w-4 h-4 text-brand-accent" /> Alert Rules</h3>
+                  <button onClick={() => setShowAddAlert(!showAddAlert)} className="flex items-center gap-2 px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-brand-accent rounded-lg text-xs font-medium hover:bg-[rgba(37,99,235,0.12)] transition">
                     <Plus className="w-3.5 h-3.5" /> Add Rule
                   </button>
                 </div>
@@ -668,7 +668,7 @@ export default function CompetitiveMonitorPage() {
                       <div className="flex gap-2">
                         {CHANNEL_OPTIONS.map(ch => (
                           <button key={ch} onClick={() => toggleAlertChannel(ch)}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${newAlertChannels.includes(ch) ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "bg-surface-light text-muted border border-border hover:text-text-primary"}`}>
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${newAlertChannels.includes(ch) ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]" : "bg-surface-light text-muted border border-border hover:text-text-primary"}`}>
                             {ch}
                           </button>
                         ))}
@@ -685,7 +685,7 @@ export default function CompetitiveMonitorPage() {
                 <div className="space-y-2">
                   {alertRules.map((rule, ri) => {
                     const triggerMeta = rule.triggerType === "any" ? null : CHANGE_TYPE_META[rule.triggerType];
-                    const urgencyColor = rule.urgency === "critical" ? "text-red-400 bg-red-500/10" : rule.urgency === "normal" ? "text-[#2563EB] bg-[rgba(37,99,235,0.08)]" : "text-emerald-400 bg-emerald-500/10";
+                    const urgencyColor = rule.urgency === "critical" ? "text-red-400 bg-red-500/10" : rule.urgency === "normal" ? "text-brand-accent bg-[rgba(37,99,235,0.08)]" : "text-emerald-400 bg-emerald-500/10";
                     return (
                       <motion.div
                         key={rule.id}
@@ -696,7 +696,7 @@ export default function CompetitiveMonitorPage() {
                         className={`rounded-xl p-4 flex items-center gap-4 hover:border-[rgba(37,99,235,0.14)] transition ${!rule.enabled ? "opacity-50" : ""}`}
                       >
                         <button onClick={() => setAlertRules(prev => prev.map(r => r.id === rule.id ? { ...r, enabled: !r.enabled } : r))}
-                          className={`w-10 h-5 rounded-full transition relative ${rule.enabled ? "bg-[#2563EB]" : "bg-surface-light"}`}>
+                          className={`w-10 h-5 rounded-full transition relative ${rule.enabled ? "bg-brand-accent" : "bg-surface-light"}`}>
                           <div className={`absolute w-4 h-4 rounded-full bg-white top-0.5 transition-all ${rule.enabled ? "left-5.5" : "left-0.5"}`}
                             style={{ left: rule.enabled ? "22px" : "2px" }} />
                         </button>
@@ -715,7 +715,7 @@ export default function CompetitiveMonitorPage() {
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <button onClick={() => testAlert(rule.id)} className="px-3 py-1.5 bg-surface-light border border-border text-muted rounded-lg text-xs hover:text-[#2563EB] transition">Test</button>
+                          <button onClick={() => testAlert(rule.id)} className="px-3 py-1.5 bg-surface-light border border-border text-muted rounded-lg text-xs hover:text-brand-accent transition">Test</button>
                           <button onClick={() => setAlertRules(prev => prev.filter(r => r.id !== rule.id))} className="px-2 py-1.5 bg-surface-light border border-border text-muted rounded-lg text-xs hover:text-red-400 transition">
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -729,7 +729,7 @@ export default function CompetitiveMonitorPage() {
               <div className="space-y-6">
                 {/* AI Market Summary */}
                 <PrismPanel padding="p-5">
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-[#2563EB]" /> AI Market Summary</h3>
+                  <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-brand-accent" /> AI Market Summary</h3>
                   <div className="text-sm text-muted leading-relaxed space-y-2">
                     <p>The agency SaaS market continues to consolidate around AI-first platforms. Over the past week, <strong className="text-text-primary">3 of 8 tracked competitors</strong> made AI-related announcements. Pricing is trending upward (AgencyFlow +34%), while MarketMind bucks the trend with a free tier launch. The enterprise segment is heating up with both AgencyFlow and ClientPulse making upmarket moves.</p>
                     <p>Your positioning remains strong on <span className="text-emerald-400">pricing</span> and <span className="text-emerald-400">review ratings</span>, but you are falling behind on <span className="text-red-400">social media presence</span> and <span className="text-red-400">content velocity</span>. The biggest opportunity window is the 2-4 week period before competitors ship their announced features.</p>
@@ -738,7 +738,7 @@ export default function CompetitiveMonitorPage() {
 
                 {/* Activity Heatmap */}
                 <PrismPanel padding="p-5">
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-4"><LayoutGrid className="w-4 h-4 text-[#2563EB]" /> Competitor Activity Heatmap (Last 4 Weeks)</h3>
+                  <h3 className="section-header text-sm flex items-center gap-2 mb-4"><LayoutGrid className="w-4 h-4 text-brand-accent" /> Competitor Activity Heatmap (Last 4 Weeks)</h3>
                   <div className="overflow-x-auto">
                     <div className="min-w-[500px]">
                       <div className="flex items-center gap-2 mb-2 pl-28">
@@ -792,7 +792,7 @@ export default function CompetitiveMonitorPage() {
                         <div className="flex items-center gap-2 mb-2">
                           <AlertTriangle className="w-4 h-4 text-red-400" />
                           <span className="text-xs font-medium text-red-400">{threat.competitor}</span>
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded-full ml-auto ${threat.severity === "critical" ? "bg-red-500/10 text-red-400" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"}`}>{threat.severity}</span>
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded-full ml-auto ${threat.severity === "critical" ? "bg-red-500/10 text-red-400" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"}`}>{threat.severity}</span>
                         </div>
                         <div className="text-sm font-medium mb-1.5">{threat.title}</div>
                         <p className="text-xs text-muted leading-relaxed">{threat.desc}</p>
@@ -803,7 +803,7 @@ export default function CompetitiveMonitorPage() {
 
                 {/* Opportunities */}
                 <div>
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Lightbulb className="w-4 h-4 text-[#2563EB]" /> Opportunities</h3>
+                  <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Lightbulb className="w-4 h-4 text-brand-accent" /> Opportunities</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {[
                       { title: "AgencyFlow Price Increase", desc: "Their 34% price hike on the Pro plan creates a migration window. Launch a targeted \"Switch & Save\" campaign offering 6 months at your current rate with white-glove migration support.", impact: "high" },
@@ -819,8 +819,8 @@ export default function CompetitiveMonitorPage() {
                         className="glass rounded-xl p-4" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}
                       >
                         <div className="flex items-center gap-2 mb-2">
-                          <Target className="w-4 h-4 text-[#2563EB]" />
-                          <span className={`text-[10px] px-1.5 py-0.5 rounded-full ml-auto ${opp.impact === "high" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"}`}>{opp.impact} impact</span>
+                          <Target className="w-4 h-4 text-brand-accent" />
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded-full ml-auto ${opp.impact === "high" ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"}`}>{opp.impact} impact</span>
                         </div>
                         <div className="text-sm font-medium mb-1.5">{opp.title}</div>
                         <p className="text-xs text-muted leading-relaxed">{opp.desc}</p>
@@ -831,7 +831,7 @@ export default function CompetitiveMonitorPage() {
 
                 {/* Market Share Estimation */}
                 <PrismPanel padding="p-5">
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-[#2563EB]" /> Estimated Market Share (Agency SaaS Segment)</h3>
+                  <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-brand-accent" /> Estimated Market Share (Agency SaaS Segment)</h3>
                   <div className="space-y-3">
                     {[
                       { name: "AgencyFlow", share: 22, color: "#2563EB" },

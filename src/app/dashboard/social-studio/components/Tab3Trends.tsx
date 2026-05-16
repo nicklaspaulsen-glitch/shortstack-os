@@ -52,7 +52,7 @@ export default function Tab3Trends() {
       <div className="rounded-xl border border-border/40 bg-surface p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles size={14} className="text-[#2563EB]" />
+            <Sparkles size={14} className="text-brand-accent" />
             <h3 className="text-sm font-semibold tracking-tight">Niche</h3>
           </div>
           <button
@@ -73,7 +73,7 @@ export default function Tab3Trends() {
               onClick={() => setNiche(n)}
               className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
                 niche === n
-                  ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.3)] text-[#2563EB]"
+                  ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.3)] text-brand-accent"
                   : "border-border/40 text-muted hover:bg-elevated"
               }`}
             >
@@ -102,7 +102,7 @@ export default function Tab3Trends() {
 
       <div className="rounded-xl border border-border/40 bg-surface p-4">
         <div className="flex items-center gap-2 mb-3">
-          <Hash size={14} className="text-[#2563EB]" />
+          <Hash size={14} className="text-brand-accent" />
           <h3 className="text-sm font-semibold tracking-tight">Trending hashtags by platform</h3>
         </div>
         {loading && !data ? (
@@ -140,7 +140,7 @@ export default function Tab3Trends() {
 
       <div className="rounded-xl border border-border/40 bg-surface p-4">
         <div className="flex items-center gap-2 mb-3">
-          <Lightbulb size={14} className="text-[#2563EB]" />
+          <Lightbulb size={14} className="text-brand-accent" />
           <h3 className="text-sm font-semibold tracking-tight">Content ideas for this week</h3>
         </div>
         {loading && !data ? (

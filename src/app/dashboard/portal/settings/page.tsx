@@ -84,7 +84,7 @@ export default function ClientSettingsPage() {
   };
 
   if (loading) return (
-    <MotionPage className="flex items-center justify-center py-20"><Loader size={20} className="animate-spin text-[#2563EB]" /></MotionPage>
+    <MotionPage className="flex items-center justify-center py-20"><Loader size={20} className="animate-spin text-brand-accent" /></MotionPage>
   );
 
   return (
@@ -92,7 +92,7 @@ export default function ClientSettingsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-2">
-            <Settings size={18} className="text-[#2563EB]" /> Account Settings
+            <Settings size={18} className="text-brand-accent" /> Account Settings
           </h1>
           <p className="text-xs text-muted mt-0.5">Control what our AI can do on your behalf</p>
         </div>
@@ -105,7 +105,7 @@ export default function ClientSettingsPage() {
       {/* AI Permissions */}
       <div className="card">
         <h2 className="section-header flex items-center gap-2">
-          <Shield size={14} className="text-[#2563EB]" /> AI Permissions
+          <Shield size={14} className="text-brand-accent" /> AI Permissions
         </h2>
         <p className="text-[10px] text-muted mb-4">Choose what our AI assistant is allowed to do with your connected accounts</p>
 
@@ -114,7 +114,7 @@ export default function ClientSettingsPage() {
           <div className="flex items-start justify-between p-3 bg-surface-light rounded-lg border border-border">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0 mt-0.5">
-                <MessageSquare size={14} className="text-[#2563EB]" />
+                <MessageSquare size={14} className="text-brand-accent" />
               </div>
               <div>
                 <p className="text-xs font-semibold">DM Outreach</p>
@@ -125,7 +125,7 @@ export default function ClientSettingsPage() {
                       <button key={p} onClick={() => togglePlatform(p)}
                         className={`text-[10px] px-2 py-0.5 rounded-md border transition-colors capitalize ${
                           settings.dm_outreach_platforms.includes(p)
-                            ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]"
+                            ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.2)]"
                             : "bg-surface-light text-muted border-border hover:border-[rgba(37,99,235,0.2)]"
                         }`}>
                         {p}
@@ -136,7 +136,7 @@ export default function ClientSettingsPage() {
               </div>
             </div>
             <button onClick={() => setSettings({ ...settings, allow_dm_outreach: !settings.allow_dm_outreach })}
-              className={`w-10 h-5 rounded-full transition-all shrink-0 ${settings.allow_dm_outreach ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
+              className={`w-10 h-5 rounded-full transition-all shrink-0 ${settings.allow_dm_outreach ? "bg-brand-accent" : "bg-surface-light border border-border"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${settings.allow_dm_outreach ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
@@ -153,7 +153,7 @@ export default function ClientSettingsPage() {
               </div>
             </div>
             <button onClick={() => setSettings({ ...settings, allow_ai_posting: !settings.allow_ai_posting })}
-              className={`w-10 h-5 rounded-full transition-all shrink-0 ${settings.allow_ai_posting ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
+              className={`w-10 h-5 rounded-full transition-all shrink-0 ${settings.allow_ai_posting ? "bg-brand-accent" : "bg-surface-light border border-border"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${settings.allow_ai_posting ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
@@ -170,7 +170,7 @@ export default function ClientSettingsPage() {
               </div>
             </div>
             <button onClick={() => setSettings({ ...settings, allow_analytics_access: !settings.allow_analytics_access })}
-              className={`w-10 h-5 rounded-full transition-all shrink-0 ${settings.allow_analytics_access ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
+              className={`w-10 h-5 rounded-full transition-all shrink-0 ${settings.allow_analytics_access ? "bg-brand-accent" : "bg-surface-light border border-border"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${settings.allow_analytics_access ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
@@ -187,7 +187,7 @@ export default function ClientSettingsPage() {
               </div>
             </div>
             <button onClick={() => setSettings({ ...settings, allow_ad_management: !settings.allow_ad_management })}
-              className={`w-10 h-5 rounded-full transition-all shrink-0 ${settings.allow_ad_management ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
+              className={`w-10 h-5 rounded-full transition-all shrink-0 ${settings.allow_ad_management ? "bg-brand-accent" : "bg-surface-light border border-border"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${settings.allow_ad_management ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
@@ -197,7 +197,7 @@ export default function ClientSettingsPage() {
       {/* Notifications */}
       <div className="card">
         <h2 className="section-header flex items-center gap-2">
-          <Bell size={14} className="text-[#2563EB]" /> Notifications
+          <Bell size={14} className="text-brand-accent" /> Notifications
         </h2>
         <div className="space-y-3">
           {[
@@ -217,7 +217,7 @@ export default function ClientSettingsPage() {
                   [item.key]: !settings.notification_preferences[item.key],
                 },
               })}
-                className={`w-10 h-5 rounded-full transition-all ${settings.notification_preferences[item.key] ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
+                className={`w-10 h-5 rounded-full transition-all ${settings.notification_preferences[item.key] ? "bg-brand-accent" : "bg-surface-light border border-border"}`}>
                 <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${settings.notification_preferences[item.key] ? "translate-x-5" : "translate-x-0.5"}`} />
               </button>
             </div>
@@ -228,7 +228,7 @@ export default function ClientSettingsPage() {
       {/* Info */}
       <div className="card border-border bg-surface-light">
         <div className="flex items-start gap-3">
-          <Shield size={14} className="text-[#2563EB] shrink-0 mt-0.5" />
+          <Shield size={14} className="text-brand-accent shrink-0 mt-0.5" />
           <p className="text-[10px] text-muted leading-relaxed">
             All permissions can be changed at any time. DM outreach is <strong className="text-foreground">off by default</strong> —
             you must explicitly enable it. Your account manager can also control these settings on your behalf.
@@ -324,12 +324,12 @@ function DangerZone() {
       {cancellation ? (
         <div className="bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] rounded-lg p-3 space-y-2">
           <div className="flex items-start gap-2">
-            <AlertTriangle size={14} className="text-[#2563EB] shrink-0 mt-0.5" />
+            <AlertTriangle size={14} className="text-brand-accent shrink-0 mt-0.5" />
             <div className="flex-1">
-              <p className="text-xs font-semibold text-[#2563EB]">Subscription Cancelled</p>
+              <p className="text-xs font-semibold text-brand-accent">Subscription Cancelled</p>
               <p className="text-[10px] text-muted mt-0.5">
                 Your account and all data (videos, thumbnails, websites, content) will be permanently deleted in{" "}
-                <span className="text-[#2563EB] font-semibold">{daysRemaining} {daysRemaining === 1 ? "day" : "days"}</span>.
+                <span className="text-brand-accent font-semibold">{daysRemaining} {daysRemaining === 1 ? "day" : "days"}</span>.
               </p>
             </div>
           </div>

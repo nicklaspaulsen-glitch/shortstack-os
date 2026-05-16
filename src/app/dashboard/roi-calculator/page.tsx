@@ -176,7 +176,7 @@ export default function RoiCalculatorPage() {
                         value={inputs[key]}
                         min={0}
                         onChange={e => setInput(key, e.target.value)}
-                        className="flex-1 glass rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB] [appearance:textfield]"
+                        className="flex-1 glass rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent [appearance:textfield]"
                       />
                       {suffix ? <span className="text-text-muted text-sm">{suffix}</span> : null}
                     </div>
@@ -189,12 +189,12 @@ export default function RoiCalculatorPage() {
                     value={scenarioName}
                     onChange={e => setScenarioName(e.target.value)}
                     placeholder="Scenario name"
-                    className="w-full glass rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
+                    className="w-full glass rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
                   />
                   <button
                     onClick={saveScenario}
                     disabled={saving}
-                    className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.12)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.12)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-sm font-medium transition-colors disabled:opacity-50"
                   >
                     {saving ? <Loader size={13} className="animate-spin" /> : <Save size={13} />}
                     Save
@@ -286,7 +286,7 @@ export default function RoiCalculatorPage() {
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: i * 0.04 }}
                               className={`border-b border-[rgba(0,0,0,0.06)] last:border-0 ${
-                                isBase ? "text-[#2563EB] font-semibold" : "text-[#6B7280]"
+                                isBase ? "text-brand-accent font-semibold" : "text-[#6B7280]"
                               }`}
                             >
                               <td className="py-1.5">

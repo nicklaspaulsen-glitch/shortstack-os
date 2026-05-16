@@ -66,14 +66,14 @@ const ACCENT_STYLES: Record<string, { ring: string; iconBg: string; iconText: st
   blue: {
     ring: "border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.5)] hover:shadow-[0_0_0_1px_rgba(37,99,235,0.18)]",
     iconBg: "bg-[rgba(37,99,235,0.08)]",
-    iconText: "text-[#2563EB]",
-    cta: "bg-[#2563EB] text-white hover:bg-[#1D4ED8]",
+    iconText: "text-brand-accent",
+    cta: "bg-brand-accent text-white hover:bg-brand-accent/80",
   },
   purple: {
     ring: "border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.50)] hover:shadow-[0_0_0_1px_rgba(37,99,235,0.18)]",
     iconBg: "bg-[rgba(37,99,235,0.08)]",
-    iconText: "text-[#2563EB]",
-    cta: "bg-[#2563EB] text-white hover:bg-[rgba(37,99,235,0.90)]",
+    iconText: "text-brand-accent",
+    cta: "bg-brand-accent text-white hover:bg-[rgba(37,99,235,0.90)]",
   },
 };
 
@@ -134,7 +134,7 @@ export default function ContactSupportPage() {
                 className="glass rounded-xl p-5"
               >
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(37,99,235,0.08)] text-[#2563EB]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(37,99,235,0.08)] text-brand-accent">
                     <Sparkles size={18} />
                   </div>
                   <div className="flex-1">
@@ -149,7 +149,7 @@ export default function ContactSupportPage() {
                       <li>
                         <Link
                           href="/dashboard/integrations-hub"
-                          className="text-[#2563EB] underline-offset-2 hover:underline"
+                          className="text-brand-accent underline-offset-2 hover:underline"
                         >
                           Integrations status
                         </Link>{" "}
@@ -158,7 +158,7 @@ export default function ContactSupportPage() {
                       <li>
                         <Link
                           href="/dashboard/usage"
-                          className="text-[#2563EB] underline-offset-2 hover:underline"
+                          className="text-brand-accent underline-offset-2 hover:underline"
                         >
                           Token usage
                         </Link>{" "}
@@ -167,7 +167,7 @@ export default function ContactSupportPage() {
                       <li>
                         <Link
                           href="/dashboard/inbox"
-                          className="text-[#2563EB] underline-offset-2 hover:underline"
+                          className="text-brand-accent underline-offset-2 hover:underline"
                         >
                           Unified inbox
                         </Link>{" "}
@@ -176,7 +176,7 @@ export default function ContactSupportPage() {
                       <li>
                         <Link
                           href="/dashboard/pricing"
-                          className="text-[#2563EB] underline-offset-2 hover:underline"
+                          className="text-brand-accent underline-offset-2 hover:underline"
                         >
                           Plans &amp; billing
                         </Link>{" "}

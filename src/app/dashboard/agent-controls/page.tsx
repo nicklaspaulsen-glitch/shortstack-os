@@ -159,7 +159,7 @@ export default function AgentControlsPage() {
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-semibold text-[#111827] font-mono">{row.key}</span>
                             {isDirty && (
-                              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]">
+                              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]">
                                 modified
                               </span>
                             )}
@@ -172,7 +172,7 @@ export default function AgentControlsPage() {
                           {type === "boolean" && (
                             <button
                               onClick={() => updateEdit(row.key, !(cur as boolean))}
-                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${cur ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.10)]"}`}
+                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${cur ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.10)]"}`}
                               role="switch"
                               aria-checked={!!cur}
                             >

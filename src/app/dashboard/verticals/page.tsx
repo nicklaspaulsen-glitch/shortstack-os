@@ -60,10 +60,10 @@ const ACCENT_RING: Record<string, string> = {
 };
 
 const ACCENT_ICON_BG: Record<string, string> = {
-  blue: "bg-[rgba(37,99,235,0.10)] text-[#2563EB]",
-  purple: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
+  blue: "bg-[rgba(37,99,235,0.10)] text-brand-accent",
+  purple: "bg-[rgba(37,99,235,0.08)] text-brand-accent",
   sunset: "bg-orange-500/15 text-orange-700",
-  gold: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]",
+  gold: "bg-[rgba(37,99,235,0.08)] text-brand-accent",
   green: "bg-emerald-500/15 text-emerald-700",
   ocean: "bg-cyan-500/15 text-cyan-700",
 };

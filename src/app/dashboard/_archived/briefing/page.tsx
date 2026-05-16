@@ -155,10 +155,10 @@ Be direct, specific, and action-oriented. No fluff.`;
   }, [stats]);
 
   const tiles: StatTile[] = [
-    { label: "New Leads (24h)", value: stats.newLeads, icon: Users, color: "text-[#2563EB]", bgColor: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)]" },
-    { label: "Messages Received", value: stats.messagesReceived, icon: MessageSquare, color: "text-[#2563EB]", bgColor: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)]" },
+    { label: "New Leads (24h)", value: stats.newLeads, icon: Users, color: "text-brand-accent", bgColor: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)]" },
+    { label: "Messages Received", value: stats.messagesReceived, icon: MessageSquare, color: "text-brand-accent", bgColor: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)]" },
     { label: "Appointments Today", value: stats.appointmentsToday, icon: Calendar, color: "text-emerald-600", bgColor: "bg-emerald-50 border-emerald-200" },
-    { label: "Invoices Due", value: stats.invoicesDue, icon: FileText, color: "text-[#2563EB]", bgColor: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)]" },
+    { label: "Invoices Due", value: stats.invoicesDue, icon: FileText, color: "text-brand-accent", bgColor: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)]" },
     { label: "Content Scheduled", value: stats.contentScheduled, icon: BookOpen, color: "text-rose-500", bgColor: "bg-rose-50 border-rose-200" },
   ];
 
@@ -233,7 +233,7 @@ Be direct, specific, and action-oriented. No fluff.`;
                   </div>
                   <div className="space-y-2">
                     <p className="text-muted">
-                      <span className={`font-medium ${stats.invoicesDue > 0 ? "text-[#2563EB]" : "text-[#111827]"}`}>{stats.invoicesDue}</span> invoice{stats.invoicesDue !== 1 ? "s" : ""} due or overdue.
+                      <span className={`font-medium ${stats.invoicesDue > 0 ? "text-brand-accent" : "text-[#111827]"}`}>{stats.invoicesDue}</span> invoice{stats.invoicesDue !== 1 ? "s" : ""} due or overdue.
                     </p>
                     <p className="text-muted">
                       <span className="text-[#111827] font-medium">{stats.contentScheduled}</span> content piece{stats.contentScheduled !== 1 ? "s" : ""} queued to publish today.
@@ -249,13 +249,13 @@ Be direct, specific, and action-oriented. No fluff.`;
                 className="glass rounded-xl p-6"
               >
                 <h2 className="text-base font-semibold text-[#111827] mb-4 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#2563EB]" />
+                  <Sparkles className="w-4 h-4 text-brand-accent" />
                   AI Briefing
                   {generating && <Loader2 className="w-3.5 h-3.5 animate-spin text-muted ml-1" />}
                 </h2>
                 <div className="text-sm text-[#374151] leading-relaxed whitespace-pre-wrap font-serif">
                   {aiText}
-                  {generating && <span className="inline-block w-1 h-4 bg-[#2563EB] animate-pulse ml-0.5 align-middle" />}
+                  {generating && <span className="inline-block w-1 h-4 bg-brand-accent animate-pulse ml-0.5 align-middle" />}
                 </div>
               </motion.div>
             )}</MotionPage>

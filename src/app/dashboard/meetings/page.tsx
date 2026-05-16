@@ -165,7 +165,7 @@ export default function MeetingsPage() {
               className="glass rounded-xl p-4 border-[rgba(37,99,235,0.25)] bg-gradient-to-r from-[rgba(37,99,235,0.08)] to-transparent"
             >
               <div className="flex items-center gap-2 text-[11px] font-semibold mb-1">
-                <Sparkles size={11} className="text-[#2563EB]" /> AI Notetaker
+                <Sparkles size={11} className="text-brand-accent" /> AI Notetaker
               </div>
               <p className="text-[10px] text-muted leading-relaxed">
                 Drop in a recording or paste a Zoom/Loom share URL — Whisper transcribes,
@@ -218,14 +218,14 @@ export default function MeetingsPage() {
               <div className="flex items-center gap-3 text-[10px] text-muted">
                 <button
                   onClick={() => setUrlMode((v) => !v)}
-                  className="hover:text-[#2563EB] transition-colors flex items-center gap-1"
+                  className="hover:text-brand-accent transition-colors flex items-center gap-1"
                 >
                   <Link2 size={9} /> {urlMode ? "Switch to manual entry" : "Or ingest from URL"}
                 </button>
                 <span>·</span>
                 <Link
                   href="/dashboard/meetings/new"
-                  className="hover:text-[#2563EB] transition-colors flex items-center gap-1"
+                  className="hover:text-brand-accent transition-colors flex items-center gap-1"
                 >
                   <Upload size={9} /> Upload audio file
                 </Link>
@@ -263,7 +263,7 @@ export default function MeetingsPage() {
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-10 h-10 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center flex-shrink-0">
-                          <Mic size={16} className="text-[#2563EB]" />
+                          <Mic size={16} className="text-brand-accent" />
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-semibold truncate">{m.title}</p>

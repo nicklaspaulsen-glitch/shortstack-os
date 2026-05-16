@@ -845,7 +845,7 @@ export default function DesignStudioPage() {
           onChange={e => setGuidedPrompt(e.target.value)}
           placeholder={`e.g., "Modern dental clinic hero image with a friendly dentist and warm lighting"`}
           rows={3}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB]/50 focus:ring-2 focus:ring-[rgba(37,99,235,0.12)] transition-all resize-none"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-[rgba(37,99,235,0.12)] transition-all resize-none"
           autoFocus
         />
       ),
@@ -897,7 +897,7 @@ export default function DesignStudioPage() {
                 />
               </div>
               <div className="relative text-center px-4">
-                <p className="text-[11px] uppercase tracking-widest text-[#2563EB]/80 font-semibold">
+                <p className="text-[11px] uppercase tracking-widest text-brand-accent/80 font-semibold">
                   Design library
                 </p>
                 <h3 className="text-lg font-bold text-foreground mt-1">
@@ -926,11 +926,11 @@ export default function DesignStudioPage() {
                 {/* Active template info */}
                 {selectedTemplate && (
                   <div className="flex items-center gap-3 bg-[rgba(37,99,235,0.03)] border border-[rgba(37,99,235,0.15)] rounded-xl px-4 py-2">
-                    <span className="text-[10px] text-[#2563EB] font-medium flex items-center gap-1">{selectedTemplate.icon} {selectedTemplate.label}</span>
+                    <span className="text-[10px] text-brand-accent font-medium flex items-center gap-1">{selectedTemplate.icon} {selectedTemplate.label}</span>
                     <span className="text-[9px] text-muted">{selectedTemplate.width}x{selectedTemplate.height}</span>
                     <span className="text-[9px] text-muted truncate max-w-xs">{selectedTemplate.style}</span>
                     <button onClick={() => { setSelectedTemplate(null); setStyle(""); }}
-                      className="text-[9px] text-[#2563EB] hover:text-[#2563EB]-light ml-auto flex items-center gap-1"><RotateCcw size={9} /> Clear</button>
+                      className="text-[9px] text-brand-accent hover:text-brand-accent-light ml-auto flex items-center gap-1"><RotateCcw size={9} /> Clear</button>
                   </div>
                 )}
 
@@ -949,7 +949,7 @@ export default function DesignStudioPage() {
 
                 {/* Industry style hint */}
                 {getIndustryStyle() && (
-                  <div className="flex items-center gap-2 text-[9px] text-[#2563EB] bg-[rgba(37,99,235,0.03)] border border-[rgba(37,99,235,0.1)] rounded-lg px-3 py-1.5">
+                  <div className="flex items-center gap-2 text-[9px] text-brand-accent bg-[rgba(37,99,235,0.03)] border border-[rgba(37,99,235,0.1)] rounded-lg px-3 py-1.5">
                     <Wand2 size={10} />
                     <span>AI will use industry-specific style: <span className="font-medium">{getIndustryStyle().substring(0, 80)}...</span></span>
                   </div>
@@ -958,13 +958,13 @@ export default function DesignStudioPage() {
                 {/* Section selector */}
                 <div className="flex flex-wrap gap-1.5">
                   <button onClick={() => setActiveSection(null)}
-                    className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${!activeSection ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] font-medium" : "border-border text-muted hover:text-foreground"}`}>
+                    className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${!activeSection ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent font-medium" : "border-border text-muted hover:text-foreground"}`}>
                     All
                   </button>
                   {SECTIONS.map(s => (
                     <button key={s.key} onClick={() => setActiveSection(s.key)}
                       className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
-                        activeSection === s.key ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] font-medium" : "border-border text-muted hover:text-foreground"
+                        activeSection === s.key ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent font-medium" : "border-border text-muted hover:text-foreground"
                       }`}>
                       {s.icon} {s.label}
                     </button>
@@ -985,7 +985,7 @@ export default function DesignStudioPage() {
                     >
                       <div className="p-5">
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="w-9 h-9 bg-[rgba(204,36,36,0.08)] rounded-xl flex items-center justify-center text-[#1D4ED8]">
+                        <div className="w-9 h-9 bg-[rgba(204,36,36,0.08)] rounded-xl flex items-center justify-center text-brand-accent">
                           {section.icon}
                         </div>
                         <div className="flex-1">
@@ -1026,7 +1026,7 @@ export default function DesignStudioPage() {
                 {/* Batch generate */}
                 {activeSection && (
                   <button onClick={batchGenerate} disabled={batchGenerating || !prompts[activeSection]}
-                    className="w-full text-xs py-2.5 flex items-center justify-center gap-2 rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] transition-all font-medium disabled:opacity-50">
+                    className="w-full text-xs py-2.5 flex items-center justify-center gap-2 rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] transition-all font-medium disabled:opacity-50">
                     {batchGenerating ? <Loader size={14} className="animate-spin" /> : <Layers size={14} />}
                     {batchGenerating ? "Generating all sizes..." : "Batch Generate for All Sizes"}
                   </button>
@@ -1059,7 +1059,7 @@ export default function DesignStudioPage() {
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-2">
-                                <span className="badge bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-[10px] px-2 py-0.5 rounded capitalize">
+                                <span className="badge bg-[rgba(37,99,235,0.08)] text-brand-accent text-[10px] px-2 py-0.5 rounded capitalize">
                                   {g.section}
                                 </span>
                                 <span className="text-[10px] text-muted">{g.dimensions}</span>
@@ -1099,12 +1099,12 @@ export default function DesignStudioPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.03, duration: 0.35 }}
                       whileHover={{ y: -3, scale: 1.02 }}
-                      className={`glass rounded-xl overflow-hidden text-left ${selectedTemplate?.label === t.label ? "border-[#2563EB]/40" : ""}`}
+                      className={`glass rounded-xl overflow-hidden text-left ${selectedTemplate?.label === t.label ? "border-brand-accent/40" : ""}`}
                       style={{ border: selectedTemplate?.label === t.label ? "1px solid rgba(204,36,36,0.5)" : "1px solid rgba(0,0,0,0.08)" }}
                     >
                       <div className="p-3">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-[#2563EB]">{t.icon}</span>
+                        <span className="text-brand-accent">{t.icon}</span>
                         <span className="text-[8px] text-muted bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded capitalize">{t.category}</span>
                       </div>
                       <p className="text-[11px] font-semibold">{t.label}</p>
@@ -1130,7 +1130,7 @@ export default function DesignStudioPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04, duration: 0.35 }}
                       whileHover={{ y: -3, scale: 1.02 }}
-                      className={`glass rounded-xl overflow-hidden text-left ${selectedPalette?.name === palette.name ? "border-[#2563EB]/40" : ""}`}
+                      className={`glass rounded-xl overflow-hidden text-left ${selectedPalette?.name === palette.name ? "border-brand-accent/40" : ""}`}
                       style={{ border: selectedPalette?.name === palette.name ? "1px solid rgba(204,36,36,0.5)" : "1px solid rgba(0,0,0,0.08)" }}
                     >
                       <div className="p-4">
@@ -1151,7 +1151,7 @@ export default function DesignStudioPage() {
                 </div>
 
                 <div className="glass rounded-xl p-5">
-                  <h3 className="section-header flex items-center gap-2"><Wand2 size={12} className="text-[#2563EB]" /> Industry Styles</h3>
+                  <h3 className="section-header flex items-center gap-2"><Wand2 size={12} className="text-brand-accent" /> Industry Styles</h3>
                   <p className="text-[10px] text-muted mb-3">When you select a client, AI automatically uses an industry-appropriate style</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {Object.entries(INDUSTRY_STYLES).map(([industry, style]) => (
@@ -1195,7 +1195,7 @@ export default function DesignStudioPage() {
                   ].map(tool => (
                     <button key={tool.id} onClick={() => setToolsTab(tool.id)}
                       className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
-                        toolsTab === tool.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] font-medium" : "border-border text-muted hover:text-foreground"
+                        toolsTab === tool.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent font-medium" : "border-border text-muted hover:text-foreground"
                       }`}>
                       {tool.icon} {tool.label}
                     </button>
@@ -1206,7 +1206,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "brand-kit" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Paintbrush size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Paintbrush size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Brand Kit Manager</h3>
                         <p className="text-[10px] text-muted">Save and apply brand colors, fonts, and logos across all designs</p>
@@ -1220,7 +1220,7 @@ export default function DesignStudioPage() {
                           onClick={() => { setActiveBrandKit(kit.id); toast.success(`Active brand: ${kit.name}`); }}>
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-semibold">{kit.name}</span>
-                            {activeBrandKit === kit.id && <span className="text-[9px] text-[#2563EB] font-medium bg-[rgba(37,99,235,0.08)] px-2 py-0.5 rounded">Active</span>}
+                            {activeBrandKit === kit.id && <span className="text-[9px] text-brand-accent font-medium bg-[rgba(37,99,235,0.08)] px-2 py-0.5 rounded">Active</span>}
                           </div>
                           <div className="flex gap-1 mb-2">
                             {kit.colors.map((c, i) => (
@@ -1274,7 +1274,7 @@ export default function DesignStudioPage() {
                     {brandKits.find(k => k.id === activeBrandKit) && (
                       <div className="border border-[rgba(37,99,235,0.15)] bg-[rgba(37,99,235,0.02)] rounded-xl p-3 space-y-3">
                         <h4 className="text-[11px] font-semibold flex items-center gap-2">
-                          <Wand2 size={12} className="text-[#2563EB]" /> Active Kit: {brandKits.find(k => k.id === activeBrandKit)?.name}
+                          <Wand2 size={12} className="text-brand-accent" /> Active Kit: {brandKits.find(k => k.id === activeBrandKit)?.name}
                         </h4>
                         <div className="grid grid-cols-5 gap-2">
                           {brandKits.find(k => k.id === activeBrandKit)?.colors.map((c, i) => (
@@ -1304,7 +1304,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "smart-resize" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Maximize2 size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Maximize2 size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Smart Resize</h3>
                         <p className="text-[10px] text-muted">One-click resize your design for multiple platforms simultaneously</p>
@@ -1327,7 +1327,7 @@ export default function DesignStudioPage() {
                             <button key={key} onClick={() => setSelectedResizes(prev => isSelected ? prev.filter(r => r !== key) : [...prev, key])}
                               className={`card-hover rounded-xl p-2.5 text-left transition-all ${isSelected ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : ""}`}>
                               <div className="flex items-center gap-2 mb-1">
-                                {isSelected ? <CheckCircle size={12} className="text-[#2563EB]" /> : <span className="text-muted">{preset.icon}</span>}
+                                {isSelected ? <CheckCircle size={12} className="text-brand-accent" /> : <span className="text-muted">{preset.icon}</span>}
                                 <span className="text-[10px] font-medium">{preset.label}</span>
                               </div>
                               <span className="text-[9px] text-muted">{preset.w} x {preset.h}</span>
@@ -1359,7 +1359,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "layers" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Layers size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Layers size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Layer Editor</h3>
                         <p className="text-[10px] text-muted">Manage layer ordering, visibility, and opacity for your designs</p>
@@ -1384,7 +1384,7 @@ export default function DesignStudioPage() {
                             <span className="text-[8px] text-muted w-6 text-right">{layer.opacity}%</span>
                           </div>
                           <button onClick={() => setDesignLayers(prev => prev.map(l => l.id === layer.id ? { ...l, locked: !l.locked } : l))}
-                            className={`text-[10px] ${layer.locked ? "text-[#2563EB]" : "text-muted hover:text-foreground"}`}>
+                            className={`text-[10px] ${layer.locked ? "text-brand-accent" : "text-muted hover:text-foreground"}`}>
                             {layer.locked ? <Shield size={11} /> : <Move size={11} />}
                           </button>
                           {index > 0 && (
@@ -1426,7 +1426,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "bg-remover" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Scissors size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Scissors size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">AI Background Remover</h3>
                         <p className="text-[10px] text-muted">Remove backgrounds from images using AI in one click</p>
@@ -1442,7 +1442,7 @@ export default function DesignStudioPage() {
 
                     {bgRemoveFile && (
                       <div className="flex items-center gap-3 bg-surface-light rounded-xl p-3">
-                        <ImageIcon size={16} className="text-[#2563EB]" />
+                        <ImageIcon size={16} className="text-brand-accent" />
                         <span className="text-xs flex-1">{bgRemoveFile}</span>
                         <button onClick={() => { setBgRemoveFile(""); setBgRemoveStatus("idle"); }}
                           className="text-muted hover:text-foreground"><X size={14} /></button>
@@ -1451,8 +1451,8 @@ export default function DesignStudioPage() {
 
                     {bgRemoveStatus === "processing" && (
                       <div className="flex items-center gap-3 bg-[rgba(37,99,235,0.03)] border border-[rgba(37,99,235,0.15)] rounded-xl p-3">
-                        <Loader size={14} className="text-[#2563EB] animate-spin" />
-                        <span className="text-xs text-[#2563EB]">Removing background with AI...</span>
+                        <Loader size={14} className="text-brand-accent animate-spin" />
+                        <span className="text-xs text-brand-accent">Removing background with AI...</span>
                       </div>
                     )}
 
@@ -1476,7 +1476,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "mockups" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Shirt size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Shirt size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Mockup Generator</h3>
                         <p className="text-[10px] text-muted">Place your designs on realistic product mockups</p>
@@ -1487,7 +1487,7 @@ export default function DesignStudioPage() {
                       {MOCKUP_PRODUCTS.map(product => (
                         <button key={product.id} onClick={() => setSelectedMockup(product.id)}
                           className={`card-hover rounded-xl p-3 text-center transition-all ${selectedMockup === product.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : ""}`}>
-                          <div className={`mb-1.5 ${selectedMockup === product.id ? "text-[#2563EB]" : "text-muted"}`}>{product.icon}</div>
+                          <div className={`mb-1.5 ${selectedMockup === product.id ? "text-brand-accent" : "text-muted"}`}>{product.icon}</div>
                           <span className="text-[10px] font-medium">{product.label}</span>
                         </button>
                       ))}
@@ -1507,7 +1507,7 @@ export default function DesignStudioPage() {
                         <div className="flex gap-1.5">
                           {["#ffffff", "#000000", "#1a1a2e", "#c0392b", "#2980b9", "#27ae60"].map(c => (
                             <button key={c} onClick={() => setMockupColor(c)}
-                              className={`w-6 h-6 rounded-md border ${mockupColor === c ? "border-[#2563EB]" : "border-border"}`} style={{ background: c }} />
+                              className={`w-6 h-6 rounded-md border ${mockupColor === c ? "border-brand-accent" : "border-border"}`} style={{ background: c }} />
                           ))}
                         </div>
                       </div>
@@ -1530,7 +1530,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "qr-code" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><QrCode size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><QrCode size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">QR Code Generator</h3>
                         <p className="text-[10px] text-muted">Generate branded QR codes with custom colors and embedded logo</p>
@@ -1598,7 +1598,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "version-history" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><History size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><History size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Design Version History</h3>
                         <p className="text-[10px] text-muted">Track design iterations and compare versions with visual diff</p>
@@ -1614,13 +1614,13 @@ export default function DesignStudioPage() {
                             selectedVersion === v.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.03)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
                           }`} onClick={() => setSelectedVersion(v.id)}>
                             <div className="flex flex-col items-center">
-                              <div className={`w-3 h-3 rounded-full ${selectedVersion === v.id ? "bg-[#2563EB]" : "bg-muted/30"}`} />
+                              <div className={`w-3 h-3 rounded-full ${selectedVersion === v.id ? "bg-brand-accent" : "bg-muted/30"}`} />
                               {i < versionHistory.length - 1 && <div className="w-px h-6 bg-border mt-1" />}
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
                                 <span className="text-[10px] font-semibold">{v.label}</span>
-                                {i === 0 && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded">Latest</span>}
+                                {i === 0 && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">Latest</span>}
                               </div>
                               <p className="text-[9px] text-muted">{v.date}</p>
                               <p className="text-[9px] text-muted/70 mt-0.5">{v.changes}</p>
@@ -1671,7 +1671,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "color-extract" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Pipette size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Pipette size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Color Palette Extractor</h3>
                         <p className="text-[10px] text-muted">Extract a color palette from any uploaded image</p>
@@ -1687,8 +1687,8 @@ export default function DesignStudioPage() {
 
                     {extractingColors && (
                       <div className="flex items-center gap-3 bg-[rgba(37,99,235,0.03)] border border-[rgba(37,99,235,0.15)] rounded-xl p-3">
-                        <Loader size={14} className="text-[#2563EB] animate-spin" />
-                        <span className="text-xs text-[#2563EB]">Analyzing image colors...</span>
+                        <Loader size={14} className="text-brand-accent animate-spin" />
+                        <span className="text-xs text-brand-accent">Analyzing image colors...</span>
                       </div>
                     )}
 
@@ -1722,7 +1722,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "typography" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Type size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Type size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Typography Pairing</h3>
                         <p className="text-[10px] text-muted">AI-curated font combinations for professional designs</p>
@@ -1735,7 +1735,7 @@ export default function DesignStudioPage() {
                           className={`card-hover rounded-xl p-3 text-left transition-all ${selectedPairing === i ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.03)]" : ""}`}>
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-[9px] text-muted bg-surface-light px-2 py-0.5 rounded">{pair.vibe}</span>
-                            {selectedPairing === i && <CheckCircle size={12} className="text-[#2563EB]" />}
+                            {selectedPairing === i && <CheckCircle size={12} className="text-brand-accent" />}
                           </div>
                           <p className="text-sm font-bold mb-0.5" style={{ fontFamily: pair.heading.split(" ")[0] }}>{pair.heading}</p>
                           <p className="text-[10px] text-muted" style={{ fontFamily: pair.body.split(" ")[0] }}>{pair.body}</p>
@@ -1775,7 +1775,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "patterns" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Repeat size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Repeat size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Pattern Generator</h3>
                         <p className="text-[10px] text-muted">Generate seamless patterns for backgrounds and design elements</p>
@@ -1836,7 +1836,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "filters" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Aperture size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Aperture size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Photo Filter Library</h3>
                         <p className="text-[10px] text-muted">{PHOTO_FILTERS.length} professional filters for any photo</p>
@@ -1852,7 +1852,7 @@ export default function DesignStudioPage() {
                     <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
                       {PHOTO_FILTERS.map(filter => (
                         <button key={filter.name} onClick={() => { setActiveFilter(filter.name); toast.success(`Filter: ${filter.name}`); }}
-                          className={`rounded-xl overflow-hidden border transition-all ${activeFilter === filter.name ? "border-[#2563EB]/40 ring-2 ring-[rgba(37,99,235,0.12)]" : "border-border hover:border-[rgba(37,99,235,0.2)]"}`}>
+                          className={`rounded-xl overflow-hidden border transition-all ${activeFilter === filter.name ? "border-brand-accent/40 ring-2 ring-[rgba(37,99,235,0.12)]" : "border-border hover:border-[rgba(37,99,235,0.2)]"}`}>
                           <div className="h-16 bg-gradient-to-br from-[rgba(37,99,235,0.12)] via-blue-500/20 to-purple-500/20"
                             style={{ filter: filter.css }} />
                           <div className="p-1.5 text-center">
@@ -1864,8 +1864,8 @@ export default function DesignStudioPage() {
 
                     {activeFilter && (
                       <div className="flex items-center gap-2 bg-[rgba(37,99,235,0.03)] border border-[rgba(37,99,235,0.15)] rounded-xl px-3 py-2">
-                        <Aperture size={12} className="text-[#2563EB]" />
-                        <span className="text-[10px] flex-1">Active: <span className="font-medium text-[#2563EB]">{activeFilter}</span> at {filterIntensity}%</span>
+                        <Aperture size={12} className="text-brand-accent" />
+                        <span className="text-[10px] flex-1">Active: <span className="font-medium text-brand-accent">{activeFilter}</span> at {filterIntensity}%</span>
                         <button onClick={() => setActiveFilter(null)} className="text-[9px] text-muted hover:text-foreground flex items-center gap-1">
                           <X size={10} /> Remove
                         </button>
@@ -1878,7 +1878,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "icons" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Search size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Search size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Icon Library Browser</h3>
                         <p className="text-[10px] text-muted">Search and insert icons from a curated library</p>
@@ -1891,7 +1891,7 @@ export default function DesignStudioPage() {
                     <div className="flex flex-wrap gap-1.5">
                       {ICON_CATEGORIES.map(cat => (
                         <button key={cat.name} onClick={() => setIconCategory(cat.name)}
-                          className={`text-[9px] px-2.5 py-1 rounded-lg border transition-all ${iconCategory === cat.name ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] font-medium" : "border-border text-muted"}`}>
+                          className={`text-[9px] px-2.5 py-1 rounded-lg border transition-all ${iconCategory === cat.name ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent font-medium" : "border-border text-muted"}`}>
                           {cat.name}
                         </button>
                       ))}
@@ -1904,7 +1904,7 @@ export default function DesignStudioPage() {
                           <button key={icon} onClick={() => { navigator.clipboard.writeText(icon); toast.success(`Copied icon: ${icon}`); }}
                             className="card-hover rounded-xl p-3 text-center group hover:bg-[rgba(37,99,235,0.05)]">
                             <div className="w-6 h-6 mx-auto mb-1 rounded-lg bg-surface-light flex items-center justify-center group-hover:bg-[rgba(37,99,235,0.08)]">
-                              <Globe size={14} className="text-muted group-hover:text-[#2563EB]" />
+                              <Globe size={14} className="text-muted group-hover:text-brand-accent" />
                             </div>
                             <span className="text-[8px] text-muted group-hover:text-foreground block truncate">{icon}</span>
                           </button>
@@ -1917,7 +1917,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "infographics" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><BarChart3 size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><BarChart3 size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Infographic Builder</h3>
                         <p className="text-[10px] text-muted">Build data visualizations with templates for charts, stats, and timelines</p>
@@ -1928,7 +1928,7 @@ export default function DesignStudioPage() {
                       {INFOGRAPHIC_TYPES.map(type => (
                         <button key={type.id} onClick={() => setInfographicType(type.id)}
                           className={`card-hover rounded-xl p-3 text-left transition-all ${infographicType === type.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : ""}`}>
-                          <div className={`mb-1.5 ${infographicType === type.id ? "text-[#2563EB]" : "text-muted"}`}>{type.icon}</div>
+                          <div className={`mb-1.5 ${infographicType === type.id ? "text-brand-accent" : "text-muted"}`}>{type.icon}</div>
                           <span className="text-[10px] font-medium block">{type.label}</span>
                           <span className="text-[8px] text-muted">{type.desc}</span>
                         </button>
@@ -1963,7 +1963,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "social-proof" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><ThumbsUp size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><ThumbsUp size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Social Proof Widgets</h3>
                         <p className="text-[10px] text-muted">Generate testimonial cards, review stars, and trust badges</p>
@@ -1974,7 +1974,7 @@ export default function DesignStudioPage() {
                       {SOCIAL_PROOF_TYPES.map(type => (
                         <button key={type.id} onClick={() => setSocialProofType(type.id)}
                           className={`card-hover rounded-xl p-3 text-left transition-all ${socialProofType === type.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : ""}`}>
-                          <div className={`mb-1 ${socialProofType === type.id ? "text-[#2563EB]" : "text-muted"}`}>{type.icon}</div>
+                          <div className={`mb-1 ${socialProofType === type.id ? "text-brand-accent" : "text-muted"}`}>{type.icon}</div>
                           <span className="text-[10px] font-medium">{type.label}</span>
                         </button>
                       ))}
@@ -1988,10 +1988,10 @@ export default function DesignStudioPage() {
                           className="input text-xs w-full" placeholder="Author name and title..." />
                         {/* Preview */}
                         <div className="bg-surface-light rounded-xl p-4 border border-border">
-                          <Quote size={16} className="text-[#2563EB] mb-2" />
+                          <Quote size={16} className="text-brand-accent mb-2" />
                           <p className="text-xs italic leading-relaxed">{testimonialText || "Your testimonial will appear here..."}</p>
                           <div className="flex items-center gap-2 mt-3">
-                            <div className="w-8 h-8 rounded-full bg-[rgba(37,99,235,0.12)] flex items-center justify-center text-[#2563EB] text-[10px] font-bold">
+                            <div className="w-8 h-8 rounded-full bg-[rgba(37,99,235,0.12)] flex items-center justify-center text-brand-accent text-[10px] font-bold">
                               {testimonialAuthor ? testimonialAuthor[0]?.toUpperCase() : "?"}
                             </div>
                             <span className="text-[10px] font-medium">{testimonialAuthor || "Author Name"}</span>
@@ -2007,7 +2007,7 @@ export default function DesignStudioPage() {
                           <div className="flex items-center gap-1">
                             {[1, 2, 3, 4, 5].map(n => (
                               <button key={n} onClick={() => setReviewStars(n)}
-                                className={`transition-all ${n <= reviewStars ? "text-[#2563EB]" : "text-muted/30"}`}>
+                                className={`transition-all ${n <= reviewStars ? "text-brand-accent" : "text-muted/30"}`}>
                                 <Star size={24} fill={n <= reviewStars ? "currentColor" : "none"} />
                               </button>
                             ))}
@@ -2017,7 +2017,7 @@ export default function DesignStudioPage() {
                         <div className="bg-surface-light rounded-xl p-4 border border-border text-center">
                           <div className="flex justify-center gap-1 mb-2">
                             {[1, 2, 3, 4, 5].map(n => (
-                              <Star key={n} size={20} className={n <= reviewStars ? "text-[#2563EB]" : "text-muted/20"} fill={n <= reviewStars ? "currentColor" : "none"} />
+                              <Star key={n} size={20} className={n <= reviewStars ? "text-brand-accent" : "text-muted/20"} fill={n <= reviewStars ? "currentColor" : "none"} />
                             ))}
                           </div>
                           <p className="text-xs font-semibold">{reviewStars}.0 out of 5</p>
@@ -2037,7 +2037,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "seasonal" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><CalendarDays size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><CalendarDays size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Seasonal Template Packs</h3>
                         <p className="text-[10px] text-muted">Holiday, seasonal, and event-specific design templates with themed palettes</p>
@@ -2049,9 +2049,9 @@ export default function DesignStudioPage() {
                         <button key={pack.id} onClick={() => { setSelectedSeason(pack.id); toast.success(`Selected: ${pack.label}`); }}
                           className={`card-hover rounded-xl p-3 text-left transition-all ${selectedSeason === pack.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : ""}`}>
                           <div className="flex items-center gap-2 mb-2">
-                            <span className={selectedSeason === pack.id ? "text-[#2563EB]" : "text-muted"}>{pack.icon}</span>
+                            <span className={selectedSeason === pack.id ? "text-brand-accent" : "text-muted"}>{pack.icon}</span>
                             <span className="text-[10px] font-medium">{pack.label}</span>
-                            {selectedSeason === pack.id && <CheckCircle size={10} className="text-[#2563EB] ml-auto" />}
+                            {selectedSeason === pack.id && <CheckCircle size={10} className="text-brand-accent ml-auto" />}
                           </div>
                           <div className="flex gap-1">
                             {pack.colors.map((c, i) => (
@@ -2083,7 +2083,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "animation" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Film size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Film size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Animation Preview</h3>
                         <p className="text-[10px] text-muted">Preview your design as animated GIF or video with transitions</p>
@@ -2117,7 +2117,7 @@ export default function DesignStudioPage() {
                           "animate-pulse"
                         ) : ""
                       }`} style={{ animationDuration: `${2 / animationSpeed}s` }}>
-                        <Sparkles size={24} className="text-[#2563EB]" />
+                        <Sparkles size={24} className="text-brand-accent" />
                       </div>
                     </div>
 
@@ -2140,7 +2140,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "design-tokens" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Database size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Database size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Design System Tokens</h3>
                         <p className="text-[10px] text-muted">Save reusable design tokens for spacing, border radius, shadows, and more</p>
@@ -2154,7 +2154,7 @@ export default function DesignStudioPage() {
                       return (
                         <div key={category} className="border border-border rounded-xl p-3">
                           <h4 className="text-[10px] font-semibold capitalize mb-2 flex items-center gap-1.5">
-                            <div className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-brand-accent" />
                             {category}
                           </h4>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -2218,7 +2218,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "batch-export" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Download size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Download size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Batch Export</h3>
                         <p className="text-[10px] text-muted">Export your design in multiple sizes and formats at once</p>
@@ -2231,7 +2231,7 @@ export default function DesignStudioPage() {
                         {["png", "jpg", "webp", "svg", "pdf"].map(fmt => (
                           <button key={fmt} onClick={() => setBatchExportFormats(prev => prev.includes(fmt) ? prev.filter(f => f !== fmt) : [...prev, fmt])}
                             className={`text-[10px] px-3 py-1.5 rounded-lg border uppercase font-medium transition-all ${
-                              batchExportFormats.includes(fmt) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]" : "border-border text-muted"
+                              batchExportFormats.includes(fmt) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted"
                             }`}>
                             .{fmt}
                           </button>
@@ -2254,9 +2254,9 @@ export default function DesignStudioPage() {
                         ].map(s => (
                           <button key={s.size} onClick={() => setBatchExportSizes(prev => prev.includes(s.size) ? prev.filter(x => x !== s.size) : [...prev, s.size])}
                             className={`card-hover rounded-xl p-2 text-center text-[10px] transition-all ${
-                              batchExportSizes.includes(s.size) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] font-medium" : ""
+                              batchExportSizes.includes(s.size) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent font-medium" : ""
                             }`}>
-                            {batchExportSizes.includes(s.size) && <CheckCircle size={10} className="text-[#2563EB] inline mr-1" />}
+                            {batchExportSizes.includes(s.size) && <CheckCircle size={10} className="text-brand-accent inline mr-1" />}
                             {s.label}
                           </button>
                         ))}
@@ -2266,7 +2266,7 @@ export default function DesignStudioPage() {
                     <div className="bg-surface-light rounded-xl p-3 flex items-center justify-between">
                       <div className="text-[10px]">
                         <span className="text-muted">Total exports: </span>
-                        <span className="font-semibold text-[#2563EB]">{batchExportFormats.length * batchExportSizes.length} files</span>
+                        <span className="font-semibold text-brand-accent">{batchExportFormats.length * batchExportSizes.length} files</span>
                         <span className="text-muted"> ({batchExportSizes.length} sizes x {batchExportFormats.length} formats)</span>
                       </div>
                     </div>
@@ -2283,7 +2283,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "accessibility" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Accessibility size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Accessibility size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Accessibility Checker</h3>
                         <p className="text-[10px] text-muted">Check contrast ratios and WCAG compliance for text/background combinations</p>
@@ -2332,7 +2332,7 @@ export default function DesignStudioPage() {
                       return (
                         <div className="space-y-3">
                           <div className="flex items-center gap-3 bg-surface-light rounded-xl p-3">
-                            <Contrast size={16} className="text-[#2563EB]" />
+                            <Contrast size={16} className="text-brand-accent" />
                             <div>
                               <span className="text-xs font-semibold">Contrast Ratio: {ratio.toFixed(2)}:1</span>
                               <p className="text-[9px] text-muted">Minimum 4.5:1 for normal text, 3:1 for large text (WCAG AA)</p>
@@ -2371,7 +2371,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "mood-board" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Heart size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Heart size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Mood Board Builder</h3>
                         <p className="text-[10px] text-muted">Collect inspiration images, colors, and notes for your design direction</p>
@@ -2458,7 +2458,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "style-transfer" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-[#2563EB]"><Shuffle size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Shuffle size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">AI Style Transfer</h3>
                         <p className="text-[10px] text-muted">Apply the artistic style of one image to another using AI</p>
@@ -2472,7 +2472,7 @@ export default function DesignStudioPage() {
                           onClick={() => setStyleTransferSource("content-image.jpg")}>
                           {styleTransferSource ? (
                             <div className="flex items-center gap-2 justify-center">
-                              <ImageIcon size={14} className="text-[#2563EB]" />
+                              <ImageIcon size={14} className="text-brand-accent" />
                               <span className="text-[10px]">{styleTransferSource}</span>
                               <button onClick={(e) => { e.stopPropagation(); setStyleTransferSource(""); }} className="text-muted hover:text-foreground"><X size={12} /></button>
                             </div>
@@ -2490,7 +2490,7 @@ export default function DesignStudioPage() {
                           onClick={() => setStyleTransferStyle("style-reference.jpg")}>
                           {styleTransferStyle ? (
                             <div className="flex items-center gap-2 justify-center">
-                              <Brush size={14} className="text-[#2563EB]" />
+                              <Brush size={14} className="text-brand-accent" />
                               <span className="text-[10px]">{styleTransferStyle}</span>
                               <button onClick={(e) => { e.stopPropagation(); setStyleTransferStyle(""); }} className="text-muted hover:text-foreground"><X size={12} /></button>
                             </div>
@@ -2521,7 +2521,7 @@ export default function DesignStudioPage() {
                         {["Oil Painting", "Watercolor", "Pixel Art", "Comic Book", "Art Deco", "Impressionist", "Cyberpunk", "Minimalist"].map(preset => (
                           <button key={preset} onClick={() => { setStyleTransferStyle(preset); toast.success(`Style: ${preset}`); }}
                             className={`text-[9px] px-2.5 py-1.5 rounded-lg border transition-all ${
-                              styleTransferStyle === preset ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-[#2563EB] font-medium" : "border-border text-muted hover:text-foreground"
+                              styleTransferStyle === preset ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent font-medium" : "border-border text-muted hover:text-foreground"
                             }`}>
                             {preset}
                           </button>
@@ -2531,8 +2531,8 @@ export default function DesignStudioPage() {
 
                     {styleTransferring && (
                       <div className="flex items-center gap-3 bg-[rgba(37,99,235,0.03)] border border-[rgba(37,99,235,0.15)] rounded-xl p-3">
-                        <Loader size={14} className="text-[#2563EB] animate-spin" />
-                        <span className="text-xs text-[#2563EB]">Applying style transfer ({styleTransferStrength}% strength)...</span>
+                        <Loader size={14} className="text-brand-accent animate-spin" />
+                        <span className="text-xs text-brand-accent">Applying style transfer ({styleTransferStrength}% strength)...</span>
                       </div>
                     )}
 

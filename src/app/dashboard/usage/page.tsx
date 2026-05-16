@@ -71,7 +71,7 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "Content Generation": "bg-[#2563EB]",
+  "Content Generation": "bg-brand-accent",
   "AI Chat": "bg-blue-400",
   "Email Generation": "bg-emerald-400",
   "Image Generation": "bg-purple-400",
@@ -96,7 +96,7 @@ function getProgressColor(pct: number): string {
   if (pct >= 90) return "bg-red-400";
   if (pct >= 75) return "bg-orange-400";
   if (pct >= 50) return "bg-amber-400";
-  return "bg-[#2563EB]";
+  return "bg-brand-accent";
 }
 
 function getProgressGlow(pct: number): string {
@@ -278,7 +278,7 @@ export default function UsagePage() {
                   className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
                 >
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Remaining</p>
-                  <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${isUnlimited ? "text-[#2563EB]" : remaining < effectiveLimit * 0.1 ? "text-red-400" : "text-text-primary"}`}>
+                  <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${isUnlimited ? "text-brand-accent" : remaining < effectiveLimit * 0.1 ? "text-red-400" : "text-text-primary"}`}>
                     {isUnlimited ? "∞" : fmt(remaining)}
                   </p>
                   <p className="text-[10px] text-text-muted mt-1">{isUnlimited ? "unlimited" : `of ${fmtShort(effectiveLimit)}`}</p>
@@ -333,7 +333,7 @@ export default function UsagePage() {
                   <span>
                     {fmt(used)} used of {fmt(effectiveLimit)}{" "}
                     {tokenData.bonus_tokens > 0 && (
-                      <span className="text-[#2563EB]">
+                      <span className="text-brand-accent">
                         (+{fmtShort(tokenData.bonus_tokens)} bonus)
                       </span>
                     )}
@@ -359,7 +359,7 @@ export default function UsagePage() {
               {/* Usage by Category */}
               <div className="glass rounded-xl p-5 space-y-4">
                 <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <BarChart3 size={14} className="text-[#2563EB]" />
+                  <BarChart3 size={14} className="text-brand-accent" />
                   Usage by Category
                 </div>
 
@@ -414,7 +414,7 @@ export default function UsagePage() {
               {/* Daily Usage Chart */}
               <div className="glass rounded-xl p-5 space-y-4">
                 <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Calendar size={14} className="text-[#2563EB]" />
+                  <Calendar size={14} className="text-brand-accent" />
                   Daily Usage (Last 30 Days)
                 </div>
 
@@ -439,7 +439,7 @@ export default function UsagePage() {
                           className="flex-1 flex flex-col items-center justify-end h-full group relative"
                         >
                           <div
-                            className="w-full rounded-t transition-all duration-300 bg-[rgba(37,99,235,0.6)] group-hover:bg-[#2563EB]"
+                            className="w-full rounded-t transition-all duration-300 bg-[rgba(37,99,235,0.6)] group-hover:bg-brand-accent"
                             style={{ height: `${Math.max(h, d.tokens > 0 ? 4 : 0)}%` }}
                           />
                           {/* Tooltip */}
@@ -466,7 +466,7 @@ export default function UsagePage() {
               </div>
             </div>{/* ── Buy More Tokens ── */}{isUnlimited ? (
               <div className="glass rounded-xl p-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#2563EB] shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-brand-accent shrink-0">
                   <Zap size={18} />
                 </div>
                 <div>
@@ -480,12 +480,12 @@ export default function UsagePage() {
               <div className="glass rounded-xl p-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                    <Package size={14} className="text-[#2563EB]" />
+                    <Package size={14} className="text-brand-accent" />
                     Buy More Tokens
                   </div>
                   <Link
                     href="/dashboard/pricing"
-                    className="flex items-center gap-1 text-xs text-[#2563EB] hover:underline"
+                    className="flex items-center gap-1 text-xs text-brand-accent hover:underline"
                   >
                     Or upgrade your plan <ChevronRight size={12} />
                   </Link>
@@ -506,12 +506,12 @@ export default function UsagePage() {
                       }
                       className={`relative flex flex-col items-center gap-1.5 p-4 rounded-xl border text-center transition-all ${
                         selectedPack === pack.id
-                          ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                          ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent"
                           : "border-border bg-surface-light text-foreground hover:border-[rgba(37,99,235,0.4)]"
                       }`}
                     >
                       {pack.popular && (
-                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-[#2563EB] text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-brand-accent text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                           Popular
                         </div>
                       )}
@@ -535,7 +535,7 @@ export default function UsagePage() {
                       disabled={!selectedPack || buying}
                       className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                         selectedPack && !buying
-                          ? "bg-[#2563EB] text-white hover:bg-[#1D4ED8]"
+                          ? "bg-brand-accent text-white hover:bg-brand-accent/80"
                           : "bg-surface-light text-muted cursor-not-allowed"
                       }`}
                     >
@@ -561,7 +561,7 @@ export default function UsagePage() {
               </div>
             )}{/* ── Recent Activity ── */}<div className="glass rounded-xl p-5 space-y-4">
               <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                <Activity size={14} className="text-[#2563EB]" />
+                <Activity size={14} className="text-brand-accent" />
                 Recent AI Activity
               </div>
 
@@ -601,7 +601,7 @@ export default function UsagePage() {
                           <td className="py-2.5 text-muted hidden sm:table-cell max-w-[200px] truncate">
                             {item.description || "—"}
                           </td>
-                          <td className="py-2.5 pr-1 text-right font-medium tabular-nums text-[#2563EB] whitespace-nowrap">
+                          <td className="py-2.5 pr-1 text-right font-medium tabular-nums text-brand-accent whitespace-nowrap">
                             {fmt(item.tokens_used)}
                           </td>
                         </motion.tr>

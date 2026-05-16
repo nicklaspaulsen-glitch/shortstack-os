@@ -223,7 +223,7 @@ export default function UpgradePage() {
                       </div>
                     )}
                     {isCurrent && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#2563EB] text-white text-[9px] font-bold uppercase tracking-wider">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-brand-accent text-white text-[9px] font-bold uppercase tracking-wider">
                         Current plan
                       </div>
                     )}
@@ -258,12 +258,12 @@ export default function UpgradePage() {
                       disabled={isCurrent || loadingTier !== null}
                       className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold transition-all ${
                         isCurrent
-                          ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] cursor-default"
+                          ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] cursor-default"
                           : isRecommended
                           ? "bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm"
                           : isUpgrade
-                          ? "bg-[#2563EB] text-white hover:bg-[#1D4ED8] shadow-sm"
-                          : "bg-surface-light text-foreground border border-border hover:bg-[rgba(37,99,235,0.08)] hover:text-[#2563EB]"
+                          ? "bg-brand-accent text-white hover:bg-brand-accent/80 shadow-sm"
+                          : "bg-surface-light text-foreground border border-border hover:bg-[rgba(37,99,235,0.08)] hover:text-brand-accent"
                       } ${loadingTier === tier ? "opacity-70 cursor-wait" : ""}`}
                     >
                       {loadingTier === tier ? (
@@ -294,7 +294,7 @@ export default function UpgradePage() {
                             </span>
                             <span className="font-mono font-medium text-foreground">
                               {!Number.isFinite(val) ? (
-                                <span className="text-[#2563EB]">Unlimited</span>
+                                <span className="text-brand-accent">Unlimited</span>
                               ) : (
                                 formatLimit(val, { suffix: row.suffix })
                               )}
@@ -308,7 +308,7 @@ export default function UpgradePage() {
                     <div className="mt-3 pt-3 border-t border-border space-y-1.5">
                       {getTierFeatures(tier).map((f) => (
                         <div key={f} className="flex items-start gap-1.5">
-                          <Check size={10} className="mt-0.5 shrink-0 text-[#2563EB]" />
+                          <Check size={10} className="mt-0.5 shrink-0 text-brand-accent" />
                           <span className="text-[10px] text-foreground/80 leading-relaxed">{f}</span>
                         </div>
                       ))}
@@ -318,7 +318,7 @@ export default function UpgradePage() {
               })}
             </div>{/* ─── Why upgrade? ──────────────────────────────────────────── */}<section className="glass rounded-xl p-6">
               <div className="flex items-center gap-2 mb-3">
-                <Sparkles size={16} className="text-[#2563EB]" />
+                <Sparkles size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-bold text-foreground">Why upgrade?</h2>
               </div>
               <p className="text-xs text-muted mb-5 max-w-3xl leading-relaxed">
@@ -399,7 +399,7 @@ export default function UpgradePage() {
               <p className="text-xs text-muted mb-3">Still not sure? See your current usage and invoices.</p>
               <Link
                 href="/dashboard/billing"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(37,99,235,0.08)] hover:text-[#2563EB] transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(37,99,235,0.08)] hover:text-brand-accent transition-colors"
               >
                 View billing & usage
                 <ArrowUpRight size={12} />

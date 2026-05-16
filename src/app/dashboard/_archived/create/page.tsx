@@ -58,10 +58,10 @@ export default function CreateHubPage() {
               { label: "Plan Content", href: "/dashboard/content-plan", icon: Calendar },
             ]}
             stats={[
-              { label: "Generations (30d)", key: "generations_month", icon: Sparkles, color: "text-[#2563EB]" },
+              { label: "Generations (30d)", key: "generations_month", icon: Sparkles, color: "text-brand-accent" },
               { label: "Scripts", key: "scripts", icon: FileText, color: "text-[#3B82F6]" },
-              { label: "Emails", key: "emails", icon: Mail, color: "text-[#1D4ED8]" },
-              { label: "Posts", key: "posts", icon: Film, color: "text-[#2563EB]" },
+              { label: "Emails", key: "emails", icon: Mail, color: "text-brand-accent" },
+              { label: "Posts", key: "posts", icon: Film, color: "text-brand-accent" },
             ]}
             tools={[
               {

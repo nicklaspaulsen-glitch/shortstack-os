@@ -149,7 +149,7 @@ export default function GettingStartedPage() {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold text-[#111827]">{completed.size}/{STEPS.length} completed</span>
-                <span className="text-xs text-[#2563EB] font-mono">{progress}%</span>
+                <span className="text-xs text-brand-accent font-mono">{progress}%</span>
               </div>
               <div className="w-full h-2 rounded-full bg-[rgba(0,0,0,0.06)]">
                 <div className="h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "linear-gradient(90deg, #2563EB, #3B82F6)" }} />
@@ -159,7 +159,7 @@ export default function GettingStartedPage() {
               )}
             </motion.div>{loading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader size={20} className="animate-spin text-[#2563EB]" />
+                <Loader size={20} className="animate-spin text-brand-accent" />
               </div>
             ) : (
               <div className="space-y-2">
@@ -185,19 +185,19 @@ export default function GettingStartedPage() {
                         className="shrink-0">
                         {done
                           ? <CheckCircle size={20} className="text-green-700" />
-                          : <Circle size={20} className={isCurrent ? "text-[#2563EB]" : "text-[#6B7280]"} />
+                          : <Circle size={20} className={isCurrent ? "text-brand-accent" : "text-[#6B7280]"} />
                         }
                       </button>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className={done ? "text-green-700" : isCurrent ? "text-[#2563EB]" : "text-[#6B7280]"}>{step.icon}</span>
+                          <span className={done ? "text-green-700" : isCurrent ? "text-brand-accent" : "text-[#6B7280]"}>{step.icon}</span>
                           <p className={`text-sm font-semibold ${done ? "line-through text-text-muted" : "text-[#111827]"}`}>{step.title}</p>
-                          {isCurrent && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Next</span>}
+                          {isCurrent && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Next</span>}
                         </div>
                         <p className="text-[10px] text-[#6B7280] mt-0.5">{step.description}</p>
                       </div>
                       <Link href={step.link} className={`text-[9px] py-1 px-2.5 flex items-center gap-1 shrink-0 rounded-lg font-medium transition-all ${
-                        isCurrent ? "bg-[#2563EB] text-white hover:bg-[#1D4ED8]" : "bg-[rgba(0,0,0,0.04)] text-[#374151] hover:bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.08)]"
+                        isCurrent ? "bg-brand-accent text-white hover:bg-brand-accent/80" : "bg-[rgba(0,0,0,0.04)] text-[#374151] hover:bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.08)]"
                       }`}>
                         {step.linkLabel} <ArrowRight size={9} />
                       </Link>
@@ -213,7 +213,7 @@ export default function GettingStartedPage() {
                 className="bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] rounded-xl p-4"
               >
                 <p className="text-[10px] text-[#374151]">
-                  <span className="text-[#2563EB] font-semibold">Tip:</span> Steps are auto-detected from your actual data. You can also manually check them off by clicking the circle.
+                  <span className="text-brand-accent font-semibold">Tip:</span> Steps are auto-detected from your actual data. You can also manually check them off by clicking the circle.
                 </p>
               </motion.div>
             )}</MotionPage>

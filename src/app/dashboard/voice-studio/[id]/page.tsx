@@ -343,7 +343,7 @@ export default function VoiceCloneDetailPage() {
                         value={testText}
                         onChange={(e) => setTestText(e.target.value)}
                         rows={3}
-                        className="mt-2 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#374151] placeholder:text-text-muted focus:border-[#2563EB]/60 focus:outline-none"
+                        className="mt-2 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#374151] placeholder:text-text-muted focus:border-brand-accent/60 focus:outline-none"
                         placeholder="Test text..."
                       />
                       <div className="mt-3 flex items-center gap-2">
@@ -351,7 +351,7 @@ export default function VoiceCloneDetailPage() {
                           type="button"
                           onClick={onTest}
                           disabled={testing || testText.trim().length === 0}
-                          className="flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#3B82F6] disabled:cursor-not-allowed disabled:bg-black/[0.06] disabled:text-text-muted"
+                          className="flex items-center gap-1.5 rounded-lg bg-brand-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-[#3B82F6] disabled:cursor-not-allowed disabled:bg-black/[0.06] disabled:text-text-muted"
                         >
                           {testing ? (
                             <Loader2 size={12} className="animate-spin" />
@@ -410,10 +410,10 @@ export default function VoiceCloneDetailPage() {
                                     <button
                                       type="button"
                                       onClick={() => setPlayingSampleId(isPlaying ? null : s.id)}
-                                      className="flex-shrink-0 w-6 h-6 rounded-full bg-[#2563EB]/20 hover:bg-[#2563EB]/40 flex items-center justify-center transition-colors"
+                                      className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-accent/20 hover:bg-brand-accent/40 flex items-center justify-center transition-colors"
                                       aria-label={isPlaying ? "Pause" : "Play"}
                                     >
-                                      {isPlaying ? <Pause size={10} className="text-[#3B82F6]" /> : <Play size={10} className="text-[#2563EB]" />}
+                                      {isPlaying ? <Pause size={10} className="text-[#3B82F6]" /> : <Play size={10} className="text-brand-accent" />}
                                     </button>
                                   ) : (
                                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-black/[0.04] flex items-center justify-center">
@@ -481,10 +481,10 @@ export default function VoiceCloneDetailPage() {
                                   <button
                                     type="button"
                                     onClick={() => setPlayingRenderId(isPlaying ? null : r.id)}
-                                    className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-[#2563EB]/20 hover:bg-[#2563EB]/40 flex items-center justify-center transition-colors"
+                                    className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-brand-accent/20 hover:bg-brand-accent/40 flex items-center justify-center transition-colors"
                                     aria-label={isPlaying ? "Pause" : "Play"}
                                   >
-                                    {isPlaying ? <Pause size={10} className="text-[#3B82F6]" /> : <Play size={10} className="text-[#2563EB]" />}
+                                    {isPlaying ? <Pause size={10} className="text-[#3B82F6]" /> : <Play size={10} className="text-brand-accent" />}
                                   </button>
                                 ) : (
                                   <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-black/[0.04] flex items-center justify-center">

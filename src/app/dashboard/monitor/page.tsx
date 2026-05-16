@@ -40,7 +40,7 @@ function timeAgo(ts: string | null): string {
 
 function StatusIcon({ status }: { status: string }) {
   if (status === "healthy") return <CheckCircle className="w-5 h-5 text-emerald-400" />;
-  if (status === "degraded") return <AlertTriangle className="w-5 h-5 text-[#2563EB]" />;
+  if (status === "degraded") return <AlertTriangle className="w-5 h-5 text-brand-accent" />;
   if (status === "down") return <XCircle className="w-5 h-5 text-red-400" />;
   return <Clock className="w-5 h-5 text-text-muted" />;
 }
@@ -48,7 +48,7 @@ function StatusIcon({ status }: { status: string }) {
 function StatusDot({ status }: { status: string }) {
   const cls: Record<string, string> = {
     healthy: "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]",
-    degraded: "bg-[#2563EB] shadow-[0_0_6px_rgba(37,99,235,0.5)]",
+    degraded: "bg-brand-accent shadow-[0_0_6px_rgba(37,99,235,0.5)]",
     down: "bg-red-400 shadow-[0_0_6px_rgba(248,113,113,0.6)]",
     unknown: "bg-slate-400",
   };
@@ -118,7 +118,7 @@ export default function MonitorPage() {
   const overallLabel = { healthy: "All Systems Operational", degraded: "Partial Outage", down: "Major Outage" }[overall];
   const overallCls = {
     healthy: "bg-emerald-500/15 border-emerald-500/30 text-emerald-400",
-    degraded: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]",
+    degraded: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent",
     down: "bg-red-500/15 border-red-500/30 text-red-400",
   }[overall];
 
@@ -153,7 +153,7 @@ export default function MonitorPage() {
             </motion.div>{/* Summary counts */}<div className="grid grid-cols-3 gap-3">
               {[
                 { label: "Healthy", count: annotated.filter(s => s.computedStatus === "healthy").length, cls: "text-emerald-400", bar: "from-emerald-500 to-emerald-400" },
-                { label: "Degraded", count: annotated.filter(s => s.computedStatus === "degraded").length, cls: "text-[#2563EB]", bar: "from-[#2563EB] to-[#3B82F6]" },
+                { label: "Degraded", count: annotated.filter(s => s.computedStatus === "degraded").length, cls: "text-brand-accent", bar: "from-[#2563EB] to-[#3B82F6]" },
                 { label: "Down", count: annotated.filter(s => s.computedStatus === "down").length, cls: "text-red-400", bar: "from-red-500 to-red-400" },
               ].map(({ label, count, cls, bar }, i) => (
                 <motion.div

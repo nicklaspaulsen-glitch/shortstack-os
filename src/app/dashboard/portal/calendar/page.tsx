@@ -157,7 +157,7 @@ export default function ContentCalendarPage() {
   const monthName = currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
   if (loading) return (
-    <MotionPage className="flex items-center justify-center py-20"><Loader size={20} className="animate-spin text-[#2563EB]" /></MotionPage>
+    <MotionPage className="flex items-center justify-center py-20"><Loader size={20} className="animate-spin text-brand-accent" /></MotionPage>
   );
 
   return (
@@ -166,7 +166,7 @@ export default function ContentCalendarPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-2">
-            <Calendar size={18} className="text-[#2563EB]" /> Content Calendar
+            <Calendar size={18} className="text-brand-accent" /> Content Calendar
           </h1>
           <p className="text-xs text-muted mt-0.5">Plan, schedule, and track your content</p>
         </div>
@@ -210,15 +210,15 @@ export default function ContentCalendarPage() {
                   isToday ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.04)]" : "border-transparent"
                 }`}
               >
-                <div className={`text-[10px] font-medium mb-1 ${isToday ? "text-[#2563EB]" : "text-[#6B7280]"}`}>
+                <div className={`text-[10px] font-medium mb-1 ${isToday ? "text-brand-accent" : "text-[#6B7280]"}`}>
                   {day}
                 </div>
                 <div className="space-y-0.5">
                   {dayEntries.slice(0, 3).map((entry, j) => (
                     <div key={j} className={`text-[8px] px-1 py-0.5 rounded flex items-center gap-0.5 truncate ${
                       entry.status === "published" ? "bg-success/10 text-success" :
-                      entry.status === "scheduled" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" :
-                      entry.status === "idea" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" :
+                      entry.status === "scheduled" ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" :
+                      entry.status === "idea" ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" :
                       "bg-black/[0.04] text-[#6B7280]"
                     }`}>
                       {PLATFORM_ICONS[entry.platform] || null}
@@ -238,8 +238,8 @@ export default function ContentCalendarPage() {
       {/* Legend */}
       <div className="flex items-center gap-4 justify-center">
         {[
-          { label: "Idea", color: "bg-[rgba(37,99,235,0.15)] text-[#2563EB]" },
-          { label: "Scheduled", color: "bg-[rgba(37,99,235,0.15)] text-[#2563EB]" },
+          { label: "Idea", color: "bg-[rgba(37,99,235,0.15)] text-brand-accent" },
+          { label: "Scheduled", color: "bg-[rgba(37,99,235,0.15)] text-brand-accent" },
           { label: "Published", color: "bg-success/10 text-success" },
         ].map(item => (
           <div key={item.label} className="flex items-center gap-1.5">
@@ -252,7 +252,7 @@ export default function ContentCalendarPage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-2.5">
         <div className="card text-center p-3">
-          <p className="text-lg font-bold font-mono text-[#2563EB] count-up">{entries.length}</p>
+          <p className="text-lg font-bold font-mono text-brand-accent count-up">{entries.length}</p>
           <p className="text-[9px] text-muted uppercase tracking-wider">This Month</p>
         </div>
         <div className="card text-center p-3">
@@ -260,7 +260,7 @@ export default function ContentCalendarPage() {
           <p className="text-[9px] text-muted uppercase tracking-wider">Published</p>
         </div>
         <div className="card text-center p-3">
-          <p className="text-lg font-bold font-mono text-[#2563EB] count-up">{entries.filter(e => e.status === "scheduled" || e.status === "idea").length}</p>
+          <p className="text-lg font-bold font-mono text-brand-accent count-up">{entries.filter(e => e.status === "scheduled" || e.status === "idea").length}</p>
           <p className="text-[9px] text-muted uppercase tracking-wider">Upcoming</p>
         </div>
       </div>
@@ -269,7 +269,7 @@ export default function ContentCalendarPage() {
       <Modal isOpen={showAIPlan} onClose={() => setShowAIPlan(false)} title="AI Content Planner" size="md">
         <div className="space-y-3">
           <div className="flex items-center gap-2 p-2.5 bg-[rgba(37,99,235,0.05)] rounded-lg border border-[rgba(37,99,235,0.15)]">
-            <Sparkles size={16} className="text-[#2563EB] shrink-0" />
+            <Sparkles size={16} className="text-brand-accent shrink-0" />
             <p className="text-[10px] text-muted">Describe your business and goals, and AI will generate a full 30-day content calendar with platform-specific ideas.</p>
           </div>
           <div>

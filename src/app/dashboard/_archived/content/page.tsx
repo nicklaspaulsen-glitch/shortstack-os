@@ -570,7 +570,7 @@ export default function ContentPage() {
         <div className="flex items-center justify-between mb-3">
           <div>
             <h2 className="section-header flex items-center gap-2 mb-1">
-              <Sparkles size={18} className="text-[#2563EB]" /> Drop & Go — AI handles the rest
+              <Sparkles size={18} className="text-brand-accent" /> Drop & Go — AI handles the rest
             </h2>
             <p className="text-xs text-muted">Drop any file. AI writes titles, descriptions, hashtags, and best post times for every platform.</p>
           </div>
@@ -579,7 +579,7 @@ export default function ContentPage() {
               <button
                 onClick={() => planForPeriod(7)}
                 disabled={planningWeek}
-                className="btn-primary flex items-center gap-1.5 disabled:opacity-50 bg-[#2563EB] text-xs px-3 py-1.5"
+                className="btn-primary flex items-center gap-1.5 disabled:opacity-50 bg-brand-accent text-xs px-3 py-1.5"
               >
                 {planningWeek && planPeriodDays === 7 ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
                 Plan Week
@@ -587,7 +587,7 @@ export default function ContentPage() {
               <button
                 onClick={() => planForPeriod(30)}
                 disabled={planningWeek}
-                className="btn-ghost flex items-center gap-1.5 disabled:opacity-50 text-xs px-3 py-1.5 border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] rounded-lg"
+                className="btn-ghost flex items-center gap-1.5 disabled:opacity-50 text-xs px-3 py-1.5 border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] rounded-lg"
               >
                 {planningWeek && planPeriodDays === 30 ? <Loader size={12} className="animate-spin" /> : null}
                 Plan Month
@@ -595,7 +595,7 @@ export default function ContentPage() {
               <button
                 onClick={() => planForPeriod(365)}
                 disabled={planningWeek}
-                className="btn-ghost flex items-center gap-1.5 disabled:opacity-50 text-xs px-3 py-1.5 border border-[rgba(37,99,235,0.25)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)] rounded-lg"
+                className="btn-ghost flex items-center gap-1.5 disabled:opacity-50 text-xs px-3 py-1.5 border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] rounded-lg"
               >
                 {planningWeek && planPeriodDays === 365 ? <Loader size={12} className="animate-spin" /> : null}
                 Plan Year
@@ -610,10 +610,10 @@ export default function ContentPage() {
           onDrop={onDropZone}
           onClick={() => fileInputRef.current?.click()}
           className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
-            dragOver ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : "border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.4)]"
+            dragOver ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : "border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.4)]"
           }`}
         >
-          <Upload size={36} className="mx-auto mb-3 text-[#2563EB]" />
+          <Upload size={36} className="mx-auto mb-3 text-brand-accent" />
           <p className="text-sm font-medium">Drag & drop images, videos, PDFs, or docs</p>
           <p className="text-xs text-muted mt-1">or click to browse — AI auto-packages each file. JPG, PNG, WebP, GIF, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV up to 100 MB.</p>
           <input
@@ -644,7 +644,7 @@ export default function ContentPage() {
                   <div className="flex items-center gap-2 min-w-0">
                     {item.mime_type?.startsWith("video/") ? <Film size={14} className="text-purple-700 shrink-0" /> :
                       item.mime_type?.startsWith("image/") ? <FileText size={14} className="text-blue-700 shrink-0" /> :
-                        <FileText size={14} className="text-[#2563EB] shrink-0" />}
+                        <FileText size={14} className="text-brand-accent shrink-0" />}
                     <p className="text-sm font-medium truncate">{item.file_name}</p>
                     {item.status === "uploading" && (
                       <span className="text-[10px] text-muted flex items-center gap-1">
@@ -652,7 +652,7 @@ export default function ContentPage() {
                       </span>
                     )}
                     {item.status === "analyzing" && (
-                      <span className="text-[10px] text-[#2563EB] flex items-center gap-1">
+                      <span className="text-[10px] text-brand-accent flex items-center gap-1">
                         <Loader size={10} className="animate-spin" /> Analyzing...
                       </span>
                     )}
@@ -685,13 +685,13 @@ export default function ContentPage() {
                           const isRemixing = remixing?.itemId === item.id && remixing.platform === plat;
                           return (
                             <div key={plat} className="flex items-start gap-2">
-                              <span className="text-[10px] uppercase text-[#2563EB] w-20 shrink-0 pt-1">{plat}</span>
+                              <span className="text-[10px] uppercase text-brand-accent w-20 shrink-0 pt-1">{plat}</span>
                               <p className="text-xs text-foreground flex-1">{title}</p>
                               <button
                                 onClick={() => remixPlatformTitle(item, plat)}
                                 disabled={isRemixing}
                                 title="Find a better title"
-                                className="text-[rgba(37,99,235,0.6)] hover:text-[#2563EB] transition-colors disabled:opacity-40 shrink-0"
+                                className="text-[rgba(37,99,235,0.6)] hover:text-brand-accent transition-colors disabled:opacity-40 shrink-0"
                               >
                                 {isRemixing ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
                               </button>
@@ -731,7 +731,7 @@ export default function ContentPage() {
                               if (!tags || tags.length === 0) return null;
                               return (
                                 <div key={plat}>
-                                  <span className="text-[9px] uppercase text-[#2563EB] mr-2">{plat}</span>
+                                  <span className="text-[9px] uppercase text-brand-accent mr-2">{plat}</span>
                                   <span className="text-[10px] text-muted">{tags.join(" ")}</span>
                                 </div>
                               );
@@ -751,7 +751,7 @@ export default function ContentPage() {
                               return (
                                 <div key={plat} className="flex items-center justify-between text-[10px]">
                                   <span className="text-muted capitalize">{plat}</span>
-                                  <span className="text-[#2563EB] font-medium">{t}</span>
+                                  <span className="text-brand-accent font-medium">{t}</span>
                                 </div>
                               );
                             })}
@@ -767,7 +767,7 @@ export default function ContentPage() {
                         <div className="space-y-1.5">
                           {item.ai_package.suggested_caption_variations.map((cap, idx) => (
                             <div key={idx} className="text-[11px] p-2 bg-surface-light/50 border border-border rounded flex items-start gap-2">
-                              <span className="text-[#2563EB] font-medium shrink-0">#{idx + 1}</span>
+                              <span className="text-brand-accent font-medium shrink-0">#{idx + 1}</span>
                               <span className="text-foreground/90">{cap}</span>
                             </div>
                           ))}
@@ -790,7 +790,7 @@ export default function ContentPage() {
           <div className="mt-5 glass-indigo rounded-xl p-4">
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
               <h3 className="text-sm font-medium flex items-center gap-2">
-                <Calendar size={14} className="text-[#2563EB]" />
+                <Calendar size={14} className="text-brand-accent" />
                 {planPeriodDays}-Day Plan ({weekPlan.length} posts)
               </h3>
               <div className="flex items-center gap-2">
@@ -803,7 +803,7 @@ export default function ContentPage() {
                   <button
                     onClick={approveAndPublishAll}
                     disabled={approvingAll}
-                    className="text-[11px] px-3 py-1.5 rounded-lg bg-[#2563EB] text-black font-semibold flex items-center gap-1.5 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="text-[11px] px-3 py-1.5 rounded-lg bg-brand-accent text-black font-semibold flex items-center gap-1.5 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {approvingAll ? <Loader size={12} className="animate-spin" /> : <Send size={12} />}
                     Approve all + publish on schedule
@@ -828,7 +828,7 @@ export default function ContentPage() {
             {planThemes.length > 0 && (
               <div className="mb-3 flex flex-wrap gap-1.5">
                 {planThemes.slice(0, 12).map((t) => (
-                  <span key={t.week} className="text-[10px] px-2 py-1 rounded border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)] text-[#2563EB]">
+                  <span key={t.week} className="text-[10px] px-2 py-1 rounded border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)] text-brand-accent">
                     W{t.week}: {t.theme}
                   </span>
                 ))}
@@ -850,7 +850,7 @@ export default function ContentPage() {
                     whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
                     className={`flex items-center gap-3 text-[11px] p-2 border rounded ${p.needs_creation ? "border-amber-500/30 bg-amber-500/5" : "border-border bg-surface/50"}`}
                   >
-                    <span className="text-[#2563EB] font-medium w-12 shrink-0">{p.day}</span>
+                    <span className="text-brand-accent font-medium w-12 shrink-0">{p.day}</span>
                     <span className="text-muted w-16 shrink-0">{p.date?.slice(5)}</span>
                     <span className="text-muted w-14 shrink-0">{p.post_time}</span>
                     <span className="text-foreground capitalize w-20 shrink-0">{p.platform}</span>
@@ -884,8 +884,8 @@ export default function ContentPage() {
                       )}
                       {!isPublishing && status === "approved_for_publish" && (
                         <>
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
-                          <span className="text-[#2563EB]">Approved</span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-brand-accent" />
+                          <span className="text-brand-accent">Approved</span>
                         </>
                       )}
                       {!isPublishing && (status === "scheduled" || (!p.status && !p.needs_creation)) && (
@@ -902,7 +902,7 @@ export default function ContentPage() {
                         onClick={() => publishNow(i)}
                         disabled={isPublishing}
                         title="Publish this entry right now"
-                        className="shrink-0 text-[10px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.08)] text-[#2563EB] flex items-center gap-1 disabled:opacity-40"
+                        className="shrink-0 text-[10px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.08)] text-brand-accent flex items-center gap-1 disabled:opacity-40"
                       >
                         <Send size={10} /> Publish now
                       </button>
@@ -920,7 +920,7 @@ export default function ContentPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm modal-backdrop" onClick={() => setShowPlanComplete(false)}>
           <div className="card max-w-lg w-full p-6" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-lg font-bold mb-1 flex items-center gap-2">
-              <Sparkles size={18} className="text-[#2563EB]" /> Plan ready — what&apos;s next?
+              <Sparkles size={18} className="text-brand-accent" /> Plan ready — what&apos;s next?
             </h2>
             <p className="text-xs text-muted mb-5">
               {planPeriodDays === 7 && "Your 7-day schedule is live. "}
@@ -940,7 +940,7 @@ export default function ContentPage() {
                 }}
                 className="w-full text-left p-3 rounded-lg border border-border hover:border-[rgba(37,99,235,0.3)] hover:bg-[rgba(37,99,235,0.05)] transition flex items-start gap-3"
               >
-                <Upload size={16} className="text-[#2563EB] mt-0.5 shrink-0" />
+                <Upload size={16} className="text-brand-accent mt-0.5 shrink-0" />
                 <div>
                   <p className="text-sm font-medium">I have more content to upload</p>
                   <p className="text-[10px] text-muted">Drop more files — I&apos;ll re-plan with the full set</p>
@@ -951,7 +951,7 @@ export default function ContentPage() {
                   onClick={() => { setShowPlanComplete(false); planForPeriod(30); }}
                   className="w-full text-left p-3 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] hover:bg-[rgba(37,99,235,0.08)] transition flex items-start gap-3"
                 >
-                  <Calendar size={16} className="text-[#2563EB] mt-0.5 shrink-0" />
+                  <Calendar size={16} className="text-brand-accent mt-0.5 shrink-0" />
                   <div>
                     <p className="text-sm font-medium">Plan the rest of the month</p>
                     <p className="text-[10px] text-muted">30-day schedule with themes + AI-generated content ideas to fill gaps</p>
@@ -963,7 +963,7 @@ export default function ContentPage() {
                   onClick={() => { setShowPlanComplete(false); planForPeriod(365); }}
                   className="w-full text-left p-3 rounded-lg border border-[rgba(37,99,235,0.25)] bg-gradient-to-r from-[rgba(37,99,235,0.08)] to-[rgba(37,99,235,0.08)] hover:from-[rgba(37,99,235,0.08)] transition flex items-start gap-3"
                 >
-                  <Sparkles size={16} className="text-[#2563EB] mt-0.5 shrink-0" />
+                  <Sparkles size={16} className="text-brand-accent mt-0.5 shrink-0" />
                   <div>
                     <p className="text-sm font-medium">Plan the whole year</p>
                     <p className="text-[10px] text-muted">12-month strategy with weekly themes, seasonal moments, and gap-filling ideas for every week</p>
@@ -996,7 +996,7 @@ export default function ContentPage() {
         {tabs.map((t) => (
           <button key={t.key} onClick={() => setTab(t.key)}
             className={`px-4 py-2 text-sm rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              tab === t.key ? "bg-[#2563EB] text-white font-medium" : "text-muted hover:text-foreground"
+              tab === t.key ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
             }`}
           >
             {t.icon} {t.label}
@@ -1131,7 +1131,7 @@ export default function ContentPage() {
                 { key: "scheduled_at", label: "Scheduled", render: (c: ContentCalendarEntry) => c.scheduled_at ? formatDateTime(c.scheduled_at) : "TBD" },
                 { key: "status", label: "Status", render: (c: ContentCalendarEntry) => <StatusBadge status={c.status} /> },
                 { key: "live_url", label: "URL", render: (c: ContentCalendarEntry) => c.live_url ? (
-                  <a href={c.live_url} target="_blank" rel="noopener" className="text-[#2563EB] text-xs">View</a>
+                  <a href={c.live_url} target="_blank" rel="noopener" className="text-brand-accent text-xs">View</a>
                 ) : "-" },
               ]}
               data={calendar}
@@ -1160,7 +1160,7 @@ export default function ContentPage() {
                         <p className="text-xs text-muted mb-2">{idea.hook?.slice(0, 100)}...</p>
                         <div className="flex items-center gap-2 text-xs text-muted mb-3">
                           <Clock size={12} /> {idea.estimated_length}
-                          <span className="text-[#2563EB]">#{idea.target_keyword}</span>
+                          <span className="text-brand-accent">#{idea.target_keyword}</span>
                         </div>
                         {idea.thumbnail_concept && (
                           <p className="text-xs text-muted mb-3 bg-surface-light p-2 rounded">
@@ -1193,13 +1193,13 @@ export default function ContentPage() {
                     personalIdeas.filter((i) => i.idea_type === "short_form").map((idea) => (
                       <div key={idea.id} className="card-hover p-4">
                         <h3 className="font-medium text-sm mb-1">{idea.title}</h3>
-                        <p className="text-xs text-[#2563EB] mb-1">Hook: {idea.hook}</p>
+                        <p className="text-xs text-brand-accent mb-1">Hook: {idea.hook}</p>
                         <p className="text-xs text-muted mb-2">{idea.core_concept}</p>
                         <div className="flex items-center justify-between">
                           <span className="badge bg-surface-light text-xs">{idea.platform_recommendation}</span>
                           <div className="flex gap-1">
                             {!idea.is_approved && (
-                              <button onClick={() => approveIdea(idea.id)} className="text-xs text-[#2563EB] hover:text-[#3B82F6]">Approve</button>
+                              <button onClick={() => approveIdea(idea.id)} className="text-xs text-brand-accent hover:text-[#3B82F6]">Approve</button>
                             )}
                           </div>
                         </div>
@@ -1245,11 +1245,11 @@ export default function ContentPage() {
                       <div key={item.id} className="card p-3 text-xs">
                         <p className="font-medium mb-1">{item.title}</p>
                         <div className="flex items-center gap-2 text-[10px] text-muted">
-                          <span className={`px-1.5 py-0.5 rounded ${item.type === "blog" ? "bg-info/10 text-info" : item.type === "video" ? "bg-danger/10 text-danger" : item.type === "email" ? "bg-purple-500/10 text-purple-700" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"}`}>{item.type}</span>
+                          <span className={`px-1.5 py-0.5 rounded ${item.type === "blog" ? "bg-info/10 text-info" : item.type === "video" ? "bg-danger/10 text-danger" : item.type === "email" ? "bg-purple-500/10 text-purple-700" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"}`}>{item.type}</span>
                           <span>{item.assignee}</span>
                         </div>
                         {item.due && <p className="text-[10px] text-muted mt-1 flex items-center gap-1"><Clock size={9} /> Due: {item.due}</p>}
-                        {item.seo_score > 0 && <p className="text-[10px] mt-1 flex items-center gap-1"><Search size={9} className="text-[#2563EB]" /> SEO: {item.seo_score}/100</p>}
+                        {item.seo_score > 0 && <p className="text-[10px] mt-1 flex items-center gap-1"><Search size={9} className="text-brand-accent" /> SEO: {item.seo_score}/100</p>}
                       </div>
                     ))}
                   </div>
@@ -1257,12 +1257,12 @@ export default function ContentPage() {
               </div>
               {/* Content Approval Flow */}
               <div className="card">
-                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Shield size={14} className="text-[#2563EB]" /> Content Approval Flow</h3>
+                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Shield size={14} className="text-brand-accent" /> Content Approval Flow</h3>
                 <div className="flex items-center gap-4">
                   {["AI Draft", "Internal Review", "Client Approval", "Schedule", "Publish"].map((step, i) => (
                     <div key={step} className="flex items-center gap-2">
                       <div className="text-center">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${i < 3 ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]" : "bg-surface-light text-muted border border-border"}`}>{i + 1}</div>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${i < 3 ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)]" : "bg-surface-light text-muted border border-border"}`}>{i + 1}</div>
                         <p className="text-[9px] text-muted mt-1">{step}</p>
                       </div>
                       {i < 4 && <ChevronRight size={12} className="text-muted" />}
@@ -1272,12 +1272,12 @@ export default function ContentPage() {
               </div>
               {/* Repurpose Suggestions */}
               <div className="card">
-                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><RefreshCw size={14} className="text-[#2563EB]" /> Repurpose Suggestions</h3>
+                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><RefreshCw size={14} className="text-brand-accent" /> Repurpose Suggestions</h3>
                 <p className="text-xs text-muted text-center py-6">No repurpose suggestions yet. Add content to the pipeline to get started.</p>
               </div>
               {/* Version Control */}
               <div className="card">
-                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><GitBranch size={14} className="text-[#2563EB]" /> Version History</h3>
+                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><GitBranch size={14} className="text-brand-accent" /> Version History</h3>
                 <div className="space-y-2">
                   {versions.length === 0 ? (
                     <p className="text-xs text-muted text-center py-6">No version history yet.</p>
@@ -1337,7 +1337,7 @@ export default function ContentPage() {
                 <div className="grid grid-cols-4 gap-3">
                   {Object.entries(contentAnalytics.content_types).map(([type, count]) => (
                     <div key={type} className="text-center p-3 bg-surface-light/50 rounded-lg border border-border">
-                      <p className="text-lg font-bold text-[#2563EB]">{count}</p>
+                      <p className="text-lg font-bold text-brand-accent">{count}</p>
                       <p className="text-[10px] text-muted capitalize">{type}</p>
                     </div>
                   ))}
@@ -1350,7 +1350,7 @@ export default function ContentPage() {
                   <p className="text-xs text-muted">of content approved on first review</p>
                 </div>
                 <div className="card">
-                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Star size={14} className="text-[#2563EB]" /> Top Performing</h3>
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Star size={14} className="text-brand-accent" /> Top Performing</h3>
                   <p className="text-sm font-medium">{contentAnalytics.top_performing}</p>
                   <p className="text-xs text-muted">Highest engagement this month</p>
                 </div>
@@ -1362,7 +1362,7 @@ export default function ContentPage() {
           {tab === "seo" && (
             <div className="space-y-4">
               <div className="card">
-                <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><Search size={14} className="text-[#2563EB]" /> SEO & Readability Checker</h3>
+                <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><Search size={14} className="text-brand-accent" /> SEO & Readability Checker</h3>
                 <div className="space-y-3">
                   <div>
                     <label className="text-[10px] text-muted uppercase tracking-wider">Target Keyword (optional)</label>
@@ -1374,7 +1374,7 @@ export default function ContentPage() {
                     <button
                       onClick={() => enhanceText(seoText, `Improve this content for SEO.${seoKeyword ? ` Target keyword: "${seoKeyword}".` : ""} Make it more engaging, add relevant headers, improve readability, and naturally incorporate keywords. Keep the same topic and message.`, setSeoText, "seo")}
                       disabled={!seoText.trim() || enhancing === "seo"}
-                      className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-[#2563EB] transition-colors disabled:opacity-40 mt-1"
+                      className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mt-1"
                     >
                       {enhancing === "seo" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
                       AI Enhance for SEO
@@ -1411,7 +1411,7 @@ export default function ContentPage() {
                       </div>
                     )}
                     <div className="p-3 bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg">
-                      <p className="text-xs font-medium text-[#2563EB] mb-2 flex items-center gap-1"><Zap size={12} /> Suggestions</p>
+                      <p className="text-xs font-medium text-brand-accent mb-2 flex items-center gap-1"><Zap size={12} /> Suggestions</p>
                       {seoResults.suggestions.map((s, i) => <p key={i} className="text-[10px] text-[rgba(37,99,235,0.8)]">- {s}</p>)}
                     </div>
                   </div>
@@ -1419,12 +1419,12 @@ export default function ContentPage() {
               </div>
               {/* AI Enhance */}
               <div className="card">
-                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Sparkles size={14} className="text-[#2563EB]" /> AI Enhance</h3>
+                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Sparkles size={14} className="text-brand-accent" /> AI Enhance</h3>
                 <p className="text-xs text-muted mb-3">Let AI improve your content for better SEO, readability, and engagement.</p>
                 <div className="grid grid-cols-3 gap-2">
                   {["Improve Readability", "Add Keywords", "Expand Content", "Shorten & Tighten", "Add CTA", "Fix Grammar"].map(action => (
                     <button key={action} onClick={() => toast.success(`AI enhancing: ${action}`)} className="p-3 border border-border rounded-lg text-xs text-left hover:border-[rgba(37,99,235,0.25)] transition-all">
-                      <Sparkles size={12} className="text-[#2563EB] mb-1" />
+                      <Sparkles size={12} className="text-brand-accent mb-1" />
                       {action}
                     </button>
                   ))}
@@ -1480,15 +1480,15 @@ export default function ContentPage() {
       <Modal isOpen={!!remixOptions} onClose={() => setRemixOptions(null)} title="Pick a better title" size="md">
         {remixOptions && (
           <div className="space-y-3">
-            <p className="text-xs text-muted">AI suggestions for <span className="text-[#2563EB] capitalize">{remixOptions.platform}</span>:</p>
+            <p className="text-xs text-muted">AI suggestions for <span className="text-brand-accent capitalize">{remixOptions.platform}</span>:</p>
             <div className="space-y-2">
               {remixOptions.alternatives.map((alt, i) => (
                 <button
                   key={i}
                   onClick={() => applyRemixTitle(alt)}
-                  className="w-full text-left p-3 border border-[rgba(37,99,235,0.25)] rounded-lg hover:border-[#2563EB] hover:bg-[rgba(37,99,235,0.05)] transition-all"
+                  className="w-full text-left p-3 border border-[rgba(37,99,235,0.25)] rounded-lg hover:border-brand-accent hover:bg-[rgba(37,99,235,0.05)] transition-all"
                 >
-                  <span className="text-[10px] text-[#2563EB] font-medium mr-2">#{i + 1}</span>
+                  <span className="text-[10px] text-brand-accent font-medium mr-2">#{i + 1}</span>
                   <span className="text-sm">{alt}</span>
                 </button>
               ))}
@@ -1522,7 +1522,7 @@ export default function ContentPage() {
               <button
                 onClick={() => enhanceText(editingPublish.description || "", `Improve this video description for social media. Make it engaging, include a call-to-action, and optimize for the platform. Title: "${editingPublish.video_title || ""}".`, (v) => setEditingPublish(prev => ({ ...prev, description: v })), "desc")}
                 disabled={!editingPublish.description?.trim() || enhancing === "desc"}
-                className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-[#2563EB] transition-colors disabled:opacity-40 mt-1"
+                className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mt-1"
               >
                 {enhancing === "desc" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
                 AI Enhance
@@ -1538,7 +1538,7 @@ export default function ContentPage() {
               <button
                 onClick={() => enhanceText(editingPublish.hashtags?.join(", ") || "", `Generate optimized hashtags for this social media video. Title: "${editingPublish.video_title || ""}". Return as comma-separated hashtags. Mix trending, niche, and branded tags. 15-20 hashtags.`, (v) => setEditingPublish(prev => ({ ...prev, hashtags: v.split(",").map(h => h.trim()) })), "hash")}
                 disabled={!editingPublish.hashtags?.length || enhancing === "hash"}
-                className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-[#2563EB] transition-colors disabled:opacity-40 mt-1"
+                className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mt-1"
               >
                 {enhancing === "hash" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
                 AI Enhance Hashtags

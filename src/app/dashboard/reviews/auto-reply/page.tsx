@@ -212,7 +212,7 @@ export default function ReviewsAutoReplyPage() {
                   </Link>
                   <button
                     onClick={() => setShowCompose((v) => !v)}
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#1D4ED8] text-white transition-all"
+                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-brand-accent/80 text-white transition-all"
                   >
                     <Sparkles size={14} /> New Draft
                   </button>
@@ -246,7 +246,7 @@ export default function ReviewsAutoReplyPage() {
               {showCompose && (
                 <div className="card p-5 space-y-3 border border-black/[0.06] rounded-xl bg-white">
                   <p className="font-semibold text-[#111827] text-sm flex items-center gap-2">
-                    <Sparkles size={14} className="text-[#2563EB]" /> Generate AI Reply
+                    <Sparkles size={14} className="text-brand-accent" /> Generate AI Reply
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <input
@@ -311,7 +311,7 @@ export default function ReviewsAutoReplyPage() {
                     <button
                       onClick={handleGenerate}
                       disabled={generating}
-                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#3B82F6] text-white disabled:opacity-50 transition-all"
+                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-[#3B82F6] text-white disabled:opacity-50 transition-all"
                     >
                       {generating ? (
                         <Loader2 size={14} className="animate-spin" />
@@ -380,7 +380,7 @@ export default function ReviewsAutoReplyPage() {
                         )}
 
                         <div className="px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)]">
-                          <p className="text-[11px] uppercase tracking-wider text-[#2563EB] mb-1 flex items-center gap-1.5">
+                          <p className="text-[11px] uppercase tracking-wider text-brand-accent mb-1 flex items-center gap-1.5">
                             <Sparkles size={10} /> AI Draft
                           </p>
                           {isEditing ? (

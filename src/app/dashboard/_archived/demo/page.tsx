@@ -128,13 +128,13 @@ export default function DemoManagementPage() {
         className="glass rounded-xl p-4"
       >
         <div className="section-header flex items-center gap-2 mb-3">
-          <ClipboardList className="w-3.5 h-3.5 text-[#2563EB]" />
+          <ClipboardList className="w-3.5 h-3.5 text-brand-accent" />
           <h2 className="text-xs font-semibold text-[#111827]">Demo Client Status</h2>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-8">
-            <RefreshCw className="w-4 h-4 text-[#2563EB] animate-spin" />
+            <RefreshCw className="w-4 h-4 text-brand-accent animate-spin" />
           </div>
         ) : demoClient ? (
           <div className="space-y-2">
@@ -170,7 +170,7 @@ export default function DemoManagementPage() {
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
                 className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Package</p>
-                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{demoClient.package_tier}</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{demoClient.package_tier}</p>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.26, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
                 className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
@@ -182,7 +182,7 @@ export default function DemoManagementPage() {
               <p className="text-[9px] text-[#6B7280] uppercase tracking-wider mb-1">Services</p>
               <div className="flex flex-wrap gap-1">
                 {demoClient.services?.map((s) => (
-                  <span key={s} className="text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded-lg">
+                  <span key={s} className="text-[9px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded-lg">
                     {s}
                   </span>
                 ))}
@@ -222,8 +222,8 @@ export default function DemoManagementPage() {
           </p>
           {seeding && (
             <div className="flex items-center gap-1.5 mt-2">
-              <RefreshCw className="w-3 h-3 text-[#2563EB] animate-spin" />
-              <span className="text-[9px] text-[#2563EB]">Seeding...</span>
+              <RefreshCw className="w-3 h-3 text-brand-accent animate-spin" />
+              <span className="text-[9px] text-brand-accent">Seeding...</span>
             </div>
           )}
         </motion.button>
@@ -254,7 +254,7 @@ export default function DemoManagementPage() {
         className="glass rounded-xl p-4"
       >
         <div className="section-header flex items-center gap-2 mb-3">
-          <Link2 className="w-3.5 h-3.5 text-[#2563EB]" />
+          <Link2 className="w-3.5 h-3.5 text-brand-accent" />
           <h2 className="text-xs font-semibold text-[#111827]">Share Demo Link</h2>
         </div>
         <div className="flex items-center gap-2">
@@ -280,7 +280,7 @@ export default function DemoManagementPage() {
         className="glass rounded-xl p-4"
       >
         <div className="section-header flex items-center gap-2 mb-3">
-          <Sparkles className="w-3.5 h-3.5 text-[#2563EB]" />
+          <Sparkles className="w-3.5 h-3.5 text-brand-accent" />
           <h2 className="text-xs font-semibold text-[#111827]">How to Use Demo Mode</h2>
         </div>
         <div className="space-y-2">
@@ -298,7 +298,7 @@ export default function DemoManagementPage() {
               transition={{ delay: i * 0.04 }}
               className="flex items-start gap-2"
             >
-              <span className="text-[9px] text-[#2563EB] font-bold mt-px">{i + 1}.</span>
+              <span className="text-[9px] text-brand-accent font-bold mt-px">{i + 1}.</span>
               <p className="text-[10px] text-[#374151] leading-relaxed">{instruction}</p>
             </motion.div>
           ))}

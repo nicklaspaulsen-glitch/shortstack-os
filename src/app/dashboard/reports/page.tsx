@@ -411,7 +411,7 @@ export default function ReportsPage() {
                 transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Weekly</p>
-                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{weeklyReports}</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{weeklyReports}</p>
                 <p className="text-[11px] text-text-muted mt-1.5">reports</p>
               </motion.div>
               <motion.div
@@ -420,7 +420,7 @@ export default function ReportsPage() {
                 transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly</p>
-                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{monthlyReports}</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{monthlyReports}</p>
                 <p className="text-[11px] text-text-muted mt-1.5">reports</p>
               </motion.div>
               <motion.div
@@ -444,7 +444,7 @@ export default function ReportsPage() {
                   whileHover={{ y: -2 }}
                 >
                   <div className="flex items-center gap-2 mb-4">
-                    <Sparkles size={14} className="text-[#2563EB]" />
+                    <Sparkles size={14} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold text-foreground">Generate Report</h2>
                   </div>
 
@@ -474,7 +474,7 @@ export default function ReportsPage() {
                             onClick={() => setReportType(type)}
                             className={`flex-1 py-2 px-3 rounded-xl text-xs font-medium border transition-all ${
                               reportType === type
-                                ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                                ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent"
                                 : "bg-surface-light border-border/30 text-muted hover:text-foreground"
                             }`}
                           >
@@ -524,7 +524,7 @@ export default function ReportsPage() {
                   whileHover={{ y: -2 }}
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <Users size={14} className="text-[#2563EB]" />
+                    <Users size={14} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold text-foreground">Batch Reports</h2>
                   </div>
                   <p className="text-[10px] text-muted mb-3">
@@ -550,7 +550,7 @@ export default function ReportsPage() {
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <Sparkles size={14} className="text-[#2563EB]" />
+                        <Sparkles size={14} className="text-brand-accent" />
                         <h2 className="text-sm font-semibold text-foreground">
                           {currentReport.type === "monthly" ? "Monthly" : "Weekly"} Report � {currentReport.client}
                         </h2>
@@ -578,7 +578,7 @@ export default function ReportsPage() {
                                 onClick={downloadReportHTML}
                                 className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-foreground hover:bg-surface-light transition-colors"
                               >
-                                <Download size={13} className="text-[#2563EB]" />
+                                <Download size={13} className="text-brand-accent" />
                                 <div>
                                   <p className="font-medium">Download as HTML</p>
                                   <p className="text-[10px] text-muted mt-0.5">Print-ready with styling</p>
@@ -588,7 +588,7 @@ export default function ReportsPage() {
                                 onClick={copyReportMarkdown}
                                 className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-foreground hover:bg-surface-light transition-colors"
                               >
-                                <ClipboardCopy size={13} className="text-[#2563EB]" />
+                                <ClipboardCopy size={13} className="text-brand-accent" />
                                 <div>
                                   <p className="font-medium">Copy to Clipboard</p>
                                   <p className="text-[10px] text-muted mt-0.5">Formatted Markdown</p>
@@ -599,7 +599,7 @@ export default function ReportsPage() {
                                 onClick={handleEmailReport}
                                 className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-foreground hover:bg-surface-light transition-colors"
                               >
-                                <Mail size={13} className="text-[#2563EB]" />
+                                <Mail size={13} className="text-brand-accent" />
                                 <div>
                                   <p className="font-medium">Email Report</p>
                                   <p className="text-[10px] text-muted mt-0.5">Send to an email address</p>
@@ -701,7 +701,7 @@ export default function ReportsPage() {
                             aria-controls={`report-${report.id}-content`}
                           >
                             <div className="flex items-center gap-3">
-                              <div className={`w-1.5 h-1.5 rounded-full ${report.result?.type === "monthly_report" ? "bg-info" : "bg-[#2563EB]"}`} />
+                              <div className={`w-1.5 h-1.5 rounded-full ${report.result?.type === "monthly_report" ? "bg-info" : "bg-brand-accent"}`} />
                               <div className="text-left">
                                 <p className="text-xs font-medium text-foreground">{getClientName(report.client_id)}</p>
                                 <p className="text-[10px] text-muted">
@@ -746,7 +746,7 @@ export default function ReportsPage() {
               <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center fade-in">
                 <div className="bg-surface border border-border/50  p-6 w-full max-w-sm shadow-elevated">
                   <div className="flex items-center gap-2 mb-4">
-                    <Mail size={16} className="text-[#2563EB]" />
+                    <Mail size={16} className="text-brand-accent" />
                     <h3 className="text-sm font-semibold text-foreground">Email Report</h3>
                   </div>
                   <form onSubmit={submitEmailReport} className="space-y-3">

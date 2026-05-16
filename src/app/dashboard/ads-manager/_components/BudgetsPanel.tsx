@@ -138,14 +138,14 @@ export default function BudgetsPanel() {
         <div className="rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.04)] p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-medium inline-flex items-center gap-1.5">
-              <Sparkles size={14} className="text-[#2563EB]" />
+              <Sparkles size={14} className="text-brand-accent" />
               AI-suggested allocation
             </h3>
             {suggested && suggested.length > 0 && (
               <button
                 onClick={() => void applyRebalance()}
                 disabled={applying}
-                className="inline-flex items-center gap-1 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-2.5 py-1 text-xs text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)] disabled:opacity-50"
+                className="inline-flex items-center gap-1 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-2.5 py-1 text-xs text-brand-accent hover:bg-[rgba(37,99,235,0.14)] disabled:opacity-50"
               >
                 {applying ? (
                   <Loader2 className="animate-spin" size={12} />

@@ -72,7 +72,7 @@ function Input({ value, onChange, placeholder, type = "text" }: { value: string;
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full px-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm placeholder:text-text-muted focus:outline-none focus:border-[#2563EB]/50 transition-all"
+      className="w-full px-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm placeholder:text-text-muted focus:outline-none focus:border-brand-accent/50 transition-all"
     />
   );
 }
@@ -216,7 +216,7 @@ export default function WhiteLabelPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" /></MotionPage>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-brand-accent" /></MotionPage>
     );
   }
 
@@ -240,7 +240,7 @@ export default function WhiteLabelPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Settings
@@ -342,7 +342,7 @@ export default function WhiteLabelPage() {
               <p className="text-xs text-text-muted">Display attribution in the footer</p>
             </div>
             <button onClick={() => set("show_powered_by", !config.show_powered_by)} className="shrink-0">
-              {config.show_powered_by ? <ToggleRight className="w-8 h-8 text-[#2563EB]" /> : <ToggleLeft className="w-8 h-8 text-text-muted" />}
+              {config.show_powered_by ? <ToggleRight className="w-8 h-8 text-brand-accent" /> : <ToggleLeft className="w-8 h-8 text-text-muted" />}
             </button>
           </div>
           </div>
@@ -359,7 +359,7 @@ export default function WhiteLabelPage() {
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">Custom Domain</p>
             {config.custom_domain && (
-              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${config.custom_domain_verified ? "bg-emerald-500/20 text-emerald-700" : "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"}`}>
+              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${config.custom_domain_verified ? "bg-emerald-500/20 text-emerald-700" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"}`}>
                 {config.custom_domain_verified ? "Verified" : "Awaiting DNS"}
               </span>
             )}
@@ -375,13 +375,13 @@ export default function WhiteLabelPage() {
                     value={domainInput}
                     onChange={(e) => setDomainInput(e.target.value)}
                     placeholder="app.youragency.com"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm placeholder:text-text-muted focus:outline-none focus:border-[#2563EB]/50 transition-all"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm placeholder:text-text-muted focus:outline-none focus:border-brand-accent/50 transition-all"
                   />
                 </div>
                 <button
                   onClick={handleAddDomain}
                   disabled={domainBusy || !domainInput.trim()}
-                  className="px-4 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60 transition-all whitespace-nowrap"
+                  className="px-4 py-2.5 rounded-lg bg-brand-accent hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60 transition-all whitespace-nowrap"
                 >
                   {domainBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : "Attach"}
                 </button>
@@ -413,7 +413,7 @@ export default function WhiteLabelPage() {
               {!config.custom_domain_verified && (
                 <div className="rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] p-3 flex flex-col gap-2 text-xs">
                   <p className="font-semibold text-[#374151] flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#2563EB]" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-brand-accent" />
                     Add these DNS records to your domain registrar:
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-mono text-[#6B7280]">
@@ -456,7 +456,7 @@ export default function WhiteLabelPage() {
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">Resell Billing</p>
             {stripeStatus && (
-              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${stripeStatus.fully_onboarded ? "bg-emerald-500/20 text-emerald-700" : stripeStatus.connected ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "bg-[rgba(0,0,0,0.06)] text-text-muted"}`}>
+              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${stripeStatus.fully_onboarded ? "bg-emerald-500/20 text-emerald-700" : stripeStatus.connected ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "bg-[rgba(0,0,0,0.06)] text-text-muted"}`}>
                 {stripeStatus.fully_onboarded ? "Stripe Connected" : stripeStatus.connected ? "Onboarding incomplete" : "Not connected"}
               </span>
             )}
@@ -475,7 +475,7 @@ export default function WhiteLabelPage() {
               className="shrink-0 disabled:opacity-40"
               title={stripeStatus?.fully_onboarded ? "Toggle reselling" : "Connect Stripe first"}
             >
-              {config.resell_enabled ? <ToggleRight className="w-8 h-8 text-[#2563EB]" /> : <ToggleLeft className="w-8 h-8 text-text-muted" />}
+              {config.resell_enabled ? <ToggleRight className="w-8 h-8 text-brand-accent" /> : <ToggleLeft className="w-8 h-8 text-text-muted" />}
             </button>
           </div>
 
@@ -489,14 +489,14 @@ export default function WhiteLabelPage() {
                 step={5}
                 value={config.markup_percent}
                 onChange={(e) => set("markup_percent", Number(e.target.value) || 0)}
-                className="w-32 px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]/50"
+                className="w-32 px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm focus:outline-none focus:border-brand-accent/50"
               />
               <span className="text-[#6B7280] text-sm">%</span>
             </div>
           </Field>
 
           {!stripeStatus?.connected && (
-            <a href="/api/integrations/stripe-connect/onboard" className="text-xs text-[#2563EB] hover:underline flex items-center gap-1">
+            <a href="/api/integrations/stripe-connect/onboard" className="text-xs text-brand-accent hover:underline flex items-center gap-1">
               <ExternalLink className="w-3 h-3" />
               Connect your Stripe account to enable resell billing
             </a>
@@ -522,7 +522,7 @@ export default function WhiteLabelPage() {
                   value={config.email_from_name}
                   onChange={(e) => set("email_from_name", e.target.value)}
                   placeholder="Acme Agency Team"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm placeholder:text-text-muted focus:outline-none focus:border-[#2563EB]/50 transition-all"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm placeholder:text-text-muted focus:outline-none focus:border-brand-accent/50 transition-all"
                 />
               </div>
             </Field>
@@ -544,7 +544,7 @@ export default function WhiteLabelPage() {
                 onChange={(e) => set("login_text", e.target.value)}
                 placeholder="Welcome back! Sign in to manage your growth."
                 rows={3}
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm placeholder:text-text-muted focus:outline-none focus:border-[#2563EB]/50 transition-all resize-none"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm placeholder:text-text-muted focus:outline-none focus:border-brand-accent/50 transition-all resize-none"
               />
             </div>
           </Field>
@@ -556,7 +556,7 @@ export default function WhiteLabelPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-[#2563EB] hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+          className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-brand-accent hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
         >
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Save White Label Settings

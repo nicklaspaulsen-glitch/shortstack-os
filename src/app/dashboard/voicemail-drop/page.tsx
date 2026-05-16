@@ -182,7 +182,7 @@ export default function VoicemailDropPage() {
                         type="file"
                         accept="audio/mpeg,audio/mp3,audio/wav,audio/wave"
                         onChange={(e) => setFile(e.target.files?.[0] || null)}
-                        className="w-full text-black/65 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[rgba(37,99,235,0.08)] file:text-[#2563EB] hover:file:bg-[rgba(37,99,235,0.14)]"
+                        className="w-full text-black/65 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[rgba(37,99,235,0.08)] file:text-brand-accent hover:file:bg-[rgba(37,99,235,0.14)]"
                       />
                       {file && (
                         <p className="text-xs text-black/40 mt-1.5">
@@ -253,7 +253,7 @@ export default function VoicemailDropPage() {
                         className="mt-0.5 accent-amber-400 shrink-0"
                       />
                       <span className="text-[11px] text-[#6B7280] leading-relaxed">
-                        <ShieldAlert className="inline w-3 h-3 mr-1 text-[#2563EB]" />
+                        <ShieldAlert className="inline w-3 h-3 mr-1 text-brand-accent" />
                         I confirm I have prior express written consent to contact this recipient by phone (TCPA). Dropping a voicemail without consent may violate US federal law.
                       </span>
                     </label>
@@ -283,7 +283,7 @@ export default function VoicemailDropPage() {
               </div>
             )}{/* List */}{loading ? (
               <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" />
+                <Loader2 className="w-8 h-8 animate-spin text-brand-accent" />
               </div>
             ) : templates.length === 0 ? (
               <motion.div
@@ -317,7 +317,7 @@ export default function VoicemailDropPage() {
                   >
                     <button
                       onClick={() => togglePlay(t)}
-                      className="w-10 h-10 rounded-full bg-[rgba(37,99,235,0.10)] flex items-center justify-center text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)] transition-all"
+                      className="w-10 h-10 rounded-full bg-[rgba(37,99,235,0.10)] flex items-center justify-center text-brand-accent hover:bg-[rgba(37,99,235,0.14)] transition-all"
                       aria-label={playingId === t.id ? "Pause" : "Play"}
                     >
                       {playingId === t.id ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
@@ -332,7 +332,7 @@ export default function VoicemailDropPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setShowDrop(t)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)] transition-all"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.14)] transition-all"
                     >
                       <Phone className="w-3.5 h-3.5" />
                       Drop

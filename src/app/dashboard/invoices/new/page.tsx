@@ -280,7 +280,7 @@ export default function NewSmartInvoicePage() {
 
               <div>
                 <label className="text-[9px] text-muted uppercase tracking-wider block mb-1 flex items-center gap-1">
-                  <Sparkles size={9} className="text-[#2563EB]" /> Scope (AI will draft line items from this)
+                  <Sparkles size={9} className="text-brand-accent" /> Scope (AI will draft line items from this)
                 </label>
                 <textarea
                   value={scope}
@@ -314,7 +314,7 @@ export default function NewSmartInvoicePage() {
                 <h3 className="text-sm font-semibold">Line items</h3>
                 <button
                   onClick={addItem}
-                  className="text-[10px] text-[#2563EB] flex items-center gap-1 hover:underline"
+                  className="text-[10px] text-brand-accent flex items-center gap-1 hover:underline"
                 >
                   <Plus size={10} /> Add line
                 </button>
@@ -399,7 +399,7 @@ export default function NewSmartInvoicePage() {
                 </div>
                 <div className="flex justify-between text-sm font-bold pt-1 border-t border-border">
                   <span>Total</span>
-                  <span className="text-[#1D4ED8] font-bold">${centsToDollars(total)}</span>
+                  <span className="text-brand-accent font-bold">${centsToDollars(total)}</span>
                 </div>
               </div>
             </div>{/* Notes */}<div className="card p-5 space-y-2">
@@ -421,7 +421,7 @@ export default function NewSmartInvoicePage() {
                     href={paymentLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[10px] text-[#2563EB] underline break-all"
+                    className="text-[10px] text-brand-accent underline break-all"
                   >
                     {paymentLink}
                   </a>

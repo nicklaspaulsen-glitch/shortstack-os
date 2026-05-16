@@ -291,7 +291,7 @@ function ServiceDoneDetail({
           </div>
         )}
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-mono text-[#2563EB]">{sendAddress}</span>
+          <span className="text-[11px] font-mono text-brand-accent">{sendAddress}</span>
           <button
             onClick={() => copyToClipboard(sendAddress, "Address")}
             className="text-[10px] p-1.5 rounded border border-border hover:bg-black/5"
@@ -307,7 +307,7 @@ function ServiceDoneDetail({
             <div className="mt-2 space-y-1">
               {dns.map((r, i) => (
                 <div key={i} className="font-mono break-all bg-background/40 rounded p-2">
-                  <span className="text-[#2563EB]">{r.type}</span> {r.name || "@"} → {r.value || r.data}
+                  <span className="text-brand-accent">{r.type}</span> {r.name || "@"} → {r.value || r.data}
                 </div>
               ))}
             </div>
@@ -348,7 +348,7 @@ function ServiceDoneDetail({
         </div>
         <a
           href={editorUrl}
-          className="text-[10px] px-2.5 py-1 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1"
+          className="text-[10px] px-2.5 py-1 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1"
         >
           Open builder <ExternalLink size={10} />
         </a>
@@ -363,7 +363,7 @@ function ServiceDoneDetail({
     return (
       <div className="mt-3 pt-3 border-t border-border/60 space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-mono text-[#2563EB]">https://{subdomain}</span>
+          <span className="text-[11px] font-mono text-brand-accent">https://{subdomain}</span>
           <button
             onClick={() => copyToClipboard(`https://${subdomain}`, "Portal URL")}
             className="text-[10px] p-1.5 rounded border border-border hover:bg-black/5"

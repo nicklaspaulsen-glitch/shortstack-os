@@ -80,7 +80,7 @@ export default function ClientOutreachFeedPage() {
             <MessagesSquare size={22} />
           </div>
           <div className="min-w-0">
-            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#2563EB]">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-brand-accent">
               Your conversations
             </div>
             <h1 className="text-2xl font-bold text-[#111827] tracking-tight mt-1">Outreach Feed</h1>

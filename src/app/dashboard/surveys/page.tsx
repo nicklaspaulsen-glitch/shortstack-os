@@ -190,7 +190,7 @@ export default function SurveysPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={openCreate}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors border border-[rgba(37,99,235,0.25)]"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-sm font-medium transition-colors border border-[rgba(37,99,235,0.25)]"
                 >
                   <Plus size={15} /> New Survey
                 </button>
@@ -202,7 +202,7 @@ export default function SurveysPage() {
                   onClick={() => setActiveTab(t)}
                   className={`px-4 py-2 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${
                     activeTab === t
-                      ? "border-[#2563EB] text-[#2563EB]"
+                      ? "border-brand-accent text-brand-accent"
                       : "border-transparent text-text-muted hover:text-[#6B7280]"
                   }`}
                 >
@@ -236,7 +236,7 @@ export default function SurveysPage() {
                 <p className="text-[#6B7280] mb-4">No surveys yet. Create your first one.</p>
                 <button
                   onClick={openCreate}
-                  className="px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.10)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.10)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-sm font-medium transition-colors"
                 >
                   <Plus size={14} className="inline mr-1" /> New Survey
                 </button>
@@ -310,7 +310,7 @@ export default function SurveysPage() {
                   <input
                     value={title}
                     onChange={e => setTitle(e.target.value)}
-                    className="w-full glass rounded-lg px-3 py-2 text-foreground text-sm focus:outline-none focus:border-[#2563EB]"
+                    className="w-full glass rounded-lg px-3 py-2 text-foreground text-sm focus:outline-none focus:border-brand-accent"
                     placeholder="e.g. Client Satisfaction Survey"
                   />
                 </div>
@@ -319,7 +319,7 @@ export default function SurveysPage() {
                   <input
                     value={description}
                     onChange={e => setDescription(e.target.value)}
-                    className="w-full glass rounded-lg px-3 py-2 text-foreground text-sm focus:outline-none focus:border-[#2563EB]"
+                    className="w-full glass rounded-lg px-3 py-2 text-foreground text-sm focus:outline-none focus:border-brand-accent"
                     placeholder="Brief intro for respondents"
                   />
                 </div>
@@ -329,7 +329,7 @@ export default function SurveysPage() {
                     <label className="text-xs text-text-muted">Questions</label>
                     <button
                       onClick={addQuestion}
-                      className="flex items-center gap-1 text-xs text-[#2563EB] hover:text-[#3B82F6]"
+                      className="flex items-center gap-1 text-xs text-brand-accent hover:text-[#3B82F6]"
                     >
                       <Plus size={12} /> Add
                     </button>
@@ -353,7 +353,7 @@ export default function SurveysPage() {
                               <input
                                 value={q.label}
                                 onChange={e => updateQuestion(idx, { label: e.target.value })}
-                                className="flex-1 glass rounded-lg px-2 py-1.5 text-foreground text-sm focus:outline-none focus:border-[#2563EB]"
+                                className="flex-1 glass rounded-lg px-2 py-1.5 text-foreground text-sm focus:outline-none focus:border-brand-accent"
                                 placeholder="Question text"
                               />
                               <select
@@ -421,7 +421,7 @@ export default function SurveysPage() {
                   <button
                     onClick={save}
                     disabled={saving}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-medium transition-colors disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-white text-sm font-medium transition-colors disabled:opacity-50"
                   >
                     {saving && <Loader size={13} className="animate-spin" />}
                     {editSurvey ? "Save Changes" : "Create Survey"}

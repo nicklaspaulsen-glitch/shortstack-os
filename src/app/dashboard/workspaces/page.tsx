@@ -163,7 +163,7 @@ export default function WorkspacesPage() {
                   return (
                     <motion.div
                       key={w.id}
-                      className={`glass rounded-xl p-5 flex flex-col gap-3 transition-all ${isActive ? "border border-[#2563EB]/40 bg-[#2563EB]/5" : ""}`}
+                      className={`glass rounded-xl p-5 flex flex-col gap-3 transition-all ${isActive ? "border border-brand-accent/40 bg-brand-accent/5" : ""}`}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05, duration: 0.4 }}
@@ -174,12 +174,12 @@ export default function WorkspacesPage() {
                           <div className="flex items-center gap-2">
                             <p className="text-[#111827] font-semibold truncate">{w.name}</p>
                             {w.is_default && (
-                              <span className="text-[10px] bg-[#2563EB]/10 text-[#3B82F6] border border-[#2563EB]/20 px-1.5 py-0.5 rounded-full shrink-0">Default</span>
+                              <span className="text-[10px] bg-brand-accent/10 text-[#3B82F6] border border-brand-accent/20 px-1.5 py-0.5 rounded-full shrink-0">Default</span>
                             )}
                           </div>
                           <p className="text-muted text-xs mt-0.5 font-mono">{w.slug}</p>
                         </div>
-                        {isActive && <CheckCircle size={18} className="text-[#2563EB] shrink-0 mt-0.5" />}
+                        {isActive && <CheckCircle size={18} className="text-brand-accent shrink-0 mt-0.5" />}
                       </div>
                       {w.description && <p className="text-muted text-xs line-clamp-2">{w.description}</p>}
                       <div className="flex items-center gap-3 text-xs text-muted mt-auto">
@@ -189,7 +189,7 @@ export default function WorkspacesPage() {
                       </div>
                       {!isActive && (
                         <button onClick={() => switchWorkspace(w.id)}
-                          className="btn-ghost text-sm py-1.5 rounded-lg w-full border border-[rgba(0,0,0,0.08)] hover:border-[#2563EB]/30 mt-1">
+                          className="btn-ghost text-sm py-1.5 rounded-lg w-full border border-[rgba(0,0,0,0.08)] hover:border-brand-accent/30 mt-1">
                           Switch to this workspace
                         </button>
                       )}

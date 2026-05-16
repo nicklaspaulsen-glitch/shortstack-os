@@ -210,7 +210,7 @@ export default function InvoicesPage() {
       transition={{ duration: 0.38, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
     >
       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Recurring</p>
-      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{formatCurrency(recurringTotal)}</p>
+      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{formatCurrency(recurringTotal)}</p>
       <p className="text-[11px] text-text-muted mt-1.5">active subscriptions</p>
     </motion.div>
   </div>
@@ -218,7 +218,7 @@ export default function InvoicesPage() {
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-                    activeTab === t.key ? "bg-[rgba(37,99,235,0.10)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] font-medium" : "text-muted hover:text-foreground"
+                    activeTab === t.key ? "bg-[rgba(37,99,235,0.10)] text-brand-accent border border-[rgba(37,99,235,0.25)] font-medium" : "text-muted hover:text-foreground"
                   }`}>{t.icon} {t.label}</button>
               ))}
             </div>{/* ===== ALL INVOICES ===== */}{activeTab === "all" && (
@@ -238,7 +238,7 @@ export default function InvoicesPage() {
                     {(["all", "sent", "paid", "overdue", "draft"] as const).map(f => (
                       <button key={f} onClick={() => setFilter(f)}
                         className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                          filter === f ? "bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)]" : "text-muted border border-[rgba(0,0,0,0.06)]"
+                          filter === f ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.25)]" : "text-muted border border-[rgba(0,0,0,0.06)]"
                         }`}>{f}</button>
                     ))}
                   </div>
@@ -284,7 +284,7 @@ export default function InvoicesPage() {
                                   <div className="flex items-center gap-2">
                                     <p className="text-sm font-semibold">{inv.client}</p>
                                     <span className="text-[8px] font-mono text-muted">{inv.id}</span>
-                                    {inv.recurring && <RefreshCw size={8} className="text-[#2563EB]" />}
+                                    {inv.recurring && <RefreshCw size={8} className="text-brand-accent" />}
                                     {inv.currency !== "USD" && <Globe size={8} className="text-blue-400" />}
                                   </div>
                                   <p className="text-[10px] text-muted">{inv.description}</p>
@@ -396,7 +396,7 @@ export default function InvoicesPage() {
                           ))}
                           <button
                             onClick={() => toast("In-app line items aren't wired. Create invoices via Stripe's hosted portal at /dashboard/billing.", { icon: "??", duration: 6000 })}
-                            className="text-[9px] text-[#2563EB] flex items-center gap-1 px-2"><Plus size={9} /> Add Line Item</button>
+                            className="text-[9px] text-brand-accent flex items-center gap-1 px-2"><Plus size={9} /> Add Line Item</button>
                         </div>
                       </div>
 
@@ -427,7 +427,7 @@ export default function InvoicesPage() {
                         <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatCurrency(2497, selectedCurrency)}</span></div>
                         <div className="flex justify-between"><span className="text-muted">Tax ({taxRate}%)</span><span>{formatCurrency(Math.round(2497 * taxRate / 100), selectedCurrency)}</span></div>
                         <div className="border-t border-[rgba(0,0,0,0.08)] pt-2 flex justify-between font-bold">
-                          <span>Total</span><span className="text-[#1D4ED8] font-bold">{formatCurrency(Math.round(2497 * (1 + taxRate / 100)), selectedCurrency)}</span>
+                          <span>Total</span><span className="text-brand-accent font-bold">{formatCurrency(Math.round(2497 * (1 + taxRate / 100)), selectedCurrency)}</span>
                         </div>
                       </div>
                       <Link href="/dashboard/billing" className="btn-primary w-full text-xs mt-4 flex items-center justify-center gap-1.5">
@@ -443,7 +443,7 @@ export default function InvoicesPage() {
                     {/* Quick Invoice from Proposal */}
                     <PrismPanel padding="p-4">
                       <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
-                        <Zap size={12} className="text-[#2563EB]" /> Quick Invoice
+                        <Zap size={12} className="text-brand-accent" /> Quick Invoice
                       </h4>
                       <p className="text-[9px] text-muted mb-3">Generate invoice from an accepted proposal</p>
                       <select className="input w-full text-xs mb-2">
@@ -451,7 +451,7 @@ export default function InvoicesPage() {
                       </select>
                       <button
                         onClick={() => toast("Proposals ? invoice pipeline ships with the proposals module. Track progress on the roadmap.", { icon: "??", duration: 6000 })}
-                        className="w-full text-xs flex items-center justify-center gap-1.5 bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] border border-[rgba(37,99,235,0.25)] rounded-lg py-1.5 hover:bg-[rgba(37,99,235,0.14)] transition-all">
+                        className="w-full text-xs flex items-center justify-center gap-1.5 bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.25)] rounded-lg py-1.5 hover:bg-[rgba(37,99,235,0.14)] transition-all">
                         <ArrowRight size={12} /> Create from Proposal
                       </button>
                     </PrismPanel>
@@ -459,7 +459,7 @@ export default function InvoicesPage() {
                     {/* Payment Link */}
                     <PrismPanel padding="p-4">
                       <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
-                        <CreditCard size={12} className="text-[#2563EB]" /> Payment Links
+                        <CreditCard size={12} className="text-brand-accent" /> Payment Links
                       </h4>
                       <p className="text-[9px] text-muted mb-2">Stripe-powered payment links for quick collection</p>
                       <Link href="/dashboard/clients" className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
@@ -473,7 +473,7 @@ export default function InvoicesPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <RefreshCw size={14} className="text-[#2563EB]" /> Recurring Invoices
+                    <RefreshCw size={14} className="text-brand-accent" /> Recurring Invoices
                   </h3>
                   <Link href="/dashboard/clients" className="btn-primary text-xs flex items-center gap-1.5">
                     <Plus size={12} /> Add Recurring
@@ -494,7 +494,7 @@ export default function InvoicesPage() {
                       className="glass rounded-xl p-4 flex items-center justify-between border border-[rgba(255,255,255,0.70)]" 
 >
                       <div className="flex items-center gap-3">
-                        <RefreshCw size={14} className="text-[#2563EB]" />
+                        <RefreshCw size={14} className="text-brand-accent" />
                         <div>
                           <p className="text-xs font-semibold">{inv.client}</p>
                           <p className="text-[10px] text-muted">{inv.description}</p>
@@ -502,7 +502,7 @@ export default function InvoicesPage() {
                       </div>
                       <div className="flex items-center gap-4 text-[10px]">
                         <div className="text-center">
-                          <p className="font-bold text-[#1D4ED8]">{formatCurrency(inv.amount)}</p>
+                          <p className="font-bold text-brand-accent">{formatCurrency(inv.amount)}</p>
                           <p className="text-[8px] text-muted">Monthly</p>
                         </div>
                         <div className="text-center">
@@ -518,14 +518,14 @@ export default function InvoicesPage() {
                   ))}
                 </div>
                 <PrismPanel padding="p-4" className="text-center">
-                  <p className="text-sm font-bold text-[#1D4ED8]">{formatCurrency(recurringTotal)}/mo</p>
+                  <p className="text-sm font-bold text-brand-accent">{formatCurrency(recurringTotal)}/mo</p>
                   <p className="text-[10px] text-muted">Total monthly recurring revenue from invoices</p>
                 </PrismPanel>
               </div>
             )}{/* ===== LATE PAYMENT REMINDERS ===== */}{activeTab === "reminders" && (
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <Clock size={14} className="text-[#2563EB]" /> Late Payment Reminder Settings
+                  <Clock size={14} className="text-brand-accent" /> Late Payment Reminder Settings
                 </h3>
                 <div className="space-y-2">
                   {[
@@ -551,7 +551,7 @@ export default function InvoicesPage() {
                           <p className="text-[10px] text-muted">{reminder.message}</p>
                         </div>
                       </div>
-                      <div className={`w-8 h-4 rounded-full ${reminder.enabled ? "bg-[#2563EB]" : "bg-surface-light"}`}>
+                      <div className={`w-8 h-4 rounded-full ${reminder.enabled ? "bg-brand-accent" : "bg-surface-light"}`}>
                         <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${reminder.enabled ? "ml-4" : "ml-0.5"}`} />
                       </div>
                     </motion.div>
@@ -575,7 +575,7 @@ export default function InvoicesPage() {
                           <p className="font-bold text-rose-700">{formatCurrency(inv.amount)}</p>
                           <button
                             onClick={() => toast("Automated reminders are coming. For now, contact the client directly or use Stripe's payment reminder emails.", { icon: "??", duration: 6000 })}
-                            className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#1D4ED8] hover:bg-[rgba(37,99,235,0.14)]">Send Reminder</button>
+                            className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.14)]">Send Reminder</button>
                         </div>
                       </div>
                     ))}
@@ -603,7 +603,7 @@ export default function InvoicesPage() {
 >
                       <div className="flex items-center gap-3 mb-2">
                         <div className="w-10 h-10 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
-                          <FileText size={16} className="text-[#2563EB]" />
+                          <FileText size={16} className="text-brand-accent" />
                         </div>
                         <div>
                           <p className="text-xs font-semibold">{t.name}</p>
@@ -625,7 +625,7 @@ export default function InvoicesPage() {
             )}{/* ===== AGING REPORT ===== */}{activeTab === "aging" && (
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <AlertTriangle size={14} className="text-[#2563EB]" /> Accounts Receivable Aging
+                  <AlertTriangle size={14} className="text-brand-accent" /> Accounts Receivable Aging
                 </h3>
                 <div className="grid grid-cols-5 gap-3">
                   {[
@@ -692,12 +692,12 @@ export default function InvoicesPage() {
             )}{/* ===== REVENUE SUMMARY ===== */}{activeTab === "revenue" && (
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <BarChart3 size={14} className="text-[#2563EB]" /> Revenue Summary
+                  <BarChart3 size={14} className="text-brand-accent" /> Revenue Summary
                 </h3>
                 <div className="grid grid-cols-3 gap-4">
                   {[
                     { label: "Paid Invoices", value: formatCurrency(totalPaid), sub: "All-time collected", color: "text-emerald-700" },
-                    { label: "Outstanding", value: formatCurrency(totalSent), sub: "Sent, not paid", color: "text-[#2563EB]" },
+                    { label: "Outstanding", value: formatCurrency(totalSent), sub: "Sent, not paid", color: "text-brand-accent" },
                     { label: "Overdue", value: formatCurrency(totalOverdue), sub: "Needs chasing", color: "text-rose-700" },
                   ].map((card, index) => (
                     <motion.div
@@ -731,7 +731,7 @@ export default function InvoicesPage() {
                     ].map((m, i) => (
                       <div key={i} className="flex-1 flex flex-col items-center gap-1">
                         <p className="text-[9px] font-bold">{formatCurrency(m.amount)}</p>
-                        <div className="w-full bg-[#2563EB] rounded-t" style={{ height: `${m.amount> 0 ? Math.max((m.amount / 20000) * 100, 4) : 0}%`, minHeight: m.amount> 0 ? 8 : 2 }} />
+                        <div className="w-full bg-brand-accent rounded-t" style={{ height: `${m.amount> 0 ? Math.max((m.amount / 20000) * 100, 4) : 0}%`, minHeight: m.amount> 0 ? 8 : 2 }} />
                         <span className="text-[8px] text-muted">{m.month}</span>
                       </div>
                     ))}
@@ -750,7 +750,7 @@ export default function InvoicesPage() {
                       <p className="text-[9px] text-muted">Avg Days to Pay</p>
                     </div>
                     <div className="bg-surface-light rounded-lg p-3 text-center">
-                      <p className="text-xl font-bold text-[#1D4ED8]">{formatCurrency(recurringTotal)}</p>
+                      <p className="text-xl font-bold text-brand-accent">{formatCurrency(recurringTotal)}</p>
                       <p className="text-[9px] text-muted">Monthly Recurring</p>
                     </div>
                   </div>

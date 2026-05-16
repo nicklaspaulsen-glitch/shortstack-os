@@ -157,8 +157,8 @@ export default function AIStudioPage() {
             {TOOLS.length} tools
           </span>
           {history.length > 0 && (
-            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[#1D4ED8]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
+            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-brand-accent">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
               {history.filter(j => j.status === "completed").length} done
             </span>
           )}
@@ -227,12 +227,12 @@ export default function AIStudioPage() {
               {studioTab === "video" && (
                 <div className="flex items-center justify-center min-h-[420px] rounded-2xl border border-border-subtle bg-surface-light">
                   <div className="text-center space-y-3">
-                    <Film size={32} className="mx-auto text-[#2563EB] opacity-50" />
+                    <Film size={32} className="mx-auto text-brand-accent opacity-50" />
                     <p className="text-sm font-semibold text-text-secondary">Video generation coming soon</p>
                     <p className="text-xs text-text-muted">Use the AI Tools tab for image-to-video now</p>
                     <button
                       onClick={() => { setActiveTool("img-to-video"); setAdvancedMode(true); }}
-                      className="text-xs text-[#2563EB] hover:underline font-medium"
+                      className="text-xs text-brand-accent hover:underline font-medium"
                     >
                       Open Image-to-Video tool
                     </button>
@@ -389,7 +389,7 @@ export default function AIStudioPage() {
                         />
                         <motion.div
                           layoutId="tool-active-accent"
-                          className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-[#2563EB]"
+                          className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-brand-accent"
                           transition={{ type: "spring", stiffness: 380, damping: 32 }}
                         />
                       </>
@@ -401,13 +401,13 @@ export default function AIStudioPage() {
                       <Icon size={12} style={{ color: active ? "#2563EB" : tool.color }} />
                     </div>
                     <div className="relative z-10 min-w-0 flex-1">
-                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-[#1D4ED8]" : "text-text-primary"}`}>
+                      <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-brand-accent" : "text-text-primary"}`}>
                         {tool.name}
                       </p>
                       <p className="text-[8px] font-mono text-text-muted truncate">{tool.tag}</p>
                     </div>
                     {"newBadge" in tool && tool.newBadge && (
-                      <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.1)] text-[#1D4ED8] shrink-0 uppercase tracking-wide">
+                      <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.1)] text-brand-accent shrink-0 uppercase tracking-wide">
                         New
                       </span>
                     )}
@@ -451,7 +451,7 @@ export default function AIStudioPage() {
                 );
               })()}
               {/* Blue tick — one chromatic moment per zone */}
-              <div className="w-1 h-4 rounded-full bg-[#2563EB]/35 shrink-0" />
+              <div className="w-1 h-4 rounded-full bg-brand-accent/35 shrink-0" />
             </div>
 
             {/* Tool content � AnimatePresence fades panel on tool switch */}
@@ -512,7 +512,7 @@ export default function AIStudioPage() {
                     ) : (
                       <div className="flex flex-col gap-1 p-2.5">
                         <div className="flex items-center gap-1.5">
-                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${job.status === "completed" ? "bg-emerald-500" : job.status === "failed" ? "bg-red-500" : "bg-[#1D4ED8] animate-pulse"}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${job.status === "completed" ? "bg-emerald-500" : job.status === "failed" ? "bg-red-500" : "bg-brand-accent/80 animate-pulse"}`} />
                           <span className="text-[9px] font-semibold text-text-muted truncate">{job.type}</span>
                         </div>
                         <p className="text-[8px] text-text-muted font-mono truncate">{job.status}</p>
@@ -631,9 +631,9 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Mic size={16} className="text-[#2563EB]" />
+        <Mic size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-foreground">Speech to Text</h2>
-        <span className="text-[9px] bg-[#2563EB]/10 text-[#2563EB] px-2 py-0.5 rounded-full">Whisper Large V3</span>
+        <span className="text-[9px] bg-brand-accent/10 text-brand-accent px-2 py-0.5 rounded-full">Whisper Large V3</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -641,7 +641,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
         <div>
           <div
             onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-[#2563EB]/30 hover:bg-[#2563EB]/[0.02] transition-all"
+            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-brand-accent/30 hover:bg-brand-accent/[0.02] transition-all"
           >
             <input ref={fileRef} type="file" accept="audio/*,video/*" className="hidden" onChange={e => setFile(e.target.files?.[0] || null)} />
             <Upload size={24} className="mx-auto mb-2 text-muted" />
@@ -1216,9 +1216,9 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Palette size={16} className="text-[#2563EB]" />
+        <Palette size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-foreground">Image Generator</h2>
-        <span className="text-[9px] bg-[#2563EB]/10 text-[#2563EB] px-2 py-0.5 rounded-full">FLUX / DALL-E</span>
+        <span className="text-[9px] bg-brand-accent/10 text-brand-accent px-2 py-0.5 rounded-full">FLUX / DALL-E</span>
       </motion.div>
 
       {setupRequired && (
@@ -1255,7 +1255,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                 <button key={s.value} onClick={() => setStyle(s.value)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg ${
                     style === s.value
-                      ? "bg-[#2563EB] text-white font-semibold"
+                      ? "bg-brand-accent text-white font-semibold"
                       : "bg-surface-light text-muted"
                   }`}>{s.label}</button>
               ))}
@@ -1269,7 +1269,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                 <button key={s.value} onClick={() => setSize(s.value)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg ${
                     size === s.value
-                      ? "bg-[#2563EB] text-white font-semibold"
+                      ? "bg-brand-accent text-white font-semibold"
                       : "bg-surface-light text-muted"
                   }`}>{s.label}</button>
               ))}
@@ -1301,7 +1301,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                   />
                   <div className="flex items-center justify-center gap-3 mt-1">
                     <a href={img} target="_blank" rel="noopener noreferrer" download={`generated-${i + 1}.png`}
-                      className="inline-flex items-center gap-1 text-[10px] text-[#2563EB] hover:underline">
+                      className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline">
                       <Download size={10} /> Download
                     </a>
                     <button
@@ -1322,7 +1322,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                           setHandoffingIdx(null);
                         }
                       }}
-                      className="inline-flex items-center gap-1 text-[10px] text-[#2563EB] hover:underline disabled:opacity-40"
+                      className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline disabled:opacity-40"
                     >
                       {handoffingIdx === i
                         ? <Loader2 size={10} className="animate-spin" />
@@ -1668,7 +1668,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
               <span className="text-[10px] text-muted w-16">FPS:</span>
               {[6, 12, 24].map(f => (
                 <button key={f} onClick={() => setFps(f)}
-                  className={`text-xs px-2 py-1 rounded ${fps === f ? "bg-[#2563EB] text-white" : "bg-surface-light text-muted"}`}>{f}</button>
+                  className={`text-xs px-2 py-1 rounded ${fps === f ? "bg-brand-accent text-white" : "bg-surface-light text-muted"}`}>{f}</button>
               ))}
             </div>
           </div>
@@ -1755,7 +1755,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
             <div className="flex flex-wrap gap-1.5">
               {moods.map(m => (
                 <button key={m} onClick={() => setMood(m)}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${mood === m ? "bg-[#2563EB] text-white font-semibold" : "bg-surface-light text-muted"}`}>{m}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${mood === m ? "bg-brand-accent text-white font-semibold" : "bg-surface-light text-muted"}`}>{m}</button>
               ))}
             </div>
           </div>
@@ -1765,7 +1765,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
             <div className="flex flex-wrap gap-1.5">
               {genres.map(g => (
                 <button key={g} onClick={() => setGenre(g)}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${genre === g ? "bg-[#2563EB] text-white font-semibold" : "bg-surface-light text-muted"}`}>{g}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${genre === g ? "bg-brand-accent text-white font-semibold" : "bg-surface-light text-muted"}`}>{g}</button>
               ))}
             </div>
           </div>
@@ -2113,7 +2113,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
             ))}
           </div>
           {trainingStatus && (
-            <div className="mt-4 p-3 rounded-lg bg-[rgba(37,99,235,0.06)] text-xs text-[#1D4ED8]">
+            <div className="mt-4 p-3 rounded-lg bg-[rgba(37,99,235,0.06)] text-xs text-brand-accent">
               {trainingStatus}
             </div>
           )}

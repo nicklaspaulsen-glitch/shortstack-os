@@ -61,8 +61,8 @@ export default function ConnectHubPage() {
             stats={[
               { label: "Integrations", key: "active_integrations", icon: Link2, color: "text-emerald-400" },
               { label: "Connected Accounts", key: "social_accounts", icon: UsersIcon, color: "text-blue-400" },
-              { label: "Webhooks Live", key: "webhooks_live", icon: Webhook, color: "text-[#2563EB]" },
-              { label: "API Keys", key: "api_keys", icon: Key, color: "text-[#2563EB]" },
+              { label: "Webhooks Live", key: "webhooks_live", icon: Webhook, color: "text-brand-accent" },
+              { label: "API Keys", key: "api_keys", icon: Key, color: "text-brand-accent" },
             ]}
             tools={[
               {

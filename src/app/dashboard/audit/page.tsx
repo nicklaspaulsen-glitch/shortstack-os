@@ -42,20 +42,20 @@ interface SecurityAlert {
 }
 
 const ACTION_STYLES: Record<ActionType, { icon: React.ReactNode; label: string; color: string }> = {
-  login: { icon: <LogIn size={11} />, label: "Login", color: "text-[#2563EB]" },
+  login: { icon: <LogIn size={11} />, label: "Login", color: "text-brand-accent" },
   create: { icon: <UserPlus size={11} />, label: "Create", color: "text-emerald-400" },
-  update: { icon: <Pencil size={11} />, label: "Update", color: "text-[#2563EB]" },
+  update: { icon: <Pencil size={11} />, label: "Update", color: "text-brand-accent" },
   delete: { icon: <Trash2 size={11} />, label: "Delete", color: "text-red-400" },
-  export: { icon: <Download size={11} />, label: "Export", color: "text-[#2563EB]" },
+  export: { icon: <Download size={11} />, label: "Export", color: "text-brand-accent" },
   send: { icon: <Mail size={11} />, label: "Send", color: "text-pink-400" },
-  config: { icon: <Settings size={11} />, label: "Config Change", color: "text-[#2563EB]" },
+  config: { icon: <Settings size={11} />, label: "Config Change", color: "text-brand-accent" },
 };
 
 const SEVERITY_STYLES: Record<string, string> = {
   critical: "bg-red-500/10 text-red-400 border-red-500/20",
   high: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-  medium: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.20)]",
-  low: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.20)]",
+  medium: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.20)]",
+  low: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.20)]",
 };
 
 const ACTION_FILTERS: ActionType[] = ["login", "create", "update", "delete", "export", "send", "config"];
@@ -243,7 +243,7 @@ export default function AuditPage() {
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.36 }}
                 className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Sensitive</p>
-                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{stats.sensitive}</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{stats.sensitive}</p>
               </motion.div>
               {/* Support tile: Alerts */}
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.36 }}
@@ -255,7 +255,7 @@ export default function AuditPage() {
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
+                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {t.icon} {t.label}
                   {t.badge !== undefined && t.badge > 0 && (
@@ -275,10 +275,10 @@ export default function AuditPage() {
 
                   {/* Action type filter */}
                   <div className="flex gap-1 bg-surface rounded-lg p-0.5">
-                    <button onClick={() => setActionFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${actionFilter === "all" ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>All</button>
+                    <button onClick={() => setActionFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${actionFilter === "all" ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "text-muted"}`}>All</button>
                     {ACTION_FILTERS.map(af => (
                       <button key={af} onClick={() => setActionFilter(af)}
-                        className={`px-2 py-1 rounded-md text-[9px] font-medium capitalize ${actionFilter === af ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>
+                        className={`px-2 py-1 rounded-md text-[9px] font-medium capitalize ${actionFilter === af ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "text-muted"}`}>
                         {ACTION_STYLES[af].label}
                       </button>
                     ))}
@@ -296,13 +296,13 @@ export default function AuditPage() {
                   <div className="flex gap-1">
                     {([["today", "Today"], ["7d", "7 Days"], ["30d", "30 Days"], ["all", "All"]] as const).map(([val, label]) => (
                       <button key={val} onClick={() => setDateFilter(val)}
-                        className={`px-2 py-1 rounded text-[9px] ${dateFilter === val ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>{label}</button>
+                        className={`px-2 py-1 rounded text-[9px] ${dateFilter === val ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "text-muted"}`}>{label}</button>
                     ))}
                   </div>
 
                   {/* Sensitive toggle */}
                   <button onClick={() => setShowSensitiveOnly(!showSensitiveOnly)}
-                    className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${showSensitiveOnly ? "bg-[rgba(37,99,235,0.10)] text-[#2563EB]" : "text-muted"}`}>
+                    className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${showSensitiveOnly ? "bg-[rgba(37,99,235,0.10)] text-brand-accent" : "text-muted"}`}>
                     <Lock size={9} /> Sensitive Only
                   </button>
 
@@ -341,9 +341,9 @@ export default function AuditPage() {
                             </td>
                             <td className="py-2.5 px-3">
                               <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 rounded-md bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[8px] font-bold text-[#2563EB] shrink-0">{entry.userAvatar}</div>
+                                <div className="w-6 h-6 rounded-md bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[8px] font-bold text-brand-accent shrink-0">{entry.userAvatar}</div>
                                 <span className="text-[10px] font-medium truncate">{entry.user}</span>
-                                {entry.sensitive && <Lock size={8} className="text-[#2563EB] shrink-0" />}
+                                {entry.sensitive && <Lock size={8} className="text-brand-accent shrink-0" />}
                               </div>
                             </td>
                             <td className="py-2.5 px-3">
@@ -358,7 +358,7 @@ export default function AuditPage() {
                               <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium inline-flex items-center gap-1 ${
                                 entry.status === "success" ? "bg-emerald-500/10 text-emerald-400" :
                                 entry.status === "failed" ? "bg-red-500/10 text-red-400" :
-                                "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                                "bg-[rgba(37,99,235,0.08)] text-brand-accent"
                               }`}>
                                 {entry.status === "success" ? <CheckCircle size={8} /> : entry.status === "failed" ? <AlertTriangle size={8} /> : <Clock size={8} />}
                                 {entry.status}
@@ -415,8 +415,8 @@ export default function AuditPage() {
                       </div>
                       {e.sensitive && (
                         <div className="p-2.5 rounded-lg bg-[rgba(37,99,235,0.06)] border border-[rgba(37,99,235,0.15)] flex items-center gap-2">
-                          <Lock size={11} className="text-[#2563EB] shrink-0" />
-                          <p className="text-[10px] text-[#2563EB]">This action involved sensitive data or configuration changes.</p>
+                          <Lock size={11} className="text-brand-accent shrink-0" />
+                          <p className="text-[10px] text-brand-accent">This action involved sensitive data or configuration changes.</p>
                         </div>
                       )}
                     </PrismPanel>
@@ -487,7 +487,7 @@ export default function AuditPage() {
 
                 {/* Security Overview — computed from real entries */}
                 <PrismPanel padding="p-4">
-                  <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-[#2563EB]" /> Security Overview</h2>
+                  <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-brand-accent" /> Security Overview</h2>
                   {(() => {
                     const sevenDaysAgo = Date.now() - 7 * 86400000;
                     const recent = entries.filter(e => new Date(e.timestamp).getTime() >= sevenDaysAgo);
@@ -508,9 +508,9 @@ export default function AuditPage() {
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
                         {[
                           { label: "Failed Logins (7d)", value: failedLogins, color: "text-red-400" },
-                          { label: "Config Changes (7d)", value: configChanges, color: "text-[#2563EB]" },
-                          { label: "Data Exports (7d)", value: dataExports, color: "text-[#2563EB]" },
-                          { label: "Unique IPs (7d)", value: uniqueIps, color: "text-[#2563EB]" },
+                          { label: "Config Changes (7d)", value: configChanges, color: "text-brand-accent" },
+                          { label: "Data Exports (7d)", value: dataExports, color: "text-brand-accent" },
+                          { label: "Unique IPs (7d)", value: uniqueIps, color: "text-brand-accent" },
                         ].map((s, i) => (
                           <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl p-3 text-center" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
                             <p className="text-[9px] text-muted uppercase">{s.label}</p>
@@ -525,7 +525,7 @@ export default function AuditPage() {
             )}{/* ═══ RETENTION TAB ═══ */}{tab === "retention" && (
               <div className="space-y-4">
                 <PrismPanel padding="p-4">
-                  <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-[#2563EB]" /> Retention Policy</h2>
+                  <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Retention Policy</h2>
                   <div className="space-y-3">
                     <div>
                       <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Retention Period (days)</label>
@@ -535,7 +535,7 @@ export default function AuditPage() {
                         <div className="flex gap-1">
                           {[30, 60, 90, 180, 365].map(d => (
                             <button key={d} onClick={() => setRetentionDays(d)}
-                              className={`px-2 py-1 rounded text-[9px] ${retentionDays === d ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted hover:text-foreground"}`}>{d}d</button>
+                              className={`px-2 py-1 rounded text-[9px] ${retentionDays === d ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "text-muted hover:text-foreground"}`}>{d}d</button>
                           ))}
                         </div>
                       </div>
@@ -545,12 +545,12 @@ export default function AuditPage() {
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
                       <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
                         <p className="text-[9px] text-muted uppercase">Active Entries</p>
-                        <p className="text-lg font-bold text-[#2563EB] mt-0.5">{entries.length}</p>
+                        <p className="text-lg font-bold text-brand-accent mt-0.5">{entries.length}</p>
                       </div>
                       <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
                         <p className="text-[9px] text-muted uppercase">Storage Used</p>
                         {/* Rough estimate: ~200 bytes/entry; exact size comes from backend once wired. */}
-                        <p className="text-lg font-bold text-[#2563EB] mt-0.5">
+                        <p className="text-lg font-bold text-brand-accent mt-0.5">
                           {entries.length > 0 ? `${(entries.length * 0.2).toFixed(1)} KB` : "0 KB"}
                         </p>
                       </div>
@@ -563,15 +563,15 @@ export default function AuditPage() {
                 </PrismPanel>
 
                 <PrismPanel padding="p-4">
-                  <h2 className="section-header flex items-center gap-2"><Database size={13} className="text-[#2563EB]" /> Data Lifecycle</h2>
+                  <h2 className="section-header flex items-center gap-2"><Database size={13} className="text-brand-accent" /> Data Lifecycle</h2>
                   <div className="space-y-2">
                     {[
                       { stage: "Active", desc: `0 - ${retentionDays} days`, status: "Current data, fully searchable", color: "text-emerald-400" },
-                      { stage: "Archived", desc: `${retentionDays} - ${retentionDays * 2} days`, status: "Compressed storage, on-demand access", color: "text-[#2563EB]" },
+                      { stage: "Archived", desc: `${retentionDays} - ${retentionDays * 2} days`, status: "Compressed storage, on-demand access", color: "text-brand-accent" },
                       { stage: "Deleted", desc: `After ${retentionDays * 2} days`, status: "Permanently removed", color: "text-red-400" },
                     ].map((item, i) => (
                       <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="rounded-xl flex items-center gap-3 p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                        <div className={`w-2 h-2 rounded-full ${item.color === "text-emerald-400" ? "bg-emerald-400" : item.color === "text-[#2563EB]" ? "bg-[#2563EB]" : "bg-red-400"}`} />
+                        <div className={`w-2 h-2 rounded-full ${item.color === "text-emerald-400" ? "bg-emerald-400" : item.color === "text-brand-accent" ? "bg-brand-accent" : "bg-red-400"}`} />
                         <div className="flex-1">
                           <p className={`text-[10px] font-semibold ${item.color}`}>{item.stage}</p>
                           <p className="text-[9px] text-muted">{item.desc}</p>
@@ -584,7 +584,7 @@ export default function AuditPage() {
               </div>
             )}{/* ═══ EXPORT TAB ═══ */}{tab === "export" && (
               <PrismPanel padding="p-4">
-                <h2 className="section-header flex items-center gap-2"><Download size={13} className="text-[#2563EB]" /> Export Audit Report</h2>
+                <h2 className="section-header flex items-center gap-2"><Download size={13} className="text-brand-accent" /> Export Audit Report</h2>
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -626,7 +626,7 @@ export default function AuditPage() {
                     </select>
                   </div>
                   <div className="rounded-xl p-3 text-[10px] text-muted" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                    Estimated export size: <span className="font-bold text-[#2563EB]">{exportFiltered.length} entries</span> ({(exportFiltered.length * 0.2).toFixed(1)} KB)
+                    Estimated export size: <span className="font-bold text-brand-accent">{exportFiltered.length} entries</span> ({(exportFiltered.length * 0.2).toFixed(1)} KB)
                   </div>
                   <div className="flex gap-2">
                     <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5"><Download size={12} /> Export</button>

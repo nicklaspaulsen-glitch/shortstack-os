@@ -70,9 +70,9 @@ const GRADE_STYLES: Record<
   { ring: string; text: string; bg: string; label: string }
 > = {
   A: {
-    ring: "border-[#2563EB]",
-    text: "text-[#2563EB]",
-    bg: "bg-[#2563EB]/10",
+    ring: "border-brand-accent",
+    text: "text-brand-accent",
+    bg: "bg-brand-accent/10",
     label: "Excellent",
   },
   B: {
@@ -159,7 +159,7 @@ function CategoryBar({
   const pct = Math.round((passed / total) * 100);
   const color =
     pct >= 90
-      ? "bg-[#2563EB]"
+      ? "bg-brand-accent"
       : pct >= 70
       ? "bg-emerald-400"
       : pct >= 50
@@ -209,7 +209,7 @@ function FailCheckItem({ check }: { check: FailingCheck }) {
       {expanded && (
         <div className="px-3 pb-3 space-y-2 border-t border-current/20 pt-2 mt-0">
           <p className="text-muted leading-relaxed">{check.description}</p>
-          <div className="flex items-start gap-1.5 text-[#2563EB]/80">
+          <div className="flex items-start gap-1.5 text-brand-accent/80">
             <Info size={11} className="mt-0.5 flex-shrink-0" />
             <span className="leading-relaxed">{check.recommendation}</span>
           </div>
@@ -338,7 +338,7 @@ export default function AuditScoreCard() {
               </span>
             )}
             {score.failed === 0 && (
-              <span className="text-[11px] text-[#2563EB]">
+              <span className="text-[11px] text-brand-accent">
                 All checks passing
               </span>
             )}

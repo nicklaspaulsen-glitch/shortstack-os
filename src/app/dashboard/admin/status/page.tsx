@@ -74,8 +74,8 @@ const SEVERITY_STYLES: Record<Severity, { label: string; pill: string; dot: stri
   },
   monitoring: {
     label: "Monitoring",
-    pill: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#1D4ED8]",
-    dot: "bg-[#2563EB]",
+    pill: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent",
+    dot: "bg-brand-accent",
   },
   resolved: {
     label: "Resolved",
@@ -403,7 +403,7 @@ export default function AdminStatusPage() {
             <button
               onClick={saveDraft}
               disabled={saving}
-              className="text-xs px-4 py-2 rounded-xl bg-[#2563EB] text-white hover:bg-[#1D4ED8] font-semibold disabled:opacity-50"
+              className="text-xs px-4 py-2 rounded-xl bg-brand-accent text-white hover:bg-brand-accent/80 font-semibold disabled:opacity-50"
             >
               {saving ? "Saving…" : draft.id ? "Save changes" : "Post incident"}
             </button>

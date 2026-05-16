@@ -197,7 +197,7 @@ export default function ClientPortalPage() {
             <p className="text-xs text-muted mt-0.5">{client.business_name || "Your Business"} � {client.package_tier || "Standard"} Plan</p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-[10px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-2.5 py-1 rounded-md border border-[rgba(37,99,235,0.08)]">
+            <div className="flex items-center gap-1.5 text-[10px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-2.5 py-1 rounded-md border border-[rgba(37,99,235,0.08)]">
               <Star size={10} className="fill-[#2563EB]" />
               <span className="font-medium">{client.health_score}% Health</span>
             </div>
@@ -224,7 +224,7 @@ export default function ClientPortalPage() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
         <Link href="/dashboard/portal/leads" className="card-hover p-3 flex items-center gap-2.5 group border-[rgba(37,99,235,0.1)]">
           <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0">
-            <Sparkles size={14} className="text-[#2563EB]" />
+            <Sparkles size={14} className="text-brand-accent" />
           </div>
           <div>
             <p className="text-xs font-medium group-hover:text-foreground transition-colors">AI Lead Engine</p>
@@ -242,7 +242,7 @@ export default function ClientPortalPage() {
         </Link>
         <Link href="/dashboard/portal/socials" className="card-hover p-3 flex items-center gap-2.5 group">
           <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0">
-            <Globe size={14} className="text-[#2563EB]" />
+            <Globe size={14} className="text-brand-accent" />
           </div>
           <div>
             <p className="text-xs font-medium group-hover:text-foreground transition-colors">Socials</p>
@@ -269,7 +269,7 @@ export default function ClientPortalPage() {
         </Link>
         <Link href="/dashboard/portal/support" className="card-hover p-3 flex items-center gap-2.5 group">
           <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0">
-            <MessageSquare size={14} className="text-[#2563EB]" />
+            <MessageSquare size={14} className="text-brand-accent" />
           </div>
           <div>
             <p className="text-xs font-medium group-hover:text-foreground transition-colors">Support</p>
@@ -281,7 +281,7 @@ export default function ClientPortalPage() {
       {/* AI Marketing Plan (shows after onboarding) */}
       {generatingPlan && (
         <PrismPanel padding="py-6" className="text-center">
-          <Loader size={20} className="mx-auto mb-2 text-[#2563EB] animate-spin" />
+          <Loader size={20} className="mx-auto mb-2 text-brand-accent animate-spin" />
           <p className="text-xs text-muted">AI Chief is creating your custom marketing plan...</p>
         </PrismPanel>
       )}
@@ -294,7 +294,7 @@ export default function ClientPortalPage() {
           style={{ borderColor: "rgba(0,0,0,0.10)" }}
         >
           <h2 className="section-header flex items-center gap-2">
-            <Sparkles size={13} className="text-[#2563EB]" /> Your Custom Marketing Plan
+            <Sparkles size={13} className="text-brand-accent" /> Your Custom Marketing Plan
           </h2>
           <pre className="text-[10px] text-muted leading-relaxed whitespace-pre-wrap">{aiPlan}</pre>
         </motion.div>
@@ -311,11 +311,11 @@ export default function ClientPortalPage() {
         className="glass border"
         style={{ borderColor: "rgba(0,0,0,0.10)" }}
       >
-        <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-[#2563EB]" /> Active Services</h2>
+        <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-brand-accent" /> Active Services</h2>
         <div className="flex flex-wrap gap-2">
           {(client.services || []).map((service, i) => (
             <div key={i} className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.08)] rounded-lg px-3 py-2">
-              <span className="text-xs text-[#2563EB] font-medium">{service}</span>
+              <span className="text-xs text-brand-accent font-medium">{service}</span>
             </div>
           ))}
           {(client.services || []).length === 0 && (
@@ -348,10 +348,10 @@ export default function ClientPortalPage() {
             <div className="mb-3">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[10px] text-muted">{completedTasks} of {totalTasks} complete</span>
-                <span className="text-[10px] font-mono text-[#2563EB]">{totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%</span>
+                <span className="text-[10px] font-mono text-brand-accent">{totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%</span>
               </div>
               <div className="w-full bg-surface-light rounded-full h-1.5">
-                <div className="bg-[#2563EB] rounded-full h-1.5 transition-all" style={{ width: `${totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0}%` }} />
+                <div className="bg-brand-accent rounded-full h-1.5 transition-all" style={{ width: `${totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0}%` }} />
               </div>
             </div>
           )}
@@ -385,7 +385,7 @@ export default function ClientPortalPage() {
           style={{ borderColor: "rgba(0,0,0,0.10)" }}
         >
           <h2 className="section-header flex items-center gap-2">
-            <Sparkles size={13} className="text-[#2563EB]" /> Recent Activity
+            <Sparkles size={13} className="text-brand-accent" /> Recent Activity
           </h2>
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {aiActions.length === 0 ? (
@@ -393,7 +393,7 @@ export default function ClientPortalPage() {
             ) : (
               aiActions.map((a, i) => (
                 <div key={(a.id as string) || i} className="flex items-start gap-2 py-1.5 border-b border-border last:border-0">
-                  <Bot size={12} className="text-[#2563EB] mt-0.5 shrink-0" />
+                  <Bot size={12} className="text-brand-accent mt-0.5 shrink-0" />
                   <div className="min-w-0">
                     <p className="text-xs">{a.description as string}</p>
                     <p className="text-[9px] text-muted">{formatRelativeTime(a.created_at as string)}</p>
@@ -417,9 +417,9 @@ export default function ClientPortalPage() {
         >
           <div className="flex items-center justify-between mb-3">
             <h2 className="section-header mb-0 flex items-center gap-2">
-              <Calendar size={13} className="text-[#2563EB]" /> Upcoming Content
+              <Calendar size={13} className="text-brand-accent" /> Upcoming Content
             </h2>
-            <Link href="/dashboard/portal/content" className="text-[10px] text-[#2563EB] hover:text-[rgba(37,99,235,0.8)] flex items-center gap-0.5">
+            <Link href="/dashboard/portal/content" className="text-[10px] text-brand-accent hover:text-[rgba(37,99,235,0.8)] flex items-center gap-0.5">
               View all <ArrowRight size={10} />
             </Link>
           </div>
@@ -505,7 +505,7 @@ function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
   return (
     <PrismPanel>
       <h2 className="section-header flex items-center gap-2">
-        <Phone size={13} className="text-[#2563EB]" /> Your Phone Number
+        <Phone size={13} className="text-brand-accent" /> Your Phone Number
       </h2>
       {status.has_number ? (
         <div className="space-y-2">
@@ -515,7 +515,7 @@ function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
               <Phone size={9} /> Active
             </span>
             {status.eleven_agent_id && (
-              <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)] flex items-center gap-1">
+              <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)] flex items-center gap-1">
                 <Bot size={9} /> AI caller ready
               </span>
             )}
@@ -568,13 +568,13 @@ function portalFormatBytes(bytes: number): string {
 function portalFileIcon(type: string) {
   const t = (type || "").toLowerCase();
   if (t.startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(t))
-    return <ImageIcon size={14} className="text-[#2563EB]" />;
+    return <ImageIcon size={14} className="text-brand-accent" />;
   if (t.startsWith("video") || ["mp4", "mov", "avi", "webm", "mkv"].includes(t))
-    return <Film size={14} className="text-[#2563EB]" />;
+    return <Film size={14} className="text-brand-accent" />;
   if (t.startsWith("audio") || ["mp3", "wav", "ogg", "m4a", "flac"].includes(t))
     return <Music size={14} className="text-pink-400" />;
   if (["pdf", "doc", "docx", "txt"].includes(t) || t.includes("document"))
-    return <FileText size={14} className="text-[#2563EB]" />;
+    return <FileText size={14} className="text-brand-accent" />;
   return <FileIcon size={14} className="text-muted" />;
 }
 
@@ -605,7 +605,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
     <PrismPanel>
       <div className="flex items-center justify-between mb-3">
         <h2 className="section-header flex items-center gap-2 mb-0">
-          <FolderOpen size={13} className="text-[#2563EB]" /> Your Uploaded Files
+          <FolderOpen size={13} className="text-brand-accent" /> Your Uploaded Files
         </h2>
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-muted">
@@ -621,7 +621,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
       ) : files.length === 0 ? (
         <p className="text-xs text-muted">
           You haven&apos;t uploaded any files yet. Drop files in the{" "}
-          <Link href="/dashboard/portal/uploads" className="text-[#2563EB] hover:underline">
+          <Link href="/dashboard/portal/uploads" className="text-brand-accent hover:underline">
             My Uploads
           </Link>{" "}
           page to share them with your agency.
@@ -664,7 +664,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
       )}
       {files.length > 9 && (
         <div className="mt-3 text-center">
-          <Link href="/dashboard/portal/uploads" className="text-[10px] text-[#2563EB] hover:underline">
+          <Link href="/dashboard/portal/uploads" className="text-[10px] text-brand-accent hover:underline">
             View all {files.length} files ?
           </Link>
         </div>
@@ -786,23 +786,23 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
       {/* Header */}
       <div className="text-center">
         <div className="w-14 h-14 bg-[rgba(37,99,235,0.08)]  flex items-center justify-center mx-auto mb-3 border border-[rgba(37,99,235,0.12)]">
-          <Sparkles size={24} className="text-[#2563EB]" />
+          <Sparkles size={24} className="text-brand-accent" />
         </div>
         <h1 className="text-lg font-bold tracking-tight">Welcome to Trinity</h1>
         <p className="text-xs text-muted mt-1">Let&apos;s set up your account — takes less than 2 minutes</p>
-        <p className="text-[10px] text-[#2563EB] mt-1">Complete your detailed onboarding after account creation</p>
+        <p className="text-[10px] text-brand-accent mt-1">Complete your detailed onboarding after account creation</p>
       </div>
 
       {/* Progress */}
       <div className="flex gap-1">
         {steps.map((_, i) => (
-          <div key={i} className={`flex-1 h-1 rounded-full transition-all ${i <= step ? "bg-[#2563EB]" : "bg-surface-light"}`} />
+          <div key={i} className={`flex-1 h-1 rounded-full transition-all ${i <= step ? "bg-brand-accent" : "bg-surface-light"}`} />
         ))}
       </div>
 
       {/* Step content */}
       <PrismPanel>
-        <p className="text-[10px] text-[#2563EB] font-medium uppercase tracking-wider mb-0.5">Step {step + 1} of {steps.length}</p>
+        <p className="text-[10px] text-brand-accent font-medium uppercase tracking-wider mb-0.5">Step {step + 1} of {steps.length}</p>
         <h2 className="text-sm font-semibold mb-0.5">{currentStep.title}</h2>
         <p className="text-[10px] text-muted mb-4">{currentStep.subtitle}</p>
 
@@ -859,7 +859,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="text-[11px] text-muted hover:text-[#2563EB] transition-colors px-3 py-2"
+              className="text-[11px] text-muted hover:text-brand-accent transition-colors px-3 py-2"
               title="Skip the rest and create your profile now"
             >
               Skip to finish

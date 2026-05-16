@@ -33,7 +33,7 @@ interface ProductionItem {
 }
 
 const PRIORITY_CONFIG: Record<Priority, { label: string; color: string; bg: string }> = {
-  low: { label: "Low", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]" },
+  low: { label: "Low", color: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.08)]" },
   medium: { label: "Medium", color: "text-yellow-400", bg: "bg-yellow-400/10" },
   high: { label: "High", color: "text-orange-400", bg: "bg-orange-400/10" },
   urgent: { label: "Urgent", color: "text-red-400", bg: "bg-red-400/10" },
@@ -41,10 +41,10 @@ const PRIORITY_CONFIG: Record<Priority, { label: string; color: string; bg: stri
 
 const STATUS_CONFIG: Record<KanbanStatus, { label: string; color: string }> = {
   backlog: { label: "Backlog", color: "text-text-muted" },
-  in_progress: { label: "In Progress", color: "text-[#2563EB]" },
-  review: { label: "In Review", color: "text-[#2563EB]" },
+  in_progress: { label: "In Progress", color: "text-brand-accent" },
+  review: { label: "In Review", color: "text-brand-accent" },
   approved: { label: "Approved", color: "text-emerald-400" },
-  delivered: { label: "Delivered", color: "text-[#2563EB]" },
+  delivered: { label: "Delivered", color: "text-brand-accent" },
 };
 
 export default function ProductionPage() {
@@ -124,12 +124,12 @@ export default function ProductionPage() {
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
                 className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">In Progress</p>
-                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{items.filter(i => i.status === "in_progress").length}</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{items.filter(i => i.status === "in_progress").length}</p>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
                 className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">In Review</p>
-                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{inReview}</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{inReview}</p>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
                 className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
@@ -155,7 +155,7 @@ export default function ProductionPage() {
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
+                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {t.icon} {t.label}
                 </button>
@@ -214,12 +214,12 @@ export default function ProductionPage() {
                                   <span>{item.actualHours}h / {item.estimatedHours}h</span>
                                 </div>
                                 <div className="h-1 rounded-full bg-surface-light overflow-hidden">
-                                  <div className="h-full rounded-full bg-[#2563EB]" style={{ width: `${(item.checklist.filter(c => c.done).length / item.checklist.length) * 100}%` }} />
+                                  <div className="h-full rounded-full bg-brand-accent" style={{ width: `${(item.checklist.filter(c => c.done).length / item.checklist.length) * 100}%` }} />
                                 </div>
                               </div>
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-1">
-                                  <div className="w-5 h-5 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[8px] font-bold text-[#2563EB]">{item.assignee[0]}</div>
+                                  <div className="w-5 h-5 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[8px] font-bold text-brand-accent">{item.assignee[0]}</div>
                                   <span className="text-[9px] text-muted">{item.assignee}</span>
                                 </div>
                                 <span className={`text-[9px] ${item.dueDate < new Date().toISOString().slice(0, 10) && item.status !== "delivered" ? "text-red-400" : "text-muted"}`}>
@@ -242,7 +242,7 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-[#2563EB]" /> Production Calendar</h2>
+                  <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-brand-accent" /> Production Calendar</h2>
                   <div className="space-y-2">
                     {Array.from(new Set(items.map(i => i.dueDate))).sort().map(date => {
                       const dayItems = filtered.filter(i => i.dueDate === date);
@@ -250,7 +250,7 @@ export default function ProductionPage() {
                       return (
                         <div key={date} className="p-3 rounded-lg bg-surface-light border border-border">
                           <div className="flex items-center gap-2 mb-2">
-                            <Calendar size={12} className={isOverdue ? "text-red-400" : "text-[#2563EB]"} />
+                            <Calendar size={12} className={isOverdue ? "text-red-400" : "text-brand-accent"} />
                             <span className={`text-xs font-bold ${isOverdue ? "text-red-400" : ""}`}>
                               {new Date(date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
                               {isOverdue && " (OVERDUE)"}
@@ -278,7 +278,7 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4, delay: 0.06 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-[#2563EB]" /> Time: Estimated vs Actual</h2>
+                  <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Time: Estimated vs Actual</h2>
                   <div className="space-y-2">
                     {items.filter(i => i.actualHours > 0).map(item => {
                       const pctEst = (item.estimatedHours / Math.max(totalEstimated, 1)) * 100;
@@ -335,7 +335,7 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="section-header flex items-center gap-2"><MessageSquare size={13} className="text-[#2563EB]" /> Daily Standup Summary</h2>
+                  <h2 className="section-header flex items-center gap-2"><MessageSquare size={13} className="text-brand-accent" /> Daily Standup Summary</h2>
                   <p className="text-[10px] text-muted mb-3">{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</p>
                   <div className="space-y-3">
                     {Array.from(new Set(items.map(i => i.assignee))).filter(Boolean).map(name => {
@@ -345,13 +345,13 @@ export default function ProductionPage() {
                       return (
                         <div key={name} className="p-3 rounded-lg bg-surface-light border border-border">
                           <div className="flex items-center gap-2 mb-2">
-                            <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[10px] font-bold text-[#2563EB]">{name[0]}</div>
+                            <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[10px] font-bold text-brand-accent">{name[0]}</div>
                             <span className="text-xs font-bold">{name}</span>
                             <span className="text-[9px] text-muted ml-auto">{memberItems.length} items</span>
                           </div>
                           {inProg.length > 0 && (
                             <div className="mb-1">
-                              <p className="text-[9px] text-[#2563EB] font-semibold mb-0.5">Working On:</p>
+                              <p className="text-[9px] text-brand-accent font-semibold mb-0.5">Working On:</p>
                               {inProg.map(i => (
                                 <p key={i.id} className="text-[10px] text-muted ml-3">- {i.title} ({i.client})</p>
                               ))}
@@ -359,7 +359,7 @@ export default function ProductionPage() {
                           )}
                           {review.length > 0 && (
                             <div>
-                              <p className="text-[9px] text-[#2563EB] font-semibold mb-0.5">Awaiting Review:</p>
+                              <p className="text-[9px] text-brand-accent font-semibold mb-0.5">Awaiting Review:</p>
                               {review.map(i => (
                                 <p key={i.id} className="text-[10px] text-muted ml-3">- {i.title} ({i.client})</p>
                               ))}
@@ -379,7 +379,7 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="section-header flex items-center gap-2"><CheckCircle size={13} className="text-[#2563EB]" /> Review & Approval Queue</h2>
+                  <h2 className="section-header flex items-center gap-2"><CheckCircle size={13} className="text-brand-accent" /> Review & Approval Queue</h2>
                   <div className="space-y-2">
                     {items.filter(i => i.status === "review").map(item => (
                       <div key={item.id} className="p-4 rounded-lg bg-surface-light border border-border">
@@ -438,12 +438,12 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4, delay: 0.06 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-[#2563EB]" /> Client Approval Portal</h2>
+                  <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-brand-accent" /> Client Approval Portal</h2>
                   <p className="text-[10px] text-muted mb-3">Share approval links with clients for direct feedback</p>
                   <div className="space-y-2">
                     {items.filter(i => i.status === "approved" || i.status === "review").map(item => (
                       <div key={item.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
-                        <Film size={14} className="text-[#2563EB] shrink-0" />
+                        <Film size={14} className="text-brand-accent shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium truncate">{item.title}</p>
                           <p className="text-[9px] text-muted">{item.client}</p>
@@ -467,7 +467,7 @@ export default function ProductionPage() {
               <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowSubmit(false)}>
                 <div className="glass  w-full max-w-md p-5 space-y-3" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-[#2563EB]" /> New Production Request</h3>
+                    <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-brand-accent" /> New Production Request</h3>
                     <button onClick={() => setShowSubmit(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
                   </div>
                   <div>

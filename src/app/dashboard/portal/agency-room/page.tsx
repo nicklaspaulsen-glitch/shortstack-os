@@ -89,7 +89,7 @@ export default function PortalAgencyRoomPage() {
           </div>
         </div>
         <div className="border border-black/[0.06] bg-white p-8 text-center">
-          <Sparkles className="mx-auto mb-3 text-[#2563EB]/60" size={32} />
+          <Sparkles className="mx-auto mb-3 text-brand-accent/60" size={32} />
           <h2 className="text-base font-semibold mb-1">Your room isn&apos;t set up yet</h2>
           <p className="text-[12px] text-muted max-w-md mx-auto">
             Once your agency finishes onboarding your account, this view will

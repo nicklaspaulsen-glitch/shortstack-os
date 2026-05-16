@@ -503,7 +503,7 @@ export default function LandingPagesPage() {
                 onMouseLeave={() => setHoveredLPTemplate(null)}
                 className={`relative group overflow-hidden rounded-xl border-2 transition-all duration-200 cursor-pointer text-left ${
                   isSelected
-                    ? "border-[#2563EB] ring-2 ring-[rgba(37,99,235,0.25)] shadow-lg"
+                    ? "border-brand-accent ring-2 ring-[rgba(37,99,235,0.25)] shadow-lg"
                     : "border-border hover:border-[rgba(37,99,235,0.4)] hover:shadow-md"
                 }`}
               >
@@ -547,14 +547,14 @@ export default function LandingPagesPage() {
                   </span>
                   {/* Selection checkmark */}
                   {isSelected && (
-                    <span className="absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-[#2563EB] flex items-center justify-center shadow-sm">
+                    <span className="absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center shadow-sm">
                       <Check size={10} className="text-white" strokeWidth={3} />
                     </span>
                   )}
                 </div>
                 {/* Label row */}
                 <div className="px-2.5 py-2 bg-surface border-t border-border">
-                  <p className={`text-xs font-semibold truncate ${isSelected ? "text-[#2563EB]" : "text-text-primary"}`}>
+                  <p className={`text-xs font-semibold truncate ${isSelected ? "text-brand-accent" : "text-text-primary"}`}>
                     {t.name}
                   </p>
                   <p className="text-[10px] text-muted truncate">{t.avgLaunch}</p>
@@ -891,7 +891,7 @@ export default function LandingPagesPage() {
             <button onClick={() => toggleSection(sec.key)} className={`p-1 hover:bg-surface-light rounded ${!sec.visible ? "opacity-40" : ""}`} title={sec.visible ? "Hide" : "Show"}>
               {sec.visible ? <Eye className="w-3.5 h-3.5 text-muted" /> : <EyeOff className="w-3.5 h-3.5 text-muted" />}
             </button>
-            <button onClick={() => toggleEdit(sec.key)} className={`p-1 hover:bg-surface-light rounded ${isEditing ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : ""}`} title="Edit">
+            <button onClick={() => toggleEdit(sec.key)} className={`p-1 hover:bg-surface-light rounded ${isEditing ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : ""}`} title="Edit">
               <Pencil className="w-3.5 h-3.5" />
             </button>
             <button onClick={() => handleRegenSection(sec.key)} className="p-1 hover:bg-surface-light rounded" title="Regenerate with AI">
@@ -925,7 +925,7 @@ export default function LandingPagesPage() {
                     <input value={content.hero.cta_url} onChange={e => setContent(c => ({ ...c, hero: { ...c.hero, cta_url: e.target.value } }))} className="w-full bg-surface-light border border-border rounded px-3 py-2 text-sm text-text-primary" />
                   </div>
                 </div>
-                <div className="p-3 border border-dashed border-border rounded-lg flex items-center justify-center gap-2 text-muted text-xs cursor-pointer hover:border-[#2563EB] hover:text-[#2563EB] transition-colors">
+                <div className="p-3 border border-dashed border-border rounded-lg flex items-center justify-center gap-2 text-muted text-xs cursor-pointer hover:border-brand-accent hover:text-brand-accent transition-colors">
                   <ImageIcon className="w-4 h-4" />
                   Upload Hero Image
                 </div>
@@ -944,7 +944,7 @@ export default function LandingPagesPage() {
                   </div>
                 ))}
                 {content.features.length < 6 && (
-                  <button onClick={() => setContent(c => ({ ...c, features: [...c.features, { icon: "Star", title: "New Feature", description: "Describe this feature" }] }))} className="w-full py-2 border border-dashed border-border rounded-lg text-xs text-muted hover:text-[#2563EB] hover:border-[#2563EB] transition-colors flex items-center justify-center gap-1">
+                  <button onClick={() => setContent(c => ({ ...c, features: [...c.features, { icon: "Star", title: "New Feature", description: "Describe this feature" }] }))} className="w-full py-2 border border-dashed border-border rounded-lg text-xs text-muted hover:text-brand-accent hover:border-brand-accent transition-colors flex items-center justify-center gap-1">
                     <Plus className="w-3.5 h-3.5" /> Add Feature
                   </button>
                 )}
@@ -975,7 +975,7 @@ export default function LandingPagesPage() {
             {sec.key === "pricing" && (
               <div className="space-y-3">
                 {content.pricing.map((tier, pi) => (
-                  <div key={pi} className={`p-3 rounded-lg border space-y-2 ${tier.highlighted ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : "bg-surface-light border-border"}`}>
+                  <div key={pi} className={`p-3 rounded-lg border space-y-2 ${tier.highlighted ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : "bg-surface-light border-border"}`}>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-muted font-medium">{tier.name}</span>
                       <label className="flex items-center gap-1.5 text-xs text-muted cursor-pointer">
@@ -995,7 +995,7 @@ export default function LandingPagesPage() {
                           <button onClick={() => { const np = [...content.pricing]; np[pi] = { ...np[pi], features: np[pi].features.filter((_, i) => i !== fi) }; setContent(c => ({ ...c, pricing: np })); }} className="text-red-400 hover:text-red-600"><X className="w-3 h-3" /></button>
                         </div>
                       ))}
-                      <button onClick={() => { const np = [...content.pricing]; np[pi] = { ...np[pi], features: [...np[pi].features, "New feature"] }; setContent(c => ({ ...c, pricing: np })); }} className="text-xs text-muted hover:text-[#2563EB] flex items-center gap-1 mt-1"><Plus className="w-3 h-3" /> Add feature</button>
+                      <button onClick={() => { const np = [...content.pricing]; np[pi] = { ...np[pi], features: [...np[pi].features, "New feature"] }; setContent(c => ({ ...c, pricing: np })); }} className="text-xs text-muted hover:text-brand-accent flex items-center gap-1 mt-1"><Plus className="w-3 h-3" /> Add feature</button>
                     </div>
                   </div>
                 ))}
@@ -1018,7 +1018,7 @@ export default function LandingPagesPage() {
                   </div>
                 ))}
                 {content.faq.length < 8 && (
-                  <button onClick={() => setContent(c => ({ ...c, faq: [...c.faq, { question: "New Question?", answer: "Answer here." }] }))} className="w-full py-2 border border-dashed border-border rounded-lg text-xs text-muted hover:text-[#2563EB] hover:border-[#2563EB] transition-colors flex items-center justify-center gap-1">
+                  <button onClick={() => setContent(c => ({ ...c, faq: [...c.faq, { question: "New Question?", answer: "Answer here." }] }))} className="w-full py-2 border border-dashed border-border rounded-lg text-xs text-muted hover:text-brand-accent hover:border-brand-accent transition-colors flex items-center justify-center gap-1">
                     <Plus className="w-3.5 h-3.5" /> Add FAQ
                   </button>
                 )}
@@ -1116,9 +1116,9 @@ export default function LandingPagesPage() {
               <button
                 key={s.n}
                 onClick={() => setStep(s.n as 1 | 2 | 3)}
-                className={`flex items-center gap-2 text-sm font-medium transition-colors ${step === s.n ? "text-[#2563EB]" : step > s.n ? "text-green-400" : "text-muted"}`}
+                className={`flex items-center gap-2 text-sm font-medium transition-colors ${step === s.n ? "text-brand-accent" : step > s.n ? "text-green-400" : "text-muted"}`}
               >
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border ${step === s.n ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : step > s.n ? "border-green-500 bg-green-500/10 text-green-400" : "border-border text-muted"}`}>
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border ${step === s.n ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent" : step > s.n ? "border-green-500 bg-green-500/10 text-green-400" : "border-border text-muted"}`}>
                   {step > s.n ? <Check className="w-3.5 h-3.5" /> : s.n}
                 </div>
                 {s.label}
@@ -1131,24 +1131,24 @@ export default function LandingPagesPage() {
           {step === 1 && (
             <div className="card p-6 space-y-6">
               <h2 className="section-header text-lg font-bold text-text-primary flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-[#2563EB]" />
+                <Building2 className="w-5 h-5 text-brand-accent" />
                 Business Information
               </h2>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs text-muted mb-1.5 block font-medium">Business Name *</label>
-                  <input value={bizInfo.name} onChange={e => setBizInfo(p => ({ ...p, name: e.target.value }))} placeholder="e.g. Acme Solutions" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-[#2563EB] focus:outline-none transition-colors" />
+                  <input value={bizInfo.name} onChange={e => setBizInfo(p => ({ ...p, name: e.target.value }))} placeholder="e.g. Acme Solutions" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
                 </div>
                 <div>
                   <label className="text-xs text-muted mb-1.5 block font-medium">Industry *</label>
-                  <input value={bizInfo.industry} onChange={e => setBizInfo(p => ({ ...p, industry: e.target.value }))} placeholder="e.g. SaaS, Restaurant, Real Estate" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-[#2563EB] focus:outline-none transition-colors" />
+                  <input value={bizInfo.industry} onChange={e => setBizInfo(p => ({ ...p, industry: e.target.value }))} placeholder="e.g. SaaS, Restaurant, Real Estate" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
                 </div>
               </div>
 
               <div>
                 <label className="text-xs text-muted mb-1.5 block font-medium">Tagline</label>
-                <input value={bizInfo.tagline} onChange={e => setBizInfo(p => ({ ...p, tagline: e.target.value }))} placeholder="e.g. Build faster, scale smarter" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-[#2563EB] focus:outline-none transition-colors" />
+                <input value={bizInfo.tagline} onChange={e => setBizInfo(p => ({ ...p, tagline: e.target.value }))} placeholder="e.g. Build faster, scale smarter" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
               </div>
 
               <div>
@@ -1156,26 +1156,26 @@ export default function LandingPagesPage() {
                   <label className="text-xs text-muted block font-medium">Business Description</label>
                   <AIEnhanceButton value={bizInfo.description} onResult={next => setBizInfo(p => ({ ...p, description: next }))} context="landing page section copy" variant="inline" />
                 </div>
-                <textarea value={bizInfo.description} onChange={e => setBizInfo(p => ({ ...p, description: e.target.value }))} placeholder="Describe what your business does, your main value proposition, and what makes you unique..." className="w-full bg-surface-light border border-border rounded-lg px-4 py-3 text-sm text-text-primary h-24 resize-none focus:border-[#2563EB] focus:outline-none transition-colors" />
+                <textarea value={bizInfo.description} onChange={e => setBizInfo(p => ({ ...p, description: e.target.value }))} placeholder="Describe what your business does, your main value proposition, and what makes you unique..." className="w-full bg-surface-light border border-border rounded-lg px-4 py-3 text-sm text-text-primary h-24 resize-none focus:border-brand-accent focus:outline-none transition-colors" />
               </div>
 
               <div>
                 <label className="text-xs text-muted mb-1.5 block font-medium">Target Audience</label>
-                <input value={bizInfo.targetAudience} onChange={e => setBizInfo(p => ({ ...p, targetAudience: e.target.value }))} placeholder="e.g. Small business owners, marketing teams, enterprise companies" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-[#2563EB] focus:outline-none transition-colors" />
+                <input value={bizInfo.targetAudience} onChange={e => setBizInfo(p => ({ ...p, targetAudience: e.target.value }))} placeholder="e.g. Small business owners, marketing teams, enterprise companies" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
               </div>
 
               {/* Benefits */}
               <div>
                 <label className="text-xs text-muted mb-1.5 block font-medium">Key Benefits</label>
                 <div className="flex gap-2 mb-2">
-                  <input value={benefitInput} onChange={e => setBenefitInput(e.target.value)} onKeyDown={e => e.key === "Enter" && addBenefit()} placeholder="Add a benefit and press Enter" className="flex-1 bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-[#2563EB] focus:outline-none transition-colors" />
-                  <button onClick={addBenefit} className="px-3 py-2 bg-surface-light border border-border rounded-lg hover:border-[#2563EB] transition-colors" aria-label="Add benefit">
+                  <input value={benefitInput} onChange={e => setBenefitInput(e.target.value)} onKeyDown={e => e.key === "Enter" && addBenefit()} placeholder="Add a benefit and press Enter" className="flex-1 bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
+                  <button onClick={addBenefit} className="px-3 py-2 bg-surface-light border border-border rounded-lg hover:border-brand-accent transition-colors" aria-label="Add benefit">
                     <Plus className="w-4 h-4 text-muted" />
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {bizInfo.benefits.map((b, i) => (
-                    <span key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-full text-xs font-medium">
+                    <span key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-brand-accent rounded-full text-xs font-medium">
                       {b}
                       <button onClick={() => removeBenefit(i)} aria-label={`Remove benefit ${b}`}><X className="w-3 h-3" /></button>
                     </span>
@@ -1187,11 +1187,11 @@ export default function LandingPagesPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs text-muted mb-1.5 block font-medium">CTA Button Text</label>
-                  <input value={bizInfo.ctaText} onChange={e => setBizInfo(p => ({ ...p, ctaText: e.target.value }))} placeholder="Get Started" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-[#2563EB] focus:outline-none transition-colors" />
+                  <input value={bizInfo.ctaText} onChange={e => setBizInfo(p => ({ ...p, ctaText: e.target.value }))} placeholder="Get Started" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
                 </div>
                 <div>
                   <label className="text-xs text-muted mb-1.5 block font-medium">CTA URL</label>
-                  <input value={bizInfo.ctaUrl} onChange={e => setBizInfo(p => ({ ...p, ctaUrl: e.target.value }))} placeholder="https://..." className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-[#2563EB] focus:outline-none transition-colors" />
+                  <input value={bizInfo.ctaUrl} onChange={e => setBizInfo(p => ({ ...p, ctaUrl: e.target.value }))} placeholder="https://..." className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
                 </div>
               </div>
 
@@ -1203,7 +1203,7 @@ export default function LandingPagesPage() {
                     <button
                       key={cs.id}
                       onClick={() => setBizInfo(p => ({ ...p, colorScheme: cs.id }))}
-                      className={`p-3 rounded-lg border transition-all ${bizInfo.colorScheme === cs.id ? "border-[#2563EB] ring-1 ring-[rgba(37,99,235,0.25)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}
+                      className={`p-3 rounded-lg border transition-all ${bizInfo.colorScheme === cs.id ? "border-brand-accent ring-1 ring-[rgba(37,99,235,0.25)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}
                     >
                       <div className="h-10 rounded-md mb-2 flex items-center justify-center" style={{ background: cs.bg.startsWith("linear") ? cs.bg : cs.bg, border: cs.id === "clean-light" || cs.id === "minimal" ? "1px solid #333" : "none" }}>
                         <div className="w-6 h-2 rounded-full" style={{ backgroundColor: cs.primary }} />
@@ -1217,7 +1217,7 @@ export default function LandingPagesPage() {
               {/* Logo Upload Placeholder */}
               <div>
                 <label className="text-xs text-muted mb-1.5 block font-medium">Logo</label>
-                <div className="border border-dashed border-border rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[#2563EB] hover:bg-[rgba(37,99,235,0.05)] transition-colors">
+                <div className="border border-dashed border-border rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-brand-accent hover:bg-[rgba(37,99,235,0.05)] transition-colors">
                   <Upload className="w-6 h-6 text-muted" />
                   <span className="text-xs text-muted">Click to upload your logo (PNG, SVG)</span>
                   <span className="text-[10px] text-muted/50">Max 2MB</span>
@@ -1245,7 +1245,7 @@ export default function LandingPagesPage() {
           {step === 2 && (
             <div className="space-y-4">
               <h2 className="section-header text-lg font-bold text-text-primary flex items-center gap-2">
-                <Layout className="w-5 h-5 text-[#2563EB]" />
+                <Layout className="w-5 h-5 text-brand-accent" />
                 Choose a Template
               </h2>
               <div className="grid grid-cols-4 gap-4">
@@ -1291,7 +1291,7 @@ export default function LandingPagesPage() {
                         <p className="text-xs text-muted mb-3">{tpl.desc}</p>
                         <button
                           onClick={() => handleTemplateSelect(tpl.id)}
-                          className="w-full py-2 bg-surface-light border border-border rounded-lg text-xs font-semibold text-muted hover:text-[#2563EB] hover:border-[#2563EB] transition-colors group-hover:border-[rgba(37,99,235,0.25)]"
+                          className="w-full py-2 bg-surface-light border border-border rounded-lg text-xs font-semibold text-muted hover:text-brand-accent hover:border-brand-accent transition-colors group-hover:border-[rgba(37,99,235,0.25)]"
                         >
                           Use Template
                         </button>
@@ -1310,7 +1310,7 @@ export default function LandingPagesPage() {
               <div className="col-span-2 space-y-1">
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="section-header text-lg font-bold text-text-primary flex items-center gap-2">
-                    <Pencil className="w-5 h-5 text-[#2563EB]" />
+                    <Pencil className="w-5 h-5 text-brand-accent" />
                     Sections
                   </h2>
                   <span className="text-xs text-muted">{sections.filter(s => s.visible).length}/{sections.length} visible</span>
@@ -1322,7 +1322,7 @@ export default function LandingPagesPage() {
               <div className="col-span-3 sticky top-6">
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="section-header text-lg font-bold text-text-primary flex items-center gap-2">
-                    <Monitor className="w-5 h-5 text-[#2563EB]" />
+                    <Monitor className="w-5 h-5 text-brand-accent" />
                     Live Preview
                   </h2>
                   <div className="flex items-center gap-2">
@@ -1374,7 +1374,7 @@ export default function LandingPagesPage() {
                   <tr key={page.id} className="hover:bg-surface-light/50 transition-colors">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <Globe className="w-4 h-4 text-[#2563EB]" />
+                        <Globe className="w-4 h-4 text-brand-accent" />
                         <span className="text-sm text-text-primary font-medium">{page.name}</span>
                       </div>
                     </td>
@@ -1391,7 +1391,7 @@ export default function LandingPagesPage() {
                     </td>
                     <td className="px-4 py-3 text-sm text-muted text-right">{page.views.toLocaleString()}</td>
                     <td className="px-4 py-3 text-sm text-right">
-                      <span className="text-[#2563EB] font-medium">{page.conversions.toLocaleString()}</span>
+                      <span className="text-brand-accent font-medium">{page.conversions.toLocaleString()}</span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
@@ -1440,7 +1440,7 @@ export default function LandingPagesPage() {
             {/* Deploy Action */}
             <div className="card p-6 col-span-1 space-y-4">
               <h3 className="section-header text-sm font-bold text-text-primary flex items-center gap-2">
-                <Rocket className="w-4 h-4 text-[#2563EB]" />
+                <Rocket className="w-4 h-4 text-brand-accent" />
                 Deploy
               </h3>
               <button
@@ -1453,7 +1453,7 @@ export default function LandingPagesPage() {
               </button>
               <div>
                 <label className="text-xs text-muted mb-1.5 block font-medium">Custom Domain</label>
-                <input value={customDomain} onChange={e => setCustomDomain(e.target.value)} placeholder="yourdomain.com" className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-text-primary focus:border-[#2563EB] focus:outline-none" />
+                <input value={customDomain} onChange={e => setCustomDomain(e.target.value)} placeholder="yourdomain.com" className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-text-primary focus:border-brand-accent focus:outline-none" />
               </div>
               <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
                 <span className="text-xs text-muted">SSL Certificate</span>
@@ -1467,7 +1467,7 @@ export default function LandingPagesPage() {
             {/* Deployment History */}
             <div className="card p-6 col-span-2 space-y-4">
               <h3 className="section-header text-sm font-bold text-text-primary flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#2563EB]" />
+                <Clock className="w-4 h-4 text-brand-accent" />
                 Deployment History
               </h3>
               <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -1487,7 +1487,7 @@ export default function LandingPagesPage() {
             <select
               value={analyticsPage}
               onChange={e => setAnalyticsPage(e.target.value)}
-              className="bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-text-primary focus:border-[#2563EB] focus:outline-none"
+              className="bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-text-primary focus:border-brand-accent focus:outline-none"
             >
               {pages.filter(p => p.status === "Published").map(p => (
                 <option key={p.id} value={p.id}>{p.name}</option>
@@ -1506,7 +1506,7 @@ export default function LandingPagesPage() {
                 <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                 <div>
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Views</p>
-                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-[#2563EB] tabular-nums">{EMPTY_ANALYTICS.views.toLocaleString()}</p>
+                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-brand-accent tabular-nums">{EMPTY_ANALYTICS.views.toLocaleString()}</p>
                   <p className="text-[11px] text-text-muted mt-1.5">page impressions</p>
                 </div>
               </motion.div>
@@ -1564,7 +1564,7 @@ export default function LandingPagesPage() {
             {/* Views Chart (CSS) */}
             <div className="card p-6 col-span-2 space-y-4">
               <h3 className="section-header text-sm font-bold text-text-primary flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-[#2563EB]" />
+                <BarChart3 className="w-4 h-4 text-brand-accent" />
                 Views (Last 7 Days)
               </h3>
               <div className="flex items-end gap-2 h-40">
@@ -1615,7 +1615,7 @@ export default function LandingPagesPage() {
             {/* Traffic Sources */}
             <div className="card p-6 space-y-4">
               <h3 className="section-header text-sm font-bold text-text-primary flex items-center gap-2">
-                <Megaphone className="w-4 h-4 text-[#2563EB]" />
+                <Megaphone className="w-4 h-4 text-brand-accent" />
                 Traffic Sources
               </h3>
               <div className="space-y-3">
@@ -1623,7 +1623,7 @@ export default function LandingPagesPage() {
                   <div key={src.name}>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs text-text-primary font-medium">{src.name}</span>
-                      <span className="text-xs text-[#2563EB] font-semibold">{src.pct}%</span>
+                      <span className="text-xs text-brand-accent font-semibold">{src.pct}%</span>
                     </div>
                     <div className="w-full h-2 bg-surface-light rounded-full overflow-hidden">
                       <div className="h-full rounded-full transition-all duration-500" style={{ width: `${src.pct}%`, background: "linear-gradient(90deg, #2563EB, #2563EB80)" }} />

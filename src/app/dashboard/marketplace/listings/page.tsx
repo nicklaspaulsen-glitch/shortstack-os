@@ -308,7 +308,7 @@ export default function ListingsPage() {
                   <button
                     onClick={handleSubmit}
                     disabled={submitting || !draft.title || !draft.description}
-                    className="flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-bold text-white hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-white hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {submitting && <Loader2 size={12} className="animate-spin" />}
                     Create listing
@@ -339,7 +339,7 @@ export default function ListingsPage() {
                             svc.status === "active"
                               ? "bg-emerald-500/10 text-emerald-400"
                               : svc.status === "paused"
-                                ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]"
+                                ? "bg-[rgba(37,99,235,0.08)] text-brand-accent"
                                 : "bg-[rgba(0,0,0,0.06)] text-text-muted"
                           }`}
                         >

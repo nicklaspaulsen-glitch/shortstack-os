@@ -349,7 +349,7 @@ export default function CourseBuilderPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center py-24"><Loader2 size={32} className="text-[#2563EB] animate-spin" /></MotionPage>
+      <MotionPage className="flex items-center justify-center py-24"><Loader2 size={32} className="text-brand-accent animate-spin" /></MotionPage>
     );
   }
 
@@ -402,7 +402,7 @@ export default function CourseBuilderPage() {
               <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Curriculum</span>
               <button
                 onClick={() => void addModule()}
-                className="flex items-center gap-1 text-xs text-[#2563EB] hover:text-[#1D4ED8] transition-colors"
+                className="flex items-center gap-1 text-xs text-brand-accent hover:text-brand-accent transition-colors"
               >
                 <Plus size={12} />
                 Module
@@ -445,7 +445,7 @@ export default function CourseBuilderPage() {
                 <button
                   onClick={() => { triggerLessonSave(); void saveLessonNow(); }}
                   disabled={saving}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 text-white rounded-lg text-sm transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-white rounded-lg text-sm transition-colors"
                 >
                   <Save size={14} />
                   Save
@@ -459,7 +459,7 @@ export default function CourseBuilderPage() {
                   <input
                     value={lessonTitle}
                     onChange={e => { setLessonTitle(e.target.value); triggerLessonSave(); }}
-                    className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
+                    className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
                   />
                 </div>
 
@@ -473,7 +473,7 @@ export default function CourseBuilderPage() {
                         onClick={() => { setLessonType(t); triggerLessonSave(); }}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs capitalize transition-colors ${
                           lessonType === t
-                            ? "bg-[#2563EB] text-white"
+                            ? "bg-brand-accent text-white"
                             : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] hover:bg-[rgba(0,0,0,0.06)]"
                         }`}
                       >
@@ -494,7 +494,7 @@ export default function CourseBuilderPage() {
                       value={lessonUrl}
                       onChange={e => { setLessonUrl(e.target.value); triggerLessonSave(); }}
                       placeholder="https://…"
-                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
+                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
                     />
                   </div>
                 )}
@@ -510,7 +510,7 @@ export default function CourseBuilderPage() {
                       onChange={e => { setLessonBody(e.target.value); triggerLessonSave(); }}
                       rows={10}
                       placeholder={lessonType === "text" ? "Write your lesson content here…" : "Quiz instructions…"}
-                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB] resize-none font-mono"
+                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent resize-none font-mono"
                     />
                   </div>
                 )}
@@ -524,7 +524,7 @@ export default function CourseBuilderPage() {
                       value={lessonDuration}
                       onChange={e => { setLessonDuration(e.target.value); triggerLessonSave(); }}
                       placeholder="e.g. 300"
-                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
+                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
                     />
                   </div>
                   <div>
@@ -534,7 +534,7 @@ export default function CourseBuilderPage() {
                       value={lessonDrip}
                       onChange={e => { setLessonDrip(e.target.value); triggerLessonSave(); }}
                       min="0"
-                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
+                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
                     />
                   </div>
                   <div>
@@ -575,7 +575,7 @@ export default function CourseBuilderPage() {
               <input
                 value={settingsTitle}
                 onChange={e => setSettingsTitle(e.target.value)}
-                className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
+                className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
               />
             </div>
 
@@ -585,7 +585,7 @@ export default function CourseBuilderPage() {
                 value={settingsDesc}
                 onChange={e => setSettingsDesc(e.target.value)}
                 rows={3}
-                className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB] resize-none"
+                className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent resize-none"
               />
             </div>
 
@@ -608,7 +608,7 @@ export default function CourseBuilderPage() {
                   type="number"
                   value={settingsPrice}
                   onChange={e => setSettingsPrice(e.target.value)}
-                  className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
+                  className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
                 />
               </div>
             )}
@@ -618,7 +618,7 @@ export default function CourseBuilderPage() {
               <select
                 value={settingsAccess}
                 onChange={e => setSettingsAccess(e.target.value as typeof settingsAccess)}
-                className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
+                className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
               >
                 <option value="lifetime">Lifetime</option>
                 <option value="subscription">Subscription</option>
@@ -649,7 +649,7 @@ export default function CourseBuilderPage() {
             <button
               onClick={() => void saveSettings()}
               disabled={saving}
-              className="w-full py-2 bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+              className="w-full py-2 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
             >
               <Save size={14} />
               Save Settings
@@ -678,7 +678,7 @@ export default function CourseBuilderPage() {
                   <select
                     value={enrollClientId}
                     onChange={e => setEnrollClientId(e.target.value)}
-                    className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[#2563EB]"
+                    className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
                   >
                     <option value="">Select client…</option>
                     {clients.map(c => (
@@ -688,7 +688,7 @@ export default function CourseBuilderPage() {
                   <button
                     onClick={() => void enrollClient()}
                     disabled={enrolling || !enrollClientId}
-                    className="w-full py-1.5 bg-[#2563EB] hover:bg-[#3B82F6] disabled:opacity-50 text-white rounded-lg text-sm transition-colors"
+                    className="w-full py-1.5 bg-brand-accent hover:bg-[#3B82F6] disabled:opacity-50 text-white rounded-lg text-sm transition-colors"
                   >
                     {enrolling ? "Enrolling…" : "Enroll"}
                   </button>
@@ -703,12 +703,12 @@ export default function CourseBuilderPage() {
               <p className="text-xs text-[#374151] mb-2">
                 Students access their courses at:
               </p>
-              <code className="block text-xs text-[#2563EB] bg-[rgba(0,0,0,0.04)] rounded px-2 py-1 break-all">
+              <code className="block text-xs text-brand-accent bg-[rgba(0,0,0,0.04)] rounded px-2 py-1 break-all">
                 /portal/[slug]/courses
               </code>
               <button
                 onClick={copyPortalLink}
-                className="mt-2 flex items-center gap-1.5 text-xs text-[#2563EB] hover:text-[#1D4ED8] transition-colors"
+                className="mt-2 flex items-center gap-1.5 text-xs text-brand-accent hover:text-brand-accent transition-colors"
               >
                 {copied ? <Check size={12} /> : <Copy size={12} />}
                 {copied ? "Copied!" : "Copy link"}
@@ -767,7 +767,7 @@ function ModuleItem({
         </button>
         <button
           onClick={onAddLesson}
-          className="opacity-0 group-hover:opacity-100 p-0.5 text-text-muted hover:text-[#2563EB] transition-all"
+          className="opacity-0 group-hover:opacity-100 p-0.5 text-text-muted hover:text-brand-accent transition-all"
           title="Add lesson"
         >
           <Plus size={12} />
@@ -818,7 +818,7 @@ function LessonItem({
     >
       <GripVertical size={11} className="text-[#D1D5DB] flex-shrink-0" />
       <button onClick={onSelect} className="flex-1 flex items-center gap-1.5 min-w-0 text-left">
-        <span className={`flex-shrink-0 ${selected ? "text-[#2563EB]" : "text-text-muted"}`}>
+        <span className={`flex-shrink-0 ${selected ? "text-brand-accent" : "text-text-muted"}`}>
           {CONTENT_TYPE_ICON[lesson.content_type]}
         </span>
         <span className={`text-xs truncate ${selected ? "text-[#111827]" : "text-[#374151]"}`}>

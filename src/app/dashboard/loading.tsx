@@ -47,10 +47,10 @@ export default function DashboardLoading() {
       {/* Subtle blue accent — gives energy instead of dead skeleton */}
       <div className="fixed bottom-6 right-6 flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] backdrop-blur-sm">
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2563EB] opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2563EB]" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-accent opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-accent" />
         </span>
-        <span className="text-[10px] text-[#2563EB] font-medium">Loading...</span>
+        <span className="text-[10px] text-brand-accent font-medium">Loading...</span>
       </div>
     </div>
   );

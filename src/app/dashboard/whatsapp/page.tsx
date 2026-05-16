@@ -53,8 +53,8 @@ interface Client {
 
 const STATUS_CONFIG = {
   draft: { label: "Draft", color: "text-black/50", bg: "bg-black/5", icon: <Clock className="w-3.5 h-3.5" /> },
-  scheduled: { label: "Scheduled", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]", icon: <Calendar className="w-3.5 h-3.5" /> },
-  sending: { label: "Sending", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]", icon: <Loader2 className="w-3.5 h-3.5 animate-spin" /> },
+  scheduled: { label: "Scheduled", color: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.08)]", icon: <Calendar className="w-3.5 h-3.5" /> },
+  sending: { label: "Sending", color: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.08)]", icon: <Loader2 className="w-3.5 h-3.5 animate-spin" /> },
   sent: { label: "Sent", color: "text-emerald-400", bg: "bg-emerald-400/10", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
   failed: { label: "Failed", color: "text-red-400", bg: "bg-red-400/10", icon: <XCircle className="w-3.5 h-3.5" /> },
 };
@@ -214,7 +214,7 @@ export default function WhatsAppPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-[#2563EB]" /></MotionPage>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-brand-accent" /></MotionPage>
     );
   }
 
@@ -307,7 +307,7 @@ export default function WhatsAppPage() {
                           )}
                         </div>
                         {!c.phone && (
-                          <span className="text-[10px] text-[#2563EB] bg-[rgba(37,99,235,0.08)] px-1.5 py-0.5 rounded shrink-0">
+                          <span className="text-[10px] text-brand-accent bg-[rgba(37,99,235,0.08)] px-1.5 py-0.5 rounded shrink-0">
                             No phone
                           </span>
                         )}
@@ -321,7 +321,7 @@ export default function WhatsAppPage() {
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-semibold text-black/60 uppercase tracking-wider">Message</label>
-                  <span className={`text-xs ${message.length > WARN_LEN ? "text-[#2563EB]" : "text-black/30"}`}>
+                  <span className={`text-xs ${message.length > WARN_LEN ? "text-brand-accent" : "text-black/30"}`}>
                     {message.length}/{MAX_MSG_LEN}
                   </span>
                 </div>
@@ -333,7 +333,7 @@ export default function WhatsAppPage() {
                   className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all resize-none"
                 />
                 {message.length > WARN_LEN && (
-                  <div className="flex items-center gap-1.5 text-xs text-[#2563EB]">
+                  <div className="flex items-center gap-1.5 text-xs text-brand-accent">
                     <AlertCircle className="w-3.5 h-3.5" />
                     Messages over {WARN_LEN} chars may be split into multiple segments
                   </div>
@@ -536,7 +536,7 @@ export default function WhatsAppPage() {
           transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Scheduled</p>
-          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{campaigns.filter((c) => c.status === "scheduled").length}</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{campaigns.filter((c) => c.status === "scheduled").length}</p>
           <p className="text-[11px] text-text-muted mt-1.5">upcoming</p>
         </motion.div>
         <motion.div

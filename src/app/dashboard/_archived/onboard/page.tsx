@@ -497,9 +497,9 @@ export default function OnboardPage() {
           </div>
           <div className="glass rounded-xl p-10 text-center space-y-5">
             <div className="w-20 h-20 mx-auto bg-[rgba(37,99,235,0.08)] rounded-full flex items-center justify-center">
-              <CheckCircle2 size={40} className="text-[#2563EB]" />
+              <CheckCircle2 size={40} className="text-brand-accent" />
             </div>
-            <h2 className="text-2xl font-bold text-[#2563EB]">Welcome aboard!</h2>
+            <h2 className="text-2xl font-bold text-brand-accent">Welcome aboard!</h2>
             <p className="text-sm text-muted max-w-lg mx-auto">
               <span className="font-semibold text-foreground">{soloSummary.name}</span> is set up with{" "}
               <span className="font-semibold text-foreground">{soloSummary.count}</span> sidebar tools tuned to your{" "}
@@ -508,7 +508,7 @@ export default function OnboardPage() {
             <div className="flex items-center justify-center gap-3">
               <a
                 href="/dashboard"
-                className="px-5 py-2.5 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[#1D4ED8] inline-flex items-center gap-1.5"
+                className="px-5 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:bg-brand-accent/80 inline-flex items-center gap-1.5"
               >
                 <Rocket size={14} /> Go to Dashboard
               </a>
@@ -587,14 +587,14 @@ export default function OnboardPage() {
         <button
           onClick={() => setMode("full")}
           className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
-            mode === "full" ? "bg-[#2563EB] text-white" : "text-muted hover:text-foreground"
+            mode === "full" ? "bg-brand-accent text-white" : "text-muted hover:text-foreground"
           }`}>
           Full Wizard
         </button>
         <button
           onClick={() => setMode("quick")}
           className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
-            mode === "quick" ? "bg-[#2563EB] text-white" : "text-muted hover:text-foreground"
+            mode === "quick" ? "bg-brand-accent text-white" : "text-muted hover:text-foreground"
           }`}>
           Quick Add
         </button>
@@ -605,12 +605,12 @@ export default function OnboardPage() {
         quickSubmitted ? (
           <div className="glass rounded-xl p-10 text-center space-y-5">
             <div className="w-20 h-20 mx-auto bg-[rgba(37,99,235,0.08)] rounded-full flex items-center justify-center">
-              <CheckCircle2 size={40} className="text-[#2563EB]" />
+              <CheckCircle2 size={40} className="text-brand-accent" />
             </div>
-            <h2 className="text-2xl font-bold text-[#2563EB]">Client Created!</h2>
+            <h2 className="text-2xl font-bold text-brand-accent">Client Created!</h2>
             <p className="text-sm text-muted max-w-lg mx-auto">
               <span className="font-semibold text-foreground">{quickForm.business_name}</span> has been added on the{" "}
-              <span className="text-[#2563EB] font-semibold">{quickForm.package_tier}</span> plan.
+              <span className="text-brand-accent font-semibold">{quickForm.package_tier}</span> plan.
             </p>
             <div className="flex items-center justify-center gap-3">
               <button
@@ -627,7 +627,7 @@ export default function OnboardPage() {
                   if (quickLaunchedId) router.push(`/dashboard/clients/${quickLaunchedId}`);
                   else router.push("/dashboard/clients");
                 }}
-                className="px-5 py-2.5 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[#1D4ED8] flex items-center gap-1.5">
+                className="px-5 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:bg-brand-accent/80 flex items-center gap-1.5">
                 <Eye size={14} /> View Client Profile
               </button>
             </div>
@@ -636,7 +636,7 @@ export default function OnboardPage() {
           <div className="glass rounded-xl p-6 space-y-5">
             <div>
               <h2 className="text-lg font-bold flex items-center gap-2">
-                <Zap size={18} className="text-[#2563EB]" /> Quick Add Client
+                <Zap size={18} className="text-brand-accent" /> Quick Add Client
               </h2>
               <p className="text-xs text-muted mt-0.5">
                 Rapidly add a client without the full onboarding wizard
@@ -651,7 +651,7 @@ export default function OnboardPage() {
                   <Building2 size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
                   <input value={quickForm.business_name} onChange={e => updateQuick("business_name", e.target.value)}
                     placeholder="Acme Corp"
-                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-[#2563EB] transition-colors" />
+                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors" />
                 </div>
               </div>
 
@@ -662,7 +662,7 @@ export default function OnboardPage() {
                   <Users size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
                   <input value={quickForm.contact_name} onChange={e => updateQuick("contact_name", e.target.value)}
                     placeholder="John Smith"
-                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-[#2563EB] transition-colors" />
+                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors" />
                 </div>
               </div>
 
@@ -673,7 +673,7 @@ export default function OnboardPage() {
                   <Mail size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
                   <input value={quickForm.email} onChange={e => updateQuick("email", e.target.value)}
                     placeholder="john@acme.com" type="email"
-                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-[#2563EB] transition-colors" />
+                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors" />
                 </div>
               </div>
 
@@ -684,7 +684,7 @@ export default function OnboardPage() {
                   <Phone size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
                   <input value={quickForm.phone} onChange={e => updateQuick("phone", e.target.value)}
                     placeholder="+1 (555) 123-4567"
-                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-[#2563EB] transition-colors" />
+                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors" />
                 </div>
               </div>
 
@@ -692,7 +692,7 @@ export default function OnboardPage() {
               <div className="md:col-span-2">
                 <label className="block text-[10px] text-muted mb-1 font-medium">Package</label>
                 <select value={quickForm.package_tier} onChange={e => updateQuick("package_tier", e.target.value)}
-                  className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-[#2563EB] transition-colors">
+                  className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors">
                   {PACKAGES.map(pkg => (
                     <option key={pkg.name} value={pkg.name}>{pkg.name} ({pkg.price}/mo)</option>
                   ))}
@@ -749,7 +749,7 @@ export default function OnboardPage() {
                   }
                 }}
                 disabled={!quickForm.business_name.trim() || !quickForm.contact_name.trim() || !quickForm.email.trim()}
-                className="flex items-center gap-2 px-6 py-2.5 bg-[#2563EB] text-white rounded-lg text-sm font-bold hover:bg-[#1D4ED8] disabled:opacity-40 transition-all">
+                className="flex items-center gap-2 px-6 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-bold hover:bg-brand-accent/80 disabled:opacity-40 transition-all">
                 <UserPlus size={14} /> Create Client
               </button>
             </div>
@@ -762,7 +762,7 @@ export default function OnboardPage() {
         <div className="glass rounded-xl p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-bold flex items-center gap-2"><Layers size={14} className="text-[#2563EB]" /> Onboarding Templates</h2>
+              <h2 className="text-sm font-bold flex items-center gap-2"><Layers size={14} className="text-brand-accent" /> Onboarding Templates</h2>
               <p className="text-[10px] text-muted mt-0.5">Pre-built flows for different client types</p>
             </div>
             <button onClick={() => setShowTemplates(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
@@ -788,9 +788,9 @@ export default function OnboardPage() {
       wizardComplete ? (
         <div className="glass rounded-xl p-10 text-center space-y-5">
           <div className="w-20 h-20 mx-auto bg-[rgba(37,99,235,0.08)] rounded-full flex items-center justify-center">
-            <CheckCircle2 size={40} className="text-[#2563EB]" />
+            <CheckCircle2 size={40} className="text-brand-accent" />
           </div>
-          <h2 className="text-2xl font-bold text-[#2563EB]">Client Launched Successfully!</h2>
+          <h2 className="text-2xl font-bold text-brand-accent">Client Launched Successfully!</h2>
           <p className="text-sm text-muted max-w-lg mx-auto">
             <span className="font-semibold text-foreground">{form.business_name || "New Client"}</span> has been onboarded.
             Their workspace is being configured with {selectedServices.length} services and {accessUsers.length} team member{accessUsers.length !== 1 ? "s" : ""}.
@@ -802,7 +802,7 @@ export default function OnboardPage() {
                 <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                 <div>
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">PACKAGE</p>
-                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-[#2563EB] tabular-nums">{form.package_tier}</p>
+                  <p className="font-display text-3xl font-bold tracking-[-0.03em] text-brand-accent tabular-nums">{form.package_tier}</p>
                   <p className="text-[11px] text-text-muted mt-1.5">selected plan</p>
                 </div>
               </motion.div>
@@ -833,7 +833,7 @@ export default function OnboardPage() {
                 if (launchedClientId) router.push(`/dashboard/clients/${launchedClientId}`);
                 else router.push("/dashboard/clients");
               }}
-              className="px-5 py-2.5 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[#1D4ED8] flex items-center gap-1.5">
+              className="px-5 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:bg-brand-accent/80 flex items-center gap-1.5">
               <Eye size={14} /> View Client Profile
             </button>
           </div>
@@ -844,10 +844,10 @@ export default function OnboardPage() {
           <div className="glass rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs text-muted">Step {step + 1} of {STEP_META.length}</p>
-              <p className="text-xs font-semibold text-[#2563EB]">{progressPercent}% complete</p>
+              <p className="text-xs font-semibold text-brand-accent">{progressPercent}% complete</p>
             </div>
             <div className="w-full h-2 bg-[rgba(0,0,0,0.04)] rounded-full overflow-hidden mb-4">
-              <div className="h-full bg-[#2563EB] rounded-full transition-all duration-500 ease-out"
+              <div className="h-full bg-brand-accent rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${progressPercent}%` }} />
             </div>
             <div className="flex gap-1">
@@ -864,13 +864,13 @@ export default function OnboardPage() {
                     }`}>
                     <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
                       isDone ? "bg-emerald-500 text-black" :
-                      isActive ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" :
+                      isActive ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" :
                       "bg-[rgba(0,0,0,0.04)] text-muted"
                     }`}>
                       {isDone ? <Check size={12} /> : <Icon size={12} />}
                     </div>
                     <div className="hidden lg:block min-w-0">
-                      <p className={`text-[10px] font-semibold truncate ${isActive ? "text-[#2563EB]" : isDone ? "text-emerald-400" : "text-muted"}`}>{s.label}</p>
+                      <p className={`text-[10px] font-semibold truncate ${isActive ? "text-brand-accent" : isDone ? "text-emerald-400" : "text-muted"}`}>{s.label}</p>
                       <p className="text-[8px] text-muted truncate">{s.description}</p>
                     </div>
                   </button>
@@ -887,7 +887,7 @@ export default function OnboardPage() {
               <div className="space-y-6">
                 <div className="text-center space-y-3 py-4">
                   <div className="w-16 h-16 mx-auto bg-[rgba(37,99,235,0.08)]  flex items-center justify-center">
-                    <Sparkles size={28} className="text-[#2563EB]" />
+                    <Sparkles size={28} className="text-brand-accent" />
                   </div>
                   <h2 className="text-xl font-bold">Welcome to Client Onboarding</h2>
                   <p className="text-sm text-muted max-w-md mx-auto">
@@ -905,7 +905,7 @@ export default function OnboardPage() {
                   ].map((item, i) => (
                     <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
                       <div className="p-4 text-center">
-                        <item.icon size={20} className="mx-auto mb-2 text-[#2563EB]" />
+                        <item.icon size={20} className="mx-auto mb-2 text-brand-accent" />
                         <p className="text-xs font-semibold">{item.label}</p>
                         <p className="text-[9px] text-muted mt-0.5">{item.desc}</p>
                       </div>
@@ -915,7 +915,7 @@ export default function OnboardPage() {
 
                 {/* Select package to start */}
                 <div>
-                  <p className="text-sm font-semibold mb-3 flex items-center gap-2"><Crown size={14} className="text-[#2563EB]" /> Choose a Package</p>
+                  <p className="text-sm font-semibold mb-3 flex items-center gap-2"><Crown size={14} className="text-brand-accent" /> Choose a Package</p>
                   <ChoiceCards
                     columns={3}
                     size="md"
@@ -932,7 +932,7 @@ export default function OnboardPage() {
 
                 {/* FAQ */}
                 <div className="space-y-2">
-                  <p className="text-sm font-semibold flex items-center gap-2"><BookOpen size={14} className="text-[#2563EB]" /> Quick FAQ</p>
+                  <p className="text-sm font-semibold flex items-center gap-2"><BookOpen size={14} className="text-brand-accent" /> Quick FAQ</p>
                   {[
                     { id: "faq1", q: "How long does onboarding take?", a: "Typically 5-10 minutes. You can save progress and come back anytime." },
                     { id: "faq2", q: "Can I change things after launching?", a: "Yes, everything can be edited from the client profile and settings after launch." },
@@ -957,7 +957,7 @@ export default function OnboardPage() {
             {step === 1 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-bold flex items-center gap-2"><Building2 size={18} className="text-[#2563EB]" /> Business Information</h2>
+                  <h2 className="text-lg font-bold flex items-center gap-2"><Building2 size={18} className="text-brand-accent" /> Business Information</h2>
                   <p className="text-xs text-muted mt-0.5">Core details about the new client</p>
                 </div>
 
@@ -977,7 +977,7 @@ export default function OnboardPage() {
                           value={form[field.key as keyof typeof form]}
                           onChange={e => updateForm(field.key, e.target.value)}
                           placeholder={field.placeholder}
-                          className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-[#2563EB] transition-colors"
+                          className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors"
                         />
                       </div>
                     </div>
@@ -987,7 +987,7 @@ export default function OnboardPage() {
                     <select
                       value={form.industry}
                       onChange={e => updateForm("industry", e.target.value)}
-                      className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-[#2563EB] transition-colors">
+                      className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors">
                       <option value="">Select industry...</option>
                       {INDUSTRIES.map(ind => <option key={ind} value={ind}>{ind}</option>)}
                     </select>
@@ -995,18 +995,18 @@ export default function OnboardPage() {
                 </div>
 
                 <div className="border-t border-[var(--color-border)] pt-4">
-                  <p className="text-xs text-[#2563EB] font-semibold mb-3 flex items-center gap-1.5"><Zap size={12} /> AI Context (improves content generation)</p>
+                  <p className="text-xs text-brand-accent font-semibold mb-3 flex items-center gap-1.5"><Zap size={12} /> AI Context (improves content generation)</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[10px] text-muted mb-1">Target Audience</label>
                       <input value={form.target_audience} onChange={e => updateForm("target_audience", e.target.value)}
                         placeholder="e.g., Women 25-45 in urban areas"
-                        className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-[#2563EB] transition-colors" />
+                        className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors" />
                     </div>
                     <div>
                       <label className="block text-[10px] text-muted mb-1">Brand Voice</label>
                       <select value={form.brand_voice} onChange={e => updateForm("brand_voice", e.target.value)}
-                        className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-[#2563EB] transition-colors">
+                        className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors">
                         <option value="">Select tone...</option>
                         <option value="professional">Professional & Trustworthy</option>
                         <option value="friendly">Friendly & Approachable</option>
@@ -1019,7 +1019,7 @@ export default function OnboardPage() {
                       <label className="block text-[10px] text-muted mb-1">Main Goals</label>
                       <textarea value={form.goals} onChange={e => updateForm("goals", e.target.value)}
                         placeholder="What does this client want to achieve? e.g., Increase bookings by 50%, grow Instagram to 10k followers..."
-                        className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-[#2563EB] transition-colors h-20 resize-none" />
+                        className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors h-20 resize-none" />
                     </div>
                   </div>
                 </div>
@@ -1030,13 +1030,13 @@ export default function OnboardPage() {
             {step === 2 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-bold flex items-center gap-2"><Palette size={18} className="text-[#2563EB]" /> Brand Assets</h2>
+                  <h2 className="text-lg font-bold flex items-center gap-2"><Palette size={18} className="text-brand-accent" /> Brand Assets</h2>
                   <p className="text-xs text-muted mt-0.5">Upload logos, set brand colors, and choose fonts</p>
                 </div>
 
                 {/* File uploads */}
                 <div>
-                  <p className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Image size={12} className="text-[#2563EB]" /> Logos & Files</p>
+                  <p className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Image size={12} className="text-brand-accent" /> Logos & Files</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {assets.map(asset => (
                       <button key={asset.id} onClick={() => toggleAsset(asset.id)}
@@ -1059,13 +1059,13 @@ export default function OnboardPage() {
 
                 {/* Color presets */}
                 <div>
-                  <p className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Palette size={12} className="text-[#2563EB]" /> Brand Colors</p>
+                  <p className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Palette size={12} className="text-brand-accent" /> Brand Colors</p>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-3">
                     {BRAND_COLORS.map(c => (
                       <button key={c.name}
                         onClick={() => { setSelectedColorPreset(c.name); setCustomPrimary(c.primary); setCustomSecondary(c.secondary); }}
                         className={`flex items-center gap-2.5 p-3 rounded-xl border transition-all ${
-                          selectedColorPreset === c.name ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : "border-[var(--color-border)] hover:border-[rgba(37,99,235,0.25)]"
+                          selectedColorPreset === c.name ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : "border-[var(--color-border)] hover:border-[rgba(37,99,235,0.25)]"
                         }`}>
                         <div className="flex gap-1">
                           <div className="w-6 h-6 rounded-full border border-[rgba(0,0,0,0.08)]" style={{ backgroundColor: c.primary }} />
@@ -1106,12 +1106,12 @@ export default function OnboardPage() {
 
                 {/* Font selection */}
                 <div>
-                  <p className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Type size={12} className="text-[#2563EB]" /> Brand Font</p>
+                  <p className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Type size={12} className="text-brand-accent" /> Brand Font</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {FONT_OPTIONS.map(font => (
                       <button key={font} onClick={() => setSelectedFont(font)}
                         className={`p-3 rounded-xl border text-center transition-all ${
-                          selectedFont === font ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : "border-[var(--color-border)] hover:border-[rgba(37,99,235,0.25)]"
+                          selectedFont === font ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : "border-[var(--color-border)] hover:border-[rgba(37,99,235,0.25)]"
                         }`}>
                         <p className="text-sm font-semibold" style={{ fontFamily: font }}>{font}</p>
                         <p className="text-[8px] text-muted mt-0.5" style={{ fontFamily: font }}>The quick brown fox</p>
@@ -1127,10 +1127,10 @@ export default function OnboardPage() {
               <div className="space-y-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-bold flex items-center gap-2"><Briefcase size={18} className="text-[#2563EB]" /> Service Selection</h2>
+                    <h2 className="text-lg font-bold flex items-center gap-2"><Briefcase size={18} className="text-brand-accent" /> Service Selection</h2>
                     <p className="text-xs text-muted mt-0.5">{selectedServices.length} services selected for {form.package_tier} package</p>
                   </div>
-                  <span className="text-sm font-bold text-[#2563EB]">{selectedServices.length} active</span>
+                  <span className="text-sm font-bold text-brand-accent">{selectedServices.length} active</span>
                 </div>
 
                 {/* Category filter */}
@@ -1138,7 +1138,7 @@ export default function OnboardPage() {
                   {categories.map(cat => (
                     <button key={cat} onClick={() => setServiceFilter(cat)}
                       className={`px-3 py-1.5 text-[10px] rounded-lg font-medium transition-all ${
-                        serviceFilter === cat ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted hover:text-foreground"
+                        serviceFilter === cat ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "text-muted hover:text-foreground"
                       }`}>
                       {cat}
                     </button>
@@ -1150,7 +1150,7 @@ export default function OnboardPage() {
                   {filteredServices.map(svc => (
                     <button key={svc.id} onClick={() => toggleService(svc.id)}
                       className={`p-3.5 rounded-xl border text-left transition-all ${
-                        svc.included ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : "border-[var(--color-border)] hover:border-[rgba(37,99,235,0.25)]"
+                        svc.included ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : "border-[var(--color-border)] hover:border-[rgba(37,99,235,0.25)]"
                       }`}>
                       <div className="flex items-start justify-between">
                         <div>
@@ -1158,7 +1158,7 @@ export default function OnboardPage() {
                           <p className="text-[9px] text-muted mt-0.5">{svc.description}</p>
                         </div>
                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ml-2 ${
-                          svc.included ? "border-[#2563EB] bg-[#2563EB]" : "border-[var(--color-border)]"
+                          svc.included ? "border-brand-accent bg-brand-accent" : "border-[var(--color-border)]"
                         }`}>
                           {svc.included && <Check size={10} className="text-white" />}
                         </div>
@@ -1171,10 +1171,10 @@ export default function OnboardPage() {
                 {/* Selected summary */}
                 {selectedServices.length > 0 && (
                   <div className="p-3 rounded-xl bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)]">
-                    <p className="text-[10px] text-[#2563EB] font-semibold mb-1">Selected Services:</p>
+                    <p className="text-[10px] text-brand-accent font-semibold mb-1">Selected Services:</p>
                     <div className="flex flex-wrap gap-1">
                       {selectedServices.map(s => (
-                        <span key={s.id} className="text-[9px] px-2 py-0.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-full">{s.name}</span>
+                        <span key={s.id} className="text-[9px] px-2 py-0.5 bg-[rgba(37,99,235,0.08)] text-brand-accent rounded-full">{s.name}</span>
                       ))}
                     </div>
                   </div>
@@ -1186,7 +1186,7 @@ export default function OnboardPage() {
             {step === 4 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-bold flex items-center gap-2"><ShieldCheck size={18} className="text-[#2563EB]" /> Access Setup</h2>
+                  <h2 className="text-lg font-bold flex items-center gap-2"><ShieldCheck size={18} className="text-brand-accent" /> Access Setup</h2>
                   <p className="text-xs text-muted mt-0.5">Configure portal access and team assignments</p>
                 </div>
 
@@ -1198,7 +1198,7 @@ export default function OnboardPage() {
                     { label: "Auto-Create First Invoice", desc: "Generate and send first invoice via Stripe", checked: autoInvoice, onChange: () => setAutoInvoice(!autoInvoice) },
                   ].map((toggle, i) => (
                     <label key={i} className="flex items-center gap-3 p-3.5 rounded-xl border border-[var(--color-border)] cursor-pointer hover:border-[rgba(37,99,235,0.2)] transition-all">
-                      <div className={`relative w-10 h-5 rounded-full shrink-0 transition-colors ${toggle.checked ? "bg-[#2563EB]" : "bg-[rgba(0,0,0,0.06)]"}`}
+                      <div className={`relative w-10 h-5 rounded-full shrink-0 transition-colors ${toggle.checked ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.06)]"}`}
                         onClick={toggle.onChange}>
                         <div className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all"
                           style={{ left: toggle.checked ? "22px" : "2px" }} />
@@ -1213,18 +1213,18 @@ export default function OnboardPage() {
 
                 {/* Team members */}
                 <div>
-                  <p className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Users size={12} className="text-[#2563EB]" /> Team Members</p>
+                  <p className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Users size={12} className="text-brand-accent" /> Team Members</p>
                   <div className="flex gap-2 mb-3">
                     <input value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="team@agency.com"
-                      className="flex-1 px-3 py-2 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-sm text-foreground focus:outline-none focus:border-[#2563EB] transition-colors" />
+                      className="flex-1 px-3 py-2 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-sm text-foreground focus:outline-none focus:border-brand-accent transition-colors" />
                     <select value={newRole} onChange={e => setNewRole(e.target.value as AccessUser["role"])}
-                      className="px-3 py-2 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-sm text-foreground focus:outline-none focus:border-[#2563EB] transition-colors">
+                      className="px-3 py-2 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-sm text-foreground focus:outline-none focus:border-brand-accent transition-colors">
                       <option value="admin">Admin</option>
                       <option value="manager">Manager</option>
                       <option value="editor">Editor</option>
                       <option value="viewer">Viewer</option>
                     </select>
-                    <button onClick={addAccessUser} className="px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[#1D4ED8] flex items-center gap-1">
+                    <button onClick={addAccessUser} className="px-4 py-2 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:bg-brand-accent/80 flex items-center gap-1">
                       <Plus size={14} /> Add
                     </button>
                   </div>
@@ -1233,7 +1233,7 @@ export default function OnboardPage() {
                       <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-[var(--color-border)] bg-[rgba(0,0,0,0.04)]">
                         <div className="flex items-center gap-2.5">
                           <div className="w-8 h-8 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
-                            <Mail size={12} className="text-[#2563EB]" />
+                            <Mail size={12} className="text-brand-accent" />
                           </div>
                           <div>
                             <p className="text-xs font-medium">{user.email}</p>
@@ -1243,7 +1243,7 @@ export default function OnboardPage() {
                         <div className="flex items-center gap-2">
                           <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${
                             user.status === "active" ? "bg-emerald-500/10 text-emerald-400" :
-                            user.status === "invited" ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" :
+                            user.status === "invited" ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" :
                             "bg-yellow-500/10 text-yellow-400"
                           }`}>{user.status}</span>
                           <button onClick={() => removeAccessUser(user.email)} className="text-muted hover:text-red-400 transition-colors"><X size={12} /></button>
@@ -1258,7 +1258,7 @@ export default function OnboardPage() {
                   <label className="block text-[10px] text-muted mb-1">Internal Notes</label>
                   <textarea value={form.notes} onChange={e => updateForm("notes", e.target.value)}
                     placeholder="Anything to note about this client setup..."
-                    className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-sm text-foreground focus:outline-none focus:border-[#2563EB] h-20 resize-none transition-colors" />
+                    className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-sm text-foreground focus:outline-none focus:border-brand-accent h-20 resize-none transition-colors" />
                 </div>
               </div>
             )}
@@ -1267,8 +1267,8 @@ export default function OnboardPage() {
             {step === 5 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-bold flex items-center gap-2 text-[#2563EB]">
-                    <Sparkles size={18} className="text-[#2563EB]" /> Personalized for you
+                  <h2 className="text-lg font-bold flex items-center gap-2 text-brand-accent">
+                    <Sparkles size={18} className="text-brand-accent" /> Personalized for you
                   </h2>
                   <p className="text-xs text-muted mt-0.5">
                     A few optional follow-up questions — your answers help us tune content generation and your AI copilot.
@@ -1277,7 +1277,7 @@ export default function OnboardPage() {
 
                 {personalizeLoading && (
                   <div className="flex flex-col items-center gap-2 py-12 rounded-xl border border-[rgba(37,99,235,0.2)] bg-gradient-to-b from-[rgba(37,99,235,0.05)] to-transparent">
-                    <Loader2 size={22} className="animate-spin text-[#2563EB]" />
+                    <Loader2 size={22} className="animate-spin text-brand-accent" />
                     <p className="text-xs text-muted">Our AI is getting to know you...</p>
                   </div>
                 )}
@@ -1293,7 +1293,7 @@ export default function OnboardPage() {
                     {personalizeQuestions.map((q) => (
                       <div key={q.id} className="rounded-xl border border-[var(--color-border)] p-4 bg-[rgba(0,0,0,0.04)]">
                         <label className="block text-xs font-semibold text-foreground mb-1.5 flex items-start gap-1.5">
-                          <Sparkles size={11} className="text-[#2563EB] mt-0.5 shrink-0" />
+                          <Sparkles size={11} className="text-brand-accent mt-0.5 shrink-0" />
                           <span>{q.question}</span>
                         </label>
                         {q.help_text && (
@@ -1306,7 +1306,7 @@ export default function OnboardPage() {
                           }
                           placeholder={q.placeholder}
                           rows={2}
-                          className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-[#2563EB] transition-colors resize-none"
+                          className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors resize-none"
                         />
                       </div>
                     ))}
@@ -1322,7 +1322,7 @@ export default function OnboardPage() {
             {step === 6 && (
               <div className="space-y-5">
                 <div className="text-center space-y-2">
-                  <h2 className="text-lg font-bold flex items-center justify-center gap-2"><Eye size={18} className="text-[#2563EB]" /> Review & Launch</h2>
+                  <h2 className="text-lg font-bold flex items-center justify-center gap-2"><Eye size={18} className="text-brand-accent" /> Review & Launch</h2>
                   <p className="text-xs text-muted">Verify everything looks correct, then hit Launch Client.</p>
                 </div>
 
@@ -1330,20 +1330,20 @@ export default function OnboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Business info */}
                   <div className="rounded-xl border border-[var(--color-border)] p-4 space-y-2">
-                    <p className="text-xs font-semibold text-[#2563EB] flex items-center gap-1.5"><Building2 size={12} /> Business Info</p>
+                    <p className="text-xs font-semibold text-brand-accent flex items-center gap-1.5"><Building2 size={12} /> Business Info</p>
                     <div className="space-y-1.5 text-xs">
                       <div className="flex justify-between"><span className="text-muted">Business</span><span className="font-medium">{form.business_name || "---"}</span></div>
                       <div className="flex justify-between"><span className="text-muted">Contact</span><span>{form.contact_name || "---"}</span></div>
                       <div className="flex justify-between"><span className="text-muted">Email</span><span>{form.email || "---"}</span></div>
                       <div className="flex justify-between"><span className="text-muted">Phone</span><span>{form.phone || "---"}</span></div>
                       <div className="flex justify-between"><span className="text-muted">Industry</span><span>{form.industry || "---"}</span></div>
-                      <div className="flex justify-between"><span className="text-muted">Package</span><span className="text-[#2563EB] font-bold">{form.package_tier}</span></div>
+                      <div className="flex justify-between"><span className="text-muted">Package</span><span className="text-brand-accent font-bold">{form.package_tier}</span></div>
                     </div>
                   </div>
 
                   {/* Brand */}
                   <div className="rounded-xl border border-[var(--color-border)] p-4 space-y-2">
-                    <p className="text-xs font-semibold text-[#2563EB] flex items-center gap-1.5"><Palette size={12} /> Brand Assets</p>
+                    <p className="text-xs font-semibold text-brand-accent flex items-center gap-1.5"><Palette size={12} /> Brand Assets</p>
                     <div className="space-y-1.5 text-xs">
                       <div className="flex justify-between items-center">
                         <span className="text-muted">Colors</span>
@@ -1360,11 +1360,11 @@ export default function OnboardPage() {
 
                   {/* Services */}
                   <div className="rounded-xl border border-[var(--color-border)] p-4 space-y-2">
-                    <p className="text-xs font-semibold text-[#2563EB] flex items-center gap-1.5"><Briefcase size={12} /> Services ({selectedServices.length})</p>
+                    <p className="text-xs font-semibold text-brand-accent flex items-center gap-1.5"><Briefcase size={12} /> Services ({selectedServices.length})</p>
                     {selectedServices.length > 0 ? (
                       <div className="flex flex-wrap gap-1">
                         {selectedServices.map(s => (
-                          <span key={s.id} className="text-[9px] px-2 py-0.5 bg-[rgba(37,99,235,0.08)] text-[#2563EB] rounded-full">{s.name}</span>
+                          <span key={s.id} className="text-[9px] px-2 py-0.5 bg-[rgba(37,99,235,0.08)] text-brand-accent rounded-full">{s.name}</span>
                         ))}
                       </div>
                     ) : (
@@ -1374,7 +1374,7 @@ export default function OnboardPage() {
 
                   {/* Access */}
                   <div className="rounded-xl border border-[var(--color-border)] p-4 space-y-2">
-                    <p className="text-xs font-semibold text-[#2563EB] flex items-center gap-1.5"><ShieldCheck size={12} /> Access & Setup</p>
+                    <p className="text-xs font-semibold text-brand-accent flex items-center gap-1.5"><ShieldCheck size={12} /> Access & Setup</p>
                     <div className="space-y-1.5 text-xs">
                       <div className="flex items-center gap-2">
                         {portalEnabled ? <Check size={12} className="text-emerald-400" /> : <X size={12} className="text-muted" />}
@@ -1396,7 +1396,7 @@ export default function OnboardPage() {
                 {/* Goals & notes */}
                 {(form.goals || form.notes) && (
                   <div className="rounded-xl border border-[var(--color-border)] p-4 space-y-2">
-                    <p className="text-xs font-semibold text-[#2563EB] flex items-center gap-1.5"><Target size={12} /> Goals & Notes</p>
+                    <p className="text-xs font-semibold text-brand-accent flex items-center gap-1.5"><Target size={12} /> Goals & Notes</p>
                     {form.goals && <p className="text-xs text-muted"><span className="text-foreground font-medium">Goals:</span> {form.goals}</p>}
                     {form.target_audience && <p className="text-xs text-muted"><span className="text-foreground font-medium">Target:</span> {form.target_audience}</p>}
                     {form.notes && <p className="text-xs text-muted"><span className="text-foreground font-medium">Notes:</span> {form.notes}</p>}
@@ -1404,8 +1404,8 @@ export default function OnboardPage() {
                 )}
 
                 {/* Launch confirmation */}
-                <div className="p-4 rounded-xl bg-[rgba(37,99,235,0.05)] border border-[#2563EB]/15 text-center">
-                  <p className="text-xs text-[#2563EB] font-semibold mb-1">Ready to launch?</p>
+                <div className="p-4 rounded-xl bg-[rgba(37,99,235,0.05)] border border-brand-accent/15 text-center">
+                  <p className="text-xs text-brand-accent font-semibold mb-1">Ready to launch?</p>
                   <p className="text-[10px] text-muted">This will create the client workspace, configure services, and send invitations.</p>
                 </div>
               </div>
@@ -1441,13 +1441,13 @@ export default function OnboardPage() {
 
               {step < STEP_META.length - 1 ? (
                 <button onClick={() => canProceed() && setStep(step + 1)} disabled={!canProceed()}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-[#2563EB] text-white rounded-lg text-sm font-semibold hover:bg-[#1D4ED8] disabled:opacity-40 transition-all">
+                  className="flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:bg-brand-accent/80 disabled:opacity-40 transition-all">
                   Next <ArrowRight size={14} />
                 </button>
               ) : (
                 <div className="flex flex-col items-end gap-1">
                   <button onClick={launchClient} disabled={launching}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-[#2563EB] text-white rounded-lg text-sm font-bold hover:bg-[#1D4ED8] transition-all disabled:opacity-50">
+                    className="flex items-center gap-2 px-6 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-bold hover:bg-brand-accent/80 transition-all disabled:opacity-50">
                     {launching ? <Loader2 size={14} className="animate-spin" /> : <Rocket size={14} />}
                     {launching ? "Launching..." : "Launch Client"}
                   </button>

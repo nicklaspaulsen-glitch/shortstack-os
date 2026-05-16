@@ -59,9 +59,9 @@ export default function SalesHubPage() {
               { label: "Create Proposal", href: "/dashboard/proposals", icon: FileText },
             ]}
             stats={[
-              { label: "Leads", key: "leads", icon: Users2, color: "text-[#2563EB]" },
-              { label: "Outreach (7d)", key: "outreach_week", icon: Send, color: "text-[#2563EB]" },
-              { label: "Active Deals", key: "active_deals", icon: Activity, color: "text-[#2563EB]" },
+              { label: "Leads", key: "leads", icon: Users2, color: "text-brand-accent" },
+              { label: "Outreach (7d)", key: "outreach_week", icon: Send, color: "text-brand-accent" },
+              { label: "Active Deals", key: "active_deals", icon: Activity, color: "text-brand-accent" },
               { label: "MRR", key: "mrr", icon: DollarSign, color: "text-emerald-400", format: "currency" },
             ]}
             tools={[

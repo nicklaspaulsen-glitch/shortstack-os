@@ -30,14 +30,14 @@ interface LogEntry {
 
 const TYPE_CONFIG: Record<string, { icon: React.ReactNode; color: string; label: string }> = {
   lead_gen: { icon: <Zap size={12} />, color: "text-emerald-400", label: "Lead Gen" },
-  outreach: { icon: <Mail size={12} />, color: "text-[#2563EB]", label: "Outreach" },
-  content: { icon: <Globe size={12} />, color: "text-[#2563EB]", label: "Content" },
-  automation: { icon: <Bot size={12} />, color: "text-[#2563EB]", label: "Automation" },
+  outreach: { icon: <Mail size={12} />, color: "text-brand-accent", label: "Outreach" },
+  content: { icon: <Globe size={12} />, color: "text-brand-accent", label: "Content" },
+  automation: { icon: <Bot size={12} />, color: "text-brand-accent", label: "Automation" },
   billing: { icon: <CreditCard size={12} />, color: "text-green-400", label: "Billing" },
   user: { icon: <Users size={12} />, color: "text-cyan-400", label: "User" },
   system: { icon: <Settings size={12} />, color: "text-text-muted", label: "System" },
   login: { icon: <Key size={12} />, color: "text-yellow-400", label: "Login" },
-  api: { icon: <Globe size={12} />, color: "text-[#2563EB]", label: "API" },
+  api: { icon: <Globe size={12} />, color: "text-brand-accent", label: "API" },
 };
 
 // Map the action_type enum values coming from /api/audit-log onto the
@@ -229,7 +229,7 @@ export default function ActivityLogPage() {
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
+                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {t.icon} {t.label}
                 </button>
@@ -327,7 +327,7 @@ export default function ActivityLogPage() {
               </div>
             )}{/* Heatmap Tab */}{tab === "heatmap" && (
               <PrismPanel padding="p-4">
-                <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-[#2563EB]" /> Activity Heatmap</h2>
+                <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-brand-accent" /> Activity Heatmap</h2>
                 <div className="overflow-x-auto">
                   <div className="grid gap-px" style={{ gridTemplateColumns: `60px repeat(24, 1fr)` }}>
                     <div />
@@ -358,7 +358,7 @@ export default function ActivityLogPage() {
               </PrismPanel>
             )}{/* Users Tab */}{tab === "users" && (
               <PrismPanel padding="p-4">
-                <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-[#2563EB]" /> User Activity Breakdown</h2>
+                <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-brand-accent" /> User Activity Breakdown</h2>
                 {Object.keys(userActivity).length === 0 ? (
                   <div className="text-center py-8"><Users size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No user activity yet</p></div>
                 ) : (
@@ -370,14 +370,14 @@ export default function ActivityLogPage() {
                     return (
                       <motion.div key={user} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
                         <div className="flex items-center gap-3 mb-2">
-                          <div className="w-8 h-8 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-xs font-bold text-[#2563EB]">{user[0]}</div>
+                          <div className="w-8 h-8 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-xs font-bold text-brand-accent">{user[0]}</div>
                           <div className="flex-1">
                             <p className="text-xs font-semibold">{user}</p>
                             <p className="text-[10px] text-muted">{count} actions ({pct.toFixed(0)}%)</p>
                           </div>
                         </div>
                         <div className="h-2 rounded-full bg-surface overflow-hidden mb-1.5">
-                          <div className="h-full rounded-full bg-[#2563EB]" style={{ width: `${pct}%` }} />
+                          <div className="h-full rounded-full bg-brand-accent" style={{ width: `${pct}%` }} />
                         </div>
                         <div className="flex flex-wrap gap-1">
                           {Object.entries(types).map(([type, cnt]) => {
@@ -397,7 +397,7 @@ export default function ActivityLogPage() {
               </PrismPanel>
             )}{/* Audit Tab */}{tab === "audit" && (
               <PrismPanel padding="p-4">
-                <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-[#2563EB]" /> Audit Trail (Before/After)</h2>
+                <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-brand-accent" /> Audit Trail (Before/After)</h2>
                 {logs.filter(l => l.beforeValue !== undefined || l.afterValue !== undefined).length === 0 ? (
                   <div className="text-center py-8"><Eye size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No audit trail entries yet</p></div>
                 ) : (
@@ -445,7 +445,7 @@ export default function ActivityLogPage() {
                   )}
                 </PrismPanel>
                 <PrismPanel padding="p-4">
-                  <h2 className="section-header flex items-center gap-2"><Key size={13} className="text-[#2563EB]" /> Login History</h2>
+                  <h2 className="section-header flex items-center gap-2"><Key size={13} className="text-brand-accent" /> Login History</h2>
                   {logs.filter(l => l.type === "login").length === 0 ? (
                     <div className="text-center py-8"><Key size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No login history yet</p></div>
                   ) : (

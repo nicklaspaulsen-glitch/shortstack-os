@@ -28,7 +28,7 @@ interface ApiKeyRow {
 }
 
 const SCOPE_PILLS: Record<Scope, string> = {
-  read: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.25)]",
+  read: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)]",
   write: "bg-yellow-500/10 text-yellow-700 border-yellow-500/30",
   admin: "bg-red-500/10 text-red-600 border-red-500/30",
 };
@@ -175,7 +175,7 @@ export default function ApiKeysPage() {
                       <span className="truncate flex-1">{justCreatedKey}</span>
                       <button
                         onClick={copyKey}
-                        className="text-muted hover:text-[#2563EB] transition-colors flex-shrink-0"
+                        className="text-muted hover:text-brand-accent transition-colors flex-shrink-0"
                       >
                         {copied ? (
                           <CheckCircle size={12} className="text-green-400" />
@@ -196,8 +196,8 @@ export default function ApiKeysPage() {
             )}{showCreate && (
               <div className="card p-4 space-y-3 border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.02)]">
                 <div className="flex items-center gap-2">
-                  <Key size={13} className="text-[#2563EB]" />
-                  <h2 className="text-xs font-semibold text-[#2563EB]">New API Key</h2>
+                  <Key size={13} className="text-brand-accent" />
+                  <h2 className="text-xs font-semibold text-brand-accent">New API Key</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div>
@@ -255,7 +255,7 @@ export default function ApiKeysPage() {
                   <button
                     onClick={handleCreate}
                     disabled={creating || !newName.trim() || newScopes.length === 0}
-                    className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#1D4ED8] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="text-[10px] px-4 py-1.5 rounded-lg bg-brand-accent text-white font-medium hover:bg-brand-accent/80 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {creating ? "Creating…" : "Create Key"}
                   </button>
@@ -264,10 +264,10 @@ export default function ApiKeysPage() {
             )}<div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="card p-3">
                 <div className="flex items-center gap-2 mb-1">
-                  <Key size={12} className="text-[#2563EB]" />
+                  <Key size={12} className="text-brand-accent" />
                   <p className="text-[9px] text-muted uppercase tracking-wider">Total</p>
                 </div>
-                <p className="text-lg font-bold text-[#2563EB]">{keys.length}</p>
+                <p className="text-lg font-bold text-brand-accent">{keys.length}</p>
               </div>
               <div className="card p-3">
                 <div className="flex items-center gap-2 mb-1">
@@ -351,15 +351,15 @@ export default function ApiKeysPage() {
               )}
             </div><div className="card p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Shield size={12} className="text-[#2563EB]" />
+                <Shield size={12} className="text-brand-accent" />
                 <h3 className="text-xs font-semibold">Using your key</h3>
               </div>
-              <pre className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] rounded-lg p-3 text-[10px] font-mono text-[#1D4ED8] overflow-x-auto">
+              <pre className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] rounded-lg p-3 text-[10px] font-mono text-brand-accent overflow-x-auto">
       {`curl https://app.shortstack.work/api/v1/leads \\
   -H "Authorization: Bearer ss_live_your_key_here"`}
               </pre>
               <p className="text-[10px] text-muted mt-2">
-                Full reference at <code className="text-[#2563EB]">/docs/PUBLIC_API.md</code>.
+                Full reference at <code className="text-brand-accent">/docs/PUBLIC_API.md</code>.
               </p>
             </div></MotionPage>
   );

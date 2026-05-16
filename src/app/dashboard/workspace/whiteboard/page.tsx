@@ -230,7 +230,7 @@ export default function WhiteboardPage() {
                   <LanesSkeleton />
                 ) : totalItems === 0 ? (
                   <EmptyState
-                    icon={<Activity size={28} className="text-[#2563EB]" />}
+                    icon={<Activity size={28} className="text-brand-accent" />}
                     title="Nothing in flight"
                     description="No active renders, scheduled posts, open deals, or in-progress tasks yet. Once your team starts shipping work, it'll show up here in real time."
                   />

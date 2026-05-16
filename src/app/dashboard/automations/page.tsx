@@ -122,7 +122,7 @@ export default function AutomationsPage() {
         <div className="flex items-center gap-2">
                   <Link
                     href="/dashboard/automations/library"
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors border border-[rgba(37,99,235,0.25)]"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-sm font-medium transition-colors border border-[rgba(37,99,235,0.25)]"
                   >
                     Browse template library
                   </Link>
@@ -165,7 +165,7 @@ export default function AutomationsPage() {
     transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
   >
     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Paused</p>
-    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{workflows.length - activeCount}</p>
+    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{workflows.length - activeCount}</p>
     <p className="text-[11px] text-text-muted mt-1.5">not running</p>
   </motion.div>
 </div>
@@ -196,7 +196,7 @@ export default function AutomationsPage() {
                   !search ? (
                     <Link
                       href="/dashboard/workflow-builder"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors border border-[rgba(37,99,235,0.25)]"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-sm font-medium transition-colors border border-[rgba(37,99,235,0.25)]"
                     >
                       <Plus size={14} /> Create your first automation
                     </Link>

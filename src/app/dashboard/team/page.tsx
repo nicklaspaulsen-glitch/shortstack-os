@@ -92,7 +92,7 @@ const PERMISSIONS: PermissionRow[] = [
 const STATUS_COLORS: Record<string, string> = { online: "bg-emerald-400", away: "bg-yellow-400", offline: "bg-gray-500" };
 
 const ROLE_COLORS: Record<string, string> = {
-  owner: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.2)]",
+  owner: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.2)]",
   admin: "bg-blue-400/10 text-blue-400 border-blue-400/20",
   manager: "bg-purple-400/10 text-purple-400 border-purple-400/20",
   creator: "bg-emerald-400/10 text-emerald-400 border-emerald-400/20",
@@ -250,7 +250,7 @@ export default function TeamPage() {
   }, {});
 
   const STATS = [
-    { icon: <Users size={12} className="text-[#2563EB]" />, label: "Team Size", value: members.length, sub: `${onlineCount} online now`, subColor: "text-emerald-400" },
+    { icon: <Users size={12} className="text-brand-accent" />, label: "Team Size", value: members.length, sub: `${onlineCount} online now`, subColor: "text-emerald-400" },
     { icon: <Shield size={12} className="text-purple-400" />, label: "Roles", value: ROLE_DEFINITIONS.length, valueColor: "text-purple-400", sub: "defined roles" },
     { icon: <CheckCircle size={12} className="text-emerald-400" />, label: "Tasks Done", value: `${completedTasks}/${totalTasks}`, valueColor: "text-emerald-400", sub: "this week" },
     { icon: <Clock size={12} className="text-blue-400" />, label: "Avg Hours/Week", value: `${avgHours}h`, valueColor: "text-blue-400", sub: "across team" },
@@ -319,7 +319,7 @@ export default function TeamPage() {
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
+                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {t.icon} {t.label}
                 </button>
@@ -334,9 +334,9 @@ export default function TeamPage() {
                       placeholder="Search members..." aria-label="Search team members" />
                   </div>
                   <div className="flex gap-1 bg-surface rounded-lg p-0.5">
-                    <button onClick={() => setRoleFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === "all" ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>All</button>
+                    <button onClick={() => setRoleFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === "all" ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "text-muted"}`}>All</button>
                     {ROLE_DEFINITIONS.map(r => (
-                      <button key={r.id} onClick={() => setRoleFilter(r.id)} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === r.id ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "text-muted"}`}>{r.label}</button>
+                      <button key={r.id} onClick={() => setRoleFilter(r.id)} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === r.id ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "text-muted"}`}>{r.label}</button>
                     ))}
                   </div>
                 </div>
@@ -370,7 +370,7 @@ export default function TeamPage() {
                           <td className="py-2.5 px-3">
                             <div className="flex items-center gap-2.5">
                               <div className="relative">
-                                <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[10px] font-bold text-[#2563EB]">{member.avatar}</div>
+                                <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[10px] font-bold text-brand-accent">{member.avatar}</div>
                                 <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[var(--color-surface)] ${STATUS_COLORS[member.status]}`} />
                               </div>
                               <div>
@@ -425,7 +425,7 @@ export default function TeamPage() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="relative">
-                            <div className="w-12 h-12 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-lg font-bold text-[#2563EB]">{m.avatar}</div>
+                            <div className="w-12 h-12 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-lg font-bold text-brand-accent">{m.avatar}</div>
                             <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[var(--color-surface)] ${STATUS_COLORS[m.status]}`} />
                           </div>
                           <div>
@@ -441,7 +441,7 @@ export default function TeamPage() {
                           { value: m.clients, label: "Clients" },
                           { value: `${m.hoursThisWeek}h`, label: "This Week", color: "text-blue-400" },
                           { value: m.tasksCompleted, label: "Tasks Done", color: "text-emerald-400" },
-                          { value: `${m.tasksAssigned> 0 ? Math.round((m.tasksCompleted / m.tasksAssigned) * 100) : 0}%`, label: "Completion", color: "text-[#2563EB]" },
+                          { value: `${m.tasksAssigned> 0 ? Math.round((m.tasksCompleted / m.tasksAssigned) * 100) : 0}%`, label: "Completion", color: "text-brand-accent" },
                         ].map((tile) => (
                           <div key={tile.label} className="p-2.5 rounded-lg bg-surface-light text-center border border-border">
                             <p className={`text-lg font-bold ${tile.color ?? ""}`}>{tile.value}</p>
@@ -456,7 +456,7 @@ export default function TeamPage() {
                         <div className="space-y-1.5">
                           {m.recentActions.map((act, i) => (
                             <div key={i} className="flex items-center gap-2.5 p-2 rounded-lg bg-surface-light border border-border">
-                              <Activity size={10} className="text-[#2563EB] shrink-0" />
+                              <Activity size={10} className="text-brand-accent shrink-0" />
                               <span className="text-[10px] flex-1"><span className="font-medium">{act.action}</span> <span className="text-muted">on</span> {act.resource}</span>
                               <span className="text-[9px] text-muted shrink-0">{act.time}</span>
                             </div>
@@ -475,7 +475,7 @@ export default function TeamPage() {
                 className="glass rounded-xl overflow-x-auto p-4 border border-[rgba(255,255,255,0.70)]" 
 >
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-sm font-bold flex items-center gap-2"><Shield size={14} className="text-[#2563EB]" /> Role Permissions Matrix</h2>
+                  <h2 className="text-sm font-bold flex items-center gap-2"><Shield size={14} className="text-brand-accent" /> Role Permissions Matrix</h2>
                   <motion.button
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
@@ -562,7 +562,7 @@ export default function TeamPage() {
                     style={{ border: "1px dashed rgba(0,0,0,0.12)" }}
 >
                     <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
-                      <Settings size={16} className="text-[#2563EB]" />
+                      <Settings size={16} className="text-brand-accent" />
                     </div>
                     <p className="text-xs font-bold text-muted">Create Custom Role</p>
                     <p className="text-[9px] text-muted text-center">Define a role with specific permissions for your team</p>
@@ -576,7 +576,7 @@ export default function TeamPage() {
                 transition={{ duration: 0.2 }}
                 className="glass rounded-xl p-4"
 >
-                <h2 className="section-header flex items-center gap-2 mb-3"><Activity size={13} className="text-[#2563EB]" /> Per-Member Access Log</h2>
+                <h2 className="section-header flex items-center gap-2 mb-3"><Activity size={13} className="text-brand-accent" /> Per-Member Access Log</h2>
                 <div className="space-y-2">
                   {members.flatMap(m =>
                     m.recentActions.map(a => ({
@@ -593,7 +593,7 @@ export default function TeamPage() {
                       transition={{ duration: 0.18, delay: idx * 0.04 }}
                       className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-[rgba(0,0,0,0.03)] border-b border-[rgba(0,0,0,0.05)] transition-colors"
 >
-                      <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[9px] font-bold text-[#2563EB] shrink-0">{act.avatar}</div>
+                      <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[9px] font-bold text-brand-accent shrink-0">{act.avatar}</div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[11px]">
                           <span className="font-semibold">{act.member}</span>
@@ -613,7 +613,7 @@ export default function TeamPage() {
                 transition={{ duration: 0.2 }}
                 className="glass rounded-xl p-4"
 >
-                <h2 className="section-header flex items-center gap-2 mb-1"><BarChart3 size={13} className="text-[#2563EB]" /> Team Capacity Tracker</h2>
+                <h2 className="section-header flex items-center gap-2 mb-1"><BarChart3 size={13} className="text-brand-accent" /> Team Capacity Tracker</h2>
                 <p className="text-[10px] text-muted mb-4">See who has bandwidth and who is overloaded.</p>
                 <div className="space-y-3">
                   {members.map((m, idx) => {
@@ -621,7 +621,7 @@ export default function TeamPage() {
                     const hourLoad = (m.hoursThisWeek / 45) * 100;
                     const combinedLoad = Math.min(Math.round((taskLoad + hourLoad) / 2), 100);
                     const loadLevel = combinedLoad> 80 ? "Overloaded" : combinedLoad> 50 ? "Balanced" : "Available";
-                    const loadColor = combinedLoad> 80 ? "text-red-400" : combinedLoad> 50 ? "text-[#2563EB]" : "text-emerald-400";
+                    const loadColor = combinedLoad> 80 ? "text-red-400" : combinedLoad> 50 ? "text-brand-accent" : "text-emerald-400";
                     const barColor = combinedLoad> 80 ? "#ef4444" : combinedLoad> 50 ? "#1D4ED8" : "#16a34a";
                     return (
                       <motion.div
@@ -633,7 +633,7 @@ export default function TeamPage() {
 >
                         <div className="flex items-center gap-3 mb-2">
                           <div className="relative">
-                            <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[10px] font-bold text-[#2563EB]">{m.avatar}</div>
+                            <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[10px] font-bold text-brand-accent">{m.avatar}</div>
                             <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[var(--color-surface-light)] ${STATUS_COLORS[m.status]}`} />
                           </div>
                           <div className="flex-1">
@@ -668,8 +668,8 @@ export default function TeamPage() {
 >
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="section-header flex items-center gap-2 mb-0">
-                    <Users size={13} className="text-[#2563EB]" /> Active Team Members
-                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB]">
+                    <Users size={13} className="text-brand-accent" /> Active Team Members
+                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-brand-accent">
                       {realMembers.filter(m => m.status === "active").length} active
                     </span>
                   </h2>
@@ -684,7 +684,7 @@ export default function TeamPage() {
                       whileHover={{ y: -3 }}
                       className="glass flex items-center gap-3 rounded-xl p-3 hover:border-[rgba(37,99,235,0.2)] transition-all"
 >
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[rgba(37,99,235,0.25)] to-[rgba(59,130,246,0.15)] flex items-center justify-center text-[#2563EB] text-xs font-bold shrink-0">
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[rgba(37,99,235,0.25)] to-[rgba(59,130,246,0.15)] flex items-center justify-center text-brand-accent text-xs font-bold shrink-0">
                         {m.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase() || m.email[0].toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -703,7 +703,7 @@ export default function TeamPage() {
                           {m.can_manage_outreach && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">Outreach</span>}
                           {m.can_manage_content && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">Content</span>}
                           {m.can_manage_ads && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">Ads</span>}
-                          {m.can_view_financials && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB]">Financials</span>}
+                          {m.can_view_financials && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent">Financials</span>}
                           {m.client_access_mode === "specific" && (
                             <span className="text-[8px] px-1 py-0.5 rounded bg-blue-400/10 text-blue-400">
                               {m.allowed_client_ids.length} client{m.allowed_client_ids.length === 1 ? "" : "s"}
@@ -739,7 +739,7 @@ export default function TeamPage() {
               <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowInvite(false)}>
                 <div className="bg-surface border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold flex items-center gap-2"><UserPlus size={14} className="text-[#2563EB]" /> Create Team Member</h3>
+                    <h3 className="text-sm font-bold flex items-center gap-2"><UserPlus size={14} className="text-brand-accent" /> Create Team Member</h3>
                     <button onClick={() => setShowInvite(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
                   </div>
                   <p className="text-[10px] text-muted -mt-1">A new account will be created. They&apos;ll log in with the email and password you set.</p>
@@ -776,7 +776,7 @@ export default function TeamPage() {
                       {(["member", "manager", "viewer"] as const).map(r => (
                         <button key={r} onClick={() => setCreateForm({ ...createForm, role: r })}
                           className={`flex-1 py-1.5 rounded-lg text-xs capitalize transition-all ${
-                            createForm.role === r ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "bg-surface-light text-muted border border-border"
+                            createForm.role === r ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]" : "bg-surface-light text-muted border border-border"
                           }`}>{r}</button>
                       ))}
                     </div>
@@ -807,9 +807,9 @@ export default function TeamPage() {
                   </div>
 
                   <div className="rounded-lg bg-[rgba(37,99,235,0.06)] border border-[rgba(37,99,235,0.15)] p-2.5 flex items-start gap-2">
-                    <AlertTriangle size={11} className="text-[#2563EB] shrink-0 mt-0.5" />
+                    <AlertTriangle size={11} className="text-brand-accent shrink-0 mt-0.5" />
                     <p className="text-[10px] text-muted">
-                      Team members control <span className="text-[#2563EB] font-medium">your clients</span>. They cannot create their own agency accounts, manage billing, or see other agencies.
+                      Team members control <span className="text-brand-accent font-medium">your clients</span>. They cannot create their own agency accounts, manage billing, or see other agencies.
                     </p>
                   </div>
 
@@ -835,7 +835,7 @@ export default function TeamPage() {
               <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCustomRole(false)}>
                 <div className="bg-surface border border-border w-full max-w-lg p-5 space-y-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold flex items-center gap-2"><Settings size={14} className="text-[#2563EB]" /> Custom Role Builder</h3>
+                    <h3 className="text-sm font-bold flex items-center gap-2"><Settings size={14} className="text-brand-accent" /> Custom Role Builder</h3>
                     <button onClick={() => setShowCustomRole(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
                   </div>
                   <div>
@@ -944,7 +944,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-surface border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold flex items-center gap-2"><Pencil size={14} className="text-[#2563EB]" /> Edit Team Member</h3>
+          <h3 className="text-sm font-bold flex items-center gap-2"><Pencil size={14} className="text-brand-accent" /> Edit Team Member</h3>
           <button onClick={onClose} className="text-muted hover:text-foreground" aria-label="Close edit dialog"><X size={16} /></button>
         </div>
 
@@ -990,7 +990,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
             {(["member", "manager", "viewer"] as const).map(r => (
               <button key={r} onClick={() => setRole(r)}
                 className={`flex-1 py-1.5 rounded-lg text-xs capitalize transition-all ${
-                  role === r ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]" : "bg-surface-light text-muted border border-border"
+                  role === r ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]" : "bg-surface-light text-muted border border-border"
                 }`}>{r}</button>
             ))}
           </div>

@@ -34,9 +34,9 @@ interface CalEvent {
 }
 
 const CATEGORY_CONFIG: Record<EventCategory, { label: string; color: string; bg: string }> = {
-  meeting: { label: "Meeting", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]" },
+  meeting: { label: "Meeting", color: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.08)]" },
   deadline: { label: "Deadline", color: "text-[#dc2626]", bg: "bg-[rgba(220,38,38,0.08)]" },
-  content: { label: "Content", color: "text-[#2563EB]", bg: "bg-[rgba(37,99,235,0.08)]" },
+  content: { label: "Content", color: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.08)]" },
   call: { label: "Call", color: "text-emerald-400", bg: "bg-emerald-400/10" },
 };
 
@@ -318,7 +318,7 @@ export default function CalendarPage() {
               <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-text-primary text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all flex items-center gap-1.5">
                 <Filter size={12} /> Filters
               </button>
-              <button onClick={() => setShowCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-all">
+              <button onClick={() => setShowCreate(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-accent/80 text-white text-xs font-semibold hover:bg-brand-accent/80 transition-all">
                 <Plus size={12} /> New Event
               </button>
             </div>
@@ -326,7 +326,7 @@ export default function CalendarPage() {
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium" : "text-muted hover:text-foreground"
+                    tab === t.id ? "bg-[rgba(37,99,235,0.08)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {t.icon} {t.label}
                 </button>
@@ -344,7 +344,7 @@ export default function CalendarPage() {
                     <div className="flex gap-1">
                       {(["month", "week", "day"] as const).map(v => (
                         <button key={v} onClick={() => setViewMode(v)}
-                          className={`px-2.5 py-1 text-[10px] rounded-md capitalize transition-all ${viewMode === v ? "bg-[#2563EB] text-white font-medium" : "bg-surface-light text-muted"}`}>
+                          className={`px-2.5 py-1 text-[10px] rounded-md capitalize transition-all ${viewMode === v ? "bg-brand-accent text-white font-medium" : "bg-surface-light text-muted"}`}>
                           {v}
                         </button>
                       ))}
@@ -453,7 +453,7 @@ export default function CalendarPage() {
                             className={`rounded-lg p-1.5 min-h-[80px] border transition-all ${
                               isToday ? "ring-1 ring-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.1)]" : "border-border"
                             } ${!isCurrentMonth ? "opacity-30" : "bg-surface-light"}`}>
-                            <p className={`text-[10px] font-medium text-center ${isToday ? "text-[#2563EB]" : ""}`}>{day.getDate()}</p>
+                            <p className={`text-[10px] font-medium text-center ${isToday ? "text-brand-accent" : ""}`}>{day.getDate()}</p>
                             {dayEvts.slice(0, 3).map(evt => (
                               <div key={evt.id} draggable onDragStart={() => handleDragStart(evt.id)}
                                 className="text-[8px] px-1 py-0.5 rounded mt-0.5 truncate cursor-move"
@@ -488,7 +488,7 @@ export default function CalendarPage() {
                           }`}>
                           <div className="text-center mb-2">
                             <p className="text-[10px] text-muted uppercase">{day.toLocaleDateString("en-US", { weekday: "short" })}</p>
-                            <p className={`text-lg font-bold ${isToday ? "text-[#2563EB]" : "text-foreground"}`}>{day.getDate()}</p>
+                            <p className={`text-lg font-bold ${isToday ? "text-brand-accent" : "text-foreground"}`}>{day.getDate()}</p>
                           </div>
                           <div className="space-y-1.5">
                             {dayAppts.map(appt => {
@@ -525,7 +525,7 @@ export default function CalendarPage() {
                 {viewMode === "day" && (
                   <div className="card">
                     <h2 className="section-header flex items-center gap-2">
-                      <Eye size={13} className="text-[#2563EB]" />
+                      <Eye size={13} className="text-brand-accent" />
                       {new Date(today).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
                     </h2>
                     <div className="space-y-1">
@@ -556,7 +556,7 @@ export default function CalendarPage() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <div className="lg:col-span-2 space-y-3">
                   <PrismPanel padding="p-4">
-                    <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-[#2563EB]" /> Today&apos;s Schedule</h2>
+                    <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Today&apos;s Schedule</h2>
                     {todaysEvents.length === 0 ? (
                       <EmptyState
                         type="no-calendar"
@@ -603,7 +603,7 @@ export default function CalendarPage() {
                 <div className="space-y-3">
                   <PrismPanel padding="p-0" rainbow>
                     <div className="p-4">
-                      <h2 className="section-header flex items-center gap-2"><Star size={13} className="text-[#2563EB]" /> Quick Stats</h2>
+                      <h2 className="section-header flex items-center gap-2"><Star size={13} className="text-brand-accent" /> Quick Stats</h2>
                       <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
                         <motion.div
                           className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
@@ -645,7 +645,7 @@ export default function CalendarPage() {
                           transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
                         >
                           <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Recurring</p>
-                          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">
+                          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">
                             {events.filter(e => e.recurring).length}
                           </p>
                           <p className="text-[11px] text-text-muted mt-1.5">events</p>
@@ -654,13 +654,13 @@ export default function CalendarPage() {
                     </div>
                   </PrismPanel>
                   <PrismPanel padding="p-4">
-                    <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-[#2563EB]" /> Team Today</h2>
+                    <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-brand-accent" /> Team Today</h2>
                     <div className="space-y-1.5">
                       {TEAM_MEMBERS.filter(m => m !== "All").map(member => {
                         const count = todaysEvents.filter(e => e.teamMember === member).length;
                         return (
                           <div key={member} className="flex items-center gap-2 text-xs p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.03)]">
-                            <div className="w-6 h-6 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[9px] font-bold text-[#2563EB]">{member[0]}</div>
+                            <div className="w-6 h-6 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[9px] font-bold text-brand-accent">{member[0]}</div>
                             <span className="flex-1">{member}</span>
                             <span className="text-muted">{count} event{count !== 1 ? "s" : ""}</span>
                           </div>
@@ -710,7 +710,7 @@ export default function CalendarPage() {
                 </PrismPanel>
                 {/* Recurring Events */}
                 <PrismPanel padding="p-4">
-                  <h2 className="section-header flex items-center gap-2"><Repeat size={13} className="text-[#2563EB]" /> Recurring Events</h2>
+                  <h2 className="section-header flex items-center gap-2"><Repeat size={13} className="text-brand-accent" /> Recurring Events</h2>
                   <div className="space-y-2">
                     {events.filter(e => e.recurring).length === 0 ? (
                       <p className="text-xs text-muted text-center py-8">No recurring events</p>
@@ -724,7 +724,7 @@ export default function CalendarPage() {
                           whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
                           className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border"
                         >
-                          <Repeat size={12} className="text-[#2563EB] shrink-0" />
+                          <Repeat size={12} className="text-brand-accent shrink-0" />
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-medium truncate">{evt.title}</p>
                             <p className="text-[10px] text-muted">{evt.client} - Every {new Date(evt.date).toLocaleDateString("en-US", { weekday: "long" })} at {evt.time}</p>
@@ -742,7 +742,7 @@ export default function CalendarPage() {
               <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCreate(false)}>
                 <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-3" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-[#2563EB]" /> New Event</h3>
+                    <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-brand-accent" /> New Event</h3>
                     <button onClick={() => setShowCreate(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>
                   </div>
 
@@ -813,7 +813,7 @@ export default function CalendarPage() {
                       ] as const).map(t => (
                         <button key={t.id} onClick={() => setNewEvent({ ...newEvent, type: t.id })}
                           className={`flex-1 flex items-center justify-center gap-1.5 p-2 rounded-lg border text-xs transition-all ${
-                            newEvent.type === t.id ? "border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] text-[#2563EB]" : "border-border text-muted"
+                            newEvent.type === t.id ? "border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] text-brand-accent" : "border-border text-muted"
                           }`}>
                           {t.icon} {t.label}
                         </button>

@@ -100,7 +100,7 @@ export default function Tab4Stats() {
     <div className="space-y-6">
       <div className="rounded-xl border border-border/40 bg-surface p-4">
         <div className="flex items-center gap-2 mb-3">
-          <BarChart3 size={14} className="text-[#2563EB]" />
+          <BarChart3 size={14} className="text-brand-accent" />
           <h3 className="text-sm font-semibold tracking-tight">Posts per platform — last 12 weeks</h3>
         </div>
         <div style={{ width: "100%", height: 280 }}>
@@ -138,7 +138,7 @@ export default function Tab4Stats() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="rounded-xl border border-border/40 bg-surface p-4 lg:col-span-2">
           <div className="flex items-center gap-2 mb-3">
-            <Trophy size={14} className="text-[#2563EB]" />
+            <Trophy size={14} className="text-brand-accent" />
             <h3 className="text-sm font-semibold tracking-tight">Top posts by engagement</h3>
           </div>
           {data.top_posts.length === 0 ? (
@@ -179,7 +179,7 @@ export default function Tab4Stats() {
 
         <div className="rounded-xl border border-border/40 bg-surface p-4">
           <div className="flex items-center gap-2 mb-3">
-            <TrendingUp size={14} className="text-[#2563EB]" />
+            <TrendingUp size={14} className="text-brand-accent" />
             <h3 className="text-sm font-semibold tracking-tight">Best post times</h3>
           </div>
           <p className="text-[10px] text-muted mb-2">

@@ -167,7 +167,7 @@ export default function FunnelsPage() {
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 gap-4">
                 <div className="w-16 h-16  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] flex items-center justify-center">
-                  <Layers size={28} className="text-[#2563EB]" />
+                  <Layers size={28} className="text-brand-accent" />
                 </div>
                 <div className="text-center">
                   <p className="text-[#111827] font-semibold text-lg">No funnels yet</p>
@@ -175,7 +175,7 @@ export default function FunnelsPage() {
                 </div>
                 <button
                   onClick={() => router.push("/dashboard/funnels/new")}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-semibold transition-colors"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-white text-sm font-semibold transition-colors"
                 >
                   <Plus size={15} />
                   Create Funnel

@@ -400,7 +400,7 @@ export default function AdsPage() {
           ] as const).map(t => (
             <button key={t.id} onClick={() => { setTab(t.id); if (t.id === "copilot") fetchActions(); }}
               className={`flex items-center gap-1.5 px-3.5 py-2 text-xs rounded-lg transition-all ${
-                tab === t.id ? "bg-[#2563EB] text-white font-medium shadow-sm" : "text-muted hover:text-foreground"
+                tab === t.id ? "bg-brand-accent text-white font-medium shadow-sm" : "text-muted hover:text-foreground"
               }`}
             >
               {t.icon} {t.label}
@@ -476,7 +476,7 @@ export default function AdsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: 0.36 }}
               >
-                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-[#2563EB]" /> Platform Performance</h2>
+                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-brand-accent" /> Platform Performance</h2>
                 <div className="space-y-2">
                   {PLATFORMS.map(p => {
                     const platCampaigns = campaigns.filter(c => c.platform === p.id);
@@ -528,7 +528,7 @@ export default function AdsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: 0.42 }}
               >
-                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-[#2563EB]" /> Client Ad Performance</h2>
+                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-brand-accent" /> Client Ad Performance</h2>
                 {clients.length > 0 ? (
                   <div className="space-y-2">
                     {clients.map(cl => {
@@ -574,7 +574,7 @@ export default function AdsPage() {
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <Bot size={16} className="text-[#2563EB]" />
+                    <Bot size={16} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold">AI Autopilot</h2>
                   </div>
                   <button
@@ -689,13 +689,13 @@ export default function AdsPage() {
                 transition={{ duration: 0.22, delay: 0.48 }}
                 whileHover={{ y: -2 }}
               >
-                <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings2 size={12} className="text-[#2563EB]" /> How Autopilot Works</h3>
+                <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings2 size={12} className="text-brand-accent" /> How Autopilot Works</h3>
                 <ol className="space-y-1 text-[10px] text-muted">
-                  <li className="flex gap-2"><span className="text-[#2563EB] font-bold">1.</span> Syncs latest campaign data from all platforms</li>
-                  <li className="flex gap-2"><span className="text-[#2563EB] font-bold">2.</span> AI analyzes performance vs benchmarks</li>
-                  <li className="flex gap-2"><span className="text-[#2563EB] font-bold">3.</span> Proposes budget/status changes within your limits</li>
-                  <li className="flex gap-2"><span className="text-[#2563EB] font-bold">4.</span> Auto-executes only actions you&apos;ve allowed above</li>
-                  <li className="flex gap-2"><span className="text-[#2563EB] font-bold">5.</span> Optionally creates new AI-generated ads</li>
+                  <li className="flex gap-2"><span className="text-brand-accent font-bold">1.</span> Syncs latest campaign data from all platforms</li>
+                  <li className="flex gap-2"><span className="text-brand-accent font-bold">2.</span> AI analyzes performance vs benchmarks</li>
+                  <li className="flex gap-2"><span className="text-brand-accent font-bold">3.</span> Proposes budget/status changes within your limits</li>
+                  <li className="flex gap-2"><span className="text-brand-accent font-bold">4.</span> Auto-executes only actions you&apos;ve allowed above</li>
+                  <li className="flex gap-2"><span className="text-brand-accent font-bold">5.</span> Optionally creates new AI-generated ads</li>
                 </ol>
               </motion.div>
             </div>
@@ -804,8 +804,8 @@ export default function AdsPage() {
                         title="AI Optimize"
                       >
                         {optimizingId === campaign.id
-                          ? <Loader size={13} className="text-[#2563EB] animate-spin" />
-                          : <Sparkles size={13} className="text-[#2563EB]" />
+                          ? <Loader size={13} className="text-brand-accent animate-spin" />
+                          : <Sparkles size={13} className="text-brand-accent" />
                         }
                       </button>
                       <ChevronDown size={14} className={`text-muted transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
@@ -871,7 +871,7 @@ export default function AdsPage() {
                       {campaign.ai_suggestions && (
                         <div className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-2">
-                            <Sparkles size={14} className="text-[#2563EB]" />
+                            <Sparkles size={14} className="text-brand-accent" />
                             <p className="text-xs font-semibold">AI Optimization Suggestions</p>
                           </div>
                           <p className="text-xs text-muted whitespace-pre-wrap leading-relaxed">{campaign.ai_suggestions}</p>
@@ -940,7 +940,7 @@ export default function AdsPage() {
                         <p className="text-[10px] text-muted line-clamp-2">{cr.body_text}</p>
                       )}
                       {cr.cta_text && (
-                        <div className="inline-block bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-[9px] font-semibold px-2 py-0.5 rounded-full">
+                        <div className="inline-block bg-[rgba(37,99,235,0.08)] text-brand-accent text-[9px] font-semibold px-2 py-0.5 rounded-full">
                           {cr.cta_text}
                         </div>
                       )}
@@ -964,7 +964,7 @@ export default function AdsPage() {
             transition={{ duration: 0.22, delay: 0.12 }}
           >
             <div className="flex items-center gap-2 mb-1">
-              <Wand2 size={16} className="text-[#2563EB]" />
+              <Wand2 size={16} className="text-brand-accent" />
               <h2 className="text-sm font-semibold">AI Copy Generator</h2>
             </div>
             <p className="text-[10px] text-muted -mt-2">Generate high-converting ad copy variations with AI. Pick your platform, audience, and offer.</p>
@@ -1060,7 +1060,7 @@ export default function AdsPage() {
                       >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-[9px] font-bold flex items-center justify-center">{i + 1}</span>
+                            <span className="w-5 h-5 rounded-full bg-[rgba(37,99,235,0.08)] text-brand-accent text-[9px] font-bold flex items-center justify-center">{i + 1}</span>
                             <span className="text-[9px] text-muted uppercase tracking-wider">{v.hook_type}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
@@ -1082,7 +1082,7 @@ export default function AdsPage() {
                         <p className="text-xs text-muted leading-relaxed">{v.primary_text}</p>
                         <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
                           <span className="text-[9px] text-muted">{v.description}</span>
-                          <span className="text-[10px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-semibold px-2 py-0.5 rounded-full">{v.cta}</span>
+                          <span className="text-[10px] bg-[rgba(37,99,235,0.08)] text-brand-accent font-semibold px-2 py-0.5 rounded-full">{v.cta}</span>
                         </div>
                         {v.image_concept && (
                           <div className="mt-2 pt-2 border-t border-border">
@@ -1128,7 +1128,7 @@ export default function AdsPage() {
                     transition={{ duration: 0.22, delay: 0.18 }}
                   >
                     <h3 className="text-xs font-semibold flex items-center gap-2 mb-2">
-                      <Zap size={13} className="text-[#2563EB]" /> A/B Test Recommendation
+                      <Zap size={13} className="text-brand-accent" /> A/B Test Recommendation
                     </h3>
                     <p className="text-xs text-muted leading-relaxed">
                       {typeof (generatedCopy as Record<string, unknown>).a_b_test_plan === "string"
@@ -1175,7 +1175,7 @@ export default function AdsPage() {
               transition={{ duration: 0.22, delay: 0.12 }}
             >
               <div className="flex items-center gap-2">
-                <Bot size={16} className="text-[#2563EB]" />
+                <Bot size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">AI Ad Copilot</h2>
               </div>
               <p className="text-[10px] text-muted">AI analyzes your campaigns and proposes optimizations. Review and approve actions before they execute.</p>
@@ -1199,8 +1199,8 @@ export default function AdsPage() {
                       </div>
                       <span className="text-[10px] truncate flex-1">{c.name}</span>
                       {optimizingId === c.id
-                        ? <Loader size={10} className="text-[#2563EB] animate-spin shrink-0" />
-                        : <Sparkles size={10} className="text-[#2563EB] shrink-0" />}
+                        ? <Loader size={10} className="text-brand-accent animate-spin shrink-0" />
+                        : <Sparkles size={10} className="text-brand-accent shrink-0" />}
                     </button>
                   ))}
                   {campaigns.length === 0 && <p className="text-[10px] text-muted text-center py-2">No campaigns to optimize</p>}
@@ -1250,7 +1250,7 @@ export default function AdsPage() {
                                 ) : (
                                   <button
                                     onClick={() => connectAdPlatform(client.id, p.id)}
-                                    className="text-[9px] px-2 py-1 rounded-md font-medium bg-[rgba(37,99,235,0.08)] text-[#2563EB] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
+                                    className="text-[9px] px-2 py-1 rounded-md font-medium bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
                                     <Plug size={8} /> Connect
                                   </button>
                                 )}
@@ -1274,14 +1274,14 @@ export default function AdsPage() {
               whileHover={{ y: -2 }}
             >
               <div className="flex items-center gap-2 mb-2">
-                <Shield size={14} className="text-[#2563EB]" />
+                <Shield size={14} className="text-brand-accent" />
                 <h3 className="text-xs font-semibold">How Copilot Works</h3>
               </div>
               <ol className="space-y-1.5 text-[10px] text-muted">
-                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">1.</span> AI analyzes campaign performance data</li>
-                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">2.</span> Proposes optimizations with reasoning</li>
-                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">3.</span> You review and approve/reject each action</li>
-                <li className="flex gap-2"><span className="text-[#2563EB] font-bold">4.</span> Approved actions execute on the ad platform</li>
+                <li className="flex gap-2"><span className="text-brand-accent font-bold">1.</span> AI analyzes campaign performance data</li>
+                <li className="flex gap-2"><span className="text-brand-accent font-bold">2.</span> Proposes optimizations with reasoning</li>
+                <li className="flex gap-2"><span className="text-brand-accent font-bold">3.</span> You review and approve/reject each action</li>
+                <li className="flex gap-2"><span className="text-brand-accent font-bold">4.</span> Approved actions execute on the ad platform</li>
               </ol>
             </motion.div>
           </div>
@@ -1298,7 +1298,7 @@ export default function AdsPage() {
                 whileHover={{ y: -2 }}
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <BarChart3 size={14} className="text-[#2563EB]" />
+                  <BarChart3 size={14} className="text-brand-accent" />
                   <h2 className="text-sm font-semibold">Portfolio Insights</h2>
                 </div>
                 <pre className="whitespace-pre-wrap text-xs text-foreground leading-relaxed font-sans bg-surface-light rounded-xl p-4 border border-border/30 max-h-[300px] overflow-y-auto">
@@ -1306,7 +1306,7 @@ export default function AdsPage() {
                 </pre>
                 {String((insights as Record<string, unknown>).budget_recommendations || "") && (
                   <div className="mt-3 p-3 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)]">
-                    <p className="text-[10px] font-semibold text-[#2563EB] mb-1">Budget Recommendations</p>
+                    <p className="text-[10px] font-semibold text-brand-accent mb-1">Budget Recommendations</p>
                     <p className="text-[10px] text-muted">{String((insights as Record<string, unknown>).budget_recommendations)}</p>
                   </div>
                 )}
@@ -1370,7 +1370,7 @@ export default function AdsPage() {
                           {action.description && <p className="text-[10px] text-muted mt-0.5">{action.description}</p>}
                           {action.ai_reasoning && (
                             <div className="mt-2 p-2 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)]">
-                              <p className="text-[9px] text-[#2563EB] font-medium mb-0.5">AI Reasoning</p>
+                              <p className="text-[9px] text-brand-accent font-medium mb-0.5">AI Reasoning</p>
                               <p className="text-[10px] text-muted leading-relaxed">{action.ai_reasoning}</p>
                             </div>
                           )}

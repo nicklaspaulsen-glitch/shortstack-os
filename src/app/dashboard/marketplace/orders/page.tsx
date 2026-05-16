@@ -111,7 +111,7 @@ export default function OrdersPage() {
                 </p>
                 <Link
                   href={role === "buyer" ? "/marketplace" : "/dashboard/marketplace/listings"}
-                  className="mt-4 rounded-lg bg-[rgba(37,99,235,0.08)] px-4 py-2 text-sm font-medium text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)]"
+                  className="mt-4 rounded-lg bg-[rgba(37,99,235,0.08)] px-4 py-2 text-sm font-medium text-brand-accent hover:bg-[rgba(37,99,235,0.14)]"
                 >
                   {role === "buyer" ? "Browse marketplace" : "Manage listings"}
                 </Link>
@@ -122,7 +122,7 @@ export default function OrdersPage() {
                   <Link
                     key={o.id}
                     href={`/dashboard/marketplace/orders/${o.id}`}
-                    className="card group flex items-center justify-between gap-4 transition hover:border-[#2563EB]/30"
+                    className="card group flex items-center justify-between gap-4 transition hover:border-brand-accent/30"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
@@ -153,7 +153,7 @@ export default function OrdersPage() {
                     </div>
                     <ArrowRight
                       size={14}
-                      className="text-text-muted transition group-hover:translate-x-0.5 group-hover:text-[#2563EB]"
+                      className="text-text-muted transition group-hover:translate-x-0.5 group-hover:text-brand-accent"
                     />
                   </Link>
                 ))}

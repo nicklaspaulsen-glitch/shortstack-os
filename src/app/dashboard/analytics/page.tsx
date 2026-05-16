@@ -437,7 +437,7 @@ export default function AnalyticsPage() {
                 onClick={() => setDateRange(r)}
                 className={`px-2.5 py-1 text-[10px] rounded-md transition-colors duration-150 ${
                   dateRange === r
-                    ? "bg-[#1D4ED8] text-white font-semibold"
+                    ? "bg-brand-accent/80 text-white font-semibold"
                     : "text-[#6F6D7A] hover:text-text-primary"
                 }`}
 >
@@ -455,8 +455,8 @@ export default function AnalyticsPage() {
           </button>
           {/* Live MRR badge */}
           {stats.totalMRR> 0 && (
-            <span className="hidden md:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.18)] text-[#1D4ED8]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
+            <span className="hidden md:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.18)] text-brand-accent">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
               {formatCurrency(stats.totalMRR)} MRR
             </span>
           )}
@@ -550,7 +550,7 @@ export default function AnalyticsPage() {
               </p>
               {/* Giant MRR */}
               <motion.p
-                className="font-display font-black leading-[0.88] text-[#1D4ED8]"
+                className="font-display font-black leading-[0.88] text-brand-accent"
                 style={{ fontSize: "clamp(60px,9vw,104px)", letterSpacing: "-0.045em", fontVariantNumeric: "tabular-nums" }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -812,11 +812,11 @@ export default function AnalyticsPage() {
               )}
               <div className="flex items-center gap-5 mt-3">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-4 h-px bg-[#2563EB]" />
+                  <div className="w-4 h-px bg-brand-accent" />
                   <span className="text-[9px] text-[#6F6D7A]">Sent</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-4 h-px bg-[#1D4ED8]" />
+                  <div className="w-4 h-px bg-brand-accent/80" />
                   <span className="text-[9px] text-[#6F6D7A]">Replies</span>
                 </div>
               </div>
@@ -966,7 +966,7 @@ export default function AnalyticsPage() {
                   <span className="text-[9px] text-[#4F4D58]">Industry avg</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-1.5 rounded-full bg-[#2563EB]" />
+                  <div className="w-3 h-1.5 rounded-full bg-brand-accent" />
                   <span className="text-[9px] text-[#4F4D58]">Yours</span>
                 </div>
               </div>
@@ -1026,8 +1026,8 @@ export default function AnalyticsPage() {
                 </h2>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
-                <span className="text-[9px] text-[#2563EB] font-semibold tracking-[0.1em]">LIVE</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
+                <span className="text-[9px] text-brand-accent font-semibold tracking-[0.1em]">LIVE</span>
               </div>
             </div>
             <div ref={activityRef} className="max-h-44 overflow-y-auto space-y-0.5">
@@ -1070,7 +1070,7 @@ export default function AnalyticsPage() {
             icon={<TrendingUp size={13} />}
             badge={
               revenueForecast.length> 0 ? (
-                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(37,99,235,0.10)] text-[#2563EB]">
+                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(37,99,235,0.10)] text-brand-accent">
                   {formatCurrency(revenueForecast[0]?.projected || 0)} next mo.
                 </span>
               ) : undefined
@@ -1163,7 +1163,7 @@ export default function AnalyticsPage() {
                     <tr>
                       <td colSpan={5} className="py-8 text-center" style={{ background: "none" }}>
                         <p className="text-[11px] text-[#6F6D7A]">No ad platform data yet</p>
-                        <Link href="/dashboard/integrations" className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-[#2563EB] hover:opacity-80 transition-opacity">
+                        <Link href="/dashboard/integrations" className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
                           Connect platforms <ArrowUp size={9} className="rotate-45" />
                         </Link>
                       </td>
@@ -1294,7 +1294,7 @@ export default function AnalyticsPage() {
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <Trophy size={16} className="text-[#3A3840]" />
                   <p className="text-[11px] text-text-muted">No team activity yet</p>
-                  <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#2563EB] hover:opacity-80 transition-opacity">
+                  <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
                     Invite team <ArrowUp size={9} className="rotate-45" />
                   </Link>
                 </div>
@@ -1306,11 +1306,11 @@ export default function AnalyticsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <p className="text-xs font-medium text-text-primary">{member.name}</p>
-                      {i === 0 && <Star size={9} className="text-[#2563EB]" />}
+                      {i === 0 && <Star size={9} className="text-brand-accent" />}
                     </div>
                     <p className="text-[9px] text-[#6F6D7A]">{member.leads} leads � {member.deals} deals � {member.calls} calls</p>
                   </div>
-                  <p className="text-xs font-bold text-[#2563EB] shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
+                  <p className="text-xs font-bold text-brand-accent shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
                     {formatCurrency(member.revenue)}
                   </p>
                 </div>
@@ -1416,7 +1416,7 @@ export default function AnalyticsPage() {
                   <DollarSign size={16} className="text-[#3A3840]" />
                   <p className="text-[11px] text-text-muted">No CLV data yet</p>
                   <p className="text-[9px] text-[#4F4D58] max-w-[200px]">CLV tiers appear once clients have payment records attached</p>
-                  <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[#2563EB] hover:opacity-80 transition-opacity">
+                  <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
                     Add clients <ArrowUp size={9} className="rotate-45" />
                   </Link>
                 </div>
@@ -1431,7 +1431,7 @@ export default function AnalyticsPage() {
                       <div className="grid grid-cols-2 gap-3">
                         <div>
                           <p className="text-[9px] text-[#6F6D7A] uppercase">Avg CLV</p>
-                          <p className="text-sm font-bold text-[#2563EB]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(tier.avgCLV)}</p>
+                          <p className="text-sm font-bold text-brand-accent" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(tier.avgCLV)}</p>
                         </div>
                         <div>
                           <p className="text-[9px] text-[#6F6D7A] uppercase">Avg Lifetime</p>

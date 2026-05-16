@@ -230,7 +230,7 @@ export default function ClientUploadsPage() {
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center">
-          <FolderOpen size={20} className="text-[#2563EB]" />
+          <FolderOpen size={20} className="text-brand-accent" />
         </div>
         <div>
           <h1 className="page-header mb-0">My Uploads & Media</h1>
@@ -242,7 +242,7 @@ export default function ClientUploadsPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="card p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Upload size={14} className="text-[#2563EB]" />
+            <Upload size={14} className="text-brand-accent" />
             <span className="text-[9px] text-muted uppercase tracking-wider">Uploads</span>
           </div>
           <p className="text-2xl font-bold font-mono">{analytics.totalUploads}</p>
@@ -278,7 +278,7 @@ export default function ClientUploadsPage() {
             {Object.entries(analytics.platformBreakdown).map(([platform, count]) => (
               <div key={platform} className="flex items-center gap-2 bg-black/[0.04] px-3 py-1.5 rounded-lg">
                 <span className="text-[10px] font-medium capitalize">{platform.replace(/_/g, " ")}</span>
-                <span className="text-[10px] text-[#2563EB] font-bold font-mono">{count}</span>
+                <span className="text-[10px] text-brand-accent font-bold font-mono">{count}</span>
               </div>
             ))}
           </div>
@@ -307,7 +307,7 @@ export default function ClientUploadsPage() {
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
             className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${
-              dragOver ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)]" : "border-black/[0.08] hover:border-[rgba(37,99,235,0.25)]"
+              dragOver ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : "border-black/[0.08] hover:border-[rgba(37,99,235,0.25)]"
             }`}
             onClick={() => {
               const input = document.createElement("input");
@@ -323,13 +323,13 @@ export default function ClientUploadsPage() {
           >
             {uploading ? (
               <div className="flex flex-col items-center gap-2">
-                <Loader size={24} className="animate-spin text-[#2563EB]" />
+                <Loader size={24} className="animate-spin text-brand-accent" />
                 <p className="text-xs text-muted">Uploading files...</p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center">
-                  <Upload size={20} className="text-[#2563EB]" />
+                  <Upload size={20} className="text-brand-accent" />
                 </div>
                 <p className="text-sm font-medium">Drop files here or click to upload</p>
                 <p className="text-[10px] text-muted">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV — max {maxUploadLabel}</p>
@@ -394,7 +394,7 @@ export default function ClientUploadsPage() {
                     <div className="flex items-center gap-2 mt-1.5">
                       <StatusBadge status={item.status} />
                       {item.platforms?.map(p => (
-                        <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded capitalize">
+                        <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded capitalize">
                           {p.replace(/_/g, " ")}
                         </span>
                       ))}
@@ -433,14 +433,14 @@ export default function ClientUploadsPage() {
             content.map(item => (
               <div key={item.id} className="card card-hover p-3 flex items-center gap-3">
                 <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0">
-                  <Film size={14} className="text-[#2563EB]" />
+                  <Film size={14} className="text-brand-accent" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">{item.title}</p>
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className="text-[9px] bg-black/[0.04] px-1.5 py-0.5 rounded text-[#6B7280]">{item.script_type}</span>
                     {item.target_platform && (
-                      <span className="text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded capitalize">
+                      <span className="text-[9px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded capitalize">
                         {item.target_platform.replace(/_/g, " ")}
                       </span>
                     )}
@@ -466,7 +466,7 @@ export default function ClientUploadsPage() {
           {zernioProfiles.length === 0 ? (
             <div className="card-static text-center py-12">
               <div className="w-16 h-16 bg-[rgba(37,99,235,0.08)] flex items-center justify-center mx-auto mb-4">
-                <Share2 size={28} className="text-[#2563EB]" />
+                <Share2 size={28} className="text-brand-accent" />
               </div>
               <h3 className="text-sm font-semibold mb-1">Social accounts not connected</h3>
               <p className="text-xs text-muted max-w-xs mx-auto mb-4">
@@ -527,7 +527,7 @@ export default function ClientUploadsPage() {
                     <p className="text-sm font-bold font-mono">—</p>
                   </div>
                   <div className="text-center p-3 bg-black/[0.04] rounded-xl">
-                    <ChevronRight size={16} className="text-[#2563EB] mx-auto mb-1" />
+                    <ChevronRight size={16} className="text-brand-accent mx-auto mb-1" />
                     <p className="text-[9px] text-muted">Clicks</p>
                     <p className="text-sm font-bold font-mono">—</p>
                   </div>

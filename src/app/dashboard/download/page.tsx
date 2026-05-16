@@ -224,7 +224,7 @@ export default function DownloadDesktopPage() {
                     }`}
                   >
                     {isRecommended && (
-                      <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-[#2563EB] text-[10px] font-bold text-white uppercase tracking-wider">
+                      <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-brand-accent text-[10px] font-bold text-white uppercase tracking-wider">
                         Recommended for you
                       </div>
                     )}
@@ -241,7 +241,7 @@ export default function DownloadDesktopPage() {
                       </div>
                       <Download
                         size={18}
-                        className="text-muted group-hover:text-[#2563EB] transition-colors"
+                        className="text-muted group-hover:text-brand-accent transition-colors"
                       />
                     </div>
                     <div className="text-lg font-semibold text-foreground mb-0.5">{p.title}</div>
@@ -252,7 +252,7 @@ export default function DownloadDesktopPage() {
                     </div>
                     <div className="flex items-center justify-between pt-3 border-t border-border">
                       <span className="text-[11px] text-muted">v{version}</span>
-                      <span className="text-xs font-medium text-[#2563EB] group-hover:underline">
+                      <span className="text-xs font-medium text-brand-accent group-hover:underline">
                         Download
                       </span>
                     </div>
@@ -266,7 +266,7 @@ export default function DownloadDesktopPage() {
               className="glass rounded-xl p-6"
             >
               <div className="mb-5">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-[#2563EB] mb-1">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-brand-accent mb-1">
                   What&apos;s included
                 </div>
                 <h2 className="text-xl font-semibold text-foreground">
@@ -282,12 +282,12 @@ export default function DownloadDesktopPage() {
                     transition={{ delay: i * 0.04 }}
                     className="flex items-start gap-3 p-3 glass-md rounded-xl"
                   >
-                    <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.25)]">
+                    <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.25)]">
                       <CheckCircle2 size={16} />
                     </div>
                     <div className="min-w-0">
                       <div className="text-sm font-semibold text-foreground flex items-center gap-1.5">
-                        <span className="text-[#2563EB]">{f.icon}</span>
+                        <span className="text-brand-accent">{f.icon}</span>
                         {f.title}
                       </div>
                       <div className="text-[11px] text-muted mt-0.5 leading-relaxed">{f.desc}</div>
@@ -302,7 +302,7 @@ export default function DownloadDesktopPage() {
               className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 glass rounded-xl p-4"
             >
               <div className="flex items-center gap-3 text-xs text-muted">
-                <Keyboard size={14} className="text-[#2563EB]" />
+                <Keyboard size={14} className="text-brand-accent" />
                 <span>
                   Current version{" "}
                   <span className="font-mono font-semibold text-foreground">v{version}</span>
@@ -319,7 +319,7 @@ export default function DownloadDesktopPage() {
                 href={GH_RELEASES}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-medium text-[#2563EB] hover:underline flex items-center gap-1"
+                className="text-xs font-medium text-brand-accent hover:underline flex items-center gap-1"
               >
                 View changelog <ExternalLink size={11} />
               </a>

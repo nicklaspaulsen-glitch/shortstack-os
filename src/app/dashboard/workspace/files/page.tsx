@@ -602,7 +602,7 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
     <li>
       <div
         className={`flex items-center gap-1 rounded-md text-sm cursor-pointer ${
-          isActive ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-[#374151] hover:bg-black/[0.04]"
+          isActive ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "text-[#374151] hover:bg-black/[0.04]"
         }`}
         style={{ paddingLeft: 8 + depth * 12, paddingRight: 8 }}
       >
@@ -620,7 +620,7 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
           className="flex items-center gap-1.5 py-1.5 flex-1 text-left truncate"
           title={`${folder.name} — ${PERMISSION_LABEL[folder.permission]}`}
         >
-          <FolderIcon size={14} className={isActive ? "text-[#2563EB]" : "text-[#6B7280]"} />
+          <FolderIcon size={14} className={isActive ? "text-brand-accent" : "text-[#6B7280]"} />
           <span className="truncate">{folder.name}</span>
           {folder.is_system && <Lock size={9} className="text-text-muted shrink-0" />}
         </button>
@@ -674,7 +674,7 @@ function FileCard(props: FileCardProps) {
             loading="lazy"
           />
         ) : (
-          <div className="text-[#2563EB]/60">{fileIconFor(file.mime_type)}</div>
+          <div className="text-brand-accent/60">{fileIconFor(file.mime_type)}</div>
         )}
       </div>
       <div className="px-2 py-1.5">

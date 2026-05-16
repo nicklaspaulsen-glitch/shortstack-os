@@ -38,8 +38,8 @@ interface ApiKey {
 }
 
 const PERMISSION_LABELS: Record<ApiKey["permissions"], { label: string; color: string; desc: string }> = {
-  "read": { label: "Read Only", color: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.20)]", desc: "Can read data via GET endpoints" },
-  "read-write": { label: "Read & Write", color: "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-[rgba(37,99,235,0.20)]", desc: "Can read and create/update data" },
+  "read": { label: "Read Only", color: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.20)]", desc: "Can read data via GET endpoints" },
+  "read-write": { label: "Read & Write", color: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.20)]", desc: "Can read and create/update data" },
   "full": { label: "Full Access", color: "bg-red-500/10 text-red-400 border-red-500/20", desc: "Complete access including delete operations" },
 };
 
@@ -75,7 +75,7 @@ const INITIAL_API_KEYS: ApiKey[] = [];
 const API_CATEGORIES: Category[] = [
   {
     name: "Auth",
-    icon: <Shield size={13} className="text-[#2563EB]" />,
+    icon: <Shield size={13} className="text-brand-accent" />,
     endpoints: [
       { method: "POST", path: "/api/auth/login", description: "Authenticate user and return session token", body: '{ "email": "user@example.com", "password": "***" }', response: '{ "token": "eyJhbG...", "expires_in": 3600 }', auth: false, rateLimit: "10/min" },
       { method: "POST", path: "/api/auth/register", description: "Create a new user account", body: '{ "email": "...", "password": "...", "name": "..." }', response: '{ "user_id": "uuid", "message": "Verification email sent" }', auth: false, rateLimit: "5/min" },
@@ -85,7 +85,7 @@ const API_CATEGORIES: Category[] = [
   },
   {
     name: "Clients",
-    icon: <Globe size={13} className="text-[#2563EB]" />,
+    icon: <Globe size={13} className="text-brand-accent" />,
     endpoints: [
       { method: "GET", path: "/api/clients", description: "List all clients", response: '{ "clients": [{ "id": "...", "business_name": "..." }], "total": 42 }', auth: true, rateLimit: "60/min" },
       { method: "POST", path: "/api/clients", description: "Create a new client", body: '{ "business_name": "Acme", "email": "...", "industry": "..." }', response: '{ "client": { "id": "uuid", ... } }', auth: true, rateLimit: "30/min" },
@@ -96,7 +96,7 @@ const API_CATEGORIES: Category[] = [
   },
   {
     name: "Content",
-    icon: <FileText size={13} className="text-[#2563EB]" />,
+    icon: <FileText size={13} className="text-brand-accent" />,
     endpoints: [
       { method: "POST", path: "/api/content/generate", description: "Generate social media content with AI", body: '{ "topic": "...", "platform": "instagram", "tone": "professional" }', response: '{ "content": "...", "hashtags": [...] }', auth: true, rateLimit: "20/min" },
       { method: "POST", path: "/api/content/script", description: "Generate a video script with hooks and CTAs", body: '{ "topic": "...", "duration": 60, "style": "educational" }', response: '{ "script": "...", "hooks": [...], "cta": "..." }', auth: true, rateLimit: "10/min" },
@@ -105,7 +105,7 @@ const API_CATEGORIES: Category[] = [
   },
   {
     name: "Agents",
-    icon: <Zap size={13} className="text-[#2563EB]" />,
+    icon: <Zap size={13} className="text-brand-accent" />,
     endpoints: [
       { method: "GET", path: "/api/agents", description: "List all available AI agents", response: '{ "agents": [{ "id": "...", "name": "...", "status": "active" }] }', auth: true, rateLimit: "30/min" },
       { method: "POST", path: "/api/agents/chief", description: "Chat with the Chief AI Agent", body: '{ "message": "...", "history": [] }', response: '{ "response": "...", "data": { ... } }', auth: true, rateLimit: "10/min" },
@@ -126,8 +126,8 @@ const API_CATEGORIES: Category[] = [
 
 const METHOD_STYLES: Record<string, string> = {
   GET: "bg-green-500/15 text-green-400 border-green-500/20",
-  POST: "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border-[rgba(37,99,235,0.20)]",
-  PUT: "bg-[rgba(37,99,235,0.10)] text-[#2563EB] border-[rgba(37,99,235,0.20)]",
+  POST: "bg-[rgba(37,99,235,0.10)] text-brand-accent border-[rgba(37,99,235,0.20)]",
+  PUT: "bg-[rgba(37,99,235,0.10)] text-brand-accent border-[rgba(37,99,235,0.20)]",
   DELETE: "bg-red-500/15 text-red-400 border-red-500/20",
 };
 
@@ -329,7 +329,7 @@ export default function ApiDocsPage() {
               {TABS.map(t => (
                 <button key={t} onClick={() => setActiveTab(t)}
                   className={`px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${
-                    activeTab === t ? "text-[#2563EB] border-b-2 border-[#2563EB]" : "text-muted hover:text-foreground"
+                    activeTab === t ? "text-brand-accent border-b-2 border-brand-accent" : "text-muted hover:text-foreground"
                   }`}>
                   {t}
                 </button>
@@ -338,7 +338,7 @@ export default function ApiDocsPage() {
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4 space-y-3">
                   <div className="flex items-center gap-2 mb-1">
-                    <Play size={14} className="text-[#2563EB]" />
+                    <Play size={14} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold">Interactive API Explorer</h2>
                   </div>
 
@@ -351,7 +351,7 @@ export default function ApiDocsPage() {
                     <input value={explorerPath} onChange={e => setExplorerPath(e.target.value)}
                       className="input flex-1 text-xs py-2 font-mono" placeholder="/api/clients" />
                     <button onClick={simulateRequest} disabled={explorerLoading}
-                      className="px-4 py-2 bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-xs font-medium rounded-lg border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all disabled:opacity-50 flex items-center gap-1.5">
+                      className="px-4 py-2 bg-[rgba(37,99,235,0.08)] text-brand-accent text-xs font-medium rounded-lg border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all disabled:opacity-50 flex items-center gap-1.5">
                       {explorerLoading ? <div className="w-3 h-3 border-2 border-[rgba(37,99,235,0.2)] border-t-[#2563EB] rounded-full animate-spin" /> : <Play size={12} />}
                       Send
                     </button>
@@ -388,7 +388,7 @@ export default function ApiDocsPage() {
                         <p className="text-[9px] text-muted uppercase tracking-wider">Response</p>
                         <div className="flex items-center gap-2">
                           <span className="text-[9px] px-2 py-0.5 bg-green-500/10 text-green-400 rounded border border-green-500/20">200 OK</span>
-                          <button onClick={() => copyText(explorerResponse, "response")} className="text-[9px] text-muted hover:text-[#2563EB] transition-colors flex items-center gap-1">
+                          <button onClick={() => copyText(explorerResponse, "response")} className="text-[9px] text-muted hover:text-brand-accent transition-colors flex items-center gap-1">
                             <Copy size={9} /> Copy
                           </button>
                         </div>
@@ -444,14 +444,14 @@ export default function ApiDocsPage() {
                                   <span className="text-xs font-mono text-foreground truncate">{ep.path}</span>
                                   {ep.auth && <Lock size={9} className="text-muted shrink-0" />}
                                   <span className="text-[10px] text-muted ml-auto shrink-0 hidden sm:block">{ep.description}</span>
-                                  <Copy size={11} className="text-muted shrink-0 hover:text-[#2563EB] transition-colors"
+                                  <Copy size={11} className="text-muted shrink-0 hover:text-brand-accent transition-colors"
                                     onClick={(e) => { e.stopPropagation(); copyText(ep.path, ep.path); }} />
                                 </button>
                                 {isExpanded && (
                                   <div className="px-4 pb-3 space-y-2">
                                     <p className="text-[10px] text-muted">{ep.description}</p>
                                     <div className="flex items-center gap-3 text-[9px]">
-                                      {ep.auth && <span className="flex items-center gap-1 text-[#2563EB]"><Lock size={8} /> Requires auth</span>}
+                                      {ep.auth && <span className="flex items-center gap-1 text-brand-accent"><Lock size={8} /> Requires auth</span>}
                                       {ep.rateLimit && <span className="flex items-center gap-1 text-muted"><Clock size={8} /> {ep.rateLimit}</span>}
                                     </div>
                                     {ep.body && (
@@ -463,7 +463,7 @@ export default function ApiDocsPage() {
                                     {ep.response && (
                                       <div>
                                         <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Response</p>
-                                        <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-[#2563EB] overflow-x-auto">{ep.response}</pre>
+                                        <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-brand-accent overflow-x-auto">{ep.response}</pre>
                                       </div>
                                     )}
                                   </div>
@@ -481,22 +481,22 @@ export default function ApiDocsPage() {
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <Shield size={14} className="text-[#2563EB]" />
+                    <Shield size={14} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold">Authentication Guide</h2>
                   </div>
                   <div className="space-y-4">
                     <div className="p-3 rounded-lg border border-border">
-                      <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Key size={12} className="text-[#2563EB]" /> API Key Authentication</h3>
+                      <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Key size={12} className="text-brand-accent" /> API Key Authentication</h3>
                       <p className="text-[10px] text-muted mb-2">Include your API key in the Authorization header with every request.</p>
                       <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-green-400">Authorization: Bearer sk_live_your_api_key_here</pre>
                     </div>
                     <div className="p-3 rounded-lg border border-border">
-                      <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Lock size={12} className="text-[#2563EB]" /> Session Cookie (Browser)</h3>
+                      <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Lock size={12} className="text-brand-accent" /> Session Cookie (Browser)</h3>
                       <p className="text-[10px] text-muted mb-2">For browser-based apps, use Supabase session cookies. The cookie is automatically set after login.</p>
                       <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-green-400">Cookie: sb-access-token=eyJhbG...; sb-refresh-token=...</pre>
                     </div>
                     <div className="p-3 rounded-lg border border-border bg-[rgba(37,99,235,0.04)]">
-                      <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><AlertTriangle size={12} className="text-[#2563EB]" /> Security Best Practices</h3>
+                      <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><AlertTriangle size={12} className="text-brand-accent" /> Security Best Practices</h3>
                       <ul className="space-y-1.5 text-[10px] text-muted">
                         <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Never expose API keys in client-side code</li>
                         <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Use environment variables for key storage</li>
@@ -512,7 +512,7 @@ export default function ApiDocsPage() {
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <Clock size={14} className="text-[#2563EB]" />
+                    <Clock size={14} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold">Rate Limiting</h2>
                   </div>
                   <p className="text-[10px] text-muted mb-4">All API endpoints are rate-limited. Limits are returned in response headers.</p>
@@ -553,14 +553,14 @@ Retry-After: 30`}</pre>
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <Terminal size={14} className="text-[#2563EB]" />
+                      <Terminal size={14} className="text-brand-accent" />
                       <h2 className="text-sm font-semibold">Code Examples</h2>
                     </div>
                     <div className="flex gap-1">
                       {(["curl", "js", "python"] as const).map(lang => (
                         <button key={lang} onClick={() => setCodeExampleLang(lang)}
                           className={`text-[10px] px-3 py-1 rounded-lg border transition-all ${
-                            codeExampleLang === lang ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted"
+                            codeExampleLang === lang ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted"
                           }`}>
                           {lang === "curl" ? "cURL" : lang === "js" ? "JavaScript" : "Python"}
                         </button>
@@ -646,7 +646,7 @@ print(data['content'])`}
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <AlertTriangle size={14} className="text-[#2563EB]" />
+                    <AlertTriangle size={14} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold">Error Code Reference</h2>
                   </div>
                   <p className="text-[10px] text-muted mb-3">All errors return a JSON body with an error message and optional details.</p>
@@ -668,7 +668,7 @@ print(data['content'])`}
                     </div>
                     {ERROR_CODES.map((err, i) => (
                       <div key={i} className="grid grid-cols-4 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[11px]">
-                        <div className={`font-mono font-bold ${err.code >= 500 ? "text-red-400" : err.code >= 400 ? "text-[#2563EB]" : "text-green-400"}`}>{err.code}</div>
+                        <div className={`font-mono font-bold ${err.code >= 500 ? "text-red-400" : err.code >= 400 ? "text-brand-accent" : "text-green-400"}`}>{err.code}</div>
                         <div className="font-medium">{err.name}</div>
                         <div className="col-span-2 text-muted">{err.description}</div>
                       </div>
@@ -680,7 +680,7 @@ print(data['content'])`}
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <Zap size={14} className="text-[#2563EB]" />
+                    <Zap size={14} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold">Webhook Documentation</h2>
                   </div>
                   <p className="text-[10px] text-muted mb-4">Trinity sends webhook events to your configured URL when specific actions occur.</p>
@@ -703,7 +703,7 @@ print(data['content'])`}
                         { event: "ticket.created", desc: "Support ticket opened" },
                       ].map((ev, i) => (
                         <div key={i} className="flex items-center gap-2 p-2 rounded-lg border border-border text-[10px]">
-                          <code className="text-[#2563EB] font-mono">{ev.event}</code>
+                          <code className="text-brand-accent font-mono">{ev.event}</code>
                           <span className="text-muted">{ev.desc}</span>
                         </div>
                       ))}
@@ -727,7 +727,7 @@ print(data['content'])`}
 
                   <div className="mt-4 p-3 rounded-lg border border-border bg-[rgba(37,99,235,0.04)]">
                     <h3 className="text-xs font-semibold mb-1.5 flex items-center gap-1.5">
-                      <Shield size={11} className="text-[#2563EB]" /> Signature Verification
+                      <Shield size={11} className="text-brand-accent" /> Signature Verification
                     </h3>
                     <p className="text-[10px] text-muted mb-2">Verify webhook authenticity using the X-Webhook-Signature header.</p>
                     <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-cyan-400">{`const crypto = require('crypto');
@@ -744,7 +744,7 @@ const valid = signature === expected;`}</pre>
                 {CHANGELOG.map((entry, i) => (
                   <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="glass rounded-xl p-4">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="text-xs font-bold font-mono text-[#2563EB]">{entry.version}</span>
+                      <span className="text-xs font-bold font-mono text-brand-accent">{entry.version}</span>
                       <span className="text-[10px] text-muted">{entry.date}</span>
                       {i === 0 && <span className="text-[8px] px-1.5 py-0.5 bg-green-500/10 text-green-400 rounded border border-green-500/20">Latest</span>}
                     </div>
@@ -763,7 +763,7 @@ const valid = signature === expected;`}</pre>
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <Download size={14} className="text-[#2563EB]" />
+                    <Download size={14} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold">SDK Downloads</h2>
                   </div>
                   <p className="text-[10px] text-muted mb-4">Official client libraries for popular languages. Install via package manager or download.</p>
@@ -773,7 +773,7 @@ const valid = signature === expected;`}</pre>
                       <div key={i} className="p-3 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <Code size={14} className="text-[#2563EB]" />
+                            <Code size={14} className="text-brand-accent" />
                             <span className="text-xs font-semibold">{sdk.name}</span>
                           </div>
                           <span className="text-[9px] text-muted">{sdk.size}</span>
@@ -784,7 +784,7 @@ const valid = signature === expected;`}</pre>
                             <button className="text-[9px] px-2 py-1 rounded border border-border text-muted hover:text-foreground transition-all">
                               Install Guide
                             </button>
-                            <button className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
+                            <button className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
                               <Download size={9} /> Download
                             </button>
                           </div>
@@ -814,7 +814,7 @@ const valid = signature === expected;`}</pre>
                         <div className="flex items-center gap-2 bg-[rgba(0,0,0,0.04)] rounded-lg px-3 py-2 font-mono text-[11px] text-foreground">
                           <span className="truncate flex-1">{justCreatedKey}</span>
                           <button onClick={() => copyText(justCreatedKey, "new-key")}
-                            className="text-muted hover:text-[#2563EB] transition-colors flex-shrink-0">
+                            className="text-muted hover:text-brand-accent transition-colors flex-shrink-0">
                             {copiedKey === "new-key" ? <CheckCircle size={12} className="text-green-400" /> : <Copy size={12} />}
                           </button>
                         </div>
@@ -875,12 +875,12 @@ const valid = signature === expected;`}</pre>
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <Key size={14} className="text-[#2563EB]" />
+                      <Key size={14} className="text-brand-accent" />
                       <h2 className="text-sm font-semibold">Private API Keys</h2>
                       <span className="text-[9px] px-1.5 py-0.5 rounded bg-surface-light text-muted border border-border">{apiKeys.length} keys</span>
                     </div>
                     <button onClick={() => setShowNewKey(!showNewKey)}
-                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1.5">
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1.5">
                       <Key size={10} />
                       Generate New Key
                     </button>
@@ -889,7 +889,7 @@ const valid = signature === expected;`}</pre>
                   {/* Create New Key Form */}
                   {showNewKey && (
                     <div className="p-4 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)] mb-4 space-y-3">
-                      <div className="flex items-center gap-2 text-xs font-medium text-[#2563EB]">
+                      <div className="flex items-center gap-2 text-xs font-medium text-brand-accent">
                         <Key size={12} />
                         New API Key
                       </div>
@@ -935,7 +935,7 @@ const valid = signature === expected;`}</pre>
                           </button>
                           <button onClick={generateApiKey}
                             disabled={!newKeyName.trim()}
-                            className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#1D4ED8] transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                            className="text-[10px] px-4 py-1.5 rounded-lg bg-brand-accent text-white font-medium hover:bg-brand-accent/80 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
                             Generate Key
                           </button>
                         </div>
@@ -982,7 +982,7 @@ const valid = signature === expected;`}</pre>
                           <button onClick={() => toggleRevealKey(k.id)} className="text-muted hover:text-foreground transition-colors flex-shrink-0" title={revealedKeys[k.id] ? "Hide" : "Reveal"}>
                             {revealedKeys[k.id] ? <EyeOff size={10} /> : <Eye size={10} />}
                           </button>
-                          <button onClick={() => copyText(k.key, k.id)} className="text-muted hover:text-[#2563EB] transition-colors flex-shrink-0" title="Copy key">
+                          <button onClick={() => copyText(k.key, k.id)} className="text-muted hover:text-brand-accent transition-colors flex-shrink-0" title="Copy key">
                             {copiedKey === k.id ? <CheckCircle size={10} className="text-green-400" /> : <Copy size={10} />}
                           </button>
                         </div>
@@ -1073,7 +1073,7 @@ const valid = signature === expected;`}</pre>
                   {/* Security Best Practices */}
                   <div className="glass rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-3">
-                      <Shield size={13} className="text-[#2563EB]" />
+                      <Shield size={13} className="text-brand-accent" />
                       <h3 className="text-xs font-semibold">Security Best Practices</h3>
                     </div>
                     <div className="space-y-2">
@@ -1085,7 +1085,7 @@ const valid = signature === expected;`}</pre>
                         { icon: <AlertTriangle size={10} />, text: "Revoke keys immediately if you suspect a compromise" },
                       ].map((tip, i) => (
                         <div key={i} className="flex items-start gap-2 text-[10px] text-muted">
-                          <span className="text-[#2563EB] mt-0.5 flex-shrink-0">{tip.icon}</span>
+                          <span className="text-brand-accent mt-0.5 flex-shrink-0">{tip.icon}</span>
                           <span>{tip.text}</span>
                         </div>
                       ))}
@@ -1095,7 +1095,7 @@ const valid = signature === expected;`}</pre>
                   {/* Rate Limits by Permission */}
                   <div className="glass rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-3">
-                      <Activity size={13} className="text-[#2563EB]" />
+                      <Activity size={13} className="text-brand-accent" />
                       <h3 className="text-xs font-semibold">Rate Limits by Permission Level</h3>
                     </div>
                     <div className="space-y-2">
@@ -1112,7 +1112,7 @@ const valid = signature === expected;`}</pre>
                       ))}
                     </div>
                     <div className="mt-3 p-2 rounded-lg bg-[rgba(37,99,235,0.04)] border border-[rgba(37,99,235,0.15)]">
-                      <p className="text-[9px] text-[#2563EB] flex items-center gap-1.5">
+                      <p className="text-[9px] text-brand-accent flex items-center gap-1.5">
                         <AlertTriangle size={10} className="flex-shrink-0" />
                         Exceeding rate limits returns HTTP 429. Implement exponential backoff in your integration.
                       </p>
@@ -1123,14 +1123,14 @@ const valid = signature === expected;`}</pre>
                 {/* Quick Start Code */}
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <Terminal size={13} className="text-[#2563EB]" />
+                    <Terminal size={13} className="text-brand-accent" />
                     <h3 className="text-xs font-semibold">Quick Start</h3>
                   </div>
                   <div className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 font-mono text-[10px] text-muted leading-relaxed overflow-x-auto">
                     <div className="text-green-400/60"># Authenticate with your API key</div>
                     <div><span className="text-cyan-400">curl</span> -X GET https://api.shortstack.os/v2/clients \</div>
-                    <div className="pl-4">-H <span className="text-[#2563EB]">&quot;Authorization: Bearer sk_live_your_key_here&quot;</span> \</div>
-                    <div className="pl-4">-H <span className="text-[#2563EB]">&quot;Content-Type: application/json&quot;</span></div>
+                    <div className="pl-4">-H <span className="text-brand-accent">&quot;Authorization: Bearer sk_live_your_key_here&quot;</span> \</div>
+                    <div className="pl-4">-H <span className="text-brand-accent">&quot;Content-Type: application/json&quot;</span></div>
                   </div>
                 </div>
               </div>

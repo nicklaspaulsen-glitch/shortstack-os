@@ -214,7 +214,7 @@ export default function CompetitorTrackerPage() {
                 <p className="text-[#6B7280] mb-4">No competitors tracked yet.</p>
                 <button
                   onClick={openCreate}
-                  className="px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-sm font-medium transition-colors"
 >
                   <Plus size={14} className="inline mr-1" /> Add Competitor
                 </button>
@@ -278,7 +278,7 @@ export default function CompetitorTrackerPage() {
                           <button
                             onClick={() => checkNow(c)}
                             disabled={checking === c.id}
-                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-[#2563EB] text-xs transition-colors disabled:opacity-50"
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-xs transition-colors disabled:opacity-50"
 >
                             {checking === c.id ? (
                               <Loader size={12} className="animate-spin" />
@@ -338,7 +338,7 @@ export default function CompetitorTrackerPage() {
                   <button
                     onClick={save}
                     disabled={saving}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-[#3B82F6] text-white text-sm font-medium disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-accent hover:bg-[#3B82F6] text-white text-sm font-medium disabled:opacity-50"
 >
                     {saving && <Loader size={13} className="animate-spin" />}
                     {editItem ? "Save" : "Add"}

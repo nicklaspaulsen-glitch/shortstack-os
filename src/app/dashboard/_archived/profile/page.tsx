@@ -165,7 +165,7 @@ export default function ProfilePage() {
                     <img src={avatarUrl} alt="" className="w-20 h-20 rounded-full object-cover border-2 border-border" />
                   ) : (
                     <div className="w-20 h-20 rounded-full flex items-center justify-center border-2 border-border" style={{ background: "color-mix(in srgb, var(--color-accent) 12%, transparent)" }}>
-                      <span className="text-3xl font-bold text-[#2563EB]">{displayName.charAt(0)}</span>
+                      <span className="text-3xl font-bold text-brand-accent">{displayName.charAt(0)}</span>
                     </div>
                   )}
                   <button
@@ -201,7 +201,7 @@ export default function ProfilePage() {
             >
             <div className="p-5 space-y-3">
               <h2 className="section-header flex items-center gap-2">
-                <AtSign size={14} className="text-[#2563EB]" /> Identity
+                <AtSign size={14} className="text-brand-accent" /> Identity
               </h2>
               <p className="text-[10px] text-muted -mt-2 mb-2">Your username is unique and permanent. Your nickname is what others see.</p>
 
@@ -295,7 +295,7 @@ export default function ProfilePage() {
               whileHover={{ y: -4, scale: 1.01 }}
             >
             <div className="p-5 space-y-3">
-              <h2 className="section-header flex items-center gap-2"><Key size={14} className="text-[#2563EB]" /> Change Password</h2>
+              <h2 className="section-header flex items-center gap-2"><Key size={14} className="text-brand-accent" /> Change Password</h2>
               <div className="space-y-2">
                 <input type="password" value={password.new} onChange={e => setPassword({ ...password, new: e.target.value })}
                   className="input w-full" placeholder="New password (min 6 characters)" />

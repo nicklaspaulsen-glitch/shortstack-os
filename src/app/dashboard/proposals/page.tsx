@@ -44,7 +44,7 @@ const STORAGE_KEY = "ss_proposals_v1";
 
 const STATUS_STYLES: Record<Proposal["status"], { label: string; tint: string }> = {
   draft: { label: "Draft", tint: "bg-muted/20 text-muted" },
-  sent: { label: "Sent", tint: "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" },
+  sent: { label: "Sent", tint: "bg-[rgba(37,99,235,0.08)] text-brand-accent" },
   signed: { label: "Signed", tint: "bg-emerald-500/15 text-emerald-700" },
   declined: { label: "Declined", tint: "bg-rose-500/15 text-rose-700" },
 };
@@ -131,7 +131,7 @@ export default function ProposalsPage() {
       </div>
     </div><div className="mx-auto max-w-5xl space-y-5 px-6 pb-10 pt-5">
               {/* Beta banner */}
-              <div className="rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-4 py-3 text-[12px] text-[#2563EB]">
+              <div className="rounded-xl border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-4 py-3 text-[12px] text-brand-accent">
                 <span className="font-semibold">Beta:</span> proposals are stored locally on this
                 device. E-sign and PandaDoc wiring land next sprint — existing drafts will migrate.
               </div>
@@ -183,7 +183,7 @@ export default function ProposalsPage() {
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => setShowNew(true)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#3B82F6]"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#3B82F6]"
                 >
                   <Plus size={14} /> New proposal
                 </motion.button>
@@ -217,7 +217,7 @@ export default function ProposalsPage() {
                         whileHover={{ scale: 1.04 }}
                         whileTap={{ scale: 0.96 }}
                         onClick={() => setShowNew(true)}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white"
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white"
                       >
                         <Plus size={14} /> Create proposal
                       </motion.button>
@@ -251,11 +251,11 @@ export default function ProposalsPage() {
                   <li>Workflow triggers on <code>proposal_signed</code> (onboarding, invoice, welcome)</li>
                   <li>
                     Related:{" "}
-                    <Link href="/dashboard/deals" className="text-[#2563EB] underline">
+                    <Link href="/dashboard/deals" className="text-brand-accent underline">
                       Deals
                     </Link>
                     {" · "}
-                    <Link href="/dashboard/clients" className="text-[#2563EB] underline">
+                    <Link href="/dashboard/clients" className="text-brand-accent underline">
                       Clients
                     </Link>
                   </li>
@@ -289,7 +289,7 @@ function ProposalCard({
       className="glass rounded-xl hover:border-[rgba(37,99,235,0.14)] transition-colors"
     >
       <div className="flex items-center gap-3 p-4">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.08)] text-[#2563EB]">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[rgba(37,99,235,0.08)] text-brand-accent">
           <FileCheck size={16} />
         </div>
         <div className="min-w-0 flex-1">
@@ -315,7 +315,7 @@ function ProposalCard({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onMarkSent}
-              className="inline-flex items-center gap-1 rounded bg-[rgba(37,99,235,0.08)] px-2.5 py-1.5 text-[11px] text-[#2563EB] hover:bg-[rgba(37,99,235,0.14)]"
+              className="inline-flex items-center gap-1 rounded bg-[rgba(37,99,235,0.08)] px-2.5 py-1.5 text-[11px] text-brand-accent hover:bg-[rgba(37,99,235,0.14)]"
               title="Mark as sent"
             >
               <Send size={11} /> Send
@@ -486,7 +486,7 @@ function NewProposalForm({
           whileTap={{ scale: 0.97 }}
           onClick={submit}
           disabled={!canSubmit || submitting}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-[#2563EB] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#3B82F6] disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#3B82F6] disabled:opacity-40"
         >
           {submitting ? (
             <Loader size={14} className="animate-spin" />
