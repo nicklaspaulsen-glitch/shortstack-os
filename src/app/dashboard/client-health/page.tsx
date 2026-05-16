@@ -9,7 +9,6 @@ import {
   ArrowUpRight, ArrowDownRight, Target, Lightbulb, Calendar
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
-import StatStrip from "@/components/ui/stat-strip";
 import { PrismPanel } from "@/components/prism";
 import { Heart as HeartIcon } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -163,16 +162,50 @@ export default function ClientHealthPage() {
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">CLIENT HEALTH</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Client Health Monitor</h1>
       </div>
-    </div>{/* Summary stats */}<StatStrip
-            focal={{ label: "Avg Health", value: `${avgHealth}%`, sub: "Live score", icon: <Activity size={14} />, color: getHealthColor(avgHealth) }}
-            support={[
-              { label: "Total MRR", value: `$${totalMRR.toLocaleString()}`, icon: <DollarSign size={12} /> },
-              { label: "Healthy", value: String(healthyCount), icon: <CheckCircle size={12} />, color: "text-green-400" },
-              { label: "Warning", value: String(warningCount), icon: <AlertTriangle size={12} />, color: "text-yellow-400" },
-              { label: "Critical", value: String(criticalCount), icon: <ShieldAlert size={12} />, color: "text-red-400" },
-              { label: "At-Risk MRR", value: `$${atRiskMRR.toLocaleString()}`, icon: <DollarSign size={12} />, color: "text-red-400" },
-            ]}
-          />{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
+    </div>{/* Summary stats */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-3">
+          {/* Focal tile — Avg Health */}
+          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+            <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+            <div>
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">AVG HEALTH</p>
+              <p className={`font-display text-3xl font-bold tracking-[-0.03em] tabular-nums ${getHealthColor(avgHealth)}`}>{avgHealth}%</p>
+              <p className="text-[11px] text-text-muted mt-1.5">Live score</p>
+            </div>
+          </motion.div>
+          {/* Total MRR */}
+          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">TOTAL MRR</p>
+            <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">${totalMRR.toLocaleString()}</p>
+          </motion.div>
+          {/* Healthy */}
+          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">HEALTHY</p>
+            <p className="font-display text-2xl font-bold tracking-[-0.02em] text-green-400 tabular-nums">{healthyCount}</p>
+          </motion.div>
+        </div>
+        <div className="grid grid-cols-3 gap-3 mb-4">
+          {/* Warning */}
+          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">WARNING</p>
+            <p className="font-display text-2xl font-bold tracking-[-0.02em] text-yellow-400 tabular-nums">{warningCount}</p>
+          </motion.div>
+          {/* Critical */}
+          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">CRITICAL</p>
+            <p className="font-display text-2xl font-bold tracking-[-0.02em] text-red-400 tabular-nums">{criticalCount}</p>
+          </motion.div>
+          {/* At-Risk MRR */}
+          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.26, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">AT-RISK MRR</p>
+            <p className="font-display text-2xl font-bold tracking-[-0.02em] text-red-400 tabular-nums">${atRiskMRR.toLocaleString()}</p>
+          </motion.div>
+        </div>{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
               {tabs.map(t => (
                 <button key={t.id} onClick={() => setActiveTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${

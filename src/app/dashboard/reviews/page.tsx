@@ -26,7 +26,7 @@ import {
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import EmptyState from "@/components/ui/empty-state";
-import StatStrip from "@/components/ui/stat-strip";
+
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* ─────────────────────────────────────────────────────────────── */
@@ -210,18 +210,36 @@ function ReviewManager() {
         Google Business Profile + Trustpilot auto-import lands next sprint.
       </div>
 
-      <StatStrip
-        focal={{
-          label: "Avg Rating",
-          value: stats.avg ? `${stats.avg.toFixed(1)}` : "—",
-          sub: `${stats.count} total reviews`,
-        }}
-        support={[
-          { label: "Total", value: String(stats.count) },
-          { label: "Unreplied", value: String(stats.unreplied), color: "text-[#2563EB]" },
-          { label: "1-2 Star", value: String(stats.critical), color: stats.critical > 0 ? "text-rose-600" : undefined },
-        ]}
-      />
+      <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+        {/* Focal tile — Avg Rating */}
+        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+          className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+          <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Rating</p>
+            <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{stats.avg ? stats.avg.toFixed(1) : "—"}</p>
+            <p className="text-[11px] text-text-muted mt-1.5">{stats.count} total reviews</p>
+          </div>
+        </motion.div>
+        {/* Support tile — Total */}
+        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.count}</p>
+        </motion.div>
+        {/* Support tile — Unreplied */}
+        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Unreplied</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{stats.unreplied}</p>
+        </motion.div>
+        {/* Support tile — 1-2 Star */}
+        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">1-2 Star</p>
+          <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${stats.critical > 0 ? "text-rose-600" : "text-text-primary"}`}>{stats.critical}</p>
+        </motion.div>
+      </div>
 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex gap-1">
