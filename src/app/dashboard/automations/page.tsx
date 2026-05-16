@@ -139,7 +139,7 @@ export default function AutomationsPage() {
     </div>
     <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
   <motion.div
-    className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+    className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
   >
@@ -151,16 +151,16 @@ export default function AutomationsPage() {
     </div>
   </motion.div>
   <motion.div
-    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
   >
     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active</p>
-    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-700 tabular-nums">{activeCount}</p>
+    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{activeCount}</p>
     <p className="text-[11px] text-text-muted mt-1.5">running now</p>
   </motion.div>
   <motion.div
-    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+    className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
   >
@@ -170,7 +170,7 @@ export default function AutomationsPage() {
   </motion.div>
 </div>
     {/* Search */}<div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#71717A]" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
@@ -180,7 +180,7 @@ export default function AutomationsPage() {
             </div>{loading ? (
               <div className="space-y-3">
                 {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="h-20 rounded-xl bg-[rgba(0,0,0,0.04)] animate-pulse" />
+                  <div key={i} className="h-20 rounded-xl bg-white/[0.05] animate-pulse" />
                 ))}
               </div>
             ) : filtered.length === 0 ? (
@@ -205,7 +205,7 @@ export default function AutomationsPage() {
               />
             ) : (
               <motion.div variants={containerVariants} initial="hidden" animate="visible" className="glass rounded-xl overflow-hidden">
-                <div className="divide-y divide-[rgba(0,0,0,0.06)]">
+                <div className="divide-y divide-border-subtle">
                   {filtered.map((w) => {
                     const triggerType = getTriggerType(w.nodes);
                     const stepCount = (w.nodes?.length || 0) + (Array.isArray(w.edges) ? w.edges.length : 0);
@@ -214,12 +214,12 @@ export default function AutomationsPage() {
                         key={w.id}
                         className="flex items-center gap-4 px-5 py-4 transition-colors"
                         variants={itemVariants}
-                        whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                        whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
                       >
                         {/* Status indicator */}
                         <div
                           className={`w-2 h-2 rounded-full shrink-0 ${
-                            w.active ? "bg-emerald-500" : "bg-[rgba(0,0,0,0.16)]"
+                            w.active ? "bg-emerald-500" : "bg-white/[0.25]"
                           }`}
                         />
 
@@ -230,15 +230,15 @@ export default function AutomationsPage() {
                               {w.name}
                             </span>
                             {/* Trigger chip */}
-                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-[rgba(0,0,0,0.06)] text-[#52525B] border border-[rgba(0,0,0,0.08)] shrink-0">
+                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-white/[0.06] text-text-secondary border border-border-subtle shrink-0">
                               {getTriggerIcon(triggerType)}
                               {triggerType}
                             </span>
                           </div>
                           {w.description && (
-                            <p className="text-xs text-[#71717A] truncate">{w.description}</p>
+                            <p className="text-xs text-text-muted truncate">{w.description}</p>
                           )}
-                          <div className="flex items-center gap-3 mt-1 text-xs text-[#71717A]">
+                          <div className="flex items-center gap-3 mt-1 text-xs text-text-muted">
                             {stepCount > 0 && (
                               <span className="flex items-center gap-1">
                                 <Play size={9} /> {stepCount} step{stepCount !== 1 ? "s" : ""}
@@ -254,7 +254,7 @@ export default function AutomationsPage() {
                         <div className="flex items-center gap-2 shrink-0">
                           <Link
                             href={`/dashboard/workflows`}
-                            className="text-xs text-[#52525B] hover:text-text-primary px-2 py-1 rounded border border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.16)] transition-colors"
+                            className="text-xs text-text-secondary hover:text-text-primary px-2 py-1 rounded border border-border-subtle hover:border-border transition-colors"
                           >
                             Edit
                           </Link>
@@ -264,7 +264,7 @@ export default function AutomationsPage() {
                             className={`p-1.5 rounded-lg transition-colors disabled:opacity-50 ${
                               w.active
                                 ? "text-emerald-400 hover:bg-emerald-500/10"
-                                : "text-[#71717A] hover:bg-[rgba(0,0,0,0.06)] hover:text-[#52525B]"
+                                : "text-text-muted hover:bg-white/[0.07] hover:text-text-secondary"
                             }`}
                             title={w.active ? "Pause" : "Enable"}
                           >
@@ -282,9 +282,9 @@ export default function AutomationsPage() {
                   })}
                 </div>
               </motion.div>
-            )}{/* Footer hint */}<p className="text-xs text-[#71717A] text-center">
+            )}{/* Footer hint */}<p className="text-xs text-text-muted text-center">
               To build advanced automations with branching logic, use the{" "}
-              <Link href="/dashboard/workflow-builder" className="text-[#52525B] hover:text-text-primary underline underline-offset-2">
+              <Link href="/dashboard/workflow-builder" className="text-text-secondary hover:text-text-primary underline underline-offset-2">
                 Workflow Builder
               </Link>
               .
