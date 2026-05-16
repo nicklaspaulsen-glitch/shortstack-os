@@ -13,7 +13,7 @@
  * fallback is <Sparkles/>. See also <EmojiIcon/> for the helper.
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Check, Sparkles, X, Zap, Image as ImageIcon, Type, Palette, Film, Music, Wand2, RefreshCw } from "lucide-react";
 import { mergeNonEmpty } from "@/lib/merge-patch";
@@ -64,6 +64,234 @@ export interface WizardStep {
   };
   /* Preview shown on right side — React node using current data */
   preview?: (data: Record<string, unknown>) => React.ReactNode;
+}
+
+/* ── Cinematic variant (fullscreen, large type, directional slide) ──── */
+
+/**
+ * CinematicWizard — fullscreen step-by-step flow.
+ * One question per screen, large typography, left/right slide transitions.
+ * Used by website builder for Higgsfield-style creation UX.
+ */
+export function CinematicWizard({
+  open,
+  title,
+  steps,
+  initialData = {},
+  onClose,
+  onComplete,
+  submitLabel = "Create",
+  icon,
+}: CreationWizardProps) {
+  const [stepIdx, setStepIdx] = useState(0);
+  const [data, setData] = useState<Record<string, unknown>>(initialData);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  // direction: 1 = forward (slide right→left), -1 = back (slide left→right)
+  const slideDirRef = useRef<1 | -1>(1);
+  // Force re-render so AnimatePresence picks up updated custom value
+  const [renderKey, setRenderKey] = useState(0);
+
+  useEffect(() => {
+    if (open) {
+      setStepIdx(0);
+      setData(initialData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  if (!open) return null;
+
+  const currentStep = steps[stepIdx];
+  const isLastStep = stepIdx === steps.length - 1;
+  const progress = ((stepIdx + 1) / steps.length) * 100;
+
+  function setValue(key: string, val: unknown) {
+    setData(prev => ({ ...prev, [key]: val }));
+  }
+
+  function canAdvance(): boolean {
+    if (currentStep.field.optional) return true;
+    const v = data[currentStep.field.key];
+    if (currentStep.field.type === "chip-select") return Array.isArray(v) && v.length > 0;
+    if (currentStep.field.type === "toggle") return true;
+    return !!v;
+  }
+
+  function goNext() {
+    if (!canAdvance()) return;
+    slideDirRef.current = 1;
+    setRenderKey(k => k + 1);
+    setStepIdx(s => Math.min(steps.length - 1, s + 1));
+  }
+
+  function goBack() {
+    slideDirRef.current = -1;
+    setRenderKey(k => k + 1);
+    setStepIdx(s => Math.max(0, s - 1));
+  }
+
+  async function runAiHelper() {
+    if (!currentStep.aiHelper) return;
+    setAiLoading(true);
+    try {
+      const patch = await currentStep.aiHelper.onClick(data);
+      setData(prev => ({ ...prev, ...Object.fromEntries(Object.entries(patch).filter(([, v]) => v !== undefined && v !== null && v !== "")) }));
+    } catch (err) {
+      console.error("[CinematicWizard] AI helper failed:", err);
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
+  async function handleComplete() {
+    setSubmitting(true);
+    try {
+      await onComplete(data);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  const dir = slideDirRef.current;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-[#0D1120] flex flex-col overflow-hidden">
+      {/* Top bar */}
+      <div className="flex items-center justify-between px-6 sm:px-10 pt-5 pb-4 border-b border-white/[0.05] shrink-0">
+        <div className="flex items-center gap-2.5">
+          {icon && <div className="text-[#60A5FA] opacity-70">{icon}</div>}
+          <span className="text-xs font-medium text-white/35 tracking-wide">{title}</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-white/25">
+            {stepIdx + 1} <span className="text-white/15">of</span> {steps.length}
+          </span>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="p-1.5 rounded-lg hover:bg-white/[0.06] text-white/25 hover:text-white/60 transition-colors"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div className="h-[2px] bg-white/[0.04] shrink-0">
+        <motion.div
+          className="h-full bg-[#3B82F6]"
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+        />
+      </div>
+
+      {/* Main content — centered in viewport */}
+      <div className="flex-1 flex items-center justify-center px-6 sm:px-16 md:px-24 overflow-y-auto py-10">
+        <div className="w-full max-w-2xl">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`cinematic-${stepIdx}-${renderKey}`}
+              initial={{ opacity: 0, x: dir * 64 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -dir * 48 }}
+              transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+            >
+              {/* Question */}
+              <div className="mb-8">
+                {currentStep.icon && (
+                  <div className="inline-flex w-11 h-11 rounded-xl bg-[rgba(59,130,246,0.1)] items-center justify-center text-[#60A5FA] mb-5">
+                    {currentStep.icon}
+                  </div>
+                )}
+                <h2 className="text-[2rem] sm:text-[2.5rem] font-bold text-white tracking-tight leading-tight mb-3">
+                  {currentStep.title}
+                </h2>
+                {currentStep.description && (
+                  <p className="text-[15px] text-white/40 leading-relaxed max-w-lg">
+                    {currentStep.description}
+                  </p>
+                )}
+              </div>
+
+              {/* Field */}
+              <FieldRenderer
+                field={currentStep.field}
+                value={data[currentStep.field.key]}
+                onChange={v => setValue(currentStep.field.key, v)}
+              />
+
+              {/* AI helper */}
+              {currentStep.aiHelper && (
+                <div className="mt-5 relative group">
+                  <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#2563EB] opacity-30 blur-md group-hover:opacity-60 transition-opacity" />
+                  <button
+                    onClick={runAiHelper}
+                    disabled={aiLoading}
+                    className="relative w-full flex items-center justify-center gap-2.5 py-3.5 px-5 rounded-xl bg-[#0D1827] border border-[rgba(59,130,246,0.25)] text-white text-sm font-medium hover:bg-[rgba(59,130,246,0.1)] hover:border-[rgba(59,130,246,0.45)] transition-all disabled:opacity-50"
+                  >
+                    {aiLoading ? (
+                      <><RefreshCw size={14} className="animate-spin" /> Thinking...</>
+                    ) : (
+                      <><Sparkles size={14} className="text-blue-300" /> {currentStep.aiHelper.label}</>
+                    )}
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Footer navigation */}
+      <div className="flex items-center justify-between px-6 sm:px-10 py-5 border-t border-white/[0.05] shrink-0">
+        {/* Back */}
+        <button
+          onClick={goBack}
+          disabled={stepIdx === 0}
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm text-white/35 hover:text-white/80 disabled:opacity-20 transition-colors"
+        >
+          <ChevronLeft size={14} /> Back
+        </button>
+
+        {/* Step dots */}
+        <div className="flex items-center gap-1.5">
+          {steps.map((_, i) => (
+            <div
+              key={i}
+              className={`rounded-full transition-all duration-300 ${
+                i === stepIdx
+                  ? "w-5 h-[5px] bg-[#3B82F6]"
+                  : i < stepIdx
+                  ? "w-[5px] h-[5px] bg-[#3B82F6]/40"
+                  : "w-[5px] h-[5px] bg-white/[0.10]"
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Continue / Generate */}
+        {!isLastStep ? (
+          <button
+            onClick={goNext}
+            disabled={!canAdvance()}
+            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#3B82F6] text-white text-sm font-semibold hover:bg-[#2563EB] disabled:opacity-35 transition-colors shadow-lg shadow-[rgba(59,130,246,0.18)]"
+          >
+            Continue <ChevronRight size={14} />
+          </button>
+        ) : (
+          <button
+            onClick={handleComplete}
+            disabled={!canAdvance() || submitting}
+            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#3B82F6] text-white text-sm font-semibold hover:bg-[#2563EB] disabled:opacity-35 transition-colors shadow-lg shadow-[rgba(59,130,246,0.18)]"
+          >
+            {submitting ? <RefreshCw size={14} className="animate-spin" /> : <Sparkles size={14} />}
+            {submitting ? "Creating..." : submitLabel}
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export interface CreationWizardProps {

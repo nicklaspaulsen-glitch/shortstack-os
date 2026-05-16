@@ -21,7 +21,7 @@ import { GeneratingRiveIcon, LiveRiveIcon } from "@/components/ui/rive-status-ic
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import CreationWizard, { CinematicWizard, type WizardStep } from "@/components/creation-wizard";
 import { VercelIcon, GoDaddyIcon } from "@/components/ui/platform-icons";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -969,10 +969,9 @@ export default function WebsitesPage() {
                 ))}
                 <span className="text-[10px] text-muted ml-2">Trusted by agencies & freelancers</span>
               </div>
-            </div>{/* Wizard */}<CreationWizard
+            </div>{/* Cinematic fullscreen wizard — Higgsfield-style one-question-per-screen flow */}<CinematicWizard
               open={wizardOpen}
               title="Website Builder"
-              subtitle="A few quick questions &mdash; then a live demo URL you can share in minutes."
               icon={<Globe size={18} />}
               submitLabel="Generate my site"
               initialData={wizardPreset}
