@@ -19,7 +19,6 @@ import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
-import StatStrip from "@/components/ui/stat-strip";
 
 /* -- Types -- */
 type InboxCategory = "all" | "scripts" | "emails" | "outreach" | "contracts" | "ideas" | "reports" | "briefings" | "exports";
@@ -567,14 +566,47 @@ export default function InboxPage() {
 
         {/* Stats � inbox view only */}
         {view === "inbox" && (
-          <StatStrip
-            focal={{ label: "Total", value: String(stats.total), icon: <Inbox size={14} />, color: "text-[#2563EB]" }}
-            support={[
-              { label: "Unread", value: String(stats.unread), icon: <AlertCircle size={12} />, color: "text-amber-400" },
-              { label: "Starred", value: String(stats.starred), icon: <Star size={12} />, color: "text-yellow-400" },
-              { label: "This Week", value: String(stats.thisWeek), icon: <Calendar size={12} />, color: "text-emerald-400" },
-            ]}
-          />
+          <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+            <motion.div
+              className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+              <div>
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Messages</p>
+                <p className="font-display text-3xl font-bold tracking-[-0.03em] text-[#2563EB] tabular-nums">{stats.total}</p>
+                <p className="text-[11px] text-text-muted mt-1.5">in inbox</p>
+              </div>
+            </motion.div>
+            <motion.div
+              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Unread</p>
+              <p className="font-display text-2xl font-bold tracking-[-0.02em] text-amber-500 tabular-nums">{stats.unread}</p>
+              <p className="text-[11px] text-text-muted mt-1.5">needs attention</p>
+            </motion.div>
+            <motion.div
+              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Starred</p>
+              <p className="font-display text-2xl font-bold tracking-[-0.02em] text-yellow-500 tabular-nums">{stats.starred}</p>
+              <p className="text-[11px] text-text-muted mt-1.5">flagged</p>
+            </motion.div>
+            <motion.div
+              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">This Week</p>
+              <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-600 tabular-nums">{stats.thisWeek}</p>
+              <p className="text-[11px] text-text-muted mt-1.5">received</p>
+            </motion.div>
+          </div>
         )}
 
         {/* Search & Filters � inbox view only */}

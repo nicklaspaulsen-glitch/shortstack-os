@@ -8,7 +8,6 @@ import {
   Layers, Star, Eye
 } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
-import StatStrip from "@/components/ui/stat-strip";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -230,14 +229,47 @@ export default function TrinityPage() {
               </div>
             )}{/* ═══ DASHBOARD TAB ═══ */}{tab === "Dashboard" && (
               <div className="space-y-4">
-                <StatStrip
-                  focal={{ label: "Total Agents", value: String(agents.length), color: "text-[#2563EB]" }}
-                  support={[
-                    { label: "Active Now", value: String(activeAgentCount), color: "text-emerald-700" },
-                    { label: "Actions Today", value: String(totalActionsToday) },
-                    { label: "Errors", value: String(errorAgentCount), color: errorAgentCount > 0 ? "text-rose-700" : "text-emerald-700" },
-                  ]}
-                />
+                <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                  <motion.div
+                    className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                    <div>
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Agents</p>
+                      <p className="font-display text-3xl font-bold tracking-[-0.03em] text-[#2563EB] tabular-nums">{agents.length}</p>
+                      <p className="text-[11px] text-text-muted mt-1.5">in workspace</p>
+                    </div>
+                  </motion.div>
+                  <motion.div
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active Now</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-700 tabular-nums">{activeAgentCount}</p>
+                    <p className="text-[11px] text-text-muted mt-1.5">running</p>
+                  </motion.div>
+                  <motion.div
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Actions Today</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{totalActionsToday}</p>
+                    <p className="text-[11px] text-text-muted mt-1.5">completed</p>
+                  </motion.div>
+                  <motion.div
+                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Errors</p>
+                    <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${errorAgentCount > 0 ? "text-rose-700" : "text-emerald-700"}`}>{errorAgentCount}</p>
+                    <p className="text-[11px] text-text-muted mt-1.5">agent errors</p>
+                  </motion.div>
+                </div>
                 <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-bold mb-3">Response Time Comparison (ms)</h3>
                   <div className="flex items-end gap-2 h-28">
@@ -328,14 +360,47 @@ export default function TrinityPage() {
               const maxAgentAmount = costByAgent.reduce((m, a) => Math.max(m, a.amount), 0);
               return (
                 <div className="space-y-4">
-                  <StatStrip
-                    focal={{ label: "This Month", value: `$${costTotal.toFixed(2)}` }}
-                    support={[
-                      { label: "Events (Month)", value: String(history.length), color: "text-[#2563EB]" },
-                      { label: "Agents", value: String(costByAgent.length) },
-                      { label: "Per Task Avg", value: `$${perTaskAvg.toFixed(2)}` },
-                    ]}
-                  />
+                  <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                    <motion.div
+                      className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                      <div>
+                        <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">This Month</p>
+                        <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{`$${costTotal.toFixed(2)}`}</p>
+                        <p className="text-[11px] text-text-muted mt-1.5">AI spend</p>
+                      </div>
+                    </motion.div>
+                    <motion.div
+                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Events</p>
+                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{history.length}</p>
+                      <p className="text-[11px] text-text-muted mt-1.5">this month</p>
+                    </motion.div>
+                    <motion.div
+                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Agents</p>
+                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{costByAgent.length}</p>
+                      <p className="text-[11px] text-text-muted mt-1.5">with spend</p>
+                    </motion.div>
+                    <motion.div
+                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Per Task</p>
+                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{`$${perTaskAvg.toFixed(2)}`}</p>
+                      <p className="text-[11px] text-text-muted mt-1.5">average</p>
+                    </motion.div>
+                  </div>
                   <div className="glass rounded-xl p-4">
                     <h3 className="text-xs font-bold mb-3">Cost by Agent</h3>
                     <div className="space-y-2">
@@ -423,14 +488,47 @@ export default function TrinityPage() {
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><BarChart3 size={14} className="text-[#2563EB]" /> Trinity Analytics</h2>
-                  <StatStrip
-                    focal={{ label: "Tasks This Month", value: String(history.length), color: "text-[#2563EB]" }}
-                    support={[
-                      { label: "Success Rate", value: `${successRateAvg}%`, color: "text-emerald-700" },
-                      { label: "In Queue", value: String(queue.length), color: "text-blue-700" },
-                      { label: "Monthly Cost", value: `$${costTotal.toFixed(2)}` },
-                    ]}
-                  />
+                  <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
+                    <motion.div
+                      className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+                      <div>
+                        <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Tasks This Month</p>
+                        <p className="font-display text-3xl font-bold tracking-[-0.03em] text-[#2563EB] tabular-nums">{history.length}</p>
+                        <p className="text-[11px] text-text-muted mt-1.5">completed</p>
+                      </div>
+                    </motion.div>
+                    <motion.div
+                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Success Rate</p>
+                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-700 tabular-nums">{successRateAvg}%</p>
+                      <p className="text-[11px] text-text-muted mt-1.5">this month</p>
+                    </motion.div>
+                    <motion.div
+                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">In Queue</p>
+                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-[#2563EB] tabular-nums">{queue.length}</p>
+                      <p className="text-[11px] text-text-muted mt-1.5">pending</p>
+                    </motion.div>
+                    <motion.div
+                      className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Cost</p>
+                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{`$${costTotal.toFixed(2)}`}</p>
+                      <p className="text-[11px] text-text-muted mt-1.5">AI spend</p>
+                    </motion.div>
+                  </div>
                 </div>
                 <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-bold mb-3">Agent Weighting Controls</h3>
