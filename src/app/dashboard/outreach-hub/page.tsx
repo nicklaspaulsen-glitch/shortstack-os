@@ -773,7 +773,7 @@ export default function OutreachHubPage() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D4ED8] text-white text-xs font-semibold hover:bg-[#1D4ED8]/90 transition-all disabled:opacity-40"
+                  className="btn-pill text-xs flex items-center gap-1.5 disabled:opacity-40"
                 >
                   {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
                   Save All
@@ -886,7 +886,7 @@ export default function OutreachHubPage() {
             </div>
 
             {/* -- Tabs (sticky) -- */}
-            <PrismPanel padding="p-1" className="sticky top-0 z-10 overflow-x-auto flex gap-1">
+            <div className="tab-pill-strip sticky top-0 z-10 overflow-x-auto">
               {TABS.map((t, index) => (
                 <motion.button
                   key={t.key}
@@ -896,15 +896,11 @@ export default function OutreachHubPage() {
                   transition={{ duration: 0.18, delay: index * 0.05 }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
-                  className={`px-4 py-2 text-xs rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
-                    tab === t.key
-                      ? "bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] font-medium"
-                      : "text-muted hover:text-foreground border border-transparent"
-                  }`}>
+                  className={`tab-pill flex items-center gap-2 whitespace-nowrap${tab === t.key ? " active" : ""}`}>
                   {t.icon} {t.label}
                 </motion.button>
               ))}
-            </PrismPanel>
+            </div>
 
             {/* ------------------------------------------------------------ */}
             {/*  TAB 1: CAMPAIGNS                                          */}
@@ -918,7 +914,7 @@ export default function OutreachHubPage() {
                     {campaigns.length > 0 && <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB]">{campaigns.length}</span>}
                   </h2>
                   <button onClick={() => setShowCampaignBuilder(!showCampaignBuilder)}
-                    className="btn-primary text-xs flex items-center gap-1.5">
+                    className="btn-pill text-xs flex items-center gap-1.5">
                     {showCampaignBuilder ? <X size={12} /> : <Plus size={12} />}
                     {showCampaignBuilder ? "Cancel" : "Create Campaign"}
                   </button>
@@ -1056,7 +1052,7 @@ export default function OutreachHubPage() {
 
                     {/* Create button */}
                     <motion.div className="flex justify-end" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <button onClick={createCampaign} className="btn-primary text-xs flex items-center gap-1.5">
+                      <button onClick={createCampaign} className="btn-pill text-xs flex items-center gap-1.5">
                         <Plus size={12} /> Create Campaign
                       </button>
                     </motion.div>
@@ -1072,7 +1068,7 @@ export default function OutreachHubPage() {
                       description="Create your first outreach campaign to start reaching leads across email, SMS, calls, and social DMs."
                       action={
                         <button onClick={() => setShowCampaignBuilder(true)}
-                          className="btn-primary text-xs flex items-center gap-1.5">
+                          className="btn-pill text-xs flex items-center gap-1.5">
                           <Plus size={12} /> Create Your First Campaign
                         </button>
                       }
@@ -1178,7 +1174,7 @@ export default function OutreachHubPage() {
                     <ListChecks size={14} className="text-[#2563EB]" /> Outreach Sequences
                   </h2>
                   <button onClick={() => setShowCustomBuilder(!showCustomBuilder)}
-                    className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
+                    className="btn-pill-ghost text-[10px] flex items-center gap-1">
                     {showCustomBuilder ? <><X size={10} /> Cancel</> : <><Plus size={10} /> Build Custom Sequence</>}
                   </button>
                 </div>
@@ -1313,11 +1309,11 @@ export default function OutreachHubPage() {
 
                     <div className="flex items-center gap-2">
                       <button onClick={addCustomStep}
-                        className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-[#2563EB] hover:border-[rgba(37,99,235,0.2)] flex items-center gap-1">
+                        className="btn-pill-ghost text-[10px] flex items-center gap-1">
                         <Plus size={10} /> Add Step
                       </button>
                       <button onClick={saveCustomSequence}
-                        className="btn-primary text-xs flex items-center gap-1.5 ml-auto">
+                        className="btn-pill text-xs flex items-center gap-1.5 ml-auto">
                         <Save size={12} /> Save Sequence
                       </button>
                     </div>
@@ -1333,7 +1329,7 @@ export default function OutreachHubPage() {
               <div className="space-y-4">
                 {/* Template sub-tabs */}
                 <div className="flex items-center gap-4">
-                  <PrismPanel padding="p-1" className="flex gap-1">
+                  <div className="tab-pill-strip">
                     {([
                       { key: "calls" as TemplateSubTab, label: "Calls", icon: <PhoneCall size={12} />, count: callTemplates.length },
                       { key: "sms" as TemplateSubTab, label: "SMS", icon: <Smartphone size={12} />, count: smsTemplates.length },
@@ -1348,16 +1344,12 @@ export default function OutreachHubPage() {
                         transition={{ duration: 0.18, delay: index * 0.05 }}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.97 }}
-                        className={`px-3 py-2 text-[11px] rounded-lg flex items-center gap-1.5 transition-all ${
-                          templateSubTab === t.key
-                            ? "bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] text-[#2563EB] font-medium"
-                            : "text-muted hover:text-foreground border border-transparent"
-                        }`}>
+                        className={`tab-pill flex items-center gap-1.5${templateSubTab === t.key ? " active" : ""}`}>
                         {t.icon} {t.label}
                         <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${templateSubTab === t.key ? "bg-[rgba(37,99,235,0.12)]" : "bg-[rgba(0,0,0,0.04)]"}`}>{t.count}</span>
                       </motion.button>
                     ))}
-                  </PrismPanel>
+                  </div>
                   <div className="ml-auto flex gap-1">
                     {(["all", "b2b", "b2c"] as const).map(f => (
                       <button key={f} onClick={() => setTemplateFilter(f)}

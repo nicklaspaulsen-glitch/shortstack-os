@@ -973,27 +973,27 @@ export default function CRMPage() {
               </div>
               <div className="flex items-center gap-1.5 flex-wrap">
                 {/* View mode */}
-                <div className="flex rounded-lg overflow-hidden border border-border">
+                <div className="tab-pill-strip">
                   {([
                     { key: "table" as ViewMode, icon: LayoutList, label: "Table" },
                     { key: "card" as ViewMode, icon: LayoutGrid, label: "Cards" },
                     { key: "pipeline" as ViewMode, icon: Layers, label: "Pipeline" },
                   ]).map(v => (
                     <button key={v.key} onClick={() => setViewMode(v.key)}
-                      className={`text-[9px] px-2 py-1.5 flex items-center gap-1 transition-all ${viewMode === v.key ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted hover:text-foreground"}`}>
+                      className={`tab-pill text-[9px] flex items-center gap-1${viewMode === v.key ? " active" : ""}`}>
                       <v.icon size={11} /> {v.label}
                     </button>
                   ))}
                 </div>
                 {/* Density */}
-                <div className="flex rounded-lg overflow-hidden border border-border">
+                <div className="tab-pill-strip">
                   {([
                     { key: "dense" as Density, icon: AlignJustify, tip: "Dense" },
                     { key: "compact" as Density, icon: Grid3X3, tip: "Compact" },
                     { key: "comfortable" as Density, icon: Columns3, tip: "Comfortable" },
                   ]).map(d => (
                     <button key={d.key} onClick={() => setDensity(d.key)} title={d.tip}
-                      className={`p-1.5 transition-all ${density === d.key ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "text-muted hover:text-foreground"}`}>
+                      className={`tab-pill p-1.5${density === d.key ? " active" : ""}`}>
                       <d.icon size={11} />
                     </button>
                   ))}
@@ -1938,11 +1938,11 @@ export default function CRMPage() {
                     <span className="text-[9px] text-muted">{automations.filter(r => r.enabled).length}/{automations.length} rules active</span>
                     <div className="flex items-center gap-2">
                       <button onClick={() => { setShowAutomation(false); setEditingAutomationId(null); }}
-                        className="text-[10px] px-4 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all">
+                        className="btn-pill-ghost text-[10px]">
                         Cancel
                       </button>
                       <button onClick={async () => { await persistAutomations(); setEditingAutomationId(null); setShowAutomation(false); }}
-                        className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium hover:bg-[#2563EB]-light transition-all">
+                        className="btn-pill text-[10px]">
                         Save Changes
                       </button>
                     </div>
@@ -1991,8 +1991,8 @@ export default function CRMPage() {
                   <input value={newSegmentName} onChange={e => setNewSegmentName(e.target.value)} placeholder="Segment name..."
                     className="input w-full text-xs px-3 py-2 mb-3" onKeyDown={e => { if (e.key === "Enter") saveSegment(); }} />
                   <div className="flex justify-end gap-2">
-                    <button onClick={() => setShowSegmentSave(false)} className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted">Cancel</button>
-                    <button onClick={saveSegment} className="text-[10px] px-4 py-1.5 rounded-lg bg-[#2563EB] text-white font-medium">Save</button>
+                    <button onClick={() => setShowSegmentSave(false)} className="btn-pill-ghost text-[10px]">Cancel</button>
+                    <button onClick={saveSegment} className="btn-pill text-[10px]">Save</button>
                   </div>
                 </div>
               </div>
