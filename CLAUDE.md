@@ -222,26 +222,27 @@ The visual foundation is locked. Authoritative source:
 mirrors the same hex values via `tailwind.config.ts`; CSS variables in
 `src/app/globals.css` mirror them again at `:root`.
 
-Direction: **Light × Card × Blue Accent × Blue/White/Gray** (May 10 flip).
-The dark OLED theme still exists under `[data-theme="dark"]` in globals.css
-and retains its blue accent for backward compat — but the DEFAULT (`:root`)
-theme is now light with a blue accent.
+Direction: **Dark OLED × Glassmorphic × Blue Accent** (May 16 Higgsfield overhaul).
+`:root` is now deep navy OLED dark by default. Light theme available via
+`[data-theme="light"]` / `.theme-light`. The dark frosted glass aesthetic
+applies globally — pill buttons, glass panels, split-pane layouts.
 
-### Locked color palette — light theme (`:root`, the default)
-- **Brand accent: BLUE** `#2563EB` — primary accent on light surfaces.
-  Three variants: `#2563EB` (primary), `#3B82F6` (hover/highlight),
-  `#1D4ED8` (dim/pressed, AA on light backgrounds).
-  Do **not** introduce red/gold/amber/lime accents on new pages.
-- **Surfaces (light):** white cards on `#F3F6FA` base.
-  `--bg-base #F3F6FA`, `--bg-surface-1 #FFFFFF`, `--bg-surface-2 #F8FAFC`.
-- **Borders:** `--border-subtle rgba(0,0,0,0.06)` /
-  `--border-strong rgba(0,0,0,0.14)`.
-- **Text:** `--text-primary #111827`, `--text-secondary #374151`,
-  `--text-muted #6B7280`.
-- **Dark theme accent:** `#3B82F6` under `[data-theme="dark"]`.
-  Same blue family as the light theme. Never reference dark-only values in new code.
+### Locked color palette — dark theme (`:root`, the default)
+- **Brand accent: BLUE** `#3B82F6` — primary accent on dark OLED surfaces.
+  Three variants: `#3B82F6` (primary), `#60A5FA` (hover/soft),
+  `#2563EB` (dim/pressed). Do **not** introduce red/gold/amber/lime accents.
+- **Surfaces (dark OLED):** navy glass panels on `#0D1120` base.
+  `--bg-base #0D1120`, `--bg-surface-1 #131827`, `--bg-surface-2 #1C2338`.
+- **Borders:** `--border-subtle rgba(99,146,255,0.10)` /
+  `--border-strong rgba(99,146,255,0.22)` (blue-tinted for depth).
+- **Text:** `--text-primary #F0F0F4`, `--text-secondary #A8A8B2`,
+  `--text-muted #4A4A5A`.
+- **Glass tokens:** `--glass-bg rgba(19,24,39,0.85)`, `--glass-blur blur(16px) saturate(160%)`.
+  Use `.glass-panel` utility class for frosted containers.
+- **Pill buttons:** `.btn-pill` (filled blue) / `.btn-pill-ghost` (outlined).
+  Tab strips: `.tab-pill-strip` + `.tab-pill` + `.tab-pill.active`.
 - **Accent alias:** `--brand-lime` is a back-compat alias that resolves
-  to `#2563EB` in the light theme. Do not use it in new code.
+  to `#3B82F6` on dark. Do not use it in new code.
 
 ### Font stack (locked)
 - **Satoshi** — display only (page titles, hero numbers, big counters).

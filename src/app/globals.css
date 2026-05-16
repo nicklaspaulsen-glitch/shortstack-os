@@ -203,56 +203,56 @@ a[role="button"]:hover,
  * the 100+ pages still using `text-gold-*` / `bg-amber-*` keep working
  * without a sweeping refactor. */
 :root {
-  /* Surfaces — lavender-white glass base (May 16 glass overhaul) */
-  --bg-base: #ECF0F8;
-  --bg-surface-1: #FFFFFF;
-  --bg-surface-2: #F4F6FC;
-  --bg-surface-3: #E8ECF5;
-  --bg-base-rgb: 236 240 248;
-  --bg-surface-1-rgb: 255 255 255;
-  --bg-surface-2-rgb: 244 246 252;
-  --bg-surface-3-rgb: 232 236 245;
+  /* Surfaces — deep navy OLED base (Higgsfield dark overhaul) */
+  --bg-base: #0D1120;
+  --bg-surface-1: #131827;
+  --bg-surface-2: #1C2338;
+  --bg-surface-3: #2A3350;
+  --bg-base-rgb: 13 17 32;
+  --bg-surface-1-rgb: 19 24 39;
+  --bg-surface-2-rgb: 28 35 56;
+  --bg-surface-3-rgb: 42 51 80;
 
-  /* Borders — periwinkle-tinted for glass depth */
-  --border-subtle: rgba(156, 167, 222, 0.22);
-  --border-strong: rgba(156, 167, 222, 0.42);
+  /* Borders — blue-tinted for dark glass depth */
+  --border-subtle: rgba(99, 146, 255, 0.10);
+  --border-strong: rgba(99, 146, 255, 0.22);
 
-  /* Text — pure black for body on white, softer scale for subtitles */
-  --text-primary: #0A0A0B;
-  --text-secondary: #52525B;
-  --text-muted: #71717A;
-  --text-primary-rgb: 10 10 11;
-  --text-secondary-rgb: 82 82 91;
-  --text-muted-rgb: 113 113 122;
+  /* Text — bright on dark OLED, softer secondary scale */
+  --text-primary: #F0F0F4;
+  --text-secondary: #A8A8B2;
+  --text-muted: #4A4A5A;
+  --text-primary-rgb: 240 240 244;
+  --text-secondary-rgb: 168 168 178;
+  --text-muted-rgb: 74 74 90;
 
-  /* Brand accent — PRISM BLUE. Sharp, distinctive blue for the prism split look. */
-  --brand-accent: #2563EB;
-  --brand-accent-soft: #3B82F6;
-  --brand-accent-dim: #1D4ED8;
-  --brand-accent-glow: rgba(37, 99, 235, 0.2);
-  --brand-accent-rgb: 37 99 235;
-  --brand-accent-soft-rgb: 59 130 246;
-  --brand-accent-dim-rgb: 29 78 216;
+  /* Brand accent — PRISM BLUE vibrant on dark OLED surfaces. */
+  --brand-accent: #3B82F6;
+  --brand-accent-soft: #60A5FA;
+  --brand-accent-dim: #2563EB;
+  --brand-accent-glow: rgba(59, 130, 246, 0.35);
+  --brand-accent-rgb: 59 130 246;
+  --brand-accent-soft-rgb: 96 165 250;
+  --brand-accent-dim-rgb: 37 99 235;
 
   /* Legacy lime aliases — kept so existing pages work but redirected to
      the prism blue accent. Do NOT introduce new uses of these vars in new code. */
-  --brand-lime: #2563EB;
-  --brand-lime-soft: #3B82F6;
-  --brand-lime-dim: #1D4ED8;
-  --brand-lime-glow: rgba(37, 99, 235, 0.2);
-  --brand-lime-rgb: 37 99 235;
-  --brand-lime-soft-rgb: 59 130 246;
-  --brand-lime-dim-rgb: 29 78 216;
+  --brand-lime: #3B82F6;
+  --brand-lime-soft: #60A5FA;
+  --brand-lime-dim: #2563EB;
+  --brand-lime-glow: rgba(59, 130, 246, 0.35);
+  --brand-lime-rgb: 59 130 246;
+  --brand-lime-soft-rgb: 96 165 250;
+  --brand-lime-dim-rgb: 37 99 235;
 
-  /* Editorial complement — neutral charcoal (replaces deep plum) */
-  --brand-plum: #E4E4E7;
-  --brand-plum-hover: #D4D4D8;
-  --brand-plum-rgb: 228 228 231;
-  --brand-plum-hover-rgb: 212 212 216;
+  /* Editorial complement — dark navy (dark theme surface) */
+  --brand-plum: #2A3350;
+  --brand-plum-hover: #3A4568;
+  --brand-plum-rgb: 42 51 80;
+  --brand-plum-hover-rgb: 58 69 104;
 
-  /* Indigo alias — redirected to prism blue accent. */
-  --brand-indigo: #2563EB;
-  --brand-indigo-rgb: 37 99 235;
+  /* Indigo alias — brighter blue for dark backgrounds */
+  --brand-indigo: #3B82F6;
+  --brand-indigo-rgb: 59 130 246;
 
   /* Functional */
   --status-success: #7FE5B8;
@@ -279,23 +279,23 @@ a[role="button"]:hover,
   --duration-standard: 300ms;
   --duration-hero: 500ms;
 
-  /* Premium card shadow tokens — used by .hover-lift and inline card styles */
-  --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px -4px rgba(0,0,0,0.12), 0 14px 32px -12px rgba(0,0,0,0.14);
-  --card-shadow-hover: 0 4px 24px rgba(108,114,172,0.10), 0 2px 8px rgba(0,0,0,0.08), 0 18px 40px -12px rgba(0,0,0,0.14);
+  /* Premium card shadow tokens — dark depths with ambient glow */
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.35), 0 4px 16px -4px rgba(0,0,0,0.40), 0 12px 40px -8px rgba(0,0,0,0.50);
+  --card-shadow-hover: 0 2px 4px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.30), 0 20px 48px -12px rgba(0,0,0,0.55), 0 0 32px -8px rgba(59,130,246,0.12);
 
-  /* ── Glass tokens — May 16 glassmorphism overhaul ── */
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border-inner: rgba(255, 255, 255, 0.70);
-  --glass-border-outer: rgba(156, 167, 222, 0.22);
-  --glass-blur: blur(14px) saturate(140%);
-  --glass-shadow: 0 4px 24px rgba(108, 114, 172, 0.10), 0 1px 4px rgba(0, 0, 0, 0.04);
+  /* ── Glass tokens — dark frosted glass (Higgsfield OLED overhaul) ── */
+  --glass-bg: rgba(19, 24, 39, 0.85);
+  --glass-border-inner: rgba(255, 255, 255, 0.08);
+  --glass-border-outer: rgba(59, 130, 246, 0.12);
+  --glass-blur: blur(16px) saturate(160%);
+  --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.40), 0 1px 4px rgba(0, 0, 0, 0.20);
   --glass-radius: 18px;
 
-  /* ── Periwinkle palette ── */
-  --color-periwinkle: #6C72AC;
-  --color-periwinkle-soft: #9CA7DE;
-  --color-periwinkle-bg: rgba(108, 114, 172, 0.09);
-  --color-periwinkle-border: rgba(156, 167, 222, 0.30);
+  /* ── Blue accent palette (replaces periwinkle on dark) ── */
+  --color-periwinkle: #3B82F6;
+  --color-periwinkle-soft: #60A5FA;
+  --color-periwinkle-bg: rgba(59, 130, 246, 0.09);
+  --color-periwinkle-border: rgba(59, 130, 246, 0.20);
 }
 
 * {
@@ -318,25 +318,24 @@ a[role="button"]:hover,
   --wl-primary: initial;
   --wl-accent: initial;
 
-  /* Light theme baseline — lavender-white glass base.
-   * May 16: shifted to periwinkle/lavender palette for glass OS overhaul.
-   * ThemeProvider overrides these at runtime when the user (or their
-   * OS) picks dark — see :root[data-theme="dark"] block below. */
-  --color-background: #ECF0F8;
-  --color-surface: #FFFFFF;
-  --color-surface-light: #F1F5F9;
-  --color-border: #E2E8F0;
-  --color-accent: #2563EB;
-  --color-text: #0A0A0B;
-  --color-muted: #52525B;
-  --color-foreground: #0A0A0B;
-  --color-background-rgb: 243 246 250;
-  --color-surface-rgb: 255 255 255;
-  --color-surface-light-rgb: 241 245 249;
-  --color-border-rgb: 226 232 240;
-  --color-accent-rgb: 37 99 235;
-  --color-text-rgb: 10 10 11;
-  --color-muted-rgb: 82 82 91;
+  /* Dark OLED baseline — Higgsfield dark overhaul default.
+   * ThemeProvider overrides these at runtime when the user picks light
+   * (see :root[data-theme="light"] block below). */
+  --color-background: #0D1120;
+  --color-surface: #131827;
+  --color-surface-light: #1C2338;
+  --color-border: #2A3350;
+  --color-accent: #3B82F6;
+  --color-text: #F0F0F4;
+  --color-muted: #A8A8B2;
+  --color-foreground: #F0F0F4;
+  --color-background-rgb: 13 17 32;
+  --color-surface-rgb: 19 24 39;
+  --color-surface-light-rgb: 28 35 56;
+  --color-border-rgb: 42 51 80;
+  --color-accent-rgb: 59 130 246;
+  --color-text-rgb: 240 240 244;
+  --color-muted-rgb: 168 168 178;
 }
 
 /* ═══════════ DARK THEME OVERRIDES ═══════════
@@ -468,13 +467,13 @@ a[role="button"]:hover,
 }
 
 html {
-  background: var(--bg-base, #FFFFFF);
+  background: var(--bg-base, #0D1120);
   min-height: 100vh;
 }
 
 body {
-  color: var(--text-primary, #0A0A0B);
-  background: var(--bg-base, #FFFFFF);
+  color: var(--text-primary, #F0F0F4);
+  background: var(--bg-base, #0D1120);
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -583,12 +582,12 @@ body {
       0 20px 48px -12px rgba(0,0,0,0.50);
   }
   .card:hover {
-    background: rgba(255, 255, 255, 0.88);
-    border-color: rgba(255, 255, 255, 0.80);
+    background: rgba(28, 35, 56, 0.92);
+    border-color: rgba(255, 255, 255, 0.12);
     box-shadow:
-      0 0 0 1px rgba(156, 167, 222, 0.28),
-      0 8px 32px rgba(108, 114, 172, 0.14),
-      0 2px 8px rgba(0, 0, 0, 0.05);
+      0 0 0 1px rgba(59, 130, 246, 0.18),
+      0 8px 32px rgba(0, 0, 0, 0.35),
+      0 2px 8px rgba(0, 0, 0, 0.20);
     transform: translateY(-2px);
   }
   :root[data-theme="dark"] .card:hover,
@@ -606,12 +605,12 @@ body {
     @apply card cursor-pointer;
   }
   .card-hover:hover {
-    background: rgba(255, 255, 255, 0.92);
-    border-color: rgba(255, 255, 255, 0.82);
+    background: rgba(34, 42, 68, 0.95);
+    border-color: rgba(255, 255, 255, 0.14);
     box-shadow:
-      0 0 0 1px rgba(156, 167, 222, 0.32),
-      0 10px 36px rgba(108, 114, 172, 0.16),
-      0 2px 8px rgba(0, 0, 0, 0.06);
+      0 0 0 1px rgba(59, 130, 246, 0.22),
+      0 10px 36px rgba(0, 0, 0, 0.40),
+      0 2px 8px rgba(0, 0, 0, 0.25);
     transform: translateY(-3px) scale(1.005);
   }
 
@@ -635,21 +634,21 @@ body {
   .card-static {
     @apply p-5;
     border-radius: var(--glass-radius, 18px);
+    background: rgba(19, 24, 39, 0.82);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    border: 1px solid rgba(59, 130, 246, 0.12);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.04),
+      0 2px 12px rgba(0, 0, 0, 0.30),
+      0 1px 3px rgba(0, 0, 0, 0.20);
+  }
+  [data-theme="light"] .card-static,
+  .theme-light .card-static {
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
-    border: 1px solid rgba(255, 255, 255, 0.65);
-    box-shadow:
-      0 0 0 1px rgba(156, 167, 222, 0.18),
-      0 2px 12px rgba(108, 114, 172, 0.08),
-      0 1px 3px rgba(0, 0, 0, 0.04);
-  }
-  :root[data-theme="dark"] .card-static,
-  .theme-dark .card-static {
-    background: rgba(17, 17, 20, 0.80);
-    backdrop-filter: blur(12px) saturate(1.5);
-    -webkit-backdrop-filter: blur(12px) saturate(1.5);
-    border-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.65);
   }
 
   /* ═══════════ BUTTONS ═══════════ */
@@ -738,13 +737,86 @@ body {
 
   .btn-ghost {
     @apply font-medium px-3 py-1.5 rounded-lg;
-    color: var(--color-muted, #6B7280);
+    color: var(--color-muted, #A8A8B2);
     transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .btn-ghost:hover {
-    color: var(--color-foreground, #1A1A2E);
-    background: var(--color-surface-light, #F5F3EE);
+    color: var(--color-foreground, #F0F0F4);
+    background: rgba(59, 130, 246, 0.08);
     box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset;
+  }
+
+  /* ═══════════ PILL BUTTONS (Higgsfield-style) ═══════════
+   * Fully rounded pill shape with frosted glass fill.
+   * Use .btn-pill for primary actions, .btn-pill-ghost for secondary. */
+  .btn-pill {
+    @apply font-semibold px-5 py-2 rounded-full text-sm;
+    background: var(--brand-accent, #3B82F6);
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow:
+      0 0 0 1px rgba(59,130,246,0.40) inset,
+      0 2px 12px rgba(59,130,246,0.30),
+      0 1px 0 rgba(255,255,255,0.12) inset;
+    transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+                background 0.15s;
+  }
+  .btn-pill:hover {
+    background: var(--brand-accent-soft, #60A5FA);
+    box-shadow:
+      0 0 0 1px rgba(96,165,250,0.50) inset,
+      0 4px 18px rgba(59,130,246,0.40),
+      0 1px 0 rgba(255,255,255,0.18) inset;
+    transform: translateY(-1px);
+  }
+  .btn-pill:active { transform: translateY(0); }
+
+  .btn-pill-ghost {
+    @apply font-medium px-4 py-2 rounded-full text-sm;
+    background: rgba(59,130,246,0.08);
+    color: var(--brand-accent-soft, #60A5FA);
+    border: 1px solid rgba(59,130,246,0.20);
+    transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .btn-pill-ghost:hover {
+    background: rgba(59,130,246,0.14);
+    border-color: rgba(59,130,246,0.35);
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+  .btn-pill-ghost:active { transform: translateY(0); }
+
+  /* ═══════════ GLASS PANEL (Higgsfield split-pane) ═══════════
+   * Dark frosted glass container for split-pane layouts. */
+  .glass-panel {
+    background: var(--glass-bg, rgba(19, 24, 39, 0.85));
+    backdrop-filter: var(--glass-blur, blur(16px) saturate(160%));
+    -webkit-backdrop-filter: var(--glass-blur, blur(16px) saturate(160%));
+    border: 1px solid var(--glass-border-inner, rgba(255,255,255,0.08));
+    border-radius: var(--glass-radius, 18px);
+    box-shadow: var(--glass-shadow, 0 4px 24px rgba(0,0,0,0.40));
+  }
+
+  /* ── Pill tab nav (Higgsfield horizontal tab strip) ── */
+  .tab-pill-strip {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 9999px;
+  }
+  .tab-pill {
+    @apply px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-150;
+    color: var(--text-secondary, #A8A8B2);
+  }
+  .tab-pill:hover { color: var(--text-primary, #F0F0F4); background: rgba(255,255,255,0.06); }
+  .tab-pill[data-active="true"],
+  .tab-pill.active {
+    background: var(--brand-accent, #3B82F6);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(59,130,246,0.30);
   }
 
   /* ═══════════ FOCUS-VISIBLE RING (WCAG 2.1 AA — 2.4.7) ═══════════ */
@@ -757,34 +829,34 @@ body {
   [role="button"]:focus-visible {
     @apply outline-none;
     box-shadow:
-      0 0 0 2px var(--color-background, #ffffff),
-      0 0 0 4px #2563EB;
+      0 0 0 2px var(--color-background, #0D1120),
+      0 0 0 4px #3B82F6;
   }
 
   /* ═══════════ INPUTS ═══════════ */
   .input {
     @apply text-sm rounded-xl px-3.5 py-2.5;
-    color: var(--color-text, #374151);
-    background: var(--color-surface-light, #F5F3EE);
-    border: 1px solid var(--color-border, #E8E5E0);
+    color: var(--color-text, #F0F0F4);
+    background: rgba(19, 24, 39, 0.70);
+    border: 1px solid rgba(59, 130, 246, 0.18);
     box-shadow:
-      inset 0 1px 2px rgba(0,0,0,0.15),
-      0 1px 0 rgba(255,255,255,0.03);
+      inset 0 1px 2px rgba(0,0,0,0.25),
+      0 1px 0 rgba(255,255,255,0.04);
     transition: box-shadow 0.2s cubic-bezier(0.22, 1, 0.36, 1),
                 border-color 0.2s,
                 background 0.2s;
   }
-  .input::placeholder { color: var(--color-muted, #9CA3AF); }
+  .input::placeholder { color: var(--color-muted, #4A4A5A); }
   .input:focus,
   .input:focus-visible {
     @apply outline-none;
-    border-color: var(--color-accent, #C9A84C);
-    background: var(--color-surface, #FFFFFF);
+    border-color: var(--color-accent, #3B82F6);
+    background: rgba(28, 35, 56, 0.85);
     box-shadow:
-      inset 0 1px 2px rgba(0,0,0,0.1),
-      0 0 0 2px var(--color-background, #ffffff),
-      0 0 0 4px #2563EB,
-      0 0 18px -4px color-mix(in srgb, var(--color-accent, #2563EB) 40%, transparent);
+      inset 0 1px 2px rgba(0,0,0,0.15),
+      0 0 0 2px var(--color-background, #0D1120),
+      0 0 0 4px #3B82F6,
+      0 0 18px -4px rgba(59, 130, 246, 0.40);
   }
 
   .badge {

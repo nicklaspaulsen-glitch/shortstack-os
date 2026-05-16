@@ -720,7 +720,7 @@ export default function Sidebar() {
         </Link>
         {hoveredItem === item.href && (
           <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 z-50 whitespace-nowrap pointer-events-none">
-            <div className="bg-white border border-[rgba(0,0,0,0.08)] rounded-lg px-2.5 py-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.10),0_1px_3px_rgba(0,0,0,0.06)] text-xs font-medium text-text-primary">
+            <div className="bg-[#1C2338] border border-[rgba(59,130,246,0.18)] rounded-lg px-2.5 py-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.50),0_1px_3px_rgba(0,0,0,0.30)] text-xs font-medium text-text-primary">
               {label}
               {unreadCount > 0 && <span className="ml-1.5 text-[10px] text-status-error font-bold">{unreadCount > 9 ? "9+" : unreadCount}</span>}
             </div>
@@ -745,11 +745,11 @@ export default function Sidebar() {
         collapsed ? "w-[56px]" : "w-60"
       } ${hoverExpanded && !pinned ? "shadow-[8px_0_36px_-10px_rgba(0,0,0,0.55)]" : ""}`}
       style={{
-        background: "rgba(240,242,248,0.90)",
-        backdropFilter: "blur(20px) saturate(140%)",
-        WebkitBackdropFilter: "blur(20px) saturate(140%)",
-        borderRight: "1px solid rgba(156,167,222,0.18)",
-        boxShadow: "inset -1px 0 0 rgba(156,167,222,0.10), 2px 0 24px rgba(108,114,172,0.06)",
+        background: "rgba(10,13,26,0.94)",
+        backdropFilter: "blur(24px) saturate(160%)",
+        WebkitBackdropFilter: "blur(24px) saturate(160%)",
+        borderRight: "1px solid rgba(59,130,246,0.10)",
+        boxShadow: "inset -1px 0 0 rgba(59,130,246,0.06), 2px 0 32px rgba(0,0,0,0.50)",
       }}
     >
       {/* LED light strip — lives on the sidebar's right edge, theme-colored */}

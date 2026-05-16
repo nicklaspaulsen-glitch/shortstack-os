@@ -291,17 +291,17 @@ export default function PageHero({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
         style={{
-          background: `linear-gradient(135deg, rgba(255,255,255,0.93) 0%, rgba(255,255,255,0.88) 100%)`,
-          backdropFilter: "blur(24px) saturate(1.8) brightness(1.01)",
-          WebkitBackdropFilter: "blur(24px) saturate(1.8) brightness(1.01)",
-          borderBottom: "1px solid rgba(0,0,0,0.065)",
+          background: `linear-gradient(135deg, rgba(13,17,32,0.90) 0%, rgba(19,24,39,0.85) 100%)`,
+          backdropFilter: "blur(24px) saturate(1.6)",
+          WebkitBackdropFilter: "blur(24px) saturate(1.6)",
+          borderBottom: "1px solid rgba(59,130,246,0.12)",
           boxShadow: [
-            "inset 0 1px 0 rgba(255,255,255,1)",
-            "inset 0 0 0 1px rgba(0,0,0,0.04)",
+            "inset 0 1px 0 rgba(255,255,255,0.06)",
+            "inset 0 0 0 1px rgba(59,130,246,0.06)",
             `inset 0 0 40px 0 ${sectionTint}`,
-            "0 1px 3px rgba(0,0,0,0.05)",
-            "0 4px 16px -4px rgba(0,0,0,0.07)",
-            "0 0 48px -12px rgba(37,99,235,0.09)",
+            "0 1px 3px rgba(0,0,0,0.30)",
+            "0 4px 16px -4px rgba(0,0,0,0.40)",
+            "0 0 48px -12px rgba(59,130,246,0.12)",
           ].join(", "),
         }}
       >
@@ -368,7 +368,7 @@ export default function PageHero({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.62 }}
                 transition={{ duration: 0.20, delay: 0.09 }}
-                style={{ color: "#52525B" }}
+                style={{ color: "#A8A8B2" }}
               >
                 {subtitle}
               </motion.p>
@@ -405,18 +405,18 @@ export default function PageHero({
     <div
       className={`relative overflow-hidden ${className}`}
       style={{
-        background: "rgba(255,255,255,0.83)",
-        backdropFilter: "blur(32px) saturate(1.9)",
-        WebkitBackdropFilter: "blur(32px) saturate(1.9)",
-        border: "1px solid rgba(255,255,255,0.78)",
-        borderTopColor: "rgba(255,255,255,0.96)",
+        background: "rgba(19,24,39,0.85)",
+        backdropFilter: "blur(32px) saturate(1.6)",
+        WebkitBackdropFilter: "blur(32px) saturate(1.6)",
+        border: "1px solid rgba(59,130,246,0.12)",
+        borderTopColor: "rgba(59,130,246,0.22)",
         borderRadius: "24px",
         boxShadow: [
-          "inset 0 1.5px 0 rgba(255,255,255,0.98)",
-          "inset 0 0 0 1px rgba(0,0,0,0.05)",
-          "0 2px 8px rgba(0,0,0,0.05)",
-          "0 8px 32px -8px rgba(0,0,0,0.10)",
-          "0 0 64px -16px rgba(37,99,235,0.12)",
+          "inset 0 1.5px 0 rgba(255,255,255,0.06)",
+          "inset 0 0 0 1px rgba(59,130,246,0.06)",
+          "0 2px 8px rgba(0,0,0,0.35)",
+          "0 8px 32px -8px rgba(0,0,0,0.45)",
+          "0 0 64px -16px rgba(59,130,246,0.15)",
         ].join(", "),
       }}
     >
@@ -454,12 +454,12 @@ export default function PageHero({
         />
       )}
 
-      {/* Light scrim — ensures text readability over photo backgrounds. */}
+      {/* Dark scrim — ensures text readability over photo backgrounds on OLED. */}
       {photoUrl && (
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background: `linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.85) 100%)`,
+            background: `linear-gradient(180deg, rgba(13,17,32,0.55) 0%, rgba(13,17,32,0.80) 100%)`,
           }}
           aria-hidden
         />
