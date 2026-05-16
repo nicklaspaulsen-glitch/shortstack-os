@@ -292,16 +292,12 @@ function isItemActive(href: string, pathname: string) {
 
 /* ─── Section header → hub page mapping. Sections with a value here
  * render as a clickable <Link> (expand/collapse moves to a chevron
- * button). Sections without a hub (Manage / Connect / Grow) keep the
- * all-button behavior. ─────────────────────────────────────────── */
-const SECTION_HUB_HREF: Record<string, string> = {
-  Sales: "/dashboard/sales",
-  Create: "/dashboard/create",
-  Visual: "/dashboard/visual",
-  Automate: "/dashboard/automate",
-  Manage: "/dashboard/manage",
-  Connect: "/dashboard/connect",
-};
+ * button). Sections without a hub keep the all-button behavior.
+ * May 16: cleared — all 6 hub pages (sales/create/visual/automate/
+ * manage/connect) are archived and were 404ing on click. Section
+ * headers now work as pure expand/collapse toggles. Re-add an entry
+ * when a real hub page is built at that route. ──────────────────── */
+const SECTION_HUB_HREF: Record<string, string> = {};
 
 /* ─── Icon name → Lucide component (curated list that matches the
  * icon picker in the sidebar customizer). Unknown names fall back. ── */
