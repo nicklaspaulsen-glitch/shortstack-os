@@ -348,7 +348,7 @@ function ServiceDoneDetail({
         </div>
         <a
           href={editorUrl}
-          className="text-[10px] px-2.5 py-1 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1"
+          className="text-[10px] px-2.5 py-1 rounded-lg border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1"
         >
           Open builder <ExternalLink size={10} />
         </a>

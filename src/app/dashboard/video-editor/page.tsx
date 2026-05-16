@@ -3400,12 +3400,12 @@ export default function VideoEditorPage() {
                             type="button"
                             onClick={() => setConfig(prev => ({ ...prev, type: vt.id, aspect_ratio: vt.aspect, duration: vt.duration }))}
                             className={`text-left p-4 rounded-xl border transition-all cursor-pointer ${
-                              selected ? "border-brand-accent bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]" : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                              selected ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.1)]" : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                             }`}
                           >
                             <div className="w-full h-20 flex items-center justify-center rounded-lg mb-2 overflow-hidden">
                               <div
-                                className="rounded-md bg-gradient-to-br from-[rgba(37,99,235,0.3)] to-amber-400/20 flex items-center justify-center"
+                                className="rounded-md bg-gradient-to-br from-[rgba(59,130,246,0.3)] to-amber-400/20 flex items-center justify-center"
                                 style={{
                                   aspectRatio: vt.aspect.replace(":", " / "),
                                   height: "100%",
@@ -3469,7 +3469,7 @@ export default function VideoEditorPage() {
                           onChange={e => setConfig(prev => ({ ...prev, title: e.target.value, script: e.target.value }))}
                           placeholder="e.g., 30-second hook for my new course launch"
                           rows={3}
-                          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.5)] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all resize-none"
+                          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
                           autoFocus
                         />
                         {/* Director's Brief tip card */}
@@ -3542,10 +3542,10 @@ export default function VideoEditorPage() {
                               key={opt.id}
                               onClick={() => setGuidedFootageSource(opt.id)}
                               className={`p-5 rounded-xl border text-center transition-all ${
-                                selected ? "border-brand-accent bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]" : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                                selected ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.1)]" : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                               }`}
                             >
-                              <div className="w-12 h-12 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center mx-auto mb-3 text-brand-accent">
+                              <div className="w-12 h-12 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center mx-auto mb-3 text-brand-accent">
                                 {opt.icon}
                               </div>
                               <p className="text-sm font-bold">{opt.label}</p>
@@ -3571,7 +3571,7 @@ export default function VideoEditorPage() {
                               key={p.id}
                               onClick={() => applyYouTuberPreset(p)}
                               className={`text-left rounded-xl border overflow-hidden transition-all ${
-                                selected ? "border-brand-accent ring-2 ring-[rgba(37,99,235,0.3)] shadow-lg shadow-[rgba(37,99,235,0.12)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"
+                                selected ? "border-brand-accent ring-2 ring-[rgba(59,130,246,0.3)] shadow-lg shadow-[rgba(59,130,246,0.12)]" : "border-border hover:border-[rgba(59,130,246,0.25)]"
                               }`}
                             >
                               <div className={`h-16 ${p.preview}`} />
@@ -3591,7 +3591,7 @@ export default function VideoEditorPage() {
                     description: "We'll assemble the edit. Fine-tune captions, music, SFX, and scenes in Advanced mode.",
                     icon: <Wand2 size={18} />,
                     component: (
-                      <div className="glass rounded-xl bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.2)] space-y-2">
+                      <div className="glass rounded-xl bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.2)] space-y-2">
                         <div className="grid grid-cols-2 gap-3">
                           <div>
                             <p className="text-[9px] uppercase tracking-wider text-muted">Type</p>
@@ -3636,7 +3636,7 @@ export default function VideoEditorPage() {
                 {result.url ? (
                   <video src={result.url} controls className="w-full rounded-xl border border-border bg-black" />
                 ) : (
-                  <div className="rounded-xl border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.03)] p-4">
+                  <div className="rounded-xl border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.03)] p-4">
                     <p className="text-[10px] uppercase tracking-wider text-brand-accent font-semibold mb-1.5">Scene plan ready</p>
                     <pre className="text-[11px] text-foreground/90 whitespace-pre-wrap font-sans leading-relaxed">{result.plan || "Plan generated � check Advanced mode to review full details."}</pre>
                   </div>
@@ -3758,7 +3758,7 @@ export default function VideoEditorPage() {
                 ] as const).map(st => (
                   <button key={st.id} onClick={() => setCreateSubTab(st.id)}
                     className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
-                      createSubTab === st.id ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.2)] font-semibold" : "text-muted border-border hover:border-[rgba(37,99,235,0.15)]"
+                      createSubTab === st.id ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)] font-semibold" : "text-muted border-border hover:border-[rgba(59,130,246,0.15)]"
                     }`}>
                     {st.icon} {st.label}
                   </button>
@@ -3775,7 +3775,7 @@ export default function VideoEditorPage() {
                         <h2 className="section-header flex items-center gap-2 mb-0"><GripVertical size={13} className="text-brand-accent" /> Scene Builder</h2>
                         <div className="flex items-center gap-2">
                           <span className="text-[9px] text-muted">Total: {sceneBuilderScenes.reduce((sum, s) => sum + s.duration, 0)}s</span>
-                          <button onClick={addSceneToBuilder} className="text-[9px] px-2 py-1 bg-[rgba(37,99,235,0.08)] text-brand-accent rounded-lg border border-[rgba(37,99,235,0.2)] flex items-center gap-1">
+                          <button onClick={addSceneToBuilder} className="text-[9px] px-2 py-1 bg-[rgba(59,130,246,0.08)] text-brand-accent rounded-lg border border-[rgba(59,130,246,0.2)] flex items-center gap-1">
                             <Plus size={10} /> Add Scene
                           </button>
                         </div>
@@ -3789,7 +3789,7 @@ export default function VideoEditorPage() {
                             onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
                             onDrop={() => handleSceneDrop(scene.id)}
                             className={`flex items-center gap-3 p-3 rounded-xl border transition-all cursor-grab active:cursor-grabbing ${
-                              draggedScene === scene.id ? "border-brand-accent/40 bg-[rgba(37,99,235,0.05)] opacity-60" : "border-border hover:border-[rgba(37,99,235,0.2)]"
+                              draggedScene === scene.id ? "border-brand-accent/40 bg-[rgba(59,130,246,0.05)] opacity-60" : "border-border hover:border-[rgba(59,130,246,0.2)]"
                             }`}
                           >
                             <GripVertical size={14} className="text-muted flex-shrink-0" />
@@ -3863,7 +3863,7 @@ export default function VideoEditorPage() {
 
                   {/* Scene Builder Sidebar */}
                   <div className="space-y-4">
-                    <div className="glass rounded-xl border-[rgba(37,99,235,0.1)]">
+                    <div className="glass rounded-xl border-[rgba(59,130,246,0.1)]">
                       <h3 className="section-header flex items-center gap-2"><Timer size={12} className="text-brand-accent" /> Scene Timeline</h3>
                       <div className="space-y-1">
                         {sceneBuilderScenes.map((scene, idx) => {
@@ -3871,7 +3871,7 @@ export default function VideoEditorPage() {
                           return (
                             <div key={scene.id} className="flex items-center gap-2 text-[9px]">
                               <span className="text-muted font-mono w-10">{startTime}s</span>
-                              <div className="flex-1 bg-[rgba(37,99,235,0.08)] rounded-full h-3 overflow-hidden" style={{ flex: scene.duration }}>
+                              <div className="flex-1 bg-[rgba(59,130,246,0.08)] rounded-full h-3 overflow-hidden" style={{ flex: scene.duration }}>
                                 <div className="bg-brand-accent h-full rounded-full flex items-center px-1.5">
                                   <span className="text-[7px] text-white font-medium truncate">{scene.name}</span>
                                 </div>
@@ -3921,11 +3921,11 @@ export default function VideoEditorPage() {
                         <h3 className="section-header flex items-center gap-2"><Layers size={13} className="text-brand-accent" /> Generated Scenes ({aiScriptScenes.length})</h3>
                         <div className="space-y-2">
                           {aiScriptScenes.map((scene, idx) => (
-                            <div key={idx} className="p-3 rounded-xl border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
+                            <div key={idx} className="p-3 rounded-xl border border-border hover:border-[rgba(59,130,246,0.2)] transition-all">
                               <div className="flex items-center justify-between mb-1">
                                 <span className="text-[10px] font-bold text-brand-accent">Scene {idx + 1}</span>
                                 <div className="flex items-center gap-2">
-                                  <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{scene.suggestedStyle}</span>
+                                  <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{scene.suggestedStyle}</span>
                                   <span className="text-[8px] text-muted font-mono">{scene.duration}s</span>
                                 </div>
                               </div>
@@ -3961,7 +3961,7 @@ export default function VideoEditorPage() {
 
                   {/* Script Sidebar */}
                   <div className="space-y-4">
-                    <div className="glass rounded-xl border-[rgba(37,99,235,0.1)]">
+                    <div className="glass rounded-xl border-[rgba(59,130,246,0.1)]">
                       <h3 className="section-header flex items-center gap-2"><BarChart3 size={12} className="text-brand-accent" /> Script Analysis</h3>
                       <div className="space-y-2 text-[9px]">
                         <div className="flex justify-between"><span className="text-muted">Word Count</span><span className="font-mono">{aiScriptInput.split(/\s+/).filter(Boolean).length}</span></div>
@@ -3992,7 +3992,7 @@ export default function VideoEditorPage() {
                             <label className="flex items-center gap-1.5 text-[9px] text-muted cursor-pointer">
                               <input type="checkbox" checked={audioLayers.bgMusic.enabled}
                                 onChange={e => setAudioLayers(prev => ({ ...prev, bgMusic: { ...prev.bgMusic, enabled: e.target.checked } }))}
-                                className="rounded border-border text-brand-accent focus:ring-[rgba(37,99,235,0.3)]" />
+                                className="rounded border-border text-brand-accent focus:ring-[rgba(59,130,246,0.3)]" />
                               Enabled
                             </label>
                           </div>
@@ -4026,7 +4026,7 @@ export default function VideoEditorPage() {
                             <label className="flex items-center gap-1.5 text-[9px] text-muted cursor-pointer">
                               <input type="checkbox" checked={audioLayers.voiceover.enabled}
                                 onChange={e => setAudioLayers(prev => ({ ...prev, voiceover: { ...prev.voiceover, enabled: e.target.checked } }))}
-                                className="rounded border-border text-brand-accent focus:ring-[rgba(37,99,235,0.3)]" />
+                                className="rounded border-border text-brand-accent focus:ring-[rgba(59,130,246,0.3)]" />
                               Enabled
                             </label>
                           </div>
@@ -4049,7 +4049,7 @@ export default function VideoEditorPage() {
                             <label className="flex items-center gap-1.5 text-[9px] text-muted cursor-pointer">
                               <input type="checkbox" checked={audioLayers.sfx.enabled}
                                 onChange={e => setAudioLayers(prev => ({ ...prev, sfx: { ...prev.sfx, enabled: e.target.checked } }))}
-                                className="rounded border-border text-brand-accent focus:ring-[rgba(37,99,235,0.3)]" />
+                                className="rounded border-border text-brand-accent focus:ring-[rgba(59,130,246,0.3)]" />
                               Enabled
                             </label>
                           </div>
@@ -4085,7 +4085,7 @@ export default function VideoEditorPage() {
                             {VOICEOVER_VOICES.map(v => (
                               <button key={v.id} onClick={() => setVoiceoverConfig(prev => ({ ...prev, voice: v.id }))}
                                 className={`p-2 rounded-xl border text-left transition-all ${
-                                  voiceoverConfig.voice === v.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
+                                  voiceoverConfig.voice === v.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border hover:border-[rgba(59,130,246,0.15)]"
                                 }`}>
                                 <p className="text-[10px] font-semibold">{v.name}</p>
                                 <p className="text-[8px] text-muted">{v.gender} - {v.desc}</p>
@@ -4133,7 +4133,7 @@ export default function VideoEditorPage() {
 
                   {/* Audio Sidebar */}
                   <div className="space-y-4">
-                    <div className="glass rounded-xl border-[rgba(37,99,235,0.1)]">
+                    <div className="glass rounded-xl border-[rgba(59,130,246,0.1)]">
                       <h3 className="section-header flex items-center gap-2"><Sliders size={12} className="text-brand-accent" /> Mix Summary</h3>
                       <div className="space-y-2 text-[9px]">
                         <div className="flex justify-between items-center">
@@ -4177,14 +4177,14 @@ export default function VideoEditorPage() {
                     <h2 className="section-header flex items-center gap-2"><SunMedium size={13} className="text-brand-accent" /> Color Grading Presets</h2>
                     <div className="grid grid-cols-2 gap-2">
                       <button onClick={() => setColorGrading("none")}
-                        className={`p-2.5 rounded-xl border text-left transition-all ${colorGrading === "none" ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
+                        className={`p-2.5 rounded-xl border text-left transition-all ${colorGrading === "none" ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border hover:border-[rgba(59,130,246,0.15)]"}`}>
                         <p className="text-[10px] font-semibold">None</p>
                         <p className="text-[8px] text-muted">Original colors</p>
                       </button>
                       {COLOR_PRESETS.map(preset => (
                         <button key={preset.id} onClick={() => setColorGrading(preset.id)}
                           className={`p-2.5 rounded-xl border text-left transition-all ${
-                            colorGrading === preset.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
+                            colorGrading === preset.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border hover:border-[rgba(59,130,246,0.15)]"
                           }`}>
                           <div className="flex items-center gap-1 mb-1">
                             {preset.colors.map((c, i) => (
@@ -4222,7 +4222,7 @@ export default function VideoEditorPage() {
                         {(["top", "center", "bottom"] as const).map(pos => (
                           <button key={pos} onClick={() => setSubtitlePreview(prev => ({ ...prev, position: pos }))}
                             className={`text-[9px] p-1.5 rounded-lg border transition-all capitalize ${
-                              subtitlePreview.position === pos ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted"
+                              subtitlePreview.position === pos ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
                             }`}>{pos}</button>
                         ))}
                       </div>
@@ -4265,7 +4265,7 @@ export default function VideoEditorPage() {
                       {TEXT_ANIMATIONS.map(anim => (
                         <button key={anim.id} onClick={() => setSelectedTextAnimation(anim.id)}
                           className={`text-[9px] p-2 rounded-lg border transition-all text-center ${
-                            selectedTextAnimation === anim.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent font-semibold" : "border-border text-muted hover:text-foreground"
+                            selectedTextAnimation === anim.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent font-semibold" : "border-border text-muted hover:text-foreground"
                           }`}>
                           {anim.name}
                         </button>
@@ -4280,7 +4280,7 @@ export default function VideoEditorPage() {
                       <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
                         <input type="checkbox" checked={watermarkSettings.enabled}
                           onChange={e => setWatermarkSettings(prev => ({ ...prev, enabled: e.target.checked }))}
-                          className="rounded border-border text-brand-accent focus:ring-[rgba(37,99,235,0.3)]" />
+                          className="rounded border-border text-brand-accent focus:ring-[rgba(59,130,246,0.3)]" />
                         Enable Watermark
                       </label>
                       {watermarkSettings.enabled && (
@@ -4341,7 +4341,7 @@ export default function VideoEditorPage() {
                           toast.success(`Aspect ratio set to ${ratio}`);
                         }}
                           className={`p-2 rounded-xl border text-center transition-all ${
-                            config.aspect_ratio === ratio ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
+                            config.aspect_ratio === ratio ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border hover:border-[rgba(59,130,246,0.15)]"
                           }`}>
                           <div className={`mx-auto mb-1 border border-current rounded ${
                             ratio === "9:16" ? "w-4 h-7" : ratio === "16:9" ? "w-7 h-4" : ratio === "4:5" ? "w-5 h-6" : "w-5 h-5"
@@ -4356,7 +4356,7 @@ export default function VideoEditorPage() {
                         {(["smart", "center", "top", "bottom"] as const).map(mode => (
                           <button key={mode} onClick={() => setAspectRatioConverter(prev => ({ ...prev, cropMode: mode }))}
                             className={`text-[8px] p-1.5 rounded-lg border capitalize transition-all ${
-                              aspectRatioConverter.cropMode === mode ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted"
+                              aspectRatioConverter.cropMode === mode ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
                             }`}>{mode}</button>
                         ))}
                       </div>
@@ -4368,13 +4368,13 @@ export default function VideoEditorPage() {
                     <h2 className="section-header flex items-center gap-2"><MonitorPlay size={13} className="text-brand-accent" /> Green Screen Backgrounds</h2>
                     <div className="grid grid-cols-2 gap-1.5">
                       <button onClick={() => setGreenScreenBg("none")}
-                        className={`text-[9px] p-2 rounded-lg border transition-all ${greenScreenBg === "none" ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted"}`}>
+                        className={`text-[9px] p-2 rounded-lg border transition-all ${greenScreenBg === "none" ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"}`}>
                         None
                       </button>
                       {GREEN_SCREEN_BG.map(bg => (
                         <button key={bg.id} onClick={() => setGreenScreenBg(bg.id)}
                           className={`text-[9px] p-2 rounded-lg border transition-all text-left ${
-                            greenScreenBg === bg.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted hover:text-foreground"
+                            greenScreenBg === bg.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted hover:text-foreground"
                           }`}>
                           <p className="font-semibold">{bg.name}</p>
                           <p className="text-[8px] opacity-70">{bg.desc}</p>
@@ -4405,7 +4405,7 @@ export default function VideoEditorPage() {
                           {YOUTUBER_PRESETS.length} creator presets � click any card to apply a full suite of caption, motion, color, audio, and smart settings
                         </p>
                         {selectedYouTuberPreset && (
-                          <span className="text-[9px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-2 py-0.5 rounded-full font-mono border border-[rgba(37,99,235,0.2)]">
+                          <span className="text-[9px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-2 py-0.5 rounded-full font-mono border border-[rgba(59,130,246,0.2)]">
                             {YOUTUBER_PRESETS.find(p => p.id === selectedYouTuberPreset)?.name} active
                           </span>
                         )}
@@ -4447,7 +4447,7 @@ export default function VideoEditorPage() {
                           return (
                             <div
                               key={preset.id}
-                              className={`group relative rounded-lg border overflow-hidden transition-all cursor-pointer hover:-translate-y-0.5 hover:shadow-lg ${active ? "border-brand-accent ring-2 ring-[rgba(37,99,235,0.4)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}
+                              className={`group relative rounded-lg border overflow-hidden transition-all cursor-pointer hover:-translate-y-0.5 hover:shadow-lg ${active ? "border-brand-accent ring-2 ring-[rgba(59,130,246,0.4)]" : "border-border hover:border-[rgba(59,130,246,0.25)]"}`}
                               onClick={() => applyYouTuberPreset(preset)}
                             >
                               {/* Visual preview gradient */}
@@ -4485,7 +4485,7 @@ export default function VideoEditorPage() {
 
                         {/* Custom / Reset card */}
                         <div
-                          className={`group relative rounded-lg border-2 border-dashed overflow-hidden transition-all cursor-pointer hover:-translate-y-0.5 ${selectedYouTuberPreset === "" ? "border-brand-accent/60 bg-[rgba(37,99,235,0.03)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}
+                          className={`group relative rounded-lg border-2 border-dashed overflow-hidden transition-all cursor-pointer hover:-translate-y-0.5 ${selectedYouTuberPreset === "" ? "border-brand-accent/60 bg-[rgba(59,130,246,0.03)]" : "border-border hover:border-[rgba(59,130,246,0.25)]"}`}
                           onClick={resetYouTuberPreset}
                         >
                           <div className="h-12 w-full bg-gradient-to-br from-surface-light via-surface to-surface-light flex items-center justify-center">
@@ -4738,7 +4738,7 @@ export default function VideoEditorPage() {
                         <div className="grid grid-cols-4 gap-1">
                           {(["none", "9:16", "1:1", "16:9"] as const).map(r => (
                             <button key={r} onClick={() => setEditorSettings(p => ({ ...p, smart: { ...p.smart, autoReframeRatio: r } }))}
-                              className={`text-[9px] py-1 rounded-lg border transition-all ${editorSettings.smart.autoReframeRatio === r ? "border-brand-accent/40 bg-[rgba(37,99,235,0.08)] text-brand-accent font-semibold" : "border-border text-muted"}`}>
+                              className={`text-[9px] py-1 rounded-lg border transition-all ${editorSettings.smart.autoReframeRatio === r ? "border-brand-accent/40 bg-[rgba(59,130,246,0.08)] text-brand-accent font-semibold" : "border-border text-muted"}`}>
                               {r === "none" ? "Off" : r}
                             </button>
                           ))}
@@ -4789,7 +4789,7 @@ export default function VideoEditorPage() {
                                         position: preset.position as "top" | "center" | "bottom",
                                       },
                                     }))}
-                                    className={`p-2 rounded-xl border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}
+                                    className={`p-2 rounded-xl border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(59,130,246,0.15)]"}`}
                                   >
                                     <div
                                       className="mb-1.5 rounded-md flex items-center justify-center h-8 relative overflow-hidden"
@@ -4884,7 +4884,7 @@ export default function VideoEditorPage() {
                             <div className="grid grid-cols-4 gap-1">
                               {(["top", "center", "bottom", "custom"] as const).map(pos => (
                                 <button key={pos} onClick={() => setEditorSettings(p => ({ ...p, captions: { ...p.captions, position: pos } }))}
-                                  className={`text-[9px] py-1.5 rounded-lg border capitalize transition-all ${editorSettings.captions.position === pos ? "border-brand-accent/40 bg-[rgba(37,99,235,0.08)] text-brand-accent font-semibold" : "border-border text-muted"}`}>
+                                  className={`text-[9px] py-1.5 rounded-lg border capitalize transition-all ${editorSettings.captions.position === pos ? "border-brand-accent/40 bg-[rgba(59,130,246,0.08)] text-brand-accent font-semibold" : "border-border text-muted"}`}>
                                   {pos}
                                 </button>
                               ))}
@@ -4942,7 +4942,7 @@ export default function VideoEditorPage() {
                                 <button
                                   key={a.id}
                                   onClick={() => setEditorSettings(p => ({ ...p, textAnimation: { ...p.textAnimation, preset: a.id } }))}
-                                  className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-brand-accent/40 bg-[rgba(37,99,235,0.08)] text-brand-accent font-semibold" : "border-border text-muted hover:border-[rgba(37,99,235,0.2)]"}`}
+                                  className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-brand-accent/40 bg-[rgba(59,130,246,0.08)] text-brand-accent font-semibold" : "border-border text-muted hover:border-[rgba(59,130,246,0.2)]"}`}
                                 >
                                   <p className="text-[9px] font-semibold leading-tight">{a.name}</p>
                                   <p className="text-[7px] opacity-70 leading-tight mt-0.5">{a.desc}</p>
@@ -5020,7 +5020,7 @@ export default function VideoEditorPage() {
                                 const active = editorSettings.motion.preset === m.id;
                                 return (
                                   <button key={m.id} onClick={() => setEditorSettings(p => ({ ...p, motion: { ...p.motion, preset: m.id } }))}
-                                    className={`p-2 rounded-xl border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
+                                    className={`p-2 rounded-xl border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(59,130,246,0.15)]"}`}>
                                     <p className="text-[10px] font-semibold">{m.name}</p>
                                     <p className="text-[8px] text-muted">{m.desc}</p>
                                   </button>
@@ -5068,7 +5068,7 @@ export default function VideoEditorPage() {
                               return (
                                 <button key={t.id}
                                   onClick={() => setEditorSettings(p => ({ ...p, transitions: { ...p.transitions, preset: t.id } }))}
-                                  className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-brand-accent/40 bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted hover:border-[rgba(37,99,235,0.2)]"}`}>
+                                  className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-brand-accent/40 bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted hover:border-[rgba(59,130,246,0.2)]"}`}>
                                   <div
                                     className="mx-auto mb-1 rounded h-5 w-full"
                                     style={{ background: `linear-gradient(90deg, ${t.color}33, ${t.color}aa)` }}
@@ -5129,7 +5129,7 @@ export default function VideoEditorPage() {
                                 return (
                                   <button key={lut.id}
                                     onClick={() => setEditorSettings(p => ({ ...p, color: { ...p.color, lut: lut.id } }))}
-                                    className={`p-2 rounded-xl border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
+                                    className={`p-2 rounded-xl border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(59,130,246,0.15)]"}`}>
                                     <div className="w-full h-6 rounded-md mb-1.5" style={{ background: lut.preview }} />
                                     <p className="text-[10px] font-semibold">{lut.name}</p>
                                     <p className="text-[8px] text-muted">{lut.desc}</p>
@@ -5225,7 +5225,7 @@ export default function VideoEditorPage() {
                                 const active = editorSettings.audio.bgGenre === g.id;
                                 return (
                                   <button key={g.id} onClick={() => setEditorSettings(p => ({ ...p, audio: { ...p.audio, bgGenre: g.id } }))}
-                                    className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-brand-accent/40 bg-[rgba(37,99,235,0.08)] text-brand-accent font-semibold" : "border-border text-muted hover:border-[rgba(37,99,235,0.2)]"}`}>
+                                    className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-brand-accent/40 bg-[rgba(59,130,246,0.08)] text-brand-accent font-semibold" : "border-border text-muted hover:border-[rgba(59,130,246,0.2)]"}`}>
                                     <p className="text-[9px] font-semibold">{g.name}</p>
                                     <p className="text-[7px] opacity-70">{g.desc}</p>
                                   </button>
@@ -5255,7 +5255,7 @@ export default function VideoEditorPage() {
                                 setEditorSettings(p => ({ ...p, aspect: { ...p.aspect, preset: ar.id } }));
                                 if (ar.id !== "custom") setConfig(prev => ({ ...prev, aspect_ratio: ar.id }));
                               }}
-                              className={`p-2 rounded-xl border text-center transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06] text-brand-accent" : "border-border text-muted hover:border-[rgba(37,99,235,0.2)]"}`}>
+                              className={`p-2 rounded-xl border text-center transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06] text-brand-accent" : "border-border text-muted hover:border-[rgba(59,130,246,0.2)]"}`}>
                               <div className="mx-auto mb-1 border border-current rounded" style={{ width: ar.w, height: ar.h }} />
                               <p className="text-[9px] font-semibold">{ar.name}</p>
                               <p className="text-[7px] opacity-70 leading-tight">{ar.desc}</p>
@@ -5309,7 +5309,7 @@ export default function VideoEditorPage() {
                                       : [...p.overlays.selected, ov.id],
                                   },
                                 }))}
-                                className={`p-2 rounded-xl border text-left transition-all relative ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
+                                className={`p-2 rounded-xl border text-left transition-all relative ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(59,130,246,0.15)]"}`}>
                                 {active && (
                                   <div className="absolute top-1 right-1 w-3.5 h-3.5 bg-brand-accent rounded-full flex items-center justify-center">
                                     <Check size={7} className="text-white" />
@@ -5338,11 +5338,11 @@ export default function VideoEditorPage() {
                           const active = editorSettings.platformExport === p.id;
                           return (
                             <button key={p.id} onClick={() => applyPlatformExportPreset(p.id)}
-                              className={`p-2 rounded-xl border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
+                              className={`p-2 rounded-xl border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(59,130,246,0.15)]"}`}>
                               <p className="text-[10px] font-semibold">{p.name}</p>
                               <p className="text-[8px] text-muted">{p.desc}</p>
                               <div className="flex gap-1 mt-1">
-                                <span className="text-[7px] px-1 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent">{p.aspect}</span>
+                                <span className="text-[7px] px-1 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">{p.aspect}</span>
                                 <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">{p.maxDur}s max</span>
                                 {p.captions && <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">CC baked</span>}
                               </div>
@@ -5366,7 +5366,7 @@ export default function VideoEditorPage() {
                                     ...prev,
                                     exportAdvanced: { ...prev.exportAdvanced, format: fmt.id },
                                   }))}
-                                  className={`p-2 rounded-lg border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
+                                  className={`p-2 rounded-lg border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(59,130,246,0.15)]"}`}>
                                   <p className="text-[9px] font-semibold">{fmt.name}</p>
                                   <p className="text-[8px] text-muted mt-0.5 leading-tight">{fmt.desc}</p>
                                 </button>
@@ -5387,7 +5387,7 @@ export default function VideoEditorPage() {
                                     ...prev,
                                     exportAdvanced: { ...prev.exportAdvanced, quality: q.id },
                                   }))}
-                                  className={`p-2 rounded-lg border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
+                                  className={`p-2 rounded-lg border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(59,130,246,0.15)]"}`}>
                                   <p className="text-[9px] font-semibold">{q.name}</p>
                                   <p className="text-[8px] text-muted">{q.desc}</p>
                                 </button>
@@ -5427,8 +5427,8 @@ export default function VideoEditorPage() {
                               onClick={() => setEffectCategoryFilter(cat)}
                               className={`text-[9px] px-2 py-1 rounded-lg border transition-all ${
                                 effectCategoryFilter === cat
-                                  ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.2)] font-semibold"
-                                  : "text-muted border-border hover:border-[rgba(37,99,235,0.15)]"
+                                  ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)] font-semibold"
+                                  : "text-muted border-border hover:border-[rgba(59,130,246,0.15)]"
                               }`}
                             >
                               {cat}
@@ -5453,7 +5453,7 @@ export default function VideoEditorPage() {
                           return (
                             <div
                               key={fx.id}
-                              className={`relative rounded-lg border overflow-hidden transition-all ${active ? "border-brand-accent ring-1 ring-[rgba(37,99,235,0.3)]" : "border-border hover:border-[rgba(37,99,235,0.2)]"}`}
+                              className={`relative rounded-lg border overflow-hidden transition-all ${active ? "border-brand-accent ring-1 ring-[rgba(59,130,246,0.3)]" : "border-border hover:border-[rgba(59,130,246,0.2)]"}`}
                             >
                               <button
                                 type="button"
@@ -5518,11 +5518,11 @@ export default function VideoEditorPage() {
                                 key={v.id}
                                 type="button"
                                 onClick={() => selectVoicePreset(v.id)}
-                                className={`p-2 rounded-lg border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}
+                                className={`p-2 rounded-lg border text-left transition-all ${active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(59,130,246,0.15)]"}`}
                               >
                                 <p className="text-[9px] font-semibold leading-tight">{v.name}</p>
                                 <div className="flex gap-0.5 mt-1 flex-wrap">
-                                  <span className="text-[7px] px-1 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent">{v.gender}</span>
+                                  <span className="text-[7px] px-1 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">{v.gender}</span>
                                   <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">{v.style}</span>
                                   <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">{v.accent}</span>
                                 </div>
@@ -5701,7 +5701,7 @@ export default function VideoEditorPage() {
                               <button
                                 key={cat.id}
                                 onClick={() => setEditorSettings(prev => ({ ...prev, broll: { ...prev.broll, activeCategory: cat.id } }))}
-                                className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${active ? "border-brand-accent/40 bg-brand-accent/[0.06] text-brand-accent" : "border-border hover:border-[rgba(37,99,235,0.15)] text-muted"}`}
+                                className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${active ? "border-brand-accent/40 bg-brand-accent/[0.06] text-brand-accent" : "border-border hover:border-[rgba(59,130,246,0.15)] text-muted"}`}
                               >
                                 <span>{cat.icon}</span> {cat.name}
                               </button>
@@ -5713,7 +5713,7 @@ export default function VideoEditorPage() {
                       {/* Pointer to the real Preset Picker � previously this was a
                           grid of 8 fake gradient tiles. The real clip browser lives
                           in the sidebar at Cmd/Ctrl+K (Preset Picker). */}
-                      <div className="p-3 rounded-lg border border-dashed border-brand-accent/25 bg-[rgba(37,99,235,0.03)] text-center">
+                      <div className="p-3 rounded-lg border border-dashed border-brand-accent/25 bg-[rgba(59,130,246,0.03)] text-center">
                         <p className="text-[10px] text-muted mb-2">
                           {editorSettings.broll.selectedClips.length} clip{editorSettings.broll.selectedClips.length === 1 ? "" : "s"} selected. For the full library
                           (real Pexels / Pixabay results), open the Preset Picker.
@@ -5721,7 +5721,7 @@ export default function VideoEditorPage() {
                         <button
                           type="button"
                           onClick={() => setShowPresetPicker(true)}
-                          className="text-[10px] px-3 py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] flex items-center justify-center gap-1.5 mx-auto"
+                          className="text-[10px] px-3 py-1.5 rounded-lg border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center justify-center gap-1.5 mx-auto"
                         >
                           <Wand2 size={10} /> Open Preset Picker <span className="text-[8px] opacity-70">?K</span>
                         </button>
@@ -5793,7 +5793,7 @@ export default function VideoEditorPage() {
 
                   {/* Sidebar � active-config summary */}
                   <div className="space-y-3">
-                    <div className="glass rounded-xl border-[rgba(37,99,235,0.1)]">
+                    <div className="glass rounded-xl border-[rgba(59,130,246,0.1)]">
                       <h3 className="section-header flex items-center gap-2"><ListChecks size={12} className="text-brand-accent" /> Active Config Summary</h3>
                       <div className="space-y-1.5 text-[9px]">
                         <SummaryRow label="Captions" on={editorSettings.captions.enabled} value={editorSettings.captions.enabled ? ADVANCED_CAPTION_PRESETS.find(x => x.id === editorSettings.captions.preset)?.name : "off"} />
@@ -5834,7 +5834,7 @@ export default function VideoEditorPage() {
                       </div>
                     </div>
 
-                    <div className="glass rounded-xl border-[rgba(37,99,235,0.1)]">
+                    <div className="glass rounded-xl border-[rgba(59,130,246,0.1)]">
                       <h3 className="section-header flex items-center gap-2"><AlertCircle size={12} className="text-brand-accent" /> Tips</h3>
                       <ul className="text-[9px] text-muted space-y-1 list-disc pl-3.5">
                         <li>Every panel is optional � toggle only what you need.</li>
@@ -5951,7 +5951,7 @@ export default function VideoEditorPage() {
                                   type="button"
                                   onClick={() => classifyReferenceFootage(i)}
                                   disabled={classifyingIdx === i}
-                                  className="text-[8px] px-1.5 py-0.5 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1 disabled:opacity-40"
+                                  className="text-[8px] px-1.5 py-0.5 rounded border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1 disabled:opacity-40"
                                 >
                                   {classifyingIdx === i ? <Loader2 size={8} className="animate-spin" /> : <Bot size={8} />}
                                   {classifyingIdx === i ? "Classifying" : "Classify"}
@@ -6010,7 +6010,7 @@ export default function VideoEditorPage() {
                           toast.success(`Brand kit "${kit.name}" applied`);
                         }}
                           className={`p-2.5 rounded-xl border text-left transition-all ${
-                            selectedBrandKit === kit.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
+                            selectedBrandKit === kit.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border hover:border-[rgba(59,130,246,0.15)]"
                           }`}>
                           <div className="flex items-center gap-1 mb-1">
                             {kit.colors.map((c, i) => (
@@ -6048,7 +6048,7 @@ export default function VideoEditorPage() {
                               onClick={() => setCaptionStyleFilter(f)}
                               className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${
                                 captionStyleFilter === f
-                                  ? "border-[rgba(37,99,235,0.25)] bg-brand-accent/[0.08] text-brand-accent font-semibold"
+                                  ? "border-[rgba(59,130,246,0.25)] bg-brand-accent/[0.08] text-brand-accent font-semibold"
                                   : "border-border text-muted hover:text-foreground"
                               }`}
                             >
@@ -6083,7 +6083,7 @@ export default function VideoEditorPage() {
                                   }));
                                 }}
                                 className={`p-2.5 rounded-xl border text-left transition-all ${
-                                  active ? "border-brand-accent/40 bg-brand-accent/[0.07]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
+                                  active ? "border-brand-accent/40 bg-brand-accent/[0.07]" : "border-border hover:border-[rgba(59,130,246,0.15)]"
                                 }`}
                               >
                                 <div
@@ -6106,7 +6106,7 @@ export default function VideoEditorPage() {
                                 <p className="text-[8px] text-muted">{c.desc}</p>
                                 <div className="flex gap-1 mt-1 flex-wrap">
                                   {c.best_for.map((b) => (
-                                    <span key={b} className="text-[7px] px-1 py-[1px] rounded bg-[rgba(37,99,235,0.08)] text-brand-accent/90">
+                                    <span key={b} className="text-[7px] px-1 py-[1px] rounded bg-[rgba(59,130,246,0.08)] text-brand-accent/90">
                                       {b}
                                     </span>
                                   ))}
@@ -6143,7 +6143,7 @@ export default function VideoEditorPage() {
                               onClick={() => setEffectsCategoryTab(cat)}
                               className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${
                                 effectsCategoryTab === cat
-                                  ? "border-[rgba(37,99,235,0.25)] bg-brand-accent/[0.08] text-brand-accent font-semibold"
+                                  ? "border-[rgba(59,130,246,0.25)] bg-brand-accent/[0.08] text-brand-accent font-semibold"
                                   : "border-border text-muted hover:text-foreground"
                               }`}
                             >
@@ -6174,7 +6174,7 @@ export default function VideoEditorPage() {
                                 className={`flex items-center gap-1.5 px-2 py-1 rounded-full border text-[10px] transition-all ${
                                   active
                                     ? "border-brand-accent/40 bg-brand-accent/[0.08] text-brand-accent"
-                                    : "border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
+                                    : "border-border text-muted hover:border-[rgba(59,130,246,0.2)] hover:text-foreground"
                                 }`}
                               >
                                 {e.preview && <span className={`inline-block w-3 h-3 rounded-sm ${e.preview}`} />}
@@ -6212,7 +6212,7 @@ export default function VideoEditorPage() {
                               onClick={() => setSfxCategoryTab(cat)}
                               className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${
                                 sfxCategoryTab === cat
-                                  ? "border-[rgba(37,99,235,0.25)] bg-brand-accent/[0.08] text-brand-accent font-semibold"
+                                  ? "border-[rgba(59,130,246,0.25)] bg-brand-accent/[0.08] text-brand-accent font-semibold"
                                   : "border-border text-muted hover:text-foreground"
                               }`}
                             >
@@ -6227,12 +6227,12 @@ export default function VideoEditorPage() {
                               <div
                                 key={s.id}
                                 className={`flex items-center gap-2 p-2 rounded-lg border transition-all ${
-                                  active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
+                                  active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(59,130,246,0.15)]"
                                 }`}
                               >
                                 <button
                                   onClick={() => playSfxPlaceholderTone(s)}
-                                  className="p-1 rounded-full bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-brand-accent/25 transition-all flex-shrink-0"
+                                  className="p-1 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-brand-accent/25 transition-all flex-shrink-0"
                                   title={`Preview ${s.name}`}
                                 >
                                   <Play size={10} />
@@ -6281,7 +6281,7 @@ export default function VideoEditorPage() {
                     {openAssetPanels.music && (
                       <>
                         {/* AI Music Generation (ACE-Step / MusicGen) */}
-                        <div className="mb-3 p-2 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.12)]">
+                        <div className="mb-3 p-2 rounded-lg bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.12)]">
                           <p className="text-[8px] uppercase tracking-wider text-brand-accent font-semibold mb-1.5">AI Generate</p>
                           <textarea
                             value={aiMusicPrompt}
@@ -6354,7 +6354,7 @@ export default function VideoEditorPage() {
                                   }));
                                 }}
                                 className={`w-full flex items-center gap-2 p-2 rounded-lg border text-left transition-all ${
-                                  active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
+                                  active ? "border-brand-accent/40 bg-brand-accent/[0.06]" : "border-border hover:border-[rgba(59,130,246,0.15)]"
                                 }`}
                               >
                                 <div className="flex-1 min-w-0">
@@ -6366,7 +6366,7 @@ export default function VideoEditorPage() {
                                 </div>
                                 <div className="flex gap-1 flex-shrink-0">
                                   {m.suggested_platforms.slice(0, 2).map((p) => (
-                                    <span key={p} className="text-[7px] px-1 py-[1px] rounded bg-[rgba(37,99,235,0.08)] text-brand-accent/90">{p}</span>
+                                    <span key={p} className="text-[7px] px-1 py-[1px] rounded bg-[rgba(59,130,246,0.08)] text-brand-accent/90">{p}</span>
                                   ))}
                                 </div>
                               </button>
@@ -6389,7 +6389,7 @@ export default function VideoEditorPage() {
                       {(stylesExpanded ? STYLES : STYLES.slice(0, 6)).map(s => (
                         <button key={s.id} onClick={() => setConfig({ ...config, style: s.id })}
                           className={`p-2 rounded-xl border text-left transition-all ${
-                            config.style === s.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
+                            config.style === s.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border hover:border-[rgba(59,130,246,0.15)]"
                           }`}>
                           <p className="text-[10px] font-semibold">{s.name}</p>
                           <p className="text-[8px] text-muted">{s.desc}</p>
@@ -6426,7 +6426,7 @@ export default function VideoEditorPage() {
                       {VIDEO_TYPES.map(t => (
                         <button key={t.id} onClick={() => selectType(t)}
                           className={`flex items-center gap-2 p-2.5 rounded-xl border transition-all ${
-                            config.type === t.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border"
+                            config.type === t.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border"
                           }`}>
                           <span className={config.type === t.id ? "text-brand-accent" : "text-muted"}>{t.icon}</span>
                           <div>
@@ -6460,13 +6460,13 @@ export default function VideoEditorPage() {
                     <div>
                       <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Reference Files (faces, logos, footage, effects)</label>
                       <div
-                        className="border-2 border-dashed border-border/40 rounded-xl p-3 text-center hover:border-[rgba(37,99,235,0.25)] transition-colors cursor-pointer"
-                        onDragOver={e => { e.preventDefault(); e.stopPropagation(); e.currentTarget.classList.add("border-brand-accent/40", "bg-[rgba(37,99,235,0.05)]"); }}
-                        onDragLeave={e => { e.currentTarget.classList.remove("border-brand-accent/40", "bg-[rgba(37,99,235,0.05)]"); }}
+                        className="border-2 border-dashed border-border/40 rounded-xl p-3 text-center hover:border-[rgba(59,130,246,0.25)] transition-colors cursor-pointer"
+                        onDragOver={e => { e.preventDefault(); e.stopPropagation(); e.currentTarget.classList.add("border-brand-accent/40", "bg-[rgba(59,130,246,0.05)]"); }}
+                        onDragLeave={e => { e.currentTarget.classList.remove("border-brand-accent/40", "bg-[rgba(59,130,246,0.05)]"); }}
                         onDrop={e => {
                           e.preventDefault();
                           e.stopPropagation();
-                          e.currentTarget.classList.remove("border-brand-accent/40", "bg-[rgba(37,99,235,0.05)]");
+                          e.currentTarget.classList.remove("border-brand-accent/40", "bg-[rgba(59,130,246,0.05)]");
                           handleFileUpload(Array.from(e.dataTransfer.files));
                         }}
                         onClick={() => {
@@ -6543,7 +6543,7 @@ export default function VideoEditorPage() {
                         <button
                           onClick={() => analyzeReferenceFile(0)}
                           disabled={refAnalyzing}
-                          className="mt-2 w-full text-[10px] py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center justify-center gap-1.5 disabled:opacity-40"
+                          className="mt-2 w-full text-[10px] py-1.5 rounded-lg border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-all flex items-center justify-center gap-1.5 disabled:opacity-40"
                         >
                           {refAnalyzing ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
                           Analyze this style with AI
@@ -6592,7 +6592,7 @@ export default function VideoEditorPage() {
                     {nextVideoTierLabel && (
                       <Link
                         href="/dashboard/upgrade"
-                        className="mt-2 flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-amber-400 py-1.5 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] transition-all"
+                        className="mt-2 flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-amber-400 py-1.5 rounded-lg border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] transition-all"
                       >
                         <Lock size={10} /> Upgrade to unlock longer videos ({nextVideoTierLabel})
                       </Link>
@@ -6645,7 +6645,7 @@ export default function VideoEditorPage() {
                               >
                                 <span
                                   className={`flex h-7 w-7 items-center justify-center rounded-md transition-all ${
-                                    active ? "bg-[rgba(37,99,235,0.08)]" : m.bg
+                                    active ? "bg-[rgba(59,130,246,0.08)]" : m.bg
                                   }`}
                                 >
                                   {isHovered && m.id !== "none" ? (
@@ -6703,13 +6703,13 @@ export default function VideoEditorPage() {
                       <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
                         <input type="checkbox" checked={config.include_voiceover}
                           onChange={e => setConfig({ ...config, include_voiceover: e.target.checked })}
-                          className="rounded border-border text-brand-accent focus:ring-[rgba(37,99,235,0.3)]" />
+                          className="rounded border-border text-brand-accent focus:ring-[rgba(59,130,246,0.3)]" />
                         <Volume2 size={11} /> AI Voiceover Notes
                       </label>
                       <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
                         <input type="checkbox" checked={config.include_cta}
                           onChange={e => setConfig({ ...config, include_cta: e.target.checked })}
-                          className="rounded border-border text-brand-accent focus:ring-[rgba(37,99,235,0.3)]" />
+                          className="rounded border-border text-brand-accent focus:ring-[rgba(59,130,246,0.3)]" />
                         <Zap size={11} /> Include CTA Overlay
                       </label>
                       {config.include_cta && (
@@ -6724,7 +6724,7 @@ export default function VideoEditorPage() {
                     <div className="glass rounded-xl space-y-3">
                       <h2 className="section-header flex items-center gap-2">
                         <Bot size={13} className="text-brand-accent" /> AI Project
-                        <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-brand-accent font-medium">Claude</span>
+                        <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium">Claude</span>
                       </h2>
                       {aiProject.hook && (
                         <div>
@@ -6798,19 +6798,19 @@ export default function VideoEditorPage() {
                   <div className="flex gap-2">
                     <button onClick={() => setMode("storyboard")}
                       className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
-                        mode === "storyboard" ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent" : "border-border text-muted hover:text-foreground"
+                        mode === "storyboard" ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent" : "border-border text-muted hover:text-foreground"
                       }`}>
                       <LayoutGrid size={14} /> AI Storyboard
                     </button>
                     <button onClick={() => setMode("plan")}
                       className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
-                        mode === "plan" ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent" : "border-border text-muted hover:text-foreground"
+                        mode === "plan" ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent" : "border-border text-muted hover:text-foreground"
                       }`}>
                       <Sparkles size={14} /> AI Plan
                     </button>
                     <button onClick={() => setMode("render")}
                       className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
-                        mode === "render" ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent" : "border-border text-muted hover:text-foreground"
+                        mode === "render" ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent" : "border-border text-muted hover:text-foreground"
                       }`}>
                       <Film size={14} /> Render MP4
                     </button>
@@ -6818,7 +6818,7 @@ export default function VideoEditorPage() {
 
                   <button onClick={generateVideo} disabled={generating || !config.title}
                     className={`w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl font-semibold transition-all ${
-                      mode === "render" ? "btn-primary" : "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.12)]"
+                      mode === "render" ? "btn-primary" : "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.12)]"
                     }`}>
                     {generating ? <Loader size={14} className="animate-spin" /> : mode === "storyboard" ? <LayoutGrid size={14} /> : mode === "render" ? <Film size={14} /> : <Sparkles size={14} />}
                     {generating ? "Creating..." : mode === "storyboard" ? "Generate Storyboard" : mode === "render" ? "Render Video" : "Generate Video Plan"}
@@ -6841,7 +6841,7 @@ export default function VideoEditorPage() {
                 <div className="space-y-4">
                   {/* Inspector � shows project meta when nothing's selected; swaps to
                       clip properties when a timeline clip is picked. Minimal v1. */}
-                  <div className="card border-[rgba(37,99,235,0.15)] p-3 space-y-1">
+                  <div className="card border-[rgba(59,130,246,0.15)] p-3 space-y-1">
                     <h3 className="section-header flex items-center gap-2 mb-0">
                       <Sliders size={11} className="text-brand-accent" /> Inspector
                     </h3>
@@ -6869,7 +6869,7 @@ export default function VideoEditorPage() {
                     </div>
                   </div>
 
-                  <div className="card-premium border-[rgba(37,99,235,0.1)] text-center py-6 relative overflow-hidden">
+                  <div className="card-premium border-[rgba(59,130,246,0.1)] text-center py-6 relative overflow-hidden">
                     <div className="absolute inset-0 bg-mesh opacity-20" />
                     <div className="relative">
                       <div className={`mx-auto mb-3 rounded-xl flex items-center justify-center overflow-hidden ${
@@ -6970,7 +6970,7 @@ export default function VideoEditorPage() {
                         onClick={() => setShowPresetPicker((v) => !v)}
                         className={`flex items-center gap-1 rounded border px-2 py-0.5 text-[9px] transition ${
                           showPresetPicker
-                            ? "border-brand-accent/40 bg-[rgba(37,99,235,0.08)] text-brand-accent"
+                            ? "border-brand-accent/40 bg-[rgba(59,130,246,0.08)] text-brand-accent"
                             : "border-border text-muted hover:text-foreground"
                         }`}
                         title="Open Preset Picker (Cmd/Ctrl+K)"
@@ -7139,7 +7139,7 @@ export default function VideoEditorPage() {
                     {(["lower-thirds", "transitions", "intros", "outros"] as const).map(cat => (
                       <button key={cat} onClick={() => setMotionGraphicsCategory(cat)}
                         className={`text-[9px] px-2.5 py-1 rounded-lg border capitalize transition-all ${
-                          motionGraphicsCategory === cat ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.2)] font-semibold" : "text-muted border-border hover:border-[rgba(37,99,235,0.15)]"
+                          motionGraphicsCategory === cat ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)] font-semibold" : "text-muted border-border hover:border-[rgba(59,130,246,0.15)]"
                         }`}>{cat.replace("-", " ")}</button>
                     ))}
                   </div>
@@ -7151,7 +7151,7 @@ export default function VideoEditorPage() {
                         );
                       }}
                         className={`p-2.5 rounded-xl border text-left transition-all relative ${
-                          selectedMotionGraphics.includes(mg.id) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
+                          selectedMotionGraphics.includes(mg.id) ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border hover:border-[rgba(59,130,246,0.15)]"
                         }`}>
                         {selectedMotionGraphics.includes(mg.id) && (
                           <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-brand-accent rounded-full flex items-center justify-center">
@@ -7179,7 +7179,7 @@ export default function VideoEditorPage() {
                         setTab("create");
                         toast.success(`Template "${tmpl.name}" loaded`);
                       }}
-                        className="w-full flex items-center gap-2.5 p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all text-left">
+                        className="w-full flex items-center gap-2.5 p-2 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] transition-all text-left">
                         <div className="w-10 h-10 rounded-lg bg-surface-light border border-border flex items-center justify-center flex-shrink-0">
                           <Film size={12} className="text-muted" />
                         </div>
@@ -7203,7 +7203,7 @@ export default function VideoEditorPage() {
                   <div className="grid grid-cols-2 gap-2">
                     {EFFECT_PRESETS.map(effect => (
                       <button key={effect.id} onClick={() => toast.success(`Effect applied: ${effect.name}`)}
-                        className="p-2.5 rounded-xl border border-border hover:border-[rgba(37,99,235,0.15)] text-left transition-all">
+                        className="p-2.5 rounded-xl border border-border hover:border-[rgba(59,130,246,0.15)] text-left transition-all">
                         <p className="text-[10px] font-semibold">{effect.name}</p>
                         <p className="text-[8px] text-muted">{effect.desc}</p>
                         <span className="text-[7px] bg-surface-light text-muted px-1 py-0.5 rounded mt-1 inline-block">{effect.category}</span>
@@ -7223,7 +7223,7 @@ export default function VideoEditorPage() {
                         toast.success(`Font set: ${font.name}`);
                       }}
                         className={`p-2 rounded-xl border text-left transition-all ${
-                          subtitlePreview.font === font.family ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"
+                          subtitlePreview.font === font.family ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border hover:border-[rgba(59,130,246,0.15)]"
                         }`}>
                         <p className="text-[10px] font-semibold" style={{ fontFamily: font.family }}>{font.name}</p>
                         <p className="text-[8px] text-muted">{font.category} / {font.weight}</p>
@@ -7248,7 +7248,7 @@ export default function VideoEditorPage() {
                         {(["720p", "1080p", "4k"] as const).map(res => (
                           <button key={res} onClick={() => setExportSettings(prev => ({ ...prev, resolution: res }))}
                             className={`text-[10px] p-2 rounded-xl border transition-all text-center uppercase font-semibold ${
-                              exportSettings.resolution === res ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted"
+                              exportSettings.resolution === res ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
                             }`}>{res}</button>
                         ))}
                       </div>
@@ -7259,7 +7259,7 @@ export default function VideoEditorPage() {
                         {(["low", "medium", "high"] as const).map(br => (
                           <button key={br} onClick={() => setExportSettings(prev => ({ ...prev, bitrate: br }))}
                             className={`text-[10px] p-2 rounded-xl border transition-all text-center capitalize ${
-                              exportSettings.bitrate === br ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted"
+                              exportSettings.bitrate === br ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
                             }`}>{br} {br === "low" ? "(~5Mb)" : br === "medium" ? "(~15Mb)" : "(~30Mb)"}</button>
                         ))}
                       </div>
@@ -7303,7 +7303,7 @@ export default function VideoEditorPage() {
                           <span className="text-[10px] font-medium flex-1 truncate">{item.title}</span>
                           <span className={`text-[8px] px-1.5 py-0.5 rounded ${
                             item.status === "done" ? "bg-success/10 text-success" :
-                            item.status === "rendering" ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" :
+                            item.status === "rendering" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
                             item.status === "failed" ? "bg-danger/10 text-danger" :
                             "bg-surface-light text-muted"
                           }`}>{item.status}</span>
@@ -7784,7 +7784,7 @@ export default function VideoEditorPage() {
                   type="button"
                   onClick={runFullPassAutoEdit}
                   disabled={fullPassRunning || !result?.url || !aiProject?.project_id}
-                  className="text-[10px] px-3 py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1.5 disabled:opacity-40"
+                  className="text-[10px] px-3 py-1.5 rounded-lg border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1.5 disabled:opacity-40"
                   title={
                     !result?.url || !aiProject?.project_id
                       ? "Generate a video + AI project first"
@@ -7870,7 +7870,7 @@ function CollapsiblePanel({
             <h2 className="section-header mb-0 flex items-center gap-2">
               {title}
               {typeof badge === "number" && badge > 0 && (
-                <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded-full font-mono">{badge}</span>
+                <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded-full font-mono">{badge}</span>
               )}
             </h2>
             {desc && <p className="text-[9px] text-muted mt-0.5">{desc}</p>}
@@ -7886,7 +7886,7 @@ function CollapsiblePanel({
                 type="checkbox"
                 checked={enabledToggle.value}
                 onChange={e => enabledToggle.onChange(e.target.checked)}
-                className="rounded border-border text-brand-accent focus:ring-[rgba(37,99,235,0.3)]"
+                className="rounded border-border text-brand-accent focus:ring-[rgba(59,130,246,0.3)]"
               />
               {enabledToggle.value ? "Enabled" : "Off"}
             </label>
@@ -7913,12 +7913,12 @@ function ToggleRow({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <label className={`flex items-start gap-2 p-2 rounded-lg border transition-all cursor-pointer ${checked ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]" : "border-border hover:border-[rgba(37,99,235,0.15)]"}`}>
+    <label className={`flex items-start gap-2 p-2 rounded-lg border transition-all cursor-pointer ${checked ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border hover:border-[rgba(59,130,246,0.15)]"}`}>
       <input
         type="checkbox"
         checked={checked}
         onChange={e => onChange(e.target.checked)}
-        className="mt-0.5 rounded border-border text-brand-accent focus:ring-[rgba(37,99,235,0.3)] flex-shrink-0"
+        className="mt-0.5 rounded border-border text-brand-accent focus:ring-[rgba(59,130,246,0.3)] flex-shrink-0"
       />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
@@ -7975,8 +7975,8 @@ function VideoPresetsTab({ onSelect }: { onSelect: (preset: VideoPreset) => void
             onClick={() => setActiveCategory(cat.id)}
             className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${
               activeCategory === cat.id
-                ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.2)] font-semibold"
-                : "text-muted border-border hover:border-[rgba(37,99,235,0.15)] hover:text-foreground"
+                ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)] font-semibold"
+                : "text-muted border-border hover:border-[rgba(59,130,246,0.15)] hover:text-foreground"
             }`}
           >
             {cat.name}
@@ -8000,7 +8000,7 @@ function VideoPresetsTab({ onSelect }: { onSelect: (preset: VideoPreset) => void
             </div>
             <p className="text-[9px] text-muted mb-2">{preset.desc}</p>
             <div className="flex flex-wrap gap-1">
-              <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{preset.config.style}</span>
+              <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{preset.config.style}</span>
               <span className="text-[8px] bg-surface-light text-muted px-1.5 py-0.5 rounded">{preset.config.caption_style}</span>
               <span className="text-[8px] bg-surface-light text-muted px-1.5 py-0.5 rounded">{preset.config.music_mood}</span>
             </div>
@@ -8015,7 +8015,7 @@ function VideoPresetsTab({ onSelect }: { onSelect: (preset: VideoPreset) => void
       )}
 
       {/* Batch ideas */}
-      <div className="glass rounded-xl border-[rgba(37,99,235,0.1)]">
+      <div className="glass rounded-xl border-[rgba(59,130,246,0.1)]">
         <h3 className="section-header flex items-center gap-2"><Zap size={12} className="text-brand-accent" /> Weekly Content Plan</h3>
         <p className="text-[10px] text-muted mb-3">Auto-generate a week of video content � one preset per day</p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">

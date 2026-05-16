@@ -27,14 +27,14 @@ export default function ManagedClientBanner() {
   if (profile?.role !== "admin" && profile?.role !== "team_member") return null;
 
   return (
-    <div className="bg-[rgba(37,99,235,0.05)] border-b border-[rgba(37,99,235,0.08)]">
+    <div className="bg-[rgba(59,130,246,0.05)] border-b border-[rgba(59,130,246,0.08)]">
       <div className="flex items-center justify-between px-5 lg:px-6 h-9">
         <div className="flex items-center gap-2">
           <UserCheck size={13} className="text-[#2563EB]" />
-          <span className="text-[10px] text-[rgba(37,99,235,0.8)] font-semibold uppercase tracking-wider">
+          <span className="text-[10px] text-[rgba(59,130,246,0.8)] font-semibold uppercase tracking-wider">
             Managing
           </span>
-          <ChevronRight size={10} className="text-[rgba(37,99,235,0.4)]" />
+          <ChevronRight size={10} className="text-[rgba(59,130,246,0.4)]" />
           <span className="text-xs font-semibold text-[#2563EB]">
             {managedClient.business_name}
           </span>
@@ -42,21 +42,21 @@ export default function ManagedClientBanner() {
             {managedClient.contact_name}
           </span>
           {managedClient.package_tier && (
-            <span className="text-[9px] bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded font-medium ml-1">
+            <span className="text-[9px] bg-[rgba(59,130,246,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded font-medium ml-1">
               {managedClient.package_tier}
             </span>
           )}
 
           {/* Quick nav links */}
-          <div className="hidden md:flex items-center gap-0.5 ml-3 pl-3 border-l border-[rgba(37,99,235,0.08)]">
+          <div className="hidden md:flex items-center gap-0.5 ml-3 pl-3 border-l border-[rgba(59,130,246,0.08)]">
             {QUICK_LINKS.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={`flex items-center gap-1 text-[9px] px-2 py-0.5 rounded transition-all ${
                   pathname === link.href
-                    ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] font-medium"
-                    : "text-muted hover:text-[#2563EB] hover:bg-[rgba(37,99,235,0.05)]"
+                    ? "bg-[rgba(59,130,246,0.08)] text-[#2563EB] font-medium"
+                    : "text-muted hover:text-[#2563EB] hover:bg-[rgba(59,130,246,0.05)]"
                 }`}
               >
                 {link.icon} {link.label}

@@ -202,7 +202,7 @@ export default function Notifications() {
                       if (n.link) window.location.href = n.link;
                     }}
                     className={`w-full text-left px-4 py-2.5 border-b border-border/10 hover:bg-surface-light/30 transition-colors flex items-start gap-2.5 ${
-                      !n.read ? "bg-[rgba(37,99,235,0.05)]" : ""
+                      !n.read ? "bg-[rgba(59,130,246,0.05)]" : ""
                     }`}
                   >
                     <div className="mt-0.5 shrink-0">

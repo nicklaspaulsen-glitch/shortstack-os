@@ -358,7 +358,7 @@ function GeneratingAnimation() {
             scaleX: { duration: 0.5, ease: "easeOut" },
           }}
           style={{ originX: 0 }}
-          className={`${b.width} ${b.height} ${b.className} bg-[rgba(37,99,235,0.18)]`}
+          className={`${b.width} ${b.height} ${b.className} bg-[rgba(59,130,246,0.18)]`}
         />
       ))}
       <div className="absolute bottom-2 left-0 right-0 flex items-center justify-center gap-1.5">
@@ -1000,7 +1000,7 @@ export default function WebsitesPage() {
                 </div>
                 <button
                   onClick={startBlank}
-                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] flex items-center gap-1"
+                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.25)] flex items-center gap-1"
                 >
                   Start from a blank canvas <ArrowRight size={10} />
                 </button>
@@ -1042,7 +1042,7 @@ export default function WebsitesPage() {
                     onClick={() => pickTemplate(t)}
                     onMouseEnter={() => setHoveredTemplate(t.id)}
                     onMouseLeave={() => setHoveredTemplate(null)}
-                    className="group relative text-left overflow-hidden border border-border bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-[rgba(37,99,235,0.12)] hover:-translate-y-1 hover:border-[rgba(37,99,235,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(37,99,235,0.6)] [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
+                    className="group relative text-left overflow-hidden border border-border bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-[rgba(59,130,246,0.12)] hover:-translate-y-1 hover:border-[rgba(59,130,246,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(59,130,246,0.6)] [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
                   >
                     {/* Preview image */}
                     <div className="relative aspect-[3/2] overflow-hidden">
@@ -1146,7 +1146,7 @@ export default function WebsitesPage() {
                     {/* Footer bar */}
                     <div className="flex items-center justify-between px-3 py-2.5 bg-surface">
                       <span className="text-[10px] text-muted flex items-center gap-1">
-                        <Clock size={10} className="text-[rgba(37,99,235,0.7)]" /> {t.avgLaunch}
+                        <Clock size={10} className="text-[rgba(59,130,246,0.7)]" /> {t.avgLaunch}
                       </span>
                       <span className="text-[10px] text-brand-accent font-semibold flex items-center gap-1 transition-transform duration-200 group-hover:translate-x-0.5">
                         Use this <ArrowRight size={11} />
@@ -1197,7 +1197,7 @@ export default function WebsitesPage() {
                       {STATUS_LABEL[effectiveStatus(active)] || active.status}
                     </span>
                     {effectiveStatus(active) === "preview" && active.demo_expires_at && (
-                      <span className="text-[9px] px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent inline-flex items-center gap-1">
+                      <span className="text-[9px] px-2 py-0.5 rounded-full border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent inline-flex items-center gap-1">
                         <Clock size={9} /> {daysUntil(active.demo_expires_at)} days left
                       </span>
                     )}
@@ -1361,7 +1361,7 @@ export default function WebsitesPage() {
                             {STATUS_LABEL[status] || p.status}
                           </span>
                           {status === "preview" && days !== null && (
-                            <span className="absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent backdrop-blur inline-flex items-center gap-1">
+                            <span className="absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent backdrop-blur inline-flex items-center gap-1">
                               <Clock size={9} /> {days}d
                             </span>
                           )}
@@ -1632,7 +1632,7 @@ function PricingModal({
                     <button
                       key={a.key}
                       onClick={() => onToggleAddon(a.key)}
-                      className={`w-full flex items-center justify-between p-2 rounded-lg border text-left transition ${active ? "border-brand-accent bg-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}
+                      className={`w-full flex items-center justify-between p-2 rounded-lg border text-left transition ${active ? "border-brand-accent bg-[rgba(59,130,246,0.08)]" : "border-border hover:border-[rgba(59,130,246,0.25)]"}`}
                     >
                       <span className="flex items-center gap-2 text-[11px]">
                         <span className={active ? "text-brand-accent" : "text-muted"}>{a.icon}</span>
@@ -1685,7 +1685,7 @@ function PricingModal({
               <li className="flex items-center gap-1 text-muted/60"><X size={9} /> No analytics</li>
             </ul>
           </div>
-          <div className="card border-[rgba(37,99,235,0.25)] bg-gradient-to-br from-amber-500/5 to-orange-500/5">
+          <div className="card border-[rgba(59,130,246,0.25)] bg-gradient-to-br from-amber-500/5 to-orange-500/5">
             <h3 className="text-[11px] font-semibold mb-2 flex items-center gap-1.5">
               <Crown size={11} className="text-brand-accent" /> Paid Plan
             </h3>

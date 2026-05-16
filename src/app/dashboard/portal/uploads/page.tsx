@@ -229,7 +229,7 @@ export default function ClientUploadsPage() {
     <div className="fade-in space-y-5">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center">
+        <div className="w-10 h-10 bg-[rgba(59,130,246,0.08)] rounded-xl flex items-center justify-center">
           <FolderOpen size={20} className="text-brand-accent" />
         </div>
         <div>
@@ -307,7 +307,7 @@ export default function ClientUploadsPage() {
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
             className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${
-              dragOver ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : "border-black/[0.08] hover:border-[rgba(37,99,235,0.25)]"
+              dragOver ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "border-black/[0.08] hover:border-[rgba(59,130,246,0.25)]"
             }`}
             onClick={() => {
               const input = document.createElement("input");
@@ -328,7 +328,7 @@ export default function ClientUploadsPage() {
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-[rgba(59,130,246,0.08)] rounded-xl flex items-center justify-center">
                   <Upload size={20} className="text-brand-accent" />
                 </div>
                 <p className="text-sm font-medium">Drop files here or click to upload</p>
@@ -394,7 +394,7 @@ export default function ClientUploadsPage() {
                     <div className="flex items-center gap-2 mt-1.5">
                       <StatusBadge status={item.status} />
                       {item.platforms?.map(p => (
-                        <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded capitalize">
+                        <span key={p} className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded capitalize">
                           {p.replace(/_/g, " ")}
                         </span>
                       ))}
@@ -432,7 +432,7 @@ export default function ClientUploadsPage() {
           ) : (
             content.map(item => (
               <div key={item.id} className="card card-hover p-3 flex items-center gap-3">
-                <div className="w-9 h-9 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center shrink-0">
                   <Film size={14} className="text-brand-accent" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -440,7 +440,7 @@ export default function ClientUploadsPage() {
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className="text-[9px] bg-black/[0.04] px-1.5 py-0.5 rounded text-[#6B7280]">{item.script_type}</span>
                     {item.target_platform && (
-                      <span className="text-[9px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded capitalize">
+                      <span className="text-[9px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded capitalize">
                         {item.target_platform.replace(/_/g, " ")}
                       </span>
                     )}
@@ -465,7 +465,7 @@ export default function ClientUploadsPage() {
         <div className="space-y-4">
           {zernioProfiles.length === 0 ? (
             <div className="card-static text-center py-12">
-              <div className="w-16 h-16 bg-[rgba(37,99,235,0.08)] flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-[rgba(59,130,246,0.08)] flex items-center justify-center mx-auto mb-4">
                 <Share2 size={28} className="text-brand-accent" />
               </div>
               <h3 className="text-sm font-semibold mb-1">Social accounts not connected</h3>

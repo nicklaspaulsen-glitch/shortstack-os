@@ -271,7 +271,7 @@ export default function PageHero({
     // Auto-detect section from pathname for tint
     const editorialPathname = typeof window !== "undefined" ? window.location.pathname : "";
     // Section tints: very subtle color shift in the glass based on route family
-    let sectionTint = "rgba(37,99,235,0.018)"; // default: blue
+    let sectionTint = "rgba(59,130,246,0.018)"; // default: blue
     if (/\/(voice|phone|eleven|voicemail|dialer|headphone)/.test(editorialPathname)) {
       sectionTint = "rgba(139,92,246,0.020)"; // voice: soft violet
     } else if (/\/(leads|crm|deals|outreach|sales)/.test(editorialPathname)) {
@@ -309,7 +309,7 @@ export default function PageHero({
         <div
           className="absolute top-0 left-0 right-0 h-px pointer-events-none"
           style={{
-            background: "linear-gradient(90deg, transparent 0%, rgba(37,99,235,0.55) 20%, rgba(59,130,246,0.40) 60%, rgba(99,102,241,0.25) 85%, transparent 100%)",
+            background: "linear-gradient(90deg, transparent 0%, rgba(59,130,246,0.55) 20%, rgba(59,130,246,0.40) 60%, rgba(99,102,241,0.25) 85%, transparent 100%)",
           }}
           aria-hidden
         />
@@ -332,10 +332,10 @@ export default function PageHero({
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.20, delay: 0.04, ease: [0.32, 0.72, 0, 1] }}
               style={{
-                background: "linear-gradient(135deg, rgba(37,99,235,0.09) 0%, rgba(37,99,235,0.05) 100%)",
-                border: "1px solid rgba(37,99,235,0.18)",
+                background: "linear-gradient(135deg, rgba(59,130,246,0.09) 0%, rgba(59,130,246,0.05) 100%)",
+                border: "1px solid rgba(59,130,246,0.18)",
                 color: "#2563EB",
-                boxShadow: "0 1px 4px rgba(37,99,235,0.10), inset 0 1px 0 rgba(255,255,255,0.9)",
+                boxShadow: "0 1px 4px rgba(59,130,246,0.10), inset 0 1px 0 rgba(255,255,255,0.9)",
               }}
             >
               {icon}

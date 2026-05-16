@@ -175,7 +175,7 @@ export default function WebhooksPage() {
                 <span>{error}</span>
               </div>
             )}{showCreate && (
-              <div className="card p-4 space-y-3 border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)]">
+              <div className="card p-4 space-y-3 border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]">
                 <div className="flex items-center gap-2">
                   <Webhook size={13} className="text-brand-accent" />
                   <h2 className="text-xs font-semibold text-brand-accent">New Webhook</h2>
@@ -202,7 +202,7 @@ export default function WebhooksPage() {
                         onClick={() => toggleEvent(e)}
                         className={`text-[10px] px-2 py-1.5 rounded border font-mono transition-all text-left ${
                           newEvents.includes(e)
-                            ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.35)] text-brand-accent"
+                            ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.35)] text-brand-accent"
                             : "border-border text-muted hover:text-foreground"
                         }`}
                       >
@@ -261,7 +261,7 @@ export default function WebhooksPage() {
                         <button
                           onClick={() => handleTest(w.id)}
                           disabled={testingId === w.id || !w.active}
-                          className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
+                          className="text-[9px] px-2 py-1 rounded border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
                         >
                           <Send size={9} />
                           {testingId === w.id ? "Sending…" : "Test"}
@@ -295,7 +295,7 @@ export default function WebhooksPage() {
                         {w.events.map((e) => (
                           <span
                             key={e}
-                            className="text-[9px] px-1.5 py-0.5 rounded border border-[rgba(37,99,235,0.25)] text-[rgba(37,99,235,0.9)] bg-[rgba(37,99,235,0.05)] font-mono"
+                            className="text-[9px] px-1.5 py-0.5 rounded border border-[rgba(59,130,246,0.25)] text-[rgba(59,130,246,0.9)] bg-[rgba(59,130,246,0.05)] font-mono"
                           >
                             {e}
                           </span>

@@ -596,7 +596,7 @@ export default function BillingPage() {
                                     href={inv.hosted_invoice_url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-1 rounded text-muted hover:text-brand-accent hover:bg-[rgba(37,99,235,0.08)] transition-colors"
+                                    className="p-1 rounded text-muted hover:text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-colors"
                                     title="View invoice"
                                   >
                                     <ExternalLink size={12} />
@@ -607,7 +607,7 @@ export default function BillingPage() {
                                     href={inv.invoice_pdf}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-1 rounded text-muted hover:text-brand-accent hover:bg-[rgba(37,99,235,0.08)] transition-colors"
+                                    className="p-1 rounded text-muted hover:text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-colors"
                                     title="Download PDF"
                                   >
                                     <Download size={12} />

@@ -699,7 +699,7 @@ export default function CourseBuilderPage() {
             <hr className="border-[rgba(0,0,0,0.08)]" />
 
             {/* Portal link note */}
-            <div className="bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] rounded-lg p-3">
+            <div className="bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] rounded-lg p-3">
               <p className="text-xs text-[#374151] mb-2">
                 Students access their courses at:
               </p>
@@ -813,7 +813,7 @@ function LessonItem({
   return (
     <div
       className={`group flex items-center gap-1.5 px-2 py-1.5 rounded-lg cursor-pointer transition-colors ${
-        selected ? "bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)]" : "hover:bg-[rgba(0,0,0,0.04)]"
+        selected ? "bg-[rgba(59,130,246,0.10)] border border-[rgba(59,130,246,0.25)]" : "hover:bg-[rgba(0,0,0,0.04)]"
       }`}
     >
       <GripVertical size={11} className="text-[#D1D5DB] flex-shrink-0" />

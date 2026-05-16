@@ -38,7 +38,7 @@ interface Props {
 export default function AgentSettings({ agentConfigs, editingAgent, setEditingAgent, saveAgentConfig }: Props) {
   return (
     <div className="space-y-4">
-      <div className="card bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.2)]">
+      <div className="card bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)]">
         <p className="text-sm">Configure AI agents for each client. Control what the AI does automatically — outreach, cold calling, content, publishing.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

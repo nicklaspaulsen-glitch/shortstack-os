@@ -474,7 +474,7 @@ export default function ReportsPage() {
                             onClick={() => setReportType(type)}
                             className={`flex-1 py-2 px-3 rounded-xl text-xs font-medium border transition-all ${
                               reportType === type
-                                ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent"
+                                ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent"
                                 : "bg-surface-light border-border/30 text-muted hover:text-foreground"
                             }`}
                           >

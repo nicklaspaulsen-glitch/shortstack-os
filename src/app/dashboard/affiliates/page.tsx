@@ -289,7 +289,7 @@ function ProgramsTab({
 
       {programs.length === 0 ? (
         <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
-          <Award size={32} className="mx-auto text-[rgba(37,99,235,0.6)] mb-3" />
+          <Award size={32} className="mx-auto text-[rgba(59,130,246,0.6)] mb-3" />
           <h3 className="text-lg font-semibold mb-1">No programs yet</h3>
           <p className="text-sm text-muted mb-4">
             Create your first program to start recruiting affiliates.
@@ -357,7 +357,7 @@ function ProgramCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.05 }}
       whileHover={{ y: -4, scale: 1.01 }}
-      className="glass rounded-xl p-5 space-y-3 hover:border-[rgba(37,99,235,0.4)] transition-colors"
+      className="glass rounded-xl p-5 space-y-3 hover:border-[rgba(59,130,246,0.4)] transition-colors"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="space-y-1 min-w-0">
@@ -631,7 +631,7 @@ function AffiliatesTab({
 
       {affiliates.length === 0 ? (
         <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
-          <Users size={32} className="mx-auto text-[rgba(37,99,235,0.6)] mb-3" />
+          <Users size={32} className="mx-auto text-[rgba(59,130,246,0.6)] mb-3" />
           <p className="text-sm text-muted">No affiliates yet</p>
         </div>
       ) : (
@@ -780,7 +780,7 @@ function StatusBadge({ status }: { status: AffiliateStatus | ReferralStatus | Pr
     paid: "bg-success/15 text-success",
     pending: "bg-warning/15 text-warning",
     paused: "bg-warning/15 text-warning",
-    signed_up: "bg-[rgba(37,99,235,0.08)] text-brand-accent",
+    signed_up: "bg-[rgba(59,130,246,0.08)] text-brand-accent",
     clicked: "bg-muted/15 text-muted",
     suspended: "bg-danger/15 text-danger",
     rejected: "bg-danger/15 text-danger",
@@ -1007,7 +1007,7 @@ function KanbanColumn({
 }) {
   const colorMap: Record<string, string> = {
     muted: "border-muted/40",
-    blue: "border-[rgba(37,99,235,0.40)]",
+    blue: "border-[rgba(59,130,246,0.40)]",
     success: "border-success/40",
   };
   const titleMap: Record<string, string> = {

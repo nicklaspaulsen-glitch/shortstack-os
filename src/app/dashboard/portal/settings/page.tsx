@@ -113,7 +113,7 @@ export default function ClientSettingsPage() {
           {/* DM Outreach */}
           <div className="flex items-start justify-between p-3 bg-surface-light rounded-lg border border-border">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+              <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center shrink-0 mt-0.5">
                 <MessageSquare size={14} className="text-brand-accent" />
               </div>
               <div>
@@ -125,8 +125,8 @@ export default function ClientSettingsPage() {
                       <button key={p} onClick={() => togglePlatform(p)}
                         className={`text-[10px] px-2 py-0.5 rounded-md border transition-colors capitalize ${
                           settings.dm_outreach_platforms.includes(p)
-                            ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.2)]"
-                            : "bg-surface-light text-muted border-border hover:border-[rgba(37,99,235,0.2)]"
+                            ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]"
+                            : "bg-surface-light text-muted border-border hover:border-[rgba(59,130,246,0.2)]"
                         }`}>
                         {p}
                       </button>
@@ -322,7 +322,7 @@ function DangerZone() {
       </div>
 
       {cancellation ? (
-        <div className="bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] rounded-lg p-3 space-y-2">
+        <div className="bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] rounded-lg p-3 space-y-2">
           <div className="flex items-start gap-2">
             <AlertTriangle size={14} className="text-brand-accent shrink-0 mt-0.5" />
             <div className="flex-1">

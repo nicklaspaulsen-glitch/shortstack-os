@@ -190,7 +190,7 @@ export default function SurveysPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={openCreate}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-sm font-medium transition-colors border border-[rgba(37,99,235,0.25)]"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent text-sm font-medium transition-colors border border-[rgba(59,130,246,0.25)]"
                 >
                   <Plus size={15} /> New Survey
                 </button>
@@ -236,7 +236,7 @@ export default function SurveysPage() {
                 <p className="text-[#6B7280] mb-4">No surveys yet. Create your first one.</p>
                 <button
                   onClick={openCreate}
-                  className="px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.10)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg bg-[rgba(59,130,246,0.10)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent text-sm font-medium transition-colors"
                 >
                   <Plus size={14} className="inline mr-1" /> New Survey
                 </button>

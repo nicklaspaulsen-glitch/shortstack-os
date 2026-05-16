@@ -79,7 +79,7 @@ function AreaChart({ pct }: { pct: number }) {
           opacity="0.65"
         />
         {/* Terminal dot + pulse ring */}
-        <circle cx={last.x} cy={last.y} r="5" fill="rgba(37,99,235,0.15)" />
+        <circle cx={last.x} cy={last.y} r="5" fill="rgba(59,130,246,0.15)" />
         <circle cx={last.x} cy={last.y} r="3" fill="#2563EB" opacity="0.9" />
       </svg>
       {/* Percent label pinned to the terminal dot */}
@@ -87,9 +87,9 @@ function AreaChart({ pct }: { pct: number }) {
         className="absolute right-0 text-[10px] font-mono font-semibold tabular-nums px-1.5 py-0.5 rounded-md"
         style={{
           top: 0,
-          background: "rgba(37,99,235,0.08)",
+          background: "rgba(59,130,246,0.08)",
           color: "#2563EB",
-          border: "1px solid rgba(37,99,235,0.18)",
+          border: "1px solid rgba(59,130,246,0.18)",
         }}
       >
         {pct}%
@@ -115,7 +115,7 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
           "inset 0 1px 0 rgba(255,255,255,1)",
           "0 4px 12px rgba(0,0,0,0.06)",
           "0 24px 56px -16px rgba(0,0,0,0.12)",
-          "0 0 48px -12px rgba(37,99,235,0.14)",
+          "0 0 48px -12px rgba(59,130,246,0.14)",
         ].join(", "),
       }}
       initial={reduceMotion ? false : { opacity: 0, y: 20 }}
@@ -191,7 +191,7 @@ export default function DashboardHeroMoment({ hero, index = 0 }: Props) {
             href={hero.cta.href}
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold transition-all duration-220 bg-brand-accent text-white hover:-translate-y-px"
             style={{
-              boxShadow: `0 4px 18px -4px rgba(37,99,235,0.50), 0 1px 0 rgba(255,255,255,0.25) inset`,
+              boxShadow: `0 4px 18px -4px rgba(59,130,246,0.50), 0 1px 0 rgba(255,255,255,0.25) inset`,
             }}
           >
             {hero.cta.label}

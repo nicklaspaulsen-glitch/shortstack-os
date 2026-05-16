@@ -115,7 +115,7 @@ export default function AdsManagerPage() {
                     transition={{ delay: i * 0.06 }}
                     className={`inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border-b-2 -mb-px transition-colors ${
                       isActive
-                        ? "border-brand-accent text-brand-accent bg-[rgba(37,99,235,0.08)]"
+                        ? "border-brand-accent text-brand-accent bg-[rgba(59,130,246,0.08)]"
                         : "border-transparent text-muted hover:text-text"
                     }`}
                   >

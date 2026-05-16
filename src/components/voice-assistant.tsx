@@ -279,7 +279,7 @@ export default function VoiceAssistant() {
         storageKey="voice_pill_v2"
       >
         <button onClick={() => setIsOpen(true)}
-          className="bg-gradient-to-r from-[#1D4ED8] to-[#2563EB] px-4 py-2.5 rounded-full shadow-lg shadow-[rgba(37,99,235,0.2)] flex items-center gap-2 hover:scale-105 transition-all active:scale-95 group">
+          className="bg-gradient-to-r from-[#1D4ED8] to-[#2563EB] px-4 py-2.5 rounded-full shadow-lg shadow-[rgba(59,130,246,0.2)] flex items-center gap-2 hover:scale-105 transition-all active:scale-95 group">
           <div className="w-6 h-6 rounded-full bg-black/20 flex items-center justify-center">
             <Mic size={14} className="text-black" />
           </div>
@@ -294,9 +294,9 @@ export default function VoiceAssistant() {
     <Draggable defaultX={288} defaultY={typeof window !== "undefined" ? window.innerHeight - 580 : 200} storageKey="voice_panel">
     <div className="w-[420px] bg-surface border border-border  shadow-2xl shadow-black/50 flex flex-col overflow-hidden fade-in" style={{ height: "560px" }}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-[rgba(29,78,216,0.2)] to-[rgba(37,99,235,0.1)] px-4 py-3 flex items-center justify-between border-b border-border">
+      <div className="bg-gradient-to-r from-[rgba(29,78,216,0.2)] to-[rgba(59,130,246,0.1)] px-4 py-3 flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-2">
-          <div className="w-9 h-9 bg-[rgba(37,99,235,0.12)] rounded-full flex items-center justify-center relative">
+          <div className="w-9 h-9 bg-[rgba(59,130,246,0.12)] rounded-full flex items-center justify-center relative">
             <Image src="/icons/shortstack-logo.svg" alt="Assistant" width={20} height={20} />
             {isSpeaking && <div className="absolute inset-0 rounded-full border-2 border-[#2563EB] animate-ping" />}
           </div>
@@ -403,12 +403,12 @@ export default function VoiceAssistant() {
               </button>
             ) : isSpeaking ? (
               <button onClick={stopSpeaking}
-                className="w-16 h-16 rounded-full bg-[#2563EB] flex items-center justify-center shadow-lg shadow-[rgba(37,99,235,0.3)] animate-pulse">
+                className="w-16 h-16 rounded-full bg-[#2563EB] flex items-center justify-center shadow-lg shadow-[rgba(59,130,246,0.3)] animate-pulse">
                 <StopCircle size={28} className="text-black" />
               </button>
             ) : (
               <button onClick={startListening} disabled={processing}
-                className="w-16 h-16 rounded-full bg-[#2563EB] flex items-center justify-center shadow-lg shadow-[rgba(37,99,235,0.3)] hover:scale-105 transition-all active:scale-95 disabled:opacity-50">
+                className="w-16 h-16 rounded-full bg-[#2563EB] flex items-center justify-center shadow-lg shadow-[rgba(59,130,246,0.3)] hover:scale-105 transition-all active:scale-95 disabled:opacity-50">
                 <Mic size={28} className="text-black" />
               </button>
             )}
@@ -430,7 +430,7 @@ export default function VoiceAssistant() {
               value={textInput}
               onChange={(e) => setTextInput(e.target.value)}
               placeholder="Type a message..."
-              className="flex-1 bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-foreground placeholder-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
+              className="flex-1 bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-foreground placeholder-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
               disabled={processing}
               autoFocus
             />

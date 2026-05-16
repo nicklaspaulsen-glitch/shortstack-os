@@ -573,7 +573,7 @@ export default function DMControllerPage() {
                   className={cn(
                     "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border",
                     activeTab === t.id
-                      ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent font-medium"
+                      ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent font-medium"
                       : "border-border text-muted hover:text-foreground"
                   )}
                 >
@@ -607,7 +607,7 @@ export default function DMControllerPage() {
                             onClick={() => togglePlatform(p.id)}
                             className={cn(
                               "flex items-center gap-2.5 p-3 rounded-xl border transition-all",
-                              active ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-border opacity-60 hover:opacity-90"
+                              active ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "border-border opacity-60 hover:opacity-90"
                             )}
                           >
                             {p.icon(22)}
@@ -647,7 +647,7 @@ export default function DMControllerPage() {
                           <button key={s} onClick={() => setConfig({ ...config, messageStyle: s })}
                             className={cn(
                               "text-[10px] px-3 py-1 rounded-lg border transition-all capitalize",
-                              config.messageStyle === s ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted"
+                              config.messageStyle === s ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
                             )}>{s}</button>
                         ))}
                       </div>
@@ -694,7 +694,7 @@ export default function DMControllerPage() {
                         <button key={n} onClick={() => toggleNiche(n)}
                           className={cn(
                             "text-[10px] px-2.5 py-1 rounded-lg border transition-all",
-                            config.niches.includes(n) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted"
+                            config.niches.includes(n) ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
                           )}>{n}</button>
                       ))}
                     </div>
@@ -708,7 +708,7 @@ export default function DMControllerPage() {
                         <button key={s} onClick={() => toggleService(s)}
                           className={cn(
                             "text-[10px] px-2.5 py-1 rounded-lg border transition-all",
-                            config.services.includes(s) ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted"
+                            config.services.includes(s) ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
                           )}>{s}</button>
                       ))}
                     </div>
@@ -761,7 +761,7 @@ export default function DMControllerPage() {
                       </div>
                       <div className="p-3 space-y-2">
                         <div className="text-[9px] text-muted flex items-center gap-1"><Clock size={8} /> just now</div>
-                        <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[11px] leading-relaxed text-[#374151]">
+                        <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-[11px] leading-relaxed text-[#374151]">
                           {previewText || <span className="text-muted italic">Your message will appear here…</span>}
                         </div>
                       </div>
@@ -799,11 +799,11 @@ export default function DMControllerPage() {
                   </div>
 
                   {/* Launch */}
-                  <div className="card p-4 border-[rgba(37,99,235,0.1)] relative overflow-hidden">
+                  <div className="card p-4 border-[rgba(59,130,246,0.1)] relative overflow-hidden">
                     <div className="text-center py-3">
                       <div className={cn(
                         "w-14 h-14  flex items-center justify-center mx-auto mb-3",
-                        running ? "bg-green-400/10 animate-pulse" : "bg-[rgba(37,99,235,0.08)]"
+                        running ? "bg-green-400/10 animate-pulse" : "bg-[rgba(59,130,246,0.08)]"
                       )}>
                         {running
                           ? <Clock size={24} className="text-green-400 animate-spin" />
@@ -876,7 +876,7 @@ export default function DMControllerPage() {
                       const replyRate = c.sent ? ((c.replied / c.sent) * 100).toFixed(1) : "0.0";
                       const progressPct = c.leads ? Math.round((c.sent / c.leads) * 100) : 0;
                       return (
-                        <div key={c.id} className="card p-4 hover:border-[rgba(37,99,235,0.2)] transition-all">
+                        <div key={c.id} className="card p-4 hover:border-[rgba(59,130,246,0.2)] transition-all">
                           <div className="flex items-start gap-3">
                             <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
                               {platform?.icon(22)}
@@ -906,15 +906,15 @@ export default function DMControllerPage() {
                             </div>
                             <div className="flex items-center gap-1">
                               <button onClick={() => toggleCampaign(c.id)} title={c.status === "running" ? "Pause" : "Play"}
-                                className="p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
+                                className="p-2 rounded-lg border border-border hover:border-[rgba(59,130,246,0.25)] transition-all">
                                 {c.status === "running" ? <Pause size={12} /> : <Play size={12} />}
                               </button>
                               <button onClick={() => setActiveTab("analytics")} title="Analytics"
-                                className="p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
+                                className="p-2 rounded-lg border border-border hover:border-[rgba(59,130,246,0.25)] transition-all">
                                 <BarChart3 size={12} />
                               </button>
                               <button onClick={() => setActiveTab("setup")} title="Edit"
-                                className="p-2 rounded-lg border border-border hover:border-[rgba(37,99,235,0.25)] transition-all">
+                                className="p-2 rounded-lg border border-border hover:border-[rgba(59,130,246,0.25)] transition-all">
                                 <Edit3 size={12} />
                               </button>
                               <button onClick={() => deleteCampaign(c.id)} title="Delete"
@@ -936,12 +936,12 @@ export default function DMControllerPage() {
                 <div className="flex flex-wrap items-center gap-1.5">
                   <button onClick={() => setTemplateFilter("all")}
                     className={cn("text-[10px] px-2.5 py-1 rounded-lg border transition-all",
-                      templateFilter === "all" ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted"
+                      templateFilter === "all" ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
                     )}>All ({templates.length})</button>
                   {TEMPLATE_GOALS.map(g => (
                     <button key={g.id} onClick={() => setTemplateFilter(g.id)}
                       className={cn("text-[10px] px-2.5 py-1 rounded-lg border transition-all flex items-center gap-1",
-                        templateFilter === g.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent" : "border-border text-muted"
+                        templateFilter === g.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
                       )}><g.icon size={9} className={g.color} /> {g.label}</button>
                   ))}
                   <div className="ml-auto">
@@ -958,7 +958,7 @@ export default function DMControllerPage() {
                         custom: true,
                       };
                       setTemplates(ts => [t, ...ts]);
-                    }} className="px-3 py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent text-[10px] font-semibold flex items-center gap-1.5">
+                    }} className="px-3 py-1.5 rounded-lg border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent text-[10px] font-semibold flex items-center gap-1.5">
                       <Plus size={10} /> New Template
                     </button>
                   </div>
@@ -983,7 +983,7 @@ export default function DMControllerPage() {
                               <div className="flex items-center gap-1.5 flex-wrap">
                                 {goal && <goal.icon size={11} className={goal.color} />}
                                 <p className="text-xs font-semibold truncate">{t.name}</p>
-                                {t.custom && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">Custom</span>}
+                                {t.custom && <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">Custom</span>}
                               </div>
                               <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">{goal?.label}</p>
                             </div>
@@ -1039,7 +1039,7 @@ export default function DMControllerPage() {
                                 setConfig(prev => ({ ...prev, customMessage: msg }));
                                 setActiveTab("setup");
                               }}
-                              className="text-[10px] px-2 py-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1.5"
+                              className="text-[10px] px-2 py-1.5 rounded-lg border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-all flex items-center gap-1.5"
                             >
                               <ArrowRight size={10} /> Clone to campaign
                             </button>
@@ -1066,7 +1066,7 @@ export default function DMControllerPage() {
                       onClick={() => { setOpenReplyId(r.id); setAiReplies(null); setAiReplyError(null); }}
                       className={cn(
                         "w-full text-left card p-3 transition-all",
-                        openReplyId === r.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "hover:border-[rgba(0,0,0,0.14)]"
+                        openReplyId === r.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "hover:border-[rgba(0,0,0,0.14)]"
                       )}
                     >
                       <div className="flex items-start gap-2">
@@ -1104,7 +1104,7 @@ export default function DMControllerPage() {
                           <p className="text-[9px] text-muted mb-1">You</p>
                           {openReply.original}
                         </div>
-                        <div className="max-w-[85%] ml-auto px-3 py-2 rounded-br-sm bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[11px] text-[#374151]">
+                        <div className="max-w-[85%] ml-auto px-3 py-2 rounded-br-sm bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-[11px] text-[#374151]">
                           <p className="text-[9px] text-brand-accent mb-1">{openReply.from}</p>
                           {openReply.full}
                         </div>
@@ -1135,7 +1135,7 @@ export default function DMControllerPage() {
                                 {r.cta && <p className="text-[9px] text-muted italic">CTA: {r.cta}</p>}
                                 <div className="flex items-center gap-1.5 pt-1">
                                   <button onClick={() => navigator.clipboard?.writeText(r.text)} className="text-[9px] px-2 py-0.5 rounded border border-border text-muted hover:text-foreground">Copy</button>
-                                  <button className="text-[9px] px-2 py-0.5 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] text-brand-accent">Use this</button>
+                                  <button className="text-[9px] px-2 py-0.5 rounded border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent">Use this</button>
                                 </div>
                               </div>
                             ))}
@@ -1245,7 +1245,7 @@ export default function DMControllerPage() {
                         const rate = c.sent ? ((c.replied / c.sent) * 100).toFixed(1) : "0.0";
                         return (
                           <div key={c.id} className="flex items-center gap-3 p-2 rounded-lg border border-border">
-                            <div className="w-6 h-6 rounded-lg bg-[rgba(37,99,235,0.08)] text-brand-accent text-[10px] font-bold flex items-center justify-center">{i + 1}</div>
+                            <div className="w-6 h-6 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent text-[10px] font-bold flex items-center justify-center">{i + 1}</div>
                             <div className="shrink-0">{platformIcon(c.platform, 14)}</div>
                             <div className="flex-1 min-w-0">
                               <p className="text-xs truncate">{c.name}</p>
@@ -1313,7 +1313,7 @@ export default function DMControllerPage() {
                     <div className="space-y-2">
                       {rules.map(r => (
                         <div key={r.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
-                          <div className="shrink-0 w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                          <div className="shrink-0 w-8 h-8 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
                             {r.type === "auto_reply"    && <MessageSquare size={14} className="text-brand-accent" />}
                             {r.type === "auto_followup" && <RefreshCw size={14} className="text-brand-accent" />}
                             {r.type === "auto_tag"      && <Sparkles size={14} className="text-brand-accent" />}
@@ -1678,7 +1678,7 @@ function SentimentBadge({ sentiment }: { sentiment: InboxReply["sentiment"] }) {
 
 function StatusChip({ status }: { status: InboxReply["status"] }) {
   const cfg = {
-    new:          { cls: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)]",            label: "New" },
+    new:          { cls: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",            label: "New" },
     closed:       { cls: "bg-[rgba(0,0,0,0.04)] text-muted border-[rgba(0,0,0,0.08)]", label: "Closed" },
     handed_off:   { cls: "bg-blue-400/10 text-blue-400 border-blue-400/30",label: "Handed off" },
     needs_human:  { cls: "bg-amber-400/10 text-amber-400 border-amber-400/30", label: "Needs human" },
@@ -1689,8 +1689,8 @@ function StatusChip({ status }: { status: InboxReply["status"] }) {
 function EmptyIllustration({ icon }: { icon: React.ReactNode }) {
   return (
     <div className="relative inline-flex items-center justify-center">
-      <div className="absolute inset-0 rounded-full bg-[rgba(37,99,235,0.08)] blur-xl scale-150" />
-      <div className="relative w-16 h-16 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center text-brand-accent">
+      <div className="absolute inset-0 rounded-full bg-[rgba(59,130,246,0.08)] blur-xl scale-150" />
+      <div className="relative w-16 h-16 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] flex items-center justify-center text-brand-accent">
         {icon}
       </div>
     </div>
@@ -1712,7 +1712,7 @@ function TemplateField({ label, value, onChange }: { label: string; value: strin
 
 function TypeCard({ title, desc, icon }: { title: string; desc: string; icon: React.ReactNode }) {
   return (
-    <div className="p-3 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
+    <div className="p-3 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] transition-all">
       <div className="flex items-center gap-2 mb-1">
         <span className="text-brand-accent">{icon}</span>
         <p className="text-xs font-semibold">{title}</p>
@@ -1764,7 +1764,7 @@ function Heatmap() {
                 <div
                   key={`${dIdx}-${h}`}
                   className="aspect-square rounded-sm"
-                  style={{ background: `rgba(37,99,235,${0.08 + (v / 100) * 0.55})` }}
+                  style={{ background: `rgba(59,130,246,${0.08 + (v / 100) * 0.55})` }}
                   title={`${d} ${h}:00 — ${v}% reply rate`}
                 />
               );
@@ -1818,7 +1818,7 @@ function HowItWorksFlow() {
     );
   }
   return (
-    <div className="card p-4 bg-gradient-to-br from-[rgba(37,99,235,0.04)] to-transparent border-[rgba(37,99,235,0.2)]">
+    <div className="card p-4 bg-gradient-to-br from-[rgba(59,130,246,0.04)] to-transparent border-[rgba(59,130,246,0.2)]">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-xs font-semibold flex items-center gap-1.5">
           <span className="text-base">💡</span> How DM Controller works
@@ -1894,7 +1894,7 @@ function LeadSourcePicker() {
               onClick={() => setSource(opt.id as "scraped" | "campaign" | "crm" | "manual")}
               className={cn(
                 "text-left p-3 rounded-xl border transition-all",
-                active ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]" : "bg-surface-light/30 border-border hover:border-[rgba(37,99,235,0.2)]"
+                active ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)]" : "bg-surface-light/30 border-border hover:border-[rgba(59,130,246,0.2)]"
               )}
             >
               <div className="flex items-center gap-1.5">
@@ -2019,7 +2019,7 @@ function SenderAccountPicker() {
                       className={cn(
                         "text-[10px] px-2.5 py-1.5 rounded-full border flex items-center gap-1.5 transition-all",
                         isSelected
-                          ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent"
+                          ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent"
                           : "bg-surface-light border-border text-muted hover:text-foreground"
                       )}
                     >

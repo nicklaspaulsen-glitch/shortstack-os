@@ -153,13 +153,13 @@ export default function AgentControlsPage() {
                   const isDirty = JSON.stringify(parseValue(row.value)) !== JSON.stringify(cur);
 
                   return (
-                    <motion.div key={row.key} variants={itemVariants} className={`glass rounded-xl p-5 transition-all ${isDirty ? "ring-1 ring-[rgba(37,99,235,0.35)]" : ""}`}>
+                    <motion.div key={row.key} variants={itemVariants} className={`glass rounded-xl p-5 transition-all ${isDirty ? "ring-1 ring-[rgba(59,130,246,0.35)]" : ""}`}>
                       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-semibold text-[#111827] font-mono">{row.key}</span>
                             {isDirty && (
-                              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]">
+                              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]">
                                 modified
                               </span>
                             )}
@@ -184,7 +184,7 @@ export default function AgentControlsPage() {
                               type="number"
                               value={cur as number}
                               onChange={e => updateEdit(row.key, parseFloat(e.target.value) || 0)}
-                              className="w-28 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm text-right focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.40)]"
+                              className="w-28 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm text-right focus:outline-none focus:ring-1 focus:ring-[rgba(59,130,246,0.40)]"
                             />
                           )}
                           {type === "json" && (
@@ -194,7 +194,7 @@ export default function AgentControlsPage() {
                                 try { updateEdit(row.key, JSON.parse(e.target.value)); } catch { /* keep typing */ }
                               }}
                               rows={3}
-                              className="w-64 px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.40)] resize-none"
+                              className="w-64 px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[rgba(59,130,246,0.40)] resize-none"
                             />
                           )}
                           {type === "string" && (
@@ -202,7 +202,7 @@ export default function AgentControlsPage() {
                               type="text"
                               value={cur as string}
                               onChange={e => updateEdit(row.key, e.target.value)}
-                              className="w-48 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.40)]"
+                              className="w-48 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm focus:outline-none focus:ring-1 focus:ring-[rgba(59,130,246,0.40)]"
                             />
                           )}
                         </div>

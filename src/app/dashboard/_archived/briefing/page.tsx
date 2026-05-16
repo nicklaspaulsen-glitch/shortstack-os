@@ -155,10 +155,10 @@ Be direct, specific, and action-oriented. No fluff.`;
   }, [stats]);
 
   const tiles: StatTile[] = [
-    { label: "New Leads (24h)", value: stats.newLeads, icon: Users, color: "text-brand-accent", bgColor: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)]" },
-    { label: "Messages Received", value: stats.messagesReceived, icon: MessageSquare, color: "text-brand-accent", bgColor: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)]" },
+    { label: "New Leads (24h)", value: stats.newLeads, icon: Users, color: "text-brand-accent", bgColor: "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.20)]" },
+    { label: "Messages Received", value: stats.messagesReceived, icon: MessageSquare, color: "text-brand-accent", bgColor: "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.20)]" },
     { label: "Appointments Today", value: stats.appointmentsToday, icon: Calendar, color: "text-emerald-600", bgColor: "bg-emerald-50 border-emerald-200" },
-    { label: "Invoices Due", value: stats.invoicesDue, icon: FileText, color: "text-brand-accent", bgColor: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.20)]" },
+    { label: "Invoices Due", value: stats.invoicesDue, icon: FileText, color: "text-brand-accent", bgColor: "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.20)]" },
     { label: "Content Scheduled", value: stats.contentScheduled, icon: BookOpen, color: "text-rose-500", bgColor: "bg-rose-50 border-rose-200" },
   ];
 

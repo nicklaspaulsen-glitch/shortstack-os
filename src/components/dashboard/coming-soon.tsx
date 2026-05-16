@@ -231,7 +231,7 @@ export function ComingSoon({
         {/* What's coming */}
         <div className="lg:col-span-2 card !p-5">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-7 h-7 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#2563EB]">
+            <div className="w-7 h-7 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center text-[#2563EB]">
               <Hammer size={14} />
             </div>
             <div>
@@ -263,7 +263,7 @@ export function ComingSoon({
         {/* Waitlist panel */}
         <div className="card !p-5 flex flex-col">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-7 h-7 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#2563EB]">
+            <div className="w-7 h-7 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center text-[#2563EB]">
               <Bell size={14} />
             </div>
             <div>
@@ -300,7 +300,7 @@ export function ComingSoon({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
-                className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-[12px] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[rgba(37,99,235,0.4)] focus:ring-1 focus:ring-[rgba(37,99,235,0.2)]"
+                className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-[12px] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)]"
               />
               <button
                 type="submit"
@@ -346,7 +346,7 @@ export function ComingSoon({
               <Link
                 key={alt.href}
                 href={alt.href}
-                className="group flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl border border-border bg-surface hover:bg-surface-light hover:border-[rgba(37,99,235,0.25)] transition-all"
+                className="group flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl border border-border bg-surface hover:bg-surface-light hover:border-[rgba(59,130,246,0.25)] transition-all"
               >
                 <span className="text-[12px] font-semibold text-foreground truncate">
                   {alt.label}

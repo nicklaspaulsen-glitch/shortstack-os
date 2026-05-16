@@ -94,7 +94,7 @@ export default function LandingNav() {
           </Link>
           <Link
             href="/pricing"
-            className="text-sm font-semibold px-5 py-2 rounded-lg transition-all duration-200 hidden sm:inline-block bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_16px_rgba(37,99,235,0.35)] hover:shadow-[0_0_24px_rgba(37,99,235,0.55)]"
+            className="text-sm font-semibold px-5 py-2 rounded-lg transition-all duration-200 hidden sm:inline-block bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_16px_rgba(59,130,246,0.35)] hover:shadow-[0_0_24px_rgba(59,130,246,0.55)]"
           >
             Start free trial
           </Link>

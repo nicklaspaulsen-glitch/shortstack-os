@@ -648,7 +648,7 @@ function CloneRow({
 
 function StatusChip({ status }: { status: VoiceClone["status"] }) {
   const map = {
-    training: { cls: "bg-[rgba(37,99,235,0.10)] text-brand-accent", label: "Training" },
+    training: { cls: "bg-[rgba(59,130,246,0.10)] text-brand-accent", label: "Training" },
     ready: { cls: "bg-emerald-500/15 text-emerald-700", label: "Ready" },
     failed: { cls: "bg-rose-500/15 text-rose-700", label: "Failed" },
   };
@@ -725,7 +725,7 @@ function AudioPlayer({ src, autoPlay = false }: { src: string; autoPlay?: boolea
         aria-valuemax={100}
         aria-valuenow={Math.round(progress * 100)}
         tabIndex={0}
-        className="flex-1 relative h-[3px] rounded-full bg-[rgba(37,99,235,0.15)] overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2563EB]/50"
+        className="flex-1 relative h-[3px] rounded-full bg-[rgba(59,130,246,0.15)] overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2563EB]/50"
         onClick={(e) => {
           const a = audioRef.current;
           if (!a || !a.duration) return;
@@ -1047,7 +1047,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
   return (
     <div
       className={`glass group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-all duration-200 min-h-[220px] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]`}
-      style={{ border: featured ? "1px solid rgba(37,99,235,0.30)" : "1px solid rgba(255,255,255,0.70)" }}
+      style={{ border: featured ? "1px solid rgba(59,130,246,0.30)" : "1px solid rgba(255,255,255,0.70)" }}
       onMouseEnter={() => {
         setIsHovering(true);
         if (testUrl || testing) return;
@@ -1066,7 +1066,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           </div>
           <div className="flex items-center gap-1.5 flex-wrap justify-end">
             {featured && (
-              <span className="text-[10px] font-semibold bg-[rgba(37,99,235,0.1)] text-brand-accent px-2 py-0.5 rounded-full uppercase tracking-wide">
+              <span className="text-[10px] font-semibold bg-[rgba(59,130,246,0.1)] text-brand-accent px-2 py-0.5 rounded-full uppercase tracking-wide">
                 Featured
               </span>
             )}
@@ -1095,7 +1095,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             onClick={() => { if (!testing) onTest(); }}
             disabled={testing}
             aria-label={testing ? "Generating previewâ€¦" : "Click to preview this voice"}
-            className="mt-3 w-full flex flex-col items-center gap-1.5 py-3 rounded-lg border border-dashed border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.015)] hover:border-[rgba(37,99,235,0.30)] hover:bg-[rgba(37,99,235,0.04)] transition-colors duration-200 cursor-pointer disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2563EB]/40 group/play"
+            className="mt-3 w-full flex flex-col items-center gap-1.5 py-3 rounded-lg border border-dashed border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.015)] hover:border-[rgba(59,130,246,0.30)] hover:bg-[rgba(59,130,246,0.04)] transition-colors duration-200 cursor-pointer disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2563EB]/40 group/play"
           >
             {/* waveform bars â€” animate when hovering or generating */}
             <div className="flex items-end justify-center gap-[2px] h-6 opacity-40 group-hover/play:opacity-80 transition-opacity duration-200" aria-hidden="true">
@@ -1175,7 +1175,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
 
         {/* Audio player â€” shown above actions; kept visible while re-generating */}
         {(testUrl || (testing && prevUrlRef.current)) && (
-          <div className="relative mt-3 rounded-lg border border-[rgba(37,99,235,0.18)] bg-[rgba(37,99,235,0.05)] py-2 px-1">
+          <div className="relative mt-3 rounded-lg border border-[rgba(59,130,246,0.18)] bg-[rgba(59,130,246,0.05)] py-2 px-1">
             <AudioPlayer src={testUrl ?? prevUrlRef.current ?? ""} />
             {testing && (
               <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-[rgba(0,0,0,0.06)]">
@@ -1290,7 +1290,7 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
                 )}
               </div>
               {isOpen && audioUrl && (
-                <div className="mt-3 rounded-lg border border-[rgba(37,99,235,0.18)] bg-[rgba(37,99,235,0.05)] py-2 px-1">
+                <div className="mt-3 rounded-lg border border-[rgba(59,130,246,0.18)] bg-[rgba(59,130,246,0.05)] py-2 px-1">
                   <AudioPlayer src={audioUrl} autoPlay />
                 </div>
               )}

@@ -273,7 +273,7 @@ export default function CommandPalette() {
                       onMouseEnter={() => setSelectedIndex(flatIdx)}
                       className={`w-full flex items-center gap-3 px-4 py-2 text-left transition-colors ${
                         isSelected
-                          ? "bg-[rgba(37,99,235,0.07)]"
+                          ? "bg-[rgba(59,130,246,0.07)]"
                           : "hover:bg-[rgba(0,0,0,0.03)]"
                       }`}
                     >
@@ -317,7 +317,7 @@ export default function CommandPalette() {
                       onMouseEnter={() => setSelectedIndex(flatIdx)}
                       className={`w-full flex items-center gap-3 px-4 py-2 text-left transition-colors ${
                         isSelected
-                          ? "bg-[rgba(37,99,235,0.07)]"
+                          ? "bg-[rgba(59,130,246,0.07)]"
                           : "hover:bg-[rgba(0,0,0,0.03)]"
                       }`}
                     >

@@ -151,7 +151,7 @@ export default function InsightsPanel() {
           <button
             onClick={() => void generate()}
             disabled={generating}
-            className="inline-flex items-center gap-1.5 rounded border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-3 py-1.5 text-xs text-brand-accent hover:bg-[rgba(37,99,235,0.14)] disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] px-3 py-1.5 text-xs text-brand-accent hover:bg-[rgba(59,130,246,0.14)] disabled:opacity-50"
           >
             {generating ? (
               <Loader2 className="animate-spin" size={12} />

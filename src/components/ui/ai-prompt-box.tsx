@@ -127,14 +127,14 @@ export function AIPromptBox({
           reducedMotion
             ? undefined
             : isFocused
-            ? { boxShadow: "0 0 0 2px rgba(37,99,235,0.25), 0 4px 24px rgba(37,99,235,0.12)" }
+            ? { boxShadow: "0 0 0 2px rgba(59,130,246,0.25), 0 4px 24px rgba(59,130,246,0.12)" }
             : { boxShadow: "0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.07)" }
         }
         transition={{ duration: 0.2 }}
         className="relative flex flex-col rounded-2xl bg-white overflow-hidden"
         style={{
           boxShadow: isFocused
-            ? "0 0 0 2px rgba(37,99,235,0.25), 0 4px 24px rgba(37,99,235,0.12)"
+            ? "0 0 0 2px rgba(59,130,246,0.25), 0 4px 24px rgba(59,130,246,0.12)"
             : "0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.07)",
         }}
       >
@@ -210,7 +210,7 @@ export function AIPromptBox({
           <div className="flex items-center gap-2">
             {/* Model badge */}
             {modelLabel && (
-              <span className="rounded-full border border-[rgba(37,99,235,0.20)] bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-[#2563EB]">
+              <span className="rounded-full border border-[rgba(59,130,246,0.20)] bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-[#2563EB]">
                 {modelLabel}
               </span>
             )}
@@ -232,7 +232,7 @@ export function AIPromptBox({
               "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full",
               "transition-all duration-200",
               value.trim() && !busy
-                ? "bg-[#2563EB] text-white shadow-[0_2px_8px_rgba(37,99,235,0.30)]"
+                ? "bg-[#2563EB] text-white shadow-[0_2px_8px_rgba(59,130,246,0.30)]"
                 : "bg-[rgba(0,0,0,0.07)] text-text-muted",
               "disabled:pointer-events-none"
             )}
@@ -259,7 +259,7 @@ export function AIPromptBox({
               key={s}
               type="button"
               onClick={() => applySuggestion(s)}
-              className="rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-3 py-1.5 text-xs text-text-secondary transition-all duration-150 hover:border-[rgba(37,99,235,0.25)] hover:bg-blue-50 hover:text-[#2563EB] active:scale-[0.97]"
+              className="rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-3 py-1.5 text-xs text-text-secondary transition-all duration-150 hover:border-[rgba(59,130,246,0.25)] hover:bg-blue-50 hover:text-[#2563EB] active:scale-[0.97]"
             >
               {s}
             </button>

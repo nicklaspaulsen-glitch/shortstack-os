@@ -38,8 +38,8 @@ interface ApiKey {
 }
 
 const PERMISSION_LABELS: Record<ApiKey["permissions"], { label: string; color: string; desc: string }> = {
-  "read": { label: "Read Only", color: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.20)]", desc: "Can read data via GET endpoints" },
-  "read-write": { label: "Read & Write", color: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.20)]", desc: "Can read and create/update data" },
+  "read": { label: "Read Only", color: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.20)]", desc: "Can read data via GET endpoints" },
+  "read-write": { label: "Read & Write", color: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.20)]", desc: "Can read and create/update data" },
   "full": { label: "Full Access", color: "bg-red-500/10 text-red-400 border-red-500/20", desc: "Complete access including delete operations" },
 };
 
@@ -126,8 +126,8 @@ const API_CATEGORIES: Category[] = [
 
 const METHOD_STYLES: Record<string, string> = {
   GET: "bg-green-500/15 text-green-400 border-green-500/20",
-  POST: "bg-[rgba(37,99,235,0.10)] text-brand-accent border-[rgba(37,99,235,0.20)]",
-  PUT: "bg-[rgba(37,99,235,0.10)] text-brand-accent border-[rgba(37,99,235,0.20)]",
+  POST: "bg-[rgba(59,130,246,0.10)] text-brand-accent border-[rgba(59,130,246,0.20)]",
+  PUT: "bg-[rgba(59,130,246,0.10)] text-brand-accent border-[rgba(59,130,246,0.20)]",
   DELETE: "bg-red-500/15 text-red-400 border-red-500/20",
 };
 
@@ -351,8 +351,8 @@ export default function ApiDocsPage() {
                     <input value={explorerPath} onChange={e => setExplorerPath(e.target.value)}
                       className="input flex-1 text-xs py-2 font-mono" placeholder="/api/clients" />
                     <button onClick={simulateRequest} disabled={explorerLoading}
-                      className="px-4 py-2 bg-[rgba(37,99,235,0.08)] text-brand-accent text-xs font-medium rounded-lg border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all disabled:opacity-50 flex items-center gap-1.5">
-                      {explorerLoading ? <div className="w-3 h-3 border-2 border-[rgba(37,99,235,0.2)] border-t-[#2563EB] rounded-full animate-spin" /> : <Play size={12} />}
+                      className="px-4 py-2 bg-[rgba(59,130,246,0.08)] text-brand-accent text-xs font-medium rounded-lg border border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.12)] transition-all disabled:opacity-50 flex items-center gap-1.5">
+                      {explorerLoading ? <div className="w-3 h-3 border-2 border-[rgba(59,130,246,0.2)] border-t-[#2563EB] rounded-full animate-spin" /> : <Play size={12} />}
                       Send
                     </button>
                   </div>
@@ -495,7 +495,7 @@ export default function ApiDocsPage() {
                       <p className="text-[10px] text-muted mb-2">For browser-based apps, use Supabase session cookies. The cookie is automatically set after login.</p>
                       <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-green-400">Cookie: sb-access-token=eyJhbG...; sb-refresh-token=...</pre>
                     </div>
-                    <div className="p-3 rounded-lg border border-border bg-[rgba(37,99,235,0.04)]">
+                    <div className="p-3 rounded-lg border border-border bg-[rgba(59,130,246,0.04)]">
                       <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><AlertTriangle size={12} className="text-brand-accent" /> Security Best Practices</h3>
                       <ul className="space-y-1.5 text-[10px] text-muted">
                         <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Never expose API keys in client-side code</li>
@@ -560,7 +560,7 @@ Retry-After: 30`}</pre>
                       {(["curl", "js", "python"] as const).map(lang => (
                         <button key={lang} onClick={() => setCodeExampleLang(lang)}
                           className={`text-[10px] px-3 py-1 rounded-lg border transition-all ${
-                            codeExampleLang === lang ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted"
+                            codeExampleLang === lang ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted"
                           }`}>
                           {lang === "curl" ? "cURL" : lang === "js" ? "JavaScript" : "Python"}
                         </button>
@@ -725,7 +725,7 @@ print(data['content'])`}
 }`}</pre>
                   </div>
 
-                  <div className="mt-4 p-3 rounded-lg border border-border bg-[rgba(37,99,235,0.04)]">
+                  <div className="mt-4 p-3 rounded-lg border border-border bg-[rgba(59,130,246,0.04)]">
                     <h3 className="text-xs font-semibold mb-1.5 flex items-center gap-1.5">
                       <Shield size={11} className="text-brand-accent" /> Signature Verification
                     </h3>
@@ -770,7 +770,7 @@ const valid = signature === expected;`}</pre>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {SDK_DOWNLOADS.map((sdk, i) => (
-                      <div key={i} className="p-3 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] transition-all">
+                      <div key={i} className="p-3 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] transition-all">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <Code size={14} className="text-brand-accent" />
@@ -784,7 +784,7 @@ const valid = signature === expected;`}</pre>
                             <button className="text-[9px] px-2 py-1 rounded border border-border text-muted hover:text-foreground transition-all">
                               Install Guide
                             </button>
-                            <button className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1">
+                            <button className="text-[9px] px-2 py-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.12)] transition-all flex items-center gap-1">
                               <Download size={9} /> Download
                             </button>
                           </div>
@@ -880,7 +880,7 @@ const valid = signature === expected;`}</pre>
                       <span className="text-[9px] px-1.5 py-0.5 rounded bg-surface-light text-muted border border-border">{apiKeys.length} keys</span>
                     </div>
                     <button onClick={() => setShowNewKey(!showNewKey)}
-                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-all flex items-center gap-1.5">
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.12)] transition-all flex items-center gap-1.5">
                       <Key size={10} />
                       Generate New Key
                     </button>
@@ -888,7 +888,7 @@ const valid = signature === expected;`}</pre>
 
                   {/* Create New Key Form */}
                   {showNewKey && (
-                    <div className="p-4 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)] mb-4 space-y-3">
+                    <div className="p-4 rounded-lg border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)] mb-4 space-y-3">
                       <div className="flex items-center gap-2 text-xs font-medium text-brand-accent">
                         <Key size={12} />
                         New API Key
@@ -1111,7 +1111,7 @@ const valid = signature === expected;`}</pre>
                         </div>
                       ))}
                     </div>
-                    <div className="mt-3 p-2 rounded-lg bg-[rgba(37,99,235,0.04)] border border-[rgba(37,99,235,0.15)]">
+                    <div className="mt-3 p-2 rounded-lg bg-[rgba(59,130,246,0.04)] border border-[rgba(59,130,246,0.15)]">
                       <p className="text-[9px] text-brand-accent flex items-center gap-1.5">
                         <AlertTriangle size={10} className="flex-shrink-0" />
                         Exceeding rate limits returns HTTP 429. Implement exponential backoff in your integration.

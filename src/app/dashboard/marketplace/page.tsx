@@ -345,7 +345,7 @@ export default function MarketplacePage() {
                   placeholder="Search plugins by name, author, or tag..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full rounded-lg border border-border bg-surface py-2.5 pl-10 pr-4 text-sm text-[#111827] placeholder:text-muted/60 focus:border-[rgba(37,99,235,0.5)] focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.3)]"
+                  className="w-full rounded-lg border border-border bg-surface py-2.5 pl-10 pr-4 text-sm text-[#111827] placeholder:text-muted/60 focus:border-[rgba(59,130,246,0.5)] focus:outline-none focus:ring-1 focus:ring-[rgba(59,130,246,0.3)]"
                 />
                 {search && (
                   <button
@@ -366,7 +366,7 @@ export default function MarketplacePage() {
                       onClick={() => setCategory(cat.key)}
                       className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
                         category === cat.key
-                          ? "bg-[rgba(37,99,235,0.08)] text-brand-accent ring-1 ring-[rgba(37,99,235,0.3)]"
+                          ? "bg-[rgba(59,130,246,0.08)] text-brand-accent ring-1 ring-[rgba(59,130,246,0.3)]"
                           : "bg-surface text-muted hover:bg-surface-light hover:text-[#111827]"
                       }`}
                     >
@@ -381,7 +381,7 @@ export default function MarketplacePage() {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as SortBy)}
-                    className="rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-[#111827] focus:border-[rgba(37,99,235,0.5)] focus:outline-none"
+                    className="rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-[#111827] focus:border-[rgba(59,130,246,0.5)] focus:outline-none"
                   >
                     <option value="popular">Popular</option>
                     <option value="newest">Newest</option>
@@ -412,7 +412,7 @@ export default function MarketplacePage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.06, duration: 0.4 }}
                       whileHover={{ y: -4, scale: 1.01 }}
-                      className="glass rounded-xl group cursor-pointer transition-shadow hover:border-[rgba(37,99,235,0.25)] hover:shadow-lg hover:shadow-[rgba(37,99,235,0.05)]"
+                      className="glass rounded-xl group cursor-pointer transition-shadow hover:border-[rgba(59,130,246,0.25)] hover:shadow-lg hover:shadow-[rgba(59,130,246,0.05)]"
                       onClick={() => {
                         setSelectedPlugin(plugin);
                         setDetailTab("overview");
@@ -434,7 +434,7 @@ export default function MarketplacePage() {
                               {plugin.name}
                             </h3>
                             {plugin.verified && (
-                              <div className="flex items-center gap-0.5 rounded-full bg-[rgba(37,99,235,0.08)] px-1.5 py-0.5" title="Verified">
+                              <div className="flex items-center gap-0.5 rounded-full bg-[rgba(59,130,246,0.08)] px-1.5 py-0.5" title="Verified">
                                 <Shield size={10} className="text-brand-accent" />
                                 <span className="text-[9px] font-bold text-brand-accent">VERIFIED</span>
                               </div>
@@ -450,7 +450,7 @@ export default function MarketplacePage() {
                               Free
                             </span>
                           ) : (
-                            <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2.5 py-0.5 text-[11px] font-bold text-brand-accent">
+                            <span className="rounded-full bg-[rgba(59,130,246,0.08)] px-2.5 py-0.5 text-[11px] font-bold text-brand-accent">
                               ${plugin.price}/mo
                             </span>
                           )}
@@ -492,8 +492,8 @@ export default function MarketplacePage() {
                             isInstalled
                               ? "bg-emerald-500/10 text-emerald-400 cursor-default"
                               : isInstalling
-                              ? "bg-[rgba(37,99,235,0.08)] text-brand-accent cursor-wait"
-                              : "bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)]"
+                              ? "bg-[rgba(59,130,246,0.08)] text-brand-accent cursor-wait"
+                              : "bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)]"
                           }`}
                         >
                           {isInstalling ? (
@@ -536,7 +536,7 @@ export default function MarketplacePage() {
                     <p className="mt-1 text-xs text-muted">Browse the marketplace to discover plugins</p>
                     <button
                       onClick={() => setViewTab("browse")}
-                      className="mt-4 rounded-lg bg-[rgba(37,99,235,0.08)] px-4 py-2 text-sm font-medium text-brand-accent hover:bg-[rgba(37,99,235,0.12)] transition-colors"
+                      className="mt-4 rounded-lg bg-[rgba(59,130,246,0.08)] px-4 py-2 text-sm font-medium text-brand-accent hover:bg-[rgba(59,130,246,0.12)] transition-colors"
                     >
                       Browse Marketplace
                     </button>
@@ -609,7 +609,7 @@ export default function MarketplacePage() {
                               setSelectedPlugin(plugin);
                               setDetailTab("settings");
                             }}
-                            className="rounded-lg border border-border p-2 text-muted hover:border-[rgba(37,99,235,0.25)] hover:text-brand-accent transition-colors"
+                            className="rounded-lg border border-border p-2 text-muted hover:border-[rgba(59,130,246,0.25)] hover:text-brand-accent transition-colors"
                             title="Settings"
                           >
                             <Settings size={14} />
@@ -650,9 +650,9 @@ export default function MarketplacePage() {
               <h2 className="text-lg font-semibold text-[#111827]">For Developers</h2>
             </div><div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* Build CTA */}
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }} className="glass rounded-xl border-dashed border-[rgba(37,99,235,0.2)] bg-gradient-to-br from-[rgba(37,99,235,0.05)] to-transparent p-5">
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }} className="glass rounded-xl border-dashed border-[rgba(59,130,246,0.2)] bg-gradient-to-br from-[rgba(59,130,246,0.05)] to-transparent p-5">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(37,99,235,0.08)]">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(59,130,246,0.08)]">
                     <Code2 size={24} className="text-brand-accent" />
                   </div>
                   <div className="flex-1">
@@ -664,7 +664,7 @@ export default function MarketplacePage() {
                     <div className="mt-4 flex flex-wrap gap-2">
                       <a
                         href="/dashboard/api-docs"
-                        className="flex items-center gap-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] px-3 py-1.5 text-xs font-semibold text-brand-accent hover:bg-[rgba(37,99,235,0.12)] transition-colors">
+                        className="flex items-center gap-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] px-3 py-1.5 text-xs font-semibold text-brand-accent hover:bg-[rgba(59,130,246,0.12)] transition-colors">
                         <BookOpen size={12} />
                         API Docs
                       </a>
@@ -672,7 +672,7 @@ export default function MarketplacePage() {
                         href="https://github.com/shortstack-os/plugin-examples"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted hover:border-[rgba(37,99,235,0.25)] hover:text-[#111827] transition-colors">
+                        className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted hover:border-[rgba(59,130,246,0.25)] hover:text-[#111827] transition-colors">
                         <ExternalLink size={12} />
                         View Examples
                       </a>
@@ -702,7 +702,7 @@ export default function MarketplacePage() {
                 </pre>
                 <button
                   onClick={() => toast("Plugin submissions open after marketplace launch.", { icon: "info" })}
-                  className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] py-2 text-xs font-semibold text-brand-accent hover:bg-[rgba(37,99,235,0.12)] transition-colors">
+                  className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] py-2 text-xs font-semibold text-brand-accent hover:bg-[rgba(59,130,246,0.12)] transition-colors">
                   <Upload size={12} />
                   Submit Your Plugin
                 </button>
@@ -730,7 +730,7 @@ export default function MarketplacePage() {
                           <div className="flex items-center gap-2">
                             <h2 className="text-lg font-bold text-text-primary">{selectedPlugin.name}</h2>
                             {selectedPlugin.verified && (
-                              <div className="flex items-center gap-0.5 rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5">
+                              <div className="flex items-center gap-0.5 rounded-full bg-[rgba(59,130,246,0.08)] px-2 py-0.5">
                                 <Shield size={10} className="text-brand-accent" />
                                 <span className="text-[10px] font-bold text-brand-accent">VERIFIED</span>
                               </div>
@@ -762,7 +762,7 @@ export default function MarketplacePage() {
                           onClick={() => setDetailTab(tab)}
                           className={`rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
                             detailTab === tab
-                              ? "bg-[rgba(37,99,235,0.08)] text-brand-accent"
+                              ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
                               : "text-muted hover:text-text-primary"
                           }`}
                         >
@@ -897,7 +897,7 @@ export default function MarketplacePage() {
                           <div key={i} className="rounded-lg border border-border bg-surface p-4">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2.5">
-                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(37,99,235,0.08)] text-[11px] font-bold text-brand-accent">
+                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[rgba(59,130,246,0.08)] text-[11px] font-bold text-brand-accent">
                                   {review.avatar}
                                 </div>
                                 <div>
@@ -926,7 +926,7 @@ export default function MarketplacePage() {
                             <div
                               className={`absolute left-0 top-1.5 h-3.5 w-3.5 rounded-full border-2 ${
                                 i === 0
-                                  ? "border-brand-accent bg-[rgba(37,99,235,0.12)]"
+                                  ? "border-brand-accent bg-[rgba(59,130,246,0.12)]"
                                   : "border-border bg-surface"
                               }`}
                             />
@@ -935,7 +935,7 @@ export default function MarketplacePage() {
                                 <span className="text-sm font-semibold text-[#111827]">v{entry.version}</span>
                                 <span className="text-xs text-muted">{entry.date}</span>
                                 {i === 0 && (
-                                  <span className="rounded-full bg-[rgba(37,99,235,0.08)] px-2 py-0.5 text-[9px] font-bold text-brand-accent">LATEST</span>
+                                  <span className="rounded-full bg-[rgba(59,130,246,0.08)] px-2 py-0.5 text-[9px] font-bold text-brand-accent">LATEST</span>
                                 )}
                               </div>
                               <p className="mt-1 text-xs text-muted">{entry.notes}</p>
@@ -974,21 +974,21 @@ export default function MarketplacePage() {
                                     />
                                   </button>
                                 ) : setting.type === "select" ? (
-                                  <select className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-[#111827] focus:border-[rgba(37,99,235,0.5)] focus:outline-none">
+                                  <select className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-[#111827] focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
                                     <option>{String(setting.default ?? "")}</option>
                                   </select>
                                 ) : (
                                   <input
                                     type="text"
                                     defaultValue={String(setting.default ?? "")}
-                                    className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-[#111827] placeholder:text-muted/60 focus:border-[rgba(37,99,235,0.5)] focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.3)]"
+                                    className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-[#111827] placeholder:text-muted/60 focus:border-[rgba(59,130,246,0.5)] focus:outline-none focus:ring-1 focus:ring-[rgba(59,130,246,0.3)]"
                                   />
                                 )}
                               </div>
                             ))}
                             <button
                               onClick={() => toast.success("Settings saved")}
-                              className="mt-2 w-full rounded-lg bg-[rgba(37,99,235,0.08)] py-2 text-xs font-semibold text-brand-accent hover:bg-[rgba(37,99,235,0.12)] transition-colors">
+                              className="mt-2 w-full rounded-lg bg-[rgba(59,130,246,0.08)] py-2 text-xs font-semibold text-brand-accent hover:bg-[rgba(59,130,246,0.12)] transition-colors">
                               Save Configuration
                             </button>
                           </>

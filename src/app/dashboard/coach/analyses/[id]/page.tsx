@@ -118,11 +118,11 @@ function formatTimestamp(seconds: number): string {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  objection: "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#374151]",
-  missed_question: "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#374151]",
-  positive_moment: "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#374151]",
-  risk: "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#374151]",
-  tone: "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-[#374151]",
+  objection: "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#374151]",
+  missed_question: "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#374151]",
+  positive_moment: "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#374151]",
+  risk: "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#374151]",
+  tone: "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#374151]",
 };
 
 function isMeetingSource(s: unknown): s is MeetingSource {
@@ -305,7 +305,7 @@ export default function CoachAnalysisDetail() {
                     data-ts={ts}
                     className={`rounded-md px-3 py-2 transition-colors ${
                       isActive
-                        ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)]"
+                        ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)]"
                         : "border border-transparent"
                     }`}
                   >

@@ -218,7 +218,7 @@ export default function InvoicesPage() {
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-                    activeTab === t.key ? "bg-[rgba(37,99,235,0.10)] text-brand-accent border border-[rgba(37,99,235,0.25)] font-medium" : "text-muted hover:text-foreground"
+                    activeTab === t.key ? "bg-[rgba(59,130,246,0.10)] text-brand-accent border border-[rgba(59,130,246,0.25)] font-medium" : "text-muted hover:text-foreground"
                   }`}>{t.icon} {t.label}</button>
               ))}
             </div>{/* ===== ALL INVOICES ===== */}{activeTab === "all" && (
@@ -238,7 +238,7 @@ export default function InvoicesPage() {
                     {(["all", "sent", "paid", "overdue", "draft"] as const).map(f => (
                       <button key={f} onClick={() => setFilter(f)}
                         className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                          filter === f ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.25)]" : "text-muted border border-[rgba(0,0,0,0.06)]"
+                          filter === f ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "text-muted border border-[rgba(0,0,0,0.06)]"
                         }`}>{f}</button>
                     ))}
                   </div>
@@ -267,7 +267,7 @@ export default function InvoicesPage() {
                             <motion.div
                               variants={itemVariants}
                               onClick={() => setExpandedInvoice(expandedInvoice === inv.id ? null : inv.id)}
-                              className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-[rgba(37,99,235,0.05)] ${
+                              className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-[rgba(59,130,246,0.05)] ${
                                 isOverdue ? "bg-rose-50" : ""
                               }`}
 >
@@ -451,7 +451,7 @@ export default function InvoicesPage() {
                       </select>
                       <button
                         onClick={() => toast("Proposals ? invoice pipeline ships with the proposals module. Track progress on the roadmap.", { icon: "??", duration: 6000 })}
-                        className="w-full text-xs flex items-center justify-center gap-1.5 bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.25)] rounded-lg py-1.5 hover:bg-[rgba(37,99,235,0.14)] transition-all">
+                        className="w-full text-xs flex items-center justify-center gap-1.5 bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)] rounded-lg py-1.5 hover:bg-[rgba(59,130,246,0.14)] transition-all">
                         <ArrowRight size={12} /> Create from Proposal
                       </button>
                     </PrismPanel>
@@ -575,7 +575,7 @@ export default function InvoicesPage() {
                           <p className="font-bold text-rose-700">{formatCurrency(inv.amount)}</p>
                           <button
                             onClick={() => toast("Automated reminders are coming. For now, contact the client directly or use Stripe's payment reminder emails.", { icon: "??", duration: 6000 })}
-                            className="text-[9px] px-2 py-1 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.14)]">Send Reminder</button>
+                            className="text-[9px] px-2 py-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.14)]">Send Reminder</button>
                         </div>
                       </div>
                     ))}
@@ -602,7 +602,7 @@ export default function InvoicesPage() {
                       className="glass rounded-xl p-4 cursor-pointer border border-[rgba(255,255,255,0.70)]" 
 >
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
                           <FileText size={16} className="text-brand-accent" />
                         </div>
                         <div>

@@ -104,7 +104,7 @@ export default function PortalLayout({
           >
             <Menu size={18} />
           </button>
-          <div className="h-7 w-7 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center overflow-hidden">
+          <div className="h-7 w-7 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center overflow-hidden">
             {logoUrl ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img src={logoUrl} alt={companyName} className="w-full h-full object-contain" />
@@ -149,7 +149,7 @@ function SidebarContent({
       {/* ─── Logo / brand area ─── */}
       <div className="flex items-center justify-between h-16 px-5 border-b border-border shrink-0">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center overflow-hidden">
+          <div className="h-9 w-9 rounded-xl bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center overflow-hidden">
             {logoUrl ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img src={logoUrl} alt={companyName} className="w-full h-full object-contain" />
@@ -187,11 +187,11 @@ function SidebarContent({
               <Icon size={16} />
               <span className="flex-1">{item.label}</span>
               {item.badge && item.badge > 0 && (
-                <span className="flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-[rgba(37,99,235,0.08)] text-[#2563EB] text-[10px] font-semibold px-1">
+                <span className="flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-[rgba(59,130,246,0.08)] text-[#2563EB] text-[10px] font-semibold px-1">
                   {item.badge}
                 </span>
               )}
-              {active && <ChevronRight size={14} className="text-[rgba(37,99,235,0.6)]" />}
+              {active && <ChevronRight size={14} className="text-[rgba(59,130,246,0.6)]" />}
             </Link>
           );
         })}
@@ -201,7 +201,7 @@ function SidebarContent({
       <div className="border-t border-border px-4 py-3 space-y-3 shrink-0">
         {/* Profile mini-card */}
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center">
+          <div className="h-8 w-8 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center">
             <span className="text-[#2563EB] text-xs font-semibold">AC</span>
           </div>
           <div className="flex-1 min-w-0">
@@ -218,7 +218,7 @@ function SidebarContent({
           <div className="text-center">
             <p className="text-[10px] text-muted/50">
               Powered by{" "}
-              <span className="text-[rgba(37,99,235,0.6)] font-medium">{companyName}</span>
+              <span className="text-[rgba(59,130,246,0.6)] font-medium">{companyName}</span>
             </p>
           </div>
         )}

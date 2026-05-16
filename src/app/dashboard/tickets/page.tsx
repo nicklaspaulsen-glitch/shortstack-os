@@ -64,16 +64,16 @@ const SUPPORT_CHANNELS: SupportChannel[] = [
 
 const ACCENT_STYLES: Record<string, { ring: string; iconBg: string; iconText: string; cta: string }> = {
   blue: {
-    ring: "border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.5)] hover:shadow-[0_0_0_1px_rgba(37,99,235,0.18)]",
-    iconBg: "bg-[rgba(37,99,235,0.08)]",
+    ring: "border-[rgba(59,130,246,0.25)] hover:border-[rgba(59,130,246,0.5)] hover:shadow-[0_0_0_1px_rgba(59,130,246,0.18)]",
+    iconBg: "bg-[rgba(59,130,246,0.08)]",
     iconText: "text-brand-accent",
     cta: "bg-brand-accent text-white hover:bg-brand-accent/80",
   },
   purple: {
-    ring: "border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.50)] hover:shadow-[0_0_0_1px_rgba(37,99,235,0.18)]",
-    iconBg: "bg-[rgba(37,99,235,0.08)]",
+    ring: "border-[rgba(59,130,246,0.25)] hover:border-[rgba(59,130,246,0.50)] hover:shadow-[0_0_0_1px_rgba(59,130,246,0.18)]",
+    iconBg: "bg-[rgba(59,130,246,0.08)]",
     iconText: "text-brand-accent",
-    cta: "bg-brand-accent text-white hover:bg-[rgba(37,99,235,0.90)]",
+    cta: "bg-brand-accent text-white hover:bg-[rgba(59,130,246,0.90)]",
   },
 };
 
@@ -134,7 +134,7 @@ export default function ContactSupportPage() {
                 className="glass rounded-xl p-5"
               >
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(37,99,235,0.08)] text-brand-accent">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(59,130,246,0.08)] text-brand-accent">
                     <Sparkles size={18} />
                   </div>
                   <div className="flex-1">

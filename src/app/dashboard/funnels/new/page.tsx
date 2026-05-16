@@ -167,7 +167,7 @@ export default function NewFunnelPage() {
                 { n: 2, label: "Review & Create" },
               ].map((s, idx) => (
                 <div key={s.n} className="flex items-center gap-2">
-                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${step === s.n ? "bg-[rgba(37,99,235,0.08)] text-blue-700 border border-[rgba(37,99,235,0.25)]" : step > s.n ? "text-emerald-700" : "text-text-muted"}`}>
+                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${step === s.n ? "bg-[rgba(59,130,246,0.08)] text-blue-700 border border-[rgba(59,130,246,0.25)]" : step > s.n ? "text-emerald-700" : "text-text-muted"}`}>
                     {step > s.n ? <Check size={14} /> : <span className="w-4 h-4 rounded-full bg-current/20 flex items-center justify-center text-xs">{s.n}</span>}
                     {s.label}
                   </div>
@@ -185,7 +185,7 @@ export default function NewFunnelPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Lead Gen — Free Audit"
-                      className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)]"
+                      className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(59,130,246,0.25)]"
                     />
                   </div>
                   <div>
@@ -194,7 +194,7 @@ export default function NewFunnelPage() {
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       placeholder="Short description of the funnel goal"
-                      className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)]"
+                      className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(59,130,246,0.25)]"
                     />
                   </div>
                 </div>
@@ -210,7 +210,7 @@ export default function NewFunnelPage() {
                     {/* Blank option */}
                     <button
                       onClick={() => setSelectedTemplate(null)}
-                      className={`text-left p-4 rounded-lg border transition-all ${!selectedTemplate ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-black/[0.06] hover:border-black/[0.12] bg-[#F8FAFC]"}`}
+                      className={`text-left p-4 rounded-lg border transition-all ${!selectedTemplate ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "border-black/[0.06] hover:border-black/[0.12] bg-[#F8FAFC]"}`}
                     >
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-8 h-8 rounded-md bg-black/[0.04] border border-black/[0.08] flex items-center justify-center">
@@ -225,7 +225,7 @@ export default function NewFunnelPage() {
                       <button
                         key={tpl.id}
                         onClick={() => setSelectedTemplate(tpl)}
-                        className={`text-left p-4 rounded-lg border transition-all ${selectedTemplate?.id === tpl.id ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]" : "border-black/[0.06] hover:border-black/[0.12] bg-[#F8FAFC]"}`}
+                        className={`text-left p-4 rounded-lg border transition-all ${selectedTemplate?.id === tpl.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "border-black/[0.06] hover:border-black/[0.12] bg-[#F8FAFC]"}`}
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <div className={`w-8 h-8 rounded-md border flex items-center justify-center ${tpl.color}`}>

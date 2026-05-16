@@ -419,7 +419,7 @@ export default function WorkspaceFilesPage() {
                   }}
                   placeholder="Folder name"
                   autoFocus
-                  className="flex-1 min-w-[180px] rounded-md bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm px-3 py-1.5 outline-none focus:border-[rgba(37,99,235,0.6)]"
+                  className="flex-1 min-w-[180px] rounded-md bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm px-3 py-1.5 outline-none focus:border-[rgba(59,130,246,0.6)]"
                 />
                 <select
                   value={newFolderPermission}
@@ -602,7 +602,7 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
     <li>
       <div
         className={`flex items-center gap-1 rounded-md text-sm cursor-pointer ${
-          isActive ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "text-[#374151] hover:bg-black/[0.04]"
+          isActive ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-[#374151] hover:bg-black/[0.04]"
         }`}
         style={{ paddingLeft: 8 + depth * 12, paddingRight: 8 }}
       >
@@ -662,7 +662,7 @@ function FileCard(props: FileCardProps) {
       type="button"
       onContextMenu={(e) => onContextMenu(e, file)}
       onDoubleClick={() => onDoubleClick(file)}
-      className="group flex flex-col text-left rounded-lg border border-black/[0.06] bg-white hover:bg-[#F8FAFC] hover:border-[rgba(37,99,235,0.3)] transition overflow-hidden"
+      className="group flex flex-col text-left rounded-lg border border-black/[0.06] bg-white hover:bg-[#F8FAFC] hover:border-[rgba(59,130,246,0.3)] transition overflow-hidden"
     >
       <div className="aspect-square w-full bg-[#F8FAFC] flex items-center justify-center text-text-muted overflow-hidden">
         {isImage ? (

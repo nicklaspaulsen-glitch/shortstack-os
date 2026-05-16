@@ -102,13 +102,13 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
 
   return (
     <div
-      className={`card p-4 ${status?.active ? "border border-[rgba(37,99,235,0.25)]" : "border border-border"}`}
+      className={`card p-4 ${status?.active ? "border border-[rgba(59,130,246,0.25)]" : "border border-border"}`}
       style={{ borderRadius: "0.75rem" }}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className={`p-1.5 rounded-md ${status?.active ? "bg-[rgba(37,99,235,0.08)]" : "bg-black/5"}`}>
+          <div className={`p-1.5 rounded-md ${status?.active ? "bg-[rgba(59,130,246,0.08)]" : "bg-black/5"}`}>
             <Bot size={14} className={status?.active ? "text-[#2563EB]" : "text-muted"} />
           </div>
           <div>
@@ -124,7 +124,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
           <span
             className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
               status?.active
-                ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)]"
+                ? "bg-[rgba(59,130,246,0.08)] text-[#2563EB] border border-[rgba(59,130,246,0.2)]"
                 : "bg-black/5 text-muted border border-border"
             }`}
           >

@@ -153,9 +153,9 @@ export default function CreationWizard({
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="relative px-6 py-4 border-b border-border bg-gradient-to-br from-[rgba(37,99,235,0.08)] via-transparent to-transparent">
+        <div className="relative px-6 py-4 border-b border-border bg-gradient-to-br from-[rgba(59,130,246,0.08)] via-transparent to-transparent">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[#2563EB]">
+            <div className="w-10 h-10 rounded-xl bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[#2563EB]">
               {icon || <Sparkles size={18} />}
             </div>
             <div className="flex-1 min-w-0">
@@ -194,7 +194,7 @@ export default function CreationWizard({
                 disabled={i > stepIdx}
                 className={`group flex items-center gap-1.5 px-2.5 py-1.5 rounded-t-lg text-[10px] font-medium shrink-0 transition-all ${
                   isCurrent
-                    ? "bg-[rgba(37,99,235,0.08)] text-[#2563EB] border-b-2 border-[#2563EB]"
+                    ? "bg-[rgba(59,130,246,0.08)] text-[#2563EB] border-b-2 border-[#2563EB]"
                     : isDone
                     ? "text-muted hover:text-foreground cursor-pointer"
                     : "text-muted/50 cursor-not-allowed"
@@ -228,7 +228,7 @@ export default function CreationWizard({
             >
               <div className="flex items-start gap-3 mb-5">
                 {currentStep.icon && (
-                  <div className="w-9 h-9 rounded-xl bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[#2563EB] shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[#2563EB] shrink-0">
                     {currentStep.icon}
                   </div>
                 )}
@@ -260,7 +260,7 @@ export default function CreationWizard({
                     <button
                       onClick={runAiHelper}
                       disabled={aiLoading}
-                      className="relative w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-bold shadow-lg shadow-[rgba(37,99,235,0.3)] hover:shadow-[rgba(37,99,235,0.5)] hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-60 disabled:hover:scale-100"
+                      className="relative w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-bold shadow-lg shadow-[rgba(59,130,246,0.3)] hover:shadow-[rgba(59,130,246,0.5)] hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-60 disabled:hover:scale-100"
                     >
                       {aiLoading ? (
                         <>
@@ -324,7 +324,7 @@ export default function CreationWizard({
             <button
               onClick={() => setStepIdx(stepIdx + 1)}
               disabled={!canAdvance()}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(37,99,235,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(59,130,246,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Next <ChevronRight size={12} />
             </button>
@@ -332,7 +332,7 @@ export default function CreationWizard({
             <button
               onClick={handleComplete}
               disabled={!canAdvance() || submitting}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(37,99,235,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(59,130,246,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {submitting ? <RefreshCw size={12} className="animate-spin" /> : <Sparkles size={12} />}
               {submitting ? "Creating..." : submitLabel}
@@ -363,7 +363,7 @@ function FieldRenderer({
           value={(value as string) || ""}
           onChange={e => onChange(e.target.value)}
           placeholder={field.placeholder}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
           autoFocus
         />
       );
@@ -375,7 +375,7 @@ function FieldRenderer({
           onChange={e => onChange(e.target.value)}
           placeholder={field.placeholder}
           rows={4}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all resize-none"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
           autoFocus
         />
       );
@@ -389,7 +389,7 @@ function FieldRenderer({
           min={field.min}
           max={field.max}
           step={field.step}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
           autoFocus
         />
       );
@@ -419,7 +419,7 @@ function FieldRenderer({
         <button
           onClick={() => onChange(!value)}
           className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
-            value ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]" : "bg-surface-light border-border text-muted"
+            value ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-[#2563EB]" : "bg-surface-light border-border text-muted"
           }`}
         >
           <span className="text-sm">{value ? "Yes, enabled" : "No, disabled"}</span>
@@ -475,14 +475,14 @@ function FieldRenderer({
                 onClick={() => onChange(opt.value)}
                 className={`group relative text-left p-3.5 rounded-xl border bg-surface-light/50 backdrop-blur-sm transition-all duration-200 hover:translate-y-[-2px] ${
                   selected
-                    ? "border-[rgba(37,99,235,0.7)] bg-[rgba(37,99,235,0.08)] shadow-[0_4px_20px_-4px_rgba(37,99,235,0.35)] ring-1 ring-[rgba(37,99,235,0.4)]"
-                    : "border-border hover:border-[rgba(37,99,235,0.4)] hover:shadow-md"
+                    ? "border-[rgba(59,130,246,0.7)] bg-[rgba(59,130,246,0.08)] shadow-[0_4px_20px_-4px_rgba(59,130,246,0.35)] ring-1 ring-[rgba(59,130,246,0.4)]"
+                    : "border-border hover:border-[rgba(59,130,246,0.4)] hover:shadow-md"
                 }`}
               >
                 {/* subtle gold-gradient border glow on hover, only when unselected */}
                 {!selected && (
                   <div
-                    className="pointer-events-none absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-[rgba(37,99,235,0.08)] via-transparent to-transparent"
+                    className="pointer-events-none absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-[rgba(59,130,246,0.08)] via-transparent to-transparent"
                     aria-hidden
                   />
                 )}
@@ -495,8 +495,8 @@ function FieldRenderer({
                     <div
                       className={`w-10 h-10 shrink-0 rounded-lg flex items-center justify-center transition-colors ${
                         selected
-                          ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]"
-                          : "bg-[rgba(37,99,235,0.08)] text-[rgba(37,99,235,0.7)] group-hover:bg-[rgba(37,99,235,0.08)] group-hover:text-[#2563EB]"
+                          ? "bg-[rgba(59,130,246,0.12)] text-[#2563EB]"
+                          : "bg-[rgba(59,130,246,0.08)] text-[rgba(59,130,246,0.7)] group-hover:bg-[rgba(59,130,246,0.08)] group-hover:text-[#2563EB]"
                       }`}
                     >
                       {opt.icon ? opt.icon : <EmojiIcon emoji={opt.emoji} size={18} strokeWidth={1.75} />}
@@ -514,7 +514,7 @@ function FieldRenderer({
                   </div>
                 </div>
                 {selected && (
-                  <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[#2563EB] flex items-center justify-center shadow-sm shadow-[rgba(37,99,235,0.3)]">
+                  <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[#2563EB] flex items-center justify-center shadow-sm shadow-[rgba(59,130,246,0.3)]">
                     <Check size={9} className="text-black" strokeWidth={3} />
                   </div>
                 )}
@@ -541,7 +541,7 @@ function FieldRenderer({
                 }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] border transition-all ${
                   selected
-                    ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-[#2563EB]"
+                    ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-[#2563EB]"
                     : "bg-surface-light border-border text-muted hover:text-foreground"
                 }`}
               >
@@ -573,7 +573,7 @@ function FieldRenderer({
           />
           <label
             htmlFor="wizard-upload"
-            className="block border-2 border-dashed border-border/60 rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(37,99,235,0.4)] hover:bg-surface-light/50 transition-all"
+            className="block border-2 border-dashed border-border/60 rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(59,130,246,0.4)] hover:bg-surface-light/50 transition-all"
           >
             {value ? (
               // eslint-disable-next-line @next/next/no-img-element

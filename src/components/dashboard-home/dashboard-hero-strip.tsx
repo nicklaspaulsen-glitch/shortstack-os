@@ -110,8 +110,8 @@ function MicroStat({ icon, label, value, highlight = false }: MicroStatProps) {
     <div
       className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-md"
       style={{
-        background: highlight ? "rgba(37,99,235,0.08)" : "rgba(0,0,0,0.04)",
-        border: `1px solid ${highlight ? "rgba(37,99,235,0.2)" : "rgba(0,0,0,0.06)"}`,
+        background: highlight ? "rgba(59,130,246,0.08)" : "rgba(0,0,0,0.04)",
+        border: `1px solid ${highlight ? "rgba(59,130,246,0.2)" : "rgba(0,0,0,0.06)"}`,
       }}
     >
       <span style={{ color: highlight ? "#2563EB" : "rgba(0,0,0,0.4)" }}>{icon}</span>

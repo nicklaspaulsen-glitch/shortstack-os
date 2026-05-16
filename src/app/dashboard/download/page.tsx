@@ -219,7 +219,7 @@ export default function DownloadDesktopPage() {
                     whileHover={{ y: -4, scale: 1.01 }}
                     className={`group relative glass rounded-xl p-5 transition-all ${
                       isRecommended
-                        ? "border-[rgba(37,99,235,0.5)] shadow-[0_0_20px_rgba(37,99,235,0.12)]"
+                        ? "border-[rgba(59,130,246,0.5)] shadow-[0_0_20px_rgba(59,130,246,0.12)]"
                         : ""
                     }`}
                   >
@@ -282,7 +282,7 @@ export default function DownloadDesktopPage() {
                     transition={{ delay: i * 0.04 }}
                     className="flex items-start gap-3 p-3 glass-md rounded-xl"
                   >
-                    <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.25)]">
+                    <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)]">
                       <CheckCircle2 size={16} />
                     </div>
                     <div className="min-w-0">

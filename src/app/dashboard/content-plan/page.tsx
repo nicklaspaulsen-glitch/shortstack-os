@@ -340,8 +340,8 @@ export default function ContentPlanPage() {
             onClick={() => setWizardClientId("")}
             className={`w-full text-left p-3.5 rounded-xl border transition-all ${
               wizardClientId === ""
-                ? "border-brand-accent bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
-                : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.1)]"
+                : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
             }`}
           >
             <p className="text-sm font-semibold">No client (plan for yourself)</p>
@@ -362,8 +362,8 @@ export default function ContentPlanPage() {
                                     onClick={() => setWizardClientId(c.id)}
                                     className={`w-full text-left p-3.5 rounded-xl border transition-all ${
                                       selected
-                                        ? "border-brand-accent bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.1)]"
-                                        : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                                        ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.1)]"
+                                        : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                                     }`}
                                   >
                                     <p className="text-sm font-semibold">{c.business_name}</p>
@@ -399,8 +399,8 @@ export default function ContentPlanPage() {
                     onClick={() => setWizardGoal(g.id)}
                     className={`p-3 rounded-xl border text-center text-sm font-semibold transition-all ${
                       sel
-                        ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent shadow-lg shadow-[rgba(37,99,235,0.1)]"
-                        : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                        ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent shadow-lg shadow-[rgba(59,130,246,0.1)]"
+                        : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                     }`}
                   >
                     {g.label}
@@ -425,8 +425,8 @@ export default function ContentPlanPage() {
                     onClick={() => setWizardDuration(d.id)}
                     className={`p-3 rounded-xl border text-center text-sm font-semibold transition-all ${
                       sel
-                        ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent shadow-lg shadow-[rgba(37,99,235,0.1)]"
-                        : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                        ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent shadow-lg shadow-[rgba(59,130,246,0.1)]"
+                        : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                     }`}
                   >
                     {d.label}
@@ -463,7 +463,7 @@ export default function ContentPlanPage() {
                     }
                     className={`p-2 rounded-lg border text-[11px] font-medium capitalize transition-all ${
                       sel
-                        ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent"
+                        ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent"
                         : "border-border text-muted hover:text-foreground"
                     }`}
                   >
@@ -483,7 +483,7 @@ export default function ContentPlanPage() {
       description: "We'll draft a full calendar of posts across the selected platforms. You can edit every post in Advanced mode.",
       icon: <Wand2 size={18} />,
       component: (
-        <div className="card bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.2)] space-y-2">
+        <div className="card bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.2)] space-y-2">
           <div className="flex items-center gap-2 text-sm">
             <Target size={14} className="text-brand-accent" />
             <span className="font-semibold capitalize">{wizardGoal}</span>
@@ -601,8 +601,8 @@ export default function ContentPlanPage() {
                   onClick={() => setPlatformFilter(p.id)}
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] border transition-all ${
                     platformFilter === p.id
-                      ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.4)] text-brand-accent"
-                      : "bg-surface-light border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)]"
+                      ? "bg-[rgba(59,130,246,0.12)] border-[rgba(59,130,246,0.4)] text-brand-accent"
+                      : "bg-surface-light border-border text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.2)]"
                   }`}
                 >
                   {p.icon} {p.label}
@@ -631,7 +631,7 @@ export default function ContentPlanPage() {
 
           {/* Bulk actions bar */}
           {selectedIds.size > 0 && (
-            <div className="flex items-center justify-between flex-wrap gap-2 card py-2.5 px-3.5 border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)]">
+            <div className="flex items-center justify-between flex-wrap gap-2 card py-2.5 px-3.5 border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]">
               <div className="flex items-center gap-3 text-[11px] text-foreground">
                 <span className="font-medium">{selectedIds.size} selected</span>
                 <button onClick={clearSelection} className="text-muted hover:text-foreground text-[10px]">Clear</button>
@@ -875,7 +875,7 @@ function PostGrid({
           transition={{ delay: i * 0.06, duration: 0.4 }}
           whileHover={{ y: -4, scale: 1.01 }}
           className={`rounded-xl overflow-hidden cursor-pointer group transition-shadow ${
-            selectedIds.has(p.id) ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : ""
+            selectedIds.has(p.id) ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : ""
           }`}
 
           onClick={() => onOpen(p)}
@@ -988,7 +988,7 @@ function PostList({
                 transition={{ delay: idx * 0.04 }}
                 onClick={() => onOpen(p)}
                 className={`border-b border-border/50 cursor-pointer hover:bg-surface-light ${
-                  selectedIds.has(p.id) ? "bg-[rgba(37,99,235,0.05)]" : idx % 2 ? "bg-surface/40" : ""
+                  selectedIds.has(p.id) ? "bg-[rgba(59,130,246,0.05)]" : idx % 2 ? "bg-surface/40" : ""
                 }`}
               >
                 <td className="py-2 px-3" onClick={e => e.stopPropagation()}>
@@ -1106,7 +1106,7 @@ function PostCalendar({
               className={`min-h-[76px] rounded-lg border p-1.5 ${
                 c.date
                   ? isToday
-                    ? "border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)]"
+                    ? "border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)]"
                     : "border-border bg-surface-light/40"
                   : "border-transparent"
               }`}
@@ -1117,7 +1117,7 @@ function PostCalendar({
                     {c.date.getDate()}
                   </span>
                   {c.posts.length > 0 && (
-                    <span className="text-[8px] bg-[rgba(37,99,235,0.12)] text-brand-accent px-1 rounded">{c.posts.length}</span>
+                    <span className="text-[8px] bg-[rgba(59,130,246,0.12)] text-brand-accent px-1 rounded">{c.posts.length}</span>
                   )}
                 </div>
               )}
@@ -1286,7 +1286,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
         </div>
 
         {/* AI analysis */}
-        <div className="card border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)]">
+        <div className="card border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]">
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-[11px] font-semibold flex items-center gap-1.5 text-foreground">
               <Sparkles size={12} className="text-brand-accent" /> AI analysis

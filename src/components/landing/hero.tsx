@@ -34,7 +34,7 @@ const BLOBS = [
   // Large blue glow — bottom-left anchor
   {
     style: { left: "-8%", top: "38%", width: 720, height: 720 },
-    color: "rgba(37,99,235,0.22)",
+    color: "rgba(59,130,246,0.22)",
     animate: { y: [0, -28, 0], x: [0, 14, 0] },
     duration: 14,
     delay: 0,
@@ -138,8 +138,8 @@ export default function Hero() {
           <span
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium"
             style={{
-              background: "rgba(37,99,235,0.12)",
-              border: "1px solid rgba(37,99,235,0.28)",
+              background: "rgba(59,130,246,0.12)",
+              border: "1px solid rgba(59,130,246,0.28)",
               color: "#93C5FD",
             }}
           >
@@ -175,7 +175,7 @@ export default function Hero() {
         >
           <Link
             href="/pricing"
-            className="group inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 bg-blue-600 hover:bg-blue-500 shadow-[0_0_28px_rgba(37,99,235,0.45)] hover:shadow-[0_0_52px_rgba(37,99,235,0.65)]"
+            className="group inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 bg-blue-600 hover:bg-blue-500 shadow-[0_0_28px_rgba(59,130,246,0.45)] hover:shadow-[0_0_52px_rgba(59,130,246,0.65)]"
           >
             Start your 7-day free trial
             <ArrowRight

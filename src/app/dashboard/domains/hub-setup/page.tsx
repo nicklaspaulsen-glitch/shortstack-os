@@ -162,7 +162,7 @@ function HubSetupInner() {
         </div>
       )}
       {prefillDomain && (
-        <div className="card flex items-center gap-3 bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.2)]">
+        <div className="card flex items-center gap-3 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)]">
           <ShieldCheck size={18} className="text-brand-accent" />
           <div>
             <p className="text-xs font-semibold">{prefillDomain}</p>
@@ -189,7 +189,7 @@ function HubSetupInner() {
               onClick={() => toggle(t.key)}
               className={`w-full text-left p-3 rounded-xl border transition flex items-start gap-3 ${
                 enabled[t.key]
-                  ? "border-[rgba(37,99,235,0.35)] bg-[rgba(37,99,235,0.05)] hover:bg-[rgba(37,99,235,0.08)]"
+                  ? "border-[rgba(59,130,246,0.35)] bg-[rgba(59,130,246,0.05)] hover:bg-[rgba(59,130,246,0.08)]"
                   : "border-border bg-surface-light hover:border-border/60"
               }`}
             >

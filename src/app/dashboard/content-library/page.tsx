@@ -155,12 +155,12 @@ const TYPE_ICON: Record<string, React.ReactNode> = {
 };
 
 const TYPE_BG: Record<string, string> = {
-  image: "bg-[rgba(37,99,235,0.08)]",
-  video: "bg-[rgba(37,99,235,0.08)]",
+  image: "bg-[rgba(59,130,246,0.08)]",
+  video: "bg-[rgba(59,130,246,0.08)]",
   audio: "bg-orange-500/10",
   document: "bg-green-500/10",
   template: "bg-pink-500/10",
-  brand: "bg-[rgba(37,99,235,0.08)]",
+  brand: "bg-[rgba(59,130,246,0.08)]",
 };
 
 // -- Component --
@@ -492,7 +492,7 @@ export default function ContentLibraryPage() {
           />
         </div>
         <div className="relative text-center px-4">
-          <p className="text-[11px] uppercase tracking-widest text-[rgba(37,99,235,0.8)] font-semibold">
+          <p className="text-[11px] uppercase tracking-widest text-[rgba(59,130,246,0.8)] font-semibold">
             Content library
           </p>
           <h3 className="text-lg font-bold text-foreground mt-1">
@@ -515,7 +515,7 @@ export default function ContentLibraryPage() {
         tabIndex={0}
         onKeyDown={e => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click(); }}
         className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer ${
-          dragging ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : "glass border-[rgba(0,0,0,0.10)] hover:border-[rgba(0,0,0,0.15)]"
+          dragging ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "glass border-[rgba(0,0,0,0.10)] hover:border-[rgba(0,0,0,0.15)]"
         }`}
       >
         {uploading ? (
@@ -564,7 +564,7 @@ export default function ContentLibraryPage() {
                 <div
                   key={c.id}
                   className={`rounded-xl cursor-pointer hover:border-[rgba(0,0,0,0.15)] transition-all p-3 relative group ${
-                    collectionFilter === c.id ? "border border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)]" : "glass"
+                    collectionFilter === c.id ? "border border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)]" : "glass"
                   }`}
                   onClick={() => setCollectionFilter(collectionFilter === c.id ? "all" : c.id)}
                 >
@@ -595,7 +595,7 @@ export default function ContentLibraryPage() {
               key={c.key}
               onClick={() => setCategory(c.key)}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${
-                category === c.key ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]" : "bg-black/5 text-muted hover:text-text-primary border border-black/10"
+                category === c.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-black/5 text-muted hover:text-text-primary border border-black/10"
               }`}
             >
               {c.icon} {c.label}
@@ -633,10 +633,10 @@ export default function ContentLibraryPage() {
 
         {/* View Toggle */}
         <div className="flex bg-black/5 rounded-lg p-0.5">
-          <button onClick={() => setViewMode("grid")} className={`p-1.5 rounded ${viewMode === "grid" ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "text-muted"}`}>
+          <button onClick={() => setViewMode("grid")} className={`p-1.5 rounded ${viewMode === "grid" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-muted"}`}>
             <Grid size={14} />
           </button>
-          <button onClick={() => setViewMode("list")} className={`p-1.5 rounded ${viewMode === "list" ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "text-muted"}`}>
+          <button onClick={() => setViewMode("list")} className={`p-1.5 rounded ${viewMode === "list" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-muted"}`}>
             <List size={14} />
           </button>
         </div>
@@ -692,7 +692,7 @@ export default function ContentLibraryPage() {
               transition={{ delay: i * 0.04, duration: 0.4 }}
               whileHover={{ y: -4, scale: 1.01 }}
               className={`rounded-xl p-3 group cursor-pointer transition-all hover:border-[rgba(0,0,0,0.15)] relative ${
-                selectedAssets.has(asset.id) ? "border border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.05)]" : "glass"
+                selectedAssets.has(asset.id) ? "border border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)]" : "glass"
               }`}
             >
               {/* Select checkbox */}
@@ -770,7 +770,7 @@ export default function ContentLibraryPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.04 }}
                   className={`border-b border-black/5 hover:bg-black/5 transition-colors ${
-                    selectedAssets.has(asset.id) ? "bg-[rgba(37,99,235,0.05)]" : ""
+                    selectedAssets.has(asset.id) ? "bg-[rgba(59,130,246,0.05)]" : ""
                   }`}
                 >
                   <td className="p-2">
@@ -910,7 +910,7 @@ export default function ContentLibraryPage() {
                       value={editText}
                       onChange={e => setEditText(e.target.value)}
                       rows={4}
-                      className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border text-xs text-foreground resize-y focus:outline-none focus:border-[rgba(37,99,235,0.5)]"
+                      className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border text-xs text-foreground resize-y focus:outline-none focus:border-[rgba(59,130,246,0.5)]"
                       autoFocus
                     />
                     <div className="flex gap-2">

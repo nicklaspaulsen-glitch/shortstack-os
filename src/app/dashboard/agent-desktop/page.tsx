@@ -21,7 +21,7 @@ interface AgentService {
 function StatusChip({ status }: { status: AgentService["status"] }) {
   const map: Record<string, { cls: string; label: string; icon: typeof CheckCircle }> = {
     healthy: { cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", label: "Healthy", icon: CheckCircle },
-    degraded: { cls: "bg-[rgba(37,99,235,0.10)] text-brand-accent border-[rgba(37,99,235,0.25)]", label: "Degraded", icon: AlertTriangle },
+    degraded: { cls: "bg-[rgba(59,130,246,0.10)] text-brand-accent border-[rgba(59,130,246,0.25)]", label: "Degraded", icon: AlertTriangle },
     down: { cls: "bg-red-500/15 text-red-400 border-red-500/30", label: "Down", icon: XCircle },
     unknown: { cls: "bg-slate-500/15 text-text-muted border-slate-500/30", label: "Unknown", icon: Clock },
   };
@@ -172,7 +172,7 @@ export default function AgentDesktopPage() {
                       <button
                         onClick={() => handleRestart(agent)}
                         disabled={restarting[agent.id]}
-                        className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-xs font-medium border border-[rgba(37,99,235,0.25)] transition-colors disabled:opacity-50"
+                        className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent text-xs font-medium border border-[rgba(59,130,246,0.25)] transition-colors disabled:opacity-50"
                       >
                         <RefreshCw className={`w-3 h-3 ${restarting[agent.id] ? "animate-spin" : ""}`} />
                         {restarting[agent.id] ? "Restarting…" : "Restart"}

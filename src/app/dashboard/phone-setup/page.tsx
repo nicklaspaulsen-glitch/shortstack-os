@@ -381,7 +381,7 @@ export default function PhoneSetupPage() {
                           done
                             ? "bg-brand-accent text-white"
                             : active
-                              ? "bg-[rgba(37,99,235,0.08)] text-brand-accent ring-2 ring-[rgba(37,99,235,0.4)]"
+                              ? "bg-[rgba(59,130,246,0.08)] text-brand-accent ring-2 ring-[rgba(59,130,246,0.4)]"
                               : "bg-surface-light text-muted"
                         }`}
                       >
@@ -442,13 +442,13 @@ export default function PhoneSetupPage() {
                             disabled={alreadyHas}
                             className={`flex items-center gap-3 rounded-lg border p-3 text-left transition ${
                               selected
-                                ? "border-brand-accent bg-[rgba(37,99,235,0.08)]"
+                                ? "border-brand-accent bg-[rgba(59,130,246,0.08)]"
                                 : alreadyHas
                                   ? "border-border/30 bg-surface-light/10 opacity-50 cursor-not-allowed"
-                                  : "border-border/50 hover:border-[rgba(37,99,235,0.2)]"
+                                  : "border-border/50 hover:border-[rgba(59,130,246,0.2)]"
                             }`}
                           >
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[rgba(37,99,235,0.08)] text-brand-accent font-semibold">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent font-semibold">
                               {c.business_name[0] || "?"}
                             </div>
                             <div className="min-w-0 flex-1">
@@ -551,8 +551,8 @@ export default function PhoneSetupPage() {
                             onClick={() => setSelectedNumber(n)}
                             className={`rounded-lg border p-3 text-left transition ${
                               selected
-                                ? "border-brand-accent bg-[rgba(37,99,235,0.08)]"
-                                : "border-border/50 hover:border-[rgba(37,99,235,0.2)]"
+                                ? "border-brand-accent bg-[rgba(59,130,246,0.08)]"
+                                : "border-border/50 hover:border-[rgba(59,130,246,0.2)]"
                             }`}
                           >
                             <p className="font-mono text-sm font-semibold">{n.phone}</p>
@@ -624,7 +624,7 @@ export default function PhoneSetupPage() {
 
                   {/* Live progress during the 2-3s Twilio → ElevenLabs pipeline */}
                   {buying && (
-                    <div className="mb-5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-4">
+                    <div className="mb-5 rounded-lg border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] p-4">
                       <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-brand-accent">
                         <Loader size={13} className="animate-spin" /> Provisioning your number —
                         hang tight, this takes 2-3 seconds

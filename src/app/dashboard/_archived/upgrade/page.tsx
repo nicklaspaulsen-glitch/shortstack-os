@@ -212,7 +212,7 @@ export default function UpgradePage() {
                       isRecommended
                         ? "border-emerald-500/30 bg-emerald-500/[0.03] ring-1 ring-emerald-500/15 shadow-card"
                         : isCurrent
-                        ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.03)] ring-1 ring-[rgba(37,99,235,0.1)]"
+                        ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.03)] ring-1 ring-[rgba(59,130,246,0.1)]"
                         : "border-border bg-surface shadow-soft hover:shadow-card-hover"
                     }`}
                   >
@@ -258,12 +258,12 @@ export default function UpgradePage() {
                       disabled={isCurrent || loadingTier !== null}
                       className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold transition-all ${
                         isCurrent
-                          ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] cursor-default"
+                          ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] cursor-default"
                           : isRecommended
                           ? "bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm"
                           : isUpgrade
                           ? "bg-brand-accent text-white hover:bg-brand-accent/80 shadow-sm"
-                          : "bg-surface-light text-foreground border border-border hover:bg-[rgba(37,99,235,0.08)] hover:text-brand-accent"
+                          : "bg-surface-light text-foreground border border-border hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent"
                       } ${loadingTier === tier ? "opacity-70 cursor-wait" : ""}`}
                     >
                       {loadingTier === tier ? (
@@ -399,7 +399,7 @@ export default function UpgradePage() {
               <p className="text-xs text-muted mb-3">Still not sure? See your current usage and invoices.</p>
               <Link
                 href="/dashboard/billing"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(37,99,235,0.08)] hover:text-brand-accent transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent transition-colors"
               >
                 View billing & usage
                 <ArrowUpRight size={12} />

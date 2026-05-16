@@ -192,7 +192,7 @@ export default function ZernioConnectPanel() {
             <select
               value={selectedClientId}
               onChange={(e) => setSelectedClientId(e.target.value)}
-              className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
+              className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
             >
               {clients.length === 0 && <option value="">No clients yet</option>}
               {clients.map((c) => (

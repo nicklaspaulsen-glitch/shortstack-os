@@ -272,7 +272,7 @@ export default function CommissionTrackerPage() {
                     onClick={() => setFilterStatus(s)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
                       filterStatus === s
-                        ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]"
+                        ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]"
                         : "bg-[rgba(0,0,0,0.04)] text-text-muted hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
                     }`}
                   >

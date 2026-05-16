@@ -194,7 +194,7 @@ export default function IntegrationCard({
             style={{
               background: "#2563EB",
               boxShadow:
-                "0 1px 0 rgba(255,255,255,0.25) inset, 0 4px 10px -3px rgba(37,99,235,0.35)",
+                "0 1px 0 rgba(255,255,255,0.25) inset, 0 4px 10px -3px rgba(59,130,246,0.35)",
             }}
           >
             {busy ? (

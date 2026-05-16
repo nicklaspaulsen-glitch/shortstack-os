@@ -28,7 +28,7 @@ interface ApiKeyRow {
 }
 
 const SCOPE_PILLS: Record<Scope, string> = {
-  read: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)]",
+  read: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",
   write: "bg-yellow-500/10 text-yellow-700 border-yellow-500/30",
   admin: "bg-red-500/10 text-red-600 border-red-500/30",
 };
@@ -194,7 +194,7 @@ export default function ApiKeysPage() {
                 </div>
               </div>
             )}{showCreate && (
-              <div className="card p-4 space-y-3 border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.02)]">
+              <div className="card p-4 space-y-3 border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.02)]">
                 <div className="flex items-center gap-2">
                   <Key size={13} className="text-brand-accent" />
                   <h2 className="text-xs font-semibold text-brand-accent">New API Key</h2>

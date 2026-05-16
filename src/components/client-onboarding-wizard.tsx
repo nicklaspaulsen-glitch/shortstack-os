@@ -158,8 +158,8 @@ function ChoiceBtn({
       onClick={onClick}
       className={`px-4 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 ${
         selected
-          ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-foreground"
-          : "border-border bg-surface-light text-muted hover:border-[rgba(37,99,235,0.4)] hover:text-foreground"
+          ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] text-foreground"
+          : "border-border bg-surface-light text-muted hover:border-[rgba(59,130,246,0.4)] hover:text-foreground"
       } ${className}`}
     >
       {children}
@@ -183,8 +183,8 @@ function SelectCard({
       onClick={onClick}
       className={`relative text-left  p-4 border transition-all duration-200 ${
         selected
-          ? "border-[#2563EB] bg-[rgba(37,99,235,0.05)] shadow-[0_0_0_1px_rgba(37,99,235,0.25)]"
-          : "border-border bg-surface-light hover:border-[rgba(37,99,235,0.4)]"
+          ? "border-[#2563EB] bg-[rgba(59,130,246,0.05)] shadow-[0_0_0_1px_rgba(59,130,246,0.25)]"
+          : "border-border bg-surface-light hover:border-[rgba(59,130,246,0.4)]"
       } ${className}`}
     >
       {selected && (
@@ -361,10 +361,10 @@ export default function ClientOnboardingWizard({
         return (
           <div className="flex flex-col items-center text-center py-8 px-4">
             <div className="relative mb-8">
-              <div className="w-20 h-20 rounded-3xl bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center breathe">
+              <div className="w-20 h-20 rounded-3xl bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center breathe">
                 <Sparkles size={36} className="text-[#2563EB]" />
               </div>
-              <div className="absolute -inset-3 rounded-[2rem] bg-[rgba(37,99,235,0.04)] -z-10" />
+              <div className="absolute -inset-3 rounded-[2rem] bg-[rgba(59,130,246,0.04)] -z-10" />
             </div>
             <p className="text-xs font-semibold uppercase tracking-widest text-[#2563EB] mb-3">
               Welcome to Trinity
@@ -820,7 +820,7 @@ export default function ClientOnboardingWizard({
                   {data.content_topics.map((t) => (
                     <span
                       key={t}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] text-xs text-foreground font-medium"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] text-xs text-foreground font-medium"
                     >
                       {t}
                       <button
@@ -863,7 +863,7 @@ export default function ClientOnboardingWizard({
                     <button
                       key={t}
                       onClick={() => set("content_topics", [...data.content_topics, t])}
-                      className="text-[11px] text-muted border border-dashed border-border px-2.5 py-1 rounded-full hover:border-[rgba(37,99,235,0.4)] hover:text-foreground transition-colors"
+                      className="text-[11px] text-muted border border-dashed border-border px-2.5 py-1 rounded-full hover:border-[rgba(59,130,246,0.4)] hover:text-foreground transition-colors"
                     >
                       + {t}
                     </button>
@@ -901,8 +901,8 @@ export default function ClientOnboardingWizard({
                     onClick={() => set("has_google_business", true)}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                       data.has_google_business
-                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-foreground"
-                        : "border-border bg-surface-light text-muted hover:border-[rgba(37,99,235,0.4)]"
+                        ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] text-foreground"
+                        : "border-border bg-surface-light text-muted hover:border-[rgba(59,130,246,0.4)]"
                     }`}
                   >
                     <Check size={14} className={data.has_google_business ? "text-[#2563EB]" : "text-muted"} />
@@ -912,8 +912,8 @@ export default function ClientOnboardingWizard({
                     onClick={() => set("has_google_business", false)}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                       !data.has_google_business
-                        ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-foreground"
-                        : "border-border bg-surface-light text-muted hover:border-[rgba(37,99,235,0.4)]"
+                        ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] text-foreground"
+                        : "border-border bg-surface-light text-muted hover:border-[rgba(59,130,246,0.4)]"
                     }`}
                   >
                     <X size={14} className={!data.has_google_business ? "text-[#2563EB]" : "text-muted"} />
@@ -947,8 +947,8 @@ export default function ClientOnboardingWizard({
                             }
                             className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-all ${
                               data.social_accounts[id] === value
-                                ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] text-foreground"
-                                : "border-border text-muted hover:border-[rgba(37,99,235,0.25)]"
+                                ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] text-foreground"
+                                : "border-border text-muted hover:border-[rgba(59,130,246,0.25)]"
                             }`}
                           >
                             {optLabel}
@@ -1026,7 +1026,7 @@ export default function ClientOnboardingWizard({
                   <div
                     key={id}
                     className={`card flex items-center gap-4 transition-all ${
-                      connected ? "border-[rgba(37,99,235,0.4)] bg-[rgba(37,99,235,0.02)]" : ""
+                      connected ? "border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.02)]" : ""
                     }`}
                   >
                     <div
@@ -1047,7 +1047,7 @@ export default function ClientOnboardingWizard({
                     ) : (
                       <a
                         href="/integrations"
-                        className="flex items-center gap-1 text-[11px] font-medium text-[#2563EB] hover:text-[rgba(37,99,235,0.8)] shrink-0 transition-colors"
+                        className="flex items-center gap-1 text-[11px] font-medium text-[#2563EB] hover:text-[rgba(59,130,246,0.8)] shrink-0 transition-colors"
                         onClick={(e) => {
                           e.preventDefault();
                           set("connected_accounts", [...data.connected_accounts, id]);
@@ -1152,10 +1152,10 @@ export default function ClientOnboardingWizard({
         return (
           <div className="text-center">
             <div className="relative inline-flex mb-6">
-              <div className="w-20 h-20 rounded-3xl bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center">
+              <div className="w-20 h-20 rounded-3xl bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center">
                 <Zap size={36} className="text-[#2563EB]" />
               </div>
-              <div className="absolute -inset-4 rounded-[2.5rem] bg-[rgba(37,99,235,0.03)] -z-10 animate-pulse" />
+              <div className="absolute -inset-4 rounded-[2.5rem] bg-[rgba(59,130,246,0.03)] -z-10 animate-pulse" />
             </div>
 
             <StepLabel>Step 10 of 10</StepLabel>
@@ -1261,7 +1261,7 @@ export default function ClientOnboardingWizard({
                   i + 1 === step
                     ? "w-6 h-2 bg-[#2563EB]"
                     : i + 1 < step
-                    ? "w-2 h-2 bg-[rgba(37,99,235,0.4)] hover:bg-[rgba(37,99,235,0.7)] cursor-pointer"
+                    ? "w-2 h-2 bg-[rgba(59,130,246,0.4)] hover:bg-[rgba(59,130,246,0.7)] cursor-pointer"
                     : "w-2 h-2 bg-border cursor-default"
                 }`}
               />

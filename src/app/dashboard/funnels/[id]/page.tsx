@@ -588,7 +588,7 @@ export default function FunnelCanvasPage() {
                 <input
                   value={panelTitle}
                   onChange={(e) => setPanelTitle(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm outline-none focus:border-[rgba(37,99,235,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm outline-none focus:border-[rgba(59,130,246,0.25)]"
                 />
               </div>
 
@@ -597,7 +597,7 @@ export default function FunnelCanvasPage() {
                 <select
                   value={panelType}
                   onChange={(e) => setPanelType(e.target.value as StepType)}
-                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm outline-none focus:border-[rgba(37,99,235,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm outline-none focus:border-[rgba(59,130,246,0.25)]"
                 >
                   {STEP_TYPES.map((t) => (
                     <option key={t.value} value={t.value}>{t.label}</option>
@@ -612,7 +612,7 @@ export default function FunnelCanvasPage() {
                 <select
                   value={panelPageId}
                   onChange={(e) => setPanelPageId(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm outline-none focus:border-[rgba(37,99,235,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm outline-none focus:border-[rgba(59,130,246,0.25)]"
                 >
                   <option value="">— None —</option>
                   {pages.map((p) => (
@@ -630,7 +630,7 @@ export default function FunnelCanvasPage() {
                   value={panelButtonText}
                   onChange={(e) => setPanelButtonText(e.target.value)}
                   placeholder="e.g. Yes, I Want Access!"
-                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(59,130,246,0.25)]"
                 />
               </div>
 
@@ -640,7 +640,7 @@ export default function FunnelCanvasPage() {
                   value={panelRedirectUrl}
                   onChange={(e) => setPanelRedirectUrl(e.target.value)}
                   placeholder="https://…"
-                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(59,130,246,0.25)]"
                 />
               </div>
 

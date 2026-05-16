@@ -68,8 +68,8 @@ const DEPTH_COPY: Record<Depth, { label: string; desc: string; cost: string }> =
 
 const STATUS_PILLS: Record<JobRow["status"], string> = {
   pending: "bg-[rgba(0,0,0,0.06)] text-[#6B7280] border-[rgba(0,0,0,0.10)]",
-  researching: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)]",
-  generating: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)]",
+  researching: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",
+  generating: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",
   sending: "bg-amber-500/15 text-amber-700 border-amber-500/30",
   completed: "bg-green-500/15 text-green-700 border-green-500/30",
   failed: "bg-red-500/15 text-red-700 border-red-500/30",
@@ -289,7 +289,7 @@ export default function ColdEmailPage() {
                           onClick={() => setDepth(d)}
                           className={`flex-1 text-[10px] px-2 py-1.5 rounded border transition-all ${
                             depth === d
-                              ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.10)] text-brand-accent"
+                              ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.10)] text-brand-accent"
                               : "border-border text-muted hover:text-foreground"
                           }`}
                         >
@@ -398,7 +398,7 @@ export default function ColdEmailPage() {
                               <button
                                 onClick={() => handlePreview(j.id)}
                                 disabled={previewing === j.id}
-                                className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
+                                className="text-[9px] px-2 py-1 rounded border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
                               >
                                 {previewing === j.id ? (
                                   <Loader2 size={9} className="animate-spin" />
@@ -419,7 +419,7 @@ export default function ColdEmailPage() {
                           {(j.status === "researching" || j.status === "generating") && (
                             <button
                               onClick={() => handleSend(j.id)}
-                              className="text-[9px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] transition-all flex items-center gap-1"
+                              className="text-[9px] px-2 py-1 rounded border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-all flex items-center gap-1"
                             >
                               <Send size={9} />
                               Send

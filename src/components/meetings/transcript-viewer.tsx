@@ -61,7 +61,7 @@ export default function TranscriptViewer({ segments, fallbackRaw, currentTime = 
             ref={active ? activeRef : null}
             onClick={() => onSeek?.(seg.start)}
             className={`group w-full text-left flex gap-3 px-2 py-1.5 rounded-md transition-all ${
-              active ? "bg-[rgba(37,99,235,0.08)] ring-1 ring-[rgba(37,99,235,0.3)]" : "hover:bg-white/[0.03]"
+              active ? "bg-[rgba(59,130,246,0.08)] ring-1 ring-[rgba(59,130,246,0.3)]" : "hover:bg-white/[0.03]"
             }`}
           >
             <span className="flex-shrink-0 text-[10px] font-mono text-muted w-12 pt-0.5">

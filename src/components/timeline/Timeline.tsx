@@ -630,7 +630,7 @@ export function Timeline({
           type="button"
           onClick={() => setSnapOn((v) => !v)}
           className={`flex items-center gap-1 text-[9px] rounded px-2 py-1 border transition-colors ${
-            snapOn ? "border-[rgba(37,99,235,0.3)] bg-[rgba(37,99,235,0.08)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"
+            snapOn ? "border-[rgba(59,130,246,0.3)] bg-[rgba(59,130,246,0.08)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"
           }`}
           title="Snap to 1-second grid, clip edges & playhead"
         >

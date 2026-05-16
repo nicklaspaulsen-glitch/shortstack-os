@@ -77,7 +77,7 @@ export default function AdminIndexPage() {
               href={href}
               className="glass rounded-xl p-5 flex gap-4 items-start relative overflow-hidden hover:border-border-strong transition-colors group block"
             >
-              <span className="mt-0.5 flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(37,99,235,0.08)" }}>
+              <span className="mt-0.5 flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(59,130,246,0.08)" }}>
                 <Icon className="w-4 h-4" style={{ color: "#2563EB" }} />
               </span>
               <div>

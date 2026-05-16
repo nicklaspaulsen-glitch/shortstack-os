@@ -60,7 +60,7 @@ function PlanCard({
         reducedMotion
           ? undefined
           : hovered
-          ? { y: -4, boxShadow: "0 16px 48px rgba(37,99,235,0.16)" }
+          ? { y: -4, boxShadow: "0 16px 48px rgba(59,130,246,0.16)" }
           : { y: 0, boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }
       }
       transition={SPRING}
@@ -68,18 +68,18 @@ function PlanCard({
         "relative flex flex-col rounded-2xl p-6 bg-white",
         "border",
         plan.featured
-          ? "border-[rgba(37,99,235,0.30)]"
+          ? "border-[rgba(59,130,246,0.30)]"
           : "border-[rgba(0,0,0,0.08)]"
       )}
       style={{
         boxShadow: plan.featured
-          ? "0 4px 24px rgba(37,99,235,0.12)"
+          ? "0 4px 24px rgba(59,130,246,0.12)"
           : "0 2px 8px rgba(0,0,0,0.06)",
       }}
     >
       {/* Featured badge */}
       {plan.badge && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#2563EB] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white shadow-[0_2px_8px_rgba(37,99,235,0.35)]">
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#2563EB] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white shadow-[0_2px_8px_rgba(59,130,246,0.35)]">
           {plan.badge}
         </span>
       )}
@@ -136,8 +136,8 @@ function PlanCard({
             isCurrent
               ? "bg-[rgba(0,0,0,0.05)] text-text-muted cursor-not-allowed"
               : plan.featured
-              ? "bg-[#2563EB] text-white shadow-[0_2px_8px_rgba(37,99,235,0.28)] hover:bg-[#1D4ED8] hover:shadow-[0_4px_16px_rgba(37,99,235,0.40)]"
-              : "bg-[rgba(0,0,0,0.05)] text-text-primary hover:bg-[rgba(37,99,235,0.08)] hover:text-[#2563EB]"
+              ? "bg-[#2563EB] text-white shadow-[0_2px_8px_rgba(59,130,246,0.28)] hover:bg-[#1D4ED8] hover:shadow-[0_4px_16px_rgba(59,130,246,0.40)]"
+              : "bg-[rgba(0,0,0,0.05)] text-text-primary hover:bg-[rgba(59,130,246,0.08)] hover:text-[#2563EB]"
           )}
         >
           {plan.featured && !isCurrent && <Zap className="h-4 w-4" />}

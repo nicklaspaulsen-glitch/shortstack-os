@@ -270,7 +270,7 @@ function ScoreDetailModal({
           <button
             onClick={handleRecompute}
             disabled={recomputing}
-            className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.12)] text-brand-accent hover:bg-[rgba(37,99,235,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-50"
+            className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.12)] text-brand-accent hover:bg-[rgba(59,130,246,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-50"
           >
             {recomputing ? (
               <Loader size={11} className="animate-spin" />
@@ -659,8 +659,8 @@ export default function LeadScoringPage() {
                     onClick={() => setGradeFilter(p.key)}
                     className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
                       gradeFilter === p.key
-                        ? "bg-[rgba(37,99,235,0.12)] border-[rgba(37,99,235,0.4)] text-brand-accent"
-                        : "border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
+                        ? "bg-[rgba(59,130,246,0.12)] border-[rgba(59,130,246,0.4)] text-brand-accent"
+                        : "border-border text-muted hover:border-[rgba(59,130,246,0.2)] hover:text-foreground"
                     }`}
                   >
                     {p.label}
@@ -670,8 +670,8 @@ export default function LeadScoringPage() {
                   onClick={() => setSortByScore((v) => !v)}
                   className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
                     sortByScore
-                      ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent"
-                      : "border-border text-muted hover:border-[rgba(37,99,235,0.2)] hover:text-foreground"
+                      ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent"
+                      : "border-border text-muted hover:border-[rgba(59,130,246,0.2)] hover:text-foreground"
                   }`}
                 >
                   <Target size={11} /> Sort by score
@@ -684,7 +684,7 @@ export default function LeadScoringPage() {
                 <button
                   onClick={handleBulkRecompute}
                   disabled={selected.size === 0 || bulkRunning}
-                  className="text-xs px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-40"
+                  className="text-xs px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.12)] border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-40"
                 >
                   {bulkRunning ? (
                     <Loader size={11} className="animate-spin" />
@@ -732,7 +732,7 @@ export default function LeadScoringPage() {
                     <div
                       key={lead.id}
                       onClick={() => setDetailLead(lead)}
-                      className="grid grid-cols-12 items-center py-2 px-3 rounded-lg bg-surface-light border border-border hover:border-[rgba(37,99,235,0.1)] transition-all cursor-pointer text-[10px]"
+                      className="grid grid-cols-12 items-center py-2 px-3 rounded-lg bg-surface-light border border-border hover:border-[rgba(59,130,246,0.1)] transition-all cursor-pointer text-[10px]"
                     >
                       <div
                         className="col-span-1"
@@ -787,7 +787,7 @@ export default function LeadScoringPage() {
                   <button
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page <= 1}
-                    className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all"
+                    className="p-1.5 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] disabled:opacity-30 transition-all"
                     aria-label="Previous page"
                   >
                     <ChevronLeft size={14} />
@@ -800,7 +800,7 @@ export default function LeadScoringPage() {
                       setPage((p) => Math.min(totalPages, p + 1))
                     }
                     disabled={page >= totalPages}
-                    className="p-1.5 rounded-lg border border-border hover:border-[rgba(37,99,235,0.2)] disabled:opacity-30 transition-all"
+                    className="p-1.5 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] disabled:opacity-30 transition-all"
                     aria-label="Next page"
                   >
                     <ChevronRight size={14} />

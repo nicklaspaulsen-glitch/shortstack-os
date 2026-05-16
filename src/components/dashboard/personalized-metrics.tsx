@@ -115,10 +115,10 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
   if (!meta) return null;
 
   return (
-    <div className=" border border-[rgba(37,99,235,0.2)] bg-gradient-to-br from-[rgba(37,99,235,0.05)] via-transparent to-transparent p-4">
+    <div className=" border border-[rgba(59,130,246,0.2)] bg-gradient-to-br from-[rgba(59,130,246,0.05)] via-transparent to-transparent p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+          <div className="w-7 h-7 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
             <Sparkles size={13} className="text-[#2563EB]" />
           </div>
           <div>
@@ -147,7 +147,7 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
           return (
             <div
               key={key}
-              className="rounded-xl border border-border bg-surface-light/40 p-3 hover:border-[rgba(37,99,235,0.25)] transition-all"
+              className="rounded-xl border border-border bg-surface-light/40 p-3 hover:border-[rgba(59,130,246,0.25)] transition-all"
             >
               <div className="flex items-center gap-2 mb-1">
                 <Icon size={13} className={accent} />
@@ -163,7 +163,7 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
       </div>
 
       <div className="mt-3 text-[10px] text-muted/70 italic">
-        <Rocket size={10} className="inline mr-1 text-[rgba(37,99,235,0.7)]" />
+        <Rocket size={10} className="inline mr-1 text-[rgba(59,130,246,0.7)]" />
         Connect your platforms to populate these metrics live.
       </div>
     </div>

@@ -219,7 +219,7 @@ export default function EmailTemplatesPage() {
                   {CATEGORIES.map(cat => (
                     <button key={cat} onClick={() => setFilterCategory(cat)}
                       className={`px-3 py-1.5 rounded-lg text-[10px] font-medium transition-colors ${
-                        filterCategory === cat ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)]" : "bg-[rgba(0,0,0,0.03)] text-muted border border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.06)]"
+                        filterCategory === cat ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-[rgba(0,0,0,0.03)] text-muted border border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.06)]"
                       }`}>{cat}</button>
                   ))}
                 </div>
@@ -306,7 +306,7 @@ export default function EmailTemplatesPage() {
                         <div className="space-y-1">
                           {MERGE_TAGS.map(tag => (
                             <button key={tag.tag} onClick={() => setEditedBody(prev => prev + " " + tag.tag)}
-                              className="flex items-center justify-between w-full p-1.5 rounded hover:bg-[rgba(37,99,235,0.05)] transition-all text-[10px]">
+                              className="flex items-center justify-between w-full p-1.5 rounded hover:bg-[rgba(59,130,246,0.05)] transition-all text-[10px]">
                               <span className="font-mono text-brand-accent">{tag.tag}</span>
                               <span className="text-muted">{tag.desc}</span>
                             </button>
@@ -324,7 +324,7 @@ export default function EmailTemplatesPage() {
                           ].map(m => (
                             <button key={m.key} onClick={() => setPreviewMode(m.key as typeof previewMode)}
                               className={`flex-1 text-[9px] py-1.5 rounded flex items-center justify-center gap-1 ${
-                                previewMode === m.key ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "text-[#6B7280] hover:bg-[rgba(0,0,0,0.04)]"
+                                previewMode === m.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-[#6B7280] hover:bg-[rgba(0,0,0,0.04)]"
                               }`}>{m.icon} {m.label}</button>
                           ))}
                         </div>
@@ -454,7 +454,7 @@ export default function EmailTemplatesPage() {
 >
                       <div className="flex items-center justify-between mb-3">
                         <p className="text-xs font-semibold">{t.name}</p>
-                        <span className="text-[9px] px-2 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent">v{t.version} (current)</span>
+                        <span className="text-[9px] px-2 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">v{t.version} (current)</span>
                       </div>
                       <div className="space-y-1.5">
                         {Array.from({ length: t.version }, (_, i) => t.version - i).map(v => (
@@ -484,7 +484,7 @@ export default function EmailTemplatesPage() {
                   className="glass rounded-xl p-6" 
 >
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-[rgba(37,99,235,0.08)] rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-[rgba(59,130,246,0.08)] rounded-xl flex items-center justify-center">
                       <Sparkles size={18} className="text-brand-accent" />
                     </div>
                     <div>
@@ -531,7 +531,7 @@ export default function EmailTemplatesPage() {
                     <div className="flex gap-2 justify-center flex-wrap">
                       {["Follow-up", "Welcome", "Re-engagement", "Upsell", "Review request", "Holiday promo"].map(q => (
                         <button key={q} onClick={() => setAiPrompt(`Write a ${q.toLowerCase()} email template for a digital marketing agency. Professional but conversational tone.`)}
-                          className="text-[9px] px-2 py-1 rounded bg-[rgba(0,0,0,0.04)] text-[#6B7280] border border-[rgba(0,0,0,0.08)] hover:border-[rgba(37,99,235,0.25)] hover:text-brand-accent transition-all">{q}</button>
+                          className="text-[9px] px-2 py-1 rounded bg-[rgba(0,0,0,0.04)] text-[#6B7280] border border-[rgba(0,0,0,0.08)] hover:border-[rgba(59,130,246,0.25)] hover:text-brand-accent transition-all">{q}</button>
                       ))}
                     </div>
 
@@ -581,7 +581,7 @@ export default function EmailTemplatesPage() {
                       {aiGenerated.merge_tags.length> 0 && (
                         <div className="flex gap-1 flex-wrap">
                           {aiGenerated.merge_tags.map(tag => (
-                            <span key={tag} className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent">{tag}</span>
+                            <span key={tag} className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">{tag}</span>
                           ))}
                         </div>
                       )}
@@ -608,7 +608,7 @@ export default function EmailTemplatesPage() {
                     className="glass rounded-xl p-3" 
 >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] px-2 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent font-semibold">{v.angle}</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent font-semibold">{v.angle}</span>
                       <button onClick={() => { setEditedSubject(v.subject); setEditedBody(v.body); setShowVariantsModal(false); toast.success("Variant applied"); }} className="btn-primary text-[10px] py-1 px-2">Apply</button>
                     </div>
                     <p className="text-xs font-semibold mb-1">{v.subject}</p>
@@ -683,7 +683,7 @@ export default function EmailTemplatesPage() {
                           <span className={`text-[9px] px-1.5 py-0.5 rounded ${t.shared ? "bg-green-500/10 text-green-700" : "bg-[rgba(0,0,0,0.04)] text-[#6B7280]"}`}>
                             {t.shared ? "Shared" : "Private"}
                           </span>
-                          <button className="text-[9px] px-2 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)]">
+                          <button className="text-[9px] px-2 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)]">
                             {t.shared ? "Unshare" : "Share"}
                           </button>
                         </div>

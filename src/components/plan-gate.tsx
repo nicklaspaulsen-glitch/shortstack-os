@@ -46,8 +46,8 @@ export default function PlanGate({ requiredPlan, clientPlan, children, featureNa
   }
 
   return (
-    <div className="rounded-xl border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)] p-6 text-center">
-      <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(37,99,235,0.08)]">
+    <div className="rounded-xl border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)] p-6 text-center">
+      <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(59,130,246,0.08)]">
         <ArrowUpCircle size={20} className="text-[#2563EB]" />
       </div>
       <h3 className="text-sm font-semibold text-foreground mb-1">
@@ -57,7 +57,7 @@ export default function PlanGate({ requiredPlan, clientPlan, children, featureNa
         {clientPlan || "Starter"} plan doesn&apos;t include this feature.
         Upgrade to <span className="text-[#2563EB] font-medium">{requiredPlan}</span> to unlock it.
       </p>
-      <span className="inline-flex items-center gap-1.5 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] px-4 py-1.5 text-xs font-medium text-[#2563EB]">
+      <span className="inline-flex items-center gap-1.5 rounded-lg border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] px-4 py-1.5 text-xs font-medium text-[#2563EB]">
         <ArrowUpCircle size={12} />
         Upgrade to {requiredPlan}
       </span>

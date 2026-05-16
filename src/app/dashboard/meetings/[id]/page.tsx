@@ -326,7 +326,7 @@ export default function MeetingDetailPage() {
 
           {/* Decisions */}
           {meeting.decisions && meeting.decisions.length > 0 && (
-            <div className="card border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] p-4 space-y-2">
+            <div className="card border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] p-4 space-y-2">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-brand-accent flex items-center gap-1.5">
                 <Lightbulb size={11} /> Decisions
               </h3>
@@ -352,7 +352,7 @@ export default function MeetingDetailPage() {
                   <button
                     key={i}
                     onClick={() => seekTo(k.ts)}
-                    className="text-[10px] px-2 py-1 rounded-md bg-black/[0.04] hover:bg-[rgba(37,99,235,0.08)] hover:text-brand-accent transition-all flex items-center gap-1"
+                    className="text-[10px] px-2 py-1 rounded-md bg-black/[0.04] hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent transition-all flex items-center gap-1"
                   >
                     <Play size={8} /> {formatTs(k.ts)} · {k.label}
                   </button>

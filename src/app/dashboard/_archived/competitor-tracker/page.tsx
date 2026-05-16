@@ -214,7 +214,7 @@ export default function CompetitorTrackerPage() {
                 <p className="text-[#6B7280] mb-4">No competitors tracked yet.</p>
                 <button
                   onClick={openCreate}
-                  className="px-4 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent text-sm font-medium transition-colors"
 >
                   <Plus size={14} className="inline mr-1" /> Add Competitor
                 </button>
@@ -278,7 +278,7 @@ export default function CompetitorTrackerPage() {
                           <button
                             onClick={() => checkNow(c)}
                             disabled={checking === c.id}
-                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-xs transition-colors disabled:opacity-50"
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent text-xs transition-colors disabled:opacity-50"
 >
                             {checking === c.id ? (
                               <Loader size={12} className="animate-spin" />
@@ -324,7 +324,7 @@ export default function CompetitorTrackerPage() {
                       value={form[key]}
                       onChange={e => setF(key, e.target.value)}
                       placeholder={placeholder}
-                      className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[rgba(37,99,235,0.40)]"
+                      className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)]"
  />
                   </div>
                 ))}

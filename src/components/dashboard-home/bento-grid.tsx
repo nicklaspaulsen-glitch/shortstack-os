@@ -34,7 +34,7 @@ export default function BentoGrid({ data }: Props) {
         <div
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[50%] rounded-full"
           style={{
-            background: "radial-gradient(closest-side, rgba(37,99,235,0.07) 0%, transparent 100%)",
+            background: "radial-gradient(closest-side, rgba(59,130,246,0.07) 0%, transparent 100%)",
             filter: "blur(60px)",
           }}
         />

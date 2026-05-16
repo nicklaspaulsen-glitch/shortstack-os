@@ -354,7 +354,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                       whileHover={{ y: -2, scale: 1.01 }}
                       onClick={() => setSelectedProfile(p.id)}
                       style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
-                      className={`rounded-xl p-3 cursor-pointer transition-all ${p.id === selectedProfile ? "!border-[rgba(37,99,235,0.35)] bg-[rgba(37,99,235,0.06)]" : "hover:border-[rgba(0,0,0,0.12)]"}`}
+                      className={`rounded-xl p-3 cursor-pointer transition-all ${p.id === selectedProfile ? "!border-[rgba(59,130,246,0.35)] bg-[rgba(59,130,246,0.06)]" : "hover:border-[rgba(0,0,0,0.12)]"}`}
                     >
                       <div className="flex items-center justify-between">
                         <div>
@@ -390,7 +390,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           key={t.key}
                           onClick={() => setTab(t.key)}
                           className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-all ${
-                            tab === t.key ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "text-muted hover:text-text-primary"
+                            tab === t.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-muted hover:text-text-primary"
                           }`}
                         >
                           {t.icon} {t.label}
@@ -411,7 +411,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                             <div className="relative">
                               <button
                                 onClick={() => setShowPresetMenu(!showPresetMenu)}
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-xs hover:border-[rgba(37,99,235,0.25)] transition-colors"
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-xs hover:border-[rgba(59,130,246,0.25)] transition-colors"
                               >
                                 {VOICE_PRESETS.find(p => p.key === profile.preset)?.icon}
                                 <span className="capitalize">{profile.preset}</span>
@@ -442,7 +442,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 onClick={() => applyPreset(p.key)}
                                 className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${
                                   profile.preset === p.key
-                                    ? "bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)]"
+                                    ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]"
                                     : "bg-[rgba(0,0,0,0.04)] text-muted hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
                                 }`}
                               >
@@ -544,7 +544,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                               <button
                                 onClick={() => enhanceText(newSample, `Polish this writing sample for the "${profile?.clientName}" brand voice profile. Keep the core message but improve clarity, tone, and impact.`, setNewSample, "sample")}
                                 disabled={!newSample.trim() || enhancing === "sample"}
-                                className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40"
+                                className="flex items-center gap-1 text-[10px] text-[rgba(59,130,246,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40"
                               >
                                 {enhancing === "sample" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
                                 AI Enhance
@@ -725,7 +725,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           <button
                             onClick={() => enhanceText(checkerText, `Rewrite this text to match the "${profile?.clientName}" brand voice. Tone: ${profile?.toneSliders.formalCasual && profile.toneSliders.formalCasual > 50 ? "casual" : "formal"}. ${profile?.dos.length ? `Do: ${profile.dos.join(", ")}` : ""} ${profile?.donts.length ? `Don't: ${profile.donts.join(", ")}` : ""}`, setCheckerText, "checker")}
                             disabled={!checkerText.trim() || enhancing === "checker"}
-                            className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mb-3"
+                            className="flex items-center gap-1 text-[10px] text-[rgba(59,130,246,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mb-3"
                           >
                             {enhancing === "checker" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
                             AI Rewrite to Match Voice

@@ -129,7 +129,7 @@ export default function InlineSocialConnect({
               className={
                 connected
                   ? "flex items-center gap-1 text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
-                  : "flex items-center gap-1 text-[10px] px-2 py-1 rounded-full bg-surface-light border border-border hover:border-[rgba(37,99,235,0.4)] hover:text-foreground text-muted transition"
+                  : "flex items-center gap-1 text-[10px] px-2 py-1 rounded-full bg-surface-light border border-border hover:border-[rgba(59,130,246,0.4)] hover:text-foreground text-muted transition"
               }
             >
               {isLoading ? <Loader2 size={10} className="animate-spin" /> : connected ? <Check size={10} /> : meta.icon(10)}
@@ -156,7 +156,7 @@ export default function InlineSocialConnect({
             className={
               connected
                 ? "group relative overflow-hidden p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs"
-                : "group relative overflow-hidden p-3 rounded-xl bg-surface-light/60 border border-border hover:border-[rgba(37,99,235,0.4)] hover:bg-surface-light transition text-xs"
+                : "group relative overflow-hidden p-3 rounded-xl bg-surface-light/60 border border-border hover:border-[rgba(59,130,246,0.4)] hover:bg-surface-light transition text-xs"
             }
             style={!connected ? { boxShadow: `inset 0 0 0 1px transparent` } : undefined}
           >

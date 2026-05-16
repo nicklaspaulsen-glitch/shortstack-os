@@ -58,15 +58,15 @@ const TYPE_CONFIG: Record<string, {
   outreach: {
     icon: <Send size={16} />,
     color: "text-brand-accent",
-    bg: "bg-[rgba(37,99,235,0.08)]",
-    border: "border-[rgba(37,99,235,0.25)]",
+    bg: "bg-[rgba(59,130,246,0.08)]",
+    border: "border-[rgba(59,130,246,0.25)]",
     label: "Outreach",
   },
   autopilot: {
     icon: <Sparkles size={16} />,
     color: "text-brand-accent",
-    bg: "bg-[rgba(37,99,235,0.08)]",
-    border: "border-[rgba(37,99,235,0.25)]",
+    bg: "bg-[rgba(59,130,246,0.08)]",
+    border: "border-[rgba(59,130,246,0.25)]",
     label: "Auto-Pilot",
   },
   system: {
@@ -86,8 +86,8 @@ const TYPE_CONFIG: Record<string, {
   info: {
     icon: <Info size={16} />,
     color: "text-brand-accent",
-    bg: "bg-[rgba(37,99,235,0.08)]",
-    border: "border-[rgba(37,99,235,0.25)]",
+    bg: "bg-[rgba(59,130,246,0.08)]",
+    border: "border-[rgba(59,130,246,0.25)]",
     label: "Info",
   },
   success: {
@@ -100,8 +100,8 @@ const TYPE_CONFIG: Record<string, {
   warning: {
     icon: <AlertTriangle size={16} />,
     color: "text-brand-accent",
-    bg: "bg-[rgba(37,99,235,0.08)]",
-    border: "border-[rgba(37,99,235,0.25)]",
+    bg: "bg-[rgba(59,130,246,0.08)]",
+    border: "border-[rgba(59,130,246,0.25)]",
     label: "Warning",
   },
   error: {
@@ -340,7 +340,7 @@ export default function NotificationsPage() {
                   aria-label="Search notifications"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="glass w-full pl-9 pr-4 py-2.5 rounded-lg text-xs text-foreground placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-[rgba(37,99,235,0.25)] focus:border-[rgba(37,99,235,0.25)] transition-all"
+                  className="glass w-full pl-9 pr-4 py-2.5 rounded-lg text-xs text-foreground placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-[rgba(59,130,246,0.25)] focus:border-[rgba(59,130,246,0.25)] transition-all"
                 />
               </div>
 
@@ -352,7 +352,7 @@ export default function NotificationsPage() {
                     onClick={() => setActiveTab(tab.key)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-medium whitespace-nowrap transition-all ${
                       activeTab === tab.key
-                        ? "text-brand-accent bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)]"
+                        ? "text-brand-accent bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)]"
                         : "text-muted hover:text-foreground hover:bg-surface-light border border-transparent"
                     }`}
                   >
@@ -360,7 +360,7 @@ export default function NotificationsPage() {
                     {tab.label}
                     {tabCounts[tab.key] > 0 && (
                       <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
-                        activeTab === tab.key ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "bg-surface-light text-muted"
+                        activeTab === tab.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light text-muted"
                       }`}>
                         {tabCounts[tab.key]}
                       </span>
@@ -377,7 +377,7 @@ export default function NotificationsPage() {
                 <p className="text-xs text-muted mb-4">{error}</p>
                 <button
                   onClick={fetchNotifications}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium text-brand-accent bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.12)] transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium text-brand-accent bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.12)] transition-colors"
                 >
                   <RefreshCw size={12} />
                   Try Again
@@ -490,7 +490,7 @@ export default function NotificationsPage() {
                                     </Link>
                                   )}
                                   {actionLabel && !n.link && (
-                                    <span className="text-[10px] text-[rgba(37,99,235,0.5)] flex items-center gap-1">
+                                    <span className="text-[10px] text-[rgba(59,130,246,0.5)] flex items-center gap-1">
                                       {actionLabel}
                                       <ChevronRight size={9} />
                                     </span>
@@ -530,7 +530,7 @@ export default function NotificationsPage() {
                       </div>
                       <p className="text-[10px] text-muted">{tab.label}</p>
                       {unread > 0 && (
-                        <span className="text-[8px] text-brand-accent bg-[rgba(37,99,235,0.08)] px-1.5 py-0.5 rounded-full mt-1 inline-block">
+                        <span className="text-[8px] text-brand-accent bg-[rgba(59,130,246,0.08)] px-1.5 py-0.5 rounded-full mt-1 inline-block">
                           {unread} new
                         </span>
                       )}

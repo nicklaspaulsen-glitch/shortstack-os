@@ -82,7 +82,7 @@ export default function ChangelogPage() {
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xs text-gray-500">{entry.date}</span>
                 <span className="text-[9px] px-2 py-0.5 rounded-full font-medium" style={{
-                  background: entry.tag === "New" ? "rgba(200,168,85,0.1)" : entry.tag === "Launch" ? "rgba(37,99,235,0.1)" : "rgba(37,99,235,0.1)",
+                  background: entry.tag === "New" ? "rgba(200,168,85,0.1)" : entry.tag === "Launch" ? "rgba(59,130,246,0.1)" : "rgba(59,130,246,0.1)",
                   color: entry.tag === "New" ? "#c8a855" : entry.tag === "Launch" ? "#2563EB" : "#2563EB",
                 }}>{entry.tag}</span>
               </div>

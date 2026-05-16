@@ -202,7 +202,7 @@ export default function AIVideoPage() {
             onChange={e => setPrompt(e.target.value)}
             placeholder="e.g., Golden retriever running through a field of sunflowers at sunset, cinematic warm lighting, slow tracking shot"
             rows={4}
-            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.5)] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all resize-none"
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
             autoFocus
           />
           <div>
@@ -237,8 +237,8 @@ export default function AIVideoPage() {
               onClick={() => setAspectRatio(ar.id)}
               className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
                 aspectRatio === ar.id
-                  ? "border-brand-accent bg-[rgba(37,99,235,0.08)] shadow-lg shadow-[rgba(37,99,235,0.08)]"
-                  : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                  ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.08)]"
+                  : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
               }`}
             >
               <div
@@ -278,10 +278,10 @@ export default function AIVideoPage() {
                                     disabled={locked}
                                     className={`p-3 rounded-xl border transition-all text-center relative ${
                                       locked
-                                        ? "border-[rgba(37,99,235,0.25)] bg-surface-light/40 opacity-60 cursor-not-allowed"
+                                        ? "border-[rgba(59,130,246,0.25)] bg-surface-light/40 opacity-60 cursor-not-allowed"
                                         : numFrames === opt.f
-                                          ? "border-brand-accent bg-[rgba(37,99,235,0.08)]"
-                                          : "border-border hover:border-[rgba(37,99,235,0.25)] bg-surface-light"
+                                          ? "border-brand-accent bg-[rgba(59,130,246,0.08)]"
+                                          : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                                     }`}
                                   >
                                     {locked && (
@@ -299,7 +299,7 @@ export default function AIVideoPage() {
           {nextTierLabel && (
             <Link
               href="/dashboard/upgrade"
-              className="flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-[#3B82F6] py-1.5 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] transition-all"
+              className="flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-[#3B82F6] py-1.5 rounded-lg border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] transition-all"
             >
               <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
             </Link>
@@ -314,7 +314,7 @@ export default function AIVideoPage() {
       icon: <Sparkles size={18} />,
       component: (
         <div className="space-y-3">
-          <div className="card bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.2)]">
+          <div className="card bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.2)]">
             <p className="text-[10px] uppercase tracking-wider text-brand-accent font-semibold mb-2">Your prompt</p>
             <p className="text-sm text-foreground leading-relaxed">{prompt || <span className="text-muted italic">(no prompt set)</span>}</p>
             <div className="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-border/50">
@@ -774,7 +774,7 @@ export default function AIVideoPage() {
                 {nextTierLabel && (
                   <Link
                     href="/dashboard/upgrade"
-                    className="col-span-full flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-[#3B82F6] py-1.5 rounded-lg border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] transition-all"
+                    className="col-span-full flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-[#3B82F6] py-1.5 rounded-lg border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] transition-all"
                   >
                     <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
                   </Link>
@@ -834,7 +834,7 @@ export default function AIVideoPage() {
                         )}
                         {result.status === "plan" && (
                           <div className="text-center px-3 text-[#6B7280]">
-                            <Sparkles size={16} className="mx-auto mb-1.5 text-[rgba(37,99,235,0.7)]" />
+                            <Sparkles size={16} className="mx-auto mb-1.5 text-[rgba(59,130,246,0.7)]" />
                             <p className="text-[10px] font-light">Plan ready</p>
                           </div>
                         )}

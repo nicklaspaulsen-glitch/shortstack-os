@@ -98,7 +98,7 @@ export function FloatingActionMenu({
         aria-expanded={open}
         className="relative flex h-14 w-14 items-center justify-center rounded-full shadow-lg cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
         style={{ backgroundColor: accentColor }}
-        whileHover={reducedMotion ? undefined : { scale: 1.07, boxShadow: "0 8px 28px rgba(37,99,235,0.40)" }}
+        whileHover={reducedMotion ? undefined : { scale: 1.07, boxShadow: "0 8px 28px rgba(59,130,246,0.40)" }}
         whileTap={reducedMotion ? undefined : { scale: 0.94 }}
         transition={SPRING}
       >
@@ -163,7 +163,7 @@ export function FloatingActionMenu({
                 "bg-white shadow-[0_2px_12px_rgba(0,0,0,0.12)] border border-[rgba(0,0,0,0.07)]",
                 "text-text-primary cursor-pointer select-none",
                 "transition-all duration-150 ease-out",
-                "hover:shadow-[0_4px_20px_rgba(37,99,235,0.20)] hover:border-[rgba(37,99,235,0.20)] hover:text-[#2563EB]",
+                "hover:shadow-[0_4px_20px_rgba(59,130,246,0.20)] hover:border-[rgba(59,130,246,0.20)] hover:text-[#2563EB]",
                 "active:scale-95",
                 "disabled:opacity-40 disabled:pointer-events-none"
               )}

@@ -359,7 +359,7 @@ export default function WhiteLabelPage() {
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">Custom Domain</p>
             {config.custom_domain && (
-              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${config.custom_domain_verified ? "bg-emerald-500/20 text-emerald-700" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"}`}>
+              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${config.custom_domain_verified ? "bg-emerald-500/20 text-emerald-700" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"}`}>
                 {config.custom_domain_verified ? "Verified" : "Awaiting DNS"}
               </span>
             )}
@@ -456,7 +456,7 @@ export default function WhiteLabelPage() {
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">Resell Billing</p>
             {stripeStatus && (
-              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${stripeStatus.fully_onboarded ? "bg-emerald-500/20 text-emerald-700" : stripeStatus.connected ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "bg-[rgba(0,0,0,0.06)] text-text-muted"}`}>
+              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${stripeStatus.fully_onboarded ? "bg-emerald-500/20 text-emerald-700" : stripeStatus.connected ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-[rgba(0,0,0,0.06)] text-text-muted"}`}>
                 {stripeStatus.fully_onboarded ? "Stripe Connected" : stripeStatus.connected ? "Onboarding incomplete" : "Not connected"}
               </span>
             )}

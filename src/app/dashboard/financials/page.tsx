@@ -625,7 +625,7 @@ export default function FinancialsPage() {
                         <span className="text-brand-accent font-semibold">{formatCurrency(totalMRR)}</span>
                       </div>
                       <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
-                        <div className="h-full rounded-lg transition-all duration-500" style={{ width: barWidth(totalMRR), background: "rgba(37,99,235,0.7)" }} />
+                        <div className="h-full rounded-lg transition-all duration-500" style={{ width: barWidth(totalMRR), background: "rgba(59,130,246,0.7)" }} />
                       </div>
                     </div>
                     <div>
@@ -663,7 +663,7 @@ export default function FinancialsPage() {
                           <div key={i} className="flex-1 flex flex-col items-center gap-1">
                             <span className="text-[8px] text-muted">{formatCurrency(item.mrr)}</span>
                             <div className="w-full flex-1 flex items-end">
-                              <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(37,99,235,0.6)" }} />
+                              <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(59,130,246,0.6)" }} />
                             </div>
                             <span className="text-[8px] text-muted">{item.month}</span>
                           </div>
@@ -710,7 +710,7 @@ export default function FinancialsPage() {
                         <p className="text-lg font-bold text-foreground">{pm.count}</p>
                         <div className="flex items-center gap-1 mt-1">
                           <div className="flex-1 h-1.5 rounded bg-surface border border-border overflow-hidden">
-                            <div className="h-full rounded" style={{ width: `${pm.pct}%`, background: "rgba(37,99,235,0.6)" }} />
+                            <div className="h-full rounded" style={{ width: `${pm.pct}%`, background: "rgba(59,130,246,0.6)" }} />
                           </div>
                           <span className="text-[9px] text-muted">{pm.pct}%</span>
                         </div>
@@ -838,7 +838,7 @@ export default function FinancialsPage() {
                             onClick={() => addPreset(preset)}
                             disabled={exists}
                             className={`text-left p-2.5 rounded-lg border text-xs transition-all ${
-                              exists ? "border-border/30 text-muted/40 cursor-not-allowed" : "border-border hover:border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.05)]"
+                              exists ? "border-border/30 text-muted/40 cursor-not-allowed" : "border-border hover:border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.05)]"
                             }`}
                           >
                             <p className="font-semibold">{preset.name}</p>
@@ -985,7 +985,7 @@ export default function FinancialsPage() {
                       {subscriptions.map(s => (
                         <div key={s.id} className="grid grid-cols-12 px-4 py-3 items-center hover:bg-surface-light/30 transition-colors text-xs">
                           <div className="col-span-4 flex items-center gap-2">
-                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "bg-surface-light text-muted"}`}>
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-surface-light text-muted"}`}>
                               {s.tool_name.charAt(0).toUpperCase()}
                             </div>
                             <div>
@@ -1248,7 +1248,7 @@ export default function FinancialsPage() {
                         <div key={i} className="flex-1 flex flex-col items-center gap-1">
                           <span className="text-[8px] text-muted">{formatCurrency(item.projected)}</span>
                           <div className="w-full flex-1 flex items-end">
-                            <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(37,99,235,0.5)" }} />
+                            <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(59,130,246,0.5)" }} />
                           </div>
                           <span className="text-[8px] text-muted">{item.month}</span>
                         </div>
@@ -1341,7 +1341,7 @@ export default function FinancialsPage() {
                             key={fmt}
                             onClick={() => setExportFormat(fmt)}
                             className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
-                              exportFormat === fmt ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"
+                              exportFormat === fmt ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"
                             }`}
                           >
                             {fmt.toUpperCase()}
@@ -1357,7 +1357,7 @@ export default function FinancialsPage() {
                             key={range}
                             onClick={() => setExportRange(range)}
                             className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
-                              exportRange === range ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"
+                              exportRange === range ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"
                             }`}
                           >
                             {range.charAt(0).toUpperCase() + range.slice(1)}
@@ -1412,7 +1412,7 @@ export default function FinancialsPage() {
                       </div>
                       <button
                         onClick={() => toast(stripeSynced ? "Syncing..." : "Configure Stripe in Settings > Integrations")}
-                        className="w-full text-[10px] py-1.5 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center justify-center gap-1"
+                        className="w-full text-[10px] py-1.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.14)] transition-all flex items-center justify-center gap-1"
                       >
                         <RefreshCw size={10} /> {stripeSynced ? "Sync Now" : "Connect"}
                       </button>
@@ -1460,14 +1460,14 @@ export default function FinancialsPage() {
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => toast("CSV import is coming soon. Add expenses manually via the Expenses tab → Add Expense.", { icon: "💡", duration: 6000 })}
-                      className="p-4 rounded-lg border-2 border-dashed border-border hover:border-[rgba(37,99,235,0.25)] transition-colors text-center">
+                      className="p-4 rounded-lg border-2 border-dashed border-border hover:border-[rgba(59,130,246,0.25)] transition-colors text-center">
                       <FileText size={20} className="mx-auto mb-2 text-muted" />
                       <p className="text-xs font-semibold">Import CSV</p>
                       <p className="text-[10px] text-muted mt-0.5">Coming soon</p>
                     </button>
                     <button
                       onClick={() => toast("QuickBooks sync is on the roadmap. For now, enter expenses manually or use the Subscriptions tab.", { icon: "💡", duration: 6000 })}
-                      className="p-4 rounded-lg border-2 border-dashed border-border hover:border-[rgba(37,99,235,0.25)] transition-colors text-center">
+                      className="p-4 rounded-lg border-2 border-dashed border-border hover:border-[rgba(59,130,246,0.25)] transition-colors text-center">
                       <Globe size={20} className="mx-auto mb-2 text-muted" />
                       <p className="text-xs font-semibold">QuickBooks Import</p>
                       <p className="text-[10px] text-muted mt-0.5">Coming soon</p>

@@ -626,7 +626,7 @@ export default function InboxPage() {
               </button>
             )}
           </div>
-          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${showFilters ? "bg-[rgba(37,99,235,0.12)] text-brand-accent" : "bg-[rgba(0,0,0,0.04)] text-muted hover:text-text-primary"}`}>
+          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${showFilters ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-[rgba(0,0,0,0.04)] text-muted hover:text-text-primary"}`}>
             <SlidersHorizontal size={12} /> Filters
             {(filterStarred || filterUnread || filterPinned) && <span className="w-1.5 h-1.5 rounded-full bg-brand-accent" />}
           </button>
@@ -636,7 +636,7 @@ export default function InboxPage() {
               <button
                 key={field}
                 onClick={() => toggleSort(field)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-[10px] font-medium transition-all ${sortField === field ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "text-[#6B7280] hover:text-[#374151]"}`}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-[10px] font-medium transition-all ${sortField === field ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-[#6B7280] hover:text-[#374151]"}`}
               >
                 {label}
                 {sortField === field && (sortDir === "desc" ? <ArrowDown size={10} /> : <ArrowUp size={10} />)}
@@ -656,7 +656,7 @@ export default function InboxPage() {
               <button
                 key={f.key}
                 onClick={f.toggle}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${f.active ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.25)]" : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"}`}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${f.active ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"}`}
               >
                 {f.icon} {f.label}
               </button>
@@ -671,7 +671,7 @@ export default function InboxPage() {
 
         {/* Bulk Actions */}
         {selectedIds.size > 0 && (
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)]">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)]">
             <span className="text-xs text-brand-accent font-medium">{selectedIds.size} selected</span>
             <div className="flex items-center gap-1 ml-auto">
               <button onClick={bulkMarkRead} className="px-2 py-1 text-[10px] rounded bg-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.08)] text-text-primary transition-all">Mark Read</button>
@@ -694,7 +694,7 @@ export default function InboxPage() {
               key={c.key}
               onClick={() => { setCategory(c.key); setSelectedItem(null); }}
               className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all ${
-                category === c.key ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.25)]" : "text-[#6B7280] hover:text-[#374151] hover:bg-[rgba(0,0,0,0.04)]"
+                category === c.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "text-[#6B7280] hover:text-[#374151] hover:bg-[rgba(0,0,0,0.04)]"
               }`}
             >
               <div className="flex items-center gap-2">
@@ -702,7 +702,7 @@ export default function InboxPage() {
                 <span className="font-medium">{c.label}</span>
               </div>
               {categoryCounts[c.key] > 0 && (
-                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${category === c.key ? "bg-[rgba(37,99,235,0.14)] text-brand-accent" : "bg-[rgba(0,0,0,0.06)] text-[#6B7280]"}`}>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${category === c.key ? "bg-[rgba(59,130,246,0.14)] text-brand-accent" : "bg-[rgba(0,0,0,0.06)] text-[#6B7280]"}`}>
                   {categoryCounts[c.key]}
                 </span>
               )}
@@ -717,7 +717,7 @@ export default function InboxPage() {
               key={c.key}
               onClick={() => { setCategory(c.key); setSelectedItem(null); }}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] whitespace-nowrap transition-all ${
-                category === c.key ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "bg-[rgba(0,0,0,0.04)] text-[#6B7280]"
+                category === c.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-[rgba(0,0,0,0.04)] text-[#6B7280]"
               }`}
             >
               {c.icon} {c.label}
@@ -767,7 +767,7 @@ export default function InboxPage() {
                     onClick={() => openItem(item)}
                     className={`group flex items-start gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
                       selectedItem?.id === item.id
-                        ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)]"
+                        ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)]"
                         : isSelected
                         ? "bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)]"
                         : !item.read
@@ -1073,7 +1073,7 @@ export default function InboxPage() {
               {/* Inline Reply */}
               {showReply && (
                 <div className="mt-4 space-y-3">
-                  <div className="border border-[rgba(37,99,235,0.25)] rounded-xl overflow-hidden bg-white">
+                  <div className="border border-[rgba(59,130,246,0.25)] rounded-xl overflow-hidden bg-white">
                     <textarea
                       value={replyText}
                       onChange={e => setReplyText(e.target.value)}
@@ -1116,8 +1116,8 @@ export default function InboxPage() {
                 onClick={() => setShowReply(!showReply)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all ${
                   showReply
-                    ? "bg-[rgba(37,99,235,0.14)] text-brand-accent border border-[rgba(37,99,235,0.25)]"
-                    : "bg-[rgba(37,99,235,0.08)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent border border-[rgba(37,99,235,0.25)]"
+                    ? "bg-[rgba(59,130,246,0.14)] text-brand-accent border border-[rgba(59,130,246,0.25)]"
+                    : "bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent border border-[rgba(59,130,246,0.25)]"
                 }`}
               >
                 <Reply size={14} /> Reply

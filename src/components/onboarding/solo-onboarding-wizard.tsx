@@ -288,7 +288,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
                 i === stepIdx
                   ? "w-6 h-1.5 bg-[#2563EB]"
                   : i < stepIdx
-                  ? "w-1.5 h-1.5 bg-[rgba(37,99,235,0.4)] hover:bg-[rgba(37,99,235,0.7)] cursor-pointer"
+                  ? "w-1.5 h-1.5 bg-[rgba(59,130,246,0.4)] hover:bg-[rgba(59,130,246,0.7)] cursor-pointer"
                   : "w-1.5 h-1.5 bg-border cursor-default"
               }`}
               disabled={i >= stepIdx}
@@ -407,7 +407,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
             <button
               onClick={next}
               disabled={!canAdvance()}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-bold hover:shadow-lg hover:shadow-[rgba(37,99,235,0.2)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-bold hover:shadow-lg hover:shadow-[rgba(59,130,246,0.2)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Continue <ArrowRight size={13} />
             </button>
@@ -416,7 +416,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
           <button
             onClick={handleFinish}
             disabled={submitting}
-            className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-bold hover:shadow-lg hover:shadow-[rgba(37,99,235,0.2)] transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-bold hover:shadow-lg hover:shadow-[rgba(59,130,246,0.2)] transition-all disabled:opacity-50"
           >
             {submitting ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
             {submitting ? "Setting up..." : "Finish & Enter Trinity"}
@@ -441,7 +441,7 @@ function StepUserType({
   return (
     <div>
       <div className="text-center mb-6">
-        <div className="inline-flex w-14 h-14  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] items-center justify-center mb-3">
+        <div className="inline-flex w-14 h-14  bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] items-center justify-center mb-3">
           <Sparkles size={24} className="text-[#2563EB]" />
         </div>
         <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
@@ -457,14 +457,14 @@ function StepUserType({
               onClick={() => onPick(t.id)}
               className={`relative text-left p-4  border transition-all hover-lift ${
                 isSelected
-                  ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)] shadow-[0_0_0_2px_rgba(37,99,235,0.18)]"
-                  : "border-border bg-surface-light hover:border-[rgba(37,99,235,0.25)]"
+                  ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] shadow-[0_0_0_2px_rgba(59,130,246,0.18)]"
+                  : "border-border bg-surface-light hover:border-[rgba(59,130,246,0.25)]"
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
                 <div
                   className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                    isSelected ? "bg-[rgba(37,99,235,0.12)] text-[#2563EB]" : "bg-surface-light text-muted"
+                    isSelected ? "bg-[rgba(59,130,246,0.12)] text-[#2563EB]" : "bg-surface-light text-muted"
                   }`}
                 >
                   <Icon size={18} />
@@ -522,7 +522,7 @@ function StepBusinessInfo({
             value={state.business_name}
             onChange={(e) => onChange("business_name", e.target.value)}
             placeholder="e.g. Northfield Collective"
-            className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all"
+            className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
           />
         </div>
 
@@ -537,7 +537,7 @@ function StepBusinessInfo({
               value={state.handle}
               onChange={(e) => onChange("handle", e.target.value.replace(/^@/, ""))}
               placeholder="yourbrand"
-              className="flex-1 px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all"
+              className="flex-1 px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
             />
           </div>
         </div>
@@ -596,7 +596,7 @@ function StepNiche({
         onChange={(e) => onChange(e.target.value)}
         placeholder={meta.nichePrompt}
         rows={4}
-        className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all resize-none"
+        className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
       />
     </div>
   );
@@ -701,7 +701,7 @@ function QuestionField({
                 onClick={() => onChange(sel ? arr.filter((v) => v !== opt) : [...arr, opt])}
                 className={`px-3 py-1.5 rounded-full text-[11px] border transition-all ${
                   sel
-                    ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.4)] text-[#2563EB]"
+                    ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.4)] text-[#2563EB]"
                     : "bg-surface-light border-border text-muted hover:text-foreground"
                 }`}
               >
@@ -726,7 +726,7 @@ function QuestionField({
           onChange={(e) => onChange(e.target.value)}
           placeholder={q.placeholder}
           rows={3}
-          className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all resize-none"
+          className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
         />
       </div>
     );
@@ -743,7 +743,7 @@ function QuestionField({
         value={(value as string) || ""}
         onChange={(e) => onChange(e.target.value)}
         placeholder={q.placeholder}
-        className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all"
+        className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
       />
     </div>
   );
@@ -817,7 +817,7 @@ function StepPersonalize({
       </div>
 
       {loading && (
-        <div className="flex flex-col items-center gap-2 py-12 rounded-xl border border-[rgba(37,99,235,0.2)] bg-gradient-to-b from-[rgba(37,99,235,0.05)] to-transparent">
+        <div className="flex flex-col items-center gap-2 py-12 rounded-xl border border-[rgba(59,130,246,0.2)] bg-gradient-to-b from-[rgba(59,130,246,0.05)] to-transparent">
           <Loader2 size={22} className="animate-spin text-[#2563EB]" />
           <p className="text-xs text-muted">Our AI is getting to know you...</p>
         </div>
@@ -845,7 +845,7 @@ function StepPersonalize({
                 onChange={(e) => onChange({ ...answers, [q.id]: e.target.value })}
                 placeholder={q.placeholder}
                 rows={2}
-                className="w-full px-3 py-2.5 bg-surface-light border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all resize-none"
+                className="w-full px-3 py-2.5 bg-surface-light border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
               />
             </div>
           ))}
@@ -873,7 +873,7 @@ function StepReady({
 }) {
   return (
     <div className="text-center py-6">
-      <div className="inline-flex w-20 h-20 rounded-3xl bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] items-center justify-center mb-4">
+      <div className="inline-flex w-20 h-20 rounded-3xl bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] items-center justify-center mb-4">
         <CheckCircle2 size={36} className="text-[#2563EB]" />
       </div>
       <h2 className="text-2xl font-bold mb-2">You&apos;re all set!</h2>

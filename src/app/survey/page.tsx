@@ -96,7 +96,7 @@ export default function SurveyPage() {
 
         {step === "done" && (
           <div className="rounded-xl p-8 text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div className="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: "rgba(37,99,235,0.1)" }}>
+            <div className="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: "rgba(59,130,246,0.1)" }}>
               <CheckCircle size={28} className="text-emerald-400" />
             </div>
             <h2 className="text-lg font-bold text-white mb-1">Thank you!</h2>

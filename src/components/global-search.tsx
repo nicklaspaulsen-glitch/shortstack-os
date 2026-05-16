@@ -21,7 +21,7 @@ export default function GlobalSearch() {
     <button
       onClick={openPalette}
       aria-label="Open search (Ctrl+K)"
-      className="flex items-center gap-2 bg-surface border border-border rounded-lg px-3 py-1.5 text-sm text-muted hover:border-[rgba(37,99,235,0.25)] transition-colors"
+      className="flex items-center gap-2 bg-surface border border-border rounded-lg px-3 py-1.5 text-sm text-muted hover:border-[rgba(59,130,246,0.25)] transition-colors"
     >
       <Search size={14} />
       <span>Search...</span>

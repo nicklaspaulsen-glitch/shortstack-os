@@ -37,7 +37,7 @@ export default function BrainMark({
   const px = SIZE_PX[size];
 
   const glowFilter = glowing
-    ? "drop-shadow(0 0 8px rgba(37,99,235,0.7)) drop-shadow(0 0 18px rgba(96,165,250,0.4))"
+    ? "drop-shadow(0 0 8px rgba(59,130,246,0.7)) drop-shadow(0 0 18px rgba(96,165,250,0.4))"
     : undefined;
 
   return (

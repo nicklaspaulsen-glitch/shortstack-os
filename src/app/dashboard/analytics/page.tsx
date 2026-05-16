@@ -449,7 +449,7 @@ export default function AnalyticsPage() {
           </button>
           {/* Live MRR badge */}
           {stats.totalMRR> 0 && (
-            <span className="hidden md:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.18)] text-brand-accent">
+            <span className="hidden md:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.18)] text-brand-accent">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
               {formatCurrency(stats.totalMRR)} MRR
             </span>
@@ -526,7 +526,7 @@ export default function AnalyticsPage() {
           <motion.div
             className="glass relative overflow-hidden rounded-xl"
             style={{
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 20px -4px rgba(0,0,0,0.10), 0 0 48px -12px rgba(37,99,235,0.14)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 20px -4px rgba(0,0,0,0.10), 0 0 48px -12px rgba(59,130,246,0.14)",
             }}
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -535,7 +535,7 @@ export default function AnalyticsPage() {
             {/* Blue top rail */}
             <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent 0%, #1D4ED8 30%, #3B82F6 50%, #1D4ED8 70%, transparent 100%)" }} />
             {/* Subtle red glow at top */}
-            <div className="pointer-events-none absolute top-0 left-0 right-0 h-20" style={{ background: "linear-gradient(180deg, rgba(37,99,235,0.04) 0%, transparent 100%)" }} />
+            <div className="pointer-events-none absolute top-0 left-0 right-0 h-20" style={{ background: "linear-gradient(180deg, rgba(59,130,246,0.04) 0%, transparent 100%)" }} />
 
             <div className="relative px-8 pt-8 pb-7">
               {/* MRR label */}
@@ -872,8 +872,8 @@ export default function AnalyticsPage() {
             <motion.div
               className="relative rounded-xl border border-[rgba(0,0,0,0.08)] px-6 pt-5 pb-5 overflow-hidden"
               style={{
-                background: "rgba(37,99,235,0.03)",
-                borderTop: "2px solid rgba(37,99,235,0.4)",
+                background: "rgba(59,130,246,0.03)",
+                borderTop: "2px solid rgba(59,130,246,0.4)",
               }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1064,7 +1064,7 @@ export default function AnalyticsPage() {
             icon={<TrendingUp size={13} />}
             badge={
               revenueForecast.length> 0 ? (
-                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(37,99,235,0.10)] text-brand-accent">
+                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(59,130,246,0.10)] text-brand-accent">
                   {formatCurrency(revenueForecast[0]?.projected || 0)} next mo.
                 </span>
               ) : undefined

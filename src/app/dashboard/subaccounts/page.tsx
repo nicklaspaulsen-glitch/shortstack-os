@@ -37,7 +37,7 @@ const PLAN_TIERS = [
 ];
 
 const STATUS_BADGE: Record<Subaccount["status"], string> = {
-  pending: "bg-[rgba(37,99,235,0.10)] text-brand-accent",
+  pending: "bg-[rgba(59,130,246,0.10)] text-brand-accent",
   active: "bg-emerald-500/20 text-emerald-700",
   suspended: "bg-orange-500/20 text-orange-600",
   cancelled: "bg-black/8 text-black/40",

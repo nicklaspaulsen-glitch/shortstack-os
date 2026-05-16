@@ -157,7 +157,7 @@ export default function AIStudioPage() {
             {TOOLS.length} tools
           </span>
           {history.length > 0 && (
-            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-brand-accent">
+            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] text-brand-accent">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
               {history.filter(j => j.status === "completed").length} done
             </span>
@@ -340,7 +340,7 @@ export default function AIStudioPage() {
                 }`}
                 style={toolCategory === cat ? {
                   background: "linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)",
-                  boxShadow: "0 1px 0 rgba(255,255,255,0.15) inset, 0 2px 8px rgba(37,99,235,0.35)",
+                  boxShadow: "0 1px 0 rgba(255,255,255,0.15) inset, 0 2px 8px rgba(59,130,246,0.35)",
                 } : undefined}
               >
                 {cat === "all" ? "All" : cat}
@@ -407,7 +407,7 @@ export default function AIStudioPage() {
                       <p className="text-[8px] font-mono text-text-muted truncate">{tool.tag}</p>
                     </div>
                     {"newBadge" in tool && tool.newBadge && (
-                      <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.1)] text-brand-accent shrink-0 uppercase tracking-wide">
+                      <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.1)] text-brand-accent shrink-0 uppercase tracking-wide">
                         New
                       </span>
                     )}
@@ -801,13 +801,13 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
         {/* Orb + title */}
         <div
           className="relative flex flex-col items-center pt-6 pb-4 rounded-2xl overflow-hidden"
-          style={{ background: "rgba(37,99,235,0.06)", border: "1px solid rgba(59,130,246,0.15)" }}
+          style={{ background: "rgba(59,130,246,0.06)", border: "1px solid rgba(59,130,246,0.15)" }}
         >
           <div
             className="w-20 h-20 rounded-full mb-3 shrink-0"
             style={{
               background: "radial-gradient(circle at 35% 30%, #BFDBFE 0%, #60A5FA 35%, #2563EB 65%, #1e3a8a 100%)",
-              boxShadow: "0 0 32px rgba(37,99,235,0.40), 0 0 64px rgba(37,99,235,0.15)",
+              boxShadow: "0 0 32px rgba(59,130,246,0.40), 0 0 64px rgba(59,130,246,0.15)",
             }}
           />
           <p className="text-sm font-bold text-text-primary font-display">AI Image Generation</p>
@@ -1741,7 +1741,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
       >
         <Music size={16} className="text-[#3B82F6]" />
         <h2 className="text-sm font-bold text-foreground">AI Music Generator</h2>
-        <span className="text-[9px] bg-[rgba(37,99,235,0.1)] text-[#3B82F6] px-2 py-0.5 rounded-full">MusicGen</span>
+        <span className="text-[9px] bg-[rgba(59,130,246,0.1)] text-[#3B82F6] px-2 py-0.5 rounded-full">MusicGen</span>
         <span className="text-[9px] text-muted ml-auto">Royalty-free output</span>
       </motion.div>
 
@@ -1792,7 +1792,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
         >
           {result ? (
             <div className="w-full text-center space-y-3">
-              <div className="w-16 h-16 mx-auto rounded-full bg-[rgba(37,99,235,0.1)] flex items-center justify-center">
+              <div className="w-16 h-16 mx-auto rounded-full bg-[rgba(59,130,246,0.1)] flex items-center justify-center">
                 <Music size={24} className="text-[#3B82F6]" />
               </div>
               <audio src={result} controls className="w-full" />
@@ -2113,7 +2113,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
             ))}
           </div>
           {trainingStatus && (
-            <div className="mt-4 p-3 rounded-lg bg-[rgba(37,99,235,0.06)] text-xs text-brand-accent">
+            <div className="mt-4 p-3 rounded-lg bg-[rgba(59,130,246,0.06)] text-xs text-brand-accent">
               {trainingStatus}
             </div>
           )}

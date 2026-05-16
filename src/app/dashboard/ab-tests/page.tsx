@@ -57,12 +57,12 @@ const STATUS_CONFIG: Record<Status, { label: string; color: string; icon: React.
   },
   paused: {
     label: "Paused",
-    color: "text-brand-accent bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]",
+    color: "text-brand-accent bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)]",
     icon: <Pause size={11} />,
   },
   completed: {
     label: "Completed",
-    color: "text-brand-accent bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)]",
+    color: "text-brand-accent bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)]",
     icon: <CheckCircle2 size={11} />,
   },
 };
@@ -175,7 +175,7 @@ export default function AbTestsPage() {
               </div>
             ) : tests.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 gap-4">
-                <div className="w-16 h-16  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center">
+                <div className="w-16 h-16  bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] flex items-center justify-center">
                   <FlaskConical size={28} className="text-brand-accent" />
                 </div>
                 <div className="text-center">
@@ -237,7 +237,7 @@ export default function AbTestsPage() {
                               key={v.id}
                               className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs border ${
                                 isWinner
-                                  ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent"
+                                  ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent"
                                   : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#374151]"
                               }`}
                             >

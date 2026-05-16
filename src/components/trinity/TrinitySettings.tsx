@@ -40,8 +40,8 @@ export default function TrinitySettings({ ttsSupported, muted, speaking, onToggl
           muted
             ? "bg-surface-light text-muted hover:text-[#2563EB]"
             : speaking
-            ? "bg-[rgba(37,99,235,0.15)] text-[#2563EB] animate-pulse"
-            : "bg-surface-light text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)]"
+            ? "bg-[rgba(59,130,246,0.15)] text-[#2563EB] animate-pulse"
+            : "bg-surface-light text-[#2563EB] hover:bg-[rgba(59,130,246,0.08)]"
         }`}
       >
         {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}

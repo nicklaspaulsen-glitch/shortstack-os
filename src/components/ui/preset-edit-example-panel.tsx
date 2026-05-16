@@ -246,7 +246,7 @@ function VideoEditExample({
             value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             placeholder="Custom preset name..."
-            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
+            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
           />
           <button
             type="button"
@@ -364,7 +364,7 @@ function ThumbnailEditExample({
             value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             placeholder="Custom preset name..."
-            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
+            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
           />
           <button
             type="button"
@@ -412,7 +412,7 @@ function ThumbnailEditExample({
           value={overlayText}
           onChange={(e) => setOverlayText(e.target.value)}
           placeholder="Your headline here..."
-          className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
+          className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
         />
       </div>
 
@@ -500,7 +500,7 @@ function TelegramEditExample({
             value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             placeholder="Custom preset name..."
-            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
+            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
           />
           <button
             type="button"
@@ -526,7 +526,7 @@ function TelegramEditExample({
           <p className="text-xs text-muted font-medium">Fill in variables to preview</p>
           {vars.map((v) => (
             <div key={v} className="flex items-center gap-2">
-              <span className="text-[10px] text-[#2563EB] font-mono bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded px-2 py-1 min-w-[110px] text-center shrink-0">
+              <span className="text-[10px] text-[#2563EB] font-mono bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] rounded px-2 py-1 min-w-[110px] text-center shrink-0">
                 {`{{${v}}}`}
               </span>
               <input
@@ -535,7 +535,7 @@ function TelegramEditExample({
                   setVarValues((prev) => ({ ...prev, [v]: e.target.value }))
                 }
                 placeholder={v}
-                className="flex-1 bg-surface-light border border-border rounded-lg px-3 py-1.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
+                className="flex-1 bg-surface-light border border-border rounded-lg px-3 py-1.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
               />
             </div>
           ))}

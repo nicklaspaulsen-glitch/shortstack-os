@@ -466,7 +466,7 @@ export default function LandingPagesPage() {
             onChange={e => setGuidedOffer(e.target.value)}
             placeholder="e.g., A booking platform that cuts dental practice no-shows by 40% using text-message reminders"
             rows={3}
-            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.40)] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all resize-none"
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
             autoFocus
           />
           <div>
@@ -478,7 +478,7 @@ export default function LandingPagesPage() {
               value={guidedAudience}
               onChange={e => setGuidedAudience(e.target.value)}
               placeholder="e.g., Solo dental practice owners, independent yoga studios"
-              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.40)] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
             />
           </div>
         </div>
@@ -503,8 +503,8 @@ export default function LandingPagesPage() {
                 onMouseLeave={() => setHoveredLPTemplate(null)}
                 className={`relative group overflow-hidden rounded-xl border-2 transition-all duration-200 cursor-pointer text-left ${
                   isSelected
-                    ? "border-brand-accent ring-2 ring-[rgba(37,99,235,0.25)] shadow-lg"
-                    : "border-border hover:border-[rgba(37,99,235,0.4)] hover:shadow-md"
+                    ? "border-brand-accent ring-2 ring-[rgba(59,130,246,0.25)] shadow-lg"
+                    : "border-border hover:border-[rgba(59,130,246,0.4)] hover:shadow-md"
                 }`}
               >
                 {/* Thumbnail area */}
@@ -582,7 +582,7 @@ export default function LandingPagesPage() {
               value={guidedHeadline}
               onChange={e => setGuidedHeadline(e.target.value)}
               placeholder="e.g., Book every chair. Stop losing 40% of appointments."
-              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.40)] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
             />
           </div>
           <div>
@@ -594,7 +594,7 @@ export default function LandingPagesPage() {
               value={guidedSubhead}
               onChange={e => setGuidedSubhead(e.target.value)}
               placeholder="e.g., Text reminders that actually get read. 14-day free trial, no card."
-              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(37,99,235,0.40)] focus:ring-2 focus:ring-[rgba(37,99,235,0.2)] transition-all"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
             />
           </div>
         </div>
@@ -606,7 +606,7 @@ export default function LandingPagesPage() {
       description: "We'll write features, testimonials, FAQ, and pricing to match. You can edit every section in Advanced.",
       icon: <Rocket size={18} />,
       component: (
-        <div className="card bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.2)] space-y-2">
+        <div className="card bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)] space-y-2">
           <p className="text-sm leading-relaxed">
             <span className="text-muted">Offer: </span>
             <span className="font-semibold">{guidedOffer || <span className="italic text-muted">(none)</span>}</span>
@@ -891,7 +891,7 @@ export default function LandingPagesPage() {
             <button onClick={() => toggleSection(sec.key)} className={`p-1 hover:bg-surface-light rounded ${!sec.visible ? "opacity-40" : ""}`} title={sec.visible ? "Hide" : "Show"}>
               {sec.visible ? <Eye className="w-3.5 h-3.5 text-muted" /> : <EyeOff className="w-3.5 h-3.5 text-muted" />}
             </button>
-            <button onClick={() => toggleEdit(sec.key)} className={`p-1 hover:bg-surface-light rounded ${isEditing ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : ""}`} title="Edit">
+            <button onClick={() => toggleEdit(sec.key)} className={`p-1 hover:bg-surface-light rounded ${isEditing ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : ""}`} title="Edit">
               <Pencil className="w-3.5 h-3.5" />
             </button>
             <button onClick={() => handleRegenSection(sec.key)} className="p-1 hover:bg-surface-light rounded" title="Regenerate with AI">
@@ -975,7 +975,7 @@ export default function LandingPagesPage() {
             {sec.key === "pricing" && (
               <div className="space-y-3">
                 {content.pricing.map((tier, pi) => (
-                  <div key={pi} className={`p-3 rounded-lg border space-y-2 ${tier.highlighted ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : "bg-surface-light border-border"}`}>
+                  <div key={pi} className={`p-3 rounded-lg border space-y-2 ${tier.highlighted ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "bg-surface-light border-border"}`}>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-muted font-medium">{tier.name}</span>
                       <label className="flex items-center gap-1.5 text-xs text-muted cursor-pointer">
@@ -1118,7 +1118,7 @@ export default function LandingPagesPage() {
                 onClick={() => setStep(s.n as 1 | 2 | 3)}
                 className={`flex items-center gap-2 text-sm font-medium transition-colors ${step === s.n ? "text-brand-accent" : step > s.n ? "text-green-400" : "text-muted"}`}
               >
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border ${step === s.n ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent" : step > s.n ? "border-green-500 bg-green-500/10 text-green-400" : "border-border text-muted"}`}>
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border ${step === s.n ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : step > s.n ? "border-green-500 bg-green-500/10 text-green-400" : "border-border text-muted"}`}>
                   {step > s.n ? <Check className="w-3.5 h-3.5" /> : s.n}
                 </div>
                 {s.label}
@@ -1175,7 +1175,7 @@ export default function LandingPagesPage() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {bizInfo.benefits.map((b, i) => (
-                    <span key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-brand-accent rounded-full text-xs font-medium">
+                    <span key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-[rgba(59,130,246,0.08)] text-brand-accent rounded-full text-xs font-medium">
                       {b}
                       <button onClick={() => removeBenefit(i)} aria-label={`Remove benefit ${b}`}><X className="w-3 h-3" /></button>
                     </span>
@@ -1203,7 +1203,7 @@ export default function LandingPagesPage() {
                     <button
                       key={cs.id}
                       onClick={() => setBizInfo(p => ({ ...p, colorScheme: cs.id }))}
-                      className={`p-3 rounded-lg border transition-all ${bizInfo.colorScheme === cs.id ? "border-brand-accent ring-1 ring-[rgba(37,99,235,0.25)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}
+                      className={`p-3 rounded-lg border transition-all ${bizInfo.colorScheme === cs.id ? "border-brand-accent ring-1 ring-[rgba(59,130,246,0.25)]" : "border-border hover:border-[rgba(59,130,246,0.25)]"}`}
                     >
                       <div className="h-10 rounded-md mb-2 flex items-center justify-center" style={{ background: cs.bg.startsWith("linear") ? cs.bg : cs.bg, border: cs.id === "clean-light" || cs.id === "minimal" ? "1px solid #333" : "none" }}>
                         <div className="w-6 h-2 rounded-full" style={{ backgroundColor: cs.primary }} />
@@ -1217,7 +1217,7 @@ export default function LandingPagesPage() {
               {/* Logo Upload Placeholder */}
               <div>
                 <label className="text-xs text-muted mb-1.5 block font-medium">Logo</label>
-                <div className="border border-dashed border-border rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-brand-accent hover:bg-[rgba(37,99,235,0.05)] transition-colors">
+                <div className="border border-dashed border-border rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-brand-accent hover:bg-[rgba(59,130,246,0.05)] transition-colors">
                   <Upload className="w-6 h-6 text-muted" />
                   <span className="text-xs text-muted">Click to upload your logo (PNG, SVG)</span>
                   <span className="text-[10px] text-muted/50">Max 2MB</span>
@@ -1291,7 +1291,7 @@ export default function LandingPagesPage() {
                         <p className="text-xs text-muted mb-3">{tpl.desc}</p>
                         <button
                           onClick={() => handleTemplateSelect(tpl.id)}
-                          className="w-full py-2 bg-surface-light border border-border rounded-lg text-xs font-semibold text-muted hover:text-brand-accent hover:border-brand-accent transition-colors group-hover:border-[rgba(37,99,235,0.25)]"
+                          className="w-full py-2 bg-surface-light border border-border rounded-lg text-xs font-semibold text-muted hover:text-brand-accent hover:border-brand-accent transition-colors group-hover:border-[rgba(59,130,246,0.25)]"
                         >
                           Use Template
                         </button>
@@ -1578,7 +1578,7 @@ export default function LandingPagesPage() {
                     <div key={i} className="flex-1 flex flex-col items-center gap-1">
                       <span className="text-[10px] text-muted">{v.toLocaleString()}</span>
                       <div className="w-full rounded-t-md relative group" style={{ height: `${h}%`, background: `linear-gradient(180deg, #2563EB 0%, #2563EB40 100%)` }}>
-                        <div className="absolute inset-0 bg-[rgba(37,99,235,0.12)] opacity-0 group-hover:opacity-100 transition-opacity rounded-t-md" />
+                        <div className="absolute inset-0 bg-[rgba(59,130,246,0.12)] opacity-0 group-hover:opacity-100 transition-opacity rounded-t-md" />
                       </div>
                       <span className="text-[10px] text-muted">{days[i]}</span>
                     </div>

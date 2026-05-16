@@ -194,7 +194,7 @@ export default function RoiCalculatorPage() {
                   <button
                     onClick={saveScenario}
                     disabled={saving}
-                    className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.12)] hover:bg-[rgba(37,99,235,0.14)] text-brand-accent text-sm font-medium transition-colors disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-[rgba(59,130,246,0.12)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent text-sm font-medium transition-colors disabled:opacity-50"
                   >
                     {saving ? <Loader size={13} className="animate-spin" /> : <Save size={13} />}
                     Save

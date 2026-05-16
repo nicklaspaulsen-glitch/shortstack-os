@@ -566,7 +566,7 @@ export default function ContentPage() {
       </div>
 
       {/* ── Drop & Go ───────────────────────────────────────────── */}
-      <div className="glass-indigo rounded-xl p-4 border border-[rgba(37,99,235,0.25)] bg-gradient-to-br from-[rgba(37,99,235,0.05)] to-transparent">
+      <div className="glass-indigo rounded-xl p-4 border border-[rgba(59,130,246,0.25)] bg-gradient-to-br from-[rgba(59,130,246,0.05)] to-transparent">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h2 className="section-header flex items-center gap-2 mb-1">
@@ -587,7 +587,7 @@ export default function ContentPage() {
               <button
                 onClick={() => planForPeriod(30)}
                 disabled={planningWeek}
-                className="btn-ghost flex items-center gap-1.5 disabled:opacity-50 text-xs px-3 py-1.5 border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] rounded-lg"
+                className="btn-ghost flex items-center gap-1.5 disabled:opacity-50 text-xs px-3 py-1.5 border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.08)] rounded-lg"
               >
                 {planningWeek && planPeriodDays === 30 ? <Loader size={12} className="animate-spin" /> : null}
                 Plan Month
@@ -595,7 +595,7 @@ export default function ContentPage() {
               <button
                 onClick={() => planForPeriod(365)}
                 disabled={planningWeek}
-                className="btn-ghost flex items-center gap-1.5 disabled:opacity-50 text-xs px-3 py-1.5 border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.08)] rounded-lg"
+                className="btn-ghost flex items-center gap-1.5 disabled:opacity-50 text-xs px-3 py-1.5 border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.08)] rounded-lg"
               >
                 {planningWeek && planPeriodDays === 365 ? <Loader size={12} className="animate-spin" /> : null}
                 Plan Year
@@ -610,7 +610,7 @@ export default function ContentPage() {
           onDrop={onDropZone}
           onClick={() => fileInputRef.current?.click()}
           className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
-            dragOver ? "border-brand-accent bg-[rgba(37,99,235,0.05)]" : "border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.4)]"
+            dragOver ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "border-[rgba(59,130,246,0.25)] hover:border-[rgba(59,130,246,0.4)]"
           }`}
         >
           <Upload size={36} className="mx-auto mb-3 text-brand-accent" />
@@ -691,7 +691,7 @@ export default function ContentPage() {
                                 onClick={() => remixPlatformTitle(item, plat)}
                                 disabled={isRemixing}
                                 title="Find a better title"
-                                className="text-[rgba(37,99,235,0.6)] hover:text-brand-accent transition-colors disabled:opacity-40 shrink-0"
+                                className="text-[rgba(59,130,246,0.6)] hover:text-brand-accent transition-colors disabled:opacity-40 shrink-0"
                               >
                                 {isRemixing ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
                               </button>
@@ -828,7 +828,7 @@ export default function ContentPage() {
             {planThemes.length > 0 && (
               <div className="mb-3 flex flex-wrap gap-1.5">
                 {planThemes.slice(0, 12).map((t) => (
-                  <span key={t.week} className="text-[10px] px-2 py-1 rounded border border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.05)] text-brand-accent">
+                  <span key={t.week} className="text-[10px] px-2 py-1 rounded border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)] text-brand-accent">
                     W{t.week}: {t.theme}
                   </span>
                 ))}
@@ -902,7 +902,7 @@ export default function ContentPage() {
                         onClick={() => publishNow(i)}
                         disabled={isPublishing}
                         title="Publish this entry right now"
-                        className="shrink-0 text-[10px] px-2 py-1 rounded border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.08)] text-brand-accent flex items-center gap-1 disabled:opacity-40"
+                        className="shrink-0 text-[10px] px-2 py-1 rounded border border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.08)] text-brand-accent flex items-center gap-1 disabled:opacity-40"
                       >
                         <Send size={10} /> Publish now
                       </button>
@@ -938,7 +938,7 @@ export default function ContentPage() {
                   const el = document.querySelector('[data-drop-zone]');
                   el?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
-                className="w-full text-left p-3 rounded-lg border border-border hover:border-[rgba(37,99,235,0.3)] hover:bg-[rgba(37,99,235,0.05)] transition flex items-start gap-3"
+                className="w-full text-left p-3 rounded-lg border border-border hover:border-[rgba(59,130,246,0.3)] hover:bg-[rgba(59,130,246,0.05)] transition flex items-start gap-3"
               >
                 <Upload size={16} className="text-brand-accent mt-0.5 shrink-0" />
                 <div>
@@ -949,7 +949,7 @@ export default function ContentPage() {
               {planPeriodDays < 30 && (
                 <button
                   onClick={() => { setShowPlanComplete(false); planForPeriod(30); }}
-                  className="w-full text-left p-3 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.05)] hover:bg-[rgba(37,99,235,0.08)] transition flex items-start gap-3"
+                  className="w-full text-left p-3 rounded-lg border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] hover:bg-[rgba(59,130,246,0.08)] transition flex items-start gap-3"
                 >
                   <Calendar size={16} className="text-brand-accent mt-0.5 shrink-0" />
                   <div>
@@ -961,7 +961,7 @@ export default function ContentPage() {
               {planPeriodDays < 365 && (
                 <button
                   onClick={() => { setShowPlanComplete(false); planForPeriod(365); }}
-                  className="w-full text-left p-3 rounded-lg border border-[rgba(37,99,235,0.25)] bg-gradient-to-r from-[rgba(37,99,235,0.08)] to-[rgba(37,99,235,0.08)] hover:from-[rgba(37,99,235,0.08)] transition flex items-start gap-3"
+                  className="w-full text-left p-3 rounded-lg border border-[rgba(59,130,246,0.25)] bg-gradient-to-r from-[rgba(59,130,246,0.08)] to-[rgba(59,130,246,0.08)] hover:from-[rgba(59,130,246,0.08)] transition flex items-start gap-3"
                 >
                   <Sparkles size={16} className="text-brand-accent mt-0.5 shrink-0" />
                   <div>
@@ -1245,7 +1245,7 @@ export default function ContentPage() {
                       <div key={item.id} className="card p-3 text-xs">
                         <p className="font-medium mb-1">{item.title}</p>
                         <div className="flex items-center gap-2 text-[10px] text-muted">
-                          <span className={`px-1.5 py-0.5 rounded ${item.type === "blog" ? "bg-info/10 text-info" : item.type === "video" ? "bg-danger/10 text-danger" : item.type === "email" ? "bg-purple-500/10 text-purple-700" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"}`}>{item.type}</span>
+                          <span className={`px-1.5 py-0.5 rounded ${item.type === "blog" ? "bg-info/10 text-info" : item.type === "video" ? "bg-danger/10 text-danger" : item.type === "email" ? "bg-purple-500/10 text-purple-700" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"}`}>{item.type}</span>
                           <span>{item.assignee}</span>
                         </div>
                         {item.due && <p className="text-[10px] text-muted mt-1 flex items-center gap-1"><Clock size={9} /> Due: {item.due}</p>}
@@ -1262,7 +1262,7 @@ export default function ContentPage() {
                   {["AI Draft", "Internal Review", "Client Approval", "Schedule", "Publish"].map((step, i) => (
                     <div key={step} className="flex items-center gap-2">
                       <div className="text-center">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${i < 3 ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)]" : "bg-surface-light text-muted border border-border"}`}>{i + 1}</div>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${i < 3 ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-surface-light text-muted border border-border"}`}>{i + 1}</div>
                         <p className="text-[9px] text-muted mt-1">{step}</p>
                       </div>
                       {i < 4 && <ChevronRight size={12} className="text-muted" />}
@@ -1374,7 +1374,7 @@ export default function ContentPage() {
                     <button
                       onClick={() => enhanceText(seoText, `Improve this content for SEO.${seoKeyword ? ` Target keyword: "${seoKeyword}".` : ""} Make it more engaging, add relevant headers, improve readability, and naturally incorporate keywords. Keep the same topic and message.`, setSeoText, "seo")}
                       disabled={!seoText.trim() || enhancing === "seo"}
-                      className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mt-1"
+                      className="flex items-center gap-1 text-[10px] text-[rgba(59,130,246,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mt-1"
                     >
                       {enhancing === "seo" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
                       AI Enhance for SEO
@@ -1410,9 +1410,9 @@ export default function ContentPage() {
                         {seoResults.issues.map((issue, i) => <p key={i} className="text-[10px] text-danger/80">- {issue}</p>)}
                       </div>
                     )}
-                    <div className="p-3 bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg">
+                    <div className="p-3 bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)] rounded-lg">
                       <p className="text-xs font-medium text-brand-accent mb-2 flex items-center gap-1"><Zap size={12} /> Suggestions</p>
-                      {seoResults.suggestions.map((s, i) => <p key={i} className="text-[10px] text-[rgba(37,99,235,0.8)]">- {s}</p>)}
+                      {seoResults.suggestions.map((s, i) => <p key={i} className="text-[10px] text-[rgba(59,130,246,0.8)]">- {s}</p>)}
                     </div>
                   </div>
                 )}
@@ -1423,7 +1423,7 @@ export default function ContentPage() {
                 <p className="text-xs text-muted mb-3">Let AI improve your content for better SEO, readability, and engagement.</p>
                 <div className="grid grid-cols-3 gap-2">
                   {["Improve Readability", "Add Keywords", "Expand Content", "Shorten & Tighten", "Add CTA", "Fix Grammar"].map(action => (
-                    <button key={action} onClick={() => toast.success(`AI enhancing: ${action}`)} className="p-3 border border-border rounded-lg text-xs text-left hover:border-[rgba(37,99,235,0.25)] transition-all">
+                    <button key={action} onClick={() => toast.success(`AI enhancing: ${action}`)} className="p-3 border border-border rounded-lg text-xs text-left hover:border-[rgba(59,130,246,0.25)] transition-all">
                       <Sparkles size={12} className="text-brand-accent mb-1" />
                       {action}
                     </button>
@@ -1486,7 +1486,7 @@ export default function ContentPage() {
                 <button
                   key={i}
                   onClick={() => applyRemixTitle(alt)}
-                  className="w-full text-left p-3 border border-[rgba(37,99,235,0.25)] rounded-lg hover:border-brand-accent hover:bg-[rgba(37,99,235,0.05)] transition-all"
+                  className="w-full text-left p-3 border border-[rgba(59,130,246,0.25)] rounded-lg hover:border-brand-accent hover:bg-[rgba(59,130,246,0.05)] transition-all"
                 >
                   <span className="text-[10px] text-brand-accent font-medium mr-2">#{i + 1}</span>
                   <span className="text-sm">{alt}</span>
@@ -1522,7 +1522,7 @@ export default function ContentPage() {
               <button
                 onClick={() => enhanceText(editingPublish.description || "", `Improve this video description for social media. Make it engaging, include a call-to-action, and optimize for the platform. Title: "${editingPublish.video_title || ""}".`, (v) => setEditingPublish(prev => ({ ...prev, description: v })), "desc")}
                 disabled={!editingPublish.description?.trim() || enhancing === "desc"}
-                className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mt-1"
+                className="flex items-center gap-1 text-[10px] text-[rgba(59,130,246,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mt-1"
               >
                 {enhancing === "desc" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
                 AI Enhance
@@ -1538,7 +1538,7 @@ export default function ContentPage() {
               <button
                 onClick={() => enhanceText(editingPublish.hashtags?.join(", ") || "", `Generate optimized hashtags for this social media video. Title: "${editingPublish.video_title || ""}". Return as comma-separated hashtags. Mix trending, niche, and branded tags. 15-20 hashtags.`, (v) => setEditingPublish(prev => ({ ...prev, hashtags: v.split(",").map(h => h.trim()) })), "hash")}
                 disabled={!editingPublish.hashtags?.length || enhancing === "hash"}
-                className="flex items-center gap-1 text-[10px] text-[rgba(37,99,235,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mt-1"
+                className="flex items-center gap-1 text-[10px] text-[rgba(59,130,246,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mt-1"
               >
                 {enhancing === "hash" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
                 AI Enhance Hashtags

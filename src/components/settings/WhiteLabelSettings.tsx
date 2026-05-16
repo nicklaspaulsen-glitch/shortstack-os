@@ -104,7 +104,7 @@ function LogoDropZone({
         tabIndex={0}
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") inputRef.current?.click(); }}
         className={`relative flex items-center gap-4 p-4 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
-          dragOver ? "border-[#2563EB] bg-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.4)] bg-surface-light/40"
+          dragOver ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)]" : "border-border hover:border-[rgba(59,130,246,0.4)] bg-surface-light/40"
         } ${uploading ? "opacity-60 pointer-events-none" : ""}`}
       >
         <div className="w-14 h-14 rounded-lg border border-border bg-surface flex items-center justify-center overflow-hidden shrink-0">
@@ -322,7 +322,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={whiteLabel.logo_url} alt="" className="w-6 h-6 rounded object-contain" />
               ) : (
-                <div className="w-6 h-6 rounded bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                <div className="w-6 h-6 rounded bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
                   <Palette size={10} style={{ color: whiteLabel.primary_color || "#C9A84C" }} />
                 </div>
               )}

@@ -39,7 +39,7 @@ export function FlowButton({
       disabled={disabled}
       className={cn(
         "group relative flex items-center gap-1 overflow-hidden",
-        "rounded-full border border-[rgba(37,99,235,0.35)] bg-transparent",
+        "rounded-full border border-[rgba(59,130,246,0.35)] bg-transparent",
         "px-7 py-2.5 text-sm font-semibold text-[#2563EB]",
         "cursor-pointer select-none",
         "transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)]",

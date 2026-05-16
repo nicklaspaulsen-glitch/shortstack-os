@@ -699,8 +699,8 @@ export default function IntegrationsHubPage() {
                     className={[
                       "px-3 py-1.5 text-[11px] font-semibold rounded-full border transition-all",
                       active
-                        ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent"
-                        : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] hover:border-[rgba(37,99,235,0.14)]",
+                        ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent"
+                        : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] hover:border-[rgba(59,130,246,0.14)]",
                     ].join(" ")}
                   >
                     {cat}

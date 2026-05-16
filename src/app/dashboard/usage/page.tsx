@@ -439,7 +439,7 @@ export default function UsagePage() {
                           className="flex-1 flex flex-col items-center justify-end h-full group relative"
                         >
                           <div
-                            className="w-full rounded-t transition-all duration-300 bg-[rgba(37,99,235,0.6)] group-hover:bg-brand-accent"
+                            className="w-full rounded-t transition-all duration-300 bg-[rgba(59,130,246,0.6)] group-hover:bg-brand-accent"
                             style={{ height: `${Math.max(h, d.tokens > 0 ? 4 : 0)}%` }}
                           />
                           {/* Tooltip */}
@@ -466,7 +466,7 @@ export default function UsagePage() {
               </div>
             </div>{/* ── Buy More Tokens ── */}{isUnlimited ? (
               <div className="glass rounded-xl p-5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-brand-accent shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center text-brand-accent shrink-0">
                   <Zap size={18} />
                 </div>
                 <div>
@@ -506,8 +506,8 @@ export default function UsagePage() {
                       }
                       className={`relative flex flex-col items-center gap-1.5 p-4 rounded-xl border text-center transition-all ${
                         selectedPack === pack.id
-                          ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent"
-                          : "border-border bg-surface-light text-foreground hover:border-[rgba(37,99,235,0.4)]"
+                          ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                          : "border-border bg-surface-light text-foreground hover:border-[rgba(59,130,246,0.4)]"
                       }`}
                     >
                       {pack.popular && (

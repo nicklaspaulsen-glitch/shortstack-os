@@ -449,7 +449,7 @@ export default function Tab1Calendar() {
                   type="button"
                   onClick={handleSaveEdit}
                   disabled={savingId === selected.id}
-                  className="px-3 py-1.5 text-xs rounded-md bg-[rgba(37,99,235,0.12)] text-brand-accent border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.18)] disabled:opacity-50"
+                  className="px-3 py-1.5 text-xs rounded-md bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.18)] disabled:opacity-50"
                 >
                   {savingId === selected.id ? (
                     <Loader2 size={12} className="inline mr-1 animate-spin" />

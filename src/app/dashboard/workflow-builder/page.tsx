@@ -401,14 +401,14 @@ function WorkflowNode({ id, data, selected }: NodeProps) {
         relative group rounded-xl border-l-[3px] ${colors.border}
         bg-surface border border-border min-w-[200px] max-w-[240px]
         transition-all duration-200
-        ${selected ? "ring-1 ring-[rgba(37,99,235,0.4)] border-[rgba(37,99,235,0.25)]" : ""}
-        ${isSimulating ? "ring-2 ring-[rgba(37,99,235,0.7)] shadow-[0_0_20px_rgba(37,99,235,0.25)]" : ""}
+        ${selected ? "ring-1 ring-[rgba(59,130,246,0.4)] border-[rgba(59,130,246,0.25)]" : ""}
+        ${isSimulating ? "ring-2 ring-[rgba(59,130,246,0.7)] shadow-[0_0_20px_rgba(59,130,246,0.25)]" : ""}
       `}
       style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}
     >
       {/* Input handle */}
       {def.category !== "trigger" && (
-        <Handle type="target" position={Position.Top} className="!w-2.5 !h-2.5 !bg-surface !border-2 !border-[rgba(37,99,235,0.4)] !-top-[6px]" />
+        <Handle type="target" position={Position.Top} className="!w-2.5 !h-2.5 !bg-surface !border-2 !border-[rgba(59,130,246,0.4)] !-top-[6px]" />
       )}
 
       <div className="px-3 py-2.5">
@@ -452,7 +452,7 @@ function WorkflowNode({ id, data, selected }: NodeProps) {
       </button>
 
       {/* Output handle */}
-      <Handle type="source" position={Position.Bottom} className="!w-2.5 !h-2.5 !bg-surface !border-2 !border-[rgba(37,99,235,0.4)] !-bottom-[6px]" />
+      <Handle type="source" position={Position.Bottom} className="!w-2.5 !h-2.5 !bg-surface !border-2 !border-[rgba(59,130,246,0.4)] !-bottom-[6px]" />
     </div>
   );
 }
@@ -861,7 +861,7 @@ function WorkflowBuilderInner() {
 
         <div className="flex-1" />
 
-        <button onClick={() => setShowTemplates(true)} className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-medium bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-colors">
+        <button onClick={() => setShowTemplates(true)} className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-medium bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.12)] transition-colors">
           <LayoutTemplate size={13} /> Templates
         </button>
       </div>
@@ -971,14 +971,14 @@ function WorkflowBuilderInner() {
             {nodes.length === 0 && (
               <Panel position="top-center">
                 <div className="mt-32 text-center">
-                  <div className="w-14 h-14  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center mx-auto mb-4">
+                  <div className="w-14 h-14  bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center mx-auto mb-4">
                     <Zap size={24} className="text-brand-accent" />
                   </div>
                   <h3 className="text-sm font-semibold text-foreground mb-1">Build your workflow</h3>
                   <p className="text-[11px] text-muted max-w-[240px] mx-auto mb-4">Drag nodes from the left panel onto the canvas, or start with a template.</p>
                   <button
                     onClick={() => setShowTemplates(true)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] hover:bg-[rgba(37,99,235,0.12)] transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.12)] transition-colors"
                   >
                     <LayoutTemplate size={14} /> Browse Templates
                   </button>
@@ -989,7 +989,7 @@ function WorkflowBuilderInner() {
 
           {/* Simulation overlay */}
           {simulating && (
-            <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-xl bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] backdrop-blur-sm z-10">
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-xl bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] backdrop-blur-sm z-10">
               <div className="w-2 h-2 rounded-full bg-brand-accent animate-pulse" />
               <span className="text-[11px] font-medium text-brand-accent">Simulating workflow...</span>
               <button onClick={stopSimulation} className="text-[10px] text-muted hover:text-foreground ml-2">Stop</button>
@@ -1140,11 +1140,11 @@ function WorkflowBuilderInner() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.04, duration: 0.35 }}
                   whileHover={{ y: -4, scale: 1.01 }}
-                  className="group glass rounded-xl hover:border-[rgba(37,99,235,0.25)] transition-all p-4 cursor-pointer"
+                  className="group glass rounded-xl hover:border-[rgba(59,130,246,0.25)] transition-all p-4 cursor-pointer"
                   onClick={() => loadTemplate(tpl)}
                 >
                   <div className="flex items-start justify-between mb-2">
-                    <div className="w-9 h-9 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center">
                       <Zap size={16} className="text-brand-accent" />
                     </div>
                     <span className="text-[10px] text-muted bg-surface px-2 py-0.5 rounded-full border border-border">{tpl.nodeCount} nodes</span>
@@ -1169,7 +1169,7 @@ function WorkflowBuilderInner() {
                     )}
                   </div>
 
-                  <button className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-[11px] font-semibold bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] group-hover:bg-[rgba(37,99,235,0.12)] transition-colors">
+                  <button className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-[11px] font-semibold bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] group-hover:bg-[rgba(59,130,246,0.12)] transition-colors">
                     <Play size={11} /> Use Template
                   </button>
                 </motion.div>

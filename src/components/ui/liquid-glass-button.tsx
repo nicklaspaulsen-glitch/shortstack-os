@@ -90,7 +90,7 @@ export function LiquidGlassButton({
           boxShadow: [
             "inset 0 1px 1px rgba(255,255,255,0.55)",
             "inset 0 -1px 1px rgba(0,0,0,0.08)",
-            "0 4px 16px rgba(37,99,235,0.12)",
+            "0 4px 16px rgba(59,130,246,0.12)",
             "0 1px 4px rgba(0,0,0,0.08)",
           ].join(", "),
           border: "1px solid rgba(255,255,255,0.40)",
@@ -100,7 +100,7 @@ export function LiquidGlassButton({
           (e.currentTarget as HTMLButtonElement).style.boxShadow = [
             "inset 0 1px 1px rgba(255,255,255,0.70)",
             "inset 0 -1px 1px rgba(0,0,0,0.06)",
-            "0 8px 28px rgba(37,99,235,0.20)",
+            "0 8px 28px rgba(59,130,246,0.20)",
             "0 2px 6px rgba(0,0,0,0.10)",
           ].join(", ");
           (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)";
@@ -109,7 +109,7 @@ export function LiquidGlassButton({
           (e.currentTarget as HTMLButtonElement).style.boxShadow = [
             "inset 0 1px 1px rgba(255,255,255,0.55)",
             "inset 0 -1px 1px rgba(0,0,0,0.08)",
-            "0 4px 16px rgba(37,99,235,0.12)",
+            "0 4px 16px rgba(59,130,246,0.12)",
             "0 1px 4px rgba(0,0,0,0.08)",
           ].join(", ");
           (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";

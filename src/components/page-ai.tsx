@@ -276,7 +276,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={(e) => { const wasDrag = dragRef.current?.moved; dragRef.current = null; elRef.current?.releasePointerCapture(e.pointerId); if (!wasDrag) setMinimized(false); }}
-        className="flex items-center gap-2 px-3 py-2 rounded-full bg-surface border border-[rgba(37,99,235,0.2)] text-xs text-[#2563EB] hover:bg-surface-light transition-all cursor-grab active:cursor-grabbing touch-none select-none"
+        className="flex items-center gap-2 px-3 py-2 rounded-full bg-surface border border-[rgba(59,130,246,0.2)] text-xs text-[#2563EB] hover:bg-surface-light transition-all cursor-grab active:cursor-grabbing touch-none select-none"
       >
         <Bot size={14} /> {pageName} AI
         <span className="w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
@@ -312,7 +312,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
         }}
       >
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+          <div className="w-7 h-7 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
             <Sparkles size={14} className="text-[#2563EB]" />
           </div>
           <div>
@@ -336,12 +336,12 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2.5 max-h-[320px]">
         {messages.length === 0 && (
           <div className="text-center py-4">
-            <Sparkles size={20} className="mx-auto mb-2 text-[rgba(37,99,235,0.3)]" />
+            <Sparkles size={20} className="mx-auto mb-2 text-[rgba(59,130,246,0.3)]" />
             <p className="text-[10px] text-muted mb-3">Ask me anything about this page</p>
             <div className="space-y-1">
               {suggestions.map((s, i) => (
                 <button key={i} onClick={() => sendMessage(s)}
-                  className="w-full text-left text-[10px] p-2 rounded-lg border border-border/20 hover:border-[rgba(37,99,235,0.2)] text-muted hover:text-foreground transition-all">
+                  className="w-full text-left text-[10px] p-2 rounded-lg border border-border/20 hover:border-[rgba(59,130,246,0.2)] text-muted hover:text-foreground transition-all">
                   {s}
                 </button>
               ))}
@@ -358,7 +358,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
             <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
               <div className={`max-w-[85%] rounded-xl px-3 py-2 ${
                 msg.role === "user"
-                  ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.08)]"
+                  ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.08)]"
                   : "bg-surface-light/50 border border-border/20"
               }`}>
                 <p className="text-[11px] whitespace-pre-wrap leading-relaxed">
@@ -396,7 +396,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
           className="flex-1 bg-transparent text-xs placeholder-muted/50 outline-none"
           disabled={thinking} />
         <button type="submit" disabled={!input.trim() || thinking}
-          className="w-7 h-7 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[#2563EB] disabled:opacity-30 hover:bg-[rgba(37,99,235,0.12)] transition-colors">
+          className="w-7 h-7 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[#2563EB] disabled:opacity-30 hover:bg-[rgba(59,130,246,0.12)] transition-colors">
           <Send size={12} />
         </button>
       </form>

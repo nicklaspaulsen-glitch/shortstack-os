@@ -66,7 +66,7 @@ function WidgetCard({
       onDragOver={onDragOver}
       onDrop={onDrop}
       className={`bg-white border border-[rgba(0,0,0,0.08)] rounded-xl overflow-hidden cursor-grab active:cursor-grabbing transition-all select-none shadow-sm ${
-        isDragOver ? "border-[rgba(37,99,235,0.60)] scale-[1.02]" : ""
+        isDragOver ? "border-[rgba(59,130,246,0.60)] scale-[1.02]" : ""
       }`}
     >
       <div className="p-4 flex flex-col gap-3">

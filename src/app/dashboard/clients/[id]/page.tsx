@@ -111,9 +111,9 @@ export default function ClientDetailPage() {
   return (
     <div className="fade-in space-y-6">
       {/* Client banner — makes it clear you're managing a specific client */}
-      <div className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.08)] rounded-xl px-4 py-2.5 flex items-center justify-between">
+      <div className="bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.08)] rounded-xl px-4 py-2.5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center">
             <span className="text-brand-accent text-sm font-bold">{client.business_name.charAt(0)}</span>
           </div>
           <div>
@@ -124,7 +124,7 @@ export default function ClientDetailPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setSmartManageOpen(true)}
-            className="text-[10px] px-2.5 py-1 rounded-full bg-brand-accent text-white font-bold flex items-center gap-1 hover:bg-[rgba(37,99,235,0.90)] transition-colors"
+            className="text-[10px] px-2.5 py-1 rounded-full bg-brand-accent text-white font-bold flex items-center gap-1 hover:bg-[rgba(59,130,246,0.90)] transition-colors"
             aria-label="Open Smart Manage"
           >
             <Sparkles size={10} /> Manage
@@ -212,7 +212,7 @@ export default function ClientDetailPage() {
         </div>
         <div className="flex flex-wrap gap-2">
           {(client.services || []).map((s, i) => (
-            <span key={i} className="bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded-lg px-3 py-1.5 text-brand-accent text-sm">{s}</span>
+            <span key={i} className="bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] rounded-lg px-3 py-1.5 text-brand-accent text-sm">{s}</span>
           ))}
           {(client.services || []).length === 0 && <span className="text-muted text-sm">No services assigned</span>}
         </div>
@@ -594,7 +594,7 @@ function ClientPhoneSection({
                 <Phone size={9} /> Active
               </span>
               {status.eleven_agent_id ? (
-                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)] flex items-center gap-1">
+                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)] flex items-center gap-1">
                   <Bot size={9} /> AI agent ready
                 </span>
               ) : (
@@ -752,7 +752,7 @@ function ClientFilesSection({ clientId, readOnly = false }: { clientId: string; 
                 href={f.url || "#"}
                 target={f.url ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                className={`flex items-center gap-2 p-2 rounded-lg border border-border bg-surface-light/50 hover:border-[rgba(37,99,235,0.25)] transition-colors min-w-0 ${f.url ? "" : "pointer-events-none opacity-60"}`}
+                className={`flex items-center gap-2 p-2 rounded-lg border border-border bg-surface-light/50 hover:border-[rgba(59,130,246,0.25)] transition-colors min-w-0 ${f.url ? "" : "pointer-events-none opacity-60"}`}
                 title={f.name}
               >
                 <div className="w-10 h-10 rounded-lg bg-surface flex items-center justify-center shrink-0 overflow-hidden">
@@ -886,7 +886,7 @@ const ONBOARDING_PHASES = [
     phase: "Setup & Discovery",
     icon: <Rocket size={14} />,
     color: "text-brand-accent",
-    bg: "bg-[rgba(37,99,235,0.08)]",
+    bg: "bg-[rgba(59,130,246,0.08)]",
     tasks: [
       { title: "Complete client onboarding form", description: "Fill in business details, goals, and preferences" },
       { title: "Connect social media accounts", description: "Link Instagram, TikTok, Facebook, LinkedIn via Zernio" },
@@ -901,7 +901,7 @@ const ONBOARDING_PHASES = [
     phase: "Strategy & Planning",
     icon: <Target size={14} />,
     color: "text-brand-accent",
-    bg: "bg-[rgba(37,99,235,0.08)]",
+    bg: "bg-[rgba(59,130,246,0.08)]",
     tasks: [
       { title: "Create content strategy document", description: "Define content pillars, posting frequency, and tone" },
       { title: "Build first month content calendar", description: "Plan 30 days of posts across all platforms" },
@@ -915,7 +915,7 @@ const ONBOARDING_PHASES = [
     phase: "Content Production",
     icon: <Palette size={14} />,
     color: "text-brand-accent",
-    bg: "bg-[rgba(37,99,235,0.08)]",
+    bg: "bg-[rgba(59,130,246,0.08)]",
     tasks: [
       { title: "Write first 5 video scripts", description: "Use AI Script Lab to create platform-specific scripts" },
       { title: "Design social media templates", description: "Create branded templates in Design Studio" },

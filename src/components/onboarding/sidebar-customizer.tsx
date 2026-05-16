@@ -88,7 +88,7 @@ export default function SidebarCustomizer({
           type="button"
           onClick={runAiRecommend}
           disabled={aiLoading}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[rgba(37,99,235,0.12)] to-amber-400/15 border border-[rgba(37,99,235,0.25)] text-[#2563EB] text-xs font-semibold hover:from-[rgba(37,99,235,0.18)] hover:to-amber-400/20 transition-all disabled:opacity-50"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[rgba(59,130,246,0.12)] to-amber-400/15 border border-[rgba(59,130,246,0.25)] text-[#2563EB] text-xs font-semibold hover:from-[rgba(59,130,246,0.18)] hover:to-amber-400/20 transition-all disabled:opacity-50"
         >
           {aiLoading ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
           {aiLoading ? "Thinking..." : "AI Recommended"}
@@ -96,14 +96,14 @@ export default function SidebarCustomizer({
         <button
           type="button"
           onClick={selectAll}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light border border-border text-xs font-medium text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] transition-all"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light border border-border text-xs font-medium text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.25)] transition-all"
         >
           <CheckSquare size={12} /> Select All
         </button>
         <button
           type="button"
           onClick={selectNone}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light border border-border text-xs font-medium text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)] transition-all"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light border border-border text-xs font-medium text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.25)] transition-all"
         >
           <Square size={12} /> Select None
         </button>
@@ -114,7 +114,7 @@ export default function SidebarCustomizer({
       </div>
 
       {reasoning && (
-        <div className="px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.08)] text-[11px] text-muted italic">
+        <div className="px-3 py-2 rounded-lg bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.08)] text-[11px] text-muted italic">
           <span className="text-[#2563EB] font-medium">AI: </span>
           {reasoning}
         </div>
@@ -146,7 +146,7 @@ export default function SidebarCustomizer({
                     allSelected
                       ? "bg-[#2563EB] border-[#2563EB] text-white"
                       : someSelected
-                      ? "bg-[rgba(37,99,235,0.18)] border-[rgba(37,99,235,0.4)] text-[#2563EB]"
+                      ? "bg-[rgba(59,130,246,0.18)] border-[rgba(59,130,246,0.4)] text-[#2563EB]"
                       : "border-border"
                   }`}
                 >
@@ -163,7 +163,7 @@ export default function SidebarCustomizer({
                       onClick={() => toggle(item.href)}
                       className={`flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg text-xs text-left transition-all ${
                         selected
-                          ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-foreground"
+                          ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-foreground"
                           : "bg-transparent border border-transparent text-muted hover:text-foreground hover:bg-surface-light"
                       }`}
                     >

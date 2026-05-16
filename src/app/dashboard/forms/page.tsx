@@ -462,7 +462,7 @@ export default function FormsPage() {
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(37,99,235,0.10)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
+                    tab === t.id ? "bg-[rgba(59,130,246,0.10)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {t.icon} {t.label}
                 </button>
@@ -532,7 +532,7 @@ export default function FormsPage() {
                               className="flex-1 bg-transparent text-xs outline-none font-medium" aria-label="Field label" />
                             <span className="text-[8px] text-muted px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)]">{field.type}</span>
                             <button onClick={() => updateField(field.id, "required", !field.required)}
-                              className={`text-[8px] px-1.5 py-0.5 rounded ${field.required ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "text-muted"}`}>
+                              className={`text-[8px] px-1.5 py-0.5 rounded ${field.required ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-muted"}`}>
                               {field.required ? "Required" : "Optional"}
                             </button>
                             <button onClick={() => handleRegenFieldValidation(field.id)} disabled={regenFieldId === field.id}
@@ -543,7 +543,7 @@ export default function FormsPage() {
                               onClick={() => setConditionEditorFieldId(conditionEditorFieldId === field.id ? null : field.id)}
                               className={`text-[8px] px-1.5 py-0.5 rounded flex items-center gap-1 ${
                                 (field.conditions?.length ?? 0) > 0
-                                  ? "bg-[rgba(37,99,235,0.08)] text-brand-accent"
+                                  ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
                                   : "text-muted hover:text-brand-accent"
                               }`}
                               title="Add show/hide/require rules"
@@ -952,7 +952,7 @@ function ConditionEditor({ field, otherFields, onChange }: ConditionEditorProps)
         <p className="text-[10px] uppercase tracking-wider text-muted">Conditions for {field.label}</p>
         <button
           onClick={addRule}
-          className="flex items-center gap-1 text-[9px] px-2 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.14)]"
+          className="flex items-center gap-1 text-[9px] px-2 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.14)]"
         >
           <Plus size={9} /> Add rule
         </button>

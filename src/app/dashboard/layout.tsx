@@ -308,7 +308,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (loading || !user) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="w-6 h-6 border-2 border-[rgba(37,99,235,0.25)] border-t-[#2563EB] rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-[rgba(59,130,246,0.25)] border-t-[#2563EB] rounded-full animate-spin" />
       </div>
     );
   }
@@ -318,7 +318,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (profile?.role && pathname && !isRouteAllowed(pathname, profile.role)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="w-6 h-6 border-2 border-[rgba(37,99,235,0.25)] border-t-[#2563EB] rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-[rgba(59,130,246,0.25)] border-t-[#2563EB] rounded-full animate-spin" />
       </div>
     );
   }
@@ -335,7 +335,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="w-6 h-6 border-2 border-[rgba(37,99,235,0.25)] border-t-[#2563EB] rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-[rgba(59,130,246,0.25)] border-t-[#2563EB] rounded-full animate-spin" />
       </div>
     );
   }
@@ -439,7 +439,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       className="rounded-full object-cover w-7 h-7"
                     />
                   ) : (
-                    <div className="w-7 h-7 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
                       <span className="text-brand-accent text-[10px] font-bold font-display leading-none">
                         {(profile?.nickname || profile?.full_name)?.charAt(0).toUpperCase() || "?"}
                       </span>

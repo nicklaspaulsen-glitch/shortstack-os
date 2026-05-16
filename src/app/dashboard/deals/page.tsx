@@ -186,7 +186,7 @@ export default function DealsPage() {
             </h1>
           </div>
           {deals.length> 0 && (
-            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-brand-accent">
+            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] text-brand-accent">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
               {deals.length} deal{deals.length !== 1 ? "s" : ""}
             </span>
@@ -283,7 +283,7 @@ export default function DealsPage() {
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-                    activeTab === t.key ? "bg-[rgba(37,99,235,0.10)] text-brand-accent border border-[rgba(37,99,235,0.25)] font-medium" : "text-muted hover:text-foreground"
+                    activeTab === t.key ? "bg-[rgba(59,130,246,0.10)] text-brand-accent border border-[rgba(59,130,246,0.25)] font-medium" : "text-muted hover:text-foreground"
                   }`}>
                   {t.icon} {t.label}
                 </button>
@@ -292,7 +292,7 @@ export default function DealsPage() {
               <motion.div
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white border border-[rgba(37,99,235,0.15)] rounded-xl p-4 space-y-3 shadow-sm"
+                className="bg-white border border-[rgba(59,130,246,0.15)] rounded-xl p-4 space-y-3 shadow-sm"
 >
                 <h3 className="text-sm font-semibold">Quick Create Deal</h3>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-2">

@@ -334,14 +334,14 @@ export default function ElevenAgentsPage() {
                       <span className="text-[9px] text-muted font-normal">({liveAgents.length} from ElevenLabs)</span>
                     </h2>
                     <button onClick={() => { setShowCreateForm(!showCreateForm); if (!showCreateForm) handleLoadDefaults(); }}
-                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all flex items-center gap-1">
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.14)] transition-all flex items-center gap-1">
                       {showCreateForm ? <><X size={10} /> Cancel</> : <><Plus size={10} /> New Agent</>}
                     </button>
                   </div>
 
                   {/* ── Create Agent Form ── */}
                   {showCreateForm && (
-                    <div className="mb-4 p-4 rounded-lg border border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] space-y-3">
+                    <div className="mb-4 p-4 rounded-lg border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] space-y-3">
                       <h3 className="text-xs font-semibold text-brand-accent">Create New ElevenLabs Agent</h3>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
@@ -394,10 +394,10 @@ export default function ElevenAgentsPage() {
                         const language = (agentConfig?.language || "en") as string;
                         const voiceId = (ttsConfig?.voice_id || "default") as string;
                         return (
-                          <motion.div key={agentId} variants={itemVariants} className="p-3 rounded-lg border border-[rgba(37,99,235,0.14)] bg-[rgba(37,99,235,0.04)] transition-all">
+                          <motion.div key={agentId} variants={itemVariants} className="p-3 rounded-lg border border-[rgba(59,130,246,0.14)] bg-[rgba(59,130,246,0.04)] transition-all">
                             <div className="flex items-center justify-between mb-2">
                               <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
                                   <Phone size={14} className="text-brand-accent" />
                                 </div>
                                 <div>
@@ -424,7 +424,7 @@ export default function ElevenAgentsPage() {
                       <Phone size={24} className="text-text-muted mx-auto mb-2" />
                       <p className="text-xs text-[#6B7280] mb-2">No agents found on ElevenLabs</p>
                       <button onClick={() => { setShowCreateForm(true); handleLoadDefaults(); }}
-                        className="text-[10px] px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-brand-accent rounded-lg border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all">
+                        className="text-[10px] px-3 py-1.5 bg-[rgba(59,130,246,0.08)] text-brand-accent rounded-lg border border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.14)] transition-all">
                         Create Your First Agent
                       </button>
                     </div>
@@ -439,11 +439,11 @@ export default function ElevenAgentsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {agents.map(agent => (
                       <div key={agent.id} className={`p-3 rounded-lg border transition-all ${
-                        agent.status === "active" ? "border-[rgba(37,99,235,0.14)] bg-[rgba(37,99,235,0.04)]" : "border-[rgba(0,0,0,0.08)]"
+                        agent.status === "active" ? "border-[rgba(59,130,246,0.14)] bg-[rgba(59,130,246,0.04)]" : "border-[rgba(0,0,0,0.08)]"
                       }`}>
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                            <div className="w-8 h-8 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
                               <Phone size={14} className="text-brand-accent" />
                             </div>
                             <div>
@@ -548,7 +548,7 @@ export default function ElevenAgentsPage() {
                       {["all", "qualified", "callback", "not_interested", "voicemail", "no_answer"].map(f => (
                         <button key={f} onClick={() => setCallFilter(f)}
                           className={`text-[10px] px-3 py-1.5 rounded-lg border capitalize transition-all ${
-                            callFilter === f ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-[rgba(0,0,0,0.08)] text-[#6B7280]"
+                            callFilter === f ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-[rgba(0,0,0,0.08)] text-[#6B7280]"
                           }`}>{f.replace("_", " ")}</button>
                       ))}
                     </div>
@@ -638,7 +638,7 @@ export default function ElevenAgentsPage() {
                     const useCase = labels?.use_case || labels?.["use case"] || "";
                     return (
                       <div key={voiceId} className="flex items-center gap-3 p-3 rounded-lg border border-[rgba(0,0,0,0.08)]">
-                        <div className="w-10 h-10 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
                           <Volume2 size={16} className="text-brand-accent" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -663,7 +663,7 @@ export default function ElevenAgentsPage() {
                       <Volume2 size={24} className="text-text-muted mx-auto mb-2" />
                       <p className="text-xs text-[#6B7280]">No voices loaded</p>
                       <button onClick={() => loadVoices()}
-                        className="mt-2 text-[10px] px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-brand-accent rounded-lg border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all">
+                        className="mt-2 text-[10px] px-3 py-1.5 bg-[rgba(59,130,246,0.08)] text-brand-accent rounded-lg border border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.14)] transition-all">
                         Load Voices
                       </button>
                     </div>
@@ -676,7 +676,7 @@ export default function ElevenAgentsPage() {
                   {["all", "cold-call", "follow-up", "reminder", "reactivation", "retention"].map(f => (
                     <button key={f} onClick={() => setScriptFilter(f)}
                       className={`text-[10px] px-3 py-1.5 rounded-lg border capitalize transition-all ${
-                        scriptFilter === f ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-[rgba(0,0,0,0.08)] text-[#6B7280]"
+                        scriptFilter === f ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-[rgba(0,0,0,0.08)] text-[#6B7280]"
                       }`}>{f.replace("-", " ")}</button>
                   ))}
                 </div>
@@ -695,7 +695,7 @@ export default function ElevenAgentsPage() {
                     <input value={abScriptA} onChange={e => setAbScriptA(e.target.value)} className="input text-xs" placeholder="Script A description" />
                     <div className="flex gap-2">
                       <input value={abScriptB} onChange={e => setAbScriptB(e.target.value)} className="input flex-1 text-xs" placeholder="Script B" />
-                      <button onClick={createAbTest} disabled={!abTestName.trim()} className="px-3 py-1.5 bg-[rgba(37,99,235,0.08)] text-brand-accent text-xs rounded-lg border border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)] transition-all disabled:opacity-50">Create</button>
+                      <button onClick={createAbTest} disabled={!abTestName.trim()} className="px-3 py-1.5 bg-[rgba(59,130,246,0.08)] text-brand-accent text-xs rounded-lg border border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.14)] transition-all disabled:opacity-50">Create</button>
                     </div>
                   </div>
                   <div className="space-y-3">

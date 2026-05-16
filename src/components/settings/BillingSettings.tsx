@@ -70,7 +70,7 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
     <div className="space-y-4">
       <div className="card">
         <h3 className="section-header">Current Plan</h3>
-        <div className="flex items-center justify-between p-4 bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] rounded-xl flex-wrap gap-3">
+        <div className="flex items-center justify-between p-4 bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.2)] rounded-xl flex-wrap gap-3">
           <div>
             <p className="text-lg font-bold" style={{ color: getPlanConfig(profile?.plan_tier).color }}>{getPlanConfig(profile?.plan_tier).badge_label}</p>
             <p className="text-xs text-muted">${getPlanConfig(profile?.plan_tier).price_monthly}/month</p>
@@ -153,7 +153,7 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
               <p className="text-sm text-muted">No payment method on file</p>
             </div>
             <button onClick={openBillingPortal} disabled={portalLoading}
-              className="text-xs bg-[rgba(37,99,235,0.08)] text-[#2563EB] border border-[rgba(37,99,235,0.2)] px-3 py-1.5 rounded-lg hover:bg-[rgba(37,99,235,0.12)] transition flex items-center gap-1 disabled:opacity-50">
+              className="text-xs bg-[rgba(59,130,246,0.08)] text-[#2563EB] border border-[rgba(59,130,246,0.2)] px-3 py-1.5 rounded-lg hover:bg-[rgba(59,130,246,0.12)] transition flex items-center gap-1 disabled:opacity-50">
               {portalLoading ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />}
               Add Payment Method
             </button>

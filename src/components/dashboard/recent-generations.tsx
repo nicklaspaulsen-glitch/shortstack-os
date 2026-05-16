@@ -28,7 +28,7 @@ const TYPE_META: Record<string, { label: string; icon: React.ReactNode; gradient
   form:         { label: "Form",         icon: <Layers size={11} />,    gradient: "from-violet-500/30 to-purple-500/20", color: "text-violet-400" },
   sequence:     { label: "Sequence",     icon: <Mail size={11} />,      gradient: "from-fuchsia-500/30 to-pink-500/20",  color: "text-fuchsia-400" },
   blog:         { label: "Blog",         icon: <FileText size={11} />,  gradient: "from-indigo-500/30 to-blue-500/20",   color: "text-indigo-400" },
-  other:        { label: "Generation",   icon: <Sparkles size={11} />,  gradient: "from-[rgba(37,99,235,0.18)] to-amber-500/20",        color: "text-[#2563EB]" },
+  other:        { label: "Generation",   icon: <Sparkles size={11} />,  gradient: "from-[rgba(59,130,246,0.18)] to-amber-500/20",        color: "text-[#2563EB]" },
 };
 
 function timeAgo(dateStr: string): string {
@@ -62,7 +62,7 @@ export default function RecentGenerations() {
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm font-semibold flex items-center gap-2">
           <Sparkles size={14} className="text-[#2563EB]" /> Recent AI Generations
-          <span className="text-[9px] text-muted font-normal bg-[rgba(37,99,235,0.08)] text-[#2563EB] px-2 py-0.5 rounded-full">
+          <span className="text-[9px] text-muted font-normal bg-[rgba(59,130,246,0.08)] text-[#2563EB] px-2 py-0.5 rounded-full">
             Latest
           </span>
         </h2>
@@ -103,7 +103,7 @@ export default function RecentGenerations() {
               <Link
                 key={item.id}
                 href={item.href}
-                className="shrink-0 w-44 group rounded-xl border border-border bg-surface hover:border-[rgba(37,99,235,0.25)] hover:shadow-md transition-all overflow-hidden"
+                className="shrink-0 w-44 group rounded-xl border border-border bg-surface hover:border-[rgba(59,130,246,0.25)] hover:shadow-md transition-all overflow-hidden"
               >
                 {/* Thumbnail */}
                 <div className={`relative h-24 w-full bg-gradient-to-br ${meta.gradient} flex items-center justify-center overflow-hidden`}>

@@ -111,7 +111,7 @@ export default function OrdersPage() {
                 </p>
                 <Link
                   href={role === "buyer" ? "/marketplace" : "/dashboard/marketplace/listings"}
-                  className="mt-4 rounded-lg bg-[rgba(37,99,235,0.08)] px-4 py-2 text-sm font-medium text-brand-accent hover:bg-[rgba(37,99,235,0.14)]"
+                  className="mt-4 rounded-lg bg-[rgba(59,130,246,0.08)] px-4 py-2 text-sm font-medium text-brand-accent hover:bg-[rgba(59,130,246,0.14)]"
                 >
                   {role === "buyer" ? "Browse marketplace" : "Manage listings"}
                 </Link>

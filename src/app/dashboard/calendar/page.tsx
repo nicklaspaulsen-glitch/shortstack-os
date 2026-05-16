@@ -34,9 +34,9 @@ interface CalEvent {
 }
 
 const CATEGORY_CONFIG: Record<EventCategory, { label: string; color: string; bg: string }> = {
-  meeting: { label: "Meeting", color: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.08)]" },
+  meeting: { label: "Meeting", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]" },
   deadline: { label: "Deadline", color: "text-[#dc2626]", bg: "bg-[rgba(220,38,38,0.08)]" },
-  content: { label: "Content", color: "text-brand-accent", bg: "bg-[rgba(37,99,235,0.08)]" },
+  content: { label: "Content", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]" },
   call: { label: "Call", color: "text-emerald-400", bg: "bg-emerald-400/10" },
 };
 
@@ -449,7 +449,7 @@ export default function CalendarPage() {
                             onDragOver={e => e.preventDefault()}
                             onDrop={() => handleDrop(dateStr)}
                             className={`rounded-lg p-1.5 min-h-[80px] border transition-all ${
-                              isToday ? "ring-1 ring-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] border-[rgba(37,99,235,0.1)]" : "border-border"
+                              isToday ? "ring-1 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.1)]" : "border-border"
                             } ${!isCurrentMonth ? "opacity-30" : "bg-surface-light"}`}>
                             <p className={`text-[10px] font-medium text-center ${isToday ? "text-brand-accent" : ""}`}>{day.getDate()}</p>
                             {dayEvts.slice(0, 3).map(evt => (
@@ -482,7 +482,7 @@ export default function CalendarPage() {
                           onDragOver={e => e.preventDefault()}
                           onDrop={() => handleDrop(dateStr)}
                           className={`rounded-xl p-3 min-h-[220px] border border-border ${
-                            isToday ? "ring-1 ring-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)]" : "bg-surface-light"
+                            isToday ? "ring-1 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)]" : "bg-surface-light"
                           }`}>
                           <div className="text-center mb-2">
                             <p className="text-[10px] text-muted uppercase">{day.toLocaleDateString("en-US", { weekday: "short" })}</p>
@@ -658,7 +658,7 @@ export default function CalendarPage() {
                         const count = todaysEvents.filter(e => e.teamMember === member).length;
                         return (
                           <div key={member} className="flex items-center gap-2 text-xs p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.03)]">
-                            <div className="w-6 h-6 rounded-full bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-[9px] font-bold text-brand-accent">{member[0]}</div>
+                            <div className="w-6 h-6 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[9px] font-bold text-brand-accent">{member[0]}</div>
                             <span className="flex-1">{member}</span>
                             <span className="text-muted">{count} event{count !== 1 ? "s" : ""}</span>
                           </div>
@@ -811,7 +811,7 @@ export default function CalendarPage() {
                       ] as const).map(t => (
                         <button key={t.id} onClick={() => setNewEvent({ ...newEvent, type: t.id })}
                           className={`flex-1 flex items-center justify-center gap-1.5 p-2 rounded-lg border text-xs transition-all ${
-                            newEvent.type === t.id ? "border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)] text-brand-accent" : "border-border text-muted"
+                            newEvent.type === t.id ? "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] text-brand-accent" : "border-border text-muted"
                           }`}>
                           {t.icon} {t.label}
                         </button>

@@ -511,7 +511,7 @@ export default function TelegramBotPage() {
                   onClick={() => setTab(t.key)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
                     tab === t.key
-                      ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)]"
+                      ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]"
                       : "text-muted hover:text-foreground hover:bg-surface"
                   }`}
                 >
@@ -555,7 +555,7 @@ export default function TelegramBotPage() {
                           </button>
                           <button
                             onClick={() => setTab("templates")}
-                            className="px-4 py-2 bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] rounded-lg text-sm font-medium hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-2"
+                            className="px-4 py-2 bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] rounded-lg text-sm font-medium hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-2"
                           >
                             <Sparkles size={14} /> Browse Templates
                           </button>
@@ -567,7 +567,7 @@ export default function TelegramBotPage() {
                   <div className="space-y-2">
                     {routines.map((r, idx) => {
                       const statusBadge = r.paused
-                        ? { label: "Paused", cls: "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)]" }
+                        ? { label: "Paused", cls: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]" }
                         : !r.enabled
                         ? { label: "Disabled", cls: "bg-surface-light text-muted border-border" }
                         : (r.fail_count ?? 0) > (r.success_count ?? 0) && (r.run_count ?? 0) > 0
@@ -616,21 +616,21 @@ export default function TelegramBotPage() {
                             <button
                               onClick={() => handleTogglePause(r)}
                               title={r.paused ? "Resume" : "Pause"}
-                              className={`p-2 rounded-lg border transition-colors ${r.paused ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20" : "bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)] hover:bg-[rgba(37,99,235,0.14)]"}`}
+                              className={`p-2 rounded-lg border transition-colors ${r.paused ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20" : "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.14)]"}`}
                             >
                               {r.paused ? <Play size={14} /> : <Pause size={14} />}
                             </button>
                             <button
                               onClick={() => handleRunNow(r)}
                               title="Run now"
-                              className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-brand-accent hover:border-[rgba(37,99,235,0.2)] transition-colors"
+                              className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-colors"
                             >
                               <Zap size={14} />
                             </button>
                             <button
                               onClick={() => openEditModal(r)}
                               title="Edit"
-                              className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)] transition-colors"
+                              className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.2)] transition-colors"
                             >
                               <Edit3 size={14} />
                             </button>
@@ -655,7 +655,7 @@ export default function TelegramBotPage() {
                   <select
                     value={activityFilter}
                     onChange={e => setActivityFilter(e.target.value)}
-                    className="bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
+                    className="bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
                   >
                     <option value="">All routines</option>
                     {ROUTINE_TYPES.map(t => (
@@ -664,7 +664,7 @@ export default function TelegramBotPage() {
                   </select>
                   <button
                     onClick={() => loadActivity(activityFilter)}
-                    className="px-3 py-2 bg-surface-light border border-border rounded-lg text-xs text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.2)]"
+                    className="px-3 py-2 bg-surface-light border border-border rounded-lg text-xs text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.2)]"
                   >
                     Refresh
                   </button>
@@ -781,7 +781,7 @@ export default function TelegramBotPage() {
                     </div>
                     <button
                       onClick={loadBotInfo}
-                      className="px-4 py-2 bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)] rounded-lg text-sm font-medium hover:bg-[rgba(37,99,235,0.12)] transition-all"
+                      className="px-4 py-2 bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] rounded-lg text-sm font-medium hover:bg-[rgba(59,130,246,0.12)] transition-all"
                     >
                       Re-check
                     </button>
@@ -852,8 +852,8 @@ export default function TelegramBotPage() {
                         onClick={() => setRetentionDays(d)}
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                           retentionDays === d
-                            ? "bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.2)]"
-                            : "bg-surface-light text-muted border border-border hover:border-[rgba(37,99,235,0.2)]"
+                            ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]"
+                            : "bg-surface-light text-muted border border-border hover:border-[rgba(59,130,246,0.2)]"
                         }`}
                       >
                         {d} days
@@ -913,7 +913,7 @@ export default function TelegramBotPage() {
                         type="text"
                         value={editing.name}
                         onChange={e => setEditing({ ...editing, name: e.target.value })}
-                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)] focus:ring-1 focus:ring-[rgba(37,99,235,0.2)]"
+                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)]"
                         placeholder="Daily Lead Brief"
                       />
                     </div>
@@ -924,7 +924,7 @@ export default function TelegramBotPage() {
                         type="text"
                         value={editing.description || ""}
                         onChange={e => setEditing({ ...editing, description: e.target.value })}
-                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)] focus:ring-1 focus:ring-[rgba(37,99,235,0.2)]"
+                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)]"
                         placeholder="What this routine does"
                       />
                     </div>
@@ -935,7 +935,7 @@ export default function TelegramBotPage() {
                         <select
                           value={editing.routine_type}
                           onChange={e => setEditing({ ...editing, routine_type: e.target.value })}
-                          className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
+                          className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
                         >
                           {ROUTINE_TYPES.map(t => (
                             <option key={t.value} value={t.value}>{t.label}</option>
@@ -952,7 +952,7 @@ export default function TelegramBotPage() {
                               setEditing({ ...editing, schedule: e.target.value });
                             }
                           }}
-                          className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-[rgba(37,99,235,0.4)]"
+                          className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
                         >
                           {SCHEDULE_PRESETS.map(p => (
                             <option key={p.value} value={p.value}>{p.label}</option>
@@ -967,7 +967,7 @@ export default function TelegramBotPage() {
                         type="text"
                         value={editing.schedule}
                         onChange={e => setEditing({ ...editing, schedule: e.target.value })}
-                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm font-mono text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)] focus:ring-1 focus:ring-[rgba(37,99,235,0.2)]"
+                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm font-mono text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)]"
                         placeholder="0 9 * * *   or   manual"
                       />
                       <p className="text-[10px] text-muted mt-1">
@@ -981,7 +981,7 @@ export default function TelegramBotPage() {
                         value={editing.message_template || ""}
                         onChange={e => setEditing({ ...editing, message_template: e.target.value })}
                         rows={6}
-                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-3 text-sm font-mono text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)] focus:ring-1 focus:ring-[rgba(37,99,235,0.2)] resize-none"
+                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-3 text-sm font-mono text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)] resize-none"
                         placeholder="Hello! Today is {{today_date}} and you have {{lead_count}} new leads."
                       />
                       <div className="mt-2 flex flex-wrap gap-1.5">
@@ -997,7 +997,7 @@ export default function TelegramBotPage() {
                                 message_template: (editing.message_template || "") + insert,
                               });
                             }}
-                            className="text-[10px] font-mono text-brand-accent bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] rounded px-1.5 py-0.5 hover:bg-[rgba(37,99,235,0.12)]"
+                            className="text-[10px] font-mono text-brand-accent bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] rounded px-1.5 py-0.5 hover:bg-[rgba(59,130,246,0.12)]"
                           >
                             {`{{${v}}}`}
                           </button>
@@ -1019,7 +1019,7 @@ export default function TelegramBotPage() {
                           }
                         }}
                         rows={3}
-                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-3 text-xs font-mono text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(37,99,235,0.4)] focus:ring-1 focus:ring-[rgba(37,99,235,0.2)] resize-none"
+                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-3 text-xs font-mono text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)] resize-none"
                         placeholder='{ "min_deal_value": 500 }'
                       />
                     </div>
@@ -1028,7 +1028,7 @@ export default function TelegramBotPage() {
                   <div className="sticky bottom-0 bg-surface border-t border-border px-6 py-4 flex items-center justify-between gap-2">
                     <button
                       onClick={handleSendTestFromModal}
-                      className="px-4 py-2 bg-surface-light border border-border rounded-lg text-sm font-medium text-muted hover:text-brand-accent hover:border-[rgba(37,99,235,0.2)] transition-all flex items-center gap-2"
+                      className="px-4 py-2 bg-surface-light border border-border rounded-lg text-sm font-medium text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center gap-2"
                     >
                       <Zap size={14} /> Test
                     </button>

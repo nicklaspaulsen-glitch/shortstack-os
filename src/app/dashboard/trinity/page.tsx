@@ -274,7 +274,7 @@ export default function TrinityPage() {
                   <h3 className="text-xs font-bold mb-3">Response Time Comparison (ms)</h3>
                   <div className="flex items-end gap-2 h-28">
                     {[
-                      { name: "Claude", ms: 0, color: "bg-[rgba(37,99,235,0.6)]" },
+                      { name: "Claude", ms: 0, color: "bg-[rgba(59,130,246,0.6)]" },
                       { name: "GPT-4o", ms: 0, color: "bg-blue-400/60" },
                       { name: "Gemini", ms: 0, color: "bg-purple-400/60" },
                     ].map(m => (
@@ -342,10 +342,10 @@ export default function TrinityPage() {
                     queue.map(q => (
                       <div key={q.id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
                         <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-bold uppercase ${
-                          q.priority === "high" ? "bg-red-500/10 text-red-400" : q.priority === "medium" ? "bg-[rgba(37,99,235,0.08)] text-brand-accent" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"
+                          q.priority === "high" ? "bg-red-500/10 text-red-400" : q.priority === "medium" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"
                         }`}>{q.priority}</span>
                         <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium ${
-                          q.status === "running" ? "bg-emerald-500/10 text-emerald-400" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"
+                          q.status === "running" ? "bg-emerald-500/10 text-emerald-400" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"
                         }`}>{q.status}</span>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium">{q.description}</p>
@@ -452,7 +452,7 @@ export default function TrinityPage() {
                     <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
                       <div className="bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded text-[10px] font-medium">{f.primary}</div>
                       <ArrowRight size={12} className="text-muted" />
-                      <div className="bg-[rgba(37,99,235,0.08)] text-brand-accent px-2 py-1 rounded text-[10px] font-medium">{f.fallback}</div>
+                      <div className="bg-[rgba(59,130,246,0.08)] text-brand-accent px-2 py-1 rounded text-[10px] font-medium">{f.fallback}</div>
                       <span className="text-[9px] text-muted ml-auto">{f.trigger}</span>
                     </motion.div>
                   ))}

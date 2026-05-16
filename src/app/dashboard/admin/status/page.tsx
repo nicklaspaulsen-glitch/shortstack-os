@@ -74,7 +74,7 @@ const SEVERITY_STYLES: Record<Severity, { label: string; pill: string; dot: stri
   },
   monitoring: {
     label: "Monitoring",
-    pill: "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.25)] text-brand-accent",
+    pill: "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent",
     dot: "bg-brand-accent",
   },
   resolved: {
@@ -312,7 +312,7 @@ export default function AdminStatusPage() {
 
       {/* Composer panel */}
       {draft && (
-        <section className=" border border-[rgba(37,99,235,0.25)] bg-surface p-5 space-y-4">
+        <section className=" border border-[rgba(59,130,246,0.25)] bg-surface p-5 space-y-4">
           <header className="flex items-center justify-between">
             <h2 className="text-sm font-semibold">
               {draft.id ? "Edit incident" : "New incident"}

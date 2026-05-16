@@ -296,15 +296,15 @@ export default function BrandKitPage() {
                       </button>
                       {showExportMenu && (
                         <div className="absolute right-0 top-full mt-2 w-56 bg-surface border border-border/30 rounded-xl shadow-2xl z-50 py-1 overflow-hidden">
-                          <button onClick={exportAsJSON} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors">
+                          <button onClick={exportAsJSON} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(59,130,246,0.05)] transition-colors">
                             <Braces size={14} className="text-brand-accent shrink-0" />
                             <div><p className="font-medium">Export as JSON</p><p className="text-[10px] text-muted">Full brand data file</p></div>
                           </button>
-                          <button onClick={copyBrandSummary} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors">
+                          <button onClick={copyBrandSummary} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(59,130,246,0.05)] transition-colors">
                             <ClipboardList size={14} className="text-brand-accent shrink-0" />
                             <div><p className="font-medium">Copy Brand Summary</p><p className="text-[10px] text-muted">Formatted text to clipboard</p></div>
                           </button>
-                          <button onClick={exportCSSVariables} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(37,99,235,0.05)] transition-colors">
+                          <button onClick={exportCSSVariables} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(59,130,246,0.05)] transition-colors">
                             <FileCode size={14} className="text-brand-accent shrink-0" />
                             <div><p className="font-medium">Export CSS Variables</p><p className="text-[10px] text-muted">Colors &amp; fonts as CSS</p></div>
                           </button>
@@ -355,7 +355,7 @@ export default function BrandKitPage() {
                   disabled={t.disabled}
                   className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-all ${
                     tab === t.key
-                      ? "text-brand-accent border-b-2 border-brand-accent bg-[rgba(37,99,235,0.05)]"
+                      ? "text-brand-accent border-b-2 border-brand-accent bg-[rgba(59,130,246,0.05)]"
                       : t.disabled
                         ? "text-muted/40 cursor-not-allowed"
                         : "text-muted hover:text-foreground"
@@ -373,7 +373,7 @@ export default function BrandKitPage() {
 >
                 {/* URL Input */}
                 <motion.div variants={tileVariants} className="glass rounded-xl p-8 text-center space-y-4">
-                  <div className="w-16 h-16 mx-auto bg-[rgba(37,99,235,0.08)] flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 mx-auto bg-[rgba(59,130,246,0.08)] flex items-center justify-center mb-4">
                     <Globe size={28} className="text-brand-accent" />
                   </div>
                   <h2 className="text-lg font-bold">Extract Brand Identity</h2>
@@ -443,7 +443,7 @@ export default function BrandKitPage() {
                   ].map((step, i) => (
                     <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="glass rounded-xl p-4 text-center relative overflow-hidden">
                       <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} className="absolute top-0 inset-x-0" />
-                      <div className="w-10 h-10 mx-auto bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center text-brand-accent mb-2 mt-1">
+                      <div className="w-10 h-10 mx-auto bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center text-brand-accent mb-2 mt-1">
                         {step.icon}
                       </div>
                       <p className="text-xs font-semibold">{step.title}</p>
@@ -575,7 +575,7 @@ export default function BrandKitPage() {
                               variants={rowVariants}
                               whileHover={{ x: 2 }}
                               onClick={() => copyColor(color)}
-                              className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:border-[rgba(37,99,235,0.25)] transition-all text-xs" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
+                              className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:border-[rgba(59,130,246,0.25)] transition-all text-xs" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
 >
                               <div className="w-4 h-4 rounded-md border border-border/30" style={{ backgroundColor: color }} />
                               <span className="font-mono text-[10px]">{color}</span>
@@ -642,7 +642,7 @@ export default function BrandKitPage() {
                           href={s.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 rounded-lg px-3 py-2 hover:border-[rgba(37,99,235,0.25)] transition-all text-xs" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
+                          className="flex items-center gap-2 rounded-lg px-3 py-2 hover:border-[rgba(59,130,246,0.25)] transition-all text-xs" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
 >
                           <ExternalLink size={12} className="text-brand-accent" />
                           {s.platform}
@@ -726,7 +726,7 @@ export default function BrandKitPage() {
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {brand.ctaTexts.map((cta, i) => (
-                        <span key={i} className="bg-[rgba(37,99,235,0.08)] text-brand-accent border border-[rgba(37,99,235,0.20)] px-3 py-1.5 rounded-lg text-xs font-medium">
+                        <span key={i} className="bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.20)] px-3 py-1.5 rounded-lg text-xs font-medium">
                           {cta}
                         </span>
                       ))}
@@ -838,16 +838,16 @@ export default function BrandKitPage() {
                         onClick={() => generateFromPreset(preset.id)}
                         disabled={generating}
                         
-                        className={`text-left rounded-xl p-4 hover:border-[rgba(37,99,235,0.25)] transition-all group ${
+                        className={`text-left rounded-xl p-4 hover:border-[rgba(59,130,246,0.25)] transition-all group ${
                           selectedPreset === preset.id && generating
-                            ? "border-[rgba(37,99,235,0.40)] bg-[rgba(37,99,235,0.05)]"
+                            ? "border-[rgba(59,130,246,0.40)] bg-[rgba(59,130,246,0.05)]"
                             : ""
                         }`}
 >
                         <div className="flex items-start gap-3">
                           <div className={`p-2 rounded-lg ${
                             selectedPreset === preset.id && generating
-                              ? "bg-[rgba(37,99,235,0.12)] text-brand-accent"
+                              ? "bg-[rgba(59,130,246,0.12)] text-brand-accent"
                               : "bg-[rgba(0,0,0,0.04)] text-muted group-hover:text-brand-accent"
                           } transition-colors`}>
                             {selectedPreset === preset.id && generating ? <Loader size={16} className="animate-spin" /> : preset.icon}

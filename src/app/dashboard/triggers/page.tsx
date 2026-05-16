@@ -76,7 +76,7 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     label: "Email opened",
     description: "Recipient opened an email you sent.",
     icon: Mail,
-    tint: "text-brand-accent bg-[rgba(37,99,235,0.08)]",
+    tint: "text-brand-accent bg-[rgba(59,130,246,0.08)]",
     filterFields: [{ key: "campaign_id", label: "Campaign ID (optional)", placeholder: "Any email campaign" }],
   },
   {
@@ -84,7 +84,7 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     label: "Email link clicked",
     description: "Recipient clicked a link inside an email.",
     icon: MousePointerClick,
-    tint: "text-brand-accent bg-[rgba(37,99,235,0.08)]",
+    tint: "text-brand-accent bg-[rgba(59,130,246,0.08)]",
     filterFields: [{ key: "campaign_id", label: "Campaign ID (optional)", placeholder: "Any campaign" }],
   },
   {
@@ -92,7 +92,7 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     label: "Email replied",
     description: "Recipient replied to your email.",
     icon: Mail,
-    tint: "text-brand-accent bg-[rgba(37,99,235,0.08)]",
+    tint: "text-brand-accent bg-[rgba(59,130,246,0.08)]",
   },
   {
     id: "link_clicked",
@@ -107,7 +107,7 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     label: "Tag added",
     description: "A specific tag was added to a lead or client in your CRM.",
     icon: Tag,
-    tint: "text-brand-accent bg-[rgba(37,99,235,0.08)]",
+    tint: "text-brand-accent bg-[rgba(59,130,246,0.08)]",
     filterFields: [
       { key: "tag", label: "Tag name (optional)", placeholder: "e.g. hot-lead" },
       { key: "entity", label: "Applies to", placeholder: "lead | client | deal" },
@@ -118,7 +118,7 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     label: "Tag removed",
     description: "A tag was removed from a lead or client.",
     icon: Tag,
-    tint: "text-brand-accent bg-[rgba(37,99,235,0.08)]",
+    tint: "text-brand-accent bg-[rgba(59,130,246,0.08)]",
     filterFields: [
       { key: "tag", label: "Tag name (optional)", placeholder: "e.g. cold-lead" },
       { key: "entity", label: "Applies to", placeholder: "lead | client | deal" },
@@ -143,7 +143,7 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     label: "Pipeline stage changed",
     description: "A deal moved from one stage to another.",
     icon: TrendingUp,
-    tint: "text-brand-accent bg-[rgba(37,99,235,0.08)]",
+    tint: "text-brand-accent bg-[rgba(59,130,246,0.08)]",
     filterFields: [
       { key: "from_stage", label: "From stage (optional)", placeholder: "e.g. qualified" },
       { key: "to_stage", label: "To stage (optional)", placeholder: "e.g. won" },
@@ -432,7 +432,7 @@ export default function TriggersPage() {
                                   ? "bg-emerald-500/15 text-emerald-700"
                                   : r.status === "failed"
                                     ? "bg-rose-500/15 text-rose-700"
-                                    : "bg-[rgba(37,99,235,0.08)] text-brand-accent"
+                                    : "bg-[rgba(59,130,246,0.08)] text-brand-accent"
                               }`}
                             >
                               {r.status}
@@ -491,7 +491,7 @@ function TriggerRowCard({
   const Icon = meta?.icon || Zap;
 
   return (
-    <div className="glass rounded-xl transition hover:border-[rgba(37,99,235,0.4)]">
+    <div className="glass rounded-xl transition hover:border-[rgba(59,130,246,0.4)]">
       <div className="flex items-center gap-3 p-3">
         <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${meta?.tint || "bg-muted/20"}`}>
           <Icon size={16} />
@@ -531,7 +531,7 @@ function TriggerRowCard({
             onClick={onToggle}
             className={`rounded px-2 py-1.5 text-[11px] ${
               trigger.is_active
-                ? "bg-[rgba(37,99,235,0.08)] text-brand-accent hover:bg-[rgba(37,99,235,0.14)]"
+                ? "bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.14)]"
                 : "bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/25"
             }`}
             title={trigger.is_active ? "Pause" : "Resume"}
@@ -637,7 +637,7 @@ function NewTriggerForm({
   }
 
   return (
-    <div className="glass-md rounded-xl border border-[rgba(37,99,235,0.25)] p-5">
+    <div className="glass-md rounded-xl border border-[rgba(59,130,246,0.25)] p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <button onClick={onClose} className="rounded p-1 text-muted hover:text-foreground" aria-label="Back to triggers list">
@@ -662,7 +662,7 @@ function NewTriggerForm({
                   setConfig({});
                 }}
                 className={`flex items-start gap-2 rounded-lg border p-2.5 text-left transition ${
-                  active ? "border-brand-accent bg-[rgba(37,99,235,0.08)]" : "border-border/50 hover:border-[rgba(37,99,235,0.4)]"
+                  active ? "border-brand-accent bg-[rgba(59,130,246,0.08)]" : "border-border/50 hover:border-[rgba(59,130,246,0.4)]"
                 }`}
                 title={t.description}
               >

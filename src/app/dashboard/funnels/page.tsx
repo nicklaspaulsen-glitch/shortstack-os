@@ -140,7 +140,7 @@ export default function FunnelsPage() {
                     onClick={() => setFilter(tab.id)}
                     className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                       filter === tab.id
-                        ? "bg-[rgba(37,99,235,0.08)] text-blue-700 border border-[rgba(37,99,235,0.25)]"
+                        ? "bg-[rgba(59,130,246,0.08)] text-blue-700 border border-[rgba(59,130,246,0.25)]"
                         : "text-[#6B7280] hover:text-[#374151]"
                     }`}
                   >
@@ -155,7 +155,7 @@ export default function FunnelsPage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search funnels…"
-                  className="bg-white border border-black/[0.08] rounded-lg pl-9 pr-4 py-2 text-sm text-[#374151] placeholder-[#9CA3AF] outline-none focus:border-[rgba(37,99,235,0.25)] w-56"
+                  className="bg-white border border-black/[0.08] rounded-lg pl-9 pr-4 py-2 text-sm text-[#374151] placeholder-[#9CA3AF] outline-none focus:border-[rgba(59,130,246,0.25)] w-56"
                 />
               </div>
             </div>{/* Grid */}{loading ? (
@@ -166,7 +166,7 @@ export default function FunnelsPage() {
               </div>
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 gap-4">
-                <div className="w-16 h-16  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] flex items-center justify-center">
+                <div className="w-16 h-16  bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] flex items-center justify-center">
                   <Layers size={28} className="text-brand-accent" />
                 </div>
                 <div className="text-center">

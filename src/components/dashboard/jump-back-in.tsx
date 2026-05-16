@@ -126,7 +126,7 @@ export default function JumpBackIn() {
               <Link
                 key={item.id}
                 href={item.href}
-                className="group p-3 rounded-xl border border-border bg-surface hover:border-[rgba(37,99,235,0.25)] hover:shadow-sm transition-all flex flex-col gap-2"
+                className="group p-3 rounded-xl border border-border bg-surface hover:border-[rgba(59,130,246,0.25)] hover:shadow-sm transition-all flex flex-col gap-2"
               >
                 <div className="flex items-center justify-between">
                   <span className={`inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full font-semibold ${meta.bg} ${meta.color}`}>

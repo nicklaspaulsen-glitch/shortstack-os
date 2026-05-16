@@ -670,7 +670,7 @@ export default function ClientsPage() {
           {/* Live count + MRR badges beside the title */}
           {clients.length> 0 && (
             <div className="hidden sm:flex items-center gap-1.5 ml-1">
-              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.15)] text-[10px] font-medium text-brand-accent">
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] text-[10px] font-medium text-brand-accent">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
                 {clients.length}
               </span>
@@ -890,7 +890,7 @@ export default function ClientsPage() {
                 className={`text-[10px] px-2 py-1 rounded-full border transition-all ${
                   activityFilter === chip.key
                     ? chip.color + " border"
-                    : "bg-surface text-muted border-border hover:border-[rgba(37,99,235,0.30)]"
+                    : "bg-surface text-muted border-border hover:border-[rgba(59,130,246,0.30)]"
                 }`}
 >
                 {chip.label}
@@ -952,7 +952,7 @@ export default function ClientsPage() {
 
           {/* Feature 4: Bulk Actions Bar */}
           {selectedClients.size> 0 && (
-            <div className="card p-2.5 flex items-center gap-3 bg-[rgba(37,99,235,0.05)] border-[rgba(37,99,235,0.20)] flex-wrap">
+            <div className="card p-2.5 flex items-center gap-3 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.20)] flex-wrap">
               <span className="text-xs font-medium">{selectedClients.size} selected</span>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <button onClick={() => handleBulkAction("email")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
@@ -1021,7 +1021,7 @@ export default function ClientsPage() {
                 <div className="absolute top-3 left-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
+                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border hover:border-[rgba(59,130,246,0.40)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1232,7 +1232,7 @@ export default function ClientsPage() {
             columns={[
               { key: "select", label: (
                 <button onClick={selectAllClients} className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                  selectedClients.size === filteredClients.length && filteredClients.length> 0 ? "bg-brand-accent border-brand-accent text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
+                  selectedClients.size === filteredClients.length && filteredClients.length> 0 ? "bg-brand-accent border-brand-accent text-white" : "border-border hover:border-[rgba(59,130,246,0.40)]"
                 }`}>
                   {selectedClients.size === filteredClients.length && filteredClients.length> 0 && <Check size={10} />}
                 </button>
@@ -1240,7 +1240,7 @@ export default function ClientsPage() {
                 <div onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border hover:border-[rgba(37,99,235,0.40)]"
+                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border hover:border-[rgba(59,130,246,0.40)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1914,7 +1914,7 @@ export default function ClientsPage() {
                   return (
                     <button key={tag.label} onClick={() => toggleTag(showTagModal, tag)}
                       className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
-                        isActive ? "border-transparent" : "border-border hover:border-[rgba(37,99,235,0.25)]"
+                        isActive ? "border-transparent" : "border-border hover:border-[rgba(59,130,246,0.25)]"
                       }`}
                       style={isActive ? { background: tag.color + "22", color: tag.color, borderColor: tag.color + "44" } : {}}>
                       {isActive && <Check size={10} className="inline mr-1" />}

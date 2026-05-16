@@ -72,7 +72,7 @@ export default function TrinityVoice({ listening, onListeningChange, onTranscrip
       className={`absolute right-2 bottom-2 w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
         listening
           ? "bg-danger/15 text-danger animate-pulse"
-          : "bg-surface-light text-muted hover:text-[#2563EB] hover:bg-[rgba(37,99,235,0.08)]"
+          : "bg-surface-light text-muted hover:text-[#2563EB] hover:bg-[rgba(59,130,246,0.08)]"
       }`}
     >
       {listening ? <MicOff size={14} /> : <Mic size={14} />}

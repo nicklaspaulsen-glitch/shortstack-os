@@ -439,7 +439,7 @@ export default function DomainsPage() {
                 the main domains page. Sits above the search so the "buy the
                 domain → launch the brand" loop is discoverable. */}<a
               href="/dashboard/domains/hub-setup"
-              className="glass rounded-xl block bg-gradient-to-br from-[rgba(37,99,235,0.08)] to-[rgba(37,99,235,0.03)] border-[rgba(37,99,235,0.25)] hover:border-[rgba(37,99,235,0.4)] transition p-4"
+              className="glass rounded-xl block bg-gradient-to-br from-[rgba(59,130,246,0.08)] to-[rgba(59,130,246,0.03)] border-[rgba(59,130,246,0.25)] hover:border-[rgba(59,130,246,0.4)] transition p-4"
             >
               <div className="flex items-center gap-3">
                 <Sparkles size={18} className="text-brand-accent shrink-0" />
@@ -516,7 +516,7 @@ export default function DomainsPage() {
                               <button
                                 onClick={() => purchaseDomain(r.domain, "monthly", r.price || undefined)}
                                 disabled={anyRowLoading}
-                                className="text-[10px] px-2 py-2 rounded-lg border border-border text-foreground hover:border-[rgba(37,99,235,0.4)] hover:bg-black/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="text-[10px] px-2 py-2 rounded-lg border border-border text-foreground hover:border-[rgba(59,130,246,0.4)] hover:bg-black/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
                               >
                                 {rowMonthlyLoading ? (
                                   <Loader size={12} className="animate-spin my-1" />
@@ -609,7 +609,7 @@ export default function DomainsPage() {
                           {(d.status === "processing" || d.status === "purchased" || d.status === "pending_payment") && (
                             <button
                               onClick={() => retryAutoConfigure(d)}
-                              className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1"
+                              className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1"
                             >
                               <RefreshCw size={10} /> Finish setup
                             </button>
@@ -721,7 +721,7 @@ export default function DomainsPage() {
                       )}
                       {/* No mail yet — gentle nudge since this is the "agency flow" win */}
                       {!d.resend_status && (d.status === "active" || d.status === "dns_configured" || d.status === "purchased") && (
-                        <div className="mt-2 px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.2)] text-[10px] text-brand-accent flex items-center gap-2 flex-wrap">
+                        <div className="mt-2 px-3 py-2 rounded-lg bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.2)] text-[10px] text-brand-accent flex items-center gap-2 flex-wrap">
                           <Sparkles size={11} />
                           <span>
                             Send marketing email from{" "}
@@ -744,7 +744,7 @@ export default function DomainsPage() {
                               <ShieldCheck size={12} className="text-brand-accent" /> DNS Records
                             </h3>
                             <div className="flex items-center gap-1.5">
-                              <button onClick={pointToVercel} className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-brand-accent hover:bg-[rgba(37,99,235,0.12)] flex items-center gap-1">
+                              <button onClick={pointToVercel} className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1">
                                 <VercelIcon size={10} /> Point to Vercel
                               </button>
                               <button onClick={addDnsRecord} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
@@ -805,7 +805,7 @@ export default function DomainsPage() {
                   ))}
                 </div>
               )}
-            </div>{/* Tip card */}<div className="glass rounded-xl p-4 border-[rgba(37,99,235,0.1)]">
+            </div>{/* Tip card */}<div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.1)]">
               <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
                 <AlertTriangle size={11} className="text-brand-accent" /> How domain ownership works
               </h3>

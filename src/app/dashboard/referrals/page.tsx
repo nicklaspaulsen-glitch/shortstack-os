@@ -248,7 +248,7 @@ export default function ReferralsPage() {
                     <button
                       onClick={handleRegen}
                       disabled={regenLoading || meLoading}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(37,99,235,0.08)] hover:text-brand-accent transition-colors disabled:opacity-60"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent transition-colors disabled:opacity-60"
                       title="Regenerate code (invalidates old link)"
                     >
                       {regenLoading ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
@@ -292,7 +292,7 @@ export default function ReferralsPage() {
                       href={shareLinks.twitter}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-muted hover:text-brand-accent hover:border-[rgba(37,99,235,0.25)] transition-colors"
+                      className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.25)] transition-colors"
                       title="Share on Twitter"
                     >
                       <TwitterIcon size={14} />
@@ -301,7 +301,7 @@ export default function ReferralsPage() {
                       href={shareLinks.facebook}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-muted hover:text-brand-accent hover:border-[rgba(37,99,235,0.25)] transition-colors"
+                      className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.25)] transition-colors"
                       title="Share on Facebook"
                     >
                       <FacebookIcon size={14} />
@@ -310,7 +310,7 @@ export default function ReferralsPage() {
                       href={shareLinks.linkedin}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-muted hover:text-brand-accent hover:border-[rgba(37,99,235,0.25)] transition-colors"
+                      className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.25)] transition-colors"
                       title="Share on LinkedIn"
                     >
                       <LinkedinIcon size={14} />
@@ -418,7 +418,7 @@ export default function ReferralsPage() {
                   </div>
                 ) : referrals.length === 0 ? (
                   <div className="p-8 text-center">
-                    <div className="w-12 h-12 mx-auto  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.12)] flex items-center justify-center mb-3">
+                    <div className="w-12 h-12 mx-auto  bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.12)] flex items-center justify-center mb-3">
                       <Sparkles size={18} className="text-brand-accent" />
                     </div>
                     <p className="text-sm font-medium text-foreground mb-1">No referrals yet</p>
@@ -489,7 +489,7 @@ export default function ReferralsPage() {
                   <Trophy size={14} className="text-brand-accent" />
                   <h2 className="text-sm font-bold text-foreground">Leaderboard</h2>
                   {leaderboard?.is_admin_view && (
-                    <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.08)] text-brand-accent">
+                    <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent">
                       Admin
                     </span>
                   )}
@@ -533,7 +533,7 @@ export default function ReferralsPage() {
                 )}
               </div>
             </section>{/* Footer help */}<div className="glass rounded-xl p-5 flex items-start gap-4 flex-wrap">
-              <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.12)] flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.12)] flex items-center justify-center shrink-0">
                 <Sparkles size={16} className="text-brand-accent" />
               </div>
               <div className="flex-1 min-w-[220px]">
@@ -547,7 +547,7 @@ export default function ReferralsPage() {
               </div>
               <a
                 href="/dashboard/settings"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(37,99,235,0.08)] hover:text-brand-accent transition-colors shrink-0"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent transition-colors shrink-0"
               >
                 <ArrowUpRight size={12} />
                 Connect payout
@@ -564,7 +564,7 @@ function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
   return (
     <div
       className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-colors ${
-        entry.is_you ? "bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.10)]" : "bg-surface-light/30"
+        entry.is_you ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.10)]" : "bg-surface-light/30"
       }`}
     >
       <div className="w-6 text-center text-xs font-bold text-muted">

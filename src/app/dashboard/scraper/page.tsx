@@ -682,7 +682,7 @@ export default function ScraperPage() {
                                 className={`w-8 h-8 rounded-lg text-[10px] font-bold transition-all ${
                                   autoRunDays.includes(day.id)
                                     ? "bg-brand-accent text-white"
-                                    : "bg-surface-light text-muted border border-border hover:border-[rgba(37,99,235,0.25)]"
+                                    : "bg-surface-light text-muted border border-border hover:border-[rgba(59,130,246,0.25)]"
                                 }`}
                               >
                                 {day.label}
@@ -698,8 +698,8 @@ export default function ScraperPage() {
                         <div className="p-2.5 bg-surface-light rounded-lg border border-border">
                           <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Current Config</p>
                           <div className="flex flex-wrap gap-1">
-                            {selectedPlatforms.map(p => <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{p.replace("_", " ")}</span>)}
-                            {niches.slice(0, 3).map(n => <span key={n} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{n}</span>)}
+                            {selectedPlatforms.map(p => <span key={p} className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{p.replace("_", " ")}</span>)}
+                            {niches.slice(0, 3).map(n => <span key={n} className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{n}</span>)}
                             {niches.length > 3 && <span className="text-[8px] text-muted">+{niches.length - 3} more</span>}
                             {locations.slice(0, 2).map(l => <span key={l} className="text-[8px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded">{l}</span>)}
                             {locations.length > 2 && <span className="text-[8px] text-muted">+{locations.length - 2} more</span>}
@@ -776,8 +776,8 @@ export default function ScraperPage() {
                         onClick={() => setTargetMode(mode.id)}
                         className={`px-3 py-1 rounded-lg text-xs font-medium border transition-all ${
                           targetMode === mode.id
-                            ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent"
-                            : "border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)]"
+                            ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                            : "border-border text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.25)]"
                         }`}
                       >
                         {mode.label}
@@ -880,7 +880,7 @@ export default function ScraperPage() {
                           <div className="flex flex-wrap gap-1">
                             {REVENUE_RANGES.map(r => (
                               <button key={r} onClick={() => setFilters({ ...filters, revenue_range: filters.revenue_range === r ? "" : r })}
-                                className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.revenue_range === r ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"}`}>{r}</button>
+                                className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.revenue_range === r ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"}`}>{r}</button>
                             ))}
                           </div>
                         </div>
@@ -890,7 +890,7 @@ export default function ScraperPage() {
                           <div className="flex flex-wrap gap-1">
                             {COMPANY_SIZES.map(s => (
                               <button key={s} onClick={() => setFilters({ ...filters, company_size: filters.company_size === s ? "" : s })}
-                                className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.company_size === s ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"}`}>{s}</button>
+                                className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.company_size === s ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"}`}>{s}</button>
                             ))}
                           </div>
                         </div>
@@ -1009,7 +1009,7 @@ export default function ScraperPage() {
                           <div className="flex flex-wrap gap-1">
                             {DECISION_MAKER_TITLES.map(title => (
                               <button key={title} onClick={() => toggleDecisionMakerTitle(title)}
-                                className={`text-[9px] px-2 py-1 rounded border transition-all ${decisionMakerTitles.includes(title) ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"}`}>
+                                className={`text-[9px] px-2 py-1 rounded border transition-all ${decisionMakerTitles.includes(title) ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"}`}>
                                 <Briefcase size={8} className="inline mr-1" />{title}
                               </button>
                             ))}
@@ -1044,7 +1044,7 @@ export default function ScraperPage() {
                           <span className="text-[10px]">AI Score leads based on this prompt</span>
                         </label>
                         {aiMatchPrompt && (
-                          <div className="p-2 bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.1)] rounded-lg">
+                          <div className="p-2 bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)] rounded-lg">
                             <p className="text-[8px] text-brand-accent uppercase tracking-wider mb-0.5">AI Prompt Active</p>
                             <p className="text-[9px] text-muted truncate">{aiMatchPrompt}</p>
                           </div>
@@ -1071,7 +1071,7 @@ export default function ScraperPage() {
                         {/* Selected niches */}
                         <div className="flex flex-wrap gap-1.5 mb-3">
                           {niches.map(n => (
-                            <span key={n} className="bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.2)] text-brand-accent text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                            <span key={n} className="bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] text-brand-accent text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5">
                               {n}<button onClick={() => setNiches(niches.filter(x => x !== n))} className="hover:text-foreground"><X size={10} /></button>
                             </span>
                           ))}
@@ -1112,7 +1112,7 @@ export default function ScraperPage() {
                                   </div>
                                   <div className="flex items-center gap-1.5">
                                     {selectedInCategory > 0 && (
-                                      <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded-full font-medium">{selectedInCategory} selected</span>
+                                      <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded-full font-medium">{selectedInCategory} selected</span>
                                     )}
                                     <span className="text-[8px] text-muted">{items.length}</span>
                                   </div>
@@ -1123,7 +1123,7 @@ export default function ScraperPage() {
                                       <button key={n} onClick={() => addNiche(n)} className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-foreground hover:bg-border transition-colors">{n}</button>
                                     ))}
                                     {items.filter(n => !niches.includes(n)).length === 0 && (
-                                      <p className="text-[9px] text-[rgba(37,99,235,0.6)] italic px-1">All niches in this category are selected</p>
+                                      <p className="text-[9px] text-[rgba(59,130,246,0.6)] italic px-1">All niches in this category are selected</p>
                                     )}
                                   </div>
                                 )}
@@ -1198,8 +1198,8 @@ export default function ScraperPage() {
                           onClick={() => setSelectedCountries(prev => prev.includes(c.code) ? prev.filter(x => x !== c.code) : [...prev, c.code])}
                           className={`text-[10px] px-2 py-1 rounded border transition-all flex items-center gap-1 ${
                             selectedCountries.includes(c.code)
-                              ? "border-brand-accent bg-[rgba(37,99,235,0.08)] text-brand-accent"
-                              : "border-border text-muted hover:text-foreground hover:border-[rgba(37,99,235,0.25)]"
+                              ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                              : "border-border text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.25)]"
                           }`}
                         >
                           <span>{c.flag}</span> {c.name}
@@ -1223,7 +1223,7 @@ export default function ScraperPage() {
                               <button key={city} onClick={() => addLocation(city)} className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-foreground hover:bg-border transition-colors">{city}</button>
                             ))}
                             {cities.length === 0 && !locationSearch.trim() && (
-                              <p className="text-[9px] text-[rgba(37,99,235,0.6)] italic px-1">All cities selected</p>
+                              <p className="text-[9px] text-[rgba(59,130,246,0.6)] italic px-1">All cities selected</p>
                             )}
                           </div>
                         </div>
@@ -1243,7 +1243,7 @@ export default function ScraperPage() {
                 {/* Campaign-first workflow tip */}
                 {!pushTipDismissed && (
                   <div className="rounded-xl border border-blue-400/20 bg-blue-500/5 px-3.5 py-2.5 flex items-start gap-2.5">
-                    <div className="w-6 h-6 rounded-lg bg-[rgba(37,99,235,0.10)] border border-[rgba(37,99,235,0.25)] flex items-center justify-center text-brand-accent flex-shrink-0 mt-0.5">
+                    <div className="w-6 h-6 rounded-lg bg-[rgba(59,130,246,0.10)] border border-[rgba(59,130,246,0.25)] flex items-center justify-center text-brand-accent flex-shrink-0 mt-0.5">
                       <Lightbulb size={12} />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -1337,7 +1337,7 @@ export default function ScraperPage() {
                             transition={{ duration: 0.3, delay: i * 0.05 }}
                             whileHover={{ y: -3 }}
                             onClick={() => toggleLeadSelection(i)}
-                            className={`glass rounded-xl p-4 cursor-pointer transition-all hover:border-[rgba(37,99,235,0.14)] ${selectedLeads.has(i) ? "border-[rgba(37,99,235,0.40)] bg-[rgba(37,99,235,0.05)]" : ""}`}
+                            className={`glass rounded-xl p-4 cursor-pointer transition-all hover:border-[rgba(59,130,246,0.14)] ${selectedLeads.has(i) ? "border-[rgba(59,130,246,0.40)] bg-[rgba(59,130,246,0.05)]" : ""}`}
                           >
                             <div className="flex items-start justify-between mb-2">
                               <div className="flex-1 min-w-0">
@@ -1360,9 +1360,9 @@ export default function ScraperPage() {
                             </div>
                             <div className="flex gap-1 mt-2">
                               {r.instagram_url && <span className="text-[8px] bg-pink-500/10 text-pink-400 px-1.5 py-0.5 rounded">IG</span>}
-                              {r.facebook_url && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">FB</span>}
+                              {r.facebook_url && <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">FB</span>}
                               {r.tiktok_url && <span className="text-[8px] bg-[rgba(0,0,0,0.06)] text-[#374151] px-1.5 py-0.5 rounded">TK</span>}
-                              {r.linkedin_url && <span className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">LI</span>}
+                              {r.linkedin_url && <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">LI</span>}
                             </div>
                           </motion.div>
                         );
@@ -1408,7 +1408,7 @@ export default function ScraperPage() {
                       { id: "decision_maker" as const, label: "Decision Maker Finder", desc: "Find owners, CEOs, key contacts", icon: <Users size={18} />, color: "text-brand-accent" },
                     ].map(e => (
                       <button key={e.id} onClick={() => setEnrichmentType(e.id)}
-                        className={`p-4 rounded-xl border text-left transition-all ${enrichmentType === e.id ? "border-brand-accent bg-[rgba(37,99,235,0.08)]" : "border-border hover:border-[rgba(37,99,235,0.25)]"}`}>
+                        className={`p-4 rounded-xl border text-left transition-all ${enrichmentType === e.id ? "border-brand-accent bg-[rgba(59,130,246,0.08)]" : "border-border hover:border-[rgba(59,130,246,0.25)]"}`}>
                         <div className={e.color}>{e.icon}</div>
                         <p className="font-medium text-sm mt-2">{e.label}</p>
                         <p className="text-[10px] text-muted">{e.desc}</p>
@@ -1512,7 +1512,7 @@ export default function ScraperPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: si * 0.06 }}
                         whileHover={{ y: -3 }}
-                        className="glass rounded-xl p-4 hover:border-[rgba(37,99,235,0.14)] transition-all"
+                        className="glass rounded-xl p-4 hover:border-[rgba(59,130,246,0.14)] transition-all"
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div>
@@ -1525,7 +1525,7 @@ export default function ScraperPage() {
                           </div>
                         </div>
                         <div className="flex flex-wrap gap-1 mb-2">
-                          {s.platforms.map(p => <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{p}</span>)}
+                          {s.platforms.map(p => <span key={p} className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{p}</span>)}
                           {s.niches.map(n => <span key={n} className="text-[8px] bg-info/10 text-info px-1.5 py-0.5 rounded">{n}</span>)}
                           {s.locations.map(l => <span key={l} className="text-[8px] bg-success/10 text-success px-1.5 py-0.5 rounded">{l}</span>)}
                         </div>
@@ -1552,11 +1552,11 @@ export default function ScraperPage() {
                         initial={{ opacity: 0, x: -16 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.28, delay: hi * 0.05 }}
-                        className="glass-md rounded-lg p-3 hover:border-[rgba(37,99,235,0.14)] transition-all"
+                        className="glass-md rounded-lg p-3 hover:border-[rgba(59,130,246,0.14)] transition-all"
                       >
                         <div className="flex items-center justify-between mb-1.5">
                           <div className="flex flex-wrap gap-1">
-                            {h.platforms.map(p => <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{p}</span>)}
+                            {h.platforms.map(p => <span key={p} className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{p}</span>)}
                             {h.niches.map(n => <span key={n} className="text-[8px] bg-info/10 text-info px-1.5 py-0.5 rounded">{n}</span>)}
                             {h.locations.map(l => <span key={l} className="text-[8px] bg-success/10 text-success px-1.5 py-0.5 rounded">{l}</span>)}
                           </div>
@@ -1603,7 +1603,7 @@ export default function ScraperPage() {
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {selectedPlatforms.map(p => <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{p}</span>)}
+                      {selectedPlatforms.map(p => <span key={p} className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{p}</span>)}
                       {niches.map(n => <span key={n} className="text-[8px] bg-info/10 text-info px-1.5 py-0.5 rounded">{n}</span>)}
                       {locations.map(l => <span key={l} className="text-[8px] bg-success/10 text-success px-1.5 py-0.5 rounded">{l}</span>)}
                     </div>
@@ -1631,7 +1631,7 @@ export default function ScraperPage() {
                               <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${s.is_active ? "bg-success/10 text-success" : "bg-muted/10 text-muted"}`}>{s.is_active ? "Active" : "Paused"}</span>
                             </p>
                             <div className="flex flex-wrap gap-1 mt-1">
-                              {s.platforms.map(p => <span key={p} className="text-[8px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{p}</span>)}
+                              {s.platforms.map(p => <span key={p} className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{p}</span>)}
                               {s.niches.map(n => <span key={n} className="text-[8px] bg-info/10 text-info px-1.5 py-0.5 rounded">{n}</span>)}
                             </div>
                           </div>
@@ -1689,13 +1689,13 @@ export default function ScraperPage() {
                 <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
                 <div
                   className="relative w-[95%] max-w-2xl max-h-[85vh] border border-[rgba(0,0,0,0.08)] rounded-2xl shadow-xl flex flex-col overflow-hidden"
-                  style={{ background: "rgba(255,255,255,0.94)", backdropFilter: "blur(24px) saturate(1.5)", WebkitBackdropFilter: "blur(24px) saturate(1.5)", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 20px 60px rgba(0,0,0,0.10), 0 0 48px -12px rgba(37,99,235,0.14)" }}
+                  style={{ background: "rgba(255,255,255,0.94)", backdropFilter: "blur(24px) saturate(1.5)", WebkitBackdropFilter: "blur(24px) saturate(1.5)", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 20px 60px rgba(0,0,0,0.10), 0 0 48px -12px rgba(59,130,246,0.14)" }}
                   onClick={e => e.stopPropagation()}
                 >
                   {/* Modal Header */}
                   <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-[rgba(0,0,0,0.08)] shrink-0">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 bg-[rgba(37,99,235,0.10)] rounded-xl flex items-center justify-center">
+                      <div className="w-9 h-9 bg-[rgba(59,130,246,0.10)] rounded-xl flex items-center justify-center">
                         <Send size={18} className="text-brand-accent" />
                       </div>
                       <div>
@@ -1817,7 +1817,7 @@ export default function ScraperPage() {
                               onClick={() => setOutreachConfig({ ...outreachConfig, start_delay: opt.id })}
                               className={`flex-1 py-2 rounded-lg text-[10px] font-medium border transition-all ${
                                 outreachConfig.start_delay === opt.id
-                                  ? "border-brand-accent bg-[rgba(37,99,235,0.10)] text-brand-accent"
+                                  ? "border-brand-accent bg-[rgba(59,130,246,0.10)] text-brand-accent"
                                   : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] text-muted hover:text-[#111827] hover:border-[rgba(0,0,0,0.16)]"
                               }`}
                             >
@@ -1886,8 +1886,8 @@ export default function ScraperPage() {
                             key={c.id}
                             className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-all ${
                               selectedPushCampaign === c.id
-                                ? "border-brand-accent bg-[rgba(37,99,235,0.05)]"
-                                : "border-border hover:border-[rgba(37,99,235,0.25)]"
+                                ? "border-brand-accent bg-[rgba(59,130,246,0.05)]"
+                                : "border-border hover:border-[rgba(59,130,246,0.25)]"
                             }`}
                           >
                             <input
@@ -1930,8 +1930,8 @@ export default function ScraperPage() {
                           onClick={() => setPushSchedule(s.id)}
                           className={`p-2.5 rounded-lg border text-left transition-all ${
                             pushSchedule === s.id
-                              ? "border-brand-accent bg-[rgba(37,99,235,0.05)]"
-                              : "border-border hover:border-[rgba(37,99,235,0.25)]"
+                              ? "border-brand-accent bg-[rgba(59,130,246,0.05)]"
+                              : "border-border hover:border-[rgba(59,130,246,0.25)]"
                           }`}
                         >
                           <p className="text-[11px] font-medium text-foreground">{s.label}</p>

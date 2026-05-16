@@ -168,7 +168,7 @@ export default function AffiliatePortalPage() {
   if (affiliates.length === 0) {
     return (
       <div className="max-w-3xl mx-auto py-16 px-6 text-center space-y-4">
-        <Award size={40} className="mx-auto text-[rgba(37,99,235,0.6)]" />
+        <Award size={40} className="mx-auto text-[rgba(59,130,246,0.6)]" />
         <h1 className="text-2xl font-semibold">Affiliate portal</h1>
         <p className="text-muted">
           You're not enrolled in any affiliate program yet. If you've been invited
@@ -192,7 +192,7 @@ export default function AffiliatePortalPage() {
   return (
     <div className="max-w-5xl mx-auto py-10 px-6 space-y-8">
       <div className="flex items-center gap-3">
-        <div className="p-3  bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)]">
+        <div className="p-3  bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)]">
           <Award size={24} className="text-[#2563EB]" />
         </div>
         <div>

@@ -44,7 +44,7 @@ interface BrowserTaskTemplate {
 
 const STATUS_STYLES: Record<BrowserTask["status"], { label: string; bg: string; fg: string; icon: React.ReactNode }> = {
   queued: { label: "Queued", bg: "bg-amber-50", fg: "text-amber-700", icon: <Clock size={12} /> },
-  running: { label: "Running", bg: "bg-[rgba(37,99,235,0.08)]", fg: "text-brand-accent", icon: <Loader2 size={12} className="animate-spin" /> },
+  running: { label: "Running", bg: "bg-[rgba(59,130,246,0.08)]", fg: "text-brand-accent", icon: <Loader2 size={12} className="animate-spin" /> },
   completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-700", icon: <CheckCircle2 size={12} /> },
   failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-700", icon: <XCircle size={12} /> },
   cancelled: { label: "Cancelled", bg: "bg-zinc-500/15", fg: "text-text-muted", icon: <XCircle size={12} /> },
@@ -222,7 +222,7 @@ export default function BrowserTasksPage() {
                 <button
                   onClick={submit}
                   disabled={submitting}
-                  className="inline-flex items-center gap-1.5 rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[rgba(37,99,235,0.30)] transition hover:bg-[#3B82F6] disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[rgba(59,130,246,0.30)] transition hover:bg-[#3B82F6] disabled:opacity-50"
                 >
                   {submitting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
                   Queue task
@@ -243,7 +243,7 @@ export default function BrowserTasksPage() {
                       }}
                       className={`group rounded-lg border p-3 text-left transition ${
                         selectedTemplateId === t.id
-                          ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.08)]"
+                          ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]"
                           : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] hover:border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.06)]"
                       }`}
                     >

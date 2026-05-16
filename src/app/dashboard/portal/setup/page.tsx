@@ -97,8 +97,8 @@ export default function ClientSetupPage() {
           <button key={platform.id} onClick={() => togglePlatform(platform.id)}
             className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${
               connectedPlatforms.includes(platform.id)
-                ? "border-brand-accent bg-[rgba(37,99,235,0.08)]"
-                : "border-black/[0.06] hover:border-[rgba(37,99,235,0.25)]"
+                ? "border-brand-accent bg-[rgba(59,130,246,0.08)]"
+                : "border-black/[0.06] hover:border-[rgba(59,130,246,0.25)]"
             }`}>
             <span className={platform.color}>{platform.icon}</span>
             <span className="text-sm font-medium">{platform.name}</span>
@@ -121,7 +121,7 @@ export default function ClientSetupPage() {
 
     // Step 3: Meet Trinity
     <div key="trinity" className="text-center space-y-6">
-      <div className="w-16 h-16 bg-[rgba(37,99,235,0.08)] flex items-center justify-center mx-auto">
+      <div className="w-16 h-16 bg-[rgba(59,130,246,0.08)] flex items-center justify-center mx-auto">
         <MessageSquare size={32} className="text-brand-accent" />
       </div>
       <div>

@@ -218,15 +218,15 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
   const active = messages.length > 0;
 
   return (
-    <div className="card-static overflow-hidden relative" style={{ borderColor: "rgba(37,99,235,0.18)" }}>
+    <div className="card-static overflow-hidden relative" style={{ borderColor: "rgba(59,130,246,0.18)" }}>
       {/* ─── Ambient aurora behind the orb ────────────────────── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 opacity-60">
         <div className="absolute top-[-60px] left-1/2 -translate-x-1/2 w-[500px] h-[280px] rounded-full blur-3xl"
-             style={{ background: "radial-gradient(ellipse, rgba(37,99,235,0.20), transparent 60%)" }} />
+             style={{ background: "radial-gradient(ellipse, rgba(59,130,246,0.20), transparent 60%)" }} />
         <div className="absolute top-[120px] left-[20%] w-[160px] h-[160px] rounded-full blur-3xl"
              style={{ background: "radial-gradient(circle, rgba(139,92,246,0.15), transparent 70%)" }} />
         <div className="absolute top-[120px] right-[20%] w-[160px] h-[160px] rounded-full blur-3xl"
-             style={{ background: "radial-gradient(circle, rgba(37,99,235,0.12), transparent 70%)" }} />
+             style={{ background: "radial-gradient(circle, rgba(59,130,246,0.12), transparent 70%)" }} />
       </div>
 
       {/* ─── TTS controls (lazy) ───────────────────────────────── */}
@@ -280,7 +280,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
           }}
           className="relative flex items-end gap-2 max-w-2xl mx-auto"
         >
-          <div className="flex-1 relative  border border-[rgba(37,99,235,0.2)] bg-surface focus-within:border-[rgba(37,99,235,0.5)] focus-within:shadow-[0_0_0_3px_rgba(37,99,235,0.12)] transition-all">
+          <div className="flex-1 relative  border border-[rgba(59,130,246,0.2)] bg-surface focus-within:border-[rgba(59,130,246,0.5)] focus-within:shadow-[0_0_0_3px_rgba(59,130,246,0.12)] transition-all">
             <textarea
               ref={inputRef}
               value={input}

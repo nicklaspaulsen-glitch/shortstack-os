@@ -109,7 +109,7 @@ export default function Tab5TopCommenters() {
                     <button
                       type="button"
                       onClick={() => onDraft(c)}
-                      className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)] text-[10px] text-brand-accent hover:bg-[rgba(37,99,235,0.12)]"
+                      className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-[10px] text-brand-accent hover:bg-[rgba(59,130,246,0.12)]"
                     >
                       <Sparkles size={10} />
                       Reply with AI
@@ -175,7 +175,7 @@ export default function Tab5TopCommenters() {
                   }
                 }}
                 disabled={!draftReply}
-                className="px-3 py-1.5 text-xs rounded-md bg-[rgba(37,99,235,0.12)] border border-[rgba(37,99,235,0.3)] text-brand-accent inline-flex items-center gap-1 disabled:opacity-50"
+                className="px-3 py-1.5 text-xs rounded-md bg-[rgba(59,130,246,0.12)] border border-[rgba(59,130,246,0.3)] text-brand-accent inline-flex items-center gap-1 disabled:opacity-50"
               >
                 <Reply size={10} />
                 Copy reply

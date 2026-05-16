@@ -35,7 +35,7 @@ export default function TrinityHistory({ messages, sending }: Props) {
           <div
             className={`max-w-[85%]  px-3.5 py-2.5 text-xs leading-relaxed whitespace-pre-wrap ${
               m.role === "user"
-                ? "bg-[rgba(37,99,235,0.12)] text-foreground border border-[rgba(37,99,235,0.2)] rounded-br-sm"
+                ? "bg-[rgba(59,130,246,0.12)] text-foreground border border-[rgba(59,130,246,0.2)] rounded-br-sm"
                 : "bg-surface-light text-foreground border border-border rounded-bl-sm"
             }`}
           >

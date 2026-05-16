@@ -149,7 +149,7 @@ export default function PricingPage() {
                     whileHover={{ y: -4, scale: 1.01 }}
                     className={`relative glass  border p-5 flex flex-col transition-shadow ${
                       plan.popular
-                        ? "border-[rgba(37,99,235,0.25)] bg-[rgba(37,99,235,0.03)] shadow-card ring-1 ring-[rgba(37,99,235,0.08)]"
+                        ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.03)] shadow-card ring-1 ring-[rgba(59,130,246,0.08)]"
                         : isCurrentPlan
                         ? "border-success/30 bg-success/[0.03] ring-1 ring-success/10"
                         : "border-border shadow-soft"
@@ -196,7 +196,7 @@ export default function PricingPage() {
                           ? "bg-success/10 text-success border border-success/20 cursor-default"
                           : plan.popular
                           ? "bg-brand-accent text-white hover:bg-brand-accent/80 shadow-sm"
-                          : "bg-surface-light text-foreground hover:bg-[rgba(37,99,235,0.08)] hover:text-brand-accent border border-border"
+                          : "bg-surface-light text-foreground hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent border border-border"
                       } ${checkoutLoading === plan.key ? "opacity-60 cursor-wait" : ""}`}
                     >
                       {isCurrentPlan
@@ -305,7 +305,7 @@ export default function PricingPage() {
                 { icon: <Headphones size={16} />, label: "Dedicated Support", desc: "Named success manager", plans: "Business+" },
               ].map((item, i) => (
                 <motion.div key={item.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl p-4">
-                  <div className="w-8 h-8 rounded-lg bg-[rgba(37,99,235,0.08)] flex items-center justify-center text-brand-accent mb-2">{item.icon}</div>
+                  <div className="w-8 h-8 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-brand-accent mb-2">{item.icon}</div>
                   <p className="text-xs font-medium text-foreground">{item.label}</p>
                   <p className="text-[10px] text-muted mt-0.5">{item.desc}</p>
                   <p className="text-[9px] text-brand-accent font-medium mt-1.5">{item.plans}</p>
@@ -353,7 +353,7 @@ export default function PricingPage() {
                       <div className="flex items-center justify-between">
                         <p className="text-xs font-medium text-foreground">{addon.name}</p>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
-                          addon.type === "one-time" ? "bg-info/10 text-info" : "bg-[rgba(37,99,235,0.08)] text-brand-accent"
+                          addon.type === "one-time" ? "bg-info/10 text-info" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"
                         }`}>
                           {addon.type === "one-time" ? "One-time" : "Monthly"}
                         </span>
@@ -364,7 +364,7 @@ export default function PricingPage() {
                   </motion.div>
                 ))}
               </div>
-            </div>{/* FAQ / CTA */}<div className="glass  border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.03)] p-6 text-center">
+            </div>{/* FAQ / CTA */}<div className="glass  border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.03)] p-6 text-center">
               <h2 className="text-sm font-bold text-foreground mb-1">Not sure which plan is right?</h2>
               <p className="text-xs text-muted mb-4">
                 Start with Starter and upgrade anytime. All plans include a 14-day free trial.

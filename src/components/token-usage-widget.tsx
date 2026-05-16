@@ -218,7 +218,7 @@ export default function TokenUsageWidget() {
         className={`group flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-surface border shadow-lg backdrop-blur transition-all hover:scale-[1.02] active:scale-95 ${
           atLimit
             ? "border-danger/50 shadow-danger/20 animate-pulse"
-            : "border-border hover:border-[rgba(37,99,235,0.4)]"
+            : "border-border hover:border-[rgba(59,130,246,0.4)]"
         }`}
         style={{
           background:

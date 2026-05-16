@@ -62,7 +62,7 @@ export const PRISM_BORDERS = {
   subtle: "rgba(0,0,0,0.06)",
   default: "rgba(0,0,0,0.08)",
   strong: "rgba(0,0,0,0.14)",
-  hover: "rgba(37,99,235,0.18)",
+  hover: "rgba(59,130,246,0.18)",
 } as const;
 
 /** Accent gradient for signature top bars — blue shimmer, not rainbow */
@@ -89,9 +89,9 @@ export const PRISM_SURFACES = {
 
 /** Card shadows — light-theme depth + blue glow on hover */
 export const PRISM_SHADOWS = {
-  card: "0 1px 0 rgba(255,255,255,1) inset, 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.06)",
-  cardHover: "0 1px 0 rgba(255,255,255,1) inset, 0 2px 8px rgba(0,0,0,0.08), 0 8px 24px -6px rgba(0,0,0,0.12), 0 0 48px -12px rgba(37,99,235,0.14)",
-  panel: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 16px rgba(0,0,0,0.08), 0 0 32px -8px rgba(37,99,235,0.08)",
+  card: "0 1px 0 rgba(255,255,255,1) inset, 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08), 0 0 32px -8px rgba(59,130,246,0.06)",
+  cardHover: "0 1px 0 rgba(255,255,255,1) inset, 0 2px 8px rgba(0,0,0,0.08), 0 8px 24px -6px rgba(0,0,0,0.12), 0 0 48px -12px rgba(59,130,246,0.14)",
+  panel: "0 1px 0 rgba(255,255,255,1) inset, 0 4px 16px rgba(0,0,0,0.08), 0 0 32px -8px rgba(59,130,246,0.08)",
 } as const;
 
 /** Inset container surface — light-theme */

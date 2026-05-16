@@ -320,7 +320,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
                   onClick={() => toggle(m.key)}
                   className={`text-left rounded-xl p-4 border transition-colors ${
                     isSel
-                      ? "bg-[rgba(37,99,235,0.08)] border-[rgba(37,99,235,0.30)]"
+                      ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.30)]"
                       : "bg-[rgba(0,0,0,0.03)] border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.05)]"
                   }`}
                 >

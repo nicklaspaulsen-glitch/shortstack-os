@@ -197,7 +197,7 @@ export default function ClientPortalPage() {
             <p className="text-xs text-muted mt-0.5">{client.business_name || "Your Business"} � {client.package_tier || "Standard"} Plan</p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-[10px] bg-[rgba(37,99,235,0.08)] text-brand-accent px-2.5 py-1 rounded-md border border-[rgba(37,99,235,0.08)]">
+            <div className="flex items-center gap-1.5 text-[10px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-2.5 py-1 rounded-md border border-[rgba(59,130,246,0.08)]">
               <Star size={10} className="fill-[#2563EB]" />
               <span className="font-medium">{client.health_score}% Health</span>
             </div>
@@ -222,8 +222,8 @@ export default function ClientPortalPage() {
 
       {/* Quick links */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-        <Link href="/dashboard/portal/leads" className="card-hover p-3 flex items-center gap-2.5 group border-[rgba(37,99,235,0.1)]">
-          <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0">
+        <Link href="/dashboard/portal/leads" className="card-hover p-3 flex items-center gap-2.5 group border-[rgba(59,130,246,0.1)]">
+          <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center shrink-0">
             <Sparkles size={14} className="text-brand-accent" />
           </div>
           <div>
@@ -241,7 +241,7 @@ export default function ClientPortalPage() {
           </div>
         </Link>
         <Link href="/dashboard/portal/socials" className="card-hover p-3 flex items-center gap-2.5 group">
-          <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center shrink-0">
             <Globe size={14} className="text-brand-accent" />
           </div>
           <div>
@@ -268,7 +268,7 @@ export default function ClientPortalPage() {
           </div>
         </Link>
         <Link href="/dashboard/portal/support" className="card-hover p-3 flex items-center gap-2.5 group">
-          <div className="w-8 h-8 bg-[rgba(37,99,235,0.08)] rounded-lg flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center shrink-0">
             <MessageSquare size={14} className="text-brand-accent" />
           </div>
           <div>
@@ -314,7 +314,7 @@ export default function ClientPortalPage() {
         <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-brand-accent" /> Active Services</h2>
         <div className="flex flex-wrap gap-2">
           {(client.services || []).map((service, i) => (
-            <div key={i} className="bg-[rgba(37,99,235,0.05)] border border-[rgba(37,99,235,0.08)] rounded-lg px-3 py-2">
+            <div key={i} className="bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.08)] rounded-lg px-3 py-2">
               <span className="text-xs text-brand-accent font-medium">{service}</span>
             </div>
           ))}
@@ -419,7 +419,7 @@ export default function ClientPortalPage() {
             <h2 className="section-header mb-0 flex items-center gap-2">
               <Calendar size={13} className="text-brand-accent" /> Upcoming Content
             </h2>
-            <Link href="/dashboard/portal/content" className="text-[10px] text-brand-accent hover:text-[rgba(37,99,235,0.8)] flex items-center gap-0.5">
+            <Link href="/dashboard/portal/content" className="text-[10px] text-brand-accent hover:text-[rgba(59,130,246,0.8)] flex items-center gap-0.5">
               View all <ArrowRight size={10} />
             </Link>
           </div>
@@ -515,7 +515,7 @@ function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
               <Phone size={9} /> Active
             </span>
             {status.eleven_agent_id && (
-              <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(37,99,235,0.08)] text-brand-accent border-[rgba(37,99,235,0.25)] flex items-center gap-1">
+              <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)] flex items-center gap-1">
                 <Bot size={9} /> AI caller ready
               </span>
             )}
@@ -636,7 +636,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
                 href={f.url || "#"}
                 target={f.url ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                className={`flex items-center gap-2 p-2 rounded-lg border border-border bg-surface-light/50 hover:border-[rgba(37,99,235,0.25)] transition-colors min-w-0 ${f.url ? "" : "pointer-events-none opacity-60"}`}
+                className={`flex items-center gap-2 p-2 rounded-lg border border-border bg-surface-light/50 hover:border-[rgba(59,130,246,0.25)] transition-colors min-w-0 ${f.url ? "" : "pointer-events-none opacity-60"}`}
                 title={f.name}
               >
                 <div className="w-10 h-10 rounded-lg bg-surface flex items-center justify-center shrink-0 overflow-hidden">
@@ -785,7 +785,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
     <div className="fade-in max-w-xl mx-auto py-6 space-y-5">
       {/* Header */}
       <div className="text-center">
-        <div className="w-14 h-14 bg-[rgba(37,99,235,0.08)]  flex items-center justify-center mx-auto mb-3 border border-[rgba(37,99,235,0.12)]">
+        <div className="w-14 h-14 bg-[rgba(59,130,246,0.08)]  flex items-center justify-center mx-auto mb-3 border border-[rgba(59,130,246,0.12)]">
           <Sparkles size={24} className="text-brand-accent" />
         </div>
         <h1 className="text-lg font-bold tracking-tight">Welcome to Trinity</h1>

@@ -379,7 +379,7 @@ export default function ReviewsAutoReplyPage() {
                           </div>
                         )}
 
-                        <div className="px-3 py-2 rounded-lg bg-[rgba(37,99,235,0.08)] border border-[rgba(37,99,235,0.25)]">
+                        <div className="px-3 py-2 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)]">
                           <p className="text-[11px] uppercase tracking-wider text-brand-accent mb-1 flex items-center gap-1.5">
                             <Sparkles size={10} /> AI Draft
                           </p>
