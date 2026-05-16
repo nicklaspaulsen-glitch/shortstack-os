@@ -138,28 +138,17 @@ export default function PricingPreview() {
                   ))}
                 </ul>
 
+                {/* GlassButton-style CTA: glow for featured, glass for standard */}
                 <Link
                   href="/pricing"
-                  className="group flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm transition-all"
-                  style={
+                  className={
                     plan.featured
-                      ? {
-                          background:
-                            "#2563EB",
-                          color: "#fff",
-                        }
-                      : {
-                          background: "rgba(255,255,255,0.04)",
-                          border: "1px solid rgba(255,255,255,0.08)",
-                          color: "#fff",
-                        }
+                      ? "relative inline-flex items-center justify-center select-none font-semibold leading-none cursor-pointer shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/50 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] h-10 px-5 text-[12px] gap-2 rounded-[12px] w-full bg-[#3B82F6] text-white border border-[rgba(96,165,250,0.40)] shadow-[0_0_0_1px_rgba(59,130,246,0.30),0_4px_20px_rgba(59,130,246,0.55),0_0_60px_rgba(59,130,246,0.20)] hover:shadow-[0_0_0_1px_rgba(59,130,246,0.50),0_6px_28px_rgba(59,130,246,0.70),0_0_80px_rgba(59,130,246,0.30)] hover:bg-[#2563EB] hover:-translate-y-0.5 active:translate-y-0"
+                      : "relative inline-flex items-center justify-center select-none font-medium leading-none cursor-pointer shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/50 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] h-10 px-5 text-[12px] gap-2 rounded-[12px] w-full bg-[rgba(19,24,39,0.72)] text-[#A8A8B2] border border-[rgba(255,255,255,0.08)] backdrop-blur-[14px] hover:bg-[rgba(28,35,56,0.80)] hover:text-[#F0F0F4] hover:border-[rgba(255,255,255,0.13)] hover:-translate-y-px active:translate-y-0"
                   }
                 >
                   {plan.cta}
-                  <ArrowRight
-                    size={14}
-                    className="group-hover:translate-x-0.5 transition-transform"
-                  />
+                  <ArrowRight size={14} />
                 </Link>
               </div>
             </Reveal>

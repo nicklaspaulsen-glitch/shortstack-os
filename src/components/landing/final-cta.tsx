@@ -48,15 +48,13 @@ export default function FinalCTA() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            {/* GlassButton glow variant (Link-compatible) */}
             <Link
               href="/pricing"
-              className="group flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 text-white bg-blue-600 hover:bg-blue-500 shadow-[0_0_28px_rgba(59,130,246,0.45)] hover:shadow-[0_0_52px_rgba(59,130,246,0.65)]"
+              className="relative inline-flex items-center justify-center select-none font-semibold leading-none cursor-pointer shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/50 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] h-11 px-6 text-[13px] gap-2.5 rounded-[14px] bg-[#3B82F6] text-white border border-[rgba(96,165,250,0.40)] shadow-[0_0_0_1px_rgba(59,130,246,0.30),0_4px_20px_rgba(59,130,246,0.55),0_0_60px_rgba(59,130,246,0.20)] hover:shadow-[0_0_0_1px_rgba(59,130,246,0.50),0_6px_28px_rgba(59,130,246,0.70),0_0_80px_rgba(59,130,246,0.30)] hover:bg-[#2563EB] hover:-translate-y-0.5 active:translate-y-0"
             >
               Start your 7-day free trial
-              <ArrowRight
-                size={16}
-                className="group-hover:translate-x-0.5 transition-transform"
-              />
+              <ArrowRight size={16} />
             </Link>
           </div>
 
