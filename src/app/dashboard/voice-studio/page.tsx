@@ -674,6 +674,92 @@ function StatusChip({ status }: { status: VoiceClone["status"] }) {
   );
 }
 
+// -- Custom Audio Player ---------------------------------------------
+function AudioPlayer({ src, autoPlay = false }: { src: string; autoPlay?: boolean }) {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a) return;
+    const onPlay = () => setPlaying(true);
+    const onPause = () => setPlaying(false);
+    const onEnded = () => { setPlaying(false); setProgress(0); };
+    const onTime = () => { if (a.duration) setProgress(a.currentTime / a.duration); };
+    const onMeta = () => setDuration(a.duration);
+    a.addEventListener("play", onPlay);
+    a.addEventListener("pause", onPause);
+    a.addEventListener("ended", onEnded);
+    a.addEventListener("timeupdate", onTime);
+    a.addEventListener("loadedmetadata", onMeta);
+    if (autoPlay) a.play().catch(() => {});
+    return () => {
+      a.removeEventListener("play", onPlay);
+      a.removeEventListener("pause", onPause);
+      a.removeEventListener("ended", onEnded);
+      a.removeEventListener("timeupdate", onTime);
+      a.removeEventListener("loadedmetadata", onMeta);
+    };
+  }, [autoPlay]);
+
+  const toggle = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (a.paused) { a.play().catch(() => {}); } else { a.pause(); }
+  };
+
+  const fmt = (s: number) => {
+    const m = Math.floor(s / 60);
+    return `${m}:${Math.floor(s % 60).toString().padStart(2, "0")}`;
+  };
+
+  return (
+    <div className="flex items-center gap-2.5 px-0.5">
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <audio ref={audioRef} src={src} preload="metadata" className="hidden" />
+      <button
+        type="button"
+        onClick={toggle}
+        aria-label={playing ? "Pause" : "Play"}
+        className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-[#2563EB] text-white hover:bg-[#1D4ED8] transition-colors cursor-pointer"
+      >
+        {playing ? <Pause size={9} /> : <Play size={9} />}
+      </button>
+      <div
+        role="slider"
+        aria-label="Playback position"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(progress * 100)}
+        tabIndex={0}
+        className="flex-1 relative h-[3px] rounded-full bg-[rgba(37,99,235,0.15)] overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2563EB]/50"
+        onClick={(e) => {
+          const a = audioRef.current;
+          if (!a || !a.duration) return;
+          const rect = e.currentTarget.getBoundingClientRect();
+          a.currentTime = ((e.clientX - rect.left) / rect.width) * a.duration;
+        }}
+        onKeyDown={(e) => {
+          const a = audioRef.current;
+          if (!a) return;
+          if (e.key === "ArrowRight") a.currentTime = Math.min(a.duration || 0, a.currentTime + 5);
+          if (e.key === "ArrowLeft") a.currentTime = Math.max(0, a.currentTime - 5);
+        }}
+      >
+        <div
+          className="absolute left-0 top-0 h-full rounded-full bg-[#3B82F6]"
+          style={{ width: `${progress * 100}%`, transition: "width 100ms linear" }}
+        />
+      </div>
+      <span className="flex-shrink-0 text-[9px] tabular-nums text-[#71717A]">
+        {duration > 0 ? (playing ? fmt(progress * duration) : fmt(duration)) : "--:--"}
+      </span>
+    </div>
+  );
+}
+
 // -- Presets -----------------------------------------------------
 function inferGender(preset: VoiceClone): "female" | "male" | "neutral" {
   const eg = ((preset.consent_evidence?.gender as string) || "").toLowerCase();
@@ -789,7 +875,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search presets..."
-              className="rounded-lg w-full border border-[rgba(0,0,0,0.10)] bg-white py-1.5 pl-8 pr-3 text-xs text-text-primary placeholder-[#A1A1AA] focus:outline-none focus:border-[#2563EB]/40 focus:ring-1 focus:ring-[#1D4ED8]/30"
+              className="rounded-lg w-full border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.03)] py-1.5 pl-8 pr-3 text-xs text-text-primary placeholder-[#A1A1AA] focus:outline-none focus:border-[#2563EB]/40 focus:ring-1 focus:ring-[#1D4ED8]/30"
             />
           </div>
           <span className="flex-shrink-0 rounded-full border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2.5 py-1 text-[10px] font-medium text-[#71717A] tabular-nums">
@@ -1031,10 +1117,10 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                     background: "#2563EB",
                     borderRadius: 2,
                     transformOrigin: "bottom",
-                    ...(isHovering || testing ? {
-                      animation: `waveBar ${0.55 + (i % 5) * 0.07}s ease-in-out infinite`,
-                      animationDelay: `${(i * 0.045).toFixed(3)}s`,
-                    } : {}),
+                    animation: isHovering || testing
+                      ? `waveBar ${0.55 + (i % 5) * 0.07}s ease-in-out infinite`
+                      : `waveBar ${2.4 + (i % 5) * 0.28}s ease-in-out infinite`,
+                    animationDelay: `${(i * (isHovering || testing ? 0.045 : 0.11)).toFixed(3)}s`,
                   }}
                 />
               ))}
@@ -1080,26 +1166,28 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             </div>
           </div>
         ) : (
-          <div className="mt-3 flex items-center gap-1.5">
-            <p className="flex-1 truncate text-[11px] text-[#71717A] italic">{testText}</p>
-            <button
-              type="button"
-              onClick={() => setEditMode(true)}
-              className="flex-shrink-0 rounded border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2 py-0.5 text-[11px] text-[#52525B] hover:border-[#1D4ED8]/40 hover:text-[#1D4ED8] transition-colors duration-150 cursor-pointer"
-              aria-label="Edit test phrase"
-            >
-              Edit
-            </button>
+          <div className="mt-3">
+            <div className="flex items-center justify-between gap-1 mb-0.5">
+              <span className="text-[9px] font-medium uppercase tracking-wider text-[#71717A]">Sample phrase</span>
+              <button
+                type="button"
+                onClick={() => setEditMode(true)}
+                className="flex-shrink-0 rounded border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] px-2 py-0.5 text-[11px] text-[#52525B] hover:border-[#1D4ED8]/40 hover:text-[#1D4ED8] transition-colors duration-150 cursor-pointer"
+                aria-label="Edit test phrase"
+              >
+                Edit
+              </button>
+            </div>
+            <p className="truncate text-[11px] text-[#71717A] italic">{testText}</p>
           </div>
         )}
 
         {/* Audio player — shown above actions; kept visible while re-generating */}
         {(testUrl || (testing && prevUrlRef.current)) && (
-          <div className="relative mt-3 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] p-2">
-            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-            <audio src={testUrl ?? prevUrlRef.current ?? ""} controls className="w-full" style={{ height: 32 }} />
+          <div className="relative mt-3 rounded-lg border border-[rgba(37,99,235,0.18)] bg-[rgba(37,99,235,0.05)] py-2 px-1">
+            <AudioPlayer src={testUrl ?? prevUrlRef.current ?? ""} />
             {testing && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-[rgba(0,0,0,0.04)]">
+              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-[rgba(0,0,0,0.06)]">
                 <Loader2 size={16} className="animate-spin text-[#2563EB]" />
               </div>
             )}
@@ -1211,15 +1299,8 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
                 )}
               </div>
               {isOpen && audioUrl && (
-                <div className="mt-3 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] p-2">
-                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                  <audio
-                    src={audioUrl}
-                    controls
-                    autoPlay
-                    className="w-full"
-                    style={{ height: 32 }}
-                  />
+                <div className="mt-3 rounded-lg border border-[rgba(37,99,235,0.18)] bg-[rgba(37,99,235,0.05)] py-2 px-1">
+                  <AudioPlayer src={audioUrl} autoPlay />
                 </div>
               )}
             </motion.div>
