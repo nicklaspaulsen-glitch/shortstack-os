@@ -296,7 +296,7 @@ export default function BillingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22 }}
               style={{
-                background: `linear-gradient(135deg, ${planConfig.color}0A 0%, rgba(0,0,0,0.03) 60%)`,
+                background: `linear-gradient(135deg, ${planConfig.color}0A 0%, transparent 60%)`,
                 backdropFilter: "blur(20px)",
                 WebkitBackdropFilter: "blur(20px)",
                 borderColor: `${planConfig.color}30`,
@@ -474,8 +474,8 @@ export default function BillingPage() {
                       key={pack.id}
                       className="relative overflow-hidden  border p-4 transition-all"
                       style={{
-                        background: pack.popular ? "rgba(0,0,0,0.03)" : "#FFFFFF",
-                        borderColor: pack.popular ? "rgba(0,0,0,0.16)" : "rgba(0,0,0,0.08)",
+                        background: pack.popular ? "rgba(59,130,246,0.08)" : "rgba(255,255,255,0.05)",
+                        borderColor: pack.popular ? "rgba(59,130,246,0.30)" : "rgba(99,146,255,0.10)",
                       }}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -577,7 +577,7 @@ export default function BillingPage() {
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
-                            whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                            whileHover={{ backgroundColor: "rgba(255,255,255,0.03)" }}
                           >
                             <td className="px-4 py-3 text-xs text-foreground">{formatDate(inv.created)}</td>
                             <td className="px-4 py-3 text-xs text-muted font-mono">{inv.number || inv.id.slice(-8)}</td>

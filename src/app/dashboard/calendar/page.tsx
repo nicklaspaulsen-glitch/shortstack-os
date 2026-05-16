@@ -507,7 +507,7 @@ export default function CalendarPage() {
                             })}
                             {dayAppts.length === 0 && (
                               <button onClick={() => { setNewEvent({ ...newEvent, date: dateStr }); setShowCreate(true); }}
-                                className="w-full py-3 text-[9px] text-[#71717A]/50 hover:text-[#71717A] transition-colors text-center rounded-lg border border-dashed border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.16)]">
+                                className="w-full py-3 text-[9px] text-text-muted/50 hover:text-text-muted transition-colors text-center rounded-lg border border-dashed border-border-subtle hover:border-border">
                                 + Add
                               </button>
                             )}
@@ -570,7 +570,7 @@ export default function CalendarPage() {
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
-                            whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                            whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
                             className="flex items-center gap-3 p-3 rounded-lg border border-border transition-colors">
                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${CATEGORY_CONFIG[evt.category].bg}`}>
                               <span className={CATEGORY_CONFIG[evt.category].color}>{TYPE_ICONS[evt.type]}</span>
@@ -684,7 +684,7 @@ export default function CalendarPage() {
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
-                            whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                            whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
                             className="flex items-center gap-3 p-3 rounded-lg border border-border"
                           >
                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${daysLeft <= 1 ? "bg-red-400/10" : daysLeft <= 3 ? "bg-yellow-400/10" : "bg-blue-400/10"}`}>
@@ -719,7 +719,7 @@ export default function CalendarPage() {
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.18, delay: index * 0.04 }}
-                          whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                          whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
                           className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border"
                         >
                           <Repeat size={12} className="text-brand-accent shrink-0" />

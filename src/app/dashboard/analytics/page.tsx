@@ -443,7 +443,7 @@ export default function AnalyticsPage() {
           {/* Export */}
           <button
             onClick={handleExport}
-            className="flex items-center gap-1 text-[10px] text-[#71717A] hover:text-text-primary transition-colors border border-border-subtle px-2.5 py-1.5 rounded-md"
+            className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary transition-colors border border-border-subtle px-2.5 py-1.5 rounded-md"
             title="Export report as JSON"
 >
             <Download size={11} />
@@ -617,12 +617,12 @@ export default function AnalyticsPage() {
               {(stats.activeClients> 0 || stats.contentPublished> 0) && (
                 <div className="mt-5 pt-4 border-t border-border-subtle flex items-center gap-4">
                   <span className="text-[10px] text-[#6F6D7A]">
-                    <span className="text-[#71717A] font-medium [font-variant-numeric:tabular-nums]">{stats.activeClients}</span>{" "}
+                    <span className="text-text-muted font-medium [font-variant-numeric:tabular-nums]">{stats.activeClients}</span>{" "}
                     active client{stats.activeClients !== 1 ? "s" : ""}
                   </span>
                   {stats.contentPublished> 0 && (
                     <span className="text-[10px] text-[#6F6D7A]">
-                      <span className="text-[#71717A] font-medium [font-variant-numeric:tabular-nums]">{stats.contentPublished}</span>{" "}
+                      <span className="text-text-muted font-medium [font-variant-numeric:tabular-nums]">{stats.contentPublished}</span>{" "}
                       posts published
                     </span>
                   )}
