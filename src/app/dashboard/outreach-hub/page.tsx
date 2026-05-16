@@ -1234,7 +1234,7 @@ export default function OutreachHubPage() {
                             <span className={`text-[8px] font-bold ${idx === 0 ? "text-brand-accent" : "text-muted"}`}>{step.day}</span>
                           </div>
                           {/* Content */}
-                          <div className="flex-1 rounded-lg p-3 border border-[rgba(0,0,0,0.10)]" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}>
+                          <div className="flex-1 rounded-lg p-3 border border-border-subtle" style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}>
                             <div className="flex items-center gap-2 mb-1">
                               <span className={`${channelColor(step.channel)}`}>{channelIcon(step.channel, 12)}</span>
                               <span className="text-[10px] font-semibold capitalize">{step.channel}</span>
@@ -1517,7 +1517,7 @@ export default function OutreachHubPage() {
                                     : [...p.followupDays, d].sort((a, b) => a - b),
                                 }));
                               }} className={`text-[9px] px-2 py-1 rounded-lg border ${
-                                smsSettings.followupDays.includes(d) ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-muted border-[rgba(0,0,0,0.06)]"
+                                smsSettings.followupDays.includes(d) ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-muted border-border-subtle"
                               }`}>Day {d}</button>
                             ))}
                           </div>
@@ -1620,7 +1620,7 @@ export default function OutreachHubPage() {
                           { id: "linkedin", label: "LinkedIn", icon: <LinkedInIcon size={12} /> },
                           { id: "tiktok", label: "TikTok", icon: <TikTokIcon size={12} /> },
                         ].map(p => (
-                          <button key={p.id} className="text-[10px] px-2.5 py-1.5 rounded-lg flex items-center gap-1 text-muted border border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]">
+                          <button key={p.id} className="text-[10px] px-2.5 py-1.5 rounded-lg flex items-center gap-1 text-muted border border-border-subtle hover:border-border">
                             {p.icon} {p.label}
                           </button>
                         ))}
@@ -1752,7 +1752,7 @@ export default function OutreachHubPage() {
                       transition={{ duration: 0.38, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Converted</p>
-                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-600 tabular-nums">0</p>
+                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">0</p>
                       <p className="text-[11px] text-text-muted mt-1.5">deals closed</p>
                     </motion.div>
                   </div>
@@ -1882,7 +1882,7 @@ export default function OutreachHubPage() {
                       {["friendly", "professional", "casual", "bold", "empathetic", "authoritative"].map(t => (
                         <button key={t} onClick={() => setGlobalSettings(p => ({ ...p, tone: t }))}
                           className={`text-[10px] px-3 py-1.5 rounded-lg capitalize border ${
-                            globalSettings.tone === t ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-muted border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
+                            globalSettings.tone === t ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-muted border-border-subtle hover:border-border"
                           }`}>{t}</button>
                       ))}
                     </div>
@@ -1898,7 +1898,7 @@ export default function OutreachHubPage() {
                       ].map(a => (
                         <button key={a.key} onClick={() => setGlobalSettings(p => ({ ...p, aggressiveness: a.key }))}
                           className={`flex-1 text-left p-2.5 rounded-xl border transition-all ${
-                            globalSettings.aggressiveness === a.key ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)]" : "border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
+                            globalSettings.aggressiveness === a.key ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)]" : "border-border-subtle hover:border-border"
                           }`}>
                           <p className={`text-xs font-semibold ${globalSettings.aggressiveness === a.key ? "text-brand-accent" : ""}`}>{a.label}</p>
                           <p className="text-[9px] text-muted">{a.desc}</p>
