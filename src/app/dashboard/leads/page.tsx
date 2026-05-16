@@ -544,13 +544,13 @@ function LeadDetailPanel({
       <div className="space-y-1.5 border-t border-border-subtle pt-3">
         {lead.phone && (
           <a href={`tel:${lead.phone}`} className="flex items-center gap-2 text-[11px] text-text-secondary hover:text-brand-accent transition-colors">
-            <Phone size={11} className="text-[#71717A] flex-shrink-0" />
+            <Phone size={11} className="text-text-muted flex-shrink-0" />
             <span className="truncate">{lead.phone}</span>
           </a>
         )}
         {lead.email && (
           <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-[11px] text-text-secondary hover:text-brand-accent transition-colors">
-            <Mail size={11} className="text-[#71717A] flex-shrink-0" />
+            <Mail size={11} className="text-text-muted flex-shrink-0" />
             <span className="truncate">{lead.email}</span>
           </a>
         )}
@@ -565,9 +565,9 @@ function LeadDetailPanel({
             href={lead.website.startsWith("http") ? lead.website : `https://${lead.website}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-[11px] text-[#71717A] hover:text-brand-accent transition-colors"
+            className="flex items-center gap-2 text-[11px] text-text-muted hover:text-brand-accent transition-colors"
           >
-            <Globe size={11} className="text-[#71717A] flex-shrink-0" />
+            <Globe size={11} className="text-text-muted flex-shrink-0" />
             <span className="truncate">{lead.website.replace(/^https?:\/\//i, "")}</span>
           </a>
         )}
@@ -874,7 +874,7 @@ export default function LeadEnginePage() {
                     transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Qualified</p>
-                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-600 tabular-nums">{qualifiedLeads}</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{qualifiedLeads}</p>
                     <p className="text-[11px] text-text-muted mt-1.5">ready to close</p>
                   </motion.div>
                 </div>
@@ -905,7 +905,7 @@ export default function LeadEnginePage() {
                     transition={{ duration: 0.38, delay: 0.26, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Conv Rate</p>
-                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-600 tabular-nums">
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">
                       {totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%
                     </p>
                     <p className="text-[11px] text-text-muted mt-1.5">close rate</p>
@@ -981,7 +981,7 @@ export default function LeadEnginePage() {
                   {loading && (
                     <div className="space-y-1 py-1">
                       {Array.from({ length: 8 }).map((_, i) => (
-                        <div key={i} className="grid grid-cols-12 items-center gap-2 px-3 py-3 rounded-lg bg-[rgba(0,0,0,0.02)]">
+                        <div key={i} className="grid grid-cols-12 items-center gap-2 px-3 py-3 rounded-lg bg-white/[0.02]">
                           <div className="col-span-3 space-y-1.5">
                             <Skeleton className="h-3 w-4/5" />
                             <Skeleton className="h-2 w-3/5" />
@@ -1032,8 +1032,8 @@ export default function LeadEnginePage() {
                         }}
                         className={`grid grid-cols-12 items-center py-1.5 px-3 rounded-lg border transition-all cursor-pointer text-[10px] ${
                           selectedLead?.id === lead.id
-                            ? "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.16)]"
-                            : "bg-surface-light border-border hover:border-[rgba(0,0,0,0.10)]"
+                            ? "bg-[rgba(59,130,246,0.10)] border-[rgba(59,130,246,0.28)]"
+                            : "bg-surface-light border-border hover:border-border"
                         }`}>
                         <div className="col-span-3">
                           <p className="text-xs font-semibold">{lead.business_name}</p>
@@ -1057,7 +1057,7 @@ export default function LeadEnginePage() {
                           lead.status === "qualified" ? "bg-blue-400/10 text-blue-400" :
                           lead.status === "contacted" || lead.status === "called" ? "bg-yellow-400/10 text-yellow-400" :
                           lead.status === "replied" ? "bg-emerald-400/10 text-emerald-400" :
-                          "bg-[rgba(0,0,0,0.05)] text-muted"
+                          "bg-white/[0.05] text-muted"
                         }`}>{lead.status || "new"}</span>
                         <div className="text-center flex items-center justify-center gap-0.5">
                           {lead.google_rating ? (
@@ -1078,20 +1078,20 @@ export default function LeadEnginePage() {
                             href={lead.phone ? `tel:${lead.phone}` : undefined}
                             onClick={(e) => { if (!lead.phone) { e.preventDefault(); toast.error("No phone number"); } }}
                             aria-label={lead.phone ? `Call ${lead.business_name}` : "No phone number"}
-                            className={`p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-brand-accent ${!lead.phone ? "opacity-40 cursor-not-allowed" : ""}`}
+                            className={`p-1 rounded hover:bg-white/[0.05] text-muted hover:text-brand-accent ${!lead.phone ? "opacity-40 cursor-not-allowed" : ""}`}
                             title={lead.phone || "No phone"}
                           ><Phone size={10} /></a>
                           <a
                             href={lead.email ? `mailto:${lead.email}` : undefined}
                             onClick={(e) => { if (!lead.email) { e.preventDefault(); toast.error("No email"); } }}
                             aria-label={lead.email ? `Email ${lead.business_name}` : "No email address"}
-                            className={`p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-brand-accent ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
+                            className={`p-1 rounded hover:bg-white/[0.05] text-muted hover:text-brand-accent ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
                             title={lead.email || "No email"}
                           ><Mail size={10} /></a>
                           <Link
                             href="/dashboard/dm-controller"
                             aria-label={`Send DM to ${lead.business_name}`}
-                            className="p-1 rounded hover:bg-[rgba(0,0,0,0.05)] text-muted hover:text-brand-accent"
+                            className="p-1 rounded hover:bg-white/[0.05] text-muted hover:text-brand-accent"
                             title="DM via DM Controller"
                           ><MessageSquare size={10} /></Link>
                         </div>
@@ -1234,7 +1234,7 @@ export default function LeadEnginePage() {
                       ].map((r, i) => (
                         <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
                           <div className="flex items-center gap-2">
-                            <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">{r.category}</span>
+                            <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/[0.04] text-muted">{r.category}</span>
                             <span>{r.factor}</span>
                           </div>
                           <span className={`font-bold ${r.points.startsWith("+") ? "text-green-400" : "text-red-400"}`}>{r.points}</span>
@@ -1364,11 +1364,11 @@ export default function LeadEnginePage() {
                   {leads.map((lead, index) => (
                     <motion.div
                       key={lead.id}
-                      className="flex items-center justify-between p-3 rounded-xl text-[10px] border border-[rgba(0,0,0,0.08)]" style={{ background: "rgba(255,255,255,0.88)" }}
+                      className="flex items-center justify-between p-3 rounded-xl text-[10px] border border-border-subtle" style={{ background: "rgba(255,255,255,0.05)" }}
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                      whileHover={{ backgroundColor: "rgba(255,255,255,0.08)" }}
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
