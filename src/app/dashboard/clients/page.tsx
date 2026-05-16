@@ -11,7 +11,7 @@ import Modal from "@/components/ui/modal";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import {
-  Users, DollarSign, FileText, Plus, Search, Heart, ArrowUpRight,
+  FileText, Plus, Search, ArrowUpRight,
   UserPlus, Download, CreditCard, RefreshCw, ExternalLink, Loader, Zap,
   Tag, Check, ChevronDown, ChevronRight, Mail, Phone, Eye,
   Filter, ArrowUpDown, LayoutGrid, LayoutList, AlertTriangle,
@@ -20,10 +20,8 @@ import {
 import { useAppStore } from "@/lib/store";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import StatStrip from "@/components/ui/stat-strip";
 import { staggerContainerFast, fadeUp } from "@/lib/motion-variants";
 
-import CollapsibleStats from "@/components/ui/collapsible-stats";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -711,16 +709,77 @@ export default function ClientsPage() {
         </div>
       </div>
 
-      {/* Clients command strip */}
-      {clients.length> 0 && (
-        <StatStrip
-          focal={{ label: "MRR", value: formatCurrency(totalMRR), icon: <DollarSign size={14} />, color: "text-[#1D4ED8]", sub: `${activeClients.length} active · ${Math.round((activeClients.length / (clients.length || 1)) * 100)}% retention` }}
-          support={[
-            { label: "Total Clients", value: String(clients.length), sub: `${clients.filter(c => !c.is_active).length} inactive`, icon: <Users size={12} /> },
-            { label: "At Risk", value: String(clients.filter(c => c.health_score < 40).length), sub: "health < 40", color: clients.filter(c => c.health_score < 40).length> 0 ? "text-[#1D4ED8]" : undefined },
-            { label: "Active", value: String(activeClients.length), sub: "currently live", icon: <UserCheck size={12} /> },
-          ]}
- />
+      {/* -- Editorial bento stats (Phase 2: 4-tile white card grid) ---------- */}
+      {clients.length > 0 && (
+        <div className="grid grid-cols-2 lg:grid-cols-[5fr_2fr_2fr_2fr] gap-3">
+          {/* MRR focal tile */}
+          <motion.div
+            className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+            <div>
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Recurring Revenue</p>
+              <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">
+                {formatCurrency(totalMRR)}
+              </p>
+              <p className="text-[11px] text-text-muted mt-1.5">
+                {activeClients.length} active &middot; {Math.round((activeClients.length / (clients.length || 1)) * 100)}% retention
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Support tile: Total Clients */}
+          <motion.div
+            className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted">Total Clients</p>
+            <p className="font-display text-2xl font-bold tracking-[-0.03em] text-text-primary tabular-nums mt-2">
+              {clients.length}
+            </p>
+            <p className="text-[11px] text-text-muted mt-1">
+              {clients.filter(c => !c.is_active).length} inactive
+            </p>
+          </motion.div>
+
+          {/* Support tile: Active */}
+          <motion.div
+            className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted">Active</p>
+            <p className="font-display text-2xl font-bold tracking-[-0.03em] text-text-primary tabular-nums mt-2">
+              {activeClients.length}
+            </p>
+            <p className="text-[11px] text-text-muted mt-1">currently live</p>
+          </motion.div>
+
+          {/* Support tile: At Risk */}
+          {(() => {
+            const atRiskCount = clients.filter(c => c.health_score < 40).length;
+            return (
+              <motion.div
+                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted">At Risk</p>
+                <p className={`font-display text-2xl font-bold tracking-[-0.03em] tabular-nums mt-2 ${atRiskCount > 0 ? "text-[#EF4444]" : "text-text-primary"}`}>
+                  {atRiskCount}
+                </p>
+                <p className="text-[11px] text-text-muted mt-1">health &lt; 40</p>
+              </motion.div>
+            );
+          })()}
+        </div>
       )}
 
       {/* Tabs (sticky) */}
