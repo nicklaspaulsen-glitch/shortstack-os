@@ -604,7 +604,7 @@ export default function CalendarPage() {
                       <h2 className="section-header flex items-center gap-2"><Star size={13} className="text-brand-accent" /> Quick Stats</h2>
                       <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
                         <motion.div
-                          className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                          className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
                         >
@@ -616,7 +616,7 @@ export default function CalendarPage() {
                           </div>
                         </motion.div>
                         <motion.div
-                          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                          className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
                         >
@@ -627,7 +627,7 @@ export default function CalendarPage() {
                           <p className="text-[11px] text-text-muted mt-1.5">events</p>
                         </motion.div>
                         <motion.div
-                          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                          className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
                         >
@@ -638,7 +638,7 @@ export default function CalendarPage() {
                           <p className="text-[11px] text-text-muted mt-1.5">scheduled</p>
                         </motion.div>
                         <motion.div
-                          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                          className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
                           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
                         >
@@ -657,7 +657,7 @@ export default function CalendarPage() {
                       {TEAM_MEMBERS.filter(m => m !== "All").map(member => {
                         const count = todaysEvents.filter(e => e.teamMember === member).length;
                         return (
-                          <div key={member} className="flex items-center gap-2 text-xs p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.03)]">
+                          <div key={member} className="flex items-center gap-2 text-xs p-1.5 rounded-lg hover:bg-white/[0.04]">
                             <div className="w-6 h-6 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[9px] font-bold text-brand-accent">{member[0]}</div>
                             <span className="flex-1">{member}</span>
                             <span className="text-muted">{count} event{count !== 1 ? "s" : ""}</span>
