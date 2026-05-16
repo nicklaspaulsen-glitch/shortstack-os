@@ -276,7 +276,7 @@ export default function TeamPage() {
     </div>
     <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
       <motion.div
-        className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
         initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
       >
@@ -288,16 +288,16 @@ export default function TeamPage() {
         </div>
       </motion.div>
       <motion.div
-        className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
         initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
       >
         <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Online Now</p>
-        <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-600 tabular-nums">{String(STATS[1].value)}</p>
+        <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{String(STATS[1].value)}</p>
         <p className="text-[11px] text-text-muted mt-1.5">{STATS[1].sub}</p>
       </motion.div>
       <motion.div
-        className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
         initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
       >
@@ -306,7 +306,7 @@ export default function TeamPage() {
         <p className="text-[11px] text-text-muted mt-1.5">{STATS[2].sub}</p>
       </motion.div>
       <motion.div
-        className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+        className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
         initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
       >
@@ -328,7 +328,7 @@ export default function TeamPage() {
                   <div className="relative flex-1 min-w-[200px]">
                     <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/50" />
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                      className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-white border border-[rgba(0,0,0,0.08)] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/40 placeholder:text-[#71717A]"
+                      className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-white/[0.05] border border-border-subtle focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/40 placeholder:text-text-muted"
                       placeholder="Search members..." aria-label="Search team members" />
                   </div>
                   <div className="flex gap-1 bg-surface rounded-lg p-0.5">
@@ -343,7 +343,7 @@ export default function TeamPage() {
                 <PrismPanel rainbow padding="p-0" className="overflow-hidden">
                   <table className="w-full text-xs">
                     <thead>
-                      <tr className="border-b border-[rgba(0,0,0,0.08)]">
+                      <tr className="border-b border-border-subtle">
                         <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Member</th>
                         <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Role</th>
                         <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden md:table-cell">Status</th>
@@ -362,7 +362,7 @@ export default function TeamPage() {
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.18, delay: index * 0.04 }}
-                          className="border-b border-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.03)] transition-colors cursor-pointer"
+                          className="border-b border-border-subtle hover:bg-white/[0.03] transition-colors cursor-pointer"
                           onClick={() => setSelectedMember(selectedMember === member.id ? null : member.id)}
 >
                           <td className="py-2.5 px-3">
@@ -418,7 +418,7 @@ export default function TeamPage() {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="glass rounded-xl p-4 space-y-4 border border-[rgba(255,255,255,0.70)]" 
+                      className="glass rounded-xl p-4 space-y-4 border border-border-subtle" 
 >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -470,7 +470,7 @@ export default function TeamPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-                className="glass rounded-xl overflow-x-auto p-4 border border-[rgba(255,255,255,0.70)]" 
+                className="glass rounded-xl overflow-x-auto p-4 border border-border-subtle" 
 >
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-sm font-bold flex items-center gap-2"><Shield size={14} className="text-brand-accent" /> Role Permissions Matrix</h2>
@@ -488,7 +488,7 @@ export default function TeamPage() {
                     <p className="text-[9px] text-muted uppercase tracking-wider font-bold mb-2 px-2">{category}</p>
                     <table className="w-full text-xs">
                       <thead>
-                        <tr className="border-b border-[rgba(0,0,0,0.08)]">
+                        <tr className="border-b border-border-subtle">
                           <th className="text-left py-2 pr-4 text-muted font-semibold text-[10px] w-48 pl-2">Feature</th>
                           {ROLE_DEFINITIONS.map(role => (
                             <th key={role.id} className="text-center py-2 px-2 text-[10px] font-semibold" style={{ color: role.color }}>{role.label}</th>
@@ -497,7 +497,7 @@ export default function TeamPage() {
                       </thead>
                       <tbody>
                         {perms.map((perm, idx) => (
-                          <tr key={idx} className="border-b border-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.03)] transition-colors">
+                          <tr key={idx} className="border-b border-border-subtle hover:bg-white/[0.03] transition-colors">
                             <td className="py-2 pr-4 font-medium pl-2">{perm.feature}</td>
                             {(["owner", "admin", "manager", "creator", "viewer"] as RoleId[]).map(roleId => (
                               <td key={roleId} className="text-center py-2">
@@ -589,7 +589,7 @@ export default function TeamPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: idx * 0.04 }}
-                      className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-[rgba(0,0,0,0.03)] border-b border-[rgba(0,0,0,0.05)] transition-colors"
+                      className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.03] border-b border-border-subtle transition-colors"
 >
                       <div className="w-7 h-7 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[9px] font-bold text-brand-accent shrink-0">{act.avatar}</div>
                       <div className="flex-1 min-w-0">
@@ -697,10 +697,10 @@ export default function TeamPage() {
                         </div>
                         <p className="text-[10px] text-muted">{m.email}</p>
                         <div className="flex items-center gap-2 mt-1 flex-wrap">
-                          {m.can_manage_clients && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">Clients</span>}
-                          {m.can_manage_outreach && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">Outreach</span>}
-                          {m.can_manage_content && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">Content</span>}
-                          {m.can_manage_ads && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted">Ads</span>}
+                          {m.can_manage_clients && <span className="text-[8px] px-1 py-0.5 rounded bg-white/[0.04] text-muted">Clients</span>}
+                          {m.can_manage_outreach && <span className="text-[8px] px-1 py-0.5 rounded bg-white/[0.04] text-muted">Outreach</span>}
+                          {m.can_manage_content && <span className="text-[8px] px-1 py-0.5 rounded bg-white/[0.04] text-muted">Content</span>}
+                          {m.can_manage_ads && <span className="text-[8px] px-1 py-0.5 rounded bg-white/[0.04] text-muted">Ads</span>}
                           {m.can_view_financials && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">Financials</span>}
                           {m.client_access_mode === "specific" && (
                             <span className="text-[8px] px-1 py-0.5 rounded bg-blue-400/10 text-blue-400">
@@ -714,7 +714,7 @@ export default function TeamPage() {
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => setEditingMember(m)}
-                          className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-muted hover:text-foreground"
+                          className="p-1.5 rounded hover:bg-white/[0.04] text-muted hover:text-foreground"
                           title="Edit"
 >
                           <Pencil size={11} />
