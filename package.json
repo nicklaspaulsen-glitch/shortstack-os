@@ -88,6 +88,7 @@
     "@rive-app/react-canvas": "^4.28.5",
     "@sentry/nextjs": "^10.51.0",
     "@splinetool/react-spline": "^4.1.0",
+    "@splinetool/runtime": "^1.12.94",
     "@stripe/stripe-js": "^9.0.1",
     "@supabase/auth-helpers-nextjs": "^0.15.0",
     "@supabase/ssr": "^0.10.0",

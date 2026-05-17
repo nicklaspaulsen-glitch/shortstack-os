@@ -8,11 +8,17 @@ const nextConfig = {
   // 1. transpilePackages — tells Next/SWC to compile it (not skip as external)
   // 2. webpack alias — bypasses the exports map entirely, pointing directly to the
   //    compiled JS file so webpack never has to resolve the broken exports field.
-  transpilePackages: ["@splinetool/react-spline"],
+  // Both spline packages are ESM-only ("type":"module", exports map with only
+  // "import" condition). webpack 5 checks the exports map BEFORE transpilation
+  // and fails when it can't find a "require" or "default" condition.
+  // Fix: transpilePackages gets SWC to compile them; webpack alias bypasses the
+  // exports map entirely for both packages, pointing directly to their built JS.
+  transpilePackages: ["@splinetool/react-spline", "@splinetool/runtime"],
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       "@splinetool/react-spline": `${process.cwd()}/node_modules/@splinetool/react-spline/dist/react-spline.js`,
+      "@splinetool/runtime": `${process.cwd()}/node_modules/@splinetool/runtime/build/runtime.js`,
     };
     return config;
   },
