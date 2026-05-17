@@ -162,38 +162,59 @@ export default function VoiceStudioPage() {
   }, [mine, presets, renders]);
 
   return (
-    <MotionPage className="min-h-screen pb-12">{/* Voice Studio command strip (slim editorial header, no PageHero) */}
-          <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
-            <div className="min-w-0">
-              <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">Audio Identity</p>
-              <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">Voice Studio</h1>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              {stats.mineCount > 0 && (
-                <motion.span
-                  initial={{ opacity: 0, scale: 0.92 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-white/[0.05] border border-border-subtle text-brand-accent"
-                >
-                  <span className="w-1 h-1 rounded-full bg-brand-accent animate-pulse" />
-                  {stats.mineCount} voice{stats.mineCount !== 1 ? "s" : ""}
-                </motion.span>
-              )}
-              {stats.presetCount > 0 && (
-                <span className="hidden md:flex items-center gap-1 text-[9px] text-[#71717A] px-2 py-1 rounded-md bg-white/[0.02] border border-border-subtle">
-                  {stats.presetCount} presets
-                </span>
-              )}
-              <button
-                type="button"
-                onClick={refresh}
-                className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-white/[0.03] px-2.5 py-1.5 text-[11px] font-medium text-[#71717A] hover:text-text-primary hover:bg-white/[0.06] transition-colors duration-150"
-              >
-                <RefreshCw size={11} /> Refresh
-              </button>
-            </div>
+    <MotionPage className="min-h-screen pb-12">
+      {/* Voice Studio header — editorial style + frequency visualizer accent */}
+      <div className="relative overflow-hidden">
+        <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4 relative z-10">
+          <div className="min-w-0">
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">Audio Identity</p>
+            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">Voice Studio</h1>
           </div>
-          <div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
+          <div className="flex items-center gap-2 shrink-0">
+            {stats.mineCount > 0 && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="hidden sm:flex items-center gap-1 text-[9px] font-semibold px-2 py-1 rounded-full bg-white/[0.05] border border-border-subtle text-brand-accent"
+              >
+                <span className="w-1 h-1 rounded-full bg-brand-accent animate-pulse" />
+                {stats.mineCount} voice{stats.mineCount !== 1 ? "s" : ""}
+              </motion.span>
+            )}
+            {stats.presetCount > 0 && (
+              <span className="hidden md:flex items-center gap-1 text-[9px] text-[#71717A] px-2 py-1 rounded-md bg-white/[0.02] border border-border-subtle">
+                {stats.presetCount} presets
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={refresh}
+              className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-white/[0.03] px-2.5 py-1.5 text-[11px] font-medium text-[#71717A] hover:text-text-primary hover:bg-white/[0.06] transition-colors duration-150"
+            >
+              <RefreshCw size={11} /> Refresh
+            </button>
+          </div>
+        </div>
+        {/* Frequency visualizer strip — EQ meter aesthetic, decorative only */}
+        <div className="flex items-end gap-[1.5px] h-5 px-1 pointer-events-none overflow-hidden" aria-hidden="true">
+          {Array.from({ length: 60 }, (_, i) => (
+            <div
+              key={i}
+              style={{
+                flex: "0 0 auto",
+                width: 2.5,
+                height: `${4 + ((i * 7 + i % 11) % 13)}px`,
+                background: "#3B82F6",
+                borderRadius: "1px 1px 0 0",
+                opacity: 0.05 + (i % 6) * 0.012,
+                animation: `waveBar ${1.5 + (i % 7) * 0.2}s ease-in-out infinite`,
+                animationDelay: `${(i * 0.024).toFixed(3)}s`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="mx-auto mt-4 max-w-7xl px-4 sm:px-6">
               {/* -- Tab bar -- */}
               <div className="tab-pill-strip">
                 {TAB_ORDER.map((t) => (
@@ -479,6 +500,33 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
   );
 }
 
+// Decorative static waveform bars — sits in right portion of audio track cards
+function VoiceWaveformBg({ color = "#3B82F6", opacity = 0.07 }: { color?: string; opacity?: number }) {
+  const bars = [3, 7, 11, 5, 15, 9, 13, 6, 17, 10, 8, 14, 4, 12, 7, 16, 5, 11, 8, 13, 6, 10, 15, 7, 12];
+  return (
+    <div
+      className="absolute inset-y-0 right-0 flex items-center gap-[2.5px] pr-5 pointer-events-none overflow-hidden"
+      aria-hidden="true"
+      style={{ opacity }}
+    >
+      {bars.map((h, i) => (
+        <div
+          key={i}
+          style={{
+            width: 3,
+            height: `${Math.round((h / 18) * 100)}%`,
+            maxHeight: 36,
+            minHeight: 4,
+            background: color,
+            borderRadius: 2,
+            flexShrink: 0,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function CloneRow({
   clone,
   onChange,
@@ -550,98 +598,135 @@ function CloneRow({
     }
   }, [clone.id, clone.label, onChange]);
 
+  // Status drives the left accent + waveform tint
+  const statusColors = {
+    training: "#3B82F6",
+    ready: "#10B981",
+    failed: "#F43F5E",
+  } as const;
+  const accentColor = statusColors[clone.status];
+
   return (
-    <div className="glass rounded-xl p-5 cursor-pointer tilt-3d">
-      <div className="flex flex-wrap items-start gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-border-subtle bg-white/[0.04] text-brand-accent">
-          <Mic size={20} />
-        </div>
-        <div className="flex-1 min-w-[180px]">
-          <div className="flex flex-wrap items-center gap-2">
-            <Link
-              href={`/dashboard/voice-studio/${clone.id}`}
-              className="text-sm font-semibold text-text-primary hover:text-brand-accent transition-colors"
-            >
-              {clone.label}
-            </Link>
-            <StatusChip status={clone.status} />
-            <span className="rounded-full border border-border-subtle bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#71717A]">
-              {clone.provider}
-            </span>
-            <span className="rounded-full border border-border-subtle bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#71717A]">
-              {clone.language}
-            </span>
-          </div>
-          {clone.description && (
-            <p className="mt-1 text-xs text-[#71717A]">{clone.description}</p>
-          )}
-          {clone.failed_reason && (
-            <p className="mt-1 text-xs text-rose-600">
-              {clone.failed_reason}
-            </p>
-          )}
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={onTest}
-            disabled={testing || clone.status !== "ready"}
-            className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {testing ? (
-              <Loader2 size={12} className="animate-spin" />
-            ) : (
-              <Play size={12} />
+    <div
+      className="relative overflow-hidden rounded-xl bg-[rgba(13,17,32,0.85)] border border-border-subtle transition-all duration-220 hover:border-[rgba(99,146,255,0.22)] hover:shadow-[0_4px_24px_rgba(0,0,0,0.18)]"
+      style={{ borderLeft: `2px solid ${accentColor}` }}
+    >
+      {/* Decorative waveform in right half */}
+      <VoiceWaveformBg color={accentColor} opacity={clone.status === "ready" ? 0.07 : 0.04} />
+
+      <div className="relative z-10 p-4">
+        {/* Top row: name + meta + delete */}
+        <div className="flex items-start gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <Link
+                href={`/dashboard/voice-studio/${clone.id}`}
+                className="font-display text-base font-bold text-text-primary hover:text-brand-accent transition-colors"
+              >
+                {clone.label}
+              </Link>
+              <StatusChip status={clone.status} />
+              <span className="text-[10px] text-text-muted uppercase tracking-wide">{clone.provider}</span>
+              <span className="text-[10px] text-text-muted uppercase tracking-wide">{clone.language}</span>
+            </div>
+            {clone.description && (
+              <p className="mt-0.5 text-xs text-text-secondary line-clamp-1">{clone.description}</p>
             )}
-            Test playback
-          </button>
+            {clone.failed_reason && (
+              <p className="mt-1 text-xs text-rose-400">{clone.failed_reason}</p>
+            )}
+          </div>
           <button
             type="button"
             onClick={onDelete}
-            className="flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-medium text-rose-400 hover:bg-rose-500/20"
+            aria-label={`Delete ${clone.label}`}
+            className="flex-shrink-0 rounded-lg p-1.5 text-text-muted hover:text-rose-400 hover:bg-rose-500/10 transition-colors duration-150"
           >
-            <Trash2 size={12} />
-            Delete
+            <Trash2 size={13} />
           </button>
         </div>
-      </div>
 
-      {testUrl && (
-        <div className="mt-3 rounded-lg border border-border-subtle bg-white/[0.03] p-3">
-          {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-          <audio src={testUrl} controls className="w-full" />
-        </div>
-      )}
-      {error && (
-        <p className="mt-2 text-xs text-rose-600">{error}</p>
-      )}
-
-      {clone.status === "ready" && (
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          <span className="text-xs uppercase tracking-wider text-[#71717A]">
-            Default for:
-          </span>
-          {SURFACE_FLAGS.map((f) => {
-            const active = clone[f.key] as boolean;
-            return (
+        {/* Audio section */}
+        <div className="mt-3">
+          {clone.status === "training" && (
+            <div className="flex items-center gap-2 py-2 px-3 rounded-lg border border-[rgba(59,130,246,0.15)] bg-[rgba(59,130,246,0.04)]">
+              <Loader2 size={12} className="animate-spin text-brand-accent flex-shrink-0" />
+              <span className="text-xs text-text-secondary">Training your voice clone...</span>
+            </div>
+          )}
+          {clone.status === "failed" && (
+            <div className="flex items-center gap-2 py-2 px-3 rounded-lg border border-rose-500/20 bg-rose-500/[0.05]">
+              <AlertTriangle size={12} className="text-rose-400 flex-shrink-0" />
+              <span className="text-xs text-rose-400">Clone training failed</span>
+            </div>
+          )}
+          {clone.status === "ready" && (
+            testUrl ? (
+              <div className="rounded-lg border border-[rgba(59,130,246,0.18)] bg-[rgba(59,130,246,0.05)] py-2 px-1">
+                <AudioPlayer src={testUrl} />
+              </div>
+            ) : (
               <button
-                key={String(f.key)}
                 type="button"
-                onClick={() => onToggleDefault(f.key)}
-                className={`flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors ${
-                  active
-                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
-                    : "border-border-subtle bg-white/[0.03] text-[#71717A] hover:bg-white/[0.06]"
-                }`}
+                onClick={onTest}
+                disabled={testing}
+                className="w-full group flex items-center gap-3 py-2.5 px-3 rounded-lg border border-dashed border-border-subtle hover:border-[rgba(59,130,246,0.3)] hover:bg-[rgba(59,130,246,0.03)] transition-colors duration-150 disabled:opacity-40 cursor-pointer"
               >
-                {active && <CheckCircle2 size={10} />}
-                {f.icon}
-                {f.label}
+                <div className="flex items-end gap-[2px] h-5 flex-shrink-0" aria-hidden="true">
+                  {[5, 9, 6, 13, 7, 11, 4, 10].map((h, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        width: 2,
+                        height: h,
+                        background: "#3B82F6",
+                        borderRadius: 1,
+                        transformOrigin: "bottom",
+                        animation: `waveBar ${0.6 + (i % 4) * 0.12}s ease-in-out infinite`,
+                        animationDelay: `${i * 0.07}s`,
+                      }}
+                    />
+                  ))}
+                </div>
+                <span className="text-xs text-text-muted group-hover:text-text-secondary transition-colors flex items-center gap-1.5">
+                  {testing ? (
+                    <><Loader2 size={11} className="animate-spin" /> Generating preview...</>
+                  ) : (
+                    <><Play size={11} /> Preview voice</>
+                  )}
+                </span>
               </button>
-            );
-          })}
+            )
+          )}
         </div>
-      )}
+
+        {/* Surface flags — compact icon-only toggle row */}
+        {clone.status === "ready" && (
+          <div className="mt-3 flex items-center gap-1.5">
+            <span className="text-[9px] uppercase tracking-wider text-text-muted mr-0.5">Deploy:</span>
+            {SURFACE_FLAGS.map((f) => {
+              const active = clone[f.key] as boolean;
+              return (
+                <button
+                  key={String(f.key)}
+                  type="button"
+                  onClick={() => onToggleDefault(f.key)}
+                  title={f.label}
+                  className={`flex items-center justify-center w-7 h-7 rounded-md border transition-all duration-150 cursor-pointer ${
+                    active
+                      ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
+                      : "border-border-subtle bg-white/[0.02] text-text-muted hover:bg-white/[0.05] hover:text-text-secondary"
+                  }`}
+                >
+                  {f.icon}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {error && <p className="mt-2 text-xs text-rose-400">{error}</p>}
+      </div>
     </div>
   );
 }

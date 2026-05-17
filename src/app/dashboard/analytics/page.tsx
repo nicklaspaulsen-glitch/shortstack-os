@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -6,7 +6,7 @@ import { formatCurrency, formatRelativeTime } from "@/lib/utils";
 import {
   BarChart3, Users, DollarSign, Zap, Film, Phone, MessageSquare, ArrowUp, ArrowDown,
   TrendingUp, AlertTriangle, Target, Trophy, Calendar, Download, Activity,
-  ChevronDown, ChevronRight, Flame, Star, Clock, CheckCircle
+  Flame, Star, Clock, CheckCircle
 } from "lucide-react";
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line,
@@ -43,46 +43,20 @@ const TT = {
   itemStyle: { color: "#F0F0F4", fontSize: "11px" },
 };
 
-// --- Accordion item -------------------------------------------------------
-function Accordion({
-  id, label, icon, badge, expanded, onToggle, children,
+// --- InsightPanel: always-visible bento tile -------------------------------
+function InsightPanel({
+  icon, label, badge, children,
 }: {
-  id: string; label: string; icon: React.ReactNode; badge?: React.ReactNode;
-  expanded: boolean; onToggle: () => void; children: React.ReactNode;
+  icon: React.ReactNode; label: string; badge?: React.ReactNode; children: React.ReactNode;
 }) {
   return (
-    <div
-      className="glass rounded-xl overflow-hidden"
-    >
-      <button
-        onClick={onToggle}
-        className="flex items-center justify-between w-full px-6 py-4 hover:bg-[rgba(108,114,172,0.07)] transition-colors duration-150"
->
-        <div className="flex items-center gap-2.5">
-          <span className="text-text-muted">{icon}</span>
-          <span className="font-display text-sm font-semibold text-text-primary tracking-[-0.01em]">{label}</span>
-          {badge}
-        </div>
-        {expanded
-          ? <ChevronDown size={13} className="text-text-muted" />
-          : <ChevronRight size={13} className="text-text-muted" />}
-      </button>
-      <AnimatePresence initial={false}>
-        {expanded && (
-          <motion.div
-            key="content"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            style={{ overflow: "hidden" }}
->
-            <div className="px-6 pb-6 border-t border-[rgba(156,167,222,0.18)]">
-              {children}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="glass rounded-xl border border-border-subtle overflow-hidden flex flex-col">
+      <div className="flex items-center gap-2 px-5 pt-4 pb-3 border-b border-border-subtle">
+        <span className="text-text-muted">{icon}</span>
+        <span className="font-display text-xs font-semibold text-text-secondary tracking-[-0.005em] uppercase tracking-[0.08em]">{label}</span>
+        {badge && <div className="ml-auto">{badge}</div>}
+      </div>
+      <div className="px-5 py-4 flex-1">{children}</div>
     </div>
   );
 }
@@ -139,7 +113,6 @@ export default function AnalyticsPage() {
   const [dateRange, setDateRange] = useState<"7d" | "30d" | "90d" | "custom">("30d");
   const [customStart, setCustomStart] = useState("");
   const [customEnd, setCustomEnd] = useState("");
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [activityFeed, setActivityFeed] = useState<ActivityItem[]>([]);
   const activityRef = useRef<HTMLDivElement>(null);
 
@@ -386,9 +359,6 @@ export default function AnalyticsPage() {
     a.href = url; a.download = `analytics-report-${new Date().toISOString().split("T")[0]}.json`; a.click();
     URL.revokeObjectURL(url);
   }, [stats, leadGrowth, replyRate, revenueByMonth, leadsBySource, revenueForecast, churnRiskClients, platformROI, funnelData, teamMembers]);
-
-  const toggleSection = (section: string) =>
-    setExpandedSection(prev => prev === section ? null : section);
 
   const activityIcon = (type: string) => {
     switch (type) {
@@ -1049,29 +1019,28 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
-          {/* --------------------------------------------------------------- */}
-          {/* Collapsible sections � advanced / data-dependent analytics */}
-          {/* --------------------------------------------------------------- */}
 
-          {/* Revenue Forecast */}
-          <Accordion
-            id="forecast"
-            label="Revenue Forecast"
-            icon={<TrendingUp size={13} />}
-            badge={
-              revenueForecast.length> 0 ? (
+          {/* ===== Bento Insight Grid ===== */}
+
+          {/* Row A: Revenue Forecast (wide) + Monthly Trends */}
+          <motion.div
+            className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-4 items-start"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.1 }}
+          >
+            <InsightPanel
+              icon={<TrendingUp size={13} />}
+              label="Revenue Forecast"
+              badge={revenueForecast.length > 0 ? (
                 <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(59,130,246,0.10)] text-brand-accent">
                   {formatCurrency(revenueForecast[0]?.projected || 0)} next mo.
                 </span>
-              ) : undefined
-            }
-            expanded={expandedSection === "forecast"}
-            onToggle={() => toggleSection("forecast")}
->
-            <div className="mt-4">
+              ) : undefined}
+            >
               {revenueByMonth.length < 2 ? (
                 <p className="text-[11px] text-text-muted py-6 text-center">
-                  Not enough revenue history to forecast � connect billing data.
+                  Not enough revenue history to forecast. Connect billing data.
                 </p>
               ) : (
                 <>
@@ -1083,7 +1052,7 @@ export default function AnalyticsPage() {
                           ...revenueForecast,
                         ]}
                         margin={{ top: 4, right: 4, left: -24, bottom: 0 }}
->
+                      >
                         <defs>
                           <linearGradient id="forecastGrad" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="0%" stopColor="#2563EB" stopOpacity={0.15} />
@@ -1100,22 +1069,22 @@ export default function AnalyticsPage() {
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
-                  {revenueForecast.length> 0 && (
+                  {revenueForecast.length > 0 && (
                     <div className="grid grid-cols-3 mt-4 pt-4 border-t border-border-subtle">
                       {revenueForecast.map((f, i) => (
                         <div
                           key={f.month}
-                          className={`${i> 0 ? "border-l border-border-subtle pl-4" : ""} ${i < 2 ? "pr-4" : ""}`}
->
+                          className={`${i > 0 ? "border-l border-border-subtle pl-4" : ""} ${i < 2 ? "pr-4" : ""}`}
+                        >
                           <p className="text-[9px] text-text-muted uppercase tracking-wider">{f.month}</p>
                           <p
                             className="font-display text-lg font-bold text-text-primary mt-1"
                             style={{ fontVariantNumeric: "tabular-nums" }}
->
+                          >
                             {formatCurrency(f.projected)}
                           </p>
                           <p className="text-[9px] text-text-muted mt-0.5">
-                            {formatCurrency(f.conservative)} � {formatCurrency(f.optimistic)}
+                            {formatCurrency(f.conservative)} to {formatCurrency(f.optimistic)}
                           </p>
                         </div>
                       ))}
@@ -1123,352 +1092,317 @@ export default function AnalyticsPage() {
                   )}
                 </>
               )}
-            </div>
-          </Accordion>
+            </InsightPanel>
 
-          {/* Platform ROI */}
-          <Accordion
-            id="roi"
-            label="Platform ROI"
-            icon={<Target size={13} />}
-            expanded={expandedSection === "roi"}
-            onToggle={() => toggleSection("roi")}
->
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full text-xs">
-                <thead>
-                  <tr className="border-b border-border-subtle">
-                    {["Platform", "Spend", "Revenue", "ROI", "CPL"].map((h, i) => (
-                      <th
-                        key={h}
-                        className={`pb-2.5 text-[9px] text-text-muted font-medium uppercase tracking-wider ${i === 0 ? "text-left" : "text-right"}`}
->
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {platformROI.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="py-8 text-center" style={{ background: "none" }}>
-                        <p className="text-[11px] text-text-muted">No ad platform data yet</p>
-                        <Link href="/dashboard/integrations" className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
-                          Connect platforms <ArrowUp size={9} className="rotate-45" />
-                        </Link>
-                      </td>
-                    </tr>
-                  ) : platformROI.map(p => (
-                    <tr key={p.platform} className="border-b border-border-subtle hover:bg-white/[0.03] transition-colors group">
-
-                      <td className="py-3 font-medium text-text-primary">{p.platform}</td>
-                      <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.spend)}</td>
-                      <td className="py-3 text-right text-[#3B82F6] font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.revenue)}</td>
-                      <td className="py-3 text-right">
-                        <span
-                          className="text-[10px] font-bold"
-                          style={{ color: p.roi> 200 ? "#3B82F6" : p.roi> 100 ? "#2563EB" : "#6B7280", fontVariantNumeric: "tabular-nums" }}
->
-                          {p.roi}%
-                        </span>
-                      </td>
-                      <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.cpl)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Accordion>
-
-          {/* Churn Risk */}
-          <Accordion
-            id="churn"
-            label="Churn Risk"
-            icon={<AlertTriangle size={13} />}
-            expanded={expandedSection === "churn"}
-            onToggle={() => toggleSection("churn")}
->
-            <div className="mt-4 space-y-2">
-              {churnRiskClients.length === 0 ? (
-                <div className="flex flex-col items-center gap-2 py-6 text-center">
-                  <CheckCircle size={16} className="text-text-muted" />
-                  <p className="text-[11px] text-text-muted">All clients healthy</p>
-                  <p className="text-[9px] text-text-muted max-w-[200px] mx-auto">No churn signals detected. At-risk clients appear here when engagement drops.</p>
-                </div>
-              ) : churnRiskClients.map(client => (
-                <div key={client.name} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
-                  <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F59E0B]" : client.risk === "medium" ? "bg-[#3B82F6]" : "bg-white/[0.20]"}`} />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-text-primary truncate">{client.name}</p>
-                    <p className="text-[9px] text-text-muted">{client.reason}</p>
-                  </div>
-                  <span
-                    className="text-[10px] font-bold shrink-0"
-                    style={{ color: client.risk === "high" ? "#D97706" : client.risk === "medium" ? "#3B82F6" : "rgba(0,0,0,0.35)", fontVariantNumeric: "tabular-nums" }}
->
-                    {client.score}%
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Accordion>
-
-          {/* Monthly Trends */}
-          <Accordion
-            id="monthly"
-            label="Monthly Trends"
-            icon={<Calendar size={13} />}
-            expanded={expandedSection === "monthly"}
-            onToggle={() => toggleSection("monthly")}
->
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full text-xs">
-                <thead>
-                  <tr className="border-b border-border-subtle">
-                    {["Metric", "3 mo. ago", "Last month", "This month", "Trend"].map((h, i) => (
-                      <th
-                        key={h}
-                        className={`pb-2.5 text-[9px] text-text-muted font-medium uppercase tracking-wider ${i === 0 ? "text-left" : "text-right"}`}
->
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { label: "Leads", three: monthlyComparison.threeAgo.leads, last: monthlyComparison.last.leads, current: monthlyComparison.current.leads },
-                    { label: "MRR", three: monthlyComparison.threeAgo.mrr, last: monthlyComparison.last.mrr, current: monthlyComparison.current.mrr, isCurrency: true },
-                    { label: "Deals Won", three: monthlyComparison.threeAgo.deals, last: monthlyComparison.last.deals, current: monthlyComparison.current.deals },
-                    { label: "Replies", three: monthlyComparison.threeAgo.replies, last: monthlyComparison.last.replies, current: monthlyComparison.current.replies },
-                  ].map(row => {
-                    const growth = row.last> 0 ? Math.round(((row.current - row.last) / row.last) * 100) : 0;
-                    return (
-                      <tr key={row.label} className="border-b border-border-subtle hover:bg-white/[0.03] transition-colors">
-                        <td className="py-3 font-medium text-text-primary">{row.label}</td>
-                        <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
-                          {row.isCurrency ? formatCurrency(row.three) : row.three}
-                        </td>
-                        <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
-                          {row.isCurrency ? formatCurrency(row.last) : row.last}
-                        </td>
-                        <td className="py-3 text-right font-bold text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>
-                          {row.isCurrency ? formatCurrency(row.current) : row.current}
-                        </td>
-                        <td className="py-3 text-right">
-                          <span
-                            className="text-[10px] font-mono font-bold"
-                            style={{ color: growth>= 0 ? "#3B82F6" : "#94A3B8", fontVariantNumeric: "tabular-nums" }}
->
-                            {growth>= 0 ? "+" : ""}{growth}%
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </Accordion>
-
-          {/* Team Leaderboard */}
-          <Accordion
-            id="leaderboard"
-            label="Team Leaderboard"
-            icon={<Trophy size={13} />}
-            expanded={expandedSection === "leaderboard"}
-            onToggle={() => toggleSection("leaderboard")}
->
-            <div className="mt-4 space-y-2">
-              {teamMembers.length === 0 ? (
-                <div className="flex flex-col items-center gap-2 py-6 text-center">
-                  <Trophy size={16} className="text-text-muted" />
-                  <p className="text-[11px] text-text-muted">No team activity yet</p>
-                  <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
-                    Invite team <ArrowUp size={9} className="rotate-45" />
-                  </Link>
-                </div>
-              ) : teamMembers.map((member, i) => (
-                <div key={member.name} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
-                  <span className="text-[9px] font-mono text-text-muted w-4 shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
-                    {i + 1}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <p className="text-xs font-medium text-text-primary">{member.name}</p>
-                      {i === 0 && <Star size={9} className="text-brand-accent" />}
-                    </div>
-                    <p className="text-[9px] text-text-muted">{member.leads} leads � {member.deals} deals � {member.calls} calls</p>
-                  </div>
-                  <p className="text-xs font-bold text-brand-accent shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
-                    {formatCurrency(member.revenue)}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </Accordion>
-
-          {/* Content Heatmap */}
-          {hasContentHeatmapData && (
-            <Accordion
-              id="heatmap"
-              label="Content Heatmap"
-              icon={<Flame size={13} />}
-              expanded={expandedSection === "heatmap"}
-              onToggle={() => toggleSection("heatmap")}
->
-              <div className="mt-4 overflow-x-auto">
-                <table className="w-full">
+            <InsightPanel icon={<Calendar size={13} />} label="Monthly Trends">
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
                   <thead>
-                    <tr>
-                      <th className="text-[9px] text-text-muted font-medium py-1 text-left w-12" />
-                      {["9am", "12pm", "3pm", "6pm", "9pm"].map(h => (
-                        <th key={h} className="text-[9px] text-text-muted font-medium py-1 text-center">{h}</th>
+                    <tr className="border-b border-border-subtle">
+                      {["Metric", "3 mo. ago", "Last month", "This month", "Trend"].map((h, i) => (
+                        <th
+                          key={h}
+                          className={`pb-2.5 text-[9px] text-text-muted font-medium uppercase tracking-wider ${i === 0 ? "text-left" : "text-right"}`}
+                        >
+                          {h}
+                        </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {contentHeatmap.map(row => (
-                      <tr key={row.day as string}>
-                        <td className="text-[9px] text-text-muted py-0.5 font-medium">{row.day as string}</td>
-                        {["9am", "12pm", "3pm", "6pm", "9pm"].map(h => {
-                          const val = row[h] as number;
-                          const intensity = val / 100;
-                          return (
-                            <td key={h} className="py-0.5 px-0.5">
-                              <div
-                                className="h-7 rounded-md flex items-center justify-center text-[9px] font-bold transition-all hover:scale-105"
-                                style={{
-                                  background: `rgba(37, 99, 235, ${intensity * 0.6 + 0.04})`,
-                                  color: intensity > 0.5 ? "#fff" : "var(--text-muted)",
-                                }}
->
-                                {val}
-                              </div>
-                            </td>
-                          );
-                        })}
+                    {[
+                      { label: "Leads", three: monthlyComparison.threeAgo.leads, last: monthlyComparison.last.leads, current: monthlyComparison.current.leads },
+                      { label: "MRR", three: monthlyComparison.threeAgo.mrr, last: monthlyComparison.last.mrr, current: monthlyComparison.current.mrr, isCurrency: true },
+                      { label: "Deals Won", three: monthlyComparison.threeAgo.deals, last: monthlyComparison.last.deals, current: monthlyComparison.current.deals },
+                      { label: "Replies", three: monthlyComparison.threeAgo.replies, last: monthlyComparison.last.replies, current: monthlyComparison.current.replies },
+                    ].map(row => {
+                      const growth = row.last > 0 ? Math.round(((row.current - row.last) / row.last) * 100) : 0;
+                      return (
+                        <tr key={row.label} className="border-b border-border-subtle hover:bg-white/[0.03] transition-colors">
+                          <td className="py-3 font-medium text-text-primary">{row.label}</td>
+                          <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
+                            {row.isCurrency ? formatCurrency(row.three) : row.three}
+                          </td>
+                          <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
+                            {row.isCurrency ? formatCurrency(row.last) : row.last}
+                          </td>
+                          <td className="py-3 text-right font-bold text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>
+                            {row.isCurrency ? formatCurrency(row.current) : row.current}
+                          </td>
+                          <td className="py-3 text-right">
+                            <span
+                              className="text-[10px] font-mono font-bold"
+                              style={{ color: growth >= 0 ? "#3B82F6" : "#94A3B8", fontVariantNumeric: "tabular-nums" }}
+                            >
+                              {growth >= 0 ? "+" : ""}{growth}%
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </InsightPanel>
+          </motion.div>
+
+          {/* Row B: Churn Risk + Team Leaderboard + Platform ROI */}
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.15 }}
+          >
+            <InsightPanel icon={<AlertTriangle size={13} />} label="Churn Risk">
+              <div className="space-y-2">
+                {churnRiskClients.length === 0 ? (
+                  <div className="flex flex-col items-center gap-2 py-6 text-center">
+                    <CheckCircle size={16} className="text-text-muted" />
+                    <p className="text-[11px] text-text-muted">All clients healthy</p>
+                    <p className="text-[9px] text-text-muted max-w-[200px] mx-auto">No churn signals detected. At-risk clients appear here when engagement drops.</p>
+                  </div>
+                ) : churnRiskClients.map(client => (
+                  <div key={client.name} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
+                    <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F59E0B]" : client.risk === "medium" ? "bg-[#3B82F6]" : "bg-white/[0.20]"}`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-text-primary truncate">{client.name}</p>
+                      <p className="text-[9px] text-text-muted">{client.reason}</p>
+                    </div>
+                    <span
+                      className="text-[10px] font-bold shrink-0"
+                      style={{ color: client.risk === "high" ? "#D97706" : client.risk === "medium" ? "#3B82F6" : "rgba(0,0,0,0.35)", fontVariantNumeric: "tabular-nums" }}
+                    >
+                      {client.score}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </InsightPanel>
+
+            <InsightPanel icon={<Trophy size={13} />} label="Team Leaderboard">
+              <div className="space-y-2">
+                {teamMembers.length === 0 ? (
+                  <div className="flex flex-col items-center gap-2 py-6 text-center">
+                    <Trophy size={16} className="text-text-muted" />
+                    <p className="text-[11px] text-text-muted">No team activity yet</p>
+                    <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
+                      Invite team <ArrowUp size={9} className="rotate-45" />
+                    </Link>
+                  </div>
+                ) : teamMembers.map((member, i) => (
+                  <div key={member.name} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
+                    <span className="text-[9px] font-mono text-text-muted w-4 shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
+                      {i + 1}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-xs font-medium text-text-primary">{member.name}</p>
+                        {i === 0 && <Star size={9} className="text-brand-accent" />}
+                      </div>
+                      <p className="text-[9px] text-text-muted">{member.leads} leads / {member.deals} deals / {member.calls} calls</p>
+                    </div>
+                    <p className="text-xs font-bold text-brand-accent shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
+                      {formatCurrency(member.revenue)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </InsightPanel>
+
+            <InsightPanel icon={<Target size={13} />} label="Platform ROI">
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b border-border-subtle">
+                      {["Platform", "Spend", "Revenue", "ROI", "CPL"].map((h, i) => (
+                        <th
+                          key={h}
+                          className={`pb-2.5 text-[9px] text-text-muted font-medium uppercase tracking-wider ${i === 0 ? "text-left" : "text-right"}`}
+                        >
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {platformROI.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="py-8 text-center" style={{ background: "none" }}>
+                          <p className="text-[11px] text-text-muted">No ad platform data yet</p>
+                          <Link href="/dashboard/integrations" className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
+                            Connect platforms <ArrowUp size={9} className="rotate-45" />
+                          </Link>
+                        </td>
+                      </tr>
+                    ) : platformROI.map(p => (
+                      <tr key={p.platform} className="border-b border-border-subtle hover:bg-white/[0.03] transition-colors">
+                        <td className="py-3 font-medium text-text-primary">{p.platform}</td>
+                        <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.spend)}</td>
+                        <td className="py-3 text-right text-[#3B82F6] font-medium" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.revenue)}</td>
+                        <td className="py-3 text-right">
+                          <span
+                            className="text-[10px] font-bold"
+                            style={{ color: p.roi > 200 ? "#3B82F6" : p.roi > 100 ? "#2563EB" : "#6B7280", fontVariantNumeric: "tabular-nums" }}
+                          >
+                            {p.roi}%
+                          </span>
+                        </td>
+                        <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(p.cpl)}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-            </Accordion>
+            </InsightPanel>
+          </motion.div>
+
+          {/* Row C: Campaign Attribution + CLV + Revenue by Service */}
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.2 }}
+          >
+            <InsightPanel icon={<Target size={13} />} label="Campaign Attribution">
+              <div className="space-y-2">
+                {campaignData.length === 0 ? (
+                  <div className="flex flex-col items-center gap-2 py-6 text-center">
+                    <Target size={16} className="text-text-muted" />
+                    <p className="text-[11px] text-text-muted">No campaign data yet</p>
+                    <p className="text-[9px] text-text-muted max-w-[200px]">Attribution appears once campaigns are live and conversions tracked</p>
+                  </div>
+                ) : campaignData.map((c, i) => (
+                  <div key={c.campaign} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
+                    <div
+                      className="w-5 h-5 rounded flex items-center justify-center text-[9px] font-bold shrink-0"
+                      style={{ background: CHART_COLORS[i % CHART_COLORS.length] + "22", color: CHART_COLORS[i % CHART_COLORS.length] }}
+                    >
+                      {i + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] font-medium text-text-primary truncate">{c.campaign}</p>
+                      <p className="text-[9px] text-text-muted">{c.conversions} conversions</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-[11px] font-bold text-[#3B82F6]" style={{ fontVariantNumeric: "tabular-nums" }}>{c.roas.toFixed(1)}x</p>
+                      <p className="text-[9px] text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(c.revenue)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </InsightPanel>
+
+            <InsightPanel icon={<DollarSign size={13} />} label="Client Lifetime Value">
+              <div>
+                {clvData.length === 0 ? (
+                  <div className="flex flex-col items-center gap-2 py-6 text-center">
+                    <DollarSign size={16} className="text-text-muted" />
+                    <p className="text-[11px] text-text-muted">No CLV data yet</p>
+                    <p className="text-[9px] text-text-muted max-w-[200px]">CLV tiers appear once clients have payment records attached</p>
+                    <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
+                      Add clients <ArrowUp size={9} className="rotate-45" />
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {clvData.map(tier => (
+                      <div key={tier.name} className="p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs font-medium text-text-primary">{tier.name}</span>
+                          <span className="text-[10px] text-text-muted">{tier.count} clients</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <p className="text-[9px] text-text-muted uppercase">Avg CLV</p>
+                            <p className="text-sm font-bold text-brand-accent" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(tier.avgCLV)}</p>
+                          </div>
+                          <div>
+                            <p className="text-[9px] text-text-muted uppercase">Avg Lifetime</p>
+                            <p className="text-sm font-bold text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>{tier.avgMonths} mo.</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </InsightPanel>
+
+            <InsightPanel icon={<BarChart3 size={13} />} label="Revenue by Service">
+              <div>
+                {revenueByService.length === 0 ? (
+                  <div className="flex flex-col items-center gap-2 py-6 text-center">
+                    <BarChart3 size={16} className="text-text-muted" />
+                    <p className="text-[11px] text-text-muted">No service breakdown yet</p>
+                    <p className="text-[9px] text-text-muted max-w-[200px]">Revenue by service type appears once deals are tagged to a service category</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {revenueByService.map((s, i) => (
+                      <div key={s.service} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-sm" style={{ background: CHART_COLORS[i % CHART_COLORS.length] }} />
+                          <span className="text-[10px] text-text-muted">{s.service}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-[10px] font-mono font-medium text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(s.revenue)}</span>
+                          <span className="text-[9px] text-text-muted">{s.clients} clients</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </InsightPanel>
+          </motion.div>
+
+          {/* Row D: Content Heatmap (conditional) */}
+          {hasContentHeatmapData && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: 0.25 }}
+            >
+              <InsightPanel icon={<Flame size={13} />} label="Content Heatmap">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr>
+                        <th className="text-[9px] text-text-muted font-medium py-1 text-left w-12" />
+                        {["9am", "12pm", "3pm", "6pm", "9pm"].map(h => (
+                          <th key={h} className="text-[9px] text-text-muted font-medium py-1 text-center">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {contentHeatmap.map(row => (
+                        <tr key={row.day as string}>
+                          <td className="text-[9px] text-text-muted py-0.5 font-medium">{row.day as string}</td>
+                          {["9am", "12pm", "3pm", "6pm", "9pm"].map(h => {
+                            const val = row[h] as number;
+                            const intensity = val / 100;
+                            return (
+                              <td key={h} className="py-0.5 px-0.5">
+                                <div
+                                  className="h-7 rounded-md flex items-center justify-center text-[9px] font-bold transition-all hover:scale-105"
+                                  style={{
+                                    background: `rgba(37, 99, 235, ${intensity * 0.6 + 0.04})`,
+                                    color: intensity > 0.5 ? "#fff" : "var(--text-muted)",
+                                  }}
+                                >
+                                  {val}
+                                </div>
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </InsightPanel>
+            </motion.div>
           )}
-
-          {/* Campaign Attribution */}
-          <Accordion
-            id="campaigns"
-            label="Campaign Attribution"
-            icon={<Target size={13} />}
-            expanded={expandedSection === "campaigns"}
-            onToggle={() => toggleSection("campaigns")}
->
-            <div className="mt-4 space-y-2">
-              {campaignData.length === 0 ? (
-                <div className="flex flex-col items-center gap-2 py-6 text-center">
-                  <Target size={16} className="text-text-muted" />
-                  <p className="text-[11px] text-text-muted">No campaign data yet</p>
-                  <p className="text-[9px] text-text-muted max-w-[200px]">Attribution appears once campaigns are live and conversions tracked</p>
-                </div>
-              ) : campaignData.map((c, i) => (
-                <div key={c.campaign} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
-                  <div
-                    className="w-5 h-5 rounded flex items-center justify-center text-[9px] font-bold shrink-0"
-                    style={{ background: CHART_COLORS[i % CHART_COLORS.length] + "22", color: CHART_COLORS[i % CHART_COLORS.length] }}
->
-                    {i + 1}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[11px] font-medium text-text-primary truncate">{c.campaign}</p>
-                    <p className="text-[9px] text-text-muted">{c.conversions} conversions</p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-[11px] font-bold text-[#3B82F6]" style={{ fontVariantNumeric: "tabular-nums" }}>{c.roas.toFixed(1)}x</p>
-                    <p className="text-[9px] text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(c.revenue)}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Accordion>
-
-          {/* CLV + Revenue by Service */}
-          <Accordion
-            id="clv"
-            label="Client Lifetime Value"
-            icon={<DollarSign size={13} />}
-            expanded={expandedSection === "clv"}
-            onToggle={() => toggleSection("clv")}
->
-            <div className="mt-4">
-              {clvData.length === 0 ? (
-                <div className="flex flex-col items-center gap-2 py-6 text-center">
-                  <DollarSign size={16} className="text-text-muted" />
-                  <p className="text-[11px] text-text-muted">No CLV data yet</p>
-                  <p className="text-[9px] text-text-muted max-w-[200px]">CLV tiers appear once clients have payment records attached</p>
-                  <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
-                    Add clients <ArrowUp size={9} className="rotate-45" />
-                  </Link>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {clvData.map(tier => (
-                    <div key={tier.name} className="p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-medium text-text-primary">{tier.name}</span>
-                        <span className="text-[10px] text-text-muted">{tier.count} clients</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <p className="text-[9px] text-text-muted uppercase">Avg CLV</p>
-                          <p className="text-sm font-bold text-brand-accent" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(tier.avgCLV)}</p>
-                        </div>
-                        <div>
-                          <p className="text-[9px] text-text-muted uppercase">Avg Lifetime</p>
-                          <p className="text-sm font-bold text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>{tier.avgMonths} mo.</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </Accordion>
-
-          {/* Revenue by Service */}
-          <Accordion
-            id="service"
-            label="Revenue by Service"
-            icon={<BarChart3 size={13} />}
-            expanded={expandedSection === "service"}
-            onToggle={() => toggleSection("service")}
->
-            <div className="mt-4">
-              {revenueByService.length === 0 ? (
-                <div className="flex flex-col items-center gap-2 py-6 text-center">
-                  <BarChart3 size={16} className="text-text-muted" />
-                  <p className="text-[11px] text-text-muted">No service breakdown yet</p>
-                  <p className="text-[9px] text-text-muted max-w-[200px]">Revenue by service type appears once deals are tagged to a service category</p>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {revenueByService.map((s, i) => (
-                    <div key={s.service} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-sm" style={{ background: CHART_COLORS[i % CHART_COLORS.length] }} />
-                        <span className="text-[10px] text-text-muted">{s.service}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-mono font-medium text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(s.revenue)}</span>
-                        <span className="text-[9px] text-text-muted">{s.clients} clients</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </Accordion>
-
         </>
       )}
     </MotionPage>
