@@ -446,7 +446,7 @@ export default function AnalyticsPage() {
       {!isLoading && fetchError !== null && (
         <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
           <p className="text-sm text-danger font-medium">Could not load analytics</p>
-          <p className="text-xs text-muted max-w-xs">{fetchError}</p>
+          <p className="text-xs text-text-muted max-w-xs">{fetchError}</p>
           <button
             className="btn-secondary text-xs px-4 py-2"
             onClick={() => {
