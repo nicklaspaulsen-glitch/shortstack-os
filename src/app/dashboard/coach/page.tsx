@@ -325,7 +325,12 @@ export default function CoachPage() {
                       key={bucket.repId}
                       variants={cardVariants}
                       whileHover={{ y: -1 }}
-                      className="glass rounded-xl p-4"
+                      className="glass rounded-xl p-4 spotlight-card"
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}
                     >
                       <div className="flex items-center justify-between">
                         <div>

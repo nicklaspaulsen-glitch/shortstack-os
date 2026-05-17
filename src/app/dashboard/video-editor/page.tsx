@@ -7376,7 +7376,7 @@ export default function VideoEditorPage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                       {result.storyboard.map((scene, i) => (
-                        <motion.div key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl card-hover">
+                        <motion.div key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl card-hover spotlight-card" onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-[10px] font-bold text-brand-accent">Scene {scene.scene_number}</span>
                             <span className="text-[9px] text-muted font-mono">{scene.duration}</span>

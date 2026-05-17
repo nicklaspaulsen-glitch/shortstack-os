@@ -751,7 +751,7 @@ export default function SocialManagerPage() {
                     thread: <FileTextIcon size={12} className="text-cyan-400" />,
                   };
                   return (
-                    <motion.div key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-2.5 hover:border-[rgba(59,130,246,0.1)] transition-all">
+                    <motion.div key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-2.5 hover:border-[rgba(59,130,246,0.1)] transition-all spotlight-card" onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                       <div className="flex items-center gap-2 mb-1">
                         {typeIcon[String(meta.type)] || <Sparkles size={12} className="text-brand-accent" />}
                         <span className="text-[10px] font-medium text-brand-accent uppercase">{String(meta.type || "").replace("_", " ")}</span>

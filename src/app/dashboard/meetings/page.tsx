@@ -254,7 +254,12 @@ export default function MeetingsPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05, duration: 0.4 }}
                     whileHover={{ y: -4, scale: 1.01 }}
-                    className="glass rounded-xl overflow-hidden"
+                    className="glass rounded-xl overflow-hidden spotlight-card"
+                    onMouseMove={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                      e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                    }}
                   >
                     <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} />
                     <Link
