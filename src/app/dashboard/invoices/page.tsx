@@ -605,7 +605,12 @@ export default function InvoicesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -3 }}
-                      className="glass rounded-xl p-4 cursor-pointer border border-border-subtle" 
+                      className="glass rounded-xl p-4 cursor-pointer border border-border-subtle spotlight-card"
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}
 >
                       <div className="flex items-center gap-3 mb-2">
                         <div className="w-10 h-10 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
@@ -647,7 +652,12 @@ export default function InvoicesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: i * 0.06 }}
                       whileHover={{ y: -2 }}
-                      className="glass rounded-xl text-center p-3 overflow-hidden border border-border-subtle" 
+                      className="glass rounded-xl text-center p-3 overflow-hidden border border-border-subtle spotlight-card"
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}
 >
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                       <p className="text-[9px] text-muted uppercase mb-1">{bucket.range}</p>
@@ -712,7 +722,12 @@ export default function InvoicesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -2 }}
-                      className="glass rounded-xl text-center p-5 overflow-hidden border border-border-subtle" 
+                      className="glass rounded-xl text-center p-5 overflow-hidden border border-border-subtle spotlight-card"
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}
 >
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                       <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>

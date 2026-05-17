@@ -725,7 +725,12 @@ export default function IntegrationsHubPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.06, duration: 0.4, ease: "easeOut" }}
                       whileHover={{ y: -4, scale: 1.01 }}
-                      className="glass rounded-xl"
+                      className="glass rounded-xl spotlight-card"
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}
                     >
                       <IntegrationCard
                         integration={integration}

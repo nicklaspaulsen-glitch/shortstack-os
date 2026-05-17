@@ -568,7 +568,16 @@ export default function WorkflowsPage() {
                 {/* Preset cards */}
                 <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                   {filteredPresets.map(preset => (
-                    <motion.div key={preset.id} variants={itemVariants} className="card card-hover p-4 flex flex-col">
+                    <motion.div
+                      key={preset.id}
+                      variants={itemVariants}
+                      className="card card-hover p-4 flex flex-col spotlight-card"
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}
+                    >
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex items-center gap-2">
                           <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center shrink-0">
