@@ -1242,7 +1242,7 @@ export default function NewsletterPage() {
           {/* Best performing highlight */}
           {PAST_NEWSLETTERS.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-            <motion.div className="glass rounded-xl" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
+            <motion.div className="glass rounded-xl spotlight-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
               <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
                 <Check size={12} className="text-green-400" /> Best Open Rate
               </h3>
@@ -1260,7 +1260,7 @@ export default function NewsletterPage() {
                 );
               })()}
             </motion.div>
-            <motion.div className="glass rounded-xl" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
+            <motion.div className="glass rounded-xl spotlight-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
               <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
                 <Link2 size={12} className="text-brand-accent" /> Best Click Rate
               </h3>

@@ -145,7 +145,7 @@ export default function GoogleBusinessPage() {
             </div>{/* ---- TAB: Reviews ---- */}{activeTab === "reviews" && (
               <div className="space-y-3">
                 {/* Rating distribution */}
-                <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }}>
+                <motion.div className="glass rounded-xl p-4 spotlight-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                   <h3 className="text-xs font-semibold mb-3">Rating Distribution</h3>
                   <div className="space-y-1.5">
                     {[5, 4, 3, 2, 1].map(r => {
@@ -167,7 +167,7 @@ export default function GoogleBusinessPage() {
 
                 {/* Reviews */}
                 {reviews.map((review, ri) => (
-                  <motion.div key={review.id} className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: ri * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
+                  <motion.div key={review.id} className="glass rounded-xl p-4 spotlight-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: ri * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                     <div className="flex items-start gap-3">
                       <div className="w-8 h-8 rounded-full bg-[#4285F4]/10 flex items-center justify-center text-xs font-bold text-[#4285F4] shrink-0">
                         {review.name.charAt(0)}
@@ -208,7 +208,7 @@ export default function GoogleBusinessPage() {
             )}{/* ---- TAB: Posts ---- */}{activeTab === "posts" && (
               <div className="space-y-4">
                 {/* Post Scheduler */}
-                <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }}>
+                <motion.div className="glass rounded-xl p-4 spotlight-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Calendar size={12} className="text-[#4285F4]" /> Post Scheduler</h3>
                   <div className="space-y-2 mb-3">
                     <p className="text-xs text-muted text-center py-2">No scheduled posts.</p>
@@ -216,7 +216,7 @@ export default function GoogleBusinessPage() {
                 </motion.div>
 
                 {/* Create Post */}
-                <motion.div className="glass rounded-xl p-4 space-y-3" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }} whileHover={{ y: -4, scale: 1.01 }}>
+                <motion.div className="glass rounded-xl p-4 space-y-3 spotlight-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                   <h2 className="text-xs font-semibold">Create GBP Post</h2>
                   <textarea value={postContent} onChange={e => setPostContent(e.target.value)}
                     className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-24" placeholder="Share an update, promotion, or news..." />
@@ -229,7 +229,7 @@ export default function GoogleBusinessPage() {
                 {/* Recent Posts */}
                 <div className="space-y-2">
                   {posts.map((p, pi) => (
-                    <motion.div key={p.id} className="glass-md rounded-xl p-3" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: pi * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
+                    <motion.div key={p.id} className="glass-md rounded-xl p-3 spotlight-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: pi * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                       <p className="text-xs">{p.content}</p>
                       <div className="flex items-center gap-3 mt-2 text-[9px] text-muted">
                         <span>{p.date}</span>

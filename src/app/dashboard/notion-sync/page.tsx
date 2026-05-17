@@ -149,7 +149,7 @@ export default function NotionSyncPage() {
           {/* Actions */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Sync now */}
-            <motion.div className="glass rounded-xl p-5 flex flex-col gap-3" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
+            <motion.div className="glass rounded-xl p-5 flex flex-col gap-3 spotlight-card" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
               <div className="flex items-center gap-2">
                 <RefreshCw className="w-4 h-4 text-brand-accent" />
                 <p className="text-sm font-semibold text-[#374151]">Sync Now</p>
@@ -172,7 +172,7 @@ export default function NotionSyncPage() {
             </motion.div>
 
             {/* Auto-sync toggle */}
-            <motion.div className="glass rounded-xl p-5 flex flex-col gap-3" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
+            <motion.div className="glass rounded-xl p-5 flex flex-col gap-3 spotlight-card" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-brand-accent" />
                 <p className="text-sm font-semibold text-[#374151]">Auto-Sync</p>
@@ -196,7 +196,7 @@ export default function NotionSyncPage() {
           </div>
 
           {/* What is synced */}
-          <motion.div className="glass rounded-xl p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
+          <motion.div className="glass rounded-xl p-5 spotlight-card" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
             <p className="text-xs font-semibold uppercase tracking-widest text-text-muted mb-3">
               Synced Resources
             </p>
@@ -250,7 +250,7 @@ export default function NotionSyncPage() {
               { icon: <Link2 className="w-5 h-5" />, label: "Field mapping", desc: "Map ShortStack fields to Notion properties" },
               { icon: <Clock className="w-5 h-5" />, label: "Auto-sync", desc: "Background sync every 15 minutes" },
             ].map((f, fi) => (
-              <motion.div key={f.label} className="glass-md rounded-xl overflow-hidden" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: fi * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }}>
+              <motion.div key={f.label} className="glass-md rounded-xl overflow-hidden spotlight-card" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: fi * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                 <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
                 <div className="p-4 flex flex-col gap-2">
                   <div className="text-brand-accent">{f.icon}</div>

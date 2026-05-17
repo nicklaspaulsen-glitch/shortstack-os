@@ -340,7 +340,7 @@ export default function SMSTemplatesPage() {
                     <div className="col-span-2 text-center py-12 text-muted text-xs">No templates yet. Click &quot;New&quot; to create your first SMS template.</div>
                   )}
                   {filtered.map((template, idx) => (
-                    <motion.div key={template.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-4 group transition-all hover:border-indigo-500/10">
+                    <motion.div key={template.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-4 group transition-all hover:border-indigo-500/10 spotlight-card" onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <p className="text-xs font-semibold">{template.name}</p>
