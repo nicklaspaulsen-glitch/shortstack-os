@@ -1,10 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // @splinetool/react-spline is ESM-only (no "require" condition, no "main" field).
-  // webpack 5 production bundling fails with "Package path . is not exported" without this.
-  // transpilePackages tells Next to compile it through its own babel/swc pipeline
-  // so the ESM→CJS conversion happens correctly.
+  // @splinetool/react-spline v4 is ESM-only: "type":"module", exports map has only
+  // "import" condition (no "require", no "default", no "main"). webpack 5 resolution
+  // checks the exports map BEFORE transpilation, so it can't find the module.
+  //
+  // Two-part fix:
+  // 1. transpilePackages — tells Next/SWC to compile it (not skip as external)
+  // 2. webpack alias — bypasses the exports map entirely, pointing directly to the
+  //    compiled JS file so webpack never has to resolve the broken exports field.
   transpilePackages: ["@splinetool/react-spline"],
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@splinetool/react-spline": `${process.cwd()}/node_modules/@splinetool/react-spline/dist/react-spline.js`,
+    };
+    return config;
+  },
   // Stop ESLint from failing Vercel builds on cosmetic warnings
   // (unused imports, prefer-const, alt-text, exhaustive-deps).
   // Lint still runs in CI / dev — just not as a deploy gate. Type
