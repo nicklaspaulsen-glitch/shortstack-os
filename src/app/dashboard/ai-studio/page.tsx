@@ -989,8 +989,8 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
                   <div className="space-y-1 max-h-[200px] overflow-y-auto">
                     {segments.slice(0, 20).map((seg, i) => (
                       <div key={i} className="flex gap-2 text-[10px]">
-                        <span className="text-muted font-mono shrink-0">{formatTime(seg.start)}</span>
-                        <span className="text-foreground">{seg.text}</span>
+                        <span className="text-text-muted font-mono shrink-0">{formatTime(seg.start)}</span>
+                        <span className="text-text-primary">{seg.text}</span>
                       </div>
                     ))}
                   </div>
@@ -1844,11 +1844,11 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
           </div>
           <div className="flex items-center gap-3 mt-3">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-muted">BG Color:</span>
-              <button onClick={() => setBgColor("")} className={`w-6 h-6 rounded border ${!bgColor ? "border-pink-400" : "border-border"}`}
+              <span className="text-[10px] text-text-muted">BG Color:</span>
+              <button onClick={() => setBgColor("")} className={`w-6 h-6 rounded border ${!bgColor ? "border-pink-400" : "border-border-subtle"}`}
                 style={{ background: "repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 8px 8px" }} title="Transparent" />
               {["#ffffff", "#000000", "#f0f0f0"].map(c => (
-                <button key={c} onClick={() => setBgColor(c)} className={`w-6 h-6 rounded border ${bgColor === c ? "border-pink-400" : "border-border"}`}
+                <button key={c} onClick={() => setBgColor(c)} className={`w-6 h-6 rounded border ${bgColor === c ? "border-pink-400" : "border-border-subtle"}`}
                   style={{ background: c }} />
               ))}
               <input type="color" value={bgColor || "#ffffff"} onChange={e => setBgColor(e.target.value)} className="w-6 h-6 rounded cursor-pointer" />
