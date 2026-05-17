@@ -77,7 +77,7 @@ export default function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `document.documentElement.setAttribute("data-theme","light");document.documentElement.style.backgroundColor="#FFFFFF";`,
+            __html: `document.documentElement.setAttribute("data-theme","dark");document.documentElement.style.backgroundColor="#0D1120";`,
           }}
         />
         {/* Apr 28 v5: non-blocking font loading.

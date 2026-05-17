@@ -222,16 +222,18 @@ export default function StatCard({
       onMouseMove={handleMouseMove}
       className={`${SIZE_GRID[size]} ${SIZE_PADDING[size]} group relative overflow-hidden flex flex-col gap-1.5 tilt-3d`}
       style={{
-        background: "rgba(255,255,255,0.78)",
-        backdropFilter: "blur(14px) saturate(140%)",
-        WebkitBackdropFilter: "blur(14px) saturate(140%)",
-        border: "1px solid rgba(255,255,255,0.72)",
+        background: "rgba(255,255,255,0.05)",
+        backdropFilter: "blur(16px) saturate(160%)",
+        WebkitBackdropFilter: "blur(16px) saturate(160%)",
+        border: "1px solid rgba(255,255,255,0.09)",
         borderRadius: "18px",
         minHeight: size === "bento-1x1" ? "110px" : undefined,
         boxShadow: [
-          "0 0 0 1px rgba(156,167,222,0.20)",
-          "0 4px 24px rgba(108,114,172,0.10)",
-          "0 1px 4px rgba(0,0,0,0.04)",
+          "inset 0 1px 0 rgba(255,255,255,0.08)",
+          "inset 0 -1px 0 rgba(0,0,0,0.18)",
+          "0 1px 2px rgba(0,0,0,0.35)",
+          "0 4px 16px -4px rgba(0,0,0,0.40)",
+          "0 12px 40px -8px rgba(0,0,0,0.50)",
         ].join(", "),
       }}
       initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
@@ -247,11 +249,11 @@ export default function StatCard({
         transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
       }}
     >
-      {/* Glassy shine gradient — top-left highlight */}
+      {/* Top-edge inset glow — brightens the top rim for frosted depth */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: "linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 50%)",
+          background: "linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 45%)",
           borderRadius: "20px",
         }}
         aria-hidden
@@ -280,7 +282,7 @@ export default function StatCard({
         <div className="flex items-center justify-between mb-2">
           <span
             className="text-[11px] font-medium uppercase tracking-[1.2px]"
-            style={{ color: "#71717A" }}
+            style={{ color: "var(--text-secondary, #A8A8B2)" }}
           >
             {label}
           </span>
@@ -297,7 +299,7 @@ export default function StatCard({
         </div>
         <span
           className={`${SIZE_VALUE_CLASS[size]} tracking-[-0.5px] tabular-nums`}
-          style={{ color: "#0A0A0B", fontFamily: "'JetBrains Mono', monospace", fontVariantNumeric: "tabular-nums" }}
+          style={{ color: "var(--text-primary, #F0F0F4)", fontFamily: "'JetBrains Mono', monospace", fontVariantNumeric: "tabular-nums" }}
         >
           {displayValue}
         </span>

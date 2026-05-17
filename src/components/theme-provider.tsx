@@ -59,21 +59,21 @@ const STORAGE_KEY = "ss-theme";
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // May 12 v2 migration — force light theme for all existing users.
-    // Old sessions may have "dark" saved from the pre-Apr-28 era.
-    // One-time migration: clear the old value so everyone starts on light.
-    const MIGRATION_KEY = "ss-theme-migrated-v2";
-    if (!localStorage.getItem(MIGRATION_KEY)) {
+    // May 17 v3 migration — switch default from light → dark (OLED glass overhaul).
+    // Clears the v2 migration key and any stored "light" preference so all
+    // users land on the new dark OLED default. Users who explicitly want
+    // light can toggle it back via ThemeToggle.
+    const MIGRATION_KEY_V3 = "ss-theme-migrated-v3";
+    if (!localStorage.getItem(MIGRATION_KEY_V3)) {
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem("ss_theme");
-      localStorage.setItem(MIGRATION_KEY, "1");
+      localStorage.removeItem("ss-theme-migrated-v2");
+      localStorage.setItem(MIGRATION_KEY_V3, "1");
     }
 
-    // Resolve initial theme: explicit user choice → light.
-    // May 12 — removed system-prefers-dark auto-detect; light is the
-    // product default. Users who want dark toggle it explicitly.
+    // Resolve initial theme: explicit user choice → dark OLED (May 17 default).
     const saved = (localStorage.getItem(STORAGE_KEY) as ThemeId | null);
-    const initial: ThemeId = saved ?? "light";
+    const initial: ThemeId = saved ?? "dark";
     applyTheme(initial);
 
     // Apply saved zoom + reduced-motion if previously set.

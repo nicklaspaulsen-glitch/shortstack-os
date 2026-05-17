@@ -1018,6 +1018,140 @@ body {
       0 4px 16px rgba(0, 0, 0, 0.08);
   }
 
+  /* ═══════════ DARK OLED GLASS — May 17 overhaul ═══════════
+   * All .glass* classes override to dark frosted glass in dark mode.
+   * Base values are now correct for the dark OLED default. */
+  :root[data-theme="dark"] .glass,
+  .theme-dark .glass {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border-color: rgba(255,255,255,0.08);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.07),
+      0 1px 2px rgba(0,0,0,0.35),
+      0 4px 16px -4px rgba(0,0,0,0.40),
+      0 12px 40px -8px rgba(0,0,0,0.50);
+  }
+  :root[data-theme="dark"] .glass-md,
+  .theme-dark .glass-md {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border-color: rgba(255,255,255,0.10);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.08),
+      0 2px 4px rgba(0,0,0,0.35),
+      0 8px 24px -6px rgba(0,0,0,0.45),
+      0 20px 48px -12px rgba(0,0,0,0.55);
+  }
+  :root[data-theme="dark"] .glass-strong,
+  .theme-dark .glass-strong {
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.10),
+      0 2px 6px rgba(0,0,0,0.40),
+      0 10px 28px -6px rgba(0,0,0,0.50),
+      0 24px 56px -14px rgba(0,0,0,0.60);
+  }
+  :root[data-theme="dark"] .glass-elevated,
+  .theme-dark .glass-elevated {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border-color: rgba(255,255,255,0.14);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.12),
+      0 4px 8px rgba(0,0,0,0.40),
+      0 12px 32px -6px rgba(0,0,0,0.52),
+      0 28px 64px -16px rgba(0,0,0,0.62);
+  }
+  :root[data-theme="dark"] .glass-indigo,
+  .theme-dark .glass-indigo {
+    background: rgba(59,130,246,0.06);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border-color: rgba(59,130,246,0.20);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      0 0 0 1px rgba(59,130,246,0.08),
+      0 4px 24px rgba(59,130,246,0.10),
+      0 1px 4px rgba(0,0,0,0.30);
+  }
+  :root[data-theme="dark"] .glass-sm,
+  .theme-dark .glass-sm {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border-color: rgba(255,255,255,0.07);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      0 1px 3px rgba(0,0,0,0.30),
+      0 4px 12px rgba(0,0,0,0.40);
+  }
+
+  /* ── Explicit dark glass utility (use anywhere, no mode dependency) ── */
+  .glass-dark {
+    border-radius: var(--glass-radius, 18px);
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.09);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.08),
+      inset 0 -1px 0 rgba(0,0,0,0.18),
+      0 1px 2px rgba(0,0,0,0.35),
+      0 4px 16px -4px rgba(0,0,0,0.40),
+      0 12px 40px -8px rgba(0,0,0,0.50);
+  }
+  .glass-dark:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.13);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.10),
+      inset 0 -1px 0 rgba(0,0,0,0.22),
+      0 2px 4px rgba(0,0,0,0.40),
+      0 8px 24px -6px rgba(0,0,0,0.50),
+      0 20px 48px -12px rgba(0,0,0,0.58),
+      0 0 0 1px rgba(59,130,246,0.15);
+    transform: translateY(-2px);
+    transition: all 0.24s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  /* ── CSS spotlight — tracks --mouse-x/--mouse-y custom props set
+     via inline JS onMouseMove handler. Zero React re-renders.
+     Add .spotlight-card to any .card or .glass-dark element. ── */
+  .spotlight-card {
+    position: relative;
+    isolation: isolate;
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+  }
+  .spotlight-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at var(--mouse-x) var(--mouse-y),
+      rgba(59,130,246,0.10) 0%,
+      rgba(59,130,246,0.04) 35%,
+      transparent 65%
+    );
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+    z-index: 0;
+  }
+  .spotlight-card:hover::before {
+    opacity: 1;
+  }
+  /* Children above the spotlight */
+  .spotlight-card > * { position: relative; z-index: 1; }
+
   /* ═══════════ CARD ACCENT + SHIMMER ═══════════ */
   /* Subtle colored accent bar on the left + hover shimmer. Works on .card / .card-static. */
   .card-accent {
