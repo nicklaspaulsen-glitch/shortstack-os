@@ -283,13 +283,19 @@ a[role="button"]:hover,
   --card-shadow: 0 1px 3px rgba(0,0,0,0.35), 0 4px 16px -4px rgba(0,0,0,0.40), 0 12px 40px -8px rgba(0,0,0,0.50);
   --card-shadow-hover: 0 2px 4px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.30), 0 20px 48px -12px rgba(0,0,0,0.55), 0 0 32px -8px rgba(59,130,246,0.12);
 
-  /* ── Glass tokens — dark frosted glass (Higgsfield OLED overhaul) ── */
-  --glass-bg: rgba(19, 24, 39, 0.85);
-  --glass-border-inner: rgba(255, 255, 255, 0.08);
-  --glass-border-outer: rgba(59, 130, 246, 0.12);
-  --glass-blur: blur(16px) saturate(160%);
-  --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.40), 0 1px 4px rgba(0, 0, 0, 0.20);
-  --glass-radius: 18px;
+  /* ── Glass tokens — dark frosted glass (Glass SaaS OS overhaul) ── */
+  --glass-bg: rgba(13, 18, 32, 0.80);
+  --glass-border-inner: rgba(255, 255, 255, 0.09);
+  --glass-border-outer: rgba(59, 130, 246, 0.16);
+  --glass-blur: blur(22px) saturate(180%);
+  --glass-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    0 4px 24px rgba(0, 0, 0, 0.48),
+    0 12px 48px rgba(0, 0, 0, 0.32),
+    0 0 40px -12px rgba(59, 130, 246, 0.18);
+  --glass-radius: 16px;
+  --glass-glow: 0 0 60px -20px rgba(59, 130, 246, 0.28);
 
   /* ── Blue accent palette (replaces periwinkle on dark) ── */
   --color-periwinkle: #3B82F6;
@@ -778,15 +784,23 @@ body {
   }
   .btn-pill-ghost:active { transform: translateY(0); }
 
-  /* ═══════════ GLASS PANEL (Higgsfield split-pane) ═══════════
-   * Dark frosted glass container for split-pane layouts. */
+  /* ═══════════ GLASS PANEL (Glass SaaS OS — frosted panel) ═══════════
+   * Deep OLED frosted glass container for split-pane and card layouts.
+   * Multi-layer shadow: outer ring + inner highlight + depth + blue ambient. */
   .glass-panel {
-    background: var(--glass-bg, rgba(19, 24, 39, 0.85));
-    backdrop-filter: var(--glass-blur, blur(16px) saturate(160%));
-    -webkit-backdrop-filter: var(--glass-blur, blur(16px) saturate(160%));
-    border: 1px solid var(--glass-border-inner, rgba(255,255,255,0.08));
-    border-radius: var(--glass-radius, 18px);
-    box-shadow: var(--glass-shadow, 0 4px 24px rgba(0,0,0,0.40));
+    background: var(--glass-bg, rgba(13, 18, 32, 0.80));
+    backdrop-filter: var(--glass-blur, blur(22px) saturate(180%));
+    -webkit-backdrop-filter: var(--glass-blur, blur(22px) saturate(180%));
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: var(--glass-radius, 16px);
+    box-shadow:
+      0 0 0 1px rgba(59, 130, 246, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.09),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+      0 4px 24px rgba(0, 0, 0, 0.48),
+      0 16px 56px rgba(0, 0, 0, 0.36),
+      0 0 48px -16px rgba(59, 130, 246, 0.22);
+    position: relative;
   }
 
   /* ── Pill tab nav (Higgsfield horizontal tab strip) ── */
@@ -911,22 +925,23 @@ body {
       0 10px 28px -6px rgba(0,0,0,0.50);
   }
   .stat-card:hover {
-    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 50%, var(--color-accent, #C9A84C));
+    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 50%, var(--color-accent, #3B82F6));
     box-shadow:
       0 1px 0 rgba(255,255,255,0.08) inset,
       0 2px 4px rgba(0,0,0,0.15),
       0 12px 28px -8px rgba(0,0,0,0.5),
-      0 0 0 1px rgba(255, 45, 45, 0.08);
+      0 0 0 1px rgba(59, 130, 246, 0.12);
     transform: translateY(-2px);
   }
   :root[data-theme="dark"] .stat-card:hover,
   .theme-dark .stat-card:hover {
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(59, 130, 246, 0.22);
     box-shadow:
       0 1px 0 rgba(255,255,255,0.10) inset,
       0 4px 8px rgba(0,0,0,0.35),
       0 14px 36px -8px rgba(0,0,0,0.60),
-      0 0 0 1px rgba(255, 45, 45, 0.10);
+      0 0 0 1px rgba(59, 130, 246, 0.16),
+      0 0 24px -8px rgba(59, 130, 246, 0.20);
     transform: translateY(-2px);
   }
 
@@ -1390,7 +1405,7 @@ body {
     position: absolute;
     inset: -4px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 45, 45, 0.18) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, transparent 70%);
     animation: breathe 2s ease-in-out infinite;
   }
 
@@ -1510,10 +1525,10 @@ body {
     background: radial-gradient(circle at 30% 10%, rgba(201, 168, 76, 0.22) 0%, transparent 60%);
   }
   .accent-glow-blue::before {
-    background: radial-gradient(circle at 30% 10%, rgba(255, 45, 45, 0.2) 0%, transparent 60%);
+    background: radial-gradient(circle at 30% 10%, rgba(59, 130, 246, 0.24) 0%, transparent 60%);
   }
   .accent-glow-green::before {
-    background: radial-gradient(circle at 30% 10%, rgba(255, 45, 45, 0.2) 0%, transparent 60%);
+    background: radial-gradient(circle at 30% 10%, rgba(34, 197, 94, 0.22) 0%, transparent 60%);
   }
   .accent-glow-red::before {
     background: radial-gradient(circle at 30% 10%, rgba(239, 68, 68, 0.2) 0%, transparent 60%);
@@ -1565,6 +1580,87 @@ body {
   }
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-muted, #6B7280);
+  }
+
+  /* ═══════════ DASHBOARD AURORA ═══════════
+   * Top-viewport aurora light bleed — a deep indigo/blue radial
+   * gradient fixed at the very top of the dashboard viewport that
+   * breathes gently, giving the OLED surface a sense of ambient light
+   * coming from above (like the northern lights behind glass).
+   * Referenced in src/app/dashboard/layout.tsx line 351. */
+  .dashboard-aurora {
+    pointer-events: none;
+    position: fixed;
+    top: -180px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120vw;
+    height: 400px;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 100% at 50% 0%,
+        rgba(59, 130, 246, 0.14) 0%,
+        rgba(99, 102, 241, 0.08) 40%,
+        transparent 75%);
+    animation: auroraBreathe 8s ease-in-out infinite;
+    mix-blend-mode: screen;
+  }
+  @keyframes auroraBreathe {
+    0%, 100% { opacity: 0.75; transform: translateX(-50%) scaleY(1); }
+    50%       { opacity: 1.00; transform: translateX(-50%) scaleY(1.06); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dashboard-aurora { animation: none; }
+  }
+
+  /* ═══════════ TILT-3D ═══════════
+   * CSS perspective tilt driven by JS-injected --tilt-x / --tilt-y
+   * custom properties on the element (set via onMouseMove handlers).
+   * The card rotates toward the cursor in 3D giving "depth on hover".
+   * Referenced in src/components/ui/stat-card.tsx. */
+  .tilt-3d {
+    transform-style: preserve-3d;
+    transform:
+      perspective(900px)
+      rotateX(calc(var(--tilt-x, 0) * 1deg))
+      rotateY(calc(var(--tilt-y, 0) * 1deg));
+    transition: transform 120ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+  .tilt-3d:hover {
+    transition: transform 60ms linear;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tilt-3d,
+    .tilt-3d:hover { transform: none !important; transition: none; }
+  }
+
+  /* ═══════════ GLASS BORDER GRADIENT ═══════════
+   * Gradient border technique using a ::before pseudo-element as the
+   * border ring. Creates an indigo→blue→violet gradient border that
+   * sits 1px outside the content area. Pair with a background-clip
+   * inner element or use on already-rounded containers.
+   * Usage: add class "glass-border-gradient" to any element. */
+  .glass-border-gradient {
+    position: relative;
+  }
+  .glass-border-gradient::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgba(99, 102, 241, 0.50) 0%,
+      rgba(59, 130, 246, 0.35) 40%,
+      rgba(139, 92, 246, 0.40) 100%
+    );
+    z-index: -1;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    padding: 1px;
   }
 }
 
@@ -1669,27 +1765,27 @@ body {
    * drop-shadows are progressively offset darker copies that read as
    * the icon "sitting forward" with depth behind it. */
   filter:
-    drop-shadow(1px 2px 0 rgba(255, 45, 45, 0.28))
-    drop-shadow(2px 4px 0 rgba(255, 45, 45, 0.20))
-    drop-shadow(3px 6px 0 rgba(255, 45, 45, 0.12))
+    drop-shadow(1px 2px 0 rgba(37, 99, 235, 0.30))
+    drop-shadow(2px 4px 0 rgba(37, 99, 235, 0.20))
+    drop-shadow(3px 6px 0 rgba(37, 99, 235, 0.12))
     drop-shadow(0 8px 14px rgba(0, 0, 0, 0.40));
 }
 [data-theme="light"] .hero-3d-icon-img {
   /* Light theme — same extrusion idea but lighter alphas + a slate
    * ground shadow so the icon doesn't blow out the white surface. */
   filter:
-    drop-shadow(1px 2px 0 rgba(255, 45, 45, 0.20))
-    drop-shadow(2px 4px 0 rgba(255, 45, 45, 0.14))
-    drop-shadow(3px 6px 0 rgba(255, 45, 45, 0.08))
+    drop-shadow(1px 2px 0 rgba(37, 99, 235, 0.22))
+    drop-shadow(2px 4px 0 rgba(37, 99, 235, 0.14))
+    drop-shadow(3px 6px 0 rgba(37, 99, 235, 0.08))
     drop-shadow(0 8px 14px rgba(15, 23, 42, 0.14));
 }
 .hero-3d-icon:hover .hero-3d-icon-img {
   transform: rotateX(0deg) rotateY(0deg) translateY(-4px) scale(1.06);
   filter:
-    drop-shadow(1px 3px 0 rgba(255, 45, 45, 0.32))
-    drop-shadow(2px 6px 0 rgba(255, 45, 45, 0.22))
-    drop-shadow(3px 9px 0 rgba(255, 45, 45, 0.14))
-    drop-shadow(0 14px 22px rgba(255, 45, 45, 0.30));
+    drop-shadow(1px 3px 0 rgba(59, 130, 246, 0.36))
+    drop-shadow(2px 6px 0 rgba(59, 130, 246, 0.24))
+    drop-shadow(3px 9px 0 rgba(59, 130, 246, 0.14))
+    drop-shadow(0 14px 22px rgba(59, 130, 246, 0.32));
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-3d-icon-img {
@@ -1703,12 +1799,12 @@ body {
   }
 }
 @keyframes mandalaSpin {
-  0%   { transform: rotateY(0deg);   filter: drop-shadow(0 2px 8px rgba(255, 45, 45,0.20)); }
-  20%  { transform: rotateY(120deg); filter: drop-shadow(0 4px 12px rgba(255, 45, 45,0.32)); }
-  45%  { transform: rotateY(220deg); filter: drop-shadow(0 4px 12px rgba(255, 45, 45,0.30)); }
-  70%  { transform: rotateY(345deg); filter: drop-shadow(0 3px 10px rgba(255, 45, 45,0.25)); }
-  82%  { transform: rotateY(360deg); filter: drop-shadow(0 2px 8px rgba(255, 45, 45,0.22)); }
-  100% { transform: rotateY(360deg); filter: drop-shadow(0 2px 8px rgba(255, 45, 45,0.20)); }
+  0%   { transform: rotateY(0deg);   filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.22)); }
+  20%  { transform: rotateY(120deg); filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.36)); }
+  45%  { transform: rotateY(220deg); filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.34)); }
+  70%  { transform: rotateY(345deg); filter: drop-shadow(0 3px 10px rgba(59, 130, 246, 0.28)); }
+  82%  { transform: rotateY(360deg); filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.24)); }
+  100% { transform: rotateY(360deg); filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.22)); }
 }
 
 /* ═══════════ Page soft-enter ═══════════
@@ -1795,9 +1891,9 @@ body {
 }
 
 @keyframes pulseRing {
-  0% { box-shadow: 0 0 0 0 rgba(255, 45, 45, 0.4); }
-  70% { box-shadow: 0 0 0 6px rgba(255, 45, 45, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 45, 45, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.45); }
+  70% { box-shadow: 0 0 0 6px rgba(59, 130, 246, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
 }
 
 @keyframes waveBar {
@@ -2294,7 +2390,7 @@ body {
 /* Input focus glow */
 .input-glow:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 45, 45, 0.15);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.20);
   transition: box-shadow 0.2s ease;
 }
 
@@ -2552,11 +2648,11 @@ body {
    Used by /dashboard/ai-video and /dashboard/video-editor.
    Deep-black canvas, gold→amber radial CTA, pulsing glow, progress ring. */
 
-/* Deep cinematic canvas background with subtle violet/red wash */
+/* Deep cinematic canvas background with subtle violet/indigo wash */
 .hf-canvas {
   background:
     radial-gradient(ellipse at 20% -10%, rgba(168, 85, 247, 0.06) 0%, transparent 45%),
-    radial-gradient(ellipse at 90% 110%, rgba(255, 45, 45, 0.05) 0%, transparent 40%),
+    radial-gradient(ellipse at 90% 110%, rgba(59, 130, 246, 0.06) 0%, transparent 40%),
     #0a0a0a;
   border: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow:
@@ -2605,7 +2701,7 @@ body {
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
   box-shadow:
-    0 0 0 0 rgba(255, 45, 45, 0.4),
+    0 0 0 0 rgba(59, 130, 246, 0.40),
     0 8px 24px -6px rgba(37, 99, 235, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
   animation: hfBreathe 3s ease-in-out infinite;
@@ -2613,8 +2709,8 @@ body {
 .hf-generate:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow:
-    0 0 0 6px rgba(255, 45, 45, 0.12),
-    0 14px 36px -6px rgba(255, 45, 45, 0.6),
+    0 0 0 6px rgba(59, 130, 246, 0.14),
+    0 14px 36px -6px rgba(37, 99, 235, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .hf-generate:active:not(:disabled) {
@@ -2628,14 +2724,14 @@ body {
 @keyframes hfBreathe {
   0%, 100% {
     box-shadow:
-      0 0 0 0 rgba(255, 45, 45, 0.35),
+      0 0 0 0 rgba(59, 130, 246, 0.35),
       0 8px 24px -6px rgba(37, 99, 235, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
   50% {
     box-shadow:
-      0 0 0 10px rgba(255, 45, 45, 0),
-      0 12px 32px -6px rgba(255, 45, 45, 0.65),
+      0 0 0 10px rgba(59, 130, 246, 0),
+      0 12px 32px -6px rgba(37, 99, 235, 0.60),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 }
@@ -2680,8 +2776,8 @@ body {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .hf-tile:hover {
-  border-color: rgba(255, 45, 45, 0.3);
-  background: rgba(255, 45, 45, 0.04);
+  border-color: rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.06);
   color: rgba(255, 255, 255, 0.95);
 }
 .hf-tile[data-active="true"] {
