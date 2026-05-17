@@ -354,7 +354,8 @@ export default function CompetitiveMonitorPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: ci * 0.06 }}
                     whileHover={{ y: -3 }}
-                    className="glass rounded-xl p-4 hover:border-[rgba(59,130,246,0.14)] transition group"
+                    onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                    className="glass rounded-xl p-4 hover:border-[rgba(59,130,246,0.14)] transition group spotlight-card"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2.5">
@@ -787,7 +788,8 @@ export default function CompetitiveMonitorPage() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3, delay: i * 0.07 }}
                         whileHover={{ y: -3 }}
-                        className="glass rounded-xl p-4" style={{ border: "1px solid rgba(239,68,68,0.1)" }}
+                        onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                        className="glass rounded-xl p-4 spotlight-card" style={{ border: "1px solid rgba(239,68,68,0.1)" }}
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <AlertTriangle className="w-4 h-4 text-red-400" />
@@ -816,7 +818,8 @@ export default function CompetitiveMonitorPage() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3, delay: i * 0.07 }}
                         whileHover={{ y: -3 }}
-                        className="glass rounded-xl p-4" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}
+                        onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                        className="glass rounded-xl p-4 spotlight-card" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <Target className="w-4 h-4 text-brand-accent" />

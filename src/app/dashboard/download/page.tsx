@@ -217,7 +217,8 @@ export default function DownloadDesktopPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.06, duration: 0.4 }}
                     whileHover={{ y: -4, scale: 1.01 }}
-                    className={`group relative glass rounded-xl p-5 transition-all ${
+                    onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                    className={`group relative glass rounded-xl p-5 transition-all spotlight-card ${
                       isRecommended
                         ? "border-[rgba(59,130,246,0.5)] shadow-[0_0_20px_rgba(59,130,246,0.12)]"
                         : ""

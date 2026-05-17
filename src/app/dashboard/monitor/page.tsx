@@ -162,7 +162,8 @@ export default function MonitorPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, delay: i * 0.07 }}
                   whileHover={{ y: -2 }}
-                  className="glass rounded-xl p-4 text-center relative overflow-hidden"
+                  onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                  className="glass rounded-xl p-4 text-center relative overflow-hidden spotlight-card"
                 >
                   <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${bar}`} />
                   <div className={`text-2xl font-bold ${cls}`}>{count}</div>

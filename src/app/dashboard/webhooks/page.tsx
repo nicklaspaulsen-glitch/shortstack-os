@@ -513,7 +513,8 @@ export default function WebhooksPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.07, duration: 0.35, ease: "easeOut" }}
                       whileHover={{ y: -4, scale: 1.01 }}
-                      className="glass rounded-xl p-3"
+                      onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                      className="glass rounded-xl p-3 spotlight-card"
                     >
                       <p className="text-xs font-semibold mb-1 flex items-center gap-1.5">
                         <TemplateBrandIcon name={t.name} size={14} />

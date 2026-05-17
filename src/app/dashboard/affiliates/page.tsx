@@ -357,7 +357,8 @@ function ProgramCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.05 }}
       whileHover={{ y: -4, scale: 1.01 }}
-      className="glass rounded-xl p-5 space-y-3 hover:border-[rgba(59,130,246,0.4)] transition-colors"
+      className="glass rounded-xl p-5 space-y-3 hover:border-[rgba(59,130,246,0.4)] transition-colors spotlight-card"
+      onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="space-y-1 min-w-0">

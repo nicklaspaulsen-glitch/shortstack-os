@@ -437,11 +437,12 @@ export default function ReportsPage() {
               {/* Generate Report Panel */}
               <div className="col-span-1 space-y-4">
                 <motion.div
-                  className="glass rounded-xl p-5"
+                  className="glass rounded-xl p-5 spotlight-card"
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.24 }}
                   whileHover={{ y: -2 }}
+                  onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                 >
                   <div className="flex items-center gap-2 mb-4">
                     <Sparkles size={14} className="text-brand-accent" />
@@ -517,11 +518,12 @@ export default function ReportsPage() {
 
                 {/* Quick Generate for All */}
                 <motion.div
-                  className="glass rounded-xl p-5"
+                  className="glass rounded-xl p-5 spotlight-card"
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.30 }}
                   whileHover={{ y: -2 }}
+                  onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Users size={14} className="text-brand-accent" />
@@ -542,11 +544,12 @@ export default function ReportsPage() {
                 {/* Current Generated Report */}
                 {currentReport && (
                   <motion.div
-                    className="glass-indigo rounded-xl p-5"
+                    className="glass-indigo rounded-xl p-5 spotlight-card"
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.22 }}
                     whileHover={{ y: -2 }}
+                    onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">

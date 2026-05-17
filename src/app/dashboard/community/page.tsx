@@ -820,11 +820,12 @@ export default function CommunityPage() {
                 <motion.button
                   key={qa.action}
                   onClick={() => openQuickAction(qa.action)}
-                  className="glass rounded-xl p-3 text-center transition-all group"
+                  className="glass rounded-xl p-3 text-center transition-all group spotlight-card"
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
                   whileHover={{ y: -4, scale: 1.01 }}
+                  onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                 >
                   <div className={`w-8 h-8 mx-auto rounded-lg ${qa.bg} flex items-center justify-center mb-1.5 ${qa.hover} transition-colors`}>
                     <qa.icon size={14} className={qa.color} />

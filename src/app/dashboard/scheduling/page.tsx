@@ -360,7 +360,8 @@ export default function SchedulingPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06, duration: 0.4 }}
                   whileHover={{ y: -4, scale: 1.01 }}
-                  className={`glass rounded-xl overflow-hidden ${!mt.active ? "opacity-50" : ""}`}
+                  onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                  className={`glass rounded-xl overflow-hidden spotlight-card ${!mt.active ? "opacity-50" : ""}`}
                 >
                   <div className="p-4">
                   <div className="flex items-start gap-3">

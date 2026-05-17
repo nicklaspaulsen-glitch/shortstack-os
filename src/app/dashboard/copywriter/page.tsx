@@ -1200,8 +1200,9 @@ export default function CopywriterPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.04, duration: 0.3 }}
                         whileHover={{ y: -4, scale: 1.01 }}
+                        onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                         onClick={() => applyTemplate(template)}
-                        className="text-left p-3 glass rounded-xl hover:border-[rgba(59,130,246,0.25)] transition-all group"
+                        className="text-left p-3 glass rounded-xl hover:border-[rgba(59,130,246,0.25)] transition-all group spotlight-card"
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <div

@@ -158,7 +158,8 @@ export default function VerticalsIndexPage() {
                       >
                       <Link
                         href={`/dashboard/verticals/${v.vertical}`}
-                        className={`group relative block glass  border bg-gradient-to-br ${
+                        onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                        className={`group relative block glass border bg-gradient-to-br spotlight-card ${
                           ACCENT_RING[v.accent] ?? ACCENT_RING.gold
                         } p-6 transition-shadow`}
                       >

@@ -326,7 +326,8 @@ export default function IntakePage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.06, duration: 0.4 }}
                             whileHover={{ y: -4, scale: 1.01 }}
-                            className="glass rounded-xl overflow-hidden p-4 flex flex-col gap-3"
+                            onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                            className="glass rounded-xl overflow-hidden p-4 flex flex-col gap-3 spotlight-card"
                           >
                             <div className="flex items-start gap-3">
                               <div

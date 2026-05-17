@@ -100,7 +100,8 @@ export default function ContactSupportPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.06, duration: 0.4 }}
                       whileHover={{ y: -4, scale: 1.01 }}
-                      className={`flex flex-col glass rounded-xl overflow-hidden p-5 transition ${accent.ring}`}
+                      onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                      className={`flex flex-col glass rounded-xl overflow-hidden p-5 transition spotlight-card ${accent.ring}`}
                     >
                       <div
                         className={`mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl ${accent.iconBg} ${accent.iconText}`}

@@ -1336,8 +1336,9 @@ export default function ScraperPage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3, delay: i * 0.05 }}
                             whileHover={{ y: -3 }}
+                            onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                             onClick={() => toggleLeadSelection(i)}
-                            className={`glass rounded-xl p-4 cursor-pointer transition-all hover:border-[rgba(59,130,246,0.14)] ${selectedLeads.has(i) ? "border-[rgba(59,130,246,0.40)] bg-[rgba(59,130,246,0.05)]" : ""}`}
+                            className={`glass rounded-xl p-4 cursor-pointer transition-all hover:border-[rgba(59,130,246,0.14)] spotlight-card ${selectedLeads.has(i) ? "border-[rgba(59,130,246,0.40)] bg-[rgba(59,130,246,0.05)]" : ""}`}
                           >
                             <div className="flex items-start justify-between mb-2">
                               <div className="flex-1 min-w-0">
@@ -1512,7 +1513,8 @@ export default function ScraperPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: si * 0.06 }}
                         whileHover={{ y: -3 }}
-                        className="glass rounded-xl p-4 hover:border-[rgba(59,130,246,0.14)] transition-all"
+                        onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                        className="glass rounded-xl p-4 hover:border-[rgba(59,130,246,0.14)] transition-all spotlight-card"
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div>

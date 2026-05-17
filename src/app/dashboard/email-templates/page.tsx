@@ -236,8 +236,9 @@ export default function EmailTemplatesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05, duration: 0.4 }}
                       whileHover={{ y: -4, scale: 1.01 }}
+                      onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                       onClick={() => openTemplate(template)}
-                      className="glass rounded-xl overflow-hidden cursor-pointer group" 
+                      className="glass rounded-xl overflow-hidden cursor-pointer group spotlight-card"
 >
                       <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
                       <div className="p-4">

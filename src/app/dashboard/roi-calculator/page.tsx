@@ -328,7 +328,8 @@ export default function RoiCalculatorPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05, duration: 0.4 }}
                       whileHover={{ y: -4, scale: 1.01 }}
-                      className="flex items-center gap-4 glass rounded-xl px-4 py-3"
+                      onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                      className="flex items-center gap-4 glass rounded-xl px-4 py-3 spotlight-card"
                     >
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-[#111827] text-sm truncate">{s.name}</p>
