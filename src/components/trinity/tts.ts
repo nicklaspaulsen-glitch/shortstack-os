@@ -207,7 +207,7 @@ export async function speak(
       continue;
     }
     if (i === 0) {
-      console.log(
+      console.info(
         `[trinity/tts] ✓ streaming via ${result.provider} — ${sentences.length} sentence${sentences.length === 1 ? "" : "s"}`,
       );
     }
