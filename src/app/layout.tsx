@@ -12,6 +12,7 @@ import ThemeProvider from "@/components/theme-provider";
 import { CookieConsent } from "@/components/cookie-consent";
 import FeedbackButton from "@/components/feedback-button";
 import GrainOverlay from "@/components/brand/grain-overlay";
+import { ScrollIndicator } from "@/components/ui/scroll-indicator";
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 const OG_IMAGE = "/og-image.png";
@@ -149,6 +150,7 @@ export default function RootLayout({
           </defs>
         </svg>
         <GrainOverlay />
+        <ScrollIndicator height={2} color="#3B82F6" />
         <Suspense>
         <PostHogProvider>
         <AuthProvider>
