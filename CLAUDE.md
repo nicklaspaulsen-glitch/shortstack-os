@@ -231,13 +231,17 @@ applies globally — pill buttons, glass panels, split-pane layouts.
 - **Brand accent: BLUE** `#3B82F6` — primary accent on dark OLED surfaces.
   Three variants: `#3B82F6` (primary), `#60A5FA` (hover/soft),
   `#2563EB` (dim/pressed). Do **not** introduce red/gold/amber/lime accents.
-- **Surfaces (dark OLED):** navy glass panels on `#0D1120` base.
-  `--bg-base #0D1120`, `--bg-surface-1 #131827`, `--bg-surface-2 #1C2338`.
+- **Surfaces (dark OLED):** OLED matte-black base with navy glass panels.
+  `--bg-base #020711` (Trinity matte-black), `--bg-surface-1 #0D1120` (panels),
+  `--bg-surface-2 #131827` (hover/raised). Previous base `#0D1120` is now
+  surface-1 — all solid `bg-[#0D1120]` fills must use `#020711` instead.
 - **Borders:** `--border-subtle rgba(99,146,255,0.10)` /
   `--border-strong rgba(99,146,255,0.22)` (blue-tinted for depth).
 - **Text:** `--text-primary #F0F0F4`, `--text-secondary #A8A8B2`,
   `--text-muted #4A4A5A`.
-- **Glass tokens:** `--glass-bg rgba(19,24,39,0.85)`, `--glass-blur blur(16px) saturate(160%)`.
+- **Glass tokens:** `--glass-bg rgba(13,17,32,0.85)` (surface-1 at 85% opacity),
+  `--glass-blur blur(16px) saturate(160%)`. Glass overlays with `backdrop-blur`
+  intentionally use `rgba(13,17,32,...)` — do NOT change those to base `#020711`.
   Use `.glass-panel` utility class for frosted containers.
 - **Pill buttons:** `.btn-pill` (filled blue) / `.btn-pill-ghost` (outlined).
   Tab strips: `.tab-pill-strip` + `.tab-pill` + `.tab-pill.active`.
