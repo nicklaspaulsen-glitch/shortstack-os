@@ -156,7 +156,7 @@ export function CinematicWizard({
   const dir = slideDirRef.current;
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#0D1120] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-[#020711] flex flex-col overflow-hidden">
       {/* Top bar */}
       <div className="flex items-center justify-between px-6 sm:px-10 pt-5 pb-4 border-b border-white/[0.05] shrink-0">
         <div className="flex items-center gap-2.5">

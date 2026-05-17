@@ -385,7 +385,7 @@ export default function ConversationsPage() {
   const selected = conversations.find((c) => c.id === selectedId) || null;
 
   return (
-    <MotionPage className="flex h-[calc(100vh-4rem)] bg-[#0D1120] text-text-primary">{/* -- LEFT: conversation list � hidden on mobile when viewing a thread -- */}<aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-border-subtle flex-col`}>
+    <MotionPage className="flex h-[calc(100vh-4rem)] bg-[#020711] text-text-primary">{/* -- LEFT: conversation list � hidden on mobile when viewing a thread -- */}<aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-border-subtle flex-col`}>
               <div className="p-4 border-b border-border-subtle">
                 <h1 className="text-lg font-semibold mb-3 flex items-center gap-2">
                   <Inbox size={18} className="text-indigo-400" />

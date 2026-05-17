@@ -32,9 +32,9 @@ interface ThemeDef {
 
 const THEMES: Record<ThemeId, ThemeDef> = {
   dark: {
-    bg: "#0D1120",                // deep blue-navy — matches globals.css
-    surface: "#131827",            // panels
-    surfaceLight: "#1C2338",       // hover / raised
+    bg: "#020711",                // Trinity OS matte-black — matches globals.css
+    surface: "#0D1120",            // panels (Trinity surface-1)
+    surfaceLight: "#131827",       // hover / raised (Trinity surface-2)
     border: "#2A3350",
     accent: "#3B82F6",             // blue — matches globals.css dark override
     accentSoft: "#60A5FA",

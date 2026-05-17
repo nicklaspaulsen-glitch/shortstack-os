@@ -313,7 +313,7 @@ interface NetworkAnimationProps {
 
 export function NetworkAnimation({
   maxDistance = 140,
-  backgroundColor = "#0D1120",
+  backgroundColor = "#020711",
   particleColor = "rgba(59,130,246,",
   lineColor = "rgba(99,146,255,",
   particleCount = 55,

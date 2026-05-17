@@ -291,7 +291,7 @@ export default function PageHero({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
         style={{
-          background: `linear-gradient(135deg, rgba(13,17,32,0.90) 0%, rgba(19,24,39,0.85) 100%)`,
+          background: `linear-gradient(135deg, rgba(2,7,17,0.92) 0%, rgba(13,17,32,0.88) 100%)`,
           backdropFilter: "blur(24px) saturate(1.6)",
           WebkitBackdropFilter: "blur(24px) saturate(1.6)",
           borderBottom: "1px solid rgba(59,130,246,0.12)",
@@ -405,7 +405,7 @@ export default function PageHero({
     <div
       className={`relative overflow-hidden ${className}`}
       style={{
-        background: "rgba(19,24,39,0.85)",
+        background: "rgba(13,17,32,0.88)",
         backdropFilter: "blur(32px) saturate(1.6)",
         WebkitBackdropFilter: "blur(32px) saturate(1.6)",
         border: "1px solid rgba(59,130,246,0.12)",

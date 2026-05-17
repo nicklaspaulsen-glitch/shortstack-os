@@ -105,7 +105,7 @@ function AvatarCell({ avatar, size, style, pulse, pulseColor = "#3B82F6" }: Avat
         className="relative w-full h-full rounded-full overflow-hidden flex items-center justify-center"
         style={{
           background: avatar.color ?? "rgba(30,35,56,1)",
-          border: "2px solid #0D1120",
+          border: "2px solid #020711",
         }}
       >
         {avatar.src ? (
@@ -129,7 +129,7 @@ function AvatarCell({ avatar, size, style, pulse, pulseColor = "#3B82F6" }: Avat
       {/* Status dot */}
       {avatar.status && (
         <span
-          className="absolute bottom-0 right-0 rounded-full border-2 border-[#0D1120]"
+          className="absolute bottom-0 right-0 rounded-full border-2 border-[#020711]"
           style={{
             width: dotSize,
             height: dotSize,
@@ -195,7 +195,7 @@ export function AvatarGroup({
             marginLeft: -overlap,
             fontSize: Math.round(size * 0.32),
             background: "rgba(30,35,56,1)",
-            border: "2px solid #0D1120",
+            border: "2px solid #020711",
             color: "#A8A8B2",
             zIndex: 0,
           }}

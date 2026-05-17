@@ -46,8 +46,8 @@ export default function DashboardBackground() {
             "radial-gradient(ellipse 40% 40% at 18% 82%, rgba(37,99,235,0.08) 0%, transparent 50%)",
             // Center: teal depth hint
             "radial-gradient(ellipse 30% 30% at 50% 55%, rgba(20,184,166,0.06) 0%, transparent 55%)",
-            // Base — deep OLED navy
-            "#0D1120",
+            // Base — Trinity OS matte-black
+            "#020711",
           ].join(", "),
         }}
       />
