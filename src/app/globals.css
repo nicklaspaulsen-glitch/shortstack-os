@@ -203,15 +203,15 @@ a[role="button"]:hover,
  * the 100+ pages still using `text-gold-*` / `bg-amber-*` keep working
  * without a sweeping refactor. */
 :root {
-  /* Surfaces — deep navy OLED base (Higgsfield dark overhaul) */
-  --bg-base: #0D1120;
-  --bg-surface-1: #131827;
-  --bg-surface-2: #1C2338;
-  --bg-surface-3: #2A3350;
-  --bg-base-rgb: 13 17 32;
-  --bg-surface-1-rgb: 19 24 39;
-  --bg-surface-2-rgb: 28 35 56;
-  --bg-surface-3-rgb: 42 51 80;
+  /* Surfaces — Trinity OS matte-black base (2 7 17 ≈ #020711) */
+  --bg-base: #020711;
+  --bg-surface-1: #0D1120;
+  --bg-surface-2: #131827;
+  --bg-surface-3: #1C2338;
+  --bg-base-rgb: 2 7 17;
+  --bg-surface-1-rgb: 13 17 32;
+  --bg-surface-2-rgb: 19 24 39;
+  --bg-surface-3-rgb: 28 35 56;
 
   /* Borders — blue-tinted for dark glass depth */
   --border-subtle: rgba(99, 146, 255, 0.10);
@@ -284,7 +284,7 @@ a[role="button"]:hover,
   --card-shadow-hover: 0 2px 4px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.30), 0 20px 48px -12px rgba(0,0,0,0.55), 0 0 32px -8px rgba(59,130,246,0.12);
 
   /* ── Glass tokens — dark frosted glass (Glass SaaS OS overhaul) ── */
-  --glass-bg: rgba(13, 18, 32, 0.80);
+  --glass-bg: rgba(2, 7, 17, 0.85);
   --glass-border-inner: rgba(255, 255, 255, 0.09);
   --glass-border-outer: rgba(59, 130, 246, 0.16);
   --glass-blur: blur(22px) saturate(180%);
@@ -324,21 +324,21 @@ a[role="button"]:hover,
   --wl-primary: initial;
   --wl-accent: initial;
 
-  /* Dark OLED baseline — Higgsfield dark overhaul default.
+  /* Trinity OS baseline — matte black dark default.
    * ThemeProvider overrides these at runtime when the user picks light
    * (see :root[data-theme="light"] block below). */
-  --color-background: #0D1120;
-  --color-surface: #131827;
-  --color-surface-light: #1C2338;
-  --color-border: #2A3350;
+  --color-background: #020711;
+  --color-surface: #0D1120;
+  --color-surface-light: #131827;
+  --color-border: #1C2338;
   --color-accent: #3B82F6;
   --color-text: #F0F0F4;
   --color-muted: #A8A8B2;
   --color-foreground: #F0F0F4;
-  --color-background-rgb: 13 17 32;
-  --color-surface-rgb: 19 24 39;
-  --color-surface-light-rgb: 28 35 56;
-  --color-border-rgb: 42 51 80;
+  --color-background-rgb: 2 7 17;
+  --color-surface-rgb: 13 17 32;
+  --color-surface-light-rgb: 19 24 39;
+  --color-border-rgb: 28 35 56;
   --color-accent-rgb: 59 130 246;
   --color-text-rgb: 240 240 244;
   --color-muted-rgb: 168 168 178;
@@ -354,33 +354,33 @@ a[role="button"]:hover,
  * this :root selector is the dark override, not the dark default. */
 :root[data-theme="dark"],
 .theme-dark {
-  /* Deep blue-navy base — not pure black, gives glass panels visible depth */
-  --color-background: #0D1120;
-  --color-surface: #131827;
-  --color-surface-light: #1C2338;
-  --color-border: #2A3350;
+  /* Trinity OS matte-black base — near-pure black with midnight-blue tint */
+  --color-background: #020711;
+  --color-surface: #0D1120;
+  --color-surface-light: #131827;
+  --color-border: #1C2338;
   --color-accent: #3B82F6;
   --color-text: #F0F0F4;
   --color-muted: #A8A8B2;
   --color-foreground: #F0F0F4;
-  --color-background-rgb: 13 17 32;
-  --color-surface-rgb: 19 24 39;
-  --color-surface-light-rgb: 28 35 56;
-  --color-border-rgb: 42 51 80;
+  --color-background-rgb: 2 7 17;
+  --color-surface-rgb: 13 17 32;
+  --color-surface-light-rgb: 19 24 39;
+  --color-border-rgb: 28 35 56;
   --color-accent-rgb: 59 130 246;
   --color-text-rgb: 240 240 244;
   --color-muted-rgb: 168 168 178;
 
-  /* Surface hierarchy — deep navy base so glass panels float visibly.
-     The gap between base (#0D1120) and surface-1 (#131827) is the depth channel. */
-  --bg-base: #0D1120;
-  --bg-surface-1: #131827;
-  --bg-surface-2: #1C2338;
-  --bg-surface-3: #2A3350;
-  --bg-base-rgb: 13 17 32;
-  --bg-surface-1-rgb: 19 24 39;
-  --bg-surface-2-rgb: 28 35 56;
-  --bg-surface-3-rgb: 42 51 80;
+  /* Surface hierarchy — Trinity matte-black base so glass panels float visibly.
+     The gap between base (#020711) and surface-1 (#0D1120) is the depth channel. */
+  --bg-base: #020711;
+  --bg-surface-1: #0D1120;
+  --bg-surface-2: #131827;
+  --bg-surface-3: #1C2338;
+  --bg-base-rgb: 2 7 17;
+  --bg-surface-1-rgb: 13 17 32;
+  --bg-surface-2-rgb: 19 24 39;
+  --bg-surface-3-rgb: 28 35 56;
 
   /* Dark theme: blue-tinted borders for glass look */
   --border-subtle: rgba(99, 146, 255, 0.10);
@@ -421,7 +421,7 @@ a[role="button"]:hover,
  * ancestor was forced to dark. */
 :root[data-theme="light"],
 .theme-light {
-  --color-background: #ECF0F8;
+  --color-background: #FFFFFF;
   --color-surface: #FFFFFF;
   --color-surface-light: #F4F6FC;
   --color-border: #D8DCEE;
@@ -429,7 +429,7 @@ a[role="button"]:hover,
   --color-text: #0A0A0B;
   --color-muted: #52525B;
   --color-foreground: #0A0A0B;
-  --color-background-rgb: 236 240 248;
+  --color-background-rgb: 255 255 255;
   --color-surface-rgb: 255 255 255;
   --color-surface-light-rgb: 244 246 252;
   --color-border-rgb: 216 220 238;
@@ -437,11 +437,11 @@ a[role="button"]:hover,
   --color-text-rgb: 10 10 11;
   --color-muted-rgb: 82 82 91;
 
-  --bg-base: #ECF0F8;
+  --bg-base: #FFFFFF;
   --bg-surface-1: #FFFFFF;
   --bg-surface-2: #F4F6FC;
   --bg-surface-3: #E8ECF5;
-  --bg-base-rgb: 236 240 248;
+  --bg-base-rgb: 255 255 255;
   --bg-surface-1-rgb: 255 255 255;
   --bg-surface-2-rgb: 244 246 252;
   --bg-surface-3-rgb: 232 236 245;
@@ -473,13 +473,13 @@ a[role="button"]:hover,
 }
 
 html {
-  background: var(--bg-base, #0D1120);
+  background: var(--bg-base, #020711);
   min-height: 100vh;
 }
 
 body {
   color: var(--text-primary, #F0F0F4);
-  background: var(--bg-base, #0D1120);
+  background: var(--bg-base, #020711);
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

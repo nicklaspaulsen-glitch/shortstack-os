@@ -8,8 +8,6 @@ import { useWhiteLabel } from "@/lib/white-label-context";
 import { getPlanConfig } from "@/lib/plan-config";
 import { BRAND } from "@/lib/brand-config";
 import DesktopIndicator from "@/components/desktop-indicator";
-import Stack3D from "@/components/brand/stack-3d";
-import { LogoMark } from "@/components/brand/logo-mark";
 import NavIcon3D from "@/components/brand/nav-icon-3d";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -775,7 +773,8 @@ export default function Sidebar() {
             }
             return (
               <Link href="/dashboard" className="flex items-center justify-center" aria-label={displayName}>
-                <LogoMark size="sm" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/trinity-logo-white.svg" alt={displayName} width={24} height={24} className="opacity-90 drop-shadow-[0_0_8px_rgba(59,130,246,0.50)]" />
               </Link>
             );
           }
@@ -787,7 +786,8 @@ export default function Sidebar() {
                 <img src={wl.logo_url || "/icons/shortstack-logo.svg"} alt={displayName} width={28} height={28} className="shrink-0 object-contain" />
               ) : (
                 <div className="shrink-0 transition-transform duration-220 ease-out-expo-foundation group-hover:scale-105">
-                  <LogoMark size="sm" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/trinity-logo-white.svg" alt={displayName} width={28} height={28} className="opacity-90 drop-shadow-[0_0_12px_rgba(59,130,246,0.55)]" />
                 </div>
               )}
               <div className="min-w-0 leading-tight">
@@ -814,6 +814,44 @@ export default function Sidebar() {
           </button>
         )}
       </div>
+
+      {/* Trinity OS Workspace Switcher — Mochi / Trinity / NORDCTRL */}
+      {!collapsed && (
+        <div className="px-2 py-2.5 border-b border-[var(--border-subtle)]">
+          <div className="text-[9px] font-editorial tracking-widest text-text-muted/60 uppercase px-2 mb-1.5">WORKSPACE</div>
+          <div className="space-y-0.5">
+            {(
+              [
+                { id: "mochi",    name: "Mochi",    subtitle: "AI Assistant",  icon: "🧠", active: false },
+                { id: "trinity",  name: "Trinity",  subtitle: "Marketing OS",  icon: "⚡", active: true },
+                { id: "nordctrl", name: "NORDCTRL", subtitle: "Brand & Store", icon: "🎿", active: false },
+              ] as const
+            ).map((ws) => (
+              <button
+                key={ws.id}
+                disabled={!ws.active}
+                className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-left transition-all duration-220 ease-out-expo-foundation ${
+                  ws.active
+                    ? "bg-[rgba(59,130,246,0.10)] border border-[rgba(59,130,246,0.22)] text-text-primary cursor-default"
+                    : "hover:bg-white/[0.03] text-text-muted hover:text-text-secondary cursor-not-allowed opacity-60"
+                }`}
+                aria-label={`Switch to ${ws.name} workspace`}
+              >
+                <span className="text-[13px] leading-none shrink-0">{ws.icon}</span>
+                <div className="min-w-0 flex-1">
+                  <div className={`text-[11px] font-medium leading-tight truncate ${ws.active ? "text-text-primary" : "text-text-muted"}`}>
+                    {ws.name}
+                  </div>
+                  <div className="text-[10px] text-text-muted/60 leading-tight truncate">{ws.subtitle}</div>
+                </div>
+                {ws.active && (
+                  <div className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-accent shrink-0 shadow-[0_0_6px_rgba(59,130,246,0.8)]" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Admin Profile Switcher */}
       {!collapsed && <AdminProfileSwitcher />}
