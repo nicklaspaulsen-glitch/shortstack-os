@@ -585,50 +585,221 @@ export default function AIStudioPage() {
 }
 
 // -- Tool discovery grid (guided "AI Tools" tab) ------------------
+// Editorial bento layout: visual hero + sized audio strip + utility pair.
+// Replaces the former uniform identical-card grid.
 function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
+  // TOOLS order: transcribe[0] image-gen[1] upscale[2] remove-bg[3]
+  //              img-to-video[4] music-gen[5] voice-clone[6] train-lora[7] batch-gen[8]
+  const ease4 = [0.22, 1, 0.36, 1] as [number, number, number, number];
+
+  // Section label component (defined inline to keep component closure)
+  const SectionLabel = ({ label, color = "#3B82F6" }: { label: string; color?: string }) => (
+    <div className="flex items-center gap-2 mb-3">
+      <span className="w-[3px] h-3 rounded-full inline-block" style={{ background: color }} />
+      <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-text-muted">{label}</span>
+    </div>
+  );
+
+  // Shared small-tile for upscale / remove-bg / music-gen / voice-clone / utility
+  const SmallTile = ({ tool, delay }: { tool: typeof TOOLS[number]; delay: number }) => {
+    const Icon = tool.icon;
+    return (
+      <motion.button
+        onClick={() => onSelect(tool.id)}
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, delay, ease: ease4 }}
+        className="glass text-left p-4 rounded-2xl border border-border-subtle hover:border-[rgba(59,130,246,0.28)] hover:bg-white/[0.015] transition-all group"
+      >
+        <div
+          className="w-8 h-8 rounded-lg flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform duration-200"
+          style={{ background: `${tool.color}1c` }}
+        >
+          <Icon size={14} style={{ color: tool.color }} />
+        </div>
+        <p className="text-[11px] font-bold text-text-primary mb-0.5 leading-tight">{tool.name}</p>
+        <p className="text-[9.5px] text-text-muted leading-snug line-clamp-2">{tool.desc}</p>
+        {"newBadge" in tool && tool.newBadge && (
+          <span className="mt-2 inline-block text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-brand-accent/10 text-brand-accent uppercase tracking-wide">
+            New
+          </span>
+        )}
+        {"badge" in tool && tool.badge && (
+          <span className="mt-2 inline-block text-[7px] font-bold px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.12)] text-blue-300">
+            {tool.badge}
+          </span>
+        )}
+      </motion.button>
+    );
+  };
+
+  // Visual tools (indices 1-4): image-gen upscale remove-bg img-to-video
+  const imageGen   = TOOLS[1];
+  const upscale    = TOOLS[2];
+  const removeBg   = TOOLS[3];
+  const imgToVideo = TOOLS[4];
+  // Audio tools (indices 0, 5, 6): transcribe music-gen voice-clone
+  const transcribe = TOOLS[0];
+  const musicGen   = TOOLS[5];
+  const voiceClone = TOOLS[6];
+  // Utility tools (indices 7-8): train-lora batch-gen
+  const trainLora  = TOOLS[7];
+  const batchGen   = TOOLS[8];
+
+  const ImageGenIcon   = imageGen.icon;
+  const ImgToVideoIcon = imgToVideo.icon;
+  const TranscribeIcon = transcribe.icon;
+
   return (
-    <div className="space-y-3">
-      <p className="text-[11px] text-text-muted">Choose a tool — click to open it in Advanced mode</p>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        {TOOLS.map((tool, i) => {
-          const Icon = tool.icon;
-          return (
-            <motion.button
-              key={tool.id}
-              onClick={() => onSelect(tool.id)}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.22, delay: i * 0.045, ease: [0.22, 1, 0.36, 1] }}
-              className="glass text-left p-4 rounded-2xl border border-border-subtle hover:border-[rgba(59,130,246,0.28)] transition-all hover:bg-white/[0.015] group"
+    <div className="space-y-6">
+
+      {/* ── Visual Tools ──────────────────────────────────────── */}
+      <div>
+        <SectionLabel label="Visual" />
+        {/*
+          4-col grid, 2 rows:
+            col 1-2 row 1-2 → image-gen HERO
+            col 3   row 1   → upscale
+            col 4   row 1   → remove-bg
+            col 3-4 row 2   → img-to-video (wide horizontal)
+        */}
+        <div className="grid grid-cols-4 grid-rows-2 gap-3">
+          {/* image-gen: hero tile — col-span-2 row-span-2 */}
+          <motion.button
+            onClick={() => onSelect(imageGen.id)}
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.28, ease: ease4 }}
+            className="col-span-2 row-span-2 glass text-left p-5 rounded-2xl border border-border-subtle
+              hover:border-[rgba(59,130,246,0.32)] transition-all group relative overflow-hidden"
+          >
+            {/* Subtle directional wash */}
+            <div className="absolute inset-0 bg-gradient-to-br from-brand-accent/[0.055] to-transparent pointer-events-none rounded-2xl" />
+            <div className="relative z-10 flex flex-col h-full">
+              <div className="flex items-start justify-between mb-4">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200"
+                  style={{ background: `${imageGen.color}20` }}
+                >
+                  <ImageGenIcon size={22} style={{ color: imageGen.color }} />
+                </div>
+                <span className="text-[8px] font-mono text-text-muted/60 bg-white/[0.04] px-1.5 py-0.5 rounded">
+                  {imageGen.tag}
+                </span>
+              </div>
+              <p className="font-display text-[17px] font-bold tracking-tight text-text-primary mb-1 leading-tight">
+                {imageGen.name}
+              </p>
+              <p className="text-[11px] text-text-muted leading-relaxed flex-1">{imageGen.desc}</p>
+              <div className="mt-4 flex items-center gap-1.5 flex-wrap">
+                <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/[0.05] text-text-muted font-mono">
+                  {imageGen.inputLabel}
+                </span>
+                <span className="text-[8px] text-text-muted">→</span>
+                <span className="text-[8px] px-1.5 py-0.5 rounded bg-brand-accent/10 text-brand-accent/80 font-mono">
+                  {imageGen.outputLabel}
+                </span>
+              </div>
+            </div>
+          </motion.button>
+
+          {/* upscale: col 3 row 1 */}
+          <SmallTile tool={upscale} delay={0.05} />
+
+          {/* remove-bg: col 4 row 1 */}
+          <SmallTile tool={removeBg} delay={0.1} />
+
+          {/* img-to-video: col 3-4 row 2 (wide horizontal) */}
+          <motion.button
+            onClick={() => onSelect(imgToVideo.id)}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.15, ease: ease4 }}
+            className="col-span-2 glass text-left p-4 rounded-2xl border border-border-subtle
+              hover:border-[rgba(59,130,246,0.28)] hover:bg-white/[0.015] transition-all group flex items-center gap-3"
+          >
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200"
+              style={{ background: `${imgToVideo.color}1c` }}
             >
+              <ImgToVideoIcon size={16} style={{ color: imgToVideo.color }} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[12px] font-bold text-text-primary mb-0.5 leading-tight">{imgToVideo.name}</p>
+              <p className="text-[9.5px] text-text-muted truncate">{imgToVideo.desc}</p>
+            </div>
+            <span className="shrink-0 text-[8px] px-1.5 py-0.5 rounded bg-brand-accent/10 text-brand-accent/80 font-mono whitespace-nowrap">
+              {imgToVideo.outputLabel}
+            </span>
+          </motion.button>
+        </div>
+      </div>
+
+      {/* ── Audio Tools ───────────────────────────────────────── */}
+      <div>
+        <SectionLabel label="Audio" color="#1D4ED8" />
+        {/* 3-col fractional grid: transcribe gets more width */}
+        <div className="grid gap-3" style={{ gridTemplateColumns: "5fr 3fr 3fr" }}>
+          {/* transcribe: wider with waveform decoration */}
+          <motion.button
+            onClick={() => onSelect(transcribe.id)}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, delay: 0.06, ease: ease4 }}
+            className="glass text-left p-4 rounded-2xl border border-border-subtle
+              hover:border-[rgba(59,130,246,0.28)] hover:bg-white/[0.015] transition-all group relative overflow-hidden"
+          >
+            {/* Decorative waveform bars — bottom-right, low opacity */}
+            <div className="absolute bottom-3 right-3 pointer-events-none opacity-[0.09]">
+              <svg width="52" height="18" viewBox="0 0 52 18" fill="none">
+                {[3, 7, 11, 16, 10, 14, 6, 13, 9, 8, 15, 11, 4, 8, 13].map((h, i) => (
+                  <rect
+                    key={i}
+                    x={i * 3.4 + 0.3}
+                    y={(18 - h) / 2}
+                    width="2"
+                    height={h}
+                    rx="1"
+                    fill="#3B82F6"
+                  />
+                ))}
+              </svg>
+            </div>
+            <div className="relative z-10">
               <div
                 className="w-9 h-9 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform duration-200"
-                style={{ background: `${tool.color}1c` }}
+                style={{ background: `${transcribe.color}1c` }}
               >
-                <Icon size={16} style={{ color: tool.color }} />
+                <TranscribeIcon size={15} style={{ color: transcribe.color }} />
               </div>
-              <p className="text-[12px] font-bold text-text-primary mb-1 leading-tight">{tool.name}</p>
-              <p className="text-[10px] text-text-muted leading-snug mb-3">{tool.desc}</p>
-              {/* Input → Output flow */}
+              <p className="text-[12px] font-bold text-text-primary mb-0.5 leading-tight">{transcribe.name}</p>
+              <p className="text-[9.5px] text-text-muted leading-snug mb-3">{transcribe.desc}</p>
               <div className="flex items-center gap-1 flex-wrap">
-                <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/[0.05] text-text-muted font-mono">{tool.inputLabel}</span>
+                <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/[0.05] text-text-muted font-mono">
+                  {transcribe.inputLabel}
+                </span>
                 <span className="text-[8px] text-text-muted">→</span>
-                <span className="text-[8px] px-1.5 py-0.5 rounded bg-brand-accent/10 text-brand-accent/80 font-mono">{tool.outputLabel}</span>
+                <span className="text-[8px] px-1.5 py-0.5 rounded bg-brand-accent/10 text-brand-accent/80 font-mono">
+                  {transcribe.outputLabel}
+                </span>
               </div>
-              {"badge" in tool && tool.badge && (
-                <span className="mt-2 inline-block text-[8px] font-bold px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.12)] text-blue-300">
-                  {tool.badge}
-                </span>
-              )}
-              {"newBadge" in tool && tool.newBadge && (
-                <span className="mt-2 inline-block text-[8px] font-semibold px-1.5 py-0.5 rounded-full bg-brand-accent/10 text-brand-accent uppercase tracking-wide">
-                  New
-                </span>
-              )}
-            </motion.button>
-          );
-        })}
+            </div>
+          </motion.button>
+
+          <SmallTile tool={musicGen} delay={0.11} />
+          <SmallTile tool={voiceClone} delay={0.16} />
+        </div>
       </div>
+
+      {/* ── Utility Tools ─────────────────────────────────────── */}
+      <div>
+        <SectionLabel label="Utility" color="#475569" />
+        <div className="grid grid-cols-2 gap-3">
+          <SmallTile tool={trainLora} delay={0.08} />
+          <SmallTile tool={batchGen} delay={0.13} />
+        </div>
+      </div>
+
     </div>
   );
 }
