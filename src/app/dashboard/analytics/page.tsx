@@ -39,7 +39,7 @@ const TT = {
     padding: "8px 10px",
     backdropFilter: "blur(16px)",
   },
-  labelStyle: { color: "#6F6D7A", fontSize: "9px", marginBottom: "4px", textTransform: "uppercase" as const, letterSpacing: "0.1em" },
+  labelStyle: { color: "var(--text-muted)", fontSize: "9px", marginBottom: "4px", textTransform: "uppercase" as const, letterSpacing: "0.1em" },
   itemStyle: { color: "#F0F0F4", fontSize: "11px" },
 };
 
@@ -59,13 +59,13 @@ function Accordion({
         className="flex items-center justify-between w-full px-6 py-4 hover:bg-[rgba(108,114,172,0.07)] transition-colors duration-150"
 >
         <div className="flex items-center gap-2.5">
-          <span className="text-[#6F6D7A]">{icon}</span>
+          <span className="text-text-muted">{icon}</span>
           <span className="font-display text-sm font-semibold text-text-primary tracking-[-0.01em]">{label}</span>
           {badge}
         </div>
         {expanded
-          ? <ChevronDown size={13} className="text-[#6F6D7A]" />
-          : <ChevronRight size={13} className="text-[#6F6D7A]" />}
+          ? <ChevronDown size={13} className="text-text-muted" />
+          : <ChevronRight size={13} className="text-text-muted" />}
       </button>
       <AnimatePresence initial={false}>
         {expanded && (
@@ -397,7 +397,7 @@ export default function AnalyticsPage() {
       case "post": return <Film size={10} style={{ color: "#3B82F6" }} />;
       case "deal": return <Trophy size={10} style={{ color: "#2563EB" }} />;
       case "call": return <Phone size={10} style={{ color: "#3B82F6" }} />;
-      default: return <Activity size={10} style={{ color: "#6F6D7A" }} />;
+      default: return <Activity size={10} style={{ color: "var(--text-muted)" }} />;
     }
   };
 
@@ -518,7 +518,7 @@ export default function AnalyticsPage() {
             <div className="flex items-center gap-2 flex-wrap">
               <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)}
                 className="input text-[10px] px-2 py-1 w-32" aria-label="Start date" />
-              <span className="text-[#6F6D7A] text-[10px]">&rarr;</span>
+              <span className="text-text-muted text-[10px]">&rarr;</span>
               <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)}
                 className="input text-[10px] px-2 py-1 w-32" aria-label="End date" />
             </div>
@@ -541,7 +541,7 @@ export default function AnalyticsPage() {
 
             <div className="relative px-8 pt-8 pb-7">
               {/* MRR label */}
-              <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#6F6D7A] mb-2">
+              <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-text-muted mb-2">
                 Monthly Recurring Revenue
               </p>
               {/* Giant MRR */}
@@ -567,7 +567,7 @@ export default function AnalyticsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.38, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
 >
-                  <p className="text-xs text-[#6F6D7A] uppercase tracking-widest font-normal">Total Leads</p>
+                  <p className="text-xs text-text-muted uppercase tracking-widest font-normal">Total Leads</p>
                   <p
                     className="font-display text-4xl font-bold tracking-[-0.04em] mt-1 text-text-primary"
                     style={{ fontVariantNumeric: "tabular-nums" }}
@@ -599,7 +599,7 @@ export default function AnalyticsPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.38, delay: 0.22 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
 >
-                      <p className="text-xs text-[#6F6D7A] uppercase tracking-widest font-normal">{stat.label}</p>
+                      <p className="text-xs text-text-muted uppercase tracking-widest font-normal">{stat.label}</p>
                       <div className="flex items-end justify-between gap-2 mt-1">
                         <p className="font-display text-xl font-semibold tracking-[-0.03em] text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {stat.value}
@@ -617,12 +617,12 @@ export default function AnalyticsPage() {
               {/* Footer context */}
               {(stats.activeClients> 0 || stats.contentPublished> 0) && (
                 <div className="mt-5 pt-4 border-t border-border-subtle flex items-center gap-4">
-                  <span className="text-[10px] text-[#6F6D7A]">
+                  <span className="text-[10px] text-text-muted">
                     <span className="text-text-muted font-medium [font-variant-numeric:tabular-nums]">{stats.activeClients}</span>{" "}
                     active client{stats.activeClients !== 1 ? "s" : ""}
                   </span>
                   {stats.contentPublished> 0 && (
-                    <span className="text-[10px] text-[#6F6D7A]">
+                    <span className="text-[10px] text-text-muted">
                       <span className="text-text-muted font-medium [font-variant-numeric:tabular-nums]">{stats.contentPublished}</span>{" "}
                       posts published
                     </span>
@@ -651,7 +651,7 @@ export default function AnalyticsPage() {
                 />
               </div>
               {leadsByDay.length === 0 ? (
-                <div className="h-48 flex items-center justify-center text-[11px] text-[#6F6D7A]">
+                <div className="h-48 flex items-center justify-center text-[11px] text-text-muted">
                   No lead data for this period
                 </div>
               ) : (
@@ -681,10 +681,10 @@ export default function AnalyticsPage() {
 
             {/* Lead sources */}
             <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-5">
-              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Channels</p>
+              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-text-muted">Channels</p>
               <SectionHeader heading="Lead" accent="Sources" as="h2" className="mb-5" />
               {leadsBySource.length === 0 ? (
-                <div className="flex items-center justify-center h-40 text-[11px] text-[#6F6D7A]">
+                <div className="flex items-center justify-center h-40 text-[11px] text-text-muted">
                   No source data yet
                 </div>
               ) : (
@@ -730,7 +730,7 @@ export default function AnalyticsPage() {
 
             {/* Conversion funnel */}
             <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-5">
-              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Sales Pipeline</p>
+              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-text-muted">Sales Pipeline</p>
               <SectionHeader heading="Conversion" accent="Funnel" as="h2" className="mb-5" />
               <div className="space-y-3">
                 {funnelData.map((stage, i) => {
@@ -751,7 +751,7 @@ export default function AnalyticsPage() {
                             {stage.value.toLocaleString()}
                           </span>
                           {convRate !== null && (
-                            <span className="text-[9px] text-[#6F6D7A]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                            <span className="text-[9px] text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
                               {convRate}%
                             </span>
                           )}
@@ -771,7 +771,7 @@ export default function AnalyticsPage() {
                 })}
               </div>
               <div className="mt-5 pt-4 border-t border-border-subtle flex items-baseline justify-between">
-                <span className="text-[10px] text-[#6F6D7A]">Overall conversion</span>
+                <span className="text-[10px] text-text-muted">Overall conversion</span>
                 <span
                   className="font-display text-xl font-bold text-text-primary tracking-[-0.02em]"
                   style={{ fontVariantNumeric: "tabular-nums" }}
@@ -787,7 +787,7 @@ export default function AnalyticsPage() {
             <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-4">
               <SectionHeader eyebrow="Engagement" heading="Outreach" accent="Performance" as="h2" className="mb-4" />
               {outreachByDay.length === 0 ? (
-                <div className="h-48 flex items-center justify-center text-[11px] text-[#6F6D7A]">
+                <div className="h-48 flex items-center justify-center text-[11px] text-text-muted">
                   No outreach data for this period
                 </div>
               ) : (
@@ -807,11 +807,11 @@ export default function AnalyticsPage() {
               <div className="flex items-center gap-5 mt-3">
                 <div className="flex items-center gap-1.5">
                   <div className="w-4 h-px bg-brand-accent" />
-                  <span className="text-[9px] text-[#6F6D7A]">Sent</span>
+                  <span className="text-[9px] text-text-muted">Sent</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="w-4 h-px bg-brand-accent/80" />
-                  <span className="text-[9px] text-[#6F6D7A]">Replies</span>
+                  <span className="text-[9px] text-text-muted">Replies</span>
                 </div>
               </div>
             </div>
@@ -827,10 +827,10 @@ export default function AnalyticsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.44, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
 >
-              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Verticals</p>
+              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-text-muted">Verticals</p>
               <SectionHeader heading="Top" accent="Industries" as="h2" className="mb-5" />
               {leadsByIndustry.length === 0 ? (
-                <p className="text-[11px] text-[#6F6D7A] py-4">No industry data yet</p>
+                <p className="text-[11px] text-text-muted py-4">No industry data yet</p>
               ) : (
                 <div className="space-y-2.5">
                   {leadsByIndustry.slice(0, 6).map((ind, i) => {
@@ -839,7 +839,7 @@ export default function AnalyticsPage() {
                     return (
                       <div key={ind.industry} className="flex items-center gap-2.5">
                         <span
-                          className="text-[9px] text-[#3A3840] w-3 shrink-0 text-right"
+                          className="text-[9px] text-text-muted w-3 shrink-0 text-right"
                           style={{ fontVariantNumeric: "tabular-nums" }}
 >
                           {i + 1}
@@ -879,7 +879,7 @@ export default function AnalyticsPage() {
               transition={{ duration: 0.44, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
 >
               {/* No pseudo accent div needed � top border handles it */}
-              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">Progress</p>
+              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-text-muted">Progress</p>
               <SectionHeader heading="Monthly" accent="Goals" as="h2" className="mb-5" />
               <div className="space-y-3.5">
                 {goals.map(goal => {
@@ -918,7 +918,7 @@ export default function AnalyticsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.44, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
 >
-              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#6F6D7A]">vs Industry</p>
+              <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-text-muted">vs Industry</p>
               <SectionHeader heading="Industry" accent="Benchmarks" as="h2" className="mb-5" />
               <div className="space-y-3">
                 {benchmarks.map(b => {
@@ -927,7 +927,7 @@ export default function AnalyticsPage() {
                   const indPct = Math.min((b.industry / b.max) * 100, 100);
                   return (
                     <div key={b.metric} className="flex items-center gap-2.5">
-                      <span className="text-[10px] text-[#6F6D7A] w-24 shrink-0 truncate">{b.metric}</span>
+                      <span className="text-[10px] text-text-muted w-24 shrink-0 truncate">{b.metric}</span>
                       <div className="flex-1 relative h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
                         {/* Industry avg */}
                         <div
@@ -956,11 +956,11 @@ export default function AnalyticsPage() {
               <div className="flex items-center gap-3 mt-4 pt-3 border-t border-border-subtle">
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-1.5 rounded-full bg-white/[0.10]" />
-                  <span className="text-[9px] text-[#6F6D7A]">Industry avg</span>
+                  <span className="text-[9px] text-text-muted">Industry avg</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-1.5 rounded-full bg-brand-accent" />
-                  <span className="text-[9px] text-[#6F6D7A]">Yours</span>
+                  <span className="text-[9px] text-text-muted">Yours</span>
                 </div>
               </div>
             </motion.div>
@@ -991,7 +991,7 @@ export default function AnalyticsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.36, delay: 0.06 * i, ease: [0.22, 1, 0.36, 1] }}
 >
-                  <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-[#6F6D7A]">{cell.label}</span>
+                  <span className="text-[9px] font-medium uppercase tracking-[0.18em] text-text-muted">{cell.label}</span>
                   <div className="flex items-end justify-between gap-3">
                     <span
                       className="font-display text-2xl font-bold tracking-[-0.03em] font-mono"
@@ -1003,7 +1003,7 @@ export default function AnalyticsPage() {
                       <Sparkline values={cell.sparkData} color={cell.color} id={`score-${i}`} width={52} height={22} />
                     )}
                   </div>
-                  <span className="text-[10px] text-[#6F6D7A]">{cell.sub}</span>
+                  <span className="text-[10px] text-text-muted">{cell.sub}</span>
                 </motion.div>
               ))}
             </div>
@@ -1034,7 +1034,7 @@ export default function AnalyticsPage() {
                   </div>
                   <p className="text-[11px] text-text-muted flex-1 min-w-0 truncate">{item.message}</p>
                   <span
-                    className="text-[9px] text-[#6F6D7A] shrink-0"
+                    className="text-[9px] text-text-muted shrink-0"
                     style={{ fontVariantNumeric: "tabular-nums" }}
 >
                     {formatRelativeTime(item.time)}
@@ -1042,8 +1042,8 @@ export default function AnalyticsPage() {
                 </motion.div>
               )) : (
                 <div className="flex flex-col items-center justify-center py-8 gap-2 text-center">
-                  <Activity size={16} className="text-[#3A3840]" />
-                  <p className="text-[11px] text-[#6F6D7A]">No recent activity. New events appear here in real-time.</p>
+                  <Activity size={16} className="text-text-muted" />
+                  <p className="text-[11px] text-text-muted">No recent activity. New events appear here in real-time.</p>
                 </div>
               )}
             </div>
@@ -1070,7 +1070,7 @@ export default function AnalyticsPage() {
 >
             <div className="mt-4">
               {revenueByMonth.length < 2 ? (
-                <p className="text-[11px] text-[#6F6D7A] py-6 text-center">
+                <p className="text-[11px] text-text-muted py-6 text-center">
                   Not enough revenue history to forecast � connect billing data.
                 </p>
               ) : (
@@ -1107,14 +1107,14 @@ export default function AnalyticsPage() {
                           key={f.month}
                           className={`${i> 0 ? "border-l border-border-subtle pl-4" : ""} ${i < 2 ? "pr-4" : ""}`}
 >
-                          <p className="text-[9px] text-[#6F6D7A] uppercase tracking-wider">{f.month}</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider">{f.month}</p>
                           <p
                             className="font-display text-lg font-bold text-text-primary mt-1"
                             style={{ fontVariantNumeric: "tabular-nums" }}
 >
                             {formatCurrency(f.projected)}
                           </p>
-                          <p className="text-[9px] text-[#6F6D7A] mt-0.5">
+                          <p className="text-[9px] text-text-muted mt-0.5">
                             {formatCurrency(f.conservative)} � {formatCurrency(f.optimistic)}
                           </p>
                         </div>
@@ -1141,7 +1141,7 @@ export default function AnalyticsPage() {
                     {["Platform", "Spend", "Revenue", "ROI", "CPL"].map((h, i) => (
                       <th
                         key={h}
-                        className={`pb-2.5 text-[9px] text-[#6F6D7A] font-medium uppercase tracking-wider ${i === 0 ? "text-left" : "text-right"}`}
+                        className={`pb-2.5 text-[9px] text-text-muted font-medium uppercase tracking-wider ${i === 0 ? "text-left" : "text-right"}`}
 >
                         {h}
                       </th>
@@ -1152,7 +1152,7 @@ export default function AnalyticsPage() {
                   {platformROI.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="py-8 text-center" style={{ background: "none" }}>
-                        <p className="text-[11px] text-[#6F6D7A]">No ad platform data yet</p>
+                        <p className="text-[11px] text-text-muted">No ad platform data yet</p>
                         <Link href="/dashboard/integrations" className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
                           Connect platforms <ArrowUp size={9} className="rotate-45" />
                         </Link>
@@ -1193,14 +1193,14 @@ export default function AnalyticsPage() {
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                   <CheckCircle size={16} className="text-text-muted" />
                   <p className="text-[11px] text-text-muted">All clients healthy</p>
-                  <p className="text-[9px] text-[#6F6D7A] max-w-[200px] mx-auto">No churn signals detected. At-risk clients appear here when engagement drops.</p>
+                  <p className="text-[9px] text-text-muted max-w-[200px] mx-auto">No churn signals detected. At-risk clients appear here when engagement drops.</p>
                 </div>
               ) : churnRiskClients.map(client => (
                 <div key={client.name} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
                   <div className={`w-2 h-2 rounded-full shrink-0 ${client.risk === "high" ? "bg-[#F59E0B]" : client.risk === "medium" ? "bg-[#3B82F6]" : "bg-white/[0.20]"}`} />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-text-primary truncate">{client.name}</p>
-                    <p className="text-[9px] text-[#6F6D7A]">{client.reason}</p>
+                    <p className="text-[9px] text-text-muted">{client.reason}</p>
                   </div>
                   <span
                     className="text-[10px] font-bold shrink-0"
@@ -1228,7 +1228,7 @@ export default function AnalyticsPage() {
                     {["Metric", "3 mo. ago", "Last month", "This month", "Trend"].map((h, i) => (
                       <th
                         key={h}
-                        className={`pb-2.5 text-[9px] text-[#6F6D7A] font-medium uppercase tracking-wider ${i === 0 ? "text-left" : "text-right"}`}
+                        className={`pb-2.5 text-[9px] text-text-muted font-medium uppercase tracking-wider ${i === 0 ? "text-left" : "text-right"}`}
 >
                         {h}
                       </th>
@@ -1246,7 +1246,7 @@ export default function AnalyticsPage() {
                     return (
                       <tr key={row.label} className="border-b border-border-subtle hover:bg-white/[0.03] transition-colors">
                         <td className="py-3 font-medium text-text-primary">{row.label}</td>
-                        <td className="py-3 text-right text-[#6F6D7A]" style={{ fontVariantNumeric: "tabular-nums" }}>
+                        <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
                           {row.isCurrency ? formatCurrency(row.three) : row.three}
                         </td>
                         <td className="py-3 text-right text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>
@@ -1282,7 +1282,7 @@ export default function AnalyticsPage() {
             <div className="mt-4 space-y-2">
               {teamMembers.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
-                  <Trophy size={16} className="text-[#3A3840]" />
+                  <Trophy size={16} className="text-text-muted" />
                   <p className="text-[11px] text-text-muted">No team activity yet</p>
                   <Link href="/dashboard/settings/team" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
                     Invite team <ArrowUp size={9} className="rotate-45" />
@@ -1290,7 +1290,7 @@ export default function AnalyticsPage() {
                 </div>
               ) : teamMembers.map((member, i) => (
                 <div key={member.name} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
-                  <span className="text-[9px] font-mono text-[#6F6D7A] w-4 shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
+                  <span className="text-[9px] font-mono text-text-muted w-4 shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
                     {i + 1}
                   </span>
                   <div className="flex-1 min-w-0">
@@ -1298,7 +1298,7 @@ export default function AnalyticsPage() {
                       <p className="text-xs font-medium text-text-primary">{member.name}</p>
                       {i === 0 && <Star size={9} className="text-brand-accent" />}
                     </div>
-                    <p className="text-[9px] text-[#6F6D7A]">{member.leads} leads � {member.deals} deals � {member.calls} calls</p>
+                    <p className="text-[9px] text-text-muted">{member.leads} leads � {member.deals} deals � {member.calls} calls</p>
                   </div>
                   <p className="text-xs font-bold text-brand-accent shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>
                     {formatCurrency(member.revenue)}
@@ -1321,16 +1321,16 @@ export default function AnalyticsPage() {
                 <table className="w-full">
                   <thead>
                     <tr>
-                      <th className="text-[9px] text-[#6F6D7A] font-medium py-1 text-left w-12" />
+                      <th className="text-[9px] text-text-muted font-medium py-1 text-left w-12" />
                       {["9am", "12pm", "3pm", "6pm", "9pm"].map(h => (
-                        <th key={h} className="text-[9px] text-[#6F6D7A] font-medium py-1 text-center">{h}</th>
+                        <th key={h} className="text-[9px] text-text-muted font-medium py-1 text-center">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {contentHeatmap.map(row => (
                       <tr key={row.day as string}>
-                        <td className="text-[9px] text-[#6F6D7A] py-0.5 font-medium">{row.day as string}</td>
+                        <td className="text-[9px] text-text-muted py-0.5 font-medium">{row.day as string}</td>
                         {["9am", "12pm", "3pm", "6pm", "9pm"].map(h => {
                           const val = row[h] as number;
                           const intensity = val / 100;
@@ -1340,7 +1340,7 @@ export default function AnalyticsPage() {
                                 className="h-7 rounded-md flex items-center justify-center text-[9px] font-bold transition-all hover:scale-105"
                                 style={{
                                   background: `rgba(37, 99, 235, ${intensity * 0.6 + 0.04})`,
-                                  color: intensity> 0.5 ? "#fff" : "#6F6D7A",
+                                  color: intensity > 0.5 ? "#fff" : "var(--text-muted)",
                                 }}
 >
                                 {val}
@@ -1367,9 +1367,9 @@ export default function AnalyticsPage() {
             <div className="mt-4 space-y-2">
               {campaignData.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
-                  <Target size={16} className="text-[#3A3840]" />
+                  <Target size={16} className="text-text-muted" />
                   <p className="text-[11px] text-text-muted">No campaign data yet</p>
-                  <p className="text-[9px] text-[#6F6D7A] max-w-[200px]">Attribution appears once campaigns are live and conversions tracked</p>
+                  <p className="text-[9px] text-text-muted max-w-[200px]">Attribution appears once campaigns are live and conversions tracked</p>
                 </div>
               ) : campaignData.map((c, i) => (
                 <div key={c.campaign} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
@@ -1381,11 +1381,11 @@ export default function AnalyticsPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[11px] font-medium text-text-primary truncate">{c.campaign}</p>
-                    <p className="text-[9px] text-[#6F6D7A]">{c.conversions} conversions</p>
+                    <p className="text-[9px] text-text-muted">{c.conversions} conversions</p>
                   </div>
                   <div className="text-right shrink-0">
                     <p className="text-[11px] font-bold text-[#3B82F6]" style={{ fontVariantNumeric: "tabular-nums" }}>{c.roas.toFixed(1)}x</p>
-                    <p className="text-[9px] text-[#6F6D7A]" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(c.revenue)}</p>
+                    <p className="text-[9px] text-text-muted" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(c.revenue)}</p>
                   </div>
                 </div>
               ))}
@@ -1403,9 +1403,9 @@ export default function AnalyticsPage() {
             <div className="mt-4">
               {clvData.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
-                  <DollarSign size={16} className="text-[#3A3840]" />
+                  <DollarSign size={16} className="text-text-muted" />
                   <p className="text-[11px] text-text-muted">No CLV data yet</p>
-                  <p className="text-[9px] text-[#6F6D7A] max-w-[200px]">CLV tiers appear once clients have payment records attached</p>
+                  <p className="text-[9px] text-text-muted max-w-[200px]">CLV tiers appear once clients have payment records attached</p>
                   <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
                     Add clients <ArrowUp size={9} className="rotate-45" />
                   </Link>
@@ -1416,15 +1416,15 @@ export default function AnalyticsPage() {
                     <div key={tier.name} className="p-3 rounded-xl bg-white/[0.03] border border-border-subtle">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-medium text-text-primary">{tier.name}</span>
-                        <span className="text-[10px] text-[#6F6D7A]">{tier.count} clients</span>
+                        <span className="text-[10px] text-text-muted">{tier.count} clients</span>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <p className="text-[9px] text-[#6F6D7A] uppercase">Avg CLV</p>
+                          <p className="text-[9px] text-text-muted uppercase">Avg CLV</p>
                           <p className="text-sm font-bold text-brand-accent" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(tier.avgCLV)}</p>
                         </div>
                         <div>
-                          <p className="text-[9px] text-[#6F6D7A] uppercase">Avg Lifetime</p>
+                          <p className="text-[9px] text-text-muted uppercase">Avg Lifetime</p>
                           <p className="text-sm font-bold text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>{tier.avgMonths} mo.</p>
                         </div>
                       </div>
@@ -1446,9 +1446,9 @@ export default function AnalyticsPage() {
             <div className="mt-4">
               {revenueByService.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-6 text-center">
-                  <BarChart3 size={16} className="text-[#3A3840]" />
+                  <BarChart3 size={16} className="text-text-muted" />
                   <p className="text-[11px] text-text-muted">No service breakdown yet</p>
-                  <p className="text-[9px] text-[#6F6D7A] max-w-[200px]">Revenue by service type appears once deals are tagged to a service category</p>
+                  <p className="text-[9px] text-text-muted max-w-[200px]">Revenue by service type appears once deals are tagged to a service category</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -1460,7 +1460,7 @@ export default function AnalyticsPage() {
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="text-[10px] font-mono font-medium text-text-primary" style={{ fontVariantNumeric: "tabular-nums" }}>{formatCurrency(s.revenue)}</span>
-                        <span className="text-[9px] text-[#6F6D7A]">{s.clients} clients</span>
+                        <span className="text-[9px] text-text-muted">{s.clients} clients</span>
                       </div>
                     </div>
                   ))}
