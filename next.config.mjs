@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // @splinetool/react-spline is ESM-only (no "require" condition, no "main" field).
+  // webpack 5 production bundling fails with "Package path . is not exported" without this.
+  // transpilePackages tells Next to compile it through its own babel/swc pipeline
+  // so the ESM→CJS conversion happens correctly.
+  transpilePackages: ["@splinetool/react-spline"],
   // Stop ESLint from failing Vercel builds on cosmetic warnings
   // (unused imports, prefer-const, alt-text, exhaustive-deps).
   // Lint still runs in CI / dev — just not as a deploy gate. Type
@@ -115,7 +120,7 @@ const nextConfig = {
               // HDR environment maps at runtime (e.g. <Environment preset="city" />) from
               // pmndrs/drei-assets CDN. Missing this caused a crash on root page for all visitors.
               // Fixed May 2026.
-              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://api.anthropic.com https://api.openai.com https://api.elevenlabs.io https://api.telegram.org https://vitals.vercel-insights.com https://raw.githack.com https://raw.githubusercontent.com",
+              "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://api.anthropic.com https://api.openai.com https://api.elevenlabs.io https://api.telegram.org https://vitals.vercel-insights.com https://raw.githack.com https://raw.githubusercontent.com https://prod.spline.design",
               // Audio/video for Voice Studio previews
               "media-src 'self' blob: https:",
               // Workers for Next.js background tasks
