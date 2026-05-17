@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import { AuthProvider } from "@/lib/auth-context";
 import { PostHogProvider } from "./providers";
 import { WhiteLabelProvider } from "@/lib/white-label-context";
@@ -13,6 +14,13 @@ import { CookieConsent } from "@/components/cookie-consent";
 import FeedbackButton from "@/components/feedback-button";
 import GrainOverlay from "@/components/brand/grain-overlay";
 import { ScrollIndicator } from "@/components/ui/scroll-indicator";
+
+// Global glass OS effects — loaded client-side only so they never block SSR.
+// PixelCursorTrail: pixelated blue squares that follow the cursor (subtle, 8px blocks).
+const PixelCursorTrail = dynamic(
+  () => import("@/components/ui/21st-components").then((m) => ({ default: m.PixelCursorTrail })),
+  { ssr: false }
+);
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 const OG_IMAGE = "/og-image.png";
@@ -151,6 +159,8 @@ export default function RootLayout({
         </svg>
         <GrainOverlay />
         <ScrollIndicator height={2} color="#3B82F6" />
+        {/* Global cursor trail — blue pixel squares, subtle 8px blocks, max 20 squares */}
+        <PixelCursorTrail blockSize={8} trailLength={20} color="#3B82F6" />
         <Suspense>
         <PostHogProvider>
         <AuthProvider>
