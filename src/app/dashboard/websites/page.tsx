@@ -1328,7 +1328,12 @@ export default function WebsitesPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.22, delay: index * 0.06 }}
                         whileHover={{ y: -4, scale: 1.01 }}
-                        className="glass rounded-xl p-0 overflow-hidden shadow-lg shadow-black/20 relative"
+                        className="glass rounded-xl p-0 overflow-hidden shadow-lg shadow-black/20 relative spotlight-card"
+                        onMouseMove={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                          e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                        }}
                       >
                         {/* Thumbnail */}
                         <div className="relative h-36 bg-surface border-b border-border overflow-hidden">
@@ -1462,7 +1467,12 @@ export default function WebsitesPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: index * 0.06 }}
                   whileHover={{ y: -2 }}
-                  className="glass rounded-xl p-4 relative overflow-hidden"
+                  className="glass rounded-xl p-4 relative overflow-hidden spotlight-card"
+                  onMouseMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                    e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                  }}
                 >
                   <h3 className="section-header flex items-center gap-2 text-brand-accent">{item.icon} {item.title}</h3>
                   <p className="text-[10px] text-muted">{item.body}</p>

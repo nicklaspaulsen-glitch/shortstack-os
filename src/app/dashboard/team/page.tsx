@@ -525,7 +525,12 @@ export default function TeamPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -3 }}
-                      className="glass rounded-xl p-4 relative overflow-hidden"
+                      className="glass rounded-xl p-4 relative overflow-hidden spotlight-card"
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}
 >
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
                       <div className="flex items-center gap-3 mb-3">
@@ -680,7 +685,12 @@ export default function TeamPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.05 }}
                       whileHover={{ y: -3 }}
-                      className="glass flex items-center gap-3 rounded-xl p-3 hover:border-[rgba(59,130,246,0.2)] transition-all"
+                      className="glass flex items-center gap-3 rounded-xl p-3 hover:border-[rgba(59,130,246,0.2)] transition-all spotlight-card"
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}
 >
                       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[rgba(59,130,246,0.25)] to-[rgba(59,130,246,0.15)] flex items-center justify-center text-brand-accent text-xs font-bold shrink-0">
                         {m.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase() || m.email[0].toUpperCase()}

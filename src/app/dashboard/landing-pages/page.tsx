@@ -1260,7 +1260,12 @@ export default function LandingPagesPage() {
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -3 }}
                       onClick={() => handleTemplateSelect(tpl.id)}
-                      className={`glass rounded-xl group cursor-pointer overflow-hidden ${isSelected ? "border-brand-accent/40 ring-1 ring-brand-accent/20" : ""}`}
+                      className={`glass rounded-xl group cursor-pointer overflow-hidden spotlight-card ${isSelected ? "border-brand-accent/40 ring-1 ring-brand-accent/20" : ""}`}
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}
                     >
                       {/* Photo thumbnail with perspective tilt on hover */}
                       <div

@@ -1046,8 +1046,13 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
 
   return (
     <div
-      className={`glass group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-all duration-200 min-h-[220px] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]`}
+      className={`glass group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-all duration-200 min-h-[220px] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] spotlight-card`}
       style={{ border: featured ? "1px solid rgba(59,130,246,0.40)" : "1px solid rgba(99,146,255,0.12)"}}
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+      }}
       onMouseEnter={() => {
         setIsHovering(true);
         if (testUrl || testing) return;
