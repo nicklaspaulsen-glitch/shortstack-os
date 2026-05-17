@@ -182,7 +182,7 @@ export default function AbTestDetailPage() {
         <Tile label="Baseline rate" value={`${baselineRate}%`} />
       </div>
 
-      <div className="bg-white border border-black/[0.06] rounded-xl overflow-hidden">
+      <div className="glass rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-black/[0.03] text-xs uppercase tracking-wider text-gray-500">
             <tr>
@@ -244,7 +244,7 @@ export default function AbTestDetailPage() {
       </div>
 
       {test.status !== "completed" && (
-        <div className="bg-white border border-black/[0.06] rounded-xl p-4 flex items-end gap-3">
+        <div className="glass rounded-xl p-4 flex items-end gap-3">
           <div className="flex-1">
             <label className="block text-xs text-gray-500 mb-1">Add variant</label>
             <input
@@ -277,7 +277,7 @@ export default function AbTestDetailPage() {
 
 function Tile({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="bg-white border border-black/[0.06] rounded-xl p-3">
+    <div className="glass rounded-xl p-3">
       <div className="text-xs text-gray-500">{label}</div>
       <div className="text-gray-900 font-bold text-lg mt-0.5">{value}</div>
     </div>

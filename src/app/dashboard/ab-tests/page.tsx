@@ -157,7 +157,7 @@ export default function AbTestsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={() => setShowCreate(true)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-white text-zinc-900 hover:bg-zinc-100 transition-colors"
+                  className="btn-pill flex items-center gap-2"
                 >
                   <Plus size={15} />
                   New Test
@@ -208,7 +208,8 @@ export default function AbTestsPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05, duration: 0.4 }}
                       whileHover={{ y: -4, scale: 1.01 }}
-                      className="group relative bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-4 shadow-sm"
+                      onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                      className="group relative glass rounded-xl p-4 spotlight-card"
                     >
                       <div className="flex items-start justify-between gap-3 mb-3">
                         <div className="min-w-0">
@@ -377,7 +378,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
         initial={{ opacity: 0, y: 12, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.3 }}
-        className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl shadow-xl p-6 w-full max-w-md"
+        className="glass rounded-xl shadow-xl p-6 w-full max-w-md"
       >
         <h2 className="text-lg font-semibold text-[#111827] mb-4">New A/B Test</h2>
         <div className="space-y-4">
@@ -387,7 +388,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Homepage hero v2"
-              className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] placeholder-[#9CA3AF] text-sm focus:outline-none focus:border-brand-accent bg-white"
+              className="w-full glass rounded-lg px-3 py-2 placeholder-text-muted text-sm focus:outline-none focus:border-brand-accent"
             />
           </div>
           <div>
@@ -395,7 +396,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
             <select
               value={parentType}
               onChange={(e) => setParentType(e.target.value as ParentType)}
-              className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent bg-white"
+              className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent"
             >
               <option value="landing_page">Landing Page</option>
               <option value="funnel_step">Funnel Step</option>
@@ -408,7 +409,7 @@ function CreateTestModal({ onClose, onCreated }: { onClose: () => void; onCreate
               value={parentId}
               onChange={(e) => setParentId(e.target.value)}
               placeholder="UUID of the surface to test"
-              className="w-full border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] placeholder-[#9CA3AF] text-sm focus:outline-none focus:border-brand-accent font-mono bg-white"
+              className="w-full glass rounded-lg px-3 py-2 placeholder-text-muted text-sm focus:outline-none focus:border-brand-accent font-mono"
             />
             <p className="text-[11px] text-text-muted mt-1">
               Find this id from the URL of the landing page / funnel step / email.

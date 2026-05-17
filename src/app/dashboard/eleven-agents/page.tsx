@@ -267,7 +267,7 @@ export default function ElevenAgentsPage() {
       </div>
     </div>{/* Editorial Bento */}<div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                className="flex items-start gap-3 glass rounded-2xl p-5">
                 <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                 <div>
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Calls Today</p>
@@ -276,27 +276,27 @@ export default function ElevenAgentsPage() {
                 </div>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                className="glass rounded-2xl p-5">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Qualified</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{qualifiedCalls}</p>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                className="glass rounded-2xl p-5">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Success Rate</p>
                 <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${avgSuccessRate >= 30 ? "text-green-700" : "text-amber-600"}`}>{avgSuccessRate}%</p>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                className="glass rounded-2xl p-5">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active Agents</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{agents.filter(a => a.status === "active").length}</p>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                className="glass rounded-2xl p-5">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Duration</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{agents.length ? `${Math.round(agents.reduce((s, a) => s + a.avgDuration, 0) / agents.length)}s` : "---"}</p>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.26, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                className="glass rounded-2xl p-5">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Cost Today</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">${totalCost.toFixed(2)}</p>
               </motion.div>

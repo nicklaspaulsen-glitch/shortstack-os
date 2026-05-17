@@ -222,7 +222,7 @@ export default function ReviewsAutoReplyPage() {
               {/* Stats */}
               <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
                 <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                  className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  className="flex items-start gap-3 glass rounded-2xl p-5">
                   <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                   <div>
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Drafts</p>
@@ -231,12 +231,12 @@ export default function ReviewsAutoReplyPage() {
                   </div>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  className="glass rounded-2xl p-5">
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Pending Review</p>
                   <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.pending}</p>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                  className="glass rounded-2xl p-5">
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Published</p>
                   <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.published}</p>
                 </motion.div>
@@ -244,7 +244,7 @@ export default function ReviewsAutoReplyPage() {
 
               {/* Compose */}
               {showCompose && (
-                <div className="card p-5 space-y-3 border border-black/[0.06] rounded-xl bg-white">
+                <div className="glass rounded-xl p-5 space-y-3">
                   <p className="font-semibold text-[#111827] text-sm flex items-center gap-2">
                     <Sparkles size={14} className="text-brand-accent" /> Generate AI Reply
                   </p>
@@ -352,7 +352,7 @@ export default function ReviewsAutoReplyPage() {
                     return (
                       <div
                         key={d.id}
-                        className="rounded-xl border border-black/[0.06] bg-white hover:bg-[#F8FAFC] p-4 transition-all"
+                        className="glass rounded-xl hover:bg-[#F8FAFC] p-4 transition-all"
                       >
                         <div className="flex items-start justify-between gap-3 mb-3">
                           <div className="flex items-center gap-3 flex-wrap">
@@ -385,7 +385,7 @@ export default function ReviewsAutoReplyPage() {
                           </p>
                           {isEditing ? (
                             <textarea
-                              className="input text-sm w-full resize-none bg-white"
+                              className="input text-sm w-full resize-none glass"
                               rows={4}
                               value={editingText}
                               onChange={(e) => setEditingText(e.target.value)}
@@ -463,7 +463,7 @@ export default function ReviewsAutoReplyPage() {
               )}
 
               {/* Footnote */}
-              <div className="rounded-lg border border-black/[0.06] bg-white p-3 flex items-start gap-2 text-xs text-text-muted">
+              <div className="glass rounded-lg p-3 flex items-start gap-2 text-xs text-text-muted">
                 <AlertCircle size={14} className="text-amber-500 shrink-0 mt-0.5" />
                 <p>
                   v1 stores approved replies locally. Auto-posting back to Google

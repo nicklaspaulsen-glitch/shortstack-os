@@ -150,7 +150,7 @@ export default function BrowserTasksPage() {
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AI BROWSER TASKS</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">AI Browser Tasks</h1>
       </div>
-    </div>{/* New task card */}<div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 backdrop-blur">
+    </div>{/* New task card */}<div className="glass rounded-xl p-5">
               <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#374151]">
                 <Plus size={15} /> New task
               </div>
@@ -229,7 +229,7 @@ export default function BrowserTasksPage() {
                 </button>
               </div>
             </div>{/* Templates */}{templates.length > 0 && (
-              <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 backdrop-blur">
+              <div className="glass rounded-xl p-5">
                 <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#374151]">
                   <Sparkles size={15} /> Try a template
                 </div>
@@ -262,7 +262,7 @@ export default function BrowserTasksPage() {
                   ))}
                 </div>
               </div>
-            )}{/* Task list */}<div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white backdrop-blur">
+            )}{/* Task list */}<div className="glass rounded-xl">
               <div className="flex items-center gap-2 border-b border-[rgba(0,0,0,0.08)] px-5 py-3 text-sm font-semibold text-[#374151]">
                 <Globe size={15} /> Tasks
                 <span className="ml-2 rounded-full bg-[rgba(0,0,0,0.06)] px-2 py-0.5 text-[10px] text-[#6B7280]">

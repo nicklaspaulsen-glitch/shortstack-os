@@ -238,7 +238,7 @@ export default function VoiceCloneDetailPage() {
               ) : (
                 <>
                   {/* Status + actions */}
-                  <section className="rounded-xl border border-black/[0.08] bg-white p-6">
+                  <section className="glass rounded-xl p-6">
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <div>
                         <div className="text-xs uppercase tracking-wider text-text-muted">
@@ -301,7 +301,7 @@ export default function VoiceCloneDetailPage() {
                   {/* Defaults */}
                   {clone.status === "ready" &&
                     clone.owner_subject_kind !== "preset" && (
-                      <section className="rounded-xl border border-black/[0.08] bg-white p-6">
+                      <section className="glass rounded-xl p-6">
                         <h3 className="text-sm font-semibold text-[#111827]">
                           Default for surfaces
                         </h3>
@@ -335,7 +335,7 @@ export default function VoiceCloneDetailPage() {
 
                   {/* Test playback */}
                   {clone.status === "ready" && (
-                    <section className="rounded-xl border border-black/[0.08] bg-white p-6">
+                    <section className="glass rounded-xl p-6">
                       <h3 className="text-sm font-semibold text-[#111827]">
                         Test playback
                       </h3>
@@ -371,7 +371,7 @@ export default function VoiceCloneDetailPage() {
                   )}
 
                   {/* Consent */}
-                  <section className="rounded-xl border border-black/[0.08] bg-white p-6">
+                  <section className="glass rounded-xl p-6">
                     <h3 className="text-sm font-semibold text-[#111827]">Consent</h3>
                     <div className="mt-2 text-xs text-[#374151]">
                       Kind: <span className="font-mono">{clone.consent_kind}</span>
@@ -385,7 +385,7 @@ export default function VoiceCloneDetailPage() {
                   </section>
 
                   {/* Samples */}
-                  <section className="rounded-xl border border-black/[0.08] bg-white p-6">
+                  <section className="glass rounded-xl p-6">
                     <h3 className="text-sm font-semibold text-[#111827]">
                       Samples ({samples.length})
                     </h3>
@@ -458,7 +458,7 @@ export default function VoiceCloneDetailPage() {
                   </section>
 
                   {/* Render history */}
-                  <section className="rounded-xl border border-black/[0.08] bg-white p-6">
+                  <section className="glass rounded-xl p-6">
                     <h3 className="text-sm font-semibold text-[#111827]">
                       Recent renders ({renders.length})
                     </h3>

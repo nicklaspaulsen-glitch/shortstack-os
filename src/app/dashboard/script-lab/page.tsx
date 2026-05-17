@@ -2604,7 +2604,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             {scriptTemplates
               .filter(t => templateCategory === "all" || t.category === templateCategory)
               .map(template => (
-                <div key={template.id} className="card-hover p-4 cursor-pointer" onClick={() => {
+                <div key={template.id} className="card-hover p-4 cursor-pointer spotlight-card" onClick={() => {
                   setConfig(prev => ({ ...prev, framework: template.framework, platform: template.platform, topic: template.name }));
                   setTab("generate");
                   toast.success(`Template loaded: ${template.name}`);
@@ -2816,7 +2816,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {savedScripts.map(s => (
-                <div key={s.id} className="card card-hover cursor-pointer" onClick={() => {
+                <div key={s.id} className="card card-hover cursor-pointer spotlight-card" onClick={() => {
                   const savedScript = s.metadata?.script as ScriptResult | undefined;
                   if (savedScript) {
                     setScript(savedScript);

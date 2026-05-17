@@ -305,7 +305,7 @@ export default function FunnelCanvasPage() {
           <button
             key={tab}
             onClick={() => { setActiveTab(tab); if (tab === "analytics") void loadAnalytics(); }}
-            className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === tab ? "bg-white text-[#111827] shadow-sm" : "text-[#6B7280] hover:text-[#374151]"}`}
+            className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === tab ? "tab-pill active" : "tab-pill"}`}
           >
             {tab === "builder" ? <Settings size={14} /> : <BarChart3 size={14} />}
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -354,7 +354,7 @@ export default function FunnelCanvasPage() {
                       onClick={() => openPanel(step)}
                     >
                       {/* Step number */}
-                      <div className="absolute -top-3 -left-1 w-5 h-5 rounded-full bg-white border border-black/[0.08] flex items-center justify-center text-[10px] text-[#6B7280] font-bold">
+                      <div className="absolute -top-3 -left-1 w-5 h-5 rounded-full glass border border-border flex items-center justify-center text-[10px] font-bold">
                         {idx + 1}
                       </div>
 
@@ -438,7 +438,7 @@ export default function FunnelCanvasPage() {
                     <span className="text-sm font-medium">Add Step</span>
                   </button>
                 ) : (
-                  <div className="w-52 bg-white border border-black/[0.08] shadow-md rounded-xl p-4 space-y-3">
+                  <div className="w-52 glass rounded-xl p-4 space-y-3">
                     <input
                       autoFocus
                       value={newStepTitle}
@@ -484,7 +484,7 @@ export default function FunnelCanvasPage() {
           {/* Summary cards */}
           <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+              className="flex items-start gap-3 glass rounded-2xl p-5">
               <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Views</p>
@@ -493,24 +493,24 @@ export default function FunnelCanvasPage() {
               </div>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+              className="glass rounded-2xl p-5">
               <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Unique Visitors</p>
               <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{(analytics?.unique_visitors ?? 0).toLocaleString()}</p>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+              className="glass rounded-2xl p-5">
               <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Submits</p>
               <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{(analytics?.total_submits ?? 0).toLocaleString()}</p>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+              className="glass rounded-2xl p-5">
               <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Overall Conv.</p>
               <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{analytics?.overall_conversion_rate ?? 0}%</p>
             </motion.div>
           </div>
 
           {/* Step-by-step funnel visualization */}
-          <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-6 space-y-4">
+          <div className="glass rounded-xl p-6 space-y-4">
             <h3 className="text-[#111827] font-semibold text-base">Step-by-Step Funnel</h3>
             {steps.length === 0 ? (
               <p className="text-[#6B7280] text-sm">Add steps to see analytics.</p>
@@ -526,7 +526,7 @@ export default function FunnelCanvasPage() {
                   return (
                     <div key={step.id}>
                       <div className="flex items-center gap-3">
-                        <div className="shrink-0 w-6 h-6 rounded-full bg-white border border-black/[0.08] flex items-center justify-center text-[10px] text-[#6B7280] font-bold">
+                        <div className="shrink-0 w-6 h-6 rounded-full glass border border-border flex items-center justify-center text-[10px] font-bold">
                           {idx + 1}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -571,7 +571,7 @@ export default function FunnelCanvasPage() {
             onClick={() => setPanelOpen(false)}
           />
           {/* Drawer */}
-          <div className="fixed right-0 top-0 bottom-0 z-50 w-80 bg-white border-l border-black/[0.08] flex flex-col shadow-2xl">
+          <div className="fixed right-0 top-0 bottom-0 z-50 w-80 glass border-l border-border flex flex-col shadow-2xl">
             <div className="flex items-center justify-between px-5 py-4 border-b border-black/[0.08]">
               <div className="flex items-center gap-2">
                 <Pencil size={15} className="text-purple-600" />

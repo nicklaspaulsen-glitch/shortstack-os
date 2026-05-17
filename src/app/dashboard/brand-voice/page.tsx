@@ -353,8 +353,9 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                       transition={{ delay: i * 0.06 }}
                       whileHover={{ y: -2, scale: 1.01 }}
                       onClick={() => setSelectedProfile(p.id)}
+                      onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                       style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
-                      className={`rounded-xl p-3 cursor-pointer transition-all ${p.id === selectedProfile ? "!border-[rgba(59,130,246,0.35)] bg-[rgba(59,130,246,0.06)]" : "hover:border-[rgba(0,0,0,0.12)]"}`}
+                      className={`rounded-xl p-3 cursor-pointer transition-all spotlight-card ${p.id === selectedProfile ? "!border-[rgba(59,130,246,0.35)] bg-[rgba(59,130,246,0.06)]" : "hover:border-[rgba(0,0,0,0.12)]"}`}
                     >
                       <div className="flex items-center justify-between">
                         <div>
@@ -418,7 +419,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 <ChevronDown size={12} />
                               </button>
                               {showPresetMenu && (
-                                <div className="absolute right-0 top-full mt-1 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg shadow-xl z-10 min-w-[160px]">
+                                <div className="absolute right-0 top-full mt-1 glass rounded-lg shadow-xl z-10 min-w-[160px]">
                                   {VOICE_PRESETS.map(p => (
                                     <button
                                       key={p.key}

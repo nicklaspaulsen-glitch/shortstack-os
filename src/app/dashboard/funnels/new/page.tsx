@@ -177,7 +177,7 @@ export default function NewFunnelPage() {
             </div>{step === 1 && (
               <div className="space-y-6">
                 {/* Name */}
-                <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-4">
+                <div className="glass rounded-xl p-5 space-y-4">
                   <h2 className="text-[#111827] font-semibold text-base">Funnel Details</h2>
                   <div>
                     <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Funnel Name *</label>
@@ -200,7 +200,7 @@ export default function NewFunnelPage() {
                 </div>
 
                 {/* Templates */}
-                <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-4">
+                <div className="glass rounded-xl p-5 space-y-4">
                   <div className="flex items-center gap-2">
                     <Sparkles size={15} className="text-purple-600" />
                     <h2 className="text-[#111827] font-semibold text-base">Choose a Template</h2>
@@ -261,7 +261,7 @@ export default function NewFunnelPage() {
               </div>
             )}{step === 2 && (
               <div className="space-y-6">
-                <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-4">
+                <div className="glass rounded-xl p-5 space-y-4">
                   <h2 className="text-[#111827] font-semibold text-base">Funnel Summary</h2>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -282,7 +282,7 @@ export default function NewFunnelPage() {
                 </div>
 
                 {selectedTemplate && (
-                  <div className="bg-white border border-black/[0.06] shadow-sm rounded-xl p-5 space-y-3">
+                  <div className="glass rounded-xl p-5 space-y-3">
                     <h2 className="text-[#111827] font-semibold text-base">Steps Preview</h2>
                     <div className="flex items-center gap-2 overflow-x-auto pb-2">
                       {selectedTemplate.steps.map((s, idx) => (

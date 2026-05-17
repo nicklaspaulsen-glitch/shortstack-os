@@ -287,7 +287,7 @@ export default function ApiDocsPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.04, duration: 0.28 }}
-                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="flex items-start gap-3 glass rounded-2xl p-5"
               >
                 <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                 <div>
@@ -300,7 +300,7 @@ export default function ApiDocsPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.10, duration: 0.28 }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Categories</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{API_CATEGORIES.length}</p>
@@ -310,7 +310,7 @@ export default function ApiDocsPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.14, duration: 0.28 }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">SDKs</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{SDK_DOWNLOADS.length}</p>
@@ -320,7 +320,7 @@ export default function ApiDocsPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.18, duration: 0.28 }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">API Version</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">v2.4</p>
@@ -831,7 +831,7 @@ const valid = signature === expected;`}</pre>
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.04, duration: 0.28 }}
-                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="flex items-start gap-3 glass rounded-2xl p-5"
                   >
                     <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div>
@@ -844,7 +844,7 @@ const valid = signature === expected;`}</pre>
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.10, duration: 0.28 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{apiKeys.filter(k => k.is_active).length}</p>
@@ -854,7 +854,7 @@ const valid = signature === expected;`}</pre>
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.14, duration: 0.28 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Revoked</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{apiKeys.filter(k => !k.is_active).length}</p>
@@ -864,7 +864,7 @@ const valid = signature === expected;`}</pre>
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.18, duration: 0.28 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Full Access</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{apiKeys.filter(k => k.permissions === "full" && k.is_active).length}</p>

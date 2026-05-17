@@ -212,7 +212,7 @@ export default function DiscordPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.04, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-          className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="flex items-start gap-3 glass rounded-2xl p-5"
         >
           <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
           <div>
@@ -225,7 +225,7 @@ export default function DiscordPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.10, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="glass rounded-2xl p-5"
         >
           <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Servers</p>
           <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">0</p>
@@ -235,7 +235,7 @@ export default function DiscordPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.14, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="glass rounded-2xl p-5"
         >
           <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Members</p>
           <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">0</p>
@@ -245,7 +245,7 @@ export default function DiscordPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.18, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="glass rounded-2xl p-5"
         >
           <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Channels</p>
           <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">0</p>
@@ -310,11 +310,12 @@ export default function DiscordPage() {
               ].map((f, i) => (
                 <motion.div
                   key={i}
-                  className="rounded-xl p-4 flex items-start gap-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
+                  className="rounded-xl p-4 flex items-start gap-3 spotlight-card" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
                   whileHover={{ y: -4, scale: 1.01 }}
+                  onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                 >
                   <div className="w-8 h-8 rounded-lg bg-surface-light flex items-center justify-center shrink-0">
                     <f.icon size={16} className={f.color} />
@@ -711,7 +712,7 @@ export default function DiscordPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.04, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-              className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              className="flex items-start gap-3 glass rounded-2xl p-5"
             >
               <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
               <div>
@@ -724,7 +725,7 @@ export default function DiscordPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.10, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              className="glass rounded-2xl p-5"
             >
               <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active Members</p>
               <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">—</p>
@@ -734,7 +735,7 @@ export default function DiscordPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.14, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              className="glass rounded-2xl p-5"
             >
               <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">New Members (7d)</p>
               <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">—</p>
@@ -744,7 +745,7 @@ export default function DiscordPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.18, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-              className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+              className="glass rounded-2xl p-5"
             >
               <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Voice Hours (7d)</p>
               <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">—</p>
@@ -1000,7 +1001,7 @@ export default function DiscordPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.04, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="flex items-start gap-3 glass rounded-2xl p-5"
               >
                 <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                 <div>
@@ -1013,7 +1014,7 @@ export default function DiscordPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.10, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Active/Day</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">0</p>
@@ -1023,7 +1024,7 @@ export default function DiscordPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.14, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Retention (30d)</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">--</p>
@@ -1033,7 +1034,7 @@ export default function DiscordPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.18, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Session</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">--</p>

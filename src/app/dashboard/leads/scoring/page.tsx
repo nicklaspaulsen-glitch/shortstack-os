@@ -604,7 +604,7 @@ export default function LeadScoringPage() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.04 }}
-                  className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  className="flex items-start gap-3 glass rounded-2xl p-5"
                 >
                   <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                   <div>
@@ -617,7 +617,7 @@ export default function LeadScoringPage() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.10 }}
-                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  className="glass rounded-2xl p-5"
                 >
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Warm</p>
                   <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{counts.warm}</p>
@@ -627,7 +627,7 @@ export default function LeadScoringPage() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.14 }}
-                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  className="glass rounded-2xl p-5"
                 >
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Cold</p>
                   <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{counts.cold}</p>
@@ -637,7 +637,7 @@ export default function LeadScoringPage() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.18 }}
-                  className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                  className="glass rounded-2xl p-5"
                 >
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Customer</p>
                   <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{counts.customer}</p>

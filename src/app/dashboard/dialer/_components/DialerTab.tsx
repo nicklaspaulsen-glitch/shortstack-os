@@ -449,7 +449,7 @@ export default function DialerTab() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left: Contact list ─────────────────────────────── */}
         <section className="lg:col-span-1">
-          <div className="rounded-xl border border-black/[0.06] bg-white p-5">
+          <div className="glass rounded-xl p-5">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-sm font-semibold text-[#111827]">Call list ({contacts.length})</h2>
               {contacts.length > 0 && (
@@ -515,7 +515,7 @@ export default function DialerTab() {
 
         {/* Right: Active call panel ─────────────────────────── */}
         <section className="lg:col-span-2">
-          <div className="rounded-xl border border-black/[0.06] bg-white p-6">
+          <div className="glass rounded-xl p-6">
             {!currentContact ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <Phone size={36} className="text-text-muted" />

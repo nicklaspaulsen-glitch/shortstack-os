@@ -240,7 +240,7 @@ export default function WhatsAppPage() {
       {/* Compose modal */}
       {showCompose && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-2xl  border border-black/10 bg-white shadow-2xl overflow-hidden">
+          <div className="w-full max-w-2xl glass shadow-2xl overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-black/8">
               <div className="flex items-center gap-2">
@@ -515,7 +515,7 @@ export default function WhatsAppPage() {
       {/* Stats row */}
       <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
         <motion.div
-          className="col-span-2 lg:col-span-1 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4"
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
         >
@@ -527,7 +527,7 @@ export default function WhatsAppPage() {
           </div>
         </motion.div>
         <motion.div
-          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="glass rounded-2xl p-5 flex flex-col justify-center"
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
         >
@@ -536,7 +536,7 @@ export default function WhatsAppPage() {
           <p className="text-[11px] text-text-muted mt-1.5">delivered</p>
         </motion.div>
         <motion.div
-          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="glass rounded-2xl p-5 flex flex-col justify-center"
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
         >
@@ -545,7 +545,7 @@ export default function WhatsAppPage() {
           <p className="text-[11px] text-text-muted mt-1.5">upcoming</p>
         </motion.div>
         <motion.div
-          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="glass rounded-2xl p-5 flex flex-col justify-center"
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
         >

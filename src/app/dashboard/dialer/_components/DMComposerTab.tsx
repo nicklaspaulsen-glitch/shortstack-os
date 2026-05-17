@@ -151,7 +151,7 @@ export default function DMComposerTab() {
         <StatCard label="Failed" value={stats.failed} icon={<AlertTriangle size={16} />} />
       </div>
 
-      <div className="rounded-xl border border-black/[0.06] bg-white p-5">
+      <div className="glass rounded-xl p-5">
         <h3 className="text-sm font-semibold text-[#111827]">Compose direct message</h3>
         <p className="mt-1 text-xs text-[#6B7280]">
           {isPlatformAdmin

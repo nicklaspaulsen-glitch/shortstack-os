@@ -718,7 +718,7 @@ export default function MarketplacePage() {
                 onClick={() => setSelectedPlugin(null)}
               >
                 <div
-                  className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto  border border-border bg-white shadow-2xl"
+                  className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto glass shadow-2xl"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {/* Modal header */}
@@ -1062,7 +1062,7 @@ export default function MarketplacePage() {
                 onClick={() => setConfirmUninstall(null)}
               >
                 <div
-                  className="w-full max-w-sm rounded-xl border border-border bg-white p-6 shadow-2xl"
+                  className="w-full max-w-sm glass rounded-xl p-6 shadow-2xl"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-center gap-3 mb-4">

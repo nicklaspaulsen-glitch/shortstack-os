@@ -152,7 +152,7 @@ export default function SubaccountsPage() {
     </div><div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
               {/* Focal tile — MRR */}
               <motion.div
-                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="flex items-start gap-3 glass rounded-2xl p-5"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.04, duration: 0.3 }}
@@ -165,7 +165,7 @@ export default function SubaccountsPage() {
               </motion.div>
               {/* Support — Total Subaccounts */}
               <motion.div
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.10, duration: 0.3 }}
@@ -175,7 +175,7 @@ export default function SubaccountsPage() {
               </motion.div>
               {/* Support — Active */}
               <motion.div
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.14, duration: 0.3 }}
@@ -263,7 +263,7 @@ export default function SubaccountsPage() {
               </div>
             )}{showInvite && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-                <div className="relative w-full max-w-md  border border-black/10 bg-white p-6 shadow-2xl">
+                <div className="relative w-full max-w-md glass p-6 shadow-2xl">
                   <button onClick={() => setShowInvite(false)} className="absolute top-4 right-4 p-1.5 rounded hover:bg-black/8 text-black/60">
                     <X className="w-4 h-4" />
                   </button>

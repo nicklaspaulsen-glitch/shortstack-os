@@ -839,7 +839,7 @@ export default function CommunityPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.04 }}
-                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="flex items-start gap-3 glass rounded-2xl p-5"
               >
                 <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                 <div>
@@ -851,7 +851,7 @@ export default function CommunityPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.10 }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Online Now</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{MEMBERS.filter(m => m.online).length}</p>
@@ -860,7 +860,7 @@ export default function CommunityPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.14 }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Posts This Week</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{posts.length}</p>
@@ -869,7 +869,7 @@ export default function CommunityPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.18 }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Upcoming Events</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{events.length}</p>
@@ -1244,7 +1244,7 @@ export default function CommunityPage() {
                                 <p className="text-[7px] text-center mt-1 font-medium leading-tight">{badge.label}</p>
                                 {/* Tooltip */}
                                 <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block z-10">
-                                  <div className="bg-white border border-border rounded-lg px-2 py-1 text-[8px] whitespace-nowrap shadow-lg">
+                                  <div className="glass rounded-lg px-2 py-1 text-[8px] whitespace-nowrap shadow-lg">
                                     {badge.description}
                                   </div>
                                 </div>

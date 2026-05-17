@@ -225,7 +225,7 @@ export default function AuditPage() {
     </div>{/* Stats */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
               {/* Focal tile */}
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.36 }}
-                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                className="flex items-start gap-3 glass rounded-2xl p-5">
                 <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                 <div>
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Actions</p>
@@ -235,19 +235,19 @@ export default function AuditPage() {
               </motion.div>
               {/* Support tile: Failures */}
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.36 }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                className="glass rounded-2xl p-5">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Failures</p>
                 <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${stats.failed > 0 ? "text-red-600" : "text-emerald-700"}`}>{stats.failed}</p>
               </motion.div>
               {/* Support tile: Sensitive */}
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.36 }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                className="glass rounded-2xl p-5">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Sensitive</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{stats.sensitive}</p>
               </motion.div>
               {/* Support tile: Alerts */}
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.36 }}
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+                className="glass rounded-2xl p-5">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Alerts</p>
                 <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${stats.unresolvedAlerts > 0 ? "text-red-600" : "text-emerald-700"}`}>{stats.unresolvedAlerts}</p>
               </motion.div>

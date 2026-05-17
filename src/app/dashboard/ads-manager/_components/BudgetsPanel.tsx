@@ -99,7 +99,7 @@ export default function BudgetsPanel() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border border-black/[0.06] bg-white px-4 py-3 flex items-center justify-between">
+      <div className="glass rounded-lg px-4 py-3 flex items-center justify-between">
         <div>
           <div className="text-[11px] uppercase tracking-wide text-muted">
             Total active daily budget
@@ -119,7 +119,7 @@ export default function BudgetsPanel() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="rounded-lg border border-black/[0.06] bg-white p-4">
+        <div className="glass rounded-lg p-4">
           <h3 className="text-sm font-medium mb-3">Current allocation</h3>
           {current.length === 0 ? (
             <div className="text-sm text-[#6B7280] py-12 text-center">

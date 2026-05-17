@@ -45,7 +45,7 @@ function PieChart({ slices }: { slices: { id: string; label: string; value: numb
     .join(", ");
 
   return (
-    <motion.div className="bg-white border border-black/[0.06] rounded-xl p-5 space-y-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }}>
+    <motion.div className="glass rounded-xl p-5 space-y-4 spotlight-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
       <p className="text-sm font-semibold text-[#111827]">Leads by Source</p>
       <div className="flex flex-col sm:flex-row items-center gap-6">
         <div
@@ -163,7 +163,7 @@ export default function LeadSourcesPage() {
                 </button>
       </div>
     </div>{pieSlices.length > 0 && <PieChart slices={pieSlices} />}{showCreate && (
-              <motion.div className="bg-white border border-black/[0.06] rounded-xl p-5 space-y-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+              <motion.div className="glass rounded-xl p-5 space-y-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                 <p className="font-semibold text-[#111827] text-sm">New Source</p>
                 <div className="flex flex-wrap gap-3">
                   <input className="input flex-1 min-w-[160px] text-sm" placeholder="Source name (e.g. Google Ads)"
@@ -195,7 +195,7 @@ export default function LeadSourcesPage() {
                 </div>
               </motion.div>
             )}{loading ? <TableSkeleton rows={5} /> : sources.length === 0 ? (
-              <motion.div className="bg-white border border-black/[0.06] rounded-xl p-12 flex flex-col items-center gap-4 text-center" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+              <motion.div className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                 <Filter size={40} className="text-text-muted" />
                 <p className="text-[#111827] font-semibold">No lead sources yet</p>
                 <p className="text-[#6B7280] text-sm max-w-xs">Add your first source to start tracking where leads originate.</p>
@@ -205,7 +205,7 @@ export default function LeadSourcesPage() {
                 </button>
               </motion.div>
             ) : (
-              <motion.div className="bg-white border border-black/[0.06] rounded-xl overflow-hidden" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+              <motion.div className="glass rounded-xl overflow-hidden" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-black/[0.06] text-[#6B7280] text-xs">

@@ -525,7 +525,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.04 }}
-                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="flex items-start gap-3 glass rounded-2xl p-5"
                   >
                     <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div className="min-w-0">
@@ -538,7 +538,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.10 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">ARR</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(annualRecurringRevenue)}</p>
@@ -548,7 +548,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.14 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Net Profit</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(netProfit)}</p>
@@ -558,7 +558,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.18 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Churn Rate</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{churnRate.toFixed(1)}%</p>
@@ -572,7 +572,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.29 }}
-                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="flex items-start gap-3 glass rounded-2xl p-5"
                   >
                     <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div className="min-w-0">
@@ -585,7 +585,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.35 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg / Client</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(avgRevenue)}</p>
@@ -595,7 +595,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.39 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Client LTV</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(clv)}</p>
@@ -605,7 +605,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.43 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Est. Annual Tax</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(estimatedTax)}</p>
@@ -728,7 +728,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.04 }}
-                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="flex items-start gap-3 glass rounded-2xl p-5"
                   >
                     <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div className="min-w-0">
@@ -740,7 +740,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.10 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Annual Total</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(totalMonthlyExpenses * 12)}</p>
@@ -749,7 +749,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.14 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Categories</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{categoryTotals.length}</p>
@@ -758,7 +758,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.18 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Profit Margin</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{marginPct.toFixed(1)}%</p>
@@ -909,7 +909,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.04 }}
-                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="flex items-start gap-3 glass rounded-2xl p-5"
                   >
                     <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div className="min-w-0">
@@ -922,7 +922,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.10 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Annual Spend</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(totalAnnualSubs)}</p>
@@ -932,7 +932,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.14 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{activeSubs}</p>
@@ -942,7 +942,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.18 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Renewals ≤7d</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{upcomingRenewals}</p>
@@ -1069,7 +1069,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.04 }}
-                    className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="flex items-start gap-3 glass rounded-2xl p-5"
                   >
                     <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div className="min-w-0">
@@ -1082,7 +1082,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.10 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Due Soon</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(invoiceTotals.dueSoon)}</p>
@@ -1092,7 +1092,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.14 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Pending</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(invoiceTotals.pending)}</p>
@@ -1102,7 +1102,7 @@ export default function FinancialsPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.35, delay: 0.18 }}
-                    className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                    className="glass rounded-2xl p-5"
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Paid</p>
                     <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{formatCurrency(invoiceTotals.paid)}</p>

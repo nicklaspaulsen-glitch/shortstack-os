@@ -237,7 +237,7 @@ function ClientDashboard() {
             <button
               key={i}
               onClick={() => router.push(item.route)}
-              className="card-hover p-6 text-center group"
+              className="card-hover p-6 text-center group spotlight-card"
             >
               <span className={`${item.color} inline-block mb-2 group-hover:scale-110 transition-transform`}>
                 {item.icon}

@@ -137,7 +137,7 @@ export default function InsightsPanel() {
       {/* ── Account health scorecard (claude-ads 200+ checks) ── */}
       <AuditScoreCard />
 
-      <div className="rounded-lg border border-black/[0.06] bg-white p-4">
+      <div className="glass rounded-lg p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Sparkles className="text-brand-accent" size={16} />
@@ -259,7 +259,7 @@ function PlatformLineChart({
 }) {
   const empty = data.length === 0 || data.every((d) => !d.meta && !d.google && !d.tiktok);
   return (
-    <div className="rounded-lg border border-black/[0.06] bg-white p-4">
+    <div className="glass rounded-lg p-4">
       <h4 className="text-xs uppercase tracking-wide text-[#6B7280] mb-3">{title}</h4>
       {empty ? (
         <div className="text-xs text-[#6B7280] py-8 text-center">No data yet.</div>

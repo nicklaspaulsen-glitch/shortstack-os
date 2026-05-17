@@ -263,7 +263,7 @@ export default function SMSConsoleTab() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Compose pane */}
         <section className="lg:col-span-2">
-          <div className="rounded-xl border border-black/[0.06] bg-white p-5">
+          <div className="glass rounded-xl p-5">
             {mode === "single" ? (
               <>
                 <h3 className="text-sm font-semibold text-[#111827]">Single SMS</h3>
@@ -454,7 +454,7 @@ export default function SMSConsoleTab() {
 
         {/* Templates pane */}
         <section className="lg:col-span-1">
-          <div className="rounded-xl border border-black/[0.06] bg-white p-5">
+          <div className="glass rounded-xl p-5">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-sm font-semibold text-[#111827]">Templates</h3>
               <button
@@ -520,7 +520,7 @@ function ModeToggle({
         onClick={() => setMode("single")}
         className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
           mode === "single"
-            ? "bg-white text-[#111827] shadow-sm"
+            ? "glass text-sm font-medium shadow-sm"
             : "text-[#6B7280] hover:text-[#111827]"
         }`}
       >
@@ -531,7 +531,7 @@ function ModeToggle({
         onClick={() => setMode("bulk")}
         className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
           mode === "bulk"
-            ? "bg-white text-[#111827] shadow-sm"
+            ? "glass text-sm font-medium shadow-sm"
             : "text-[#6B7280] hover:text-[#111827]"
         }`}
       >

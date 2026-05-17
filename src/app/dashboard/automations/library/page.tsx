@@ -146,7 +146,7 @@ export default function WorkflowLibraryPage() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search templates..."
-                    className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] bg-white pl-9 pr-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-brand-accent focus:outline-none"
+                    className="w-full rounded-lg glass pl-9 pr-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-brand-accent focus:outline-none"
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -154,7 +154,7 @@ export default function WorkflowLibraryPage() {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="rounded-lg border border-[rgba(0,0,0,0.08)] bg-white px-3 py-2 text-sm text-[#111827] focus:border-brand-accent focus:outline-none"
+                    className="rounded-lg glass px-3 py-2 text-sm text-[#111827] focus:border-brand-accent focus:outline-none"
                   >
                     <option value="all">All categories</option>
                     {Object.entries(CATEGORY_LABELS).map(([k, label]) => (
@@ -187,7 +187,7 @@ export default function WorkflowLibraryPage() {
                     <motion.article
                       key={t.id}
                       variants={itemVariants}
-                      className="group rounded-xl border border-[rgba(0,0,0,0.08)] bg-white p-5 transition hover:border-[rgba(0,0,0,0.14)] hover:bg-[#F8FAFC]"
+                      className="group glass rounded-xl p-5 transition hover:border-border-strong"
                     >
                       <div className="mb-3 flex items-center justify-between gap-2">
                         <span

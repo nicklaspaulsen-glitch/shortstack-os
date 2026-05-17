@@ -43,7 +43,7 @@ function PreviewModal({ template, onClose }: { template: InvoiceTemplate; onClos
       <motion.div
         initial={{ opacity: 0, scale: 0.97, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="bg-white rounded-2xl border border-[rgba(0,0,0,0.08)] w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+        className="glass rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
       >
         {/* Invoice header */}
         <div className="p-8 border-b border-[rgba(0,0,0,0.06)]">
@@ -266,7 +266,7 @@ export default function InvoiceTemplatesPage() {
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-5 space-y-4"
+                className="glass rounded-xl p-5 space-y-4"
               >
                 <p className="font-semibold text-[#111827] text-sm">New Template</p>
                 <div className="flex flex-wrap gap-3">
@@ -303,7 +303,7 @@ export default function InvoiceTemplatesPage() {
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-12 flex flex-col items-center gap-4 text-center"
+                className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center"
               >
                 <ReceiptText size={40} className="text-muted opacity-30" />
                 <p className="text-[#111827] font-semibold">No invoice templates yet</p>
@@ -321,7 +321,7 @@ export default function InvoiceTemplatesPage() {
                       key={t.id}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-5 space-y-4"
+                      className="glass rounded-xl p-5 space-y-4"
                     >
                       <p className="font-semibold text-[#111827] text-sm">Edit Template</p>
                       <div className="flex flex-wrap gap-3">
@@ -361,7 +361,8 @@ export default function InvoiceTemplatesPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.04 }}
                       whileHover={{ y: -2, scale: 1.005 }}
-                      className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl p-4 flex items-center gap-4 group relative overflow-hidden"
+                      onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                      className="glass rounded-xl p-4 flex items-center gap-4 group relative overflow-hidden spotlight-card"
                     >
                       <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0", position: "absolute", left: 0, right: 0, top: 0 }} />
                       <div className="flex-1 min-w-0">

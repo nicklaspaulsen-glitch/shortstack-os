@@ -158,7 +158,7 @@ export default function VoicemailDropPage() {
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22 }}
-                  className="w-full max-w-md  border border-black/10 bg-white shadow-2xl overflow-hidden"
+                  className="w-full max-w-md glass shadow-2xl overflow-hidden"
                 >
                   <div className="flex items-center justify-between px-5 py-4 border-b border-black/8">
                     <p className="font-semibold text-text-primary">Upload voicemail</p>
@@ -217,7 +217,7 @@ export default function VoicemailDropPage() {
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22 }}
-                  className="w-full max-w-md  border border-black/10 bg-white shadow-2xl overflow-hidden"
+                  className="w-full max-w-md glass shadow-2xl overflow-hidden"
                 >
                   <div className="flex items-center justify-between px-5 py-4 border-b border-black/8">
                     <p className="font-semibold text-text-primary">Drop &quot;{showDrop.name}&quot;</p>

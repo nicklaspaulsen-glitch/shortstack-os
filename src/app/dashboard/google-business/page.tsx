@@ -92,7 +92,7 @@ export default function GoogleBusinessPage() {
     </div>{/* Stats */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
               {/* Focal tile — Avg Rating */}
               <motion.div
-                className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="flex items-start gap-3 glass rounded-2xl p-5"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.04, duration: 0.3 }}
@@ -105,7 +105,7 @@ export default function GoogleBusinessPage() {
               </motion.div>
               {/* Support — Total Reviews */}
               <motion.div
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.10, duration: 0.3 }}
@@ -115,7 +115,7 @@ export default function GoogleBusinessPage() {
               </motion.div>
               {/* Support — Needs Reply */}
               <motion.div
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.14, duration: 0.3 }}
@@ -125,7 +125,7 @@ export default function GoogleBusinessPage() {
               </motion.div>
               {/* Support — Profile Views */}
               <motion.div
-                className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+                className="glass rounded-2xl p-5"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.18, duration: 0.3 }}

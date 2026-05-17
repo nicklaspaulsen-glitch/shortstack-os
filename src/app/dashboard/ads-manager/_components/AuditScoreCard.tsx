@@ -289,7 +289,7 @@ export default function AuditScoreCard() {
   >;
 
   return (
-    <div className="rounded-lg border border-black/[0.06] bg-white p-4 space-y-4">
+    <div className="glass rounded-lg p-4 space-y-4">
       {/* Header row */}
       <div className="flex items-start gap-3">
         <GradeCircle grade={score.grade} score={score.score} />

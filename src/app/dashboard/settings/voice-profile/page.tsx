@@ -126,7 +126,7 @@ export default function VoiceProfileSettingsPage() {
         <button
                   onClick={handleRecompute}
                   disabled={busy || loading}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-white text-zinc-900 hover:bg-zinc-100 disabled:opacity-50 transition-colors"
+                  className="btn-pill flex items-center gap-2 disabled:opacity-50"
                 >
                   <RefreshCw size={15} className={busy ? "animate-spin" : ""} />
                   Recompute
@@ -239,7 +239,7 @@ function StatsPanel({ profile }: { profile: VoiceProfile }) {
   ];
 
   return (
-    <div className="rounded-xl border border-black/6 bg-white p-5">
+    <div className="rounded-xl glass p-5">
       <div className="flex items-center gap-2 mb-4">
         <Type size={16} className="text-blue-600" />
         <h3 className="font-semibold text-sm">Voice Stats</h3>
@@ -303,7 +303,7 @@ function SignatureSection({ profile }: { profile: VoiceProfile }) {
   if (!hasAny) return null;
 
   return (
-    <div className="rounded-xl border border-black/6 bg-white p-5 space-y-4">
+    <div className="rounded-xl glass p-5 space-y-4">
       <div className="flex items-center gap-2">
         <Sparkles size={16} className="text-blue-600" />
         <h3 className="font-semibold text-sm">Signature</h3>
@@ -331,7 +331,7 @@ function SignatureSection({ profile }: { profile: VoiceProfile }) {
 
 function PromptSnippetPanel({ snippet }: { snippet: string }) {
   return (
-    <div className="rounded-xl border border-black/6 bg-white p-5">
+    <div className="rounded-xl glass p-5">
       <div className="flex items-center gap-2 mb-3">
         <Wand2 size={16} className="text-blue-600" />
         <h3 className="font-semibold text-sm">Prompt Injection</h3>
@@ -361,7 +361,7 @@ function BootstrapPanel({
   busy: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-black/6 bg-white p-5">
+    <div className="rounded-xl glass p-5">
       <div className="flex items-center gap-2 mb-3">
         <Wand2 size={16} className="text-blue-600" />
         <h3 className="font-semibold text-sm">Bootstrap</h3>

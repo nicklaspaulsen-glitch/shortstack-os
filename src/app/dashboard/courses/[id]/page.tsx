@@ -459,7 +459,7 @@ export default function CourseBuilderPage() {
                   <input
                     value={lessonTitle}
                     onChange={e => { setLessonTitle(e.target.value); triggerLessonSave(); }}
-                    className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
+                    className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent"
                   />
                 </div>
 
@@ -494,7 +494,7 @@ export default function CourseBuilderPage() {
                       value={lessonUrl}
                       onChange={e => { setLessonUrl(e.target.value); triggerLessonSave(); }}
                       placeholder="https://…"
-                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
+                      className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent"
                     />
                   </div>
                 )}
@@ -510,7 +510,7 @@ export default function CourseBuilderPage() {
                       onChange={e => { setLessonBody(e.target.value); triggerLessonSave(); }}
                       rows={10}
                       placeholder={lessonType === "text" ? "Write your lesson content here…" : "Quiz instructions…"}
-                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent resize-none font-mono"
+                      className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent resize-none font-mono"
                     />
                   </div>
                 )}
@@ -524,7 +524,7 @@ export default function CourseBuilderPage() {
                       value={lessonDuration}
                       onChange={e => { setLessonDuration(e.target.value); triggerLessonSave(); }}
                       placeholder="e.g. 300"
-                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
+                      className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent"
                     />
                   </div>
                   <div>
@@ -534,7 +534,7 @@ export default function CourseBuilderPage() {
                       value={lessonDrip}
                       onChange={e => { setLessonDrip(e.target.value); triggerLessonSave(); }}
                       min="0"
-                      className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
+                      className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent"
                     />
                   </div>
                   <div>
@@ -575,7 +575,7 @@ export default function CourseBuilderPage() {
               <input
                 value={settingsTitle}
                 onChange={e => setSettingsTitle(e.target.value)}
-                className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
+                className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent"
               />
             </div>
 
@@ -585,7 +585,7 @@ export default function CourseBuilderPage() {
                 value={settingsDesc}
                 onChange={e => setSettingsDesc(e.target.value)}
                 rows={3}
-                className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent resize-none"
+                className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent resize-none"
               />
             </div>
 
@@ -608,7 +608,7 @@ export default function CourseBuilderPage() {
                   type="number"
                   value={settingsPrice}
                   onChange={e => setSettingsPrice(e.target.value)}
-                  className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
+                  className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent"
                 />
               </div>
             )}
@@ -618,7 +618,7 @@ export default function CourseBuilderPage() {
               <select
                 value={settingsAccess}
                 onChange={e => setSettingsAccess(e.target.value as typeof settingsAccess)}
-                className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
+                className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent"
               >
                 <option value="lifetime">Lifetime</option>
                 <option value="subscription">Subscription</option>
@@ -678,7 +678,7 @@ export default function CourseBuilderPage() {
                   <select
                     value={enrollClientId}
                     onChange={e => setEnrollClientId(e.target.value)}
-                    className="w-full bg-white border border-[rgba(0,0,0,0.10)] rounded-lg px-3 py-2 text-[#111827] text-sm focus:outline-none focus:border-brand-accent"
+                    className="w-full glass rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-accent"
                   >
                     <option value="">Select client…</option>
                     {clients.map(c => (

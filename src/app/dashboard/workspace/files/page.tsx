@@ -451,7 +451,7 @@ export default function WorkspaceFilesPage() {
               </div>
             )}{/* 2-column body */}<div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-6">
               {/* LEFT — folder tree */}
-              <aside className="rounded-xl border border-black/[0.06] bg-white p-2 h-fit">
+              <aside className="glass rounded-xl p-2 h-fit">
                 <h3 className="text-[11px] uppercase tracking-wide text-text-muted px-2 pt-2 pb-1.5">
                   Folders
                 </h3>
@@ -480,7 +480,7 @@ export default function WorkspaceFilesPage() {
                 ref={dropRef}
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
-                className="rounded-xl border border-black/[0.06] bg-white p-4 min-h-[420px]"
+                className="glass rounded-xl p-4 min-h-[420px]"
               >
                 {/* Breadcrumb */}
                 <nav className="flex flex-wrap items-center gap-1.5 text-sm text-[#6B7280] mb-4">
@@ -528,7 +528,7 @@ export default function WorkspaceFilesPage() {
               </section>
             </div>{/* Context menu */}{contextMenu && (
               <div
-                className="fixed z-50 rounded-md border border-black/[0.06] bg-white shadow-2xl py-1 text-sm"
+                className="fixed z-50 rounded-md glass shadow-2xl py-1 text-sm"
                 style={{ top: contextMenu.y, left: contextMenu.x }}
               >
                 {[
@@ -662,7 +662,7 @@ function FileCard(props: FileCardProps) {
       type="button"
       onContextMenu={(e) => onContextMenu(e, file)}
       onDoubleClick={() => onDoubleClick(file)}
-      className="group flex flex-col text-left rounded-lg border border-black/[0.06] bg-white hover:bg-[#F8FAFC] hover:border-[rgba(59,130,246,0.3)] transition overflow-hidden"
+      className="group flex flex-col text-left glass rounded-lg hover:bg-[#F8FAFC] hover:border-[rgba(59,130,246,0.3)] transition overflow-hidden"
     >
       <div className="aspect-square w-full bg-[#F8FAFC] flex items-center justify-center text-text-muted overflow-hidden">
         {isImage ? (

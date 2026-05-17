@@ -219,7 +219,7 @@ export default function CommissionTrackerPage() {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-          className="flex items-start gap-3 bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="flex items-start gap-3 glass rounded-2xl p-5"
         >
           <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
           <div>
@@ -233,7 +233,7 @@ export default function CommissionTrackerPage() {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.10, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="glass rounded-2xl p-5"
         >
           <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Paid</p>
           <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{fmtUSD(totals.paid)}</p>
@@ -243,7 +243,7 @@ export default function CommissionTrackerPage() {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-          className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+          className="glass rounded-2xl p-5"
         >
           <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Pending</p>
           <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{fmtUSD(totals.pending)}</p>

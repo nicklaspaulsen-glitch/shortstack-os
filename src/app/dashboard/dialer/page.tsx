@@ -31,7 +31,7 @@ export default function DialerPage() {
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Dialer</h1>
       </div>
     </div><div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
-              <div className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl overflow-hidden">
+              <div className="glass rounded-xl overflow-hidden">
                 <div className="border-b border-[rgba(0,0,0,0.08)]">
                   <nav className="flex gap-1 overflow-x-auto px-2" aria-label="Dialer tabs">
                     {TABS.map((tab, index) => {

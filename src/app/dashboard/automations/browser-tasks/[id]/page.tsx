@@ -184,7 +184,7 @@ export default function BrowserTaskDetailPage() {
 
   if (!task) {
     return (
-      <div className="rounded-lg border border-black/[0.06] bg-white p-10 text-center text-gray-500">
+      <div className="glass rounded-lg p-10 text-center text-gray-500">
         Task not found.{" "}
         <Link href="/dashboard/automations/browser-tasks" className="text-blue-600 hover:underline">
           Back to list
@@ -218,23 +218,23 @@ export default function BrowserTaskDetailPage() {
 
       {/* Stats row */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <div className="rounded-lg border border-black/[0.06] bg-white p-4">
+        <div className="glass rounded-lg p-4">
           <div className="text-[10px] uppercase tracking-wide text-gray-500">Steps</div>
           <div className="mt-1 text-lg font-semibold text-gray-900">
             {task.steps_taken} / {task.max_steps}
           </div>
         </div>
-        <div className="rounded-lg border border-black/[0.06] bg-white p-4">
+        <div className="glass rounded-lg p-4">
           <div className="text-[10px] uppercase tracking-wide text-gray-500">Cost</div>
           <div className="mt-1 text-lg font-semibold text-gray-900">
             ${task.total_cost_usd.toFixed(4)}
           </div>
         </div>
-        <div className="rounded-lg border border-black/[0.06] bg-white p-4">
+        <div className="glass rounded-lg p-4">
           <div className="text-[10px] uppercase tracking-wide text-gray-500">Mode</div>
           <div className="mt-1 text-sm font-medium text-gray-800">{task.run_mode}</div>
         </div>
-        <div className="rounded-lg border border-black/[0.06] bg-white p-4">
+        <div className="glass rounded-lg p-4">
           <div className="text-[10px] uppercase tracking-wide text-gray-500">Started</div>
           <div className="mt-1 text-sm font-medium text-gray-800">{fmtDate(task.started_at)}</div>
         </div>
@@ -336,7 +336,7 @@ export default function BrowserTaskDetailPage() {
       )}
 
       {/* Step timeline */}
-      <div className="rounded-xl border border-black/[0.06] bg-white">
+      <div className="glass rounded-xl">
         <div className="flex items-center gap-2 border-b border-black/[0.06] px-5 py-3 text-sm font-semibold text-gray-800">
           <Globe size={15} /> Step timeline
           <span className="ml-2 rounded-full bg-black/[0.06] px-2 py-0.5 text-[10px] text-gray-500">

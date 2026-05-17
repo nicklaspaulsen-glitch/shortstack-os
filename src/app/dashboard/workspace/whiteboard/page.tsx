@@ -260,7 +260,7 @@ interface PresenceStripProps {
 
 function PresenceStrip({ users, loading }: PresenceStripProps) {
   return (
-    <div className=" border border-black/[0.06] bg-white px-4 py-3">
+    <div className=" glass px-4 py-3">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280]">
@@ -315,7 +315,7 @@ function PresenceBubble({ user }: { user: PresenceRow }) {
 
 function ClientLaneCard({ lane }: { lane: ClientLane }) {
   return (
-    <div className="snap-start shrink-0 w-[320px]  border border-black/[0.06] bg-white p-3 flex flex-col">
+    <div className="snap-start shrink-0 w-[320px]  glass p-3 flex flex-col">
       <div className="flex items-center justify-between gap-2 mb-3 px-1">
         <h3 className="text-sm font-semibold text-[#111827] truncate">{lane.client_name}</h3>
         <span className="rounded-full border border-black/[0.06] bg-black/[0.04] px-2 py-0.5 text-[10px] font-semibold text-[#374151]">
@@ -386,7 +386,7 @@ function WhiteboardCard({ item }: { item: WhiteboardItem }) {
 
 function ActivitySidebar({ events, loading }: { events: ActivityEvent[]; loading: boolean }) {
   return (
-    <aside className=" border border-black/[0.06] bg-white p-4 h-fit xl:sticky xl:top-4">
+    <aside className=" glass p-4 h-fit xl:sticky xl:top-4">
       <div className="flex items-center gap-2 mb-3">
         <Eye size={14} className="text-[#6B7280]" />
         <h3 className="text-sm font-semibold uppercase tracking-wider text-[#6B7280]">
@@ -447,7 +447,7 @@ function LanesSkeleton() {
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
-          className="shrink-0 w-[320px]  border border-black/[0.06] bg-white p-3 space-y-2"
+          className="shrink-0 w-[320px]  glass p-3 space-y-2"
         >
           <div className="h-5 w-32 bg-black/[0.04] rounded animate-pulse" />
           {Array.from({ length: 3 }).map((__, j) => (
