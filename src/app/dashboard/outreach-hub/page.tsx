@@ -1189,9 +1189,14 @@ export default function OutreachHubPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2, delay: index * 0.05 }}
                       whileHover={{ scale: 1.01, y: -2 }}
-                      className={`text-left p-4 rounded-xl border transition-all ${
+                      className={`text-left p-4 rounded-xl border transition-all spotlight-card ${
                         activeSequence === seq.id ? "bg-white/[0.10] backdrop-blur-[20px] border-border" : "bg-white/[0.04] backdrop-blur-[16px] border-border-subtle hover:border-border"
-                      }`}>
+                      }`}
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}>
                       <div className="flex items-center justify-between mb-1">
                         <h3 className={`text-xs font-semibold ${activeSequence === seq.id ? "text-brand-accent" : ""}`}>{seq.name}</h3>
                         {activeSequence === seq.id && <CircleDot size={12} className="text-brand-accent" />}

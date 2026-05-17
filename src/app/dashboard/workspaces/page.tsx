@@ -163,11 +163,16 @@ export default function WorkspacesPage() {
                   return (
                     <motion.div
                       key={w.id}
-                      className={`glass rounded-xl p-5 flex flex-col gap-3 transition-all ${isActive ? "border border-brand-accent/40 bg-brand-accent/5" : ""}`}
+                      className={`glass rounded-xl p-5 flex flex-col gap-3 transition-all spotlight-card ${isActive ? "border border-brand-accent/40 bg-brand-accent/5" : ""}`}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05, duration: 0.4 }}
                       whileHover={{ y: -4, scale: 1.01 }}
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">

@@ -255,7 +255,12 @@ function CourseCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06, duration: 0.4 }}
       whileHover={{ y: -4, scale: 1.01 }}
-      className="group glass rounded-xl overflow-hidden">
+      className="group glass rounded-xl overflow-hidden spotlight-card"
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+      }}>
       {/* Thumbnail */}
       <div className="relative h-36 bg-gradient-to-br from-purple-100 to-indigo-100 flex items-center justify-center">
         {course.thumbnail_url ? (
