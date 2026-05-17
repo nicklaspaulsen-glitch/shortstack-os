@@ -937,37 +937,37 @@ export default function WebsitesPage() {
                 </button>
               </div>
             </div>
-            {/* Social proof strip */}<div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border bg-gradient-to-r from-amber-500/[0.04] via-transparent to-emerald-500/[0.04]">
+            {/* Social proof strip */}<div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border-subtle bg-gradient-to-r from-blue-500/[0.04] via-transparent to-emerald-500/[0.04]">
               <div className="flex items-center gap-4 flex-wrap">
-                <div className="flex items-center gap-1.5 text-[11px] text-foreground/90">
+                <div className="flex items-center gap-1.5 text-[11px] text-text-primary">
                   <TrendingUp size={12} className="text-emerald-400" />
                   <span className="font-semibold">1,240+ sites</span>
-                  <span className="text-muted">launched this month</span>
+                  <span className="text-text-muted">launched this month</span>
                 </div>
-                <span className="w-px h-4 bg-border" />
-                <div className="flex items-center gap-1.5 text-[11px] text-foreground/90">
+                <span className="w-px h-4 bg-border-subtle" />
+                <div className="flex items-center gap-1.5 text-[11px] text-text-primary">
                   <Target size={12} className="text-brand-accent" />
                   <span className="font-semibold">4.6% avg CVR</span>
-                  <span className="text-muted">across templates</span>
+                  <span className="text-text-muted">across templates</span>
                 </div>
-                <span className="w-px h-4 bg-border hidden sm:block" />
-                <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-foreground/90">
+                <span className="w-px h-4 bg-border-subtle hidden sm:block" />
+                <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-text-primary">
                   <Clock size={12} className="text-sky-400" />
                   <span className="font-semibold">3 min</span>
-                  <span className="text-muted">median time to live</span>
+                  <span className="text-text-muted">median time to live</span>
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 {["A", "M", "J", "K", "R"].map((l, i) => (
                   <span
                     key={i}
-                    className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400/30 to-orange-500/30 border border-border text-[9px] font-semibold flex items-center justify-center text-foreground/80"
+                    className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500/20 to-blue-400/10 border border-border-subtle text-[9px] font-semibold flex items-center justify-center text-text-secondary"
                     style={{ marginLeft: i === 0 ? 0 : -6 }}
                   >
                     {l}
                   </span>
                 ))}
-                <span className="text-[10px] text-muted ml-2">Trusted by agencies & freelancers</span>
+                <span className="text-[10px] text-text-muted ml-2">Trusted by agencies & freelancers</span>
               </div>
             </div>{/* Cinematic fullscreen wizard — Higgsfield-style one-question-per-screen flow */}<CinematicWizard
               open={wizardOpen}
@@ -985,7 +985,7 @@ export default function WebsitesPage() {
                     <Category size={16} variant="Bulk" color="#3B82F6" />
                     Pick a niche. Ship in 30 seconds.
                   </h2>
-                  <p className="text-[11px] text-muted mt-0.5">
+                  <p className="text-[11px] text-text-muted mt-0.5">
                     Battle-tested templates &mdash; every one is prewired for conversion.
                   </p>
                 </div>
@@ -1033,7 +1033,7 @@ export default function WebsitesPage() {
                     onClick={() => pickTemplate(t)}
                     onMouseEnter={() => setHoveredTemplate(t.id)}
                     onMouseLeave={() => setHoveredTemplate(null)}
-                    className="group relative text-left overflow-hidden border border-border bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-[rgba(59,130,246,0.12)] hover:-translate-y-1 hover:border-[rgba(59,130,246,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(59,130,246,0.6)] [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
+                    className="group relative text-left overflow-hidden border border-border-subtle bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-[rgba(59,130,246,0.12)] hover:-translate-y-1 hover:border-[rgba(59,130,246,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(59,130,246,0.6)] [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
                   >
                     {/* Preview image */}
                     <div className="relative aspect-[3/2] overflow-hidden">
@@ -1073,18 +1073,18 @@ export default function WebsitesPage() {
                       )}
 
                       {/* Niche chip */}
-                      <span className="absolute top-2.5 left-2.5 text-[9px] px-2 py-0.5 rounded-full bg-black/55 backdrop-blur-md text-white border border-border font-medium tracking-wide uppercase">
+                      <span className="absolute top-2.5 left-2.5 text-[9px] px-2 py-0.5 rounded-full bg-black/55 backdrop-blur-md text-white border border-white/10 font-medium tracking-wide uppercase">
                         {t.niche}
                       </span>
                       {/* CVR metric */}
-                      <span className="absolute top-2.5 right-2.5 text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/90 backdrop-blur-md text-black border border-border font-semibold flex items-center gap-1">
+                      <span className="absolute top-2.5 right-2.5 text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/90 backdrop-blur-md text-black border border-emerald-400/30 font-semibold flex items-center gap-1">
                         <TrendingUp size={9} /> {t.cvr}
                       </span>
 
                       {/* Bottom overlay content — hidden when wireframe/Spline preview is shown */}
                       <div className="absolute bottom-0 left-0 right-0 p-3 transition-opacity duration-200 group-hover:opacity-0">
                         <p className="text-[13px] font-bold text-white drop-shadow-sm">{t.name}</p>
-                        <p className="text-[10px] text-foreground mt-0.5 line-clamp-2">{t.tagline}</p>
+                        <p className="text-[10px] text-text-secondary mt-0.5 line-clamp-2">{t.tagline}</p>
                       </div>
 
                       {/* Wireframe mini-preview — only for non-3D templates; slides up from bottom on hover */}
@@ -1093,9 +1093,9 @@ export default function WebsitesPage() {
                           <div className="absolute inset-0 bg-black/88 backdrop-blur-sm" />
                           <div className="relative h-full flex flex-col p-2.5 gap-2">
                             {/* Mini wireframe sketch */}
-                            <div className="flex-1 rounded-lg border border-border overflow-hidden flex flex-col gap-1 p-1.5 bg-white/[0.03]">
+                            <div className="flex-1 rounded-lg border border-border-subtle overflow-hidden flex flex-col gap-1 p-1.5 bg-white/[0.03]">
                               {/* Nav bar */}
-                              <div className="flex items-center gap-1 pb-1 border-b border-border">
+                              <div className="flex items-center gap-1 pb-1 border-b border-border-subtle">
                                 <div className="h-1.5 w-6 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.9 }} />
                                 <div className="flex-1" />
                                 {[...Array(3)].map((_, i) => (
@@ -1109,7 +1109,7 @@ export default function WebsitesPage() {
                               {/* Feature row */}
                               <div className="flex gap-1">
                                 {[...Array(3)].map((_, i) => (
-                                  <div key={i} className="flex-1 h-3 rounded bg-white/[0.06] border border-border" />
+                                  <div key={i} className="flex-1 h-3 rounded bg-white/[0.06] border border-border-subtle" />
                                 ))}
                               </div>
                               {/* CTA strip */}
@@ -1123,7 +1123,7 @@ export default function WebsitesPage() {
                               {t.preset.sections.slice(0, 5).map((s) => (
                                 <span
                                   key={s}
-                                  className="text-[8px] px-1.5 py-0.5 rounded-full bg-white/[0.08] text-muted border border-border capitalize"
+                                  className="text-[8px] px-1.5 py-0.5 rounded-full bg-white/[0.08] text-text-muted border border-border-subtle capitalize"
                                 >
                                   {s.replace(/_/g, " ")}
                                 </span>
@@ -1136,7 +1136,7 @@ export default function WebsitesPage() {
 
                     {/* Footer bar */}
                     <div className="flex items-center justify-between px-3 py-2.5 bg-surface">
-                      <span className="text-[10px] text-muted flex items-center gap-1">
+                      <span className="text-[10px] text-text-muted flex items-center gap-1">
                         <Clock size={10} className="text-[rgba(59,130,246,0.7)]" /> {t.avgLaunch}
                       </span>
                       <span className="text-[10px] text-brand-accent font-semibold flex items-center gap-1 transition-transform duration-200 group-hover:translate-x-0.5">
@@ -1148,14 +1148,14 @@ export default function WebsitesPage() {
                 })}
               </div>
             </div>{/* Demo-ready banner — shown while demo is live and not yet subscribed */}{active && effectiveStatus(active) === "preview" && (
-              <div className="card p-4 bg-gradient-to-br from-emerald-500/[0.06] to-transparent border-emerald-500/30 fade-in">
+              <div className="glass rounded-xl p-4 bg-gradient-to-br from-emerald-500/[0.06] to-transparent border border-emerald-500/30">
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
                     <Rocket size={18} className="text-emerald-400" />
                   </div>
                   <div className="flex-1 min-w-[200px]">
                     <p className="text-xs font-semibold text-emerald-400">Your demo is live &mdash; try it before you pay</p>
-                    <p className="text-[10px] text-muted">
+                    <p className="text-[10px] text-text-muted">
                       Free for {daysUntil(active.demo_expires_at) ?? 14} days. Go live anytime when you&apos;re ready &mdash; custom monthly price based on what&apos;s in your site.
                     </p>
                   </div>
@@ -1180,7 +1180,7 @@ export default function WebsitesPage() {
                 </div>
               </div>
             )}{/* Active project result */}{active && (
-              <div className="card space-y-3">
+              <div className="glass rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2 min-w-0">
                     <h2 className="text-sm font-semibold truncate">{active.name}</h2>
@@ -1224,7 +1224,7 @@ export default function WebsitesPage() {
                       Deploy
                     </button>
                     {active.vercel_url && (
-                      <a href={active.vercel_url} target="_blank" rel="noopener" className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
+                      <a href={active.vercel_url} target="_blank" rel="noopener" className="text-[10px] px-3 py-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1">
                         <ExternalLink size={10} /> Open
                       </a>
                     )}
@@ -1232,12 +1232,12 @@ export default function WebsitesPage() {
                 </div>
 
                 {(active.preview_url || active.vercel_url) && (
-                  <div className="flex items-center justify-between p-2 rounded-lg bg-surface-light border border-border">
+                  <div className="flex items-center justify-between p-2 rounded-lg bg-surface-light border border-border-subtle">
                     <a href={active.preview_url || active.vercel_url || "#"} target="_blank" rel="noopener" className="text-[11px] text-brand-accent hover:text-[#3B82F6] truncate">
                       {active.preview_url || active.vercel_url}
                     </a>
                     <button onClick={() => { navigator.clipboard.writeText(active.preview_url || active.vercel_url || ""); toast.success("Copied"); }}>
-                      <Copy size={11} className="text-muted hover:text-foreground" />
+                      <Copy size={11} className="text-text-muted hover:text-text-primary" />
                     </button>
                   </div>
                 )}
@@ -1276,7 +1276,7 @@ export default function WebsitesPage() {
                 )}
 
                 {indexHtml ? (
-                  <div className="rounded-xl border border-border overflow-hidden bg-[#1a1c23] flex items-center justify-center p-3" style={{ height: 640 }}>
+                  <div className="rounded-xl border border-border-subtle overflow-hidden bg-[#1a1c23] flex items-center justify-center p-3" style={{ height: 640 }}>
                     <div
                       className="bg-white transition-all duration-300 shadow-2xl shadow-black/40 rounded-lg overflow-hidden"
                       style={{
@@ -1289,7 +1289,7 @@ export default function WebsitesPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="py-10 text-center text-xs text-muted">
+                  <div className="py-10 text-center text-xs text-text-muted">
                     <Loader size={18} className="animate-spin mx-auto mb-2" />
                     Generating&hellip;
                   </div>
@@ -1297,16 +1297,16 @@ export default function WebsitesPage() {
               </div>
             )}{/* Projects list */}<div className="glass rounded-xl overflow-hidden">
               <div className="px-4 pt-4 pb-3">
-                <h2 className="section-header flex items-center gap-2">
+                <h2 className="text-sm font-semibold text-text-primary flex items-center gap-2">
                   <Layout size={13} className="text-brand-accent" /> Your websites ({projects.length})
                 </h2>
               </div>
               {loading ? (
-                <div className="py-8 text-center text-muted text-xs">Loading...</div>
+                <div className="py-8 text-center text-text-muted text-xs">Loading...</div>
               ) : projects.length === 0 ? (
                 <div className="py-10 text-center">
-                  <Globe size={24} className="mx-auto mb-2 text-muted/30" />
-                  <p className="text-xs text-muted mb-3">No websites yet. Pick a niche template above and you&apos;ll have a live demo URL in 3 minutes &mdash; no card required.</p>
+                  <Globe size={24} className="mx-auto mb-2 text-text-muted/30" />
+                  <p className="text-xs text-text-muted mb-3">No websites yet. Pick a niche template above and you&apos;ll have a live demo URL in 3 minutes &mdash; no card required.</p>
                   <button
                     onClick={startBlank}
                     className="btn-pill-ghost inline-flex items-center gap-1.5"
@@ -1336,7 +1336,7 @@ export default function WebsitesPage() {
                         }}
                       >
                         {/* Thumbnail */}
-                        <div className="relative h-36 bg-surface border-b border-border overflow-hidden">
+                        <div className="relative h-36 bg-surface border-b border-border-subtle overflow-hidden">
                           {html ? (
                             <iframe
                               srcDoc={html}
@@ -1347,7 +1347,7 @@ export default function WebsitesPage() {
                           ) : (status === "generating" || status === "deploying") ? (
                             <GeneratingAnimation />
                           ) : (
-                            <div className="flex items-center justify-center h-full text-muted">
+                            <div className="flex items-center justify-center h-full text-text-muted">
                               <Globe size={24} className="opacity-30" />
                             </div>
                           )}
@@ -1371,7 +1371,7 @@ export default function WebsitesPage() {
                         <div className="p-3 space-y-2">
                           <div>
                             <p className="text-xs font-semibold truncate">{p.name}</p>
-                            <p className="text-[9px] text-muted truncate">
+                            <p className="text-[9px] text-text-muted truncate">
                               {clientName ? `${clientName} — ` : ""}
                               {p.industry || p.template_style || "uncategorized"}
                             </p>
@@ -1382,7 +1382,7 @@ export default function WebsitesPage() {
                             const STEPS = ["draft", "generating", "preview", "live"] as const;
                             const stepIdx = STEPS.indexOf(status as typeof STEPS[number]);
                             const currentIdx = stepIdx === -1 ? 0 : stepIdx;
-                            const stepColors = ["text-muted", "text-brand-accent", "text-brand-accent", "text-green-400"] as const;
+                            const stepColors = ["text-text-muted", "text-brand-accent", "text-brand-accent", "text-green-400"] as const;
                             const activeColor = stepColors[currentIdx] || stepColors[0];
                             return (
                               <div className="flex items-center gap-0.5">
@@ -1397,7 +1397,7 @@ export default function WebsitesPage() {
                                         }`}
                                       />
                                       {i === STEPS.length - 1 && (
-                                        <span className={`text-[8px] shrink-0 ml-1 ${active ? activeColor : done ? "text-green-400" : "text-muted/40"}`}>
+                                        <span className={`text-[8px] shrink-0 ml-1 ${active ? activeColor : done ? "text-green-400" : "text-text-muted/40"}`}>
                                           {STATUS_LABEL[status] || status}
                                         </span>
                                       )}
@@ -1429,7 +1429,7 @@ export default function WebsitesPage() {
                                   <button onClick={() => openPricing(p)} className="btn-pill text-[10px] px-3 py-1 flex items-center gap-1">
                                     <Rocket size={10} /> Go Live
                                   </button>
-                                  <button onClick={() => shareDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-border text-muted hover:text-foreground flex items-center gap-1">
+                                  <button onClick={() => shareDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1">
                                     <Share2 size={10} />
                                   </button>
                                 </>
@@ -1445,7 +1445,7 @@ export default function WebsitesPage() {
                                 </span>
                               )}
                             </div>
-                            <button onClick={() => deleteProject(p.id)} aria-label={`Delete ${p.name}`} className="p-1 rounded-md hover:bg-red-500/10 text-muted hover:text-red-400">
+                            <button onClick={() => deleteProject(p.id)} aria-label={`Delete ${p.name}`} className="p-1 rounded-md hover:bg-red-500/10 text-text-muted hover:text-red-400">
                               <Trash2 size={10} />
                             </button>
                           </div>
@@ -1474,15 +1474,15 @@ export default function WebsitesPage() {
                     e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
                   }}
                 >
-                  <h3 className="section-header flex items-center gap-2 text-brand-accent">{item.icon} {item.title}</h3>
-                  <p className="text-[10px] text-muted">{item.body}</p>
+                  <h3 className="text-sm font-semibold flex items-center gap-2 text-brand-accent">{item.icon} {item.title}</h3>
+                  <p className="text-[10px] text-text-muted">{item.body}</p>
                 </motion.div>
               ))}
             </div><div className="glass rounded-xl p-4">
               <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
                 <ShieldCheck size={11} className="text-brand-accent" /> Every template ships with
               </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px] text-muted">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px] text-text-muted">
                 <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Bold hero headline + subheader</div>
                 <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Social proof above the fold</div>
                 <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> CTA repeated 3+ times</div>
@@ -1540,9 +1540,9 @@ function PricingModal({
   const tier = quote?.tier || "starter";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm fade-in" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="card max-w-5xl w-full max-h-[90vh] overflow-y-auto"
+        className="glass rounded-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto p-5"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -1551,18 +1551,18 @@ function PricingModal({
             <h2 className="text-base font-bold flex items-center gap-2">
               <Rocket size={16} className="text-brand-accent" /> Your Website is Ready!
             </h2>
-            <p className="text-[11px] text-muted">{project.name} &mdash; pick a plan to go live.</p>
+            <p className="text-[11px] text-text-muted">{project.name} &mdash; pick a plan to go live.</p>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/[0.05]"><X size={14} /></button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Live preview */}
-          <div className="rounded-xl border border-border overflow-hidden bg-[#1a1c23]" style={{ height: 480 }}>
+          <div className="rounded-xl border border-border-subtle overflow-hidden bg-[#1a1c23]" style={{ height: 480 }}>
             {indexHtml ? (
               <iframe srcDoc={indexHtml} className="w-full h-full" title="Live preview" sandbox="allow-scripts" />
             ) : (
-              <div className="h-full flex items-center justify-center text-muted text-xs">
+              <div className="h-full flex items-center justify-center text-text-muted text-xs">
                 <Loader size={16} className="animate-spin" />
               </div>
             )}
@@ -1609,23 +1609,23 @@ function PricingModal({
 
             {/* Breakdown */}
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-2">Price breakdown</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-2">Price breakdown</p>
               <div className="space-y-1">
                 {quote?.breakdown.map((b, i) => (
-                  <div key={i} className="flex items-center justify-between text-[11px] py-1 border-b border-border/40">
-                    <span className="text-foreground">{b.item}</span>
-                    <span className="text-muted">${b.price}</span>
+                  <div key={i} className="flex items-center justify-between text-[11px] py-1 border-b border-border-subtle/40">
+                    <span className="text-text-primary">{b.item}</span>
+                    <span className="text-text-muted">${b.price}</span>
                   </div>
                 ))}
                 {!quote?.breakdown?.length && !quoteLoading && (
-                  <p className="text-[11px] text-muted">Calculating…</p>
+                  <p className="text-[11px] text-text-muted">Calculating…</p>
                 )}
               </div>
             </div>
 
             {/* Addons */}
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-2">Customize your plan</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-2">Customize your plan</p>
               <div className="space-y-1.5">
                 {ALL_ADDONS.map((a) => {
                   const active = activeAddons.includes(a.key);
@@ -1633,15 +1633,15 @@ function PricingModal({
                     <button
                       key={a.key}
                       onClick={() => onToggleAddon(a.key)}
-                      className={`w-full flex items-center justify-between p-2 rounded-lg border text-left transition ${active ? "border-brand-accent bg-[rgba(59,130,246,0.08)]" : "border-border hover:border-[rgba(59,130,246,0.25)]"}`}
+                      className={`w-full flex items-center justify-between p-2 rounded-lg border text-left transition ${active ? "border-brand-accent bg-[rgba(59,130,246,0.08)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"}`}
                     >
                       <span className="flex items-center gap-2 text-[11px]">
-                        <span className={active ? "text-brand-accent" : "text-muted"}>{a.icon}</span>
+                        <span className={active ? "text-brand-accent" : "text-text-muted"}>{a.icon}</span>
                         {a.label}
                       </span>
                       <span className="flex items-center gap-2">
-                        <span className="text-[10px] text-muted">+${a.price}/mo</span>
-                        <span className={`w-4 h-4 rounded-full border flex items-center justify-center ${active ? "bg-brand-accent border-brand-accent" : "border-border"}`}>
+                        <span className="text-[10px] text-text-muted">+${a.price}/mo</span>
+                        <span className={`w-4 h-4 rounded-full border flex items-center justify-center ${active ? "bg-brand-accent border-brand-accent" : "border-border-subtle"}`}>
                           {active && <Check size={10} className="text-black" />}
                         </span>
                       </span>
@@ -1673,24 +1673,24 @@ function PricingModal({
 
         {/* Comparison */}
         <div className="mt-4 grid grid-cols-2 gap-3">
-          <div className="card border-border">
+          <div className="glass rounded-xl border border-border-subtle p-3">
             <h3 className="text-[11px] font-semibold mb-2 flex items-center gap-1.5">
-              <Eye size={11} className="text-muted" /> Free Demo
+              <Eye size={11} className="text-text-muted" /> Free Demo
             </h3>
-            <ul className="text-[10px] text-muted space-y-1">
+            <ul className="text-[10px] text-text-muted space-y-1">
               <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Shareable demo URL</li>
               <li className="flex items-center gap-1"><Check size={9} className="text-success" /> 14-day access</li>
               <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Vercel preview hosting</li>
-              <li className="flex items-center gap-1 text-muted/60"><X size={9} /> ShortStack watermark</li>
-              <li className="flex items-center gap-1 text-muted/60"><X size={9} /> No custom domain</li>
-              <li className="flex items-center gap-1 text-muted/60"><X size={9} /> No analytics</li>
+              <li className="flex items-center gap-1 text-text-muted/60"><X size={9} /> ShortStack watermark</li>
+              <li className="flex items-center gap-1 text-text-muted/60"><X size={9} /> No custom domain</li>
+              <li className="flex items-center gap-1 text-text-muted/60"><X size={9} /> No analytics</li>
             </ul>
           </div>
-          <div className="card border-[rgba(59,130,246,0.25)] bg-gradient-to-br from-amber-500/5 to-orange-500/5">
+          <div className="glass rounded-xl border border-[rgba(59,130,246,0.25)] bg-gradient-to-br from-blue-500/5 to-indigo-500/5 p-3">
             <h3 className="text-[11px] font-semibold mb-2 flex items-center gap-1.5">
               <Crown size={11} className="text-brand-accent" /> Paid Plan
             </h3>
-            <ul className="text-[10px] text-muted space-y-1">
+            <ul className="text-[10px] text-text-muted space-y-1">
               <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Everything in demo</li>
               <li className="flex items-center gap-1"><Check size={9} className="text-success" /> No watermark</li>
               <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Custom domain support</li>
