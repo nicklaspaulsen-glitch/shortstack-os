@@ -120,7 +120,7 @@ export const SIDEBAR_CATEGORIES: {
       { href: "/dashboard/services", label: "AI Agents" },
       { href: "/dashboard/agent-supervisor", label: "Agent HQ" },
       { href: "/dashboard/ai-studio", label: "AI Studio" },
-      { href: "/dashboard/agent-desktop", label: "Apps" },
+      { href: "/dashboard/monitor", label: "Apps" },
       { href: "/dashboard/workflows", label: "Workflows" },
       { href: "/dashboard/workflow-builder", label: "Flow Builder" },
       { href: "/dashboard/automations", label: "Automations" },
