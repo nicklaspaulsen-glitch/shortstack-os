@@ -24,6 +24,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
 import { AIPromptBox } from "@/components/ui/ai-prompt-box";
+import { ActionSearchBar, type SearchAction } from "@/components/ui/21st-components";
 
 
 // -- Types --------------------------------------------------------
@@ -592,6 +593,27 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
   //              img-to-video[4] music-gen[5] voice-clone[6] train-lora[7] batch-gen[8]
   const ease4 = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
+  // Build SearchAction list for ActionSearchBar quick-access
+  const toolActions: SearchAction[] = TOOLS.map((t) => {
+    const Icon = t.icon;
+    return {
+      id: t.id,
+      label: t.name,
+      icon: <Icon size={12} />,
+      description: t.desc,
+      tag: "tag" in t ? (t as { tag: string }).tag : undefined,
+      onSelect: () => onSelect(t.id),
+    };
+  });
+
+  // Shared onMouseMove handler for spotlight — updates CSS custom props on the element
+  const spotlightMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    el.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
+
   // Section label component (defined inline to keep component closure)
   const SectionLabel = ({ label, color = "#3B82F6" }: { label: string; color?: string }) => (
     <div className="flex items-center gap-2 mb-3">
@@ -609,23 +631,30 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.22, delay, ease: ease4 }}
-        className="glass text-left p-4 rounded-2xl border border-border-subtle hover:border-[rgba(59,130,246,0.28)] hover:bg-white/[0.015] transition-all group"
+        className="glass text-left p-4 rounded-2xl border border-border-subtle hover:border-[rgba(59,130,246,0.28)] hover:bg-white/[0.015] transition-all group relative overflow-hidden"
+        onMouseMove={spotlightMove}
       >
+        {/* 21st.dev — spotlight radial gradient tracks cursor via CSS custom props */}
         <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform duration-200"
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(59,130,246,0.11), transparent 55%)" } as React.CSSProperties}
+        />
+        <div
+          className="relative z-10 w-8 h-8 rounded-lg flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform duration-200"
           style={{ background: `${tool.color}1c` }}
         >
           <Icon size={14} style={{ color: tool.color }} />
         </div>
-        <p className="text-[11px] font-bold text-text-primary mb-0.5 leading-tight">{tool.name}</p>
-        <p className="text-[9.5px] text-text-muted leading-snug line-clamp-2">{tool.desc}</p>
+        <p className="relative z-10 text-[11px] font-bold text-text-primary mb-0.5 leading-tight">{tool.name}</p>
+        <p className="relative z-10 text-[9.5px] text-text-muted leading-snug line-clamp-2">{tool.desc}</p>
         {"newBadge" in tool && tool.newBadge && (
-          <span className="mt-2 inline-block text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-brand-accent/10 text-brand-accent uppercase tracking-wide">
+          <span className="relative z-10 mt-2 inline-block text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-brand-accent/10 text-brand-accent uppercase tracking-wide">
             New
           </span>
         )}
         {"badge" in tool && tool.badge && (
-          <span className="mt-2 inline-block text-[7px] font-bold px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.12)] text-blue-300">
+          <span className="relative z-10 mt-2 inline-block text-[7px] font-bold px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.12)] text-blue-300">
             {tool.badge}
           </span>
         )}
@@ -653,6 +682,13 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
   return (
     <div className="space-y-6">
 
+      {/* ── Tool Quick-Access Search (21st.dev ActionSearchBar) ── */}
+      <ActionSearchBar
+        actions={toolActions}
+        placeholder="Quick-access a tool..."
+        className="max-w-xs"
+      />
+
       {/* ── Visual Tools ──────────────────────────────────────── */}
       <div>
         <SectionLabel label="Visual" />
@@ -672,7 +708,14 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
             transition={{ duration: 0.28, ease: ease4 }}
             className="col-span-2 row-span-2 glass text-left p-5 rounded-2xl border border-border-subtle
               hover:border-[rgba(59,130,246,0.32)] transition-all group relative overflow-hidden"
+            onMouseMove={spotlightMove}
           >
+            {/* 21st.dev — spotlight on hero tile */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -inset-px rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ background: "radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(59,130,246,0.10), transparent 45%)" } as React.CSSProperties}
+            />
             {/* Subtle directional wash */}
             <div className="absolute inset-0 bg-gradient-to-br from-brand-accent/[0.055] to-transparent pointer-events-none rounded-2xl" />
             <div className="relative z-10 flex flex-col h-full">
@@ -716,8 +759,10 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, delay: 0.15, ease: ease4 }}
             className="col-span-2 glass text-left p-4 rounded-2xl border border-border-subtle
-              hover:border-[rgba(59,130,246,0.28)] hover:bg-white/[0.015] transition-all group flex items-center gap-3"
+              hover:border-[rgba(59,130,246,0.28)] hover:bg-white/[0.015] transition-all group flex items-center gap-3 relative overflow-hidden"
+            onMouseMove={spotlightMove}
           >
+            <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: "radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(59,130,246,0.10), transparent 55%)" } as React.CSSProperties} />
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200"
               style={{ background: `${imgToVideo.color}1c` }}
@@ -748,7 +793,10 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
             transition={{ duration: 0.22, delay: 0.06, ease: ease4 }}
             className="glass text-left p-4 rounded-2xl border border-border-subtle
               hover:border-[rgba(59,130,246,0.28)] hover:bg-white/[0.015] transition-all group relative overflow-hidden"
+            onMouseMove={spotlightMove}
           >
+            <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ background: "radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(59,130,246,0.10), transparent 55%)" } as React.CSSProperties} />
             {/* Decorative waveform bars — bottom-right, low opacity */}
             <div className="absolute bottom-3 right-3 pointer-events-none opacity-[0.09]">
               <svg width="52" height="18" viewBox="0 0 52 18" fill="none">

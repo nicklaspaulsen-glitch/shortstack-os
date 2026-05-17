@@ -23,6 +23,7 @@ import { motion } from "framer-motion";
 import { staggerContainerFast, fadeUp } from "@/lib/motion-variants";
 
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+// 21st.dev — spotlight effect applied via CSS custom properties (no extra deps)
 import { MotionPage } from "@/components/motion/motion-page";
 
 // --- Types for new features ---
@@ -647,6 +648,13 @@ export default function ClientsPage() {
     { accent: "#F59E0B", bar: "from-[#F59E0B] to-transparent" }, // At Risk
   ] as const;
 
+  // Spotlight mouse-track (CSS custom property, no re-render)
+  const cardSpotlightMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  };
+
   if (loading) return (
     <div className="space-y-4">
       <div className="animate-pulse h-28 rounded-xl bg-[#F2F2F4] border border-border-subtle" />
@@ -1010,8 +1018,10 @@ export default function ClientsPage() {
                 whileHover={{ y: -4, borderColor: "rgba(99,146,255,0.22)", boxShadow: "0 12px 40px rgba(0,0,0,0.50), 0 4px 16px rgba(0,0,0,0.35)", transition: { duration: 0.22 } }}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
                 onMouseEnter={() => setHoveredClient(c.id)}
-                onMouseLeave={() => setHoveredClient(null)}>
-
+                onMouseLeave={() => setHoveredClient(null)}
+                onMouseMove={cardSpotlightMove}>
+                <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(59,130,246,0.09), transparent 55%)" } as React.CSSProperties} />
 
                 {/* Feature 4: Selection checkbox */}
                 <div className="absolute top-3 left-3" onClick={e => e.stopPropagation()}>

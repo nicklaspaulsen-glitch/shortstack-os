@@ -36,6 +36,7 @@ import OfficeEventFeed, {
 } from "@/components/pixel-office/office-event-feed";
 import KumoScene from "@/components/agent-office/kumo-scene";
 import { MotionPage } from "@/components/motion/motion-page";
+import { NetworkAnimation } from "@/components/ui/21st-components";
 
 // 3D scene: dynamically imported so Three.js doesn't bloat the initial bundle.
 const AgentScene3D = dynamic(
@@ -261,27 +262,36 @@ export default function AgentOfficePage() {
 
       {/* Main scene + right rail */}
       <div className="flex flex-col gap-4 xl:flex-row xl:items-stretch">
-        <div className="min-w-0 flex-1">
-          {viewMode === "3d" ? (
-            <AgentScene3D
-              recent={kumoRecent}
-              hovered={selectedAgentKey}
-              setHovered={(k) => setSelectedAgentKey(k)}
-              onAgentClick={(k) =>
-                setSelectedAgentKey((prev) => (prev === k ? null : k))
-              }
-            />
-          ) : (
-            <KumoScene
-              variant="full"
-              recent={kumoRecent}
-              hovered={selectedAgentKey}
-              setHovered={(k) => setSelectedAgentKey(k)}
-              onAgentClick={(k) =>
-                setSelectedAgentKey((prev) => (prev === k ? null : k))
-              }
-            />
-          )}
+        <div className="min-w-0 flex-1 relative">
+          {/* Subtle particle network behind the office canvas */}
+          <NetworkAnimation
+            className="absolute inset-0 z-0 rounded-xl opacity-35 pointer-events-none"
+            backgroundColor="transparent"
+            particleCount={30}
+            maxDistance={120}
+          />
+          <div className="relative z-10">
+            {viewMode === "3d" ? (
+              <AgentScene3D
+                recent={kumoRecent}
+                hovered={selectedAgentKey}
+                setHovered={(k) => setSelectedAgentKey(k)}
+                onAgentClick={(k) =>
+                  setSelectedAgentKey((prev) => (prev === k ? null : k))
+                }
+              />
+            ) : (
+              <KumoScene
+                variant="full"
+                recent={kumoRecent}
+                hovered={selectedAgentKey}
+                setHovered={(k) => setSelectedAgentKey(k)}
+                onAgentClick={(k) =>
+                  setSelectedAgentKey((prev) => (prev === k ? null : k))
+                }
+              />
+            )}
+          </div>
         </div>
         <div className="flex w-full shrink-0 flex-col gap-3 xl:w-[320px]">
           <OnlineNow rows={snapshot?.online ?? []} />
