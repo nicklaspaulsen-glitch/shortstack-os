@@ -691,9 +691,14 @@ export default function ContentLibraryPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04, duration: 0.4 }}
               whileHover={{ y: -4, scale: 1.01 }}
-              className={`rounded-xl p-3 group cursor-pointer transition-all hover:border-[rgba(0,0,0,0.15)] relative ${
+              className={`rounded-xl p-3 group cursor-pointer transition-all hover:border-[rgba(0,0,0,0.15)] relative spotlight-card ${
                 selectedAssets.has(asset.id) ? "border border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)]" : "glass"
               }`}
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+              }}
             >
               {/* Select checkbox */}
               <button

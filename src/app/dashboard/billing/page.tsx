@@ -387,13 +387,18 @@ export default function BillingPage() {
                   return (
                     <motion.div
                       key={meta.key}
-                      className={`glass border overflow-hidden relative transition-all ${
+                      className={`glass border overflow-hidden relative transition-all spotlight-card ${
                         maxed ? "shadow-[0_0_16px_rgba(239,68,68,0.12)]" : ""
                       }`}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -2 }}
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}
                     >
                       <div className="p-4">
                       <div className="flex items-center justify-between mb-2.5">
@@ -472,7 +477,7 @@ export default function BillingPage() {
                   return (
                     <motion.div
                       key={pack.id}
-                      className="relative overflow-hidden  border p-4 transition-all"
+                      className="relative overflow-hidden border p-4 transition-all spotlight-card"
                       style={{
                         background: pack.popular ? "rgba(59,130,246,0.08)" : "rgba(255,255,255,0.05)",
                         borderColor: pack.popular ? "rgba(59,130,246,0.30)" : "rgba(99,146,255,0.10)",
@@ -481,6 +486,11 @@ export default function BillingPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -2 }}
+                      onMouseMove={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                      }}
                     >
                       {pack.popular && (
                         <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-brand-accent text-white text-[9px] font-bold uppercase tracking-wider">

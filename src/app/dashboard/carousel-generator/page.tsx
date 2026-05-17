@@ -1251,10 +1251,15 @@ export default function CarouselGeneratorPage() {
                           return (
                             <motion.div
                               key={idx}
-                              className="flex-shrink-0 w-[280px] h-[280px] glass rounded-xl overflow-hidden relative group cursor-pointer"
+                              className="flex-shrink-0 w-[280px] h-[280px] glass rounded-xl overflow-hidden relative group cursor-pointer spotlight-card"
                               style={{
                                 background: bg,
                                 boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
+                              }}
+                              onMouseMove={(e) => {
+                                const rect = e.currentTarget.getBoundingClientRect();
+                                e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                                e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
                               }}
                               initial={{ opacity: 0, y: 12 }}
                               animate={{ opacity: 1, y: 0 }}

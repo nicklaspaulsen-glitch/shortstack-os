@@ -441,7 +441,7 @@ export default function BrandKitPage() {
                     { icon: <Palette size={18} />, title: "3. Brand Kit", desc: "Complete brand profile ready" },
                     { icon: <Sparkles size={18} />, title: "4. Generate", desc: "Create on-brand content" },
                   ].map((step, i) => (
-                    <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="glass rounded-xl p-4 text-center relative overflow-hidden">
+                    <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="glass rounded-xl p-4 text-center relative overflow-hidden spotlight-card" onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                       <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} className="absolute top-0 inset-x-0" />
                       <div className="w-10 h-10 mx-auto bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center text-brand-accent mb-2 mt-1">
                         {step.icon}

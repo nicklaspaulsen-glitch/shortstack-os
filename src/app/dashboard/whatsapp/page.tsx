@@ -475,7 +475,12 @@ export default function WhatsAppPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: idx * 0.04 }}
                   whileHover={{ y: -4, scale: 1.01 }}
-                  className="glass rounded-xl p-4 flex items-center gap-3 transition-all"
+                  className="glass rounded-xl p-4 flex items-center gap-3 transition-all spotlight-card"
+                  onMouseMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                    e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                  }}
                 >
                   <div className="w-9 h-9 rounded-full bg-[#25D366]/15 flex items-center justify-center text-xs font-semibold text-[#25D366]">
                     {(c.subject || c.external_thread_id || "?").charAt(0).toUpperCase()}
