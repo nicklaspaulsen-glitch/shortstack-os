@@ -466,19 +466,19 @@ export default function LandingPagesPage() {
             onChange={e => setGuidedOffer(e.target.value)}
             placeholder="e.g., A booking platform that cuts dental practice no-shows by 40% using text-message reminders"
             rows={3}
-            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
             autoFocus
           />
           <div>
-            <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
-              Who&apos;s it for? <span className="text-muted/60 normal-case">(optional)</span>
+            <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">
+              Who&apos;s it for? <span className="text-text-muted/60 normal-case">(optional)</span>
             </label>
             <input
               type="text"
               value={guidedAudience}
               onChange={e => setGuidedAudience(e.target.value)}
               placeholder="e.g., Solo dental practice owners, independent yoga studios"
-              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
             />
           </div>
         </div>
@@ -504,7 +504,7 @@ export default function LandingPagesPage() {
                 className={`relative group overflow-hidden rounded-xl border-2 transition-all duration-200 cursor-pointer text-left ${
                   isSelected
                     ? "border-brand-accent ring-2 ring-[rgba(59,130,246,0.25)] shadow-lg"
-                    : "border-border hover:border-[rgba(59,130,246,0.4)] hover:shadow-md"
+                    : "border-border-subtle hover:border-[rgba(59,130,246,0.4)] hover:shadow-md"
                 }`}
               >
                 {/* Thumbnail area */}
@@ -553,11 +553,11 @@ export default function LandingPagesPage() {
                   )}
                 </div>
                 {/* Label row */}
-                <div className="px-2.5 py-2 bg-surface border-t border-border">
+                <div className="px-2.5 py-2 bg-surface border-t border-border-subtle">
                   <p className={`text-xs font-semibold truncate ${isSelected ? "text-brand-accent" : "text-text-primary"}`}>
                     {t.name}
                   </p>
-                  <p className="text-[10px] text-muted truncate">{t.avgLaunch}</p>
+                  <p className="text-[10px] text-text-muted truncate">{t.avgLaunch}</p>
                 </div>
               </button>
             );
@@ -574,7 +574,7 @@ export default function LandingPagesPage() {
       component: (
         <div className="space-y-3">
           <div>
-            <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
+            <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">
               Headline
             </label>
             <input
@@ -582,11 +582,11 @@ export default function LandingPagesPage() {
               value={guidedHeadline}
               onChange={e => setGuidedHeadline(e.target.value)}
               placeholder="e.g., Book every chair. Stop losing 40% of appointments."
-              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
             />
           </div>
           <div>
-            <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
+            <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">
               Subheadline
             </label>
             <input
@@ -594,7 +594,7 @@ export default function LandingPagesPage() {
               value={guidedSubhead}
               onChange={e => setGuidedSubhead(e.target.value)}
               placeholder="e.g., Text reminders that actually get read. 14-day free trial, no card."
-              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.40)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
             />
           </div>
         </div>
@@ -606,22 +606,22 @@ export default function LandingPagesPage() {
       description: "We'll write features, testimonials, FAQ, and pricing to match. You can edit every section in Advanced.",
       icon: <Rocket size={18} />,
       component: (
-        <div className="card bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)] space-y-2">
+        <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)] space-y-2">
           <p className="text-sm leading-relaxed">
-            <span className="text-muted">Offer: </span>
-            <span className="font-semibold">{guidedOffer || <span className="italic text-muted">(none)</span>}</span>
+            <span className="text-text-muted">Offer: </span>
+            <span className="font-semibold">{guidedOffer || <span className="italic text-text-muted">(none)</span>}</span>
           </p>
-          <p className="text-[11px] text-muted">
-            Template: <span className="text-foreground">{TEMPLATES.find(t => t.id === guidedTemplate)?.name || "�"}</span>
+          <p className="text-[11px] text-text-muted">
+            Template: <span className="text-text-primary">{TEMPLATES.find(t => t.id === guidedTemplate)?.name || "�"}</span>
           </p>
           {guidedAudience && (
-            <p className="text-[11px] text-muted">
-              For: <span className="text-foreground">{guidedAudience}</span>
+            <p className="text-[11px] text-text-muted">
+              For: <span className="text-text-primary">{guidedAudience}</span>
             </p>
           )}
           {(guidedHeadline || guidedSubhead) && (
-            <p className="text-[11px] text-muted">
-              {guidedHeadline && <span className="block text-foreground font-semibold">{guidedHeadline}</span>}
+            <p className="text-[11px] text-text-muted">
+              {guidedHeadline && <span className="block text-text-primary font-semibold">{guidedHeadline}</span>}
               {guidedSubhead && <span className="block">{guidedSubhead}</span>}
             </p>
           )}
@@ -722,14 +722,14 @@ export default function LandingPagesPage() {
       : { backgroundColor: scheme.bg };
 
     return (
-      <MotionPage className="rounded-xl border border-border overflow-hidden">{/* Browser chrome */}<div className="flex items-center gap-2 px-4 py-2.5 bg-[#1a1a2e] border-b border-border">
+      <MotionPage className="rounded-xl border border-border-subtle overflow-hidden">{/* Browser chrome */}<div className="flex items-center gap-2 px-4 py-2.5 bg-[#1a1a2e] border-b border-border-subtle">
                   <div className="flex gap-1.5">
                     <div className="w-3 h-3 rounded-full bg-red-500/80" />
                     <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                     <div className="w-3 h-3 rounded-full bg-green-500/80" />
                   </div>
                   <div className="flex-1 mx-4">
-                    <div className="bg-[#0d0d1a] rounded-md px-3 py-1 text-xs text-muted flex items-center gap-2">
+                    <div className="bg-[#0d0d1a] rounded-md px-3 py-1 text-xs text-text-muted flex items-center gap-2">
                       <Shield className="w-3 h-3 text-green-400" />
                       {bizInfo.name ? `${bizInfo.name.toLowerCase().replace(/\s+/g, "")}.com` : "yoursite.com"}
                     </div>
@@ -875,27 +875,27 @@ export default function LandingPagesPage() {
   const renderSectionEditor = (sec: SectionState, idx: number) => {
     const isEditing = sec.editing;
     return (
-      <div key={sec.key} className="card mb-3">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+      <div key={sec.key} className="glass rounded-xl p-4 mb-3">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
           <div className="flex items-center gap-2">
-            <GripVertical className="w-4 h-4 text-muted cursor-grab" />
+            <GripVertical className="w-4 h-4 text-text-muted cursor-grab" />
             <span className="text-sm font-semibold text-text-primary">{sec.label}</span>
           </div>
           <div className="flex items-center gap-1">
             <button onClick={() => moveSection(idx, "up")} className="p-1 hover:bg-surface-light rounded" title="Move up">
-              <ChevronUp className="w-3.5 h-3.5 text-muted" />
+              <ChevronUp className="w-3.5 h-3.5 text-text-muted" />
             </button>
             <button onClick={() => moveSection(idx, "down")} className="p-1 hover:bg-surface-light rounded" title="Move down">
-              <ChevronDown className="w-3.5 h-3.5 text-muted" />
+              <ChevronDown className="w-3.5 h-3.5 text-text-muted" />
             </button>
             <button onClick={() => toggleSection(sec.key)} className={`p-1 hover:bg-surface-light rounded ${!sec.visible ? "opacity-40" : ""}`} title={sec.visible ? "Hide" : "Show"}>
-              {sec.visible ? <Eye className="w-3.5 h-3.5 text-muted" /> : <EyeOff className="w-3.5 h-3.5 text-muted" />}
+              {sec.visible ? <Eye className="w-3.5 h-3.5 text-text-muted" /> : <EyeOff className="w-3.5 h-3.5 text-text-muted" />}
             </button>
             <button onClick={() => toggleEdit(sec.key)} className={`p-1 hover:bg-surface-light rounded ${isEditing ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : ""}`} title="Edit">
               <Pencil className="w-3.5 h-3.5" />
             </button>
             <button onClick={() => handleRegenSection(sec.key)} className="p-1 hover:bg-surface-light rounded" title="Regenerate with AI">
-              <RotateCcw className="w-3.5 h-3.5 text-muted" />
+              <RotateCcw className="w-3.5 h-3.5 text-text-muted" />
             </button>
           </div>
         </div>
@@ -905,27 +905,27 @@ export default function LandingPagesPage() {
             {sec.key === "hero" && (
               <>
                 <div>
-                  <label className="text-xs text-muted mb-1 block">Headline</label>
-                  <input value={content.hero.headline} onChange={e => setContent(c => ({ ...c, hero: { ...c.hero, headline: e.target.value } }))} className="w-full bg-surface-light border border-border rounded px-3 py-2 text-sm text-text-primary" />
+                  <label className="text-xs text-text-muted mb-1 block">Headline</label>
+                  <input value={content.hero.headline} onChange={e => setContent(c => ({ ...c, hero: { ...c.hero, headline: e.target.value } }))} className="w-full bg-surface-light border border-border-subtle rounded px-3 py-2 text-sm text-text-primary" />
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-xs text-muted block">Subheadline</label>
+                    <label className="text-xs text-text-muted block">Subheadline</label>
                     <AIEnhanceButton value={content.hero.subheadline} onResult={next => setContent(c => ({ ...c, hero: { ...c.hero, subheadline: next } }))} context="landing page subheadline" variant="inline" />
                   </div>
-                  <textarea value={content.hero.subheadline} onChange={e => setContent(c => ({ ...c, hero: { ...c.hero, subheadline: e.target.value } }))} className="w-full bg-surface-light border border-border rounded px-3 py-2 text-sm text-text-primary h-20 resize-none" />
+                  <textarea value={content.hero.subheadline} onChange={e => setContent(c => ({ ...c, hero: { ...c.hero, subheadline: e.target.value } }))} className="w-full bg-surface-light border border-border-subtle rounded px-3 py-2 text-sm text-text-primary h-20 resize-none" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-muted mb-1 block">CTA Text</label>
-                    <input value={content.hero.cta_text} onChange={e => setContent(c => ({ ...c, hero: { ...c.hero, cta_text: e.target.value } }))} className="w-full bg-surface-light border border-border rounded px-3 py-2 text-sm text-text-primary" />
+                    <label className="text-xs text-text-muted mb-1 block">CTA Text</label>
+                    <input value={content.hero.cta_text} onChange={e => setContent(c => ({ ...c, hero: { ...c.hero, cta_text: e.target.value } }))} className="w-full bg-surface-light border border-border-subtle rounded px-3 py-2 text-sm text-text-primary" />
                   </div>
                   <div>
-                    <label className="text-xs text-muted mb-1 block">CTA URL</label>
-                    <input value={content.hero.cta_url} onChange={e => setContent(c => ({ ...c, hero: { ...c.hero, cta_url: e.target.value } }))} className="w-full bg-surface-light border border-border rounded px-3 py-2 text-sm text-text-primary" />
+                    <label className="text-xs text-text-muted mb-1 block">CTA URL</label>
+                    <input value={content.hero.cta_url} onChange={e => setContent(c => ({ ...c, hero: { ...c.hero, cta_url: e.target.value } }))} className="w-full bg-surface-light border border-border-subtle rounded px-3 py-2 text-sm text-text-primary" />
                   </div>
                 </div>
-                <div className="p-3 border border-dashed border-border rounded-lg flex items-center justify-center gap-2 text-muted text-xs cursor-pointer hover:border-brand-accent hover:text-brand-accent transition-colors">
+                <div className="p-3 border border-dashed border-border-subtle rounded-lg flex items-center justify-center gap-2 text-text-muted text-xs cursor-pointer hover:border-brand-accent hover:text-brand-accent transition-colors">
                   <ImageIcon className="w-4 h-4" />
                   Upload Hero Image
                 </div>
@@ -934,17 +934,17 @@ export default function LandingPagesPage() {
             {sec.key === "features" && (
               <div className="space-y-3">
                 {content.features.map((f, fi) => (
-                  <div key={fi} className="p-3 bg-surface-light rounded-lg border border-border space-y-2">
+                  <div key={fi} className="p-3 bg-surface-light rounded-lg border border-border-subtle space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted font-medium">Feature {fi + 1}</span>
+                      <span className="text-xs text-text-muted font-medium">Feature {fi + 1}</span>
                       <button onClick={() => setContent(c => ({ ...c, features: c.features.filter((_, i) => i !== fi) }))} className="text-red-400 hover:text-red-600"><X className="w-3.5 h-3.5" /></button>
                     </div>
-                    <input value={f.title} onChange={e => { const nf = [...content.features]; nf[fi] = { ...nf[fi], title: e.target.value }; setContent(c => ({ ...c, features: nf })); }} placeholder="Title" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
-                    <input value={f.description} onChange={e => { const nf = [...content.features]; nf[fi] = { ...nf[fi], description: e.target.value }; setContent(c => ({ ...c, features: nf })); }} placeholder="Description" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
+                    <input value={f.title} onChange={e => { const nf = [...content.features]; nf[fi] = { ...nf[fi], title: e.target.value }; setContent(c => ({ ...c, features: nf })); }} placeholder="Title" className="w-full bg-surface border border-border-subtle rounded px-2 py-1.5 text-xs text-text-primary" />
+                    <input value={f.description} onChange={e => { const nf = [...content.features]; nf[fi] = { ...nf[fi], description: e.target.value }; setContent(c => ({ ...c, features: nf })); }} placeholder="Description" className="w-full bg-surface border border-border-subtle rounded px-2 py-1.5 text-xs text-text-primary" />
                   </div>
                 ))}
                 {content.features.length < 6 && (
-                  <button onClick={() => setContent(c => ({ ...c, features: [...c.features, { icon: "Star", title: "New Feature", description: "Describe this feature" }] }))} className="w-full py-2 border border-dashed border-border rounded-lg text-xs text-muted hover:text-brand-accent hover:border-brand-accent transition-colors flex items-center justify-center gap-1">
+                  <button onClick={() => setContent(c => ({ ...c, features: [...c.features, { icon: "Star", title: "New Feature", description: "Describe this feature" }] }))} className="w-full py-2 border border-dashed border-border-subtle rounded-lg text-xs text-text-muted hover:text-brand-accent hover:border-brand-accent transition-colors flex items-center justify-center gap-1">
                     <Plus className="w-3.5 h-3.5" /> Add Feature
                   </button>
                 )}
@@ -953,21 +953,21 @@ export default function LandingPagesPage() {
             {sec.key === "testimonials" && (
               <div className="space-y-3">
                 {content.testimonials.map((t, ti) => (
-                  <div key={ti} className="p-3 bg-surface-light rounded-lg border border-border space-y-2">
+                  <div key={ti} className="p-3 bg-surface-light rounded-lg border border-border-subtle space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted font-medium">Testimonial {ti + 1}</span>
+                      <span className="text-xs text-text-muted font-medium">Testimonial {ti + 1}</span>
                       <button onClick={() => setContent(c => ({ ...c, testimonials: c.testimonials.filter((_, i) => i !== ti) }))} className="text-red-400 hover:text-red-600"><X className="w-3.5 h-3.5" /></button>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
-                      <input value={t.name} onChange={e => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], name: e.target.value }; setContent(c => ({ ...c, testimonials: nt })); }} placeholder="Name" className="bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
-                      <input value={t.company} onChange={e => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], company: e.target.value }; setContent(c => ({ ...c, testimonials: nt })); }} placeholder="Company" className="bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
+                      <input value={t.name} onChange={e => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], name: e.target.value }; setContent(c => ({ ...c, testimonials: nt })); }} placeholder="Name" className="bg-surface border border-border-subtle rounded px-2 py-1.5 text-xs text-text-primary" />
+                      <input value={t.company} onChange={e => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], company: e.target.value }; setContent(c => ({ ...c, testimonials: nt })); }} placeholder="Company" className="bg-surface border border-border-subtle rounded px-2 py-1.5 text-xs text-text-primary" />
                     </div>
-                    <input value={t.role} onChange={e => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], role: e.target.value }; setContent(c => ({ ...c, testimonials: nt })); }} placeholder="Role" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
+                    <input value={t.role} onChange={e => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], role: e.target.value }; setContent(c => ({ ...c, testimonials: nt })); }} placeholder="Role" className="w-full bg-surface border border-border-subtle rounded px-2 py-1.5 text-xs text-text-primary" />
                     <div className="flex items-center justify-between">
-                      <label className="text-[10px] text-muted uppercase tracking-wider">Quote</label>
+                      <label className="text-[10px] text-text-muted uppercase tracking-wider">Quote</label>
                       <AIEnhanceButton value={t.quote} onResult={next => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], quote: next }; setContent(c => ({ ...c, testimonials: nt })); }} context="landing page section copy" variant="inline" />
                     </div>
-                    <textarea value={t.quote} onChange={e => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], quote: e.target.value }; setContent(c => ({ ...c, testimonials: nt })); }} placeholder="Quote" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary h-16 resize-none" />
+                    <textarea value={t.quote} onChange={e => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], quote: e.target.value }; setContent(c => ({ ...c, testimonials: nt })); }} placeholder="Quote" className="w-full bg-surface border border-border-subtle rounded px-2 py-1.5 text-xs text-text-primary h-16 resize-none" />
                   </div>
                 ))}
               </div>
@@ -975,27 +975,27 @@ export default function LandingPagesPage() {
             {sec.key === "pricing" && (
               <div className="space-y-3">
                 {content.pricing.map((tier, pi) => (
-                  <div key={pi} className={`p-3 rounded-lg border space-y-2 ${tier.highlighted ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "bg-surface-light border-border"}`}>
+                  <div key={pi} className={`p-3 rounded-lg border space-y-2 ${tier.highlighted ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "bg-surface-light border-border-subtle"}`}>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted font-medium">{tier.name}</span>
-                      <label className="flex items-center gap-1.5 text-xs text-muted cursor-pointer">
+                      <span className="text-xs text-text-muted font-medium">{tier.name}</span>
+                      <label className="flex items-center gap-1.5 text-xs text-text-muted cursor-pointer">
                         <input type="checkbox" checked={tier.highlighted} onChange={() => { const np = [...content.pricing]; np[pi] = { ...np[pi], highlighted: !np[pi].highlighted }; setContent(c => ({ ...c, pricing: np })); }} className="accent-[#2563EB]" />
                         Highlight
                       </label>
                     </div>
                     <div className="grid grid-cols-3 gap-2">
-                      <input value={tier.name} onChange={e => { const np = [...content.pricing]; np[pi] = { ...np[pi], name: e.target.value }; setContent(c => ({ ...c, pricing: np })); }} placeholder="Tier name" className="bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
-                      <input value={tier.price} onChange={e => { const np = [...content.pricing]; np[pi] = { ...np[pi], price: e.target.value }; setContent(c => ({ ...c, pricing: np })); }} placeholder="Price" className="bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
-                      <input value={tier.period} onChange={e => { const np = [...content.pricing]; np[pi] = { ...np[pi], period: e.target.value }; setContent(c => ({ ...c, pricing: np })); }} placeholder="/month" className="bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
+                      <input value={tier.name} onChange={e => { const np = [...content.pricing]; np[pi] = { ...np[pi], name: e.target.value }; setContent(c => ({ ...c, pricing: np })); }} placeholder="Tier name" className="bg-surface border border-border-subtle rounded px-2 py-1.5 text-xs text-text-primary" />
+                      <input value={tier.price} onChange={e => { const np = [...content.pricing]; np[pi] = { ...np[pi], price: e.target.value }; setContent(c => ({ ...c, pricing: np })); }} placeholder="Price" className="bg-surface border border-border-subtle rounded px-2 py-1.5 text-xs text-text-primary" />
+                      <input value={tier.period} onChange={e => { const np = [...content.pricing]; np[pi] = { ...np[pi], period: e.target.value }; setContent(c => ({ ...c, pricing: np })); }} placeholder="/month" className="bg-surface border border-border-subtle rounded px-2 py-1.5 text-xs text-text-primary" />
                     </div>
                     <div className="space-y-1">
                       {tier.features.map((feat, fi) => (
                         <div key={fi} className="flex items-center gap-1">
-                          <input value={feat} onChange={e => { const np = [...content.pricing]; const nf = [...np[pi].features]; nf[fi] = e.target.value; np[pi] = { ...np[pi], features: nf }; setContent(c => ({ ...c, pricing: np })); }} className="flex-1 bg-surface border border-border rounded px-2 py-1 text-xs text-text-primary" />
+                          <input value={feat} onChange={e => { const np = [...content.pricing]; const nf = [...np[pi].features]; nf[fi] = e.target.value; np[pi] = { ...np[pi], features: nf }; setContent(c => ({ ...c, pricing: np })); }} className="flex-1 bg-surface border border-border-subtle rounded px-2 py-1 text-xs text-text-primary" />
                           <button onClick={() => { const np = [...content.pricing]; np[pi] = { ...np[pi], features: np[pi].features.filter((_, i) => i !== fi) }; setContent(c => ({ ...c, pricing: np })); }} className="text-red-400 hover:text-red-600"><X className="w-3 h-3" /></button>
                         </div>
                       ))}
-                      <button onClick={() => { const np = [...content.pricing]; np[pi] = { ...np[pi], features: [...np[pi].features, "New feature"] }; setContent(c => ({ ...c, pricing: np })); }} className="text-xs text-muted hover:text-brand-accent flex items-center gap-1 mt-1"><Plus className="w-3 h-3" /> Add feature</button>
+                      <button onClick={() => { const np = [...content.pricing]; np[pi] = { ...np[pi], features: [...np[pi].features, "New feature"] }; setContent(c => ({ ...c, pricing: np })); }} className="text-xs text-text-muted hover:text-brand-accent flex items-center gap-1 mt-1"><Plus className="w-3 h-3" /> Add feature</button>
                     </div>
                   </div>
                 ))}
@@ -1004,21 +1004,21 @@ export default function LandingPagesPage() {
             {sec.key === "faq" && (
               <div className="space-y-3">
                 {content.faq.map((item, fi) => (
-                  <div key={fi} className="p-3 bg-surface-light rounded-lg border border-border space-y-2">
+                  <div key={fi} className="p-3 bg-surface-light rounded-lg border border-border-subtle space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted font-medium">Q{fi + 1}</span>
+                      <span className="text-xs text-text-muted font-medium">Q{fi + 1}</span>
                       <button onClick={() => setContent(c => ({ ...c, faq: c.faq.filter((_, i) => i !== fi) }))} className="text-red-400 hover:text-red-600"><X className="w-3.5 h-3.5" /></button>
                     </div>
-                    <input value={item.question} onChange={e => { const nf = [...content.faq]; nf[fi] = { ...nf[fi], question: e.target.value }; setContent(c => ({ ...c, faq: nf })); }} placeholder="Question" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary" />
+                    <input value={item.question} onChange={e => { const nf = [...content.faq]; nf[fi] = { ...nf[fi], question: e.target.value }; setContent(c => ({ ...c, faq: nf })); }} placeholder="Question" className="w-full bg-surface border border-border-subtle rounded px-2 py-1.5 text-xs text-text-primary" />
                     <div className="flex items-center justify-between">
-                      <label className="text-[10px] text-muted uppercase tracking-wider">Answer</label>
+                      <label className="text-[10px] text-text-muted uppercase tracking-wider">Answer</label>
                       <AIEnhanceButton value={item.answer} onResult={next => { const nf = [...content.faq]; nf[fi] = { ...nf[fi], answer: next }; setContent(c => ({ ...c, faq: nf })); }} context="landing page section copy" variant="inline" />
                     </div>
-                    <textarea value={item.answer} onChange={e => { const nf = [...content.faq]; nf[fi] = { ...nf[fi], answer: e.target.value }; setContent(c => ({ ...c, faq: nf })); }} placeholder="Answer" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-text-primary h-16 resize-none" />
+                    <textarea value={item.answer} onChange={e => { const nf = [...content.faq]; nf[fi] = { ...nf[fi], answer: e.target.value }; setContent(c => ({ ...c, faq: nf })); }} placeholder="Answer" className="w-full bg-surface border border-border-subtle rounded px-2 py-1.5 text-xs text-text-primary h-16 resize-none" />
                   </div>
                 ))}
                 {content.faq.length < 8 && (
-                  <button onClick={() => setContent(c => ({ ...c, faq: [...c.faq, { question: "New Question?", answer: "Answer here." }] }))} className="w-full py-2 border border-dashed border-border rounded-lg text-xs text-muted hover:text-brand-accent hover:border-brand-accent transition-colors flex items-center justify-center gap-1">
+                  <button onClick={() => setContent(c => ({ ...c, faq: [...c.faq, { question: "New Question?", answer: "Answer here." }] }))} className="w-full py-2 border border-dashed border-border-subtle rounded-lg text-xs text-text-muted hover:text-brand-accent hover:border-brand-accent transition-colors flex items-center justify-center gap-1">
                     <Plus className="w-3.5 h-3.5" /> Add FAQ
                   </button>
                 )}
@@ -1026,17 +1026,17 @@ export default function LandingPagesPage() {
             )}
             {sec.key === "contact" && (
               <div className="space-y-2">
-                <input value={content.contact.heading} onChange={e => setContent(c => ({ ...c, contact: { ...c.contact, heading: e.target.value } }))} placeholder="Heading" className="w-full bg-surface-light border border-border rounded px-3 py-2 text-sm text-text-primary" />
-                <input value={content.contact.subheading} onChange={e => setContent(c => ({ ...c, contact: { ...c.contact, subheading: e.target.value } }))} placeholder="Subheading" className="w-full bg-surface-light border border-border rounded px-3 py-2 text-sm text-text-primary" />
+                <input value={content.contact.heading} onChange={e => setContent(c => ({ ...c, contact: { ...c.contact, heading: e.target.value } }))} placeholder="Heading" className="w-full bg-surface-light border border-border-subtle rounded px-3 py-2 text-sm text-text-primary" />
+                <input value={content.contact.subheading} onChange={e => setContent(c => ({ ...c, contact: { ...c.contact, subheading: e.target.value } }))} placeholder="Subheading" className="w-full bg-surface-light border border-border-subtle rounded px-3 py-2 text-sm text-text-primary" />
                 <div className="grid grid-cols-2 gap-2">
-                  <input value={content.contact.email} onChange={e => setContent(c => ({ ...c, contact: { ...c.contact, email: e.target.value } }))} placeholder="Email" className="bg-surface-light border border-border rounded px-3 py-2 text-sm text-text-primary" />
-                  <input value={content.contact.phone} onChange={e => setContent(c => ({ ...c, contact: { ...c.contact, phone: e.target.value } }))} placeholder="Phone" className="bg-surface-light border border-border rounded px-3 py-2 text-sm text-text-primary" />
+                  <input value={content.contact.email} onChange={e => setContent(c => ({ ...c, contact: { ...c.contact, email: e.target.value } }))} placeholder="Email" className="bg-surface-light border border-border-subtle rounded px-3 py-2 text-sm text-text-primary" />
+                  <input value={content.contact.phone} onChange={e => setContent(c => ({ ...c, contact: { ...c.contact, phone: e.target.value } }))} placeholder="Phone" className="bg-surface-light border border-border-subtle rounded px-3 py-2 text-sm text-text-primary" />
                 </div>
               </div>
             )}
             {sec.key === "footer" && (
               <div className="space-y-2">
-                <input value={content.footer.copyright} onChange={e => setContent(c => ({ ...c, footer: { ...c.footer, copyright: e.target.value } }))} placeholder="Copyright" className="w-full bg-surface-light border border-border rounded px-3 py-2 text-sm text-text-primary" />
+                <input value={content.footer.copyright} onChange={e => setContent(c => ({ ...c, footer: { ...c.footer, copyright: e.target.value } }))} placeholder="Copyright" className="w-full bg-surface-light border border-border-subtle rounded px-3 py-2 text-sm text-text-primary" />
               </div>
             )}
           </div>
@@ -1116,61 +1116,61 @@ export default function LandingPagesPage() {
               <button
                 key={s.n}
                 onClick={() => setStep(s.n as 1 | 2 | 3)}
-                className={`flex items-center gap-2 text-sm font-medium transition-colors ${step === s.n ? "text-brand-accent" : step > s.n ? "text-green-400" : "text-muted"}`}
+                className={`flex items-center gap-2 text-sm font-medium transition-colors ${step === s.n ? "text-brand-accent" : step > s.n ? "text-green-400" : "text-text-muted"}`}
               >
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border ${step === s.n ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : step > s.n ? "border-green-500 bg-green-500/10 text-green-400" : "border-border text-muted"}`}>
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border ${step === s.n ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : step > s.n ? "border-green-500 bg-green-500/10 text-green-400" : "border-border-subtle text-text-muted"}`}>
                   {step > s.n ? <Check className="w-3.5 h-3.5" /> : s.n}
                 </div>
                 {s.label}
-                {s.n < 3 && <ArrowRight className="w-4 h-4 text-muted ml-2" />}
+                {s.n < 3 && <ArrowRight className="w-4 h-4 text-text-muted ml-2" />}
               </button>
             ))}
           </div>
 
           {/* -- Step 1: Business Info -- */}
           {step === 1 && (
-            <div className="card p-6 space-y-6">
-              <h2 className="section-header text-lg font-bold text-text-primary flex items-center gap-2">
+            <div className="glass rounded-xl p-6 space-y-6">
+              <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
                 <Building2 className="w-5 h-5 text-brand-accent" />
                 Business Information
               </h2>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs text-muted mb-1.5 block font-medium">Business Name *</label>
-                  <input value={bizInfo.name} onChange={e => setBizInfo(p => ({ ...p, name: e.target.value }))} placeholder="e.g. Acme Solutions" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
+                  <label className="text-xs text-text-muted mb-1.5 block font-medium">Business Name *</label>
+                  <input value={bizInfo.name} onChange={e => setBizInfo(p => ({ ...p, name: e.target.value }))} placeholder="e.g. Acme Solutions" className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
                 </div>
                 <div>
-                  <label className="text-xs text-muted mb-1.5 block font-medium">Industry *</label>
-                  <input value={bizInfo.industry} onChange={e => setBizInfo(p => ({ ...p, industry: e.target.value }))} placeholder="e.g. SaaS, Restaurant, Real Estate" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
+                  <label className="text-xs text-text-muted mb-1.5 block font-medium">Industry *</label>
+                  <input value={bizInfo.industry} onChange={e => setBizInfo(p => ({ ...p, industry: e.target.value }))} placeholder="e.g. SaaS, Restaurant, Real Estate" className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs text-muted mb-1.5 block font-medium">Tagline</label>
-                <input value={bizInfo.tagline} onChange={e => setBizInfo(p => ({ ...p, tagline: e.target.value }))} placeholder="e.g. Build faster, scale smarter" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
+                <label className="text-xs text-text-muted mb-1.5 block font-medium">Tagline</label>
+                <input value={bizInfo.tagline} onChange={e => setBizInfo(p => ({ ...p, tagline: e.target.value }))} placeholder="e.g. Build faster, scale smarter" className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs text-muted block font-medium">Business Description</label>
+                  <label className="text-xs text-text-muted block font-medium">Business Description</label>
                   <AIEnhanceButton value={bizInfo.description} onResult={next => setBizInfo(p => ({ ...p, description: next }))} context="landing page section copy" variant="inline" />
                 </div>
-                <textarea value={bizInfo.description} onChange={e => setBizInfo(p => ({ ...p, description: e.target.value }))} placeholder="Describe what your business does, your main value proposition, and what makes you unique..." className="w-full bg-surface-light border border-border rounded-lg px-4 py-3 text-sm text-text-primary h-24 resize-none focus:border-brand-accent focus:outline-none transition-colors" />
+                <textarea value={bizInfo.description} onChange={e => setBizInfo(p => ({ ...p, description: e.target.value }))} placeholder="Describe what your business does, your main value proposition, and what makes you unique..." className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-3 text-sm text-text-primary h-24 resize-none focus:border-brand-accent focus:outline-none transition-colors" />
               </div>
 
               <div>
-                <label className="text-xs text-muted mb-1.5 block font-medium">Target Audience</label>
-                <input value={bizInfo.targetAudience} onChange={e => setBizInfo(p => ({ ...p, targetAudience: e.target.value }))} placeholder="e.g. Small business owners, marketing teams, enterprise companies" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
+                <label className="text-xs text-text-muted mb-1.5 block font-medium">Target Audience</label>
+                <input value={bizInfo.targetAudience} onChange={e => setBizInfo(p => ({ ...p, targetAudience: e.target.value }))} placeholder="e.g. Small business owners, marketing teams, enterprise companies" className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
               </div>
 
               {/* Benefits */}
               <div>
-                <label className="text-xs text-muted mb-1.5 block font-medium">Key Benefits</label>
+                <label className="text-xs text-text-muted mb-1.5 block font-medium">Key Benefits</label>
                 <div className="flex gap-2 mb-2">
-                  <input value={benefitInput} onChange={e => setBenefitInput(e.target.value)} onKeyDown={e => e.key === "Enter" && addBenefit()} placeholder="Add a benefit and press Enter" className="flex-1 bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
-                  <button onClick={addBenefit} className="px-3 py-2 bg-surface-light border border-border rounded-lg hover:border-brand-accent transition-colors" aria-label="Add benefit">
-                    <Plus className="w-4 h-4 text-muted" />
+                  <input value={benefitInput} onChange={e => setBenefitInput(e.target.value)} onKeyDown={e => e.key === "Enter" && addBenefit()} placeholder="Add a benefit and press Enter" className="flex-1 bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
+                  <button onClick={addBenefit} className="px-3 py-2 bg-surface-light border border-border-subtle rounded-lg hover:border-brand-accent transition-colors" aria-label="Add benefit">
+                    <Plus className="w-4 h-4 text-text-muted" />
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -1186,24 +1186,24 @@ export default function LandingPagesPage() {
               {/* CTA */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs text-muted mb-1.5 block font-medium">CTA Button Text</label>
-                  <input value={bizInfo.ctaText} onChange={e => setBizInfo(p => ({ ...p, ctaText: e.target.value }))} placeholder="Get Started" className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
+                  <label className="text-xs text-text-muted mb-1.5 block font-medium">CTA Button Text</label>
+                  <input value={bizInfo.ctaText} onChange={e => setBizInfo(p => ({ ...p, ctaText: e.target.value }))} placeholder="Get Started" className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
                 </div>
                 <div>
-                  <label className="text-xs text-muted mb-1.5 block font-medium">CTA URL</label>
-                  <input value={bizInfo.ctaUrl} onChange={e => setBizInfo(p => ({ ...p, ctaUrl: e.target.value }))} placeholder="https://..." className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
+                  <label className="text-xs text-text-muted mb-1.5 block font-medium">CTA URL</label>
+                  <input value={bizInfo.ctaUrl} onChange={e => setBizInfo(p => ({ ...p, ctaUrl: e.target.value }))} placeholder="https://..." className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary focus:border-brand-accent focus:outline-none transition-colors" />
                 </div>
               </div>
 
               {/* Color Scheme */}
               <div>
-                <label className="text-xs text-muted mb-2 block font-medium">Color Scheme</label>
+                <label className="text-xs text-text-muted mb-2 block font-medium">Color Scheme</label>
                 <div className="grid grid-cols-5 gap-3">
                   {COLOR_SCHEMES.map(cs => (
                     <button
                       key={cs.id}
                       onClick={() => setBizInfo(p => ({ ...p, colorScheme: cs.id }))}
-                      className={`p-3 rounded-lg border transition-all ${bizInfo.colorScheme === cs.id ? "border-brand-accent ring-1 ring-[rgba(59,130,246,0.25)]" : "border-border hover:border-[rgba(59,130,246,0.25)]"}`}
+                      className={`p-3 rounded-lg border transition-all ${bizInfo.colorScheme === cs.id ? "border-brand-accent ring-1 ring-[rgba(59,130,246,0.25)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"}`}
                     >
                       <div className="h-10 rounded-md mb-2 flex items-center justify-center" style={{ background: cs.bg.startsWith("linear") ? cs.bg : cs.bg, border: cs.id === "clean-light" || cs.id === "minimal" ? "1px solid #333" : "none" }}>
                         <div className="w-6 h-2 rounded-full" style={{ backgroundColor: cs.primary }} />
@@ -1216,11 +1216,11 @@ export default function LandingPagesPage() {
 
               {/* Logo Upload Placeholder */}
               <div>
-                <label className="text-xs text-muted mb-1.5 block font-medium">Logo</label>
-                <div className="border border-dashed border-border rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-brand-accent hover:bg-[rgba(59,130,246,0.05)] transition-colors">
-                  <Upload className="w-6 h-6 text-muted" />
-                  <span className="text-xs text-muted">Click to upload your logo (PNG, SVG)</span>
-                  <span className="text-[10px] text-muted/50">Max 2MB</span>
+                <label className="text-xs text-text-muted mb-1.5 block font-medium">Logo</label>
+                <div className="border border-dashed border-border-subtle rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-brand-accent hover:bg-[rgba(59,130,246,0.05)] transition-colors">
+                  <Upload className="w-6 h-6 text-text-muted" />
+                  <span className="text-xs text-text-muted">Click to upload your logo (PNG, SVG)</span>
+                  <span className="text-[10px] text-text-muted/50">Max 2MB</span>
                 </div>
               </div>
 
@@ -1244,7 +1244,7 @@ export default function LandingPagesPage() {
           {/* -- Step 2: Template Selection -- */}
           {step === 2 && (
             <div className="space-y-4">
-              <h2 className="section-header text-lg font-bold text-text-primary flex items-center gap-2">
+              <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
                 <Layout className="w-5 h-5 text-brand-accent" />
                 Choose a Template
               </h2>
@@ -1315,10 +1315,10 @@ export default function LandingPagesPage() {
 
                       <div className="p-3.5">
                         <h3 className="text-sm font-bold text-text-primary mb-0.5">{tpl.name}</h3>
-                        <p className="text-xs text-muted mb-3 line-clamp-2">{tpl.desc}</p>
+                        <p className="text-xs text-text-muted mb-3 line-clamp-2">{tpl.desc}</p>
                         <button
                           onClick={e => { e.stopPropagation(); handleTemplateSelect(tpl.id); }}
-                          className={`w-full py-1.5 rounded-lg text-xs font-semibold transition-colors ${isSelected ? "bg-brand-accent text-white" : "bg-surface-light border border-border text-muted hover:text-brand-accent hover:border-brand-accent"}`}
+                          className={`w-full py-1.5 rounded-lg text-xs font-semibold transition-colors ${isSelected ? "bg-brand-accent text-white" : "bg-surface-light border border-border-subtle text-text-muted hover:text-brand-accent hover:border-brand-accent"}`}
                         >
                           {isSelected ? "Selected" : "Use Template"}
                         </button>
@@ -1336,11 +1336,11 @@ export default function LandingPagesPage() {
               {/* Left: Section Editor */}
               <div className="col-span-2 space-y-1">
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="section-header text-lg font-bold text-text-primary flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
                     <Pencil className="w-5 h-5 text-brand-accent" />
                     Sections
                   </h2>
-                  <span className="text-xs text-muted">{sections.filter(s => s.visible).length}/{sections.length} visible</span>
+                  <span className="text-xs text-text-muted">{sections.filter(s => s.visible).length}/{sections.length} visible</span>
                 </div>
                 {sections.map((sec, idx) => renderSectionEditor(sec, idx))}
               </div>
@@ -1348,7 +1348,7 @@ export default function LandingPagesPage() {
               {/* Right: Live Preview */}
               <div className="col-span-3 sticky top-6">
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="section-header text-lg font-bold text-text-primary flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
                     <Monitor className="w-5 h-5 text-brand-accent" />
                     Live Preview
                   </h2>
@@ -1356,7 +1356,7 @@ export default function LandingPagesPage() {
                     <select
                       value={bizInfo.colorScheme}
                       onChange={e => setBizInfo(p => ({ ...p, colorScheme: e.target.value }))}
-                      className="bg-surface-light border border-border rounded px-2 py-1 text-xs text-text-primary"
+                      className="bg-surface-light border border-border-subtle rounded px-2 py-1 text-xs text-text-primary"
                     >
                       {COLOR_SCHEMES.map(cs => <option key={cs.id} value={cs.id}>{cs.name}</option>)}
                     </select>
@@ -1376,9 +1376,9 @@ export default function LandingPagesPage() {
       {mainTab === "pages" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="section-header text-lg font-bold text-text-primary">Generated Pages</h2>
+            <h2 className="text-lg font-bold text-text-primary">Generated Pages</h2>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
               <input value={pageSearch} onChange={e => setPageSearch(e.target.value)} placeholder="Search pages..." className="glass rounded-lg pl-9 pr-4 py-2 text-sm text-text-primary w-64 focus:border-indigo-500/40 focus:outline-none" />
             </div>
           </div>
@@ -1386,14 +1386,14 @@ export default function LandingPagesPage() {
           <div className="glass rounded-xl overflow-hidden">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Name</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Template</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Created</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Status</th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Views</th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Conversions</th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Actions</th>
+                <tr className="border-b border-border-subtle">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Name</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Template</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Created</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Status</th>
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Views</th>
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Conversions</th>
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -1405,8 +1405,8 @@ export default function LandingPagesPage() {
                         <span className="text-sm text-text-primary font-medium">{page.name}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-muted">{page.template}</td>
-                    <td className="px-4 py-3 text-sm text-muted">{page.created}</td>
+                    <td className="px-4 py-3 text-sm text-text-muted">{page.template}</td>
+                    <td className="px-4 py-3 text-sm text-text-muted">{page.created}</td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
                         page.status === "Published" ? "bg-green-500/10 text-green-400" :
@@ -1416,36 +1416,36 @@ export default function LandingPagesPage() {
                         {page.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-sm text-muted text-right">{page.views.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-sm text-text-muted text-right">{page.views.toLocaleString()}</td>
                     <td className="px-4 py-3 text-sm text-right">
                       <span className="text-brand-accent font-medium">{page.conversions.toLocaleString()}</span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
                         <button onClick={() => { setMainTab("create"); setStep(3); toast.success("Editing page"); }} className="p-1.5 hover:bg-surface-light rounded-md transition-colors" title="Edit">
-                          <Pencil className="w-3.5 h-3.5 text-muted hover:text-text-primary" />
+                          <Pencil className="w-3.5 h-3.5 text-text-muted hover:text-text-primary" />
                         </button>
                         <button onClick={() => toast.success("Preview opened")} className="p-1.5 hover:bg-surface-light rounded-md transition-colors" title="Preview">
-                          <Eye className="w-3.5 h-3.5 text-muted hover:text-text-primary" />
+                          <Eye className="w-3.5 h-3.5 text-text-muted hover:text-text-primary" />
                         </button>
                         <button onClick={() => {
                           setPages(ps => ps.map(p => p.id === page.id ? { ...p, status: "Published" as const } : p));
                           toast.success("Page published!");
                         }} className="p-1.5 hover:bg-surface-light rounded-md transition-colors" title="Publish">
-                          <Rocket className="w-3.5 h-3.5 text-muted hover:text-green-400" />
+                          <Rocket className="w-3.5 h-3.5 text-text-muted hover:text-green-400" />
                         </button>
                         <button onClick={() => {
                           const dup: GeneratedPage = { ...page, id: `dup-${Date.now()}`, name: `${page.name} (Copy)`, status: "Draft", views: 0, conversions: 0 };
                           setPages(ps => [...ps, dup]);
                           toast.success("Page duplicated");
                         }} className="p-1.5 hover:bg-surface-light rounded-md transition-colors" title="Duplicate">
-                          <Copy className="w-3.5 h-3.5 text-muted hover:text-text-primary" />
+                          <Copy className="w-3.5 h-3.5 text-text-muted hover:text-text-primary" />
                         </button>
                         <button onClick={() => {
                           setPages(ps => ps.filter(p => p.id !== page.id));
                           toast.success("Page deleted");
                         }} className="p-1.5 hover:bg-surface-light rounded-md transition-colors" title="Delete">
-                          <Trash2 className="w-3.5 h-3.5 text-muted hover:text-red-400" />
+                          <Trash2 className="w-3.5 h-3.5 text-text-muted hover:text-red-400" />
                         </button>
                       </div>
                     </td>
@@ -1454,7 +1454,7 @@ export default function LandingPagesPage() {
               </tbody>
             </table>
             {filteredPages.length === 0 && (
-              <div className="text-center py-12 text-muted text-sm">No pages found matching your search.</div>
+              <div className="text-center py-12 text-text-muted text-sm">No pages found matching your search.</div>
             )}
           </div>
         </div>
@@ -1465,8 +1465,8 @@ export default function LandingPagesPage() {
         <div className="space-y-6">
           <div className="grid grid-cols-3 gap-4">
             {/* Deploy Action */}
-            <div className="card p-6 col-span-1 space-y-4">
-              <h3 className="section-header text-sm font-bold text-text-primary flex items-center gap-2">
+            <div className="glass rounded-xl p-6 col-span-1 space-y-4">
+              <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
                 <Rocket className="w-4 h-4 text-brand-accent" />
                 Deploy
               </h3>
@@ -1479,12 +1479,12 @@ export default function LandingPagesPage() {
                 {deploying ? "Deploying..." : "Deploy to Vercel"}
               </button>
               <div>
-                <label className="text-xs text-muted mb-1.5 block font-medium">Custom Domain</label>
-                <input value={customDomain} onChange={e => setCustomDomain(e.target.value)} placeholder="yourdomain.com" className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-text-primary focus:border-brand-accent focus:outline-none" />
+                <label className="text-xs text-text-muted mb-1.5 block font-medium">Custom Domain</label>
+                <input value={customDomain} onChange={e => setCustomDomain(e.target.value)} placeholder="yourdomain.com" className="w-full bg-surface-light border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary focus:border-brand-accent focus:outline-none" />
               </div>
-              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
-                <span className="text-xs text-muted">SSL Certificate</span>
-                <span className={`flex items-center gap-1.5 text-xs font-semibold ${sslStatus === "active" ? "text-green-400" : sslStatus === "pending" ? "text-yellow-400" : "text-muted"}`}>
+              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border-subtle">
+                <span className="text-xs text-text-muted">SSL Certificate</span>
+                <span className={`flex items-center gap-1.5 text-xs font-semibold ${sslStatus === "active" ? "text-green-400" : sslStatus === "pending" ? "text-yellow-400" : "text-text-muted"}`}>
                   <Shield className="w-3.5 h-3.5" />
                   {sslStatus === "active" ? "Active" : sslStatus === "pending" ? "Pending" : "Not configured"}
                 </span>
@@ -1492,8 +1492,8 @@ export default function LandingPagesPage() {
             </div>
 
             {/* Deployment History */}
-            <div className="card p-6 col-span-2 space-y-4">
-              <h3 className="section-header text-sm font-bold text-text-primary flex items-center gap-2">
+            <div className="glass rounded-xl p-6 col-span-2 space-y-4">
+              <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
                 <Clock className="w-4 h-4 text-brand-accent" />
                 Deployment History
               </h3>
@@ -1510,11 +1510,11 @@ export default function LandingPagesPage() {
         <div className="space-y-6">
           {/* Page selector */}
           <div className="flex items-center gap-3">
-            <label className="text-sm text-muted font-medium">Page:</label>
+            <label className="text-sm text-text-muted font-medium">Page:</label>
             <select
               value={analyticsPage}
               onChange={e => setAnalyticsPage(e.target.value)}
-              className="bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-text-primary focus:border-brand-accent focus:outline-none"
+              className="bg-surface-light border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary focus:border-brand-accent focus:outline-none"
             >
               {pages.filter(p => p.status === "Published").map(p => (
                 <option key={p.id} value={p.id}>{p.name}</option>
@@ -1589,25 +1589,25 @@ export default function LandingPagesPage() {
 
           <div className="grid grid-cols-3 gap-4">
             {/* Views Chart (CSS) */}
-            <div className="card p-6 col-span-2 space-y-4">
-              <h3 className="section-header text-sm font-bold text-text-primary flex items-center gap-2">
+            <div className="glass rounded-xl p-6 col-span-2 space-y-4">
+              <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
                 <BarChart3 className="w-4 h-4 text-brand-accent" />
                 Views (Last 7 Days)
               </h3>
               <div className="flex items-end gap-2 h-40">
                 {EMPTY_ANALYTICS.dailyViews.length === 0 ? (
-                  <div className="flex-1 flex items-center justify-center text-xs text-muted">No data yet</div>
+                  <div className="flex-1 flex items-center justify-center text-xs text-text-muted">No data yet</div>
                 ) : EMPTY_ANALYTICS.dailyViews.map((v, i) => {
                   const max = Math.max(...EMPTY_ANALYTICS.dailyViews, 1);
                   const h = (v / max) * 100;
                   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
                   return (
                     <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                      <span className="text-[10px] text-muted">{v.toLocaleString()}</span>
+                      <span className="text-[10px] text-text-muted">{v.toLocaleString()}</span>
                       <div className="w-full rounded-t-md relative group" style={{ height: `${h}%`, background: `linear-gradient(180deg, #2563EB 0%, #2563EB40 100%)` }}>
                         <div className="absolute inset-0 bg-[rgba(59,130,246,0.12)] opacity-0 group-hover:opacity-100 transition-opacity rounded-t-md" />
                       </div>
-                      <span className="text-[10px] text-muted">{days[i]}</span>
+                      <span className="text-[10px] text-text-muted">{days[i]}</span>
                     </div>
                   );
                 })}
@@ -1640,8 +1640,8 @@ export default function LandingPagesPage() {
             </div>
 
             {/* Traffic Sources */}
-            <div className="card p-6 space-y-4">
-              <h3 className="section-header text-sm font-bold text-text-primary flex items-center gap-2">
+            <div className="glass rounded-xl p-6 space-y-4">
+              <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
                 <Megaphone className="w-4 h-4 text-brand-accent" />
                 Traffic Sources
               </h3>
@@ -1658,9 +1658,9 @@ export default function LandingPagesPage() {
                   </div>
                 ))}
               </div>
-              <div className="pt-3 border-t border-border">
+              <div className="pt-3 border-t border-border-subtle">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted">Total Sessions</span>
+                  <span className="text-text-muted">Total Sessions</span>
                   <span className="text-text-primary font-semibold">{EMPTY_ANALYTICS.views.toLocaleString()}</span>
                 </div>
               </div>
