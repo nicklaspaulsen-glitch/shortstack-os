@@ -266,6 +266,8 @@ const navItems: NavItem[] = [
   { label: "Telegram Bot", href: "/dashboard/telegram-bot", icon: <NavIcon3D name="Bot" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
   { label: "Telegram Presets", href: "/dashboard/telegram-presets", icon: <NavIcon3D name="MessageSquare" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
   { label: "Public Status", href: "/dashboard/admin/status", icon: <NavIcon3D name="Activity" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
+  // Admin-only founder hub — LLM costs, agent traces, self-test
+  { label: "Admin Hub", href: "/dashboard/admin", icon: <NavIcon3D name="ShieldCheck" size={16} />, roles: ["admin"], tier: 4, settingsOnly: true },
   { label: "Notifications", href: "/dashboard/notifications", icon: <NavIcon3D name="Bell" size={16} />, roles: ["admin", "team_member"], tier: 4 },
   { label: "System Status", href: "/dashboard/system-status", icon: <NavIcon3D name="ShieldCheck" size={16} />, roles: ["admin"], tier: 4 },
   { label: "Settings", href: "/dashboard/settings", icon: <NavIcon3D name="Settings" size={16} />, roles: ["admin"], tier: 4 },
