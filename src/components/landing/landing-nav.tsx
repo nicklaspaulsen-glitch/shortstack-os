@@ -200,19 +200,31 @@ export default function LandingNav() {
           })}
         </div>
 
-        {/* Right CTAs */}
+        {/* Right CTAs — Interfere-style with keyboard shortcut hints */}
         <div className="flex items-center gap-3">
           <Link
             href="/login"
-            className="text-sm text-text-muted hover:text-white transition-colors hidden sm:block"
+            className="hidden sm:inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-white transition-colors"
           >
             Login
+            <span
+              className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px] font-medium font-mono text-[#4A4A5A]"
+              style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              L
+            </span>
           </Link>
           <Link
             href="/pricing"
-            className="text-sm font-semibold px-5 py-2 rounded-lg transition-all duration-200 hidden sm:inline-block bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_16px_rgba(59,130,246,0.35)] hover:shadow-[0_0_24px_rgba(59,130,246,0.55)]"
+            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-all duration-200 bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_16px_rgba(59,130,246,0.30)] hover:shadow-[0_0_24px_rgba(59,130,246,0.50)]"
           >
-            Start free trial
+            Start free
+            <span
+              className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px] font-medium font-mono text-blue-200/70"
+              style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.15)" }}
+            >
+              S
+            </span>
           </Link>
 
           {/* Mobile burger */}
