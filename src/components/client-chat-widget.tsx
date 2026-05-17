@@ -88,9 +88,9 @@ export default function ClientChatWidget() {
     return (
       <Draggable
         dragAnywhere
-        defaultX={typeof window !== "undefined" ? window.innerWidth - 438 : 800}
+        defaultX={typeof window !== "undefined" ? window.innerWidth - 322 : 800}
         defaultY={typeof window !== "undefined" ? window.innerHeight - 80 : 700}
-        storageKey="chat_bubble_v2"
+        storageKey="chat_bubble_v3"
       >
         <button
           onClick={() => setIsOpen(true)}

@@ -115,6 +115,7 @@ const CONTEXT_SECTIONS: ContextSection[] = [
     key: "sales",
     label: "Sales",
     items: [
+      { label: "Trinity AI", href: "/dashboard/trinity" },
       { label: "Outreach", href: "/dashboard/outreach-hub" },
       { label: "Lead Finder", href: "/dashboard/scraper" },
       { label: "Conversations", href: "/dashboard/conversations" },
@@ -202,10 +203,10 @@ export default function TopNavbar() {
       <div
         className="sticky top-14 z-20 border-b"
         style={{
-          background: "rgba(243,246,250,0.88)",
-          backdropFilter: "blur(20px) saturate(1.5)",
-          WebkitBackdropFilter: "blur(20px) saturate(1.5)",
-          borderColor: "rgba(0,0,0,0.08)",
+          background: "rgba(9,13,27,0.92)",
+          backdropFilter: "blur(20px) saturate(1.6)",
+          WebkitBackdropFilter: "blur(20px) saturate(1.6)",
+          borderColor: "rgba(99,146,255,0.12)",
         }}
       >
         {/* Breadcrumb + Trinity row */}
@@ -283,9 +284,9 @@ export default function TopNavbar() {
             <span
               className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.16em] px-2 py-[3px] rounded-full border mr-1"
               style={{
-                color: "#6B7280",
-                borderColor: "rgba(0,0,0,0.08)",
-                background: "rgba(0,0,0,0.04)",
+                color: "rgba(160,160,180,0.8)",
+                borderColor: "rgba(99,146,255,0.15)",
+                background: "rgba(59,130,246,0.06)",
               }}
             >
               {activeSection.label}

@@ -36,7 +36,7 @@ const QuickAdd = dynamic(() => import("@/components/quick-add"), { ssr: false })
 const ClientContextPill = dynamic(() => import("@/components/client-context-pill"), { ssr: false });
 const TokenUsageWidget = dynamic(() => import("@/components/token-usage-widget"), { ssr: false });
 const ExtensionBridgePill = dynamic(() => import("@/components/extension-bridge-pill"), { ssr: false });
-const DashboardDock = dynamic(() => import("@/components/ui/dock").then((m) => ({ default: m.DashboardDock })), { ssr: false });
+// DashboardDock removed — bottom space reclaimed for content
 const DesktopBadge = dynamic(() => import("@/components/desktop-badge"), { ssr: false });
 
 // ── Role-based route access control ──
@@ -388,8 +388,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               pages just appear. Faster perceived load + no layout
               jitter. Honors prefers-reduced-motion via the underlying
               `.page-soft-enter` keyframe. */}
-          {/* pb-32 (128 px) = dock height (64 px) + generous breathing room */}
-          <div className="p-4 lg:p-6 pb-32">
+          <div className="p-4 lg:p-6 pb-8">
             <ErrorBoundary>
               <PageTransition>
                 {children}
@@ -411,10 +410,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Chrome extension bridge pill — feature-detected (only shows if extension has ever connected) */}
         <ExtensionBridgePill />
 
-        {/* macOS-style magnification dock — admin users only.
-            Clients use the portal; team_members have the sidebar.
-            Fixed at bottom-4, z-50, glass backed panel. */}
-        {profile?.role === "admin" && <DashboardDock />}
       </div>
     </QuotaWallProvider>
   );
