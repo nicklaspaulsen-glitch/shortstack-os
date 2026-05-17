@@ -1401,7 +1401,7 @@ export default function ClientsPage() {
                     { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#1D4ED8" },
                     { label: "Health", value: `${client.health_score ?? "�"}%`, color: client.health_score>= 70 ? "#3B82F6" : client.health_score>= 40 ? "#1D4ED8" : "#F59E0B" },
                     { label: "Package", value: client.package_tier ?? "�", color: "#3B82F6" },
-                    { label: "Since", value: formatDate(client.created_at ?? ""), color: "#6F6D7A" },
+                    { label: "Since", value: formatDate(client.created_at ?? ""), color: "var(--text-muted)" },
                   ].map((tile, ti) => {
                     return (
                       <div key={tile.label} className="glass relative rounded-xl border border-border-subtle p-3 overflow-hidden">
