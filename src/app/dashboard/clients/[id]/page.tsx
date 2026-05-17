@@ -89,7 +89,7 @@ export default function ClientDetailPage() {
   if (loading) return <MotionPage>
                           <PageLoading />
                         </MotionPage>;
-  if (!client) return <div className="text-muted p-8">Client not found</div>;
+  if (!client) return <div className="text-text-muted p-8">Client not found</div>;
 
   const completedTasks = tasks.filter(t => t.is_completed).length;
   const totalPaid = invoices.filter(i => i.status === "paid").reduce((s, i) => s + i.amount, 0);
@@ -109,34 +109,8 @@ export default function ClientDetailPage() {
   ];
 
   return (
-    <div className="fade-in space-y-6">
-      {/* Client banner — makes it clear you're managing a specific client */}
-      <div className="bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.08)] rounded-xl px-4 py-2.5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center">
-            <span className="text-brand-accent text-sm font-bold">{client.business_name.charAt(0)}</span>
-          </div>
-          <div>
-            <p className="text-[10px] text-brand-accent uppercase tracking-wider font-bold">Managing Client Account</p>
-            <p className="text-xs font-semibold">{client.business_name}</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setSmartManageOpen(true)}
-            className="text-[10px] px-2.5 py-1 rounded-full bg-brand-accent text-white font-bold flex items-center gap-1 hover:bg-[rgba(59,130,246,0.90)] transition-colors"
-            aria-label="Open Smart Manage"
-          >
-            <Sparkles size={10} /> Manage
-          </button>
-          <span className={`text-[9px] px-2 py-0.5 rounded-full ${client.is_active ? "bg-success/10 text-success" : "bg-danger/10 text-danger"}`}>
-            {client.is_active ? "Active" : "Inactive"}
-          </span>
-          <span className="text-[9px] text-muted">{client.package_tier || "Standard"} · ${client.mrr}/mo</span>
-        </div>
-      </div>
-
-      {/* Smart Manage overlay — Trinity-suggested one-click actions. */}
+    <MotionPage className="space-y-4">
+      {/* Smart Manage overlay */}
       <SmartManageOverlay
         clientId={client.id}
         clientName={client.business_name}
@@ -144,16 +118,31 @@ export default function ClientDetailPage() {
         onClose={() => setSmartManageOpen(false)}
       />
 
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/dashboard/clients" className="p-2 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors">
-          <ArrowLeft size={20} />
-        </Link>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold">{client.business_name}</h1>
-          <p className="text-muted text-sm">{client.contact_name} · {client.email} · {client.package_tier || "Standard"} Plan</p>
+      {/* Slim editorial header */}
+      <div className="flex items-start justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0 flex items-center gap-3">
+          <Link href="/dashboard/clients" className="p-2 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors shrink-0">
+            <ArrowLeft size={18} />
+          </Link>
+          <div className="min-w-0">
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Managing Client</p>
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">{client.business_name}</h1>
+              <span className={`flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-bold border ${client.is_active ? "bg-success/10 text-success border-success/25" : "bg-danger/10 text-danger border-danger/25"}`}>
+                {client.is_active ? "Active" : "Inactive"}
+              </span>
+            </div>
+            <p className="text-[11px] text-text-muted mt-0.5">{client.contact_name} · {client.email} · {client.package_tier || "Standard"} Plan</p>
+          </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2 shrink-0 pt-1">
+          <button
+            onClick={() => setSmartManageOpen(true)}
+            className="btn-pill text-xs flex items-center gap-1.5"
+            aria-label="Open Smart Manage"
+          >
+            <Sparkles size={13} /> Smart Manage
+          </button>
           <button onClick={async () => {
             const tid = "welcome-doc";
             toast.loading("Generating welcome doc...", { id: tid });
@@ -168,8 +157,8 @@ export default function ClientDetailPage() {
                 toast.success("Welcome doc downloaded!", { id: tid });
               } else toast.error("Failed", { id: tid });
             } catch { toast.error("Failed", { id: tid }); }
-          }} className="btn-pill-ghost flex items-center gap-2 text-sm">
-            <Download size={14} /> Welcome Doc
+          }} className="btn-pill-ghost text-xs flex items-center gap-1.5">
+            <Download size={13} /> Welcome Doc
           </button>
           <button onClick={async () => {
             const tid = "contract-pdf";
@@ -189,37 +178,70 @@ export default function ClientDetailPage() {
                 toast.success("Contract downloaded!", { id: tid });
               } else toast.error("Failed", { id: tid });
             } catch { toast.error("Failed", { id: tid }); }
-          }} className="btn-pill flex items-center gap-2 text-sm">
-            <FileText size={14} /> Contract PDF
+          }} className="btn-pill text-xs flex items-center gap-1.5">
+            <FileText size={13} /> Contract PDF
           </button>
         </div>
       </div>
 
-      {/* Stats */}
-      <motion.div className="grid grid-cols-2 md:grid-cols-5 gap-4" variants={containerVariants} initial="hidden" animate="visible">
-        <motion.div variants={itemVariants}><StatCard label="MRR" value={formatCurrency(client.mrr)} icon={<CreditCard size={18} />} /></motion.div>
-        <motion.div variants={itemVariants}><StatCard label="Health Score" value={`${client.health_score}%`} changeType={client.health_score > 75 ? "positive" : "negative"} /></motion.div>
-        <motion.div variants={itemVariants}><StatCard label="Tasks Done" value={`${completedTasks}/${tasks.length}`} icon={<CheckCircle size={18} />} /></motion.div>
-        <motion.div variants={itemVariants}><StatCard label="Content Published" value={publishedContent} icon={<Film size={18} />} /></motion.div>
-        <motion.div variants={itemVariants}><StatCard label="Ad Spend" value={formatCurrency(totalSpend)} icon={<Megaphone size={18} />} /></motion.div>
+      {/* Bento stats */}
+      <motion.div
+        className="grid grid-cols-2 lg:grid-cols-[5fr_2fr_2fr_2fr] gap-3"
+        variants={containerVariants} initial="hidden" animate="visible"
+      >
+        {/* MRR focal tile */}
+        <motion.div variants={itemVariants} className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4">
+          <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Recurring Revenue</p>
+            <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatCurrency(client.mrr)}</p>
+            <p className="text-[11px] text-text-muted mt-1">{client.package_tier || "Standard"} plan</p>
+          </div>
+        </motion.div>
+        {/* Health score tile */}
+        <motion.div variants={itemVariants} className="glass rounded-2xl p-4 flex flex-col justify-between">
+          <p className="text-[9px] font-medium uppercase tracking-[0.14em] text-text-muted">Health</p>
+          <div>
+            <p className={`font-display text-2xl font-bold tabular-nums ${client.health_score > 75 ? "text-success" : client.health_score > 50 ? "text-warning" : "text-danger"}`}>{client.health_score}%</p>
+            <div className="mt-2 h-1 rounded-full bg-surface-light overflow-hidden">
+              <div className={`h-full rounded-full ${client.health_score > 75 ? "bg-success" : client.health_score > 50 ? "bg-warning" : "bg-danger"}`} style={{ width: `${client.health_score}%` }} />
+            </div>
+          </div>
+        </motion.div>
+        {/* Tasks tile */}
+        <motion.div variants={itemVariants} className="glass rounded-2xl p-4 flex flex-col justify-between">
+          <p className="text-[9px] font-medium uppercase tracking-[0.14em] text-text-muted">Tasks Done</p>
+          <div>
+            <p className="font-display text-2xl font-bold text-text-primary tabular-nums">{completedTasks}<span className="text-base font-normal text-text-muted">/{tasks.length}</span></p>
+            <p className="text-[11px] text-text-muted mt-0.5">{publishedContent} published</p>
+          </div>
+        </motion.div>
+        {/* Ad spend tile */}
+        <motion.div variants={itemVariants} className="glass rounded-2xl p-4 flex flex-col justify-between">
+          <p className="text-[9px] font-medium uppercase tracking-[0.14em] text-text-muted">Ad Spend</p>
+          <div>
+            <p className="font-display text-2xl font-bold text-text-primary tabular-nums">{formatCurrency(totalSpend)}</p>
+            <p className="text-[11px] text-text-muted mt-0.5">{campaigns.length} campaign{campaigns.length !== 1 ? "s" : ""}</p>
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* Services */}
-      <div className="card">
+      <div className="glass rounded-xl border border-border-subtle p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-medium">Active Services</h3>
+          <h3 className="text-sm font-semibold text-text-primary">Active Services</h3>
           <StatusBadge status={client.contract_status} />
         </div>
         <div className="flex flex-wrap gap-2">
           {(client.services || []).map((s, i) => (
             <span key={i} className="bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] rounded-lg px-3 py-1.5 text-brand-accent text-sm">{s}</span>
           ))}
-          {(client.services || []).length === 0 && <span className="text-muted text-sm">No services assigned</span>}
+          {(client.services || []).length === 0 && <span className="text-text-muted text-sm">No services assigned</span>}
         </div>
       </div>
 
       {/* Social Accounts */}
-      <div className="card">
+      <div className="glass rounded-xl border border-border-subtle p-4">
         <SocialConnect clientId={client.id} clientName={client.business_name} />
       </div>
 
@@ -243,19 +265,19 @@ export default function ClientDetailPage() {
 
       {/* Overview */}
       {tab === "overview" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* AI Actions */}
-          <div className="card">
-            <h3 className="section-header flex items-center gap-2"><Sparkles size={16} className="text-brand-accent" /> AI Agent Activity</h3>
-            <div className="space-y-3 max-h-80 overflow-y-auto">
+          <div className="glass rounded-xl border border-border-subtle p-4">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-3"><Sparkles size={15} className="text-brand-accent" /> AI Agent Activity</h3>
+            <div className="space-y-1 max-h-80 overflow-y-auto">
               {aiActions.length === 0 ? (
-                <p className="text-muted text-sm">No AI actions for this client yet</p>
+                <p className="text-text-muted text-sm">No AI actions for this client yet</p>
               ) : aiActions.map((a, i) => (
-                <div key={(a.id as string) || i} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
+                <div key={(a.id as string) || i} className="flex items-start gap-3 py-2 border-b border-border-subtle last:border-0">
                   <StatusBadge status={a.status as string} />
                   <div>
-                    <p className="text-sm">{a.description as string}</p>
-                    <p className="text-xs text-muted">{formatRelativeTime(a.created_at as string)}</p>
+                    <p className="text-sm text-text-primary">{a.description as string}</p>
+                    <p className="text-xs text-text-muted">{formatRelativeTime(a.created_at as string)}</p>
                   </div>
                 </div>
               ))}
@@ -263,17 +285,17 @@ export default function ClientDetailPage() {
           </div>
 
           {/* Recent Tasks */}
-          <div className="card">
-            <h3 className="section-header">Task Checklist</h3>
-            <div className="space-y-2 max-h-80 overflow-y-auto">
+          <div className="glass rounded-xl border border-border-subtle p-4">
+            <h3 className="text-sm font-semibold text-text-primary mb-3">Task Checklist</h3>
+            <div className="space-y-1 max-h-80 overflow-y-auto">
               {tasks.length === 0 ? (
-                <p className="text-muted text-sm">No tasks</p>
+                <p className="text-text-muted text-sm">No tasks</p>
               ) : tasks.map(task => (
-                <div key={task.id} className="flex items-center gap-3 py-2 border-b border-border last:border-0">
-                  {task.is_completed ? <CheckCircle size={16} className="text-success shrink-0" /> : <Circle size={16} className="text-muted shrink-0" />}
+                <div key={task.id} className="flex items-center gap-3 py-2 border-b border-border-subtle last:border-0">
+                  {task.is_completed ? <CheckCircle size={15} className="text-success shrink-0" /> : <Circle size={15} className="text-text-muted shrink-0" />}
                   <div className="flex-1 min-w-0">
-                    <p className={`text-sm ${task.is_completed ? "line-through text-muted" : ""}`}>{task.title}</p>
-                    {task.due_date && <p className="text-xs text-muted">Due: {formatDate(task.due_date)}</p>}
+                    <p className={`text-sm ${task.is_completed ? "line-through text-text-muted" : "text-text-primary"}`}>{task.title}</p>
+                    {task.due_date && <p className="text-xs text-text-muted">Due: {formatDate(task.due_date)}</p>}
                   </div>
                 </div>
               ))}
@@ -290,12 +312,12 @@ export default function ClientDetailPage() {
               { key: "title", label: "Script", render: (s: ContentScript) => (
                 <div>
                   <p className="font-medium">{s.title}</p>
-                  <p className="text-xs text-muted">{s.script_type === "long_form" ? "Long Form" : "Short Form"}</p>
+                  <p className="text-xs text-text-muted">{s.script_type === "long_form" ? "Long Form" : "Short Form"}</p>
                 </div>
               )},
               { key: "status", label: "Status", render: (s: ContentScript) => <StatusBadge status={s.status} /> },
               { key: "target_platform", label: "Platform", render: (s: ContentScript) => <span className="capitalize text-sm">{s.target_platform?.replace("_", " ") || "-"}</span> },
-              { key: "created_at", label: "Created", render: (s: ContentScript) => <span className="text-xs text-muted">{formatDate(s.created_at)}</span> },
+              { key: "created_at", label: "Created", render: (s: ContentScript) => <span className="text-xs text-text-muted">{formatDate(s.created_at)}</span> },
               { key: "actions", label: "", render: (s: ContentScript) => (
                 <button onClick={async () => {
                   const res = await fetch(`/api/content/pdf?id=${s.id}`);
@@ -315,7 +337,7 @@ export default function ClientDetailPage() {
             data={scripts}
             emptyMessage="No content scripts yet"
           />
-          <h3 className="section-header mt-6">Content Calendar</h3>
+          <h3 className="text-sm font-semibold text-text-primary mt-6">Content Calendar</h3>
           <DataTable
             columns={[
               { key: "title", label: "Content" },
@@ -356,13 +378,22 @@ export default function ClientDetailPage() {
 
       {/* Billing */}
       {tab === "billing" && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-3 gap-4">
-            <StatCard label="Total Paid" value={formatCurrency(totalPaid)} />
-            <StatCard label="Active Contracts" value={contracts.filter(c => c.status === "signed").length} />
-            <StatCard label="MRR" value={formatCurrency(client.mrr)} />
+        <div className="space-y-4">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="glass rounded-xl border border-border-subtle p-4">
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Paid</p>
+              <p className="font-display text-2xl font-bold text-text-primary tabular-nums">{formatCurrency(totalPaid)}</p>
+            </div>
+            <div className="glass rounded-xl border border-border-subtle p-4">
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active Contracts</p>
+              <p className="font-display text-2xl font-bold text-text-primary tabular-nums">{contracts.filter(c => c.status === "signed").length}</p>
+            </div>
+            <div className="glass rounded-xl border border-border-subtle p-4">
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">MRR</p>
+              <p className="font-display text-2xl font-bold text-text-primary tabular-nums">{formatCurrency(client.mrr)}</p>
+            </div>
           </div>
-          <h3 className="section-header">Contracts</h3>
+          <h3 className="text-sm font-semibold text-text-primary">Contracts</h3>
           <DataTable
             columns={[
               { key: "title", label: "Contract" },
@@ -373,7 +404,7 @@ export default function ClientDetailPage() {
             data={contracts}
             emptyMessage="No contracts"
           />
-          <h3 className="section-header">Invoices</h3>
+          <h3 className="text-sm font-semibold text-text-primary">Invoices</h3>
           <DataTable
             columns={[
               { key: "description", label: "Description", render: (i: Invoice) => i.description || "Invoice" },
@@ -406,9 +437,9 @@ export default function ClientDetailPage() {
       {/* Access Control */}
       {tab === "access" && (
         <div className="space-y-4">
-          <div className="card">
-            <h3 className="section-header">Page Access Control</h3>
-            <p className="text-[10px] text-muted mb-4">Choose which pages this client can see in their portal. Changes save automatically.</p>
+          <div className="glass rounded-xl border border-border-subtle p-4">
+            <h3 className="text-sm font-semibold text-text-primary mb-1">Page Access Control</h3>
+            <p className="text-[10px] text-text-muted mb-4">Choose which pages this client can see in their portal. Changes save automatically.</p>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
               {Object.entries(pageAccess).map(([page, enabled]) => (
                 <button key={page} onClick={async () => {
@@ -420,7 +451,7 @@ export default function ClientDetailPage() {
                   toast.success(`${page} ${!enabled ? "enabled" : "disabled"} for client`);
                 }}
                   className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
-                    enabled ? "border-success/30 bg-success/[0.05]" : "border-border opacity-60"
+                    enabled ? "border-success/30 bg-success/[0.05]" : "border-border-subtle opacity-60"
                   }`}>
                   <span className="text-xs font-medium capitalize">{page}</span>
                   <div className={`w-8 h-4 rounded-full transition-colors ${enabled ? "bg-success" : "bg-surface-light"}`}>
@@ -431,8 +462,8 @@ export default function ClientDetailPage() {
             </div>
           </div>
 
-          <div className="card">
-            <h3 className="section-header">Social Media Accounts</h3>
+          <div className="glass rounded-xl border border-border-subtle p-4">
+            <h3 className="text-sm font-semibold text-text-primary mb-3">Social Media Accounts</h3>
             <SocialConnect clientId={id as string} clientName={client?.business_name} />
           </div>
 
@@ -444,14 +475,14 @@ export default function ClientDetailPage() {
 
       {/* Voice Profile (Apr 27 — humanizer + voice profiles feature) */}
       {tab === "voice" && (
-        <div className="card">
+        <div className="glass rounded-xl border border-border-subtle p-4">
           <ClientVoiceProfile
             clientId={client.id}
             clientName={client.business_name}
           />
         </div>
       )}
-    </div>
+    </MotionPage>
   );
 }
 
@@ -545,22 +576,22 @@ function ClientPhoneSection({
 
   if (loading) {
     return (
-      <div className="card">
-        <h3 className="section-header flex items-center gap-2">
+      <div className="glass rounded-xl border border-border-subtle p-4">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-2">
           <Phone size={13} className="text-brand-accent" /> Dedicated Phone Number
         </h3>
-        <p className="text-xs text-muted">Loading...</p>
+        <p className="text-xs text-text-muted">Loading...</p>
       </div>
     );
   }
 
   if (!status) {
     return (
-      <div className="card">
-        <h3 className="section-header flex items-center gap-2">
+      <div className="glass rounded-xl border border-border-subtle p-4">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-2">
           <Phone size={13} className="text-brand-accent" /> Dedicated Phone Number
         </h3>
-        <p className="text-xs text-muted">Unable to load phone status.</p>
+        <p className="text-xs text-text-muted">Unable to load phone status.</p>
       </div>
     );
   }
@@ -573,12 +604,12 @@ function ClientPhoneSection({
     status.plan.cap !== "unlimited" && status.plan.current >= status.plan.cap;
 
   return (
-    <div className="card">
+    <div className="glass rounded-xl border border-border-subtle p-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="section-header flex items-center gap-2 mb-0">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary">
           <Phone size={13} className="text-brand-accent" /> Dedicated Phone Number
         </h3>
-        <span className="text-[10px] text-muted">
+        <span className="text-[10px] text-text-muted">
           Plan: <span className="text-brand-accent font-semibold">{status.plan.plan_tier}</span>
           <span className="mx-1.5 opacity-40">·</span>
           <span className={capHit ? "text-red-400" : ""}>{capLabel} numbers</span>
@@ -605,36 +636,36 @@ function ClientPhoneSection({
             </div>
             <button
               onClick={() => { navigator.clipboard.writeText(status.phone_number || ""); toast.success("Copied"); }}
-              className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1"
+              className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1"
             >
               Copy
             </button>
           </div>
           <div className="grid grid-cols-2 gap-2 mt-2">
-            <div className="rounded-xl border border-border bg-surface-light p-3">
-              <div className="flex items-center gap-1.5 text-[10px] text-muted mb-0.5">
+            <div className="rounded-xl border border-border-subtle bg-surface-light p-3">
+              <div className="flex items-center gap-1.5 text-[10px] text-text-muted mb-0.5">
                 <MessageSquare size={10} /> SMS this month
               </div>
               <p className="text-base font-bold">{status.usage.sms_this_month}</p>
             </div>
-            <div className="rounded-xl border border-border bg-surface-light p-3">
-              <div className="flex items-center gap-1.5 text-[10px] text-muted mb-0.5">
+            <div className="rounded-xl border border-border-subtle bg-surface-light p-3">
+              <div className="flex items-center gap-1.5 text-[10px] text-text-muted mb-0.5">
                 <Phone size={10} /> Call minutes this month
               </div>
               <p className="text-base font-bold">{status.usage.call_minutes_this_month}</p>
             </div>
           </div>
-          <p className="text-[10px] text-muted mt-1">
+          <p className="text-[10px] text-text-muted mt-1">
             Inbound SMS + voice route to this client automatically via the Twilio webhook.
           </p>
         </div>
       ) : readOnly ? (
-        <p className="text-xs text-muted">
+        <p className="text-xs text-text-muted">
           No dedicated phone number assigned yet. Your agency can provision one for you.
         </p>
       ) : (
         <div className="space-y-2">
-          <p className="text-xs text-muted">
+          <p className="text-xs text-text-muted">
             No phone number assigned yet. Provisioning buys a Twilio number, wires the SMS + voice webhooks, and creates an ElevenAgent for AI calling.
           </p>
           {capHit && (
@@ -698,7 +729,7 @@ function fileIconFor(type: string) {
     return <Music size={14} className="text-pink-400" />;
   if (["pdf", "doc", "docx", "txt"].includes(t) || t.includes("document"))
     return <FileText size={14} className="text-brand-accent" />;
-  return <FileIcon size={14} className="text-muted" />;
+  return <FileIcon size={14} className="text-text-muted" />;
 }
 
 function ClientFilesSection({ clientId, readOnly = false }: { clientId: string; readOnly?: boolean }) {
@@ -725,19 +756,19 @@ function ClientFilesSection({ clientId, readOnly = false }: { clientId: string; 
   }, [clientId]);
 
   return (
-    <div className="card">
+    <div className="glass rounded-xl border border-border-subtle p-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="section-header flex items-center gap-2 mb-0">
+        <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary">
           <FolderOpen size={13} className="text-brand-accent" /> Uploaded Files
         </h3>
-        <span className="text-[10px] text-muted">
+        <span className="text-[10px] text-text-muted">
           {loading ? "Loading..." : `${files.length} file${files.length === 1 ? "" : "s"}`}
         </span>
       </div>
       {loading ? (
-        <p className="text-xs text-muted">Loading files...</p>
+        <p className="text-xs text-text-muted">Loading files...</p>
       ) : files.length === 0 ? (
-        <p className="text-xs text-muted">
+        <p className="text-xs text-text-muted">
           {readOnly
             ? "You haven't uploaded any files yet. Drop files in the My Uploads page to share them with your agency."
             : "No files uploaded yet. Client portal drops and tagged content library assets appear here."}
@@ -752,7 +783,7 @@ function ClientFilesSection({ clientId, readOnly = false }: { clientId: string; 
                 href={f.url || "#"}
                 target={f.url ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                className={`flex items-center gap-2 p-2 rounded-lg border border-border bg-surface-light/50 hover:border-[rgba(59,130,246,0.25)] transition-colors min-w-0 ${f.url ? "" : "pointer-events-none opacity-60"}`}
+                className={`flex items-center gap-2 p-2 rounded-lg border border-border-subtle bg-surface-light/50 hover:border-[rgba(59,130,246,0.25)] transition-colors min-w-0 ${f.url ? "" : "pointer-events-none opacity-60"}`}
                 title={f.name}
               >
                 <div className="w-10 h-10 rounded-lg bg-surface flex items-center justify-center shrink-0 overflow-hidden">
@@ -765,14 +796,14 @@ function ClientFilesSection({ clientId, readOnly = false }: { clientId: string; 
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[11px] font-medium truncate">{f.name}</p>
-                  <div className="flex items-center gap-1.5 text-[9px] text-muted">
+                  <div className="flex items-center gap-1.5 text-[9px] text-text-muted">
                     <span>{formatFileBytes(f.size)}</span>
                     <span className="opacity-40">·</span>
                     <span className="truncate">{f.source_tool}</span>
                   </div>
-                  <p className="text-[9px] text-muted mt-0.5">{formatRelativeTime(f.uploaded_at)}</p>
+                  <p className="text-[9px] text-text-muted mt-0.5">{formatRelativeTime(f.uploaded_at)}</p>
                 </div>
-                {f.url && <ExternalLink size={10} className="text-muted shrink-0" />}
+                {f.url && <ExternalLink size={10} className="text-text-muted shrink-0" />}
               </a>
             );
           })}
@@ -826,8 +857,8 @@ function TelegramBotSetup({ clientId, client, onUpdate }: { clientId: string; cl
   }
 
   return (
-    <div className="card">
-      <h3 className="section-header flex items-center gap-2">
+    <div className="glass rounded-xl border border-border-subtle p-4">
+      <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-3">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-[#26A5E4]">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
         </svg>
@@ -840,25 +871,25 @@ function TelegramBotSetup({ clientId, client, onUpdate }: { clientId: string; cl
             <div className="w-2 h-2 rounded-full bg-success" />
             <div className="flex-1">
               <p className="text-xs font-medium">@{(client as unknown as Record<string, unknown>)?.telegram_bot_username as string}</p>
-              <p className="text-[9px] text-muted">Bot connected and active</p>
+              <p className="text-[9px] text-text-muted">Bot connected and active</p>
             </div>
             <button onClick={removeBot} disabled={removing}
               className="text-[9px] text-danger hover:text-danger/80 transition-colors">
               {removing ? "Removing..." : "Remove"}
             </button>
           </div>
-          <p className="text-[9px] text-muted">
+          <p className="text-[9px] text-text-muted">
             The client can message this bot to check project status, tasks, invoices, and content.
           </p>
         </div>
       ) : (
         <div className="space-y-3">
-          <p className="text-xs text-muted">
+          <p className="text-xs text-text-muted">
             Give this client their own Telegram bot for project updates and communication.
           </p>
-          <ol className="text-[10px] text-muted space-y-1 list-decimal list-inside">
-            <li>Open Telegram and message <span className="font-mono text-foreground">@BotFather</span></li>
-            <li>Send <span className="font-mono text-foreground">/newbot</span> and follow the steps</li>
+          <ol className="text-[10px] text-text-muted space-y-1 list-decimal list-inside">
+            <li>Open Telegram and message <span className="font-mono text-text-primary">@BotFather</span></li>
+            <li>Send <span className="font-mono text-text-primary">/newbot</span> and follow the steps</li>
             <li>Copy the bot token and paste it below</li>
           </ol>
           <div className="flex gap-2">
@@ -1048,11 +1079,11 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
   return (
     <div className="space-y-5">
       {/* Progress header */}
-      <div className="card p-4">
+      <div className="glass rounded-xl border border-border-subtle p-4">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h3 className="text-xs font-bold">Client Onboarding Progress</h3>
-            <p className="text-[10px] text-muted">{completedOnboarding} of {totalOnboarding} steps completed</p>
+            <p className="text-[10px] text-text-muted">{completedOnboarding} of {totalOnboarding} steps completed</p>
           </div>
           <div className="flex items-center gap-2">
             <span className={`text-lg font-bold font-mono ${progressPercent === 100 ? "text-success" : "text-brand-accent"}`}>
@@ -1084,7 +1115,7 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
                   {phase.icon}
                   <span className="text-[8px] font-bold">{phaseCompleted}/{phaseTotal}</span>
                 </div>
-                <p className="text-[7px] text-muted mt-0.5 truncate">{phase.phase}</p>
+                <p className="text-[7px] text-text-muted mt-0.5 truncate">{phase.phase}</p>
               </div>
             );
           })}
@@ -1112,7 +1143,7 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
             const allDone = phaseCompleted === phase.tasks.length && onboardingTasks.length > 0;
 
             return (
-              <div key={phase.phase} className={`card overflow-hidden ${allDone ? "border-success/20" : ""}`}>
+              <div key={phase.phase} className={`glass rounded-xl overflow-hidden border ${allDone ? "border-success/20" : "border-border-subtle"}`}>
                 <button
                   onClick={() => setExpandedPhases(prev => ({ ...prev, [phase.phase]: !prev[phase.phase] }))}
                   className="w-full p-3 flex items-center justify-between hover:bg-surface-light/50 transition-colors"
@@ -1123,12 +1154,12 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
                     </div>
                     <div className="text-left">
                       <p className="text-xs font-semibold">{phase.phase}</p>
-                      <p className="text-[9px] text-muted">{phaseCompleted} of {phase.tasks.length} completed</p>
+                      <p className="text-[9px] text-text-muted">{phaseCompleted} of {phase.tasks.length} completed</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     {allDone && <span className="text-[8px] text-success font-bold bg-success/10 px-2 py-0.5 rounded-full">DONE</span>}
-                    {isExpanded ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
+                    {isExpanded ? <ChevronDown size={14} className="text-text-muted" /> : <ChevronRight size={14} className="text-text-muted" />}
                   </div>
                 </button>
 
@@ -1145,10 +1176,10 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
                         >
                           {isCompleted
                             ? <CheckCircle size={14} className="text-success shrink-0 mt-0.5" />
-                            : <Circle size={14} className="text-muted shrink-0 mt-0.5" />}
+                            : <Circle size={14} className="text-text-muted shrink-0 mt-0.5" />}
                           <div>
-                            <p className={`text-[11px] font-medium ${isCompleted ? "line-through text-muted" : ""}`}>{taskDef.title}</p>
-                            <p className="text-[9px] text-muted">{taskDef.description}</p>
+                            <p className={`text-[11px] font-medium ${isCompleted ? "line-through text-text-muted" : ""}`}>{taskDef.title}</p>
+                            <p className="text-[9px] text-text-muted">{taskDef.description}</p>
                             {existing?.completed_at && (
                               <p className="text-[8px] text-success mt-0.5">Completed {formatRelativeTime(existing.completed_at)}</p>
                             )}
@@ -1167,7 +1198,7 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
       {/* Custom tasks */}
       {taskView === "custom" && (
         <div className="space-y-3">
-          <div className="card p-3 flex items-center gap-2">
+          <div className="glass rounded-xl border border-border-subtle p-3 flex items-center gap-2">
             <input
               value={newTaskTitle}
               onChange={e => setNewTaskTitle(e.target.value)}
@@ -1183,10 +1214,10 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
           </div>
 
           {customTasks.length === 0 ? (
-            <div className="card-static text-center py-8">
-              <Circle size={24} className="text-muted mx-auto mb-2" />
-              <p className="text-xs text-muted">No custom tasks yet</p>
-              <p className="text-[10px] text-muted/60">Add tasks specific to this client above</p>
+            <div className="glass rounded-xl border border-border-subtle text-center py-8">
+              <Circle size={24} className="text-text-muted mx-auto mb-2" />
+              <p className="text-xs text-text-muted">No custom tasks yet</p>
+              <p className="text-[10px] text-text-muted/60">Add tasks specific to this client above</p>
             </div>
           ) : (
             <div className="space-y-1">
@@ -1194,14 +1225,14 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
                 <button
                   key={task.id}
                   onClick={() => toggleCustomTask(task.id, task.is_completed)}
-                  className={`w-full card card-hover p-3 flex items-center gap-3 text-left ${task.is_completed ? "opacity-60" : ""}`}
+                  className={`w-full glass rounded-xl border border-border-subtle p-3 flex items-center gap-3 text-left hover:border-border-strong transition-colors ${task.is_completed ? "opacity-60" : ""}`}
                 >
                   {task.is_completed
                     ? <CheckCircle size={14} className="text-success shrink-0" />
-                    : <Circle size={14} className="text-muted shrink-0" />}
+                    : <Circle size={14} className="text-text-muted shrink-0" />}
                   <div className="flex-1 min-w-0">
-                    <p className={`text-xs font-medium ${task.is_completed ? "line-through text-muted" : ""}`}>{task.title}</p>
-                    {task.description && <p className="text-[9px] text-muted truncate">{task.description}</p>}
+                    <p className={`text-xs font-medium ${task.is_completed ? "line-through text-text-muted" : ""}`}>{task.title}</p>
+                    {task.description && <p className="text-[9px] text-text-muted truncate">{task.description}</p>}
                   </div>
                   <StatusBadge status={task.is_completed ? "completed" : "pending"} />
                 </button>
