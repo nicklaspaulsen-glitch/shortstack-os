@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 
 // Lazy-load overlay/modal components — not needed on initial render
 const MainNavbar = dynamic(() => import("@/components/dashboard/main-navbar"), { ssr: false });
+const TrinitySidebar = dynamic(() => import("@/components/dashboard/trinity-sidebar"), { ssr: false });
 const TopNavbar = dynamic(() => import("@/components/dashboard/top-navbar"), { ssr: false });
 const DashboardAmbient3D = dynamic(() => import("@/components/brand/dashboard-ambient-3d"), { ssr: false });
 const DashboardBackground = dynamic(() => import("@/components/brand/dashboard-background"), { ssr: false });
@@ -130,6 +131,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
   const pathname = usePathname();
   const [zoom, setZoom] = useState(100);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -354,12 +356,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           but doesn't fight content readability. */}
       <div className="flex min-h-screen bg-background/40 relative">
 
-        {/* Full-width top navigation (icon circles + section dropdowns + actions) */}
-        <MainNavbar />
+        {/* Left sidebar navigation — Trinity OS 2.0 design */}
+        <TrinitySidebar
+          mobileOpen={mobileSidebarOpen}
+          onMobileClose={() => setMobileSidebarOpen(false)}
+        />
 
-        <main id="main" className="flex-1 min-w-0 overflow-x-hidden">
-          {/* Spacer — compensates for the fixed MainNavbar (h-14 = 56px) */}
-          <div className="h-14" aria-hidden="true" />
+        {/* Keep MainNavbar available for components that depend on it
+            (command palette, mobile drawer) — rendered off-screen via
+            its own aria-hidden when not triggered. Hidden visually on lg+. */}
+        <div className="lg:hidden">
+          <MainNavbar />
+        </div>
+
+        <main id="main" className="flex-1 min-w-0 overflow-x-hidden lg:ml-60">
+          {/* No h-14 spacer needed — sidebar is fixed left, not top */}
 
           {/* Managed client banner */}
           <ManagedClientBanner />

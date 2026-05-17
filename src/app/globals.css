@@ -302,6 +302,18 @@ a[role="button"]:hover,
   --color-periwinkle-soft: #60A5FA;
   --color-periwinkle-bg: rgba(59, 130, 246, 0.09);
   --color-periwinkle-border: rgba(59, 130, 246, 0.20);
+
+  /* ── Trinity Sidebar tokens (dark default) ── */
+  --sidebar-bg: rgba(4, 8, 20, 0.97);
+  --sidebar-border: rgba(99, 146, 255, 0.12);
+  --sidebar-border-active: rgba(99, 146, 255, 0.28);
+  --sidebar-item-bg: rgba(59, 130, 246, 0.07);
+  --sidebar-item-bg-active: rgba(59, 130, 246, 0.14);
+  --sidebar-dropdown-bg: rgba(10, 14, 30, 0.96);
+  --sidebar-text-primary: #F0F0F4;
+  --sidebar-text-secondary: #7A7A8C;
+  --sidebar-icon-active: #60A5FA;
+  --sidebar-icon-inactive: #52525F;
 }
 
 * {
@@ -412,6 +424,18 @@ a[role="button"]:hover,
   /* Dark theme card shadows — glass depth with blue ambient glow */
   --card-shadow: 0 1px 2px rgba(0,0,0,0.35), 0 4px 16px -4px rgba(0,0,0,0.40), 0 12px 40px -8px rgba(0,0,0,0.50);
   --card-shadow-hover: 0 2px 4px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.30), 0 20px 48px -12px rgba(0,0,0,0.55), 0 0 32px -8px rgba(59,130,246,0.12);
+
+  /* ── Trinity Sidebar tokens (dark explicit override) ── */
+  --sidebar-bg: rgba(4, 8, 20, 0.97);
+  --sidebar-border: rgba(99, 146, 255, 0.12);
+  --sidebar-border-active: rgba(99, 146, 255, 0.28);
+  --sidebar-item-bg: rgba(59, 130, 246, 0.07);
+  --sidebar-item-bg-active: rgba(59, 130, 246, 0.14);
+  --sidebar-dropdown-bg: rgba(10, 14, 30, 0.96);
+  --sidebar-text-primary: #F0F0F4;
+  --sidebar-text-secondary: #7A7A8C;
+  --sidebar-icon-active: #60A5FA;
+  --sidebar-icon-inactive: #52525F;
 }
 
 /* ═══════════ LIGHT THEME OVERRIDES (kept for parity / explicit selector) ═══════════
@@ -470,6 +494,18 @@ a[role="button"]:hover,
   --brand-lime-rgb: 37 99 235;
   --brand-indigo: #2563EB;
   --brand-indigo-rgb: 37 99 235;
+
+  /* ── Trinity Sidebar tokens (light override) ── */
+  --sidebar-bg: rgba(255, 255, 255, 0.98);
+  --sidebar-border: rgba(156, 167, 222, 0.25);
+  --sidebar-border-active: rgba(37, 99, 235, 0.35);
+  --sidebar-item-bg: rgba(37, 99, 235, 0.05);
+  --sidebar-item-bg-active: rgba(37, 99, 235, 0.10);
+  --sidebar-dropdown-bg: rgba(248, 250, 255, 0.98);
+  --sidebar-text-primary: #0A0A0B;
+  --sidebar-text-secondary: #6B7280;
+  --sidebar-icon-active: #2563EB;
+  --sidebar-icon-inactive: #9CA3AF;
 }
 
 html {
