@@ -1140,7 +1140,8 @@ function WorkflowBuilderInner() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.04, duration: 0.35 }}
                   whileHover={{ y: -4, scale: 1.01 }}
-                  className="group glass rounded-xl hover:border-[rgba(59,130,246,0.25)] transition-all p-4 cursor-pointer"
+                  className="group glass rounded-xl hover:border-[rgba(59,130,246,0.25)] transition-all p-4 cursor-pointer spotlight-card"
+                  onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                   onClick={() => loadTemplate(tpl)}
                 >
                   <div className="flex items-start justify-between mb-2">

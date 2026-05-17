@@ -493,7 +493,7 @@ export default function ReportGeneratorPage() {
           </motion.div>
 
           {/* Past reports */}
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.4 }} className="glass  overflow-hidden" whileHover={{ y: -4, scale: 1.01 }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.4 }} className="glass overflow-hidden spotlight-card" whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
           <div className="p-5">
             <div className="flex items-center gap-2 mb-3">
               <History size={14} className="text-muted" />

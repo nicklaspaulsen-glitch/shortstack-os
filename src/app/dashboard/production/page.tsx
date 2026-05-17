@@ -198,7 +198,8 @@ export default function ProductionPage() {
                           >
                             {/* Inner div handles HTML5 drag — cannot go on motion.div */}
                             <div draggable onDragStart={() => setDraggedItem(item.id)}
-                              className="glass rounded-xl p-3 cursor-move hover:border-[rgba(59,130,246,0.08)] transition-all">
+                              className="glass rounded-xl p-3 cursor-move hover:border-[rgba(59,130,246,0.08)] transition-all spotlight-card"
+                              onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                               <div className="flex items-center justify-between mb-1">
                                 <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${PRIORITY_CONFIG[item.priority].bg} ${PRIORITY_CONFIG[item.priority].color}`}>
                                   {PRIORITY_CONFIG[item.priority].label}

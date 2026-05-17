@@ -520,7 +520,8 @@ export default function NotificationsPage() {
                       transition={{ duration: 0.22, delay: index * 0.06 }}
                       whileHover={{ y: -2 }}
                       onClick={() => setActiveTab(tab.key)}
-                      className={`glass rounded-xl p-3 text-center relative overflow-hidden hover:shadow-md transition-all ${
+                      onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                      className={`glass rounded-xl p-3 text-center relative overflow-hidden hover:shadow-md transition-all spotlight-card ${
                         activeTab === tab.key ? "ring-1 ring-indigo-500/30" : ""
                       }`}
                     >

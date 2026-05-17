@@ -233,7 +233,8 @@ export default function GenerationsPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.04 }}
                       whileHover={{ y: -4, scale: 1.01 }}
-                      className="glass rounded-xl !p-0 overflow-hidden hover:border-[rgba(59,130,246,0.2)] transition-all group"
+                      className="glass rounded-xl !p-0 overflow-hidden hover:border-[rgba(59,130,246,0.2)] transition-all group spotlight-card"
+                      onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                     >
                       <div className="flex items-start gap-3 px-4 py-3">
                         {/* Category Icon */}

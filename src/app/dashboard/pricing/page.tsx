@@ -147,7 +147,8 @@ export default function PricingPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.06, duration: 0.4 }}
                     whileHover={{ y: -4, scale: 1.01 }}
-                    className={`relative glass  border p-5 flex flex-col transition-shadow ${
+                    onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                    className={`relative glass border p-5 flex flex-col transition-shadow spotlight-card ${
                       plan.popular
                         ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.03)] shadow-card ring-1 ring-[rgba(59,130,246,0.08)]"
                         : isCurrentPlan
@@ -344,7 +345,8 @@ export default function PricingPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.04 }}
                     whileHover={{ y: -4, scale: 1.01 }}
-                    className="glass rounded-xl p-4 transition-shadow flex items-start gap-3"
+                    className="glass rounded-xl p-4 transition-shadow flex items-start gap-3 spotlight-card"
+                    onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                   >
                     <div className="w-8 h-8 rounded-lg bg-surface-light flex items-center justify-center text-muted shrink-0">
                       {addon.icon}

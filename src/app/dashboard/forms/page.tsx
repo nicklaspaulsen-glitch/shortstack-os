@@ -722,7 +722,8 @@ export default function FormsPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05, duration: 0.35 }}
                     whileHover={{ y: -4, scale: 1.01 }}
-                    className="text-left  border p-4 transition-all" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
+                    onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
+                    className="text-left border p-4 transition-all spotlight-card" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                   >
                     <p className="text-sm font-bold mb-1">{tpl.name}</p>
                     <p className="text-[10px] text-muted mb-2">{tpl.desc} - {tpl.fields.length} fields</p>
