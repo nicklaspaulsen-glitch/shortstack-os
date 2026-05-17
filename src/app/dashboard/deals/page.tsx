@@ -279,7 +279,7 @@ export default function DealsPage() {
                   </motion.div>
                 </div>
               </div>
-            </CollapsibleStats>{/* Tabs (sticky) */}<div className="glass sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.70)]">
+            </CollapsibleStats>{/* Tabs (sticky) */}<div className="glass sticky top-0 z-10 flex gap-1 rounded-lg p-1 overflow-x-auto border border-[rgba(255,255,255,0.08)]">
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
@@ -351,7 +351,12 @@ export default function DealsPage() {
                               draggable
                               onDragStart={() => onDragStart(deal.id)}
                               onClick={() => setExpandedDeal(expandedDeal === deal.id ? null : deal.id)}
-                              className="glass rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-border transition-colors border border-[rgba(255,255,255,0.70)]">
+                              className="glass rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-border transition-colors border border-[rgba(255,255,255,0.08)] spotlight-card"
+                              onMouseMove={(e) => {
+                                const rect = e.currentTarget.getBoundingClientRect();
+                                e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                                e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                              }}>
                               <p className="text-[11px] font-semibold truncate">{deal.title}</p>
                               <p className="text-[9px] text-muted">{deal.client_name}</p>
                               <p className="text-sm font-bold mt-1" style={{ color: stage.color }}>{formatCurrency(Number(deal.value))}</p>
@@ -409,7 +414,7 @@ export default function DealsPage() {
                       { stage: "Proposal to Negotiation", avg: "0 days", trend: "faster" },
                       { stage: "Negotiation to Close", avg: "0 days", trend: "faster" },
                     ].map((v, i) => (
-                      <motion.div key={i} variants={fadeUp} className="glass rounded-lg p-3 text-center border border-[rgba(255,255,255,0.70)]">
+                      <motion.div key={i} variants={fadeUp} className="glass rounded-lg p-3 text-center border border-[rgba(255,255,255,0.08)]">
                         <p className="text-[9px] text-muted mb-1">{v.stage}</p>
                         <p className="text-sm font-bold">{v.avg}</p>
                         <p className={`text-[8px] flex items-center justify-center gap-0.5 ${v.trend === "faster" ? "text-emerald-700" : "text-rose-700"}`}>
@@ -515,8 +520,18 @@ export default function DealsPage() {
                     const scoreColor = score>= 70 ? "text-emerald-700" : score>= 40 ? "text-amber-600" : "text-rose-700";
                     const scoreBg = score>= 70 ? "bg-green-400" : score>= 40 ? "bg-yellow-400" : "bg-red-400";
                     return (
-                      <motion.div key={deal.id} variants={fadeUp} whileHover={{ y: -3 }} className="glass rounded-xl p-4 flex items-center gap-4 border border-[rgba(255,255,255,0.70)]">
-                        <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border border-[rgba(255,255,255,0.70)]" style={{ background: "rgba(255,255,255,0.72)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
+                      <motion.div
+                        key={deal.id}
+                        variants={fadeUp}
+                        whileHover={{ y: -3 }}
+                        className="glass rounded-xl p-4 flex items-center gap-4 border border-[rgba(255,255,255,0.08)] spotlight-card"
+                        onMouseMove={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                          e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                        }}
+                      >
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border border-[rgba(255,255,255,0.08)]" style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
                           <p className={`text-lg font-bold ${scoreColor}`}>{score}</p>
                         </div>
                         <div className="flex-1 min-w-0">

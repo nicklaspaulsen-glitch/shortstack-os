@@ -1527,12 +1527,16 @@ export default function CRMPage() {
                       return (
                         <motion.div
                           key={lead.id}
-                          className={`rounded-xl border border-border-subtle ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : ""}`}
-                          
+                          className={`glass rounded-xl border spotlight-card ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-[rgba(59,130,246,0.25)]" : "border-border-subtle"}`}
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.18, delay: index * 0.04 }}
-                          whileHover={{ backgroundColor: "rgba(255,255,255,0.03)" }}
+                          whileHover={{ y: -2 }}
+                          onMouseMove={(e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                            e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                          }}
                           onClick={() => setDetailLeadId(detailLeadId === lead.id ? null : lead.id)}>
                           <div className="flex items-start justify-between">
                             <div className="flex items-center gap-1.5 min-w-0">

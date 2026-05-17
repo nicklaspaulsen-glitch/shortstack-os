@@ -286,7 +286,12 @@ function ProposalCard({
         show: { opacity: 1, x: 0, transition: { duration: 0.3, ease: [0.32, 0.72, 0, 1] } },
       }}
       whileHover={{ y: -3 }}
-      className="glass rounded-xl hover:border-[rgba(59,130,246,0.14)] transition-colors"
+      className="glass rounded-xl hover:border-[rgba(59,130,246,0.14)] transition-colors spotlight-card"
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+        e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+      }}
     >
       <div className="flex items-center gap-3 p-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent">
