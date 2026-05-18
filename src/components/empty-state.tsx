@@ -47,7 +47,7 @@ export default function EmptyState({
               href={actionHref}
               className="mt-5 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-semibold text-white transition-all hover:-translate-y-0.5"
               style={{
-                background: "var(--color-accent, #C9A84C)",
+                background: "var(--color-accent, #3B82F6)",
                 boxShadow: "0 1px 3px rgba(59,130,246,0.25)",
               }}
             >
@@ -58,7 +58,7 @@ export default function EmptyState({
               onClick={onAction}
               className="mt-5 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-semibold text-white transition-all hover:-translate-y-0.5"
               style={{
-                background: "var(--color-accent, #C9A84C)",
+                background: "var(--color-accent, #3B82F6)",
                 boxShadow: "0 1px 3px rgba(59,130,246,0.25)",
               }}
             >

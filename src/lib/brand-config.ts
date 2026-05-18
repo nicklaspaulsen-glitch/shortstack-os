@@ -16,7 +16,7 @@ export const BRAND = {
   product_name: "Trinity",
   company_name: "ShortStack",
   tagline: "The AI operating system for modern agencies",
-  primary_color: "#C9A84C",
+  primary_color: "#3B82F6",
   logo_svg: "/trinity-logo.svg",
   logo_white_svg: "/trinity-logo-white.svg",
   // For future white-label: agencies override this via their own client_portal_config

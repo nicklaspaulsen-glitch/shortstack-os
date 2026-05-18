@@ -25,8 +25,8 @@ export function PresetEmptyState({ onReset, label = "presets" }: PresetEmptyStat
       >
         <defs>
           <radialGradient id="pe-glow" cx="0.5" cy="0.5" r="0.5">
-            <stop offset="0%" stopColor="#C9A84C" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="#C9A84C" stopOpacity="0" />
+            <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
           </radialGradient>
           <linearGradient id="pe-gold" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor="#E4C876" />

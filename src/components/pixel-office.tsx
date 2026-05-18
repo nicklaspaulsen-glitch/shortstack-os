@@ -26,7 +26,7 @@ interface LogEntry {
 }
 
 const AGENT_CONFIGS = [
-  { id: "lead_gen", name: "Scout", role: "Lead Finder", color: "#C9A84C", headColor: "#f5e6c8", message: "Scraping Google Maps..." },
+  { id: "lead_gen", name: "Scout", role: "Lead Finder", color: "#3B82F6", headColor: "#f5e6c8", message: "Scraping Google Maps..." },
   { id: "outreach", name: "Echo", role: "Outreach Agent", color: "#3B82F6", headColor: "#bae6fd", message: "Sending cold DMs..." },
   { id: "content", name: "Pixel", role: "Content Writer", color: "#f43f5e", headColor: "#fecdd3", message: "Writing viral script..." },
   { id: "social", name: "Wave", role: "Social Manager", color: "#2563EB", headColor: "#FFB3B3", message: "Scheduling posts..." },
@@ -144,7 +144,7 @@ export default function PixelOffice() {
       // === HEADER BAR ===
       ctx.fillStyle = "rgba(6,8,12,0.85)";
       ctx.fillRect(0, 0, W, 22);
-      ctx.fillStyle = "#C9A84C";
+      ctx.fillStyle = "#3B82F6";
       ctx.font = "bold 10px 'Courier New', monospace";
       ctx.fillText("SHORTSTACK HQ", 10, 15);
       const working = agents.filter(a => a.status === "working").length;
@@ -290,7 +290,7 @@ export default function PixelOffice() {
         }
 
         // Status indicator — floating dot
-        const statusColor = agent.status === "working" ? "#2563EB" : agent.status === "error" ? "#f43f5e" : agent.status === "talking" ? "#C9A84C" : "#475569";
+        const statusColor = agent.status === "working" ? "#2563EB" : agent.status === "error" ? "#f43f5e" : agent.status === "talking" ? "#3B82F6" : "#475569";
         ctx.fillStyle = statusColor;
         ctx.beginPath();
         ctx.arc(ax + 6, cy - 12, 2.5, 0, Math.PI * 2);

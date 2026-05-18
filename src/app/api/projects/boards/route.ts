@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
       client_id: clientId,
       name,
       icon: icon ?? "kanban",
-      color: color ?? "#C9A84C",
+      color: color ?? "#3B82F6",
     })
     .select()
     .single();

@@ -662,15 +662,15 @@ function FieldRenderer({
         <div className="flex items-center gap-3">
           <input
             type="color"
-            value={(value as string) || "#C9A84C"}
+            value={(value as string) || "#3B82F6"}
             onChange={e => onChange(e.target.value)}
             className="w-16 h-16 rounded-xl cursor-pointer border border-border-subtle bg-surface-light"
           />
           <input
             type="text"
-            value={(value as string) || "#C9A84C"}
+            value={(value as string) || "#3B82F6"}
             onChange={e => onChange(e.target.value)}
-            placeholder="#C9A84C"
+            placeholder="#3B82F6"
             className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border-subtle text-sm font-mono focus:outline-none focus:border-[#2563EB]"
           />
         </div>

@@ -205,7 +205,7 @@ export default async function PublicStatusPage({
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em]"
-            style={{ color: "#C9A84C" }}
+            style={{ color: "#3B82F6" }}
           >
             {BRAND.product_name}
           </Link>

@@ -118,7 +118,7 @@ export default function ClientChatWidget() {
               filter: drop-shadow(0 4px 18px rgba(201, 168, 76, 0.45));
             }
             .trinity-body {
-              background: radial-gradient(circle at 35% 30%, #ffe28a 0%, #f5c03c 35%, #c9a84c 70%, #8c6d1a 100%);
+              background: radial-gradient(circle at 35% 30%, #ffe28a 0%, #f5c03c 35%, #3b82f6 70%, #8c6d1a 100%);
               border: 1px solid rgba(255, 220, 130, 0.6);
               box-shadow:
                 inset 0 0 10px rgba(255, 240, 190, 0.4),

@@ -245,7 +245,7 @@ interface Props {
   businessType?: string | null;
 }
 
-const GROUP_COLOR_PALETTE = ["#C9A84C", "#2563EB", "#2563EB", "#EF4444", "#A855F7", "#F59E0B", "#EC4899"];
+const GROUP_COLOR_PALETTE = ["#3B82F6", "#2563EB", "#2563EB", "#EF4444", "#A855F7", "#F59E0B", "#EC4899"];
 
 export default function SidebarCustomizerFull({ businessType }: Props) {
   /* ── Loaded prefs (saved baseline, used for dirty comparison) ──── */
@@ -295,7 +295,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                 name: String(g.name || g.label || "Group"),
                 label: String(g.label || g.name || "Group"),
                 icon: String(g.icon || "Layers"),
-                color: String(g.color || "#C9A84C"),
+                color: String(g.color || "#3B82F6"),
                 order: typeof g.order === "number" ? g.order : 0,
                 items: Array.isArray(g.items) ? (g.items as unknown[]).filter((x): x is string => typeof x === "string") : [],
                 subgroups: Array.isArray(g.subgroups)
@@ -482,7 +482,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
         name: name.trim(),
         label: name.trim(),
         icon: icon || "Layers",
-        color: color || "#C9A84C",
+        color: color || "#3B82F6",
         order: nextOrder,
         items: [],
         subgroups: [],
@@ -872,7 +872,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                       name: "My Group",
                       label: "My Group",
                       icon: "Layers",
-                      color: "#C9A84C",
+                      color: "#3B82F6",
                       order: p.custom_groups.length,
                       items: [href],
                       subgroups: [],
@@ -1376,7 +1376,7 @@ function NewGroupModal({
 }) {
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("Layers");
-  const [color, setColor] = useState("#C9A84C");
+  const [color, setColor] = useState("#3B82F6");
   const [iconSearch, setIconSearch] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
 

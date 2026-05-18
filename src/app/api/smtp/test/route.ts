@@ -71,10 +71,10 @@ export async function POST(request: NextRequest) {
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #1a1a1a; border-radius: 12px; border: 1px solid #333;">
           <div style="text-align: center; margin-bottom: 24px;">
-            <span style="font-size: 24px; font-weight: 700; color: #C9A84C;">ShortStack OS</span>
+            <span style="font-size: 24px; font-weight: 700; color: #3B82F6;">ShortStack OS</span>
           </div>
           <div style="background: #111; border-radius: 8px; padding: 24px; border: 1px solid #2a2a2a;">
-            <h2 style="color: #C9A84C; margin: 0 0 12px 0; font-size: 18px;">SMTP Connection Verified</h2>
+            <h2 style="color: #3B82F6; margin: 0 0 12px 0; font-size: 18px;">SMTP Connection Verified</h2>
             <p style="color: #ccc; margin: 0 0 16px 0; font-size: 14px; line-height: 1.6;">
               Your email configuration is working correctly. Emails will be sent from this server.
             </p>

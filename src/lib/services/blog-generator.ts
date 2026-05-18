@@ -72,7 +72,7 @@ export async function generateBlogPDF(params: {
     doc.on("end", () => resolve(Buffer.concat(chunks)));
     doc.on("error", reject);
 
-    const gold = "#C9A84C";
+    const gold = "#3B82F6";
     const dark = "#0a0a0a";
     const white = "#FFFFFF";
     const gray = "#888888";

@@ -86,7 +86,7 @@ export type EmailBlock =
 
 const DEFAULT_TEXT_COLOR = "#1a1611";
 const DEFAULT_BG = "#ffffff";
-const DEFAULT_ACCENT = "#C9A84C";
+const DEFAULT_ACCENT = "#3B82F6";
 const DEFAULT_MUTED = "#6b6b6b";
 
 const HEADER_SIZE_PX: Record<NonNullable<HeaderBlock["size"]>, number> = {

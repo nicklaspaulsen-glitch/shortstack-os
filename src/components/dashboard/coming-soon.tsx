@@ -307,7 +307,7 @@ export function ComingSoon({
                 disabled={submitting}
                 className="mt-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-[12px] font-semibold text-white transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0"
                 style={{
-                  background: "var(--color-accent, #C9A84C)",
+                  background: "var(--color-accent, #3B82F6)",
                   boxShadow: "0 1px 3px rgba(59,130,246,0.25)",
                 }}
               >

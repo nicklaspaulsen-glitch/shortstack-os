@@ -17,9 +17,9 @@
  *   4. Outer ring: thin rim with 32 notches.
  *
  * Colours
- *   Primary gold   #C9A84C  — single source of truth for the brand.
+ *   Primary gold   #3B82F6  — single source of truth for the brand.
  *                              "gold" variant uses a 3-stop gradient
- *                              (#E4C876 → #C9A84C → #8A6F2F) for depth.
+ *                              (#E4C876 → #3B82F6 → #8A6F2F) for depth.
  *   Mono variant   currentColor — inherits from surrounding text colour.
  *
  * Variants
@@ -42,7 +42,7 @@ import React from "react";
 export const BRAND_ACCENT = "#2563EB" as const;
 
 /**
- * @deprecated Renamed to BRAND_ACCENT. Was gold (#C9A84C) before the
+ * @deprecated Renamed to BRAND_ACCENT. Was gold (#3B82F6) before the
  * May 2026 brand refresh; now resolves to blue (#2563EB). Kept as an
  * alias so existing imports don't break. Prefer BRAND_ACCENT in new code.
  */
@@ -93,7 +93,7 @@ export default function Logo({
         <defs>
           <linearGradient id={goldId} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor="#E4C876" />
-            <stop offset="55%" stopColor="#C9A84C" />
+            <stop offset="55%" stopColor="#3B82F6" />
             <stop offset="100%" stopColor="#8A6F2F" />
           </linearGradient>
           <radialGradient id={coreId} cx="50%" cy="45%" r="55%">

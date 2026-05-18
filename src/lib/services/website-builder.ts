@@ -50,7 +50,7 @@ export async function generateWebsiteCode(config: WebsiteConfig): Promise<{
   if (!apiKey) return { success: false, pages: [], layoutCode: "", globalCss: "", error: "AI not configured" };
 
   const pages = PACKAGE_PAGES[config.packageTier] || PACKAGE_PAGES.Growth;
-  const colors = config.brandColors || { primary: "#C9A84C", secondary: "#0a0a0a", accent: "#ffffff" };
+  const colors = config.brandColors || { primary: "#3B82F6", secondary: "#0a0a0a", accent: "#ffffff" };
 
   const result: Array<{ name: string; path: string; code: string }> = [];
 
