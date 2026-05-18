@@ -93,7 +93,8 @@ export function NewsTriggerBadge({ leadId, compact = false }: Props) {
         type="button"
         title={`${TRIGGER_LABEL[top.trigger_type]}: ${top.headline}`}
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2 py-0.5 text-[11px] font-medium text-orange-800 hover:bg-orange-200"
+        className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors"
+        style={{ background: "rgba(251,146,60,0.12)", color: "#FB923C", border: "1px solid rgba(251,146,60,0.25)" }}
       >
         <span aria-hidden>🔥</span>
         <span>{triggers.length}</span>
@@ -102,20 +103,23 @@ export function NewsTriggerBadge({ leadId, compact = false }: Props) {
   }
 
   return (
-    <div className="rounded-lg border border-orange-200 bg-orange-50 p-3 text-sm">
+    <div
+      className="rounded-lg p-3 text-sm"
+      style={{ background: "rgba(251,146,60,0.07)", border: "1px solid rgba(251,146,60,0.20)" }}
+    >
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between gap-2 text-left"
       >
-        <span className="inline-flex items-center gap-2 font-medium text-orange-900">
+        <span className="inline-flex items-center gap-2 font-medium text-[#FB923C]">
           <span aria-hidden>🔥</span>
           <span>
             {triggers.length} fresh news trigger
             {triggers.length === 1 ? "" : "s"}
           </span>
         </span>
-        <span className="text-xs text-orange-700">{open ? "Hide" : "Show"}</span>
+        <span className="text-xs text-text-muted">{open ? "Hide" : "Show"}</span>
       </button>
 
       {open && (
@@ -123,13 +127,17 @@ export function NewsTriggerBadge({ leadId, compact = false }: Props) {
           {triggers.map((t) => (
             <li
               key={t.id}
-              className="rounded-md border border-orange-200 bg-white p-2"
+              className="rounded-md p-2"
+              style={{ background: "rgba(251,146,60,0.05)", border: "1px solid rgba(251,146,60,0.15)" }}
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="rounded bg-orange-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-orange-800">
+                <span
+                  className="rounded px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide"
+                  style={{ background: "rgba(251,146,60,0.12)", color: "#FB923C" }}
+                >
                   {TRIGGER_LABEL[t.trigger_type]}
                 </span>
-                <span className="text-[11px] text-gray-500">
+                <span className="text-[11px] text-text-muted">
                   {new Date(t.published_at).toLocaleDateString()}
                 </span>
               </div>
@@ -137,21 +145,21 @@ export function NewsTriggerBadge({ leadId, compact = false }: Props) {
                 href={t.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-1 block text-sm font-medium text-gray-900 hover:underline"
+                className="mt-1 block text-sm font-medium text-text-primary hover:underline"
               >
                 {t.headline}
               </a>
               {t.summary && (
-                <p className="mt-1 text-xs leading-relaxed text-gray-600">
+                <p className="mt-1 text-xs leading-relaxed text-text-secondary">
                   {t.summary}
                 </p>
               )}
-              <div className="mt-2 flex items-center justify-between text-[11px] text-gray-500">
+              <div className="mt-2 flex items-center justify-between text-[11px] text-text-muted">
                 <span>{t.source}</span>
                 <button
                   type="button"
                   onClick={() => acknowledge(t.id)}
-                  className="rounded border border-gray-300 px-2 py-0.5 hover:bg-gray-100"
+                  className="rounded border border-border-subtle px-2 py-0.5 hover:bg-[rgba(99,146,255,0.06)] hover:border-[rgba(99,146,255,0.25)] hover:text-text-primary transition-colors"
                 >
                   Mark seen
                 </button>
