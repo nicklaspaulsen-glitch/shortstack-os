@@ -55,6 +55,8 @@ test.describe("Integration health audit", () => {
   test.skip(!hasTestCreds(), "Set E2E_TEST_EMAIL + E2E_TEST_PASSWORD to run");
 
   test("every integration reports its real status", async ({ page, request }) => {
+    // signIn alone can take ~41 s on a slow Supabase response; raise the ceiling.
+    test.setTimeout(120_000);
     // Sign in via the UI so the request below carries Supabase auth cookies.
     await signIn(page);
     // Wait for the dashboard to be fully mounted — ensures the session cookie

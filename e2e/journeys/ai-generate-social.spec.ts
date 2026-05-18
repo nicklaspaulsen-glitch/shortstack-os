@@ -32,14 +32,18 @@ test.describe("AI Studio → Generate → Post to Social", () => {
       !hasTestCreds(),
       "E2E credentials not set — skipping AI generate/social tests",
     );
+    // storageState provides auth; waitForDashboardReady handles rare JWT bounces.
+    // 200 s gives a full signIn recovery path (~56 s) plus page load headroom.
+    test.setTimeout(200_000);
     // Pre-seed localStorage to skip first-run wizard overlays
     await page.addInitScript(() => {
       try {
         localStorage.setItem("ss-image-wizard-seen", "1");
         localStorage.setItem("ss-wizard-advanced-ai-studio", "1");
+        localStorage.setItem("tour_completed", "true");
+        localStorage.setItem("cookie-consent", "accepted");
       } catch {}
     });
-    await loginAs(page);
     await page.goto("/dashboard/ai-studio");
     await page.waitForLoadState("domcontentloaded");
     await waitForDashboardReady(page);

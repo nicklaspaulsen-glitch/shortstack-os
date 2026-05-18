@@ -21,7 +21,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import {
   hasTestCreds,
-  loginAs,
   waitForDashboardReady,
   dismissTourIfPresent,
 } from "../helpers/auth";
@@ -32,7 +31,15 @@ test.describe("Website Builder — Generate → Preview → Deploy", () => {
       !hasTestCreds(),
       "E2E credentials not set — skipping website generate/deploy tests",
     );
-    await loginAs(page);
+    // storageState provides auth; waitForDashboardReady handles rare JWT bounces.
+    // 200 s gives a full signIn recovery path (~56 s) plus page load headroom.
+    test.setTimeout(200_000);
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem("tour_completed", "true");
+        localStorage.setItem("cookie-consent", "accepted");
+      } catch {}
+    });
     await page.goto("/dashboard/websites");
     await page.waitForLoadState("domcontentloaded");
     await waitForDashboardReady(page);

@@ -16,7 +16,7 @@
  */
 
 import { test, expect, type Page } from "@playwright/test";
-import { loginAs, dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
+import { dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
 
 test.describe("Voice Studio", () => {
   test.beforeEach(async ({ page }) => {
@@ -24,7 +24,15 @@ test.describe("Voice Studio", () => {
       !hasTestCreds(),
       "E2E credentials not set — skipping authenticated tests",
     );
-    await loginAs(page);
+    // storageState provides auth; waitForDashboardReady handles rare JWT bounces.
+    // 200 s gives a full signIn recovery path (~56 s) plus page load headroom.
+    test.setTimeout(200_000);
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem("tour_completed", "true");
+        localStorage.setItem("cookie-consent", "accepted");
+      } catch {}
+    });
     await page.goto("/dashboard/voice-studio");
     await page.waitForLoadState("domcontentloaded");
     await waitForDashboardReady(page);

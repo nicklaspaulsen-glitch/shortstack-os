@@ -11,7 +11,7 @@
  */
 
 import { test, expect, type Page } from "@playwright/test";
-import { loginAs, dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
+import { dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
 
 test.describe("Agent Office", () => {
   test.beforeEach(async ({ page }) => {
@@ -19,7 +19,15 @@ test.describe("Agent Office", () => {
       !hasTestCreds(),
       "E2E credentials not set — skipping authenticated tests",
     );
-    await loginAs(page);
+    // storageState provides auth; waitForDashboardReady handles rare JWT bounces.
+    // 200 s gives a full signIn recovery path (~56 s) plus page load headroom.
+    test.setTimeout(200_000);
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem("tour_completed", "true");
+        localStorage.setItem("cookie-consent", "accepted");
+      } catch {}
+    });
     await page.goto("/dashboard/agent-office");
     await page.waitForLoadState("domcontentloaded");
     // Auth gate: wait for sidebar to confirm DashboardLayout has fully mounted.

@@ -31,7 +31,15 @@ test.describe("Voice Studio → Clone → Dialer", () => {
       !hasTestCreds(),
       "E2E credentials not set — skipping voice/dialer flow tests",
     );
-    await loginAs(page);
+    // storageState provides auth; waitForDashboardReady handles rare JWT bounces.
+    // 200 s gives a full signIn recovery path (~56 s) plus page load headroom.
+    test.setTimeout(200_000);
+    await page.addInitScript(() => {
+      try {
+        localStorage.setItem("tour_completed", "true");
+        localStorage.setItem("cookie-consent", "accepted");
+      } catch {}
+    });
     await page.goto("/dashboard/voice-studio");
     await page.waitForLoadState("domcontentloaded");
     await waitForDashboardReady(page);

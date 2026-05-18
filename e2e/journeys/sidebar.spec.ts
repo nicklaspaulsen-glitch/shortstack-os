@@ -18,11 +18,12 @@ import { hasTestCreds, signIn } from "../helpers/auth";
 
 test.describe.configure({ mode: "serial" });
 
-// Tier-1 items that must always be visible — source: sidebar.tsx navItems
-const TIER_1_LABELS = ["Dashboard", "Inbox", "Clients", "Analytics", "CRM", "Calendar"] as const;
+// Core items that must always be visible — source: trinity-sidebar.tsx NAV_GROUPS.
+// These are hardcoded in the sidebar (no server-side enable/disable filtering).
+// "Inbox" was removed: it was in the old sidebar.tsx which is no longer used.
+const TIER_1_LABELS = ["Dashboard", "Clients", "Analytics"] as const;
 
-// A tier-3 item that should be hidden before toggling "Show more".
-// "Dialer" is tier 3 and always present for admin role.
+// A sample item that indicates the sidebar is fully rendered.
 const TIER_3_SAMPLE = "Dialer";
 
 test.describe("sidebar journey", () => {

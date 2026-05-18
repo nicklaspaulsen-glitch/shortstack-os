@@ -12,18 +12,24 @@
  */
 
 import { test, expect } from "@playwright/test";
-import { loginAs, dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
+import { dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
 
 test.describe("Thumbnail Editor Pro", () => {
   test.beforeEach(async ({ page }) => {
     test.skip(!hasTestCreds(), "E2E credentials not set — skipping authenticated tests");
+    // storageState provides auth; waitForDashboardReady handles rare JWT bounces.
+    // 200 s gives a full signIn recovery path (~56 s) plus page load headroom.
+    test.setTimeout(200_000);
     // Pre-seed sessionStorage before page JS runs so the AI-first starter
     // overlay (thumbnail-ai-starter-skipped key) doesn't auto-open and block
     // the canvas. addInitScript registers before every subsequent navigation.
     await page.addInitScript(() => {
-      try { sessionStorage.setItem("thumbnail-ai-starter-skipped", "1"); } catch {}
+      try {
+        sessionStorage.setItem("thumbnail-ai-starter-skipped", "1");
+        localStorage.setItem("tour_completed", "true");
+        localStorage.setItem("cookie-consent", "accepted");
+      } catch {}
     });
-    await loginAs(page);
     await page.goto("/dashboard/thumbnail-generator");
     await page.waitForLoadState("domcontentloaded");
     await waitForDashboardReady(page);

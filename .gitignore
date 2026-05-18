@@ -69,3 +69,6 @@ public/downloads/*.zip
 # Design exploration previews (generated, not source)
 design-previews/
 _design-previews/
+
+# Playwright auth state (contains session tokens — never commit)
+e2e/.auth/

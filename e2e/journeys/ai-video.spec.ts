@@ -10,27 +10,34 @@
  */
 
 import { test, expect } from "@playwright/test";
-import { loginAs, dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
+import { dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
 
 test.describe("AI Video Generator", () => {
   test.beforeEach(async ({ page }) => {
     test.skip(!hasTestCreds(), "E2E credentials not set — skipping authenticated tests");
+    // storageState provides auth; waitForDashboardReady handles rare JWT bounces.
+    // 200 s gives a full signIn recovery path (~56 s) plus page load headroom.
+    test.setTimeout(200_000);
     // Pre-seed localStorage BEFORE page JS runs so the first-run wizard modal
-    // never auto-opens and block pointer events on the wizard cards.
+    // never auto-opens and blocks pointer events on the wizard cards.
     // The page reads `ss-aivideo-wizard-seen` on mount.
     await page.addInitScript(() => {
-      try { localStorage.setItem("ss-aivideo-wizard-seen", "1"); } catch {}
+      try {
+        localStorage.setItem("ss-aivideo-wizard-seen", "1");
+        localStorage.setItem("tour_completed", "true");
+        localStorage.setItem("cookie-consent", "accepted");
+      } catch {}
     });
-    await loginAs(page);
     await page.goto("/dashboard/ai-video");
     await page.waitForLoadState("domcontentloaded");
     await waitForDashboardReady(page);
     await dismissTourIfPresent(page);
 
-    // Belt-and-suspenders: also click any residual skip/close buttons
+    // Belt-and-suspenders: also dismiss any residual modal/wizard overlays.
+    // noWaitAfter prevents a 200 s hang if the button triggers router.refresh().
     const skipBtn = page.getByRole("button", { name: /skip|close|dismiss/i }).first();
     if (await skipBtn.isVisible({ timeout: 1000 }).catch(() => false)) {
-      await skipBtn.click().catch(() => {});
+      await skipBtn.click({ timeout: 3_000, noWaitAfter: true }).catch(() => {});
     }
   });
 

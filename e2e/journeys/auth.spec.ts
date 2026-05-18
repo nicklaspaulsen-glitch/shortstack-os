@@ -15,13 +15,14 @@ test.describe("auth journey", () => {
     await signIn(page);
     await expectDashboard(page);
 
-    // At least one landmark that only authenticated users see
-    await expect(
-      page.getByRole("navigation").or(page.getByText(/dashboard/i).first()),
-    ).toBeVisible({ timeout: 10_000 });
+    // At least one navigation landmark present (authenticated UI)
+    await expect(page.getByRole("navigation").first()).toBeVisible({ timeout: 10_000 });
   });
 
   test("sign in with invalid credentials shows an error", async ({ page }) => {
+    // storageState provides a valid session — sign out first so /login
+    // is reachable (middleware redirects authenticated users to /dashboard).
+    await signOut(page);
     await page.goto("/login");
 
     await page.getByPlaceholder("you@company.com").fill("invalid@example.com");

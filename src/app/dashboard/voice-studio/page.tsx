@@ -229,7 +229,7 @@ export default function VoiceStudioPage() {
       </div>
       <div className="mx-auto mt-4 max-w-7xl px-4 sm:px-6">
               {/* -- Tab bar -- */}
-              <div className="tab-pill-strip">
+              <nav className="tab-pill-strip" aria-label="Voice Studio tabs">
                 {TAB_ORDER.map((t) => (
                   <button
                     key={t}
@@ -241,7 +241,7 @@ export default function VoiceStudioPage() {
                     {TAB_LABELS[t]}
                   </button>
                 ))}
-              </div>
+              </nav>
 
               {error && (
                 <div className="mt-6 flex items-start gap-3 rounded-lg border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-400">

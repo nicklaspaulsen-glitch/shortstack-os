@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { hasTestCreds, signIn } from "../helpers/auth";
+import { hasTestCreds, signIn, waitForDashboardReady } from "../helpers/auth";
 
 const SENTINEL_EMAIL = `e2e-member-${Date.now()}@example.com`;
 const SENTINEL_NAME = "E2E Test Member";
@@ -22,6 +22,8 @@ test.describe("team members journey", () => {
 
     await signIn(page);
     await page.goto("/dashboard/team");
+    // Wait for DashboardLayout to fully mount before interacting with the page.
+    await waitForDashboardReady(page);
 
     // ── Open invite modal ──────────────────────────────────────────────────
     await page

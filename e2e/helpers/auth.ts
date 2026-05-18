@@ -28,6 +28,11 @@ export async function signIn(page: Page): Promise<void> {
   for (let attempt = 0; attempt <= 1; attempt++) {
     await page.goto("/login");
 
+    // Short-circuit: if the server already redirected to /dashboard
+    // (storageState JWT is still valid and the app redirects authenticated
+    // users away from /login), we're already signed in — no form to fill.
+    if (page.url().includes("/dashboard")) return;
+
     // Fill email
     await page.getByPlaceholder("you@company.com").fill(E2E_EMAIL);
 
@@ -50,43 +55,23 @@ export async function signIn(page: Page): Promise<void> {
 }
 
 /**
- * Sign out via the sidebar sign-out button.
+ * Sign out by navigating to the server-side sign-out route.
+ * The /api/auth/signout GET route clears all Supabase auth cookies and
+ * redirects to /login — no UI button required.
  * Waits until the browser lands on /login.
  */
 export async function signOut(page: Page): Promise<void> {
-  // `signIn` waits only for the URL to change to /dashboard — React may still
-  // be hydrating. Wait for 'load' (all scripts fetched + executed) so the
-  // sidebar's onClick handler is actually attached before we click.
-  // Soft-fail: if the page never fully settles (Supabase realtime keep-alive),
-  // proceed anyway rather than timing out here.
-  await page.waitForLoadState("load", { timeout: 10_000 }).catch(() => {});
+  // Navigate to the server-side sign-out endpoint — clears cookies + redirects.
+  // This is more reliable than hunting for a UI button whose placement changes
+  // across sidebar iterations.
+  await page.goto("/api/auth/signout");
 
-  // Use .first() — the sidebar renders TWO sign-out buttons (expanded + collapsed
-  // views). Playwright's waitFor on a multi-match locator waits for ALL matches
-  // to be visible, which never happens since only one variant is shown at a time.
-  const btn = page.locator('button[aria-label="Sign Out"]').first();
-  await btn.waitFor({ state: "visible", timeout: 10_000 });
-
-  // Start listening BEFORE clicking to avoid racing the window.location.href
-  // redirect that fires after supabase.auth.signOut() resolves.
-  // Use a 10 s inner timeout — if the natural redirect stalls (Supabase
-  // rate-limiting or session collision under test load), fall back to a
-  // direct navigation to /login instead of waiting another 30 s.
-  try {
-    await Promise.all([
-      page.waitForURL((url) => !url.pathname.startsWith("/dashboard"), {
-        timeout: 10_000,
-      }),
-      btn.click(),
-    ]);
-  } catch {
-    // signOut() likely succeeded but the client-side redirect stalled.
-    // Navigate directly — the user is already signed out server-side.
-    // Accept /dashboard too: if middleware still sees a valid session, the
-    // redirect is benign for teardown purposes (test is already done).
+  // The route redirects to /login. Wait for the redirect to complete.
+  await page.waitForURL(/\/(login)/, { timeout: 15_000 }).catch(async () => {
+    // Fallback: if the redirect stalled, navigate directly.
     await page.goto("/login");
-    await page.waitForURL(/\/(login|dashboard)/, { timeout: 10_000 }).catch(() => {});
-  }
+    await page.waitForURL(/\/login/, { timeout: 5_000 }).catch(() => {});
+  });
 }
 
 /** Assert the user is on a dashboard page. */
@@ -97,38 +82,42 @@ export async function expectDashboard(page: Page): Promise<void> {
 /**
  * Wait for the dashboard to be fully ready after a page.goto().
  *
- * The Sign Out button in the sidebar is ONLY rendered after DashboardLayout
- * resolves Supabase auth (loading → false, user → present) and the full
- * sidebar mounts. Waiting for it replaces fragile fixed waitForTimeout()
- * calls that were insufficient under fullyParallel test concurrency (4
- * workers all logging in at once creates auth contention).
+ * Waits for the main navigation (sidebar) to be visible, which confirms
+ * DashboardLayout has resolved Supabase auth and the sidebar has mounted.
  *
  * If the page ends up on /login during the wait (Supabase SSR bounced the
- * session after signIn() returned), re-authenticate inline and retry rather
- * than timing out on a page where the Sign Out button will never appear.
+ * session), re-authenticate inline and retry.
  *
  * Call this AFTER page.goto('/dashboard/...') or signIn() in tests.
  */
 export async function waitForDashboardReady(
   page: Page,
-  timeout = 15_000,
+  timeout = 5_000,
 ): Promise<void> {
-  const signOutBtn = page
-    .locator('button[aria-label="Sign Out"]')
-    .first();
+  // The trinity sidebar renders a <nav> once hydrated. Waiting for it
+  // confirms the sidebar + layout are fully mounted.
+  //
+  // Default timeout is intentionally short (5 s). When the Supabase JWT is
+  // valid and the storageState is intact, the nav appears within 1-2 s.
+  // Using 5 s lets us detect a /login bounce quickly rather than burning
+  // the full 15 s before kicking off the signIn recovery — this keeps the
+  // worst-case beforeEach budget well under 150 s even on slow production.
+  const nav = page.getByRole("navigation").first();
 
   try {
-    await signOutBtn.waitFor({ state: "visible", timeout });
+    await nav.waitFor({ state: "visible", timeout });
   } catch {
-    // If the session was lost and we're on /login, re-authenticate
-    // inline rather than propagating a misleading timeout error.
+    // If the session was lost and we're on /login, re-authenticate inline.
     if (page.url().includes("/login")) {
       await signIn(page);
-      await signOutBtn.waitFor({ state: "visible", timeout });
+      // After signIn() redirects to /dashboard, give the nav 15 s to hydrate.
+      // The dashboard needs to fetch Supabase session + mount DashboardLayout,
+      // so be generous here while keeping the initial detection fast above.
+      await nav.waitFor({ state: "visible", timeout: 15_000 });
     } else {
       throw new Error(
         `waitForDashboardReady timed out after ${timeout}ms ` +
-        `(URL: ${page.url()}). The Sign Out button never appeared.`,
+        `(URL: ${page.url()}). Navigation never appeared.`,
       );
     }
   }
@@ -164,7 +153,13 @@ export async function dismissTourIfPresent(page: Page): Promise<void> {
     .getByRole("button", { name: /skip tour|dismiss|got it|close/i })
     .first();
   if (await dismissBtn.isVisible({ timeout: 800 }).catch(() => false)) {
-    await dismissBtn.click().catch(() => {});
-    await page.waitForTimeout(200);
+    // noWaitAfter prevents Playwright from waiting the full test-level 200 s for
+    // any pending Next.js router refresh triggered by the dismiss click (e.g. the
+    // token-usage badge "Dismiss for this session" button calls router.refresh()).
+    // 3 s is generous for a pure DOM dismiss; the catch swallows errors cleanly.
+    await dismissBtn.click({ timeout: 3_000, noWaitAfter: true }).catch(() => {});
+    // Wrap in catch: if the test timeout fires and Playwright closes the page
+    // mid-wait, the "Target page closed" error is swallowed cleanly.
+    await page.waitForTimeout(200).catch(() => {});
   }
 }

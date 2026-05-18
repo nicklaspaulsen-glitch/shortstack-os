@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { signOut } from "../helpers/auth";
 
 /**
  * API health-check journey — verifies that GET /api/health returns a valid
@@ -45,6 +46,9 @@ test.describe("API health checks (no auth required)", () => {
   });
 
   test("/login page renders HTML without error", async ({ page }) => {
+    // storageState provides a valid session — sign out first so /login is
+    // reachable (middleware redirects authenticated users to /dashboard).
+    await signOut(page);
     await page.goto("/login");
     await page.waitForURL(/\/login/, { timeout: 15_000 });
 

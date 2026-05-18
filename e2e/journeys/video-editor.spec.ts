@@ -9,17 +9,23 @@
  */
 
 import { test, expect } from "@playwright/test";
-import { loginAs, dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
+import { dismissTourIfPresent, hasTestCreds, waitForDashboardReady } from "../helpers/auth";
 
 test.describe("Video Editor", () => {
   test.beforeEach(async ({ page }) => {
     test.skip(!hasTestCreds(), "E2E credentials not set — skipping authenticated tests");
+    // storageState provides auth; waitForDashboardReady handles rare JWT bounces.
+    // 200 s gives a full signIn recovery path (~56 s) plus page load headroom.
+    test.setTimeout(200_000);
     // Pre-seed localStorage before page JS runs so the first-run CreationWizard
     // modal doesn't auto-open and block pointer events on the wizard cards.
     await page.addInitScript(() => {
-      try { localStorage.setItem("ss-video-wizard-seen", "1"); } catch {}
+      try {
+        localStorage.setItem("ss-video-wizard-seen", "1");
+        localStorage.setItem("tour_completed", "true");
+        localStorage.setItem("cookie-consent", "accepted");
+      } catch {}
     });
-    await loginAs(page);
     await page.goto("/dashboard/video-editor");
     await page.waitForLoadState("domcontentloaded");
     await waitForDashboardReady(page);

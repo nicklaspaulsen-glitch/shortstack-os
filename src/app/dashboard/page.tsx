@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -14,26 +14,25 @@ import {
   Sun,
   Moon,
   Search,
-  FilePlus2,
-  Upload,
-  AppWindow,
-  MessageSquare,
+  Users,
+  Target,
   Zap,
-  StickyNote,
   Activity,
-  ChevronRight,
+  TrendingUp,
   ArrowUpRight,
-  Play,
-  Compass,
+  UserPlus,
+  Clock,
 } from "lucide-react";
 
 import { useAuth } from "@/lib/auth-context";
 import { createClient as createSupabaseClient } from "@/lib/supabase/client";
-import BrainLogo from "@/components/brand/brain-logo";
 import TrinityOrb from "@/components/dashboard/trinity-orb";
 
 // ─── Below-the-fold lazy ──────────────────────────────────────────────────────
-const DowntimeBanner = dynamic(() => import("@/components/dashboard/downtime-banner"), { ssr: false });
+const DowntimeBanner = dynamic(
+  () => import("@/components/dashboard/downtime-banner"),
+  { ssr: false }
+);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -89,79 +88,14 @@ function ThemeToggle() {
   );
 }
 
-// ─── Quick actions ────────────────────────────────────────────────────────────
-
-interface QuickAction {
-  label: string
-  icon: React.ElementType
-  href: string
-  color: string
-  bgFrom: string
-  bgTo: string
-}
-
-const QUICK_ACTIONS: QuickAction[] = [
-  {
-    label: "New Document",
-    icon: FilePlus2,
-    href: "/dashboard/ai-studio",
-    color: "#60A5FA",
-    bgFrom: "rgba(59,130,246,0.12)",
-    bgTo: "rgba(99,102,241,0.08)",
-  },
-  {
-    label: "Upload File",
-    icon: Upload,
-    href: "/dashboard/ai-studio",
-    color: "#34D399",
-    bgFrom: "rgba(52,211,153,0.10)",
-    bgTo: "rgba(16,185,129,0.06)",
-  },
-  {
-    label: "Create App",
-    icon: AppWindow,
-    href: "/dashboard/monitor",
-    color: "#A78BFA",
-    bgFrom: "rgba(167,139,250,0.12)",
-    bgTo: "rgba(139,92,246,0.07)",
-  },
-  {
-    label: "AI Chat",
-    icon: MessageSquare,
-    href: "/dashboard/conversations",
-    color: "#F59E0B",
-    bgFrom: "rgba(245,158,11,0.10)",
-    bgTo: "rgba(217,119,6,0.06)",
-  },
-  {
-    label: "Automation",
-    icon: Zap,
-    href: "/dashboard/automations",
-    color: "#F472B6",
-    bgFrom: "rgba(244,114,182,0.10)",
-    bgTo: "rgba(236,72,153,0.06)",
-  },
-  {
-    label: "New Note",
-    icon: StickyNote,
-    href: "/dashboard/outreach-hub",
-    color: "#FB923C",
-    bgFrom: "rgba(251,146,60,0.10)",
-    bgTo: "rgba(249,115,22,0.06)",
-  },
-];
-
-// ─── Agency Pulse (real stats) ───────────────────────────────────────────────
-
-interface PulseStat {
-  label: string
-  value: string | number
-  sub: string
-  color: string
-}
+// ─── useAgencyStats ───────────────────────────────────────────────────────────
 
 function useAgencyStats() {
-  const [stats, setStats] = useState<{ clients: number; workflows: number; leads: number } | null>(null);
+  const [stats, setStats] = useState<{
+    clients: number;
+    workflows: number;
+    leads: number;
+  } | null>(null);
 
   useEffect(() => {
     const db = createSupabaseClient();
@@ -169,101 +103,241 @@ function useAgencyStats() {
       db.from("clients").select("id", { count: "exact", head: true }),
       db.from("workflows").select("id", { count: "exact", head: true }).eq("enabled", true),
       db.from("leads").select("id", { count: "exact", head: true }),
-    ]).then(([c, w, l]) => {
-      setStats({
-        clients: c.count ?? 0,
-        workflows: w.count ?? 0,
-        leads: l.count ?? 0,
+    ])
+      .then(([c, w, l]) => {
+        setStats({
+          clients: c.count ?? 0,
+          workflows: w.count ?? 0,
+          leads: l.count ?? 0,
+        });
+      })
+      .catch(() => {
+        // non-fatal — leave stats null so the UI shows dashes
       });
-    }).catch(() => {
-      // non-fatal — leave stats null so the UI shows dashes
-    });
   }, []);
 
   return stats;
 }
 
-function AgencyPulse() {
-  const data = useAgencyStats();
+// ─── Stat Card (Realtyhub-inspired) ──────────────────────────────────────────
 
-  const tiles: PulseStat[] = [
-    { label: "Clients", value: data?.clients ?? "—", sub: "total", color: "#60A5FA" },
-    { label: "Workflows", value: data?.workflows ?? "—", sub: "active", color: "#A78BFA" },
-    { label: "Leads", value: data?.leads ?? "—", sub: "in pipeline", color: "#34D399" },
-  ];
+interface RHStatCardProps {
+  label: string;
+  value: string | number;
+  sub: string;
+  pct: number;
+  change: string;
+  changeUp: boolean;
+  color: string;
+  icon: React.ElementType;
+}
 
+function RHStatCard({
+  label,
+  value,
+  sub,
+  pct,
+  change,
+  changeUp,
+  color,
+  icon: Icon,
+}: RHStatCardProps) {
   return (
     <div
       style={{
         background: "var(--sidebar-item-bg)",
         border: "1px solid var(--sidebar-border)",
         borderRadius: 16,
-        padding: "18px 20px",
+        padding: "20px 22px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 14,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <div className="flex items-center gap-2 mb-4">
-        <Activity size={15} style={{ color: "var(--sidebar-icon-active)" }} />
-        <span
+      {/* Ambient glow */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          top: -28,
+          right: -28,
+          width: 110,
+          height: 110,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${color}14 0%, transparent 70%)`,
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Icon + change badge */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          position: "relative",
+        }}
+      >
+        <div
           style={{
-            fontSize: 12,
-            fontWeight: 700,
-            color: "var(--sidebar-text-secondary)",
-            textTransform: "uppercase",
-            letterSpacing: "0.06em",
+            width: 40,
+            height: 40,
+            borderRadius: 12,
+            background: `${color}18`,
+            border: `1px solid ${color}28`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          Agency Pulse
+          <Icon size={20} style={{ color }} />
+        </div>
+        <span
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 3,
+            padding: "3px 9px",
+            borderRadius: 99,
+            background: changeUp
+              ? "rgba(34,197,94,0.12)"
+              : "rgba(248,113,113,0.12)",
+            border: `1px solid ${
+              changeUp ? "rgba(34,197,94,0.25)" : "rgba(248,113,113,0.25)"
+            }`,
+            fontSize: 11,
+            fontWeight: 700,
+            color: changeUp ? "#22C55E" : "#F87171",
+          }}
+        >
+          {changeUp && <TrendingUp size={10} />}
+          {change}
         </span>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        {tiles.map((t) => (
-          <div key={t.label} className="flex flex-col items-center gap-1.5">
-            <p
-              style={{
-                margin: 0,
-                fontSize: 24,
-                fontWeight: 800,
-                color: t.color,
-                lineHeight: 1,
-                letterSpacing: "-0.03em",
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
-              {t.value}
-            </p>
-            <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: "var(--sidebar-text-primary)" }}>{t.label}</p>
-            <p style={{ margin: 0, fontSize: 10, color: "var(--sidebar-text-secondary)" }}>{t.sub}</p>
-          </div>
-        ))}
+      {/* Number + label */}
+      <div style={{ position: "relative" }}>
+        <p
+          style={{
+            margin: 0,
+            fontSize: 32,
+            fontWeight: 800,
+            color: "var(--sidebar-text-primary)",
+            letterSpacing: "-0.04em",
+            lineHeight: 1,
+            fontFamily: "var(--font-satoshi, 'Satoshi', sans-serif)",
+            fontVariantNumeric: "tabular-nums",
+          }}
+        >
+          {value}
+        </p>
+        <p
+          style={{
+            margin: "5px 0 0",
+            fontSize: 13.5,
+            fontWeight: 600,
+            color: "var(--sidebar-text-primary)",
+          }}
+        >
+          {label}
+        </p>
+        <p
+          style={{
+            margin: "2px 0 0",
+            fontSize: 11,
+            color: "var(--sidebar-text-secondary)",
+          }}
+        >
+          {sub}
+        </p>
+      </div>
+
+      {/* Progress bar */}
+      <div
+        style={{
+          height: 4,
+          borderRadius: 2,
+          background: "var(--sidebar-border)",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            height: "100%",
+            width: `${pct}%`,
+            background: `linear-gradient(90deg, ${color}BB, ${color})`,
+            borderRadius: 2,
+          }}
+        />
       </div>
     </div>
   );
 }
 
-// ─── Recent Apps ──────────────────────────────────────────────────────────────
+// ─── Pipeline Board ───────────────────────────────────────────────────────────
 
-const RECENT_APPS = [
-  { name: "AI Studio", href: "/dashboard/ai-studio", color: "#60A5FA", abbr: "AI" },
-  { name: "Voice Studio", href: "/dashboard/voice-studio", color: "#A78BFA", abbr: "VS" },
-  { name: "Analytics", href: "/dashboard/analytics", color: "#34D399", abbr: "AN" },
-  { name: "CRM", href: "/dashboard/crm", color: "#F59E0B", abbr: "CR" },
-  { name: "Automations", href: "/dashboard/automations", color: "#F472B6", abbr: "AU" },
+interface PipelineStage {
+  id: string;
+  label: string;
+  color: string;
+  count: number;
+  contacts: string[];
+}
+
+const PIPELINE_STAGES: PipelineStage[] = [
+  {
+    id: "new",
+    label: "New Lead",
+    color: "#60A5FA",
+    count: 8,
+    contacts: ["Sarah Johnson", "Mike Thompson", "Emma Williams"],
+  },
+  {
+    id: "contacted",
+    label: "Contacted",
+    color: "#A78BFA",
+    count: 5,
+    contacts: ["John Davies", "Lisa Martinez", "Tom Kim"],
+  },
+  {
+    id: "proposal",
+    label: "Proposal Sent",
+    color: "#F59E0B",
+    count: 3,
+    contacts: ["Amy Rodriguez", "Brad Peterson"],
+  },
+  {
+    id: "won",
+    label: "Closed Won",
+    color: "#22C55E",
+    count: 12,
+    contacts: ["Dan Foster", "Eva Singh", "Frank Gomez"],
+  },
 ];
 
-function RecentApps() {
+function PipelineBoard() {
   return (
     <div
       style={{
         background: "var(--sidebar-item-bg)",
         border: "1px solid var(--sidebar-border)",
         borderRadius: 16,
-        padding: "18px 20px",
+        padding: "20px 22px",
       }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <AppWindow size={15} style={{ color: "var(--sidebar-icon-active)" }} />
+      {/* Header */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 18,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Activity size={15} style={{ color: "var(--sidebar-icon-active)" }} />
           <span
             style={{
               fontSize: 12,
@@ -273,252 +347,497 @@ function RecentApps() {
               letterSpacing: "0.06em",
             }}
           >
-            Recent Apps
+            Pipeline Overview
           </span>
         </div>
         <Link
-          href="/dashboard/monitor"
+          href="/dashboard/crm"
           style={{
             fontSize: 11,
             color: "var(--sidebar-icon-active)",
             textDecoration: "none",
             display: "flex",
             alignItems: "center",
-            gap: 2,
+            gap: 3,
           }}
         >
-          See all <ArrowUpRight size={11} />
+          Full CRM <ArrowUpRight size={11} />
         </Link>
       </div>
 
-      <div className="flex flex-col gap-2">
-        {RECENT_APPS.map((app) => (
-          <Link
-            key={app.href}
-            href={app.href}
+      {/* Kanban columns */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: 14,
+        }}
+      >
+        {PIPELINE_STAGES.map((stage) => (
+          <div key={stage.id}>
+            {/* Stage label + count */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: 8,
+              }}
+            >
+              <span
+                style={{ fontSize: 12, fontWeight: 600, color: stage.color }}
+              >
+                {stage.label}
+              </span>
+              <span
+                style={{
+                  padding: "1px 8px",
+                  borderRadius: 99,
+                  background: `${stage.color}18`,
+                  border: `1px solid ${stage.color}30`,
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: stage.color,
+                }}
+              >
+                {stage.count}
+              </span>
+            </div>
+
+            {/* Accent bar */}
+            <div
+              style={{
+                height: 3,
+                borderRadius: 2,
+                background: stage.color,
+                opacity: 0.3,
+                marginBottom: 10,
+              }}
+            />
+
+            {/* Contact chips */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {stage.contacts.map((c, i) => (
+                <div
+                  key={i}
+                  style={{
+                    padding: "7px 10px",
+                    borderRadius: 8,
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid var(--sidebar-border)",
+                    fontSize: 12,
+                    color: "var(--sidebar-text-primary)",
+                    cursor: "pointer",
+                    transition: "border-color 150ms ease, background 150ms ease",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {c}
+                </div>
+              ))}
+              {stage.count > stage.contacts.length && (
+                <div
+                  style={{
+                    padding: "5px 10px",
+                    borderRadius: 8,
+                    border: `1px dashed ${stage.color}40`,
+                    fontSize: 11,
+                    color: stage.color,
+                    textAlign: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  +{stage.count - stage.contacts.length} more
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── New Enquiries ────────────────────────────────────────────────────────────
+
+interface Enquiry {
+  initials: string;
+  name: string;
+  service: string;
+  time: string;
+  status: string;
+  color: string;
+}
+
+const ENQUIRIES: Enquiry[] = [
+  {
+    initials: "SJ",
+    name: "Sarah Johnson",
+    service: "Social Media Package",
+    time: "2m ago",
+    status: "NEW",
+    color: "#60A5FA",
+  },
+  {
+    initials: "MT",
+    name: "Mike Thompson",
+    service: "SEO Audit",
+    time: "15m ago",
+    status: "PENDING",
+    color: "#A78BFA",
+  },
+  {
+    initials: "EW",
+    name: "Emma Williams",
+    service: "PPC Campaign",
+    time: "1h ago",
+    status: "REVIEW",
+    color: "#F59E0B",
+  },
+  {
+    initials: "JD",
+    name: "John Davies",
+    service: "Email Marketing",
+    time: "3h ago",
+    status: "NEW",
+    color: "#22C55E",
+  },
+];
+
+function NewEnquiries() {
+  return (
+    <div
+      style={{
+        background: "var(--sidebar-item-bg)",
+        border: "1px solid var(--sidebar-border)",
+        borderRadius: 16,
+        padding: "20px 22px",
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 16,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <UserPlus size={15} style={{ color: "var(--sidebar-icon-active)" }} />
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: "var(--sidebar-text-secondary)",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+            }}
+          >
+            New Enquiries
+          </span>
+        </div>
+        <Link
+          href="/dashboard/leads"
+          style={{
+            fontSize: 11,
+            color: "var(--sidebar-icon-active)",
+            textDecoration: "none",
+            display: "flex",
+            alignItems: "center",
+            gap: 3,
+          }}
+        >
+          View all <ArrowUpRight size={11} />
+        </Link>
+      </div>
+
+      {/* Cards */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {ENQUIRIES.map((e) => (
+          <div
+            key={e.name}
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 10,
-              padding: "8px 10px",
+              gap: 12,
+              padding: "10px 12px",
               borderRadius: 10,
-              textDecoration: "none",
-              border: "1px solid transparent",
-              transition: "background 150ms ease, border-color 150ms ease",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "var(--sidebar-item-bg-active)"
-              ;(e.currentTarget as HTMLElement).style.borderColor = "var(--sidebar-border)"
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "transparent"
-              ;(e.currentTarget as HTMLElement).style.borderColor = "transparent"
+              background: "rgba(255,255,255,0.025)",
+              border: "1px solid var(--sidebar-border)",
+              cursor: "pointer",
+              transition: "border-color 150ms ease, background 150ms ease",
             }}
           >
-            <span
+            {/* Avatar */}
+            <div
               style={{
-                width: 28,
-                height: 28,
-                borderRadius: 8,
-                background: app.color,
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                background: `${e.color}18`,
+                border: `1.5px solid ${e.color}35`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 10,
-                fontWeight: 800,
-                color: "#fff",
+                fontSize: 12,
+                fontWeight: 700,
+                color: e.color,
                 flexShrink: 0,
               }}
             >
-              {app.abbr}
-            </span>
-            <span
+              {e.initials}
+            </div>
+
+            {/* Info */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: "var(--sidebar-text-primary)",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {e.name}
+              </p>
+              <p
+                style={{
+                  margin: "1px 0 0",
+                  fontSize: 11,
+                  color: "var(--sidebar-text-secondary)",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {e.service}
+              </p>
+            </div>
+
+            {/* Status + time */}
+            <div
               style={{
-                flex: 1,
-                fontSize: 13,
-                fontWeight: 500,
-                color: "var(--sidebar-text-primary)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+                gap: 3,
+                flexShrink: 0,
               }}
             >
-              {app.name}
-            </span>
-            <ChevronRight size={12} style={{ color: "var(--sidebar-text-secondary)" }} />
-          </Link>
+              <span
+                style={{
+                  padding: "2px 7px",
+                  borderRadius: 99,
+                  background: `${e.color}18`,
+                  fontSize: 10,
+                  fontWeight: 700,
+                  color: e.color,
+                  letterSpacing: "0.04em",
+                }}
+              >
+                {e.status}
+              </span>
+              <span
+                style={{ fontSize: 10, color: "var(--sidebar-text-secondary)" }}
+              >
+                {e.time}
+              </span>
+            </div>
+          </div>
         ))}
       </div>
     </div>
   );
 }
 
-// ─── Activity feed ────────────────────────────────────────────────────────────
+// ─── Follow-ups ───────────────────────────────────────────────────────────────
 
-const ACTIVITY_ITEMS = [
-  { text: "AI Studio generated a new social post", time: "2m ago", color: "#60A5FA" },
-  { text: "Voice clone completed for client", time: "18m ago", color: "#A78BFA" },
-  { text: "New lead captured via outreach", time: "1h ago", color: "#34D399" },
-  { text: "Workflow automation triggered", time: "2h ago", color: "#F59E0B" },
-  { text: "Analytics report refreshed", time: "3h ago", color: "#F472B6" },
+interface FollowUp {
+  client: string;
+  action: string;
+  priority: "HIGH" | "MEDIUM" | "LOW";
+  due: string;
+}
+
+const FOLLOWUP_COLOR: Record<string, string> = {
+  HIGH: "#F87171",
+  MEDIUM: "#F59E0B",
+  LOW: "#60A5FA",
+};
+
+const FOLLOWUPS: FollowUp[] = [
+  {
+    client: "Acme Corp",
+    action: "Send proposal follow-up email",
+    priority: "HIGH",
+    due: "Overdue",
+  },
+  {
+    client: "Brand Co",
+    action: "Review content calendar",
+    priority: "MEDIUM",
+    due: "Today",
+  },
+  {
+    client: "Growth Labs",
+    action: "Invoice overdue follow-up",
+    priority: "HIGH",
+    due: "Overdue",
+  },
+  {
+    client: "StartupX",
+    action: "Monthly check-in call",
+    priority: "LOW",
+    due: "This week",
+  },
+  {
+    client: "Blue Ocean",
+    action: "Campaign performance review",
+    priority: "MEDIUM",
+    due: "Friday",
+  },
 ];
 
-function ActivityFeed() {
+function FollowUps() {
   return (
     <div
       style={{
         background: "var(--sidebar-item-bg)",
         border: "1px solid var(--sidebar-border)",
         borderRadius: 16,
-        padding: "18px 20px",
+        padding: "20px 22px",
       }}
     >
-      <div className="flex items-center gap-2 mb-4">
-        <Activity size={15} style={{ color: "var(--sidebar-icon-active)" }} />
+      {/* Header */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 16,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Clock size={15} style={{ color: "var(--sidebar-icon-active)" }} />
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: "var(--sidebar-text-secondary)",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+            }}
+          >
+            Follow-ups
+          </span>
+        </div>
         <span
           style={{
-            fontSize: 12,
+            padding: "2px 8px",
+            borderRadius: 99,
+            background: "rgba(248,113,113,0.12)",
+            border: "1px solid rgba(248,113,113,0.25)",
+            fontSize: 11,
             fontWeight: 700,
-            color: "var(--sidebar-text-secondary)",
-            textTransform: "uppercase",
-            letterSpacing: "0.06em",
+            color: "#F87171",
           }}
         >
-          Activity Feed
+          2 overdue
         </span>
       </div>
 
-      <div className="flex flex-col gap-3">
-        {ACTIVITY_ITEMS.map((item, i) => (
-          <div key={i} className="flex items-start gap-3">
-            <span
+      {/* List */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {FOLLOWUPS.map((f, i) => {
+          const color = FOLLOWUP_COLOR[f.priority];
+          const isOverdue = f.due === "Overdue";
+          const isToday = f.due === "Today";
+          return (
+            <div
+              key={i}
               style={{
-                width: 7,
-                height: 7,
-                borderRadius: "50%",
-                background: item.color,
-                flexShrink: 0,
-                marginTop: 5,
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 10,
+                padding: "10px 12px",
+                borderRadius: 10,
+                background: "rgba(255,255,255,0.025)",
+                border: `1px solid ${isOverdue ? "rgba(248,113,113,0.18)" : "var(--sidebar-border)"}`,
+                cursor: "pointer",
+                transition: "border-color 150ms ease",
               }}
-            />
-            <div style={{ flex: 1 }}>
-              <p
+            >
+              {/* Priority badge */}
+              <span
                 style={{
-                  margin: 0,
-                  fontSize: 12.5,
-                  color: "var(--sidebar-text-primary)",
-                  lineHeight: 1.4,
+                  padding: "2px 7px",
+                  borderRadius: 6,
+                  background: `${color}14`,
+                  border: `1px solid ${color}30`,
+                  fontSize: 10,
+                  fontWeight: 700,
+                  color,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.04em",
+                  flexShrink: 0,
+                  marginTop: 1,
+                  lineHeight: 1.6,
                 }}
               >
-                {item.text}
-              </p>
-              <p
+                {f.priority}
+              </span>
+
+              {/* Content */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: "var(--sidebar-text-primary)",
+                  }}
+                >
+                  {f.client}
+                </p>
+                <p
+                  style={{
+                    margin: "2px 0 0",
+                    fontSize: 11,
+                    color: "var(--sidebar-text-secondary)",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {f.action}
+                </p>
+              </div>
+
+              {/* Due label */}
+              <span
                 style={{
-                  margin: 0,
                   fontSize: 11,
-                  color: "var(--sidebar-text-secondary)",
+                  fontWeight: isOverdue || isToday ? 700 : 400,
+                  color: isOverdue
+                    ? "#F87171"
+                    : isToday
+                    ? "#F59E0B"
+                    : "var(--sidebar-text-secondary)",
+                  flexShrink: 0,
                   marginTop: 1,
                 }}
               >
-                {item.time}
-              </p>
+                {f.due}
+              </span>
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── Storage donut ────────────────────────────────────────────────────────────
-
-function StorageDonut() {
-  const segments = [
-    { label: "Documents", pct: 35, color: "#60A5FA" },
-    { label: "Media", pct: 28, color: "#A78BFA" },
-    { label: "Backups", pct: 15, color: "#34D399" },
-    { label: "Other", pct: 22, color: "#F59E0B" },
-  ];
-
-  const r = 38;
-  const circ = 2 * Math.PI * r;
-  let offset = 0;
-
-  return (
-    <div
-      style={{
-        background: "var(--sidebar-item-bg)",
-        border: "1px solid var(--sidebar-border)",
-        borderRadius: 16,
-        padding: "18px 20px",
-      }}
-    >
-      <div className="flex items-center gap-2 mb-4">
-        <Activity size={15} style={{ color: "var(--sidebar-icon-active)" }} />
-        <span
-          style={{
-            fontSize: 12,
-            fontWeight: 700,
-            color: "var(--sidebar-text-secondary)",
-            textTransform: "uppercase",
-            letterSpacing: "0.06em",
-          }}
-        >
-          Storage Breakdown
-        </span>
-      </div>
-
-      <div className="flex items-center gap-6">
-        {/* Donut */}
-        <div style={{ position: "relative", flexShrink: 0 }}>
-          <svg width={96} height={96} viewBox="0 0 96 96">
-            <circle cx="48" cy="48" r={r} fill="none" stroke="var(--sidebar-border)" strokeWidth={10} />
-            {segments.map((s, i) => {
-              const dash = (s.pct / 100) * circ;
-              const gap = circ - dash;
-              const el = (
-                <circle
-                  key={i}
-                  cx="48"
-                  cy="48"
-                  r={r}
-                  fill="none"
-                  stroke={s.color}
-                  strokeWidth={10}
-                  strokeDasharray={`${dash} ${gap}`}
-                  strokeDashoffset={circ - offset}
-                  strokeLinecap="round"
-                  transform="rotate(-90 48 48)"
-                />
-              );
-              offset += dash;
-              return el;
-            })}
-          </svg>
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <span style={{ fontSize: 16, fontWeight: 800, color: "var(--sidebar-text-primary)", letterSpacing: "-0.02em", lineHeight: 1 }}>
-              68%
-            </span>
-            <span style={{ fontSize: 10, color: "var(--sidebar-text-secondary)" }}>used</span>
-          </div>
-        </div>
-
-        {/* Legend */}
-        <div className="flex flex-col gap-2 flex-1 min-w-0">
-          {segments.map((s) => (
-            <div key={s.label} className="flex items-center gap-2">
-              <span style={{ width: 8, height: 8, borderRadius: 2, background: s.color, flexShrink: 0 }} />
-              <span style={{ fontSize: 12, color: "var(--sidebar-text-primary)", flex: 1 }}>{s.label}</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: "var(--sidebar-text-secondary)" }}>{s.pct}%</span>
-            </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -528,8 +847,9 @@ function StorageDonut() {
 
 function AgencyDashboard() {
   const { profile, refreshProfile } = useAuth();
-  const router = useRouter();
-  const firstName = profile?.nickname?.split(" ")[0] || profile?.full_name?.split(" ")[0];
+  const firstName =
+    profile?.nickname?.split(" ")[0] || profile?.full_name?.split(" ")[0];
+  const stats = useAgencyStats();
 
   // Stripe checkout success toast
   useEffect(() => {
@@ -537,8 +857,11 @@ function AgencyDashboard() {
     const params = new URLSearchParams(window.location.search);
     const subscribed = params.get("subscribed");
     if (subscribed) {
-      const planLabel = subscribed.charAt(0).toUpperCase() + subscribed.slice(1);
-      toast.success(`Welcome to ${planLabel}! Your plan is active.`, { duration: 5000 });
+      const planLabel =
+        subscribed.charAt(0).toUpperCase() + subscribed.slice(1);
+      toast.success(`Welcome to ${planLabel}! Your plan is active.`, {
+        duration: 5000,
+      });
       const t = setTimeout(() => {
         refreshProfile().catch(() => {});
       }, 1500);
@@ -548,6 +871,51 @@ function AgencyDashboard() {
       return () => clearTimeout(t);
     }
   }, [refreshProfile]);
+
+  const statCards: RHStatCardProps[] = [
+    {
+      label: "Active Clients",
+      value: stats?.clients ?? "—",
+      sub: "total registered",
+      pct: stats ? Math.min(Math.round((stats.clients / 50) * 100), 100) : 60,
+      change: "+12%",
+      changeUp: true,
+      color: "#14B8A6",
+      icon: Users,
+    },
+    {
+      label: "Total Leads",
+      value: stats?.leads ?? "—",
+      sub: "in pipeline",
+      pct: stats ? Math.min(Math.round((stats.leads / 100) * 100), 100) : 75,
+      change: "+8%",
+      changeUp: true,
+      color: "#A78BFA",
+      icon: Target,
+    },
+    {
+      label: "Workflows",
+      value: stats?.workflows ?? "—",
+      sub: "automations running",
+      pct: stats
+        ? Math.min(Math.round((stats.workflows / 20) * 100), 100)
+        : 45,
+      change: "+3",
+      changeUp: true,
+      color: "#F97316",
+      icon: Zap,
+    },
+    {
+      label: "AI Credits",
+      value: "∞",
+      sub: "unlimited plan",
+      pct: 100,
+      change: "Pro",
+      changeUp: true,
+      color: "#22C55E",
+      icon: Sparkles,
+    },
+  ];
 
   return (
     <div className="min-h-screen" style={{ paddingBottom: 48 }}>
@@ -595,7 +963,11 @@ function AgencyDashboard() {
           <button
             aria-label="Search (⌘K)"
             onClick={() => {
-              const e = new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true });
+              const e = new KeyboardEvent("keydown", {
+                key: "k",
+                metaKey: true,
+                bubbles: true,
+              });
               document.dispatchEvent(e);
             }}
             style={{
@@ -648,7 +1020,6 @@ function AgencyDashboard() {
             }}
           >
             <Bell size={16} />
-            {/* Unread dot */}
             <span
               style={{
                 position: "absolute",
@@ -688,268 +1059,35 @@ function AgencyDashboard() {
         </div>
       </div>
 
-      {/* ── Main content grid ── */}
+      {/* ── Row 1: 4 stat cards ── */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 20,
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: 16,
           marginBottom: 20,
         }}
-        className="grid-cols-1 md:grid-cols-2"
       >
-        {/* ── Left: hero card ── */}
-        <div
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(30,41,80,0.95) 0%, rgba(20,28,60,0.95) 100%)",
-            border: "1px solid rgba(99,146,255,0.18)",
-            borderRadius: 20,
-            padding: 28,
-            display: "flex",
-            flexDirection: "column",
-            gap: 20,
-            position: "relative",
-            overflow: "hidden",
-            minHeight: 240,
-          }}
-        >
-          {/* Background glow */}
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              top: -40,
-              right: -40,
-              width: 200,
-              height: 200,
-              borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(96,165,250,0.12) 0%, transparent 70%)",
-              pointerEvents: "none",
-            }}
-          />
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              bottom: -30,
-              left: 20,
-              width: 160,
-              height: 160,
-              borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(167,139,250,0.10) 0%, transparent 70%)",
-              pointerEvents: "none",
-            }}
-          />
-
-          {/* Brain + title */}
-          <div style={{ display: "flex", alignItems: "center", gap: 14, position: "relative", zIndex: 1 }}>
-            <BrainLogo size={52} />
-            <div>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: "rgba(160,190,255,0.7)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                }}
-              >
-                Operating System
-              </p>
-              <h2
-                style={{
-                  margin: "2px 0 0",
-                  fontSize: 22,
-                  fontWeight: 900,
-                  color: "#F0F0F4",
-                  letterSpacing: "-0.03em",
-                  lineHeight: 1.1,
-                  fontFamily: "var(--font-satoshi, 'Satoshi', sans-serif)",
-                }}
-              >
-                Trinity OS
-              </h2>
-              <span
-                style={{
-                  display: "inline-block",
-                  marginTop: 3,
-                  padding: "2px 8px",
-                  borderRadius: 99,
-                  background: "linear-gradient(90deg, #60A5FA, #A78BFA)",
-                  fontSize: 10,
-                  fontWeight: 800,
-                  color: "#fff",
-                  letterSpacing: "0.04em",
-                }}
-              >
-                2.0 PRO
-              </span>
-            </div>
-          </div>
-
-          <p
-            style={{
-              margin: 0,
-              fontSize: 13.5,
-              color: "rgba(200,210,240,0.8)",
-              lineHeight: 1.55,
-              position: "relative",
-              zIndex: 1,
-              flex: 1,
-            }}
-          >
-            Your agency command center. Manage clients, AI agents,
-            automations, and campaigns from one intelligent workspace.
-          </p>
-
-          {/* CTAs */}
-          <div style={{ display: "flex", gap: 10, position: "relative", zIndex: 1 }}>
-            <Link
-              href="/dashboard/agent-office"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "9px 16px",
-                borderRadius: 10,
-                background: "linear-gradient(135deg, #3B82F6, #6366F1)",
-                color: "#fff",
-                fontSize: 13,
-                fontWeight: 700,
-                textDecoration: "none",
-                transition: "opacity 160ms ease",
-              }}
-            >
-              <Compass size={14} />
-              Explore Features
-            </Link>
-            <Link
-              href="/dashboard/ai-studio"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "9px 16px",
-                borderRadius: 10,
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.14)",
-                color: "rgba(200,210,240,0.9)",
-                fontSize: 13,
-                fontWeight: 600,
-                textDecoration: "none",
-                transition: "background 160ms ease",
-              }}
-            >
-              <Play size={13} />
-              Watch Overview
-            </Link>
-          </div>
-        </div>
-
-        {/* ── Right: Quick Actions ── */}
-        <div
-          style={{
-            background: "var(--sidebar-item-bg)",
-            border: "1px solid var(--sidebar-border)",
-            borderRadius: 20,
-            padding: 24,
-          }}
-        >
-          <div className="flex items-center gap-2 mb-4">
-            <Zap size={15} style={{ color: "var(--sidebar-icon-active)" }} />
-            <span
-              style={{
-                fontSize: 12,
-                fontWeight: 700,
-                color: "var(--sidebar-text-secondary)",
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-              }}
-            >
-              Quick Actions
-            </span>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 10,
-            }}
-          >
-            {QUICK_ACTIONS.map((action) => {
-              const Icon = action.icon;
-              return (
-                <Link
-                  key={action.href}
-                  href={action.href}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    gap: 10,
-                    padding: "14px 14px",
-                    borderRadius: 12,
-                    background: `linear-gradient(135deg, ${action.bgFrom}, ${action.bgTo})`,
-                    border: `1px solid ${action.color}22`,
-                    textDecoration: "none",
-                    transition: "transform 160ms ease, box-shadow 160ms ease",
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"
-                    ;(e.currentTarget as HTMLElement).style.boxShadow = `0 4px 16px ${action.color}28`
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.transform = "none"
-                    ;(e.currentTarget as HTMLElement).style.boxShadow = "none"
-                  }}
-                >
-                  <Icon size={20} style={{ color: action.color }} />
-                  <span
-                    style={{
-                      fontSize: 12.5,
-                      fontWeight: 600,
-                      color: "var(--sidebar-text-primary)",
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {action.label}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
+        {statCards.map((card) => (
+          <RHStatCard key={card.label} {...card} />
+        ))}
       </div>
 
-      {/* ── Row 2: System Overview + Recent Apps ── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 20,
-          marginBottom: 20,
-        }}
-        className="grid-cols-1 md:grid-cols-2"
-      >
-        <AgencyPulse />
-        <RecentApps />
+      {/* ── Row 2: Pipeline kanban ── */}
+      <div style={{ marginBottom: 20 }}>
+        <PipelineBoard />
       </div>
 
-      {/* ── Row 3: Activity Feed + Storage ── */}
+      {/* ── Row 3: Enquiries + Follow-ups ── */}
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
           gap: 20,
         }}
-        className="grid-cols-1 md:grid-cols-2"
       >
-        <ActivityFeed />
-        <StorageDonut />
+        <NewEnquiries />
+        <FollowUps />
       </div>
     </div>
   );
@@ -964,7 +1102,8 @@ function AgencyDashboard() {
 function ClientDashboard() {
   const { profile } = useAuth();
   const router = useRouter();
-  const firstName = profile?.nickname?.split(" ")[0] || profile?.full_name?.split(" ")[0];
+  const firstName =
+    profile?.nickname?.split(" ")[0] || profile?.full_name?.split(" ")[0];
 
   return (
     <div className="space-y-6 max-w-[1000px] mx-auto">
@@ -974,7 +1113,10 @@ function ClientDashboard() {
         </h1>
         <div
           className="h-[2px] mt-1 rounded-full"
-          style={{ background: "linear-gradient(90deg, var(--brand-accent, #2563EB) 0%, transparent 70%)" }}
+          style={{
+            background:
+              "linear-gradient(90deg, var(--brand-accent, #2563EB) 0%, transparent 70%)",
+          }}
           aria-hidden
         />
         <p className="text-sm text-text-muted mt-1.5">Your client portal</p>
@@ -997,17 +1139,39 @@ function ClientDashboard() {
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: "My Services", icon: <Briefcase size={22} />, color: "text-brand-accent", route: "/dashboard/portal" },
-            { label: "Invoices", icon: <FileText size={22} />, color: "text-info", route: "/dashboard/portal/billing" },
-            { label: "Content", icon: <Sparkles size={22} />, color: "text-brand-accent", route: "/dashboard/portal/content" },
-            { label: "Contact Us", icon: <Send size={22} />, color: "text-success", route: "/dashboard/portal/support" },
+            {
+              label: "My Services",
+              icon: <Briefcase size={22} />,
+              color: "text-brand-accent",
+              route: "/dashboard/portal",
+            },
+            {
+              label: "Invoices",
+              icon: <FileText size={22} />,
+              color: "text-info",
+              route: "/dashboard/portal/billing",
+            },
+            {
+              label: "Content",
+              icon: <Sparkles size={22} />,
+              color: "text-brand-accent",
+              route: "/dashboard/portal/content",
+            },
+            {
+              label: "Contact Us",
+              icon: <Send size={22} />,
+              color: "text-success",
+              route: "/dashboard/portal/support",
+            },
           ].map((item, i) => (
             <button
               key={i}
               onClick={() => router.push(item.route)}
               className="card-hover p-6 text-center group spotlight-card"
             >
-              <span className={`${item.color} inline-block mb-2 group-hover:scale-110 transition-transform`}>
+              <span
+                className={`${item.color} inline-block mb-2 group-hover:scale-110 transition-transform`}
+              >
                 {item.icon}
               </span>
               <span className="text-sm font-medium block">{item.label}</span>
