@@ -64,10 +64,7 @@ test.describe("AI Studio", () => {
     // the goto from hanging when background fetches (lazy images, API calls)
     // keep the load event from firing within navigationTimeout (30 s).
     await page.goto("/dashboard/ai-studio", { waitUntil: "domcontentloaded" });
-    // 20 s budget: domcontentloaded returns before React mounts the sidebar nav,
-    // so late tests (run after 17+ warmed-up requests) need a larger window than
-    // the 5 s default to handle a brief Vercel scheduling hiccup.
-    await waitForDashboardReady(page, 20_000);
+    await waitForDashboardReady(page);
     await dismissTourIfPresent(page);
   });
 

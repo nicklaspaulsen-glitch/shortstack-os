@@ -92,16 +92,21 @@ export async function expectDashboard(page: Page): Promise<void> {
  */
 export async function waitForDashboardReady(
   page: Page,
-  timeout = 5_000,
+  timeout = 20_000,
 ): Promise<void> {
   // The trinity sidebar renders a <nav> once hydrated. Waiting for it
   // confirms the sidebar + layout are fully mounted.
   //
-  // Default timeout is intentionally short (5 s). When the Supabase JWT is
-  // valid and the storageState is intact, the nav appears within 1-2 s.
-  // Using 5 s lets us detect a /login bounce quickly rather than burning
-  // the full 15 s before kicking off the signIn recovery — this keeps the
-  // worst-case beforeEach budget well under 150 s even on slow production.
+  // Default is 20 s. Most tests see the nav in 1-3 s on a warm Vercel
+  // function, so the extra headroom costs nothing in the happy path.
+  // The budget matters for two edge cases:
+  //   1. Spec uses waitUntil:"domcontentloaded" (returns before React mounts)
+  //      — the nav can take 5-10 s to appear when the function is cold.
+  //   2. Late tests in a long suite hit the function after 20+ prior requests
+  //      — occasional scheduling jitter pushes hydration past the old 5 s cap.
+  // /login detection is still instant: any URL that doesn't include /login
+  // after <timeout> ms triggers the immediate throw below, so we don't burn
+  // the full 20 s on a genuine session-expired redirect.
   const nav = page.getByRole("navigation").first();
 
   try {
