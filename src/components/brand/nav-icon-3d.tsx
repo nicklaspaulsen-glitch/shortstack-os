@@ -107,6 +107,11 @@ import plugIcon from "@iconify-icons/solar/plug-circle-bold-duotone";
 import linkIcon from "@iconify-icons/solar/link-bold-duotone";
 import uploadIcon from "@iconify-icons/solar/cloud-upload-bold-duotone";
 
+// Intelligence / competitive
+import eyeIcon from "@iconify-icons/solar/eye-bold-duotone";
+import bonfireIcon from "@iconify-icons/solar/bonfire-bold-duotone";
+import graphNewUpIcon from "@iconify-icons/solar/graph-new-up-bold-duotone";
+
 // Special
 import homeIcon from "@iconify-icons/solar/home-2-bold-duotone";
 import pinIcon from "@iconify-icons/solar/pin-bold-duotone";
@@ -195,6 +200,10 @@ const LUCIDE_TO_SOLAR: Record<string, IconifyIcon> = {
   ArrowUpRight: arrowUpRightIcon,
   ChevronLeft: chevronLeftIcon,
   ChevronDown: chevronDownIcon,
+  // Intelligence
+  Eye: eyeIcon,
+  Flame: bonfireIcon,
+  GraphNewUp: graphNewUpIcon,
 };
 
 export interface NavIcon3DProps {
