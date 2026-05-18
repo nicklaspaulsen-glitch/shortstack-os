@@ -21,6 +21,7 @@ import { PrismPanel } from "@/components/prism";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import SafeThumb from "@/components/safe-thumb";
 import { MotionPage } from "@/components/motion/motion-page";
+import PageAgent from "@/components/ui/page-agent";
 
 // Sample content-piece tiles shown in the Content Library landing state.
 const CONTENT_LIBRARY_PREVIEW_FALLBACK: RollingPreviewItem[] = [
@@ -478,6 +479,11 @@ export default function ContentLibraryPage() {
             </label>
           </>
         </div>
+      </div>
+
+      {/* Competitive Intelligence strip */}
+      <div className="px-1 mb-2">
+        <PageAgent context="content-hub" />
       </div>
 
       {/* Rolling preview of example content */}

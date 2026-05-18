@@ -25,6 +25,7 @@ import { useAuth } from "@/lib/auth-context";
 import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
 import { AIPromptBox } from "@/components/ui/ai-prompt-box";
 import { ActionSearchBar, type SearchAction } from "@/components/ui/21st-components";
+import PageAgent from "@/components/ui/page-agent";
 
 
 // -- Types --------------------------------------------------------
@@ -190,6 +191,11 @@ export default function AIStudioPage() {
             </button>
           )}
         </div>
+      </div>
+
+      {/* Competitive Intelligence strip */}
+      <div className="px-1 mb-2">
+        <PageAgent context="ai-studio" />
       </div>
 
       {/* -- GUIDED MODE ------------------------------------------- */}

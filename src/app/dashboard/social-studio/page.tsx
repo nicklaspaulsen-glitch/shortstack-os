@@ -10,6 +10,7 @@ import Tab3Trends from "./components/Tab3Trends";
 import Tab4Stats from "./components/Tab4Stats";
 import Tab5TopCommenters from "./components/Tab5TopCommenters";
 import { MotionPage } from "@/components/motion/motion-page";
+import PageAgent from "@/components/ui/page-agent";
 
 type StudioTab = "calendar" | "ai-upload" | "trends" | "stats" | "commenters";
 
@@ -60,6 +61,11 @@ export default function SocialStudioPage() {
                   </motion.button>
                 );
               })}
-            </div>{tab === "calendar"   && <Tab1Calendar />}{tab === "ai-upload"  && <Tab2AIUpload />}{tab === "trends"     && <Tab3Trends />}{tab === "stats"      && <Tab4Stats />}{tab === "commenters" && <Tab5TopCommenters />}</MotionPage>
+            </div>
+      {/* Competitive Intelligence strip */}
+      <div className="px-1 mb-2">
+        <PageAgent context="social-studio" />
+      </div>
+      {tab === "calendar"   && <Tab1Calendar />}{tab === "ai-upload"  && <Tab2AIUpload />}{tab === "trends"     && <Tab3Trends />}{tab === "stats"      && <Tab4Stats />}{tab === "commenters" && <Tab5TopCommenters />}</MotionPage>
   );
 }

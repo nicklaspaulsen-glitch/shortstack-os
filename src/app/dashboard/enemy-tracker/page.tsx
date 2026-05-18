@@ -6,6 +6,7 @@ import {
   Target,
   Plus,
   Play,
+  Pause,
   Heart,
   MessageCircle,
   Share2,
@@ -28,6 +29,10 @@ import {
   Loader2,
   Search,
   ChevronDown,
+  Lightbulb,
+  Radio,
+  Zap,
+  Volume2,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { useRouter } from "next/navigation";
@@ -868,6 +873,10 @@ function DetailPanel({
   const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showIdeas, setShowIdeas] = useState(false);
+  const [ideas, setIdeas] = useState<string[]>([]);
+  const [loadingIdeas, setLoadingIdeas] = useState(false);
   const cfg = PLATFORM_CONFIG[item.platform];
 
   const handleCopy = () => {
@@ -880,6 +889,47 @@ function DetailPanel({
     setTranscribing(true);
     await new Promise((r) => setTimeout(r, 1800));
     setTranscribing(false);
+  };
+
+  const handleGetIdeas = async () => {
+    if (showIdeas && ideas.length > 0) { setShowIdeas(false); return; }
+    setLoadingIdeas(true);
+    setShowIdeas(true);
+    await new Promise((r) => setTimeout(r, 1600));
+    // Mock ideas based on item niche + hooks — production calls /api/ai/content-ideas
+    const mockIdeas: Record<string, string[]> = {
+      fitness: [
+        `"I trained like [celebrity] for 30 days — here's what happened to my body" (transformation reveal)`,
+        `"3 gym machines nobody uses that target the muscle everyone wants" (counterintuitive tip)`,
+        `"I asked 12 personal trainers what they'd do differently — this was the common answer" (aggregated expert take)`,
+        `"The exercise you're doing that's making you WORSE at the gym" (fear + fix format)`,
+        `"Before/after reveal: same workout, different order — results changed completely" (specific test)`,
+      ],
+      business: [
+        `"I interviewed 50 $10K/month freelancers — here's the ONE service they all sell" (data-backed claim)`,
+        `"Why my $3K/month client paid less than my $500/month client" (counterintuitive pricing story)`,
+        `"The proposal format that closed $47K in 2 weeks — exact template" (actionable framework)`,
+        `"Businesses that will pay $2K-$5K for a simple skill most people ignore" (niche reveal)`,
+        `"I raised my rates 3x and got MORE clients — here's the email I sent" (exact copy reveal)`,
+      ],
+      food: [
+        `"5 ingredients that upgrade any meal instantly — most people have 2 of them wrong" (accessible tip)`,
+        `"Restaurant trick: why their sauce tastes better than yours (and how to fix it)" (insider reveal)`,
+        `"I made the same recipe 10 different ways — only one was worth eating again" (experiment format)`,
+        `"The cheapest protein source that actually tastes good — nutritionists don't talk about it" (underdog reveal)`,
+        `"Zero-waste cooking: every single part of this [ingredient] is edible" (sustainability + intrigue)`,
+      ],
+      default: [
+        `Hook the first 3 seconds with the result, not the process — "Here's how I [result]" > "Today I'm going to teach you..."`,
+        `Add a specific number to your hook — "7 tools" outperforms "tools I use" every time`,
+        `Use the enemy's top hook + your niche: "${item.hooks[0] ?? "Expert reveals..."}" adapted for your audience`,
+        `Post the same concept in 3 formats: short-form (≤60s), carousel, and long-form — find which converts`,
+        `Show the before/after gap in the first 2 seconds — let the viewer self-identify as the "before"`,
+      ],
+    };
+    const nicheIdeas = mockIdeas[item.niche] ?? mockIdeas.default;
+    setIdeas(nicheIdeas);
+    setLoadingIdeas(false);
   };
 
   const handleGenerateVersion = () => {
@@ -937,19 +987,101 @@ function DetailPanel({
       </div>
 
       <div className="p-5 space-y-5">
-        {/* Thumbnail */}
-        <div className="relative aspect-video rounded-xl overflow-hidden bg-[#131827]">
+        {/* Media Preview Player */}
+        <div className="relative rounded-xl overflow-hidden bg-[#0a0e1d]" style={{ aspectRatio: "16/9" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`https://picsum.photos/seed/${item.content.thumbnailSeed}/800/450`}
             alt={item.content.title}
             className="w-full h-full object-cover"
+            style={{ opacity: isPlaying ? 0.5 : 1, transition: "opacity 0.4s ease" }}
           />
-          {item.content.type === "video" && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-              <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
-                <Play className="w-6 h-6 text-white fill-white ml-0.5" />
-              </div>
+
+          {/* Waveform overlay when playing */}
+          <AnimatePresence>
+            {isPlaying && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 flex flex-col items-center justify-center"
+              >
+                {/* Audio waveform bars */}
+                <div className="flex items-end gap-[2px] h-16 w-full px-6 mb-4">
+                  {Array.from({ length: 48 }).map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="flex-1 rounded-full"
+                      style={{ backgroundColor: cfg.color, opacity: 0.8 }}
+                      animate={{
+                        height: [
+                          `${15 + Math.sin(i * 0.7) * 40 + Math.random() * 20}%`,
+                          `${15 + Math.sin(i * 0.7 + 1.5) * 40 + Math.random() * 20}%`,
+                        ],
+                      }}
+                      transition={{
+                        duration: 0.25 + (i % 5) * 0.07,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        ease: "easeInOut",
+                      }}
+                    />
+                  ))}
+                </div>
+
+                {/* Progress bar */}
+                <div className="w-full px-4">
+                  <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ backgroundColor: cfg.color }}
+                      initial={{ width: "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: item.content.duration ?? 30, ease: "linear" }}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Live badge */}
+          <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/60 backdrop-blur-sm">
+            <motion.div
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ backgroundColor: cfg.color }}
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            />
+            <span className="text-[10px] text-white/70 font-medium uppercase tracking-wider">
+              {item.platform}
+            </span>
+          </div>
+
+          {/* Play / Pause button */}
+          <div className="absolute bottom-3 right-3">
+            <button
+              onClick={() => setIsPlaying((p) => !p)}
+              className="w-11 h-11 rounded-full flex items-center justify-center border transition-all hover:scale-105 active:scale-95"
+              style={{
+                background: isPlaying ? cfg.color : "rgba(255,255,255,0.15)",
+                borderColor: isPlaying ? cfg.color : "rgba(255,255,255,0.25)",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              {isPlaying
+                ? <Pause className="w-4 h-4 text-white fill-white" />
+                : <Play className="w-4 h-4 text-white fill-white ml-0.5" />
+              }
+            </button>
+          </div>
+
+          {/* Duration badge */}
+          {item.content.duration && (
+            <div className="absolute bottom-3 left-3 text-[10px] text-white/70 bg-black/60 px-1.5 py-0.5 rounded font-mono">
+              {item.content.duration >= 60
+                ? `${Math.floor(item.content.duration / 60)}:${String(item.content.duration % 60).padStart(2, "0")}`
+                : `0:${String(item.content.duration).padStart(2, "0")}`}
             </div>
           )}
         </div>
@@ -1111,6 +1243,83 @@ function DetailPanel({
           <p className="text-xs text-white/60 leading-relaxed italic">
             &ldquo;{item.transcript}&rdquo;
           </p>
+        </div>
+
+        {/* Ideas Generator */}
+        <div
+          className="rounded-xl overflow-hidden"
+          style={{
+            border: showIdeas && ideas.length > 0
+              ? "1px solid rgba(251,191,36,0.20)"
+              : "1px solid rgba(251,191,36,0.10)",
+            background: "rgba(251,191,36,0.04)",
+          }}
+        >
+          <button
+            onClick={handleGetIdeas}
+            disabled={loadingIdeas}
+            className="w-full flex items-center gap-2 px-4 py-3 text-xs font-semibold transition-all disabled:opacity-60"
+            style={{ color: "#fbbf24" }}
+          >
+            {loadingIdeas
+              ? <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
+              : <Lightbulb className="w-3.5 h-3.5 shrink-0" />}
+            <span className="flex-1 text-left">
+              {loadingIdeas ? "Generating ideas for your niche…" : "Get Content Ideas for My Niche"}
+            </span>
+            {!loadingIdeas && ideas.length > 0 && (
+              <ChevronDown
+                className="w-3.5 h-3.5 shrink-0 transition-transform duration-200"
+                style={{ transform: showIdeas ? "rotate(180deg)" : "rotate(0deg)" }}
+              />
+            )}
+          </button>
+
+          <AnimatePresence>
+            {showIdeas && ideas.length > 0 && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="px-4 pb-4 space-y-2 border-t border-yellow-400/10 pt-3">
+                  {ideas.map((idea, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.08 }}
+                      className="flex items-start gap-2.5 text-xs text-white/70 leading-relaxed"
+                    >
+                      <span className="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5"
+                        style={{ background: "rgba(251,191,36,0.15)", color: "#fbbf24" }}>
+                        {i + 1}
+                      </span>
+                      {idea}
+                    </motion.div>
+                  ))}
+                  <button
+                    onClick={() => {
+                      const params = new URLSearchParams({
+                        hooks: item.hooks[0] ?? "",
+                        niche: item.niche,
+                        platform: item.platform,
+                        ref: "enemy-tracker-ideas",
+                      });
+                      router.push(`/dashboard/script-lab?${params.toString()}`);
+                    }}
+                    className="w-full mt-3 flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition-all hover:brightness-110"
+                    style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.20)", color: "#fbbf24" }}
+                  >
+                    <Wand2 className="w-3.5 h-3.5" />
+                    Write Script from These Ideas
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Action buttons */}
@@ -1411,15 +1620,84 @@ export default function EnemyTrackerPage() {
               ))}
             </div>
 
-            <div className="flex items-center gap-2 text-white/40 text-xs">
+            <div className="flex items-center gap-3 text-white/40 text-xs">
+              {/* Live pulse indicator */}
+              <div className="flex items-center gap-1.5">
+                <motion.div
+                  className="w-1.5 h-1.5 rounded-full bg-green-400"
+                  animate={{ opacity: [1, 0.3, 1], scale: [1, 1.3, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+                <span className="text-green-400 text-[10px] font-semibold uppercase tracking-wider">Live</span>
+              </div>
+              <span className="text-white/25">·</span>
               <Flame className="w-3.5 h-3.5 text-orange-400" />
               <span>{filtered.length} viral posts</span>
-              <RefreshCw className="w-3.5 h-3.5 ml-1 cursor-pointer hover:text-white/70 transition-colors" />
+              <button className="ml-1 hover:text-white/70 transition-colors">
+                <RefreshCw className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
 
           {/* Grid feed */}
           <div className="p-4">
+            {/* Trending discovery banner — shown when ≤1 competitor tracked */}
+            {competitors.length <= 1 && (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 rounded-xl p-4"
+                style={{
+                  background: "linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(139,92,246,0.05) 100%)",
+                  border: "1px solid rgba(59,130,246,0.18)",
+                }}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                    style={{ background: "rgba(59,130,246,0.15)", border: "1px solid rgba(59,130,246,0.25)" }}>
+                    <Zap className="w-4 h-4 text-blue-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-white mb-0.5">
+                      {competitors.length === 0
+                        ? "What's trending in content right now"
+                        : `Showing what's viral — add competitors to personalize`}
+                    </div>
+                    <div className="text-xs text-white/50 leading-relaxed">
+                      {competitors.length === 0
+                        ? "You haven't tracked any competitors yet. Add their handles in the left panel, or explore what's trending across all niches below."
+                        : "Connect your social media or add more competitor handles to see niche-specific viral content."}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setAddingCompetitor(true);
+                      setTimeout(() => inputRef.current?.focus(), 50);
+                    }}
+                    className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all hover:brightness-110"
+                    style={{ background: "rgba(59,130,246,0.18)", border: "1px solid rgba(59,130,246,0.30)", color: "#60a5fa" }}
+                  >
+                    + Add Competitor
+                  </button>
+                </div>
+
+                {/* Trending niches chip row */}
+                <div className="flex items-center gap-2 mt-3 flex-wrap">
+                  <span className="text-[10px] text-white/35 uppercase tracking-wider shrink-0">Trending:</span>
+                  {["fitness", "business", "food", "finance", "tech", "beauty", "lifestyle"].map((niche) => (
+                    <button
+                      key={niche}
+                      className="px-2.5 py-1 rounded-full text-[10px] font-medium transition-all hover:bg-blue-500/20 hover:text-blue-300"
+                      style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.50)", border: "1px solid rgba(255,255,255,0.08)" }}
+                    >
+                      {niche}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Content grid */}
             <div
               className="grid gap-3"
               style={{

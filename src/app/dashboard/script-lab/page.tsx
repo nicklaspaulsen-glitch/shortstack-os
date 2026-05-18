@@ -24,6 +24,7 @@ import { trackGeneration } from "@/lib/track-generation";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 import { MotionPage } from "@/components/motion/motion-page";
+import PageAgent from "@/components/ui/page-agent";
 
 // Example "phone mockup" script cards used in the landing state marquee.
 // Each card shows 2-3 lines of a sample script opener � just enough to
@@ -1296,6 +1297,10 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             {clients.map(c => <option key={c.id} value={c.id} className="bg-surface">{c.business_name}</option>)}
           </select>
         </div>
+      </div>
+      {/* Competitive Intelligence strip */}
+      <div className="px-1 mb-2">
+        <PageAgent context="script-lab" />
       </div>
       {/* Guided Mode � "4-year-old friendly" flow */}
       {!advancedMode && (

@@ -24,6 +24,7 @@ import {
 import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
+import PageAgent from "@/components/ui/page-agent";
 
 const PROMPT_IDEAS = [
   "A golden retriever running through a field of sunflowers at sunset, cinematic lighting",
@@ -596,6 +597,11 @@ export default function AIVideoPage() {
           <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">AI Video</h1>
         </div>
         <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+      </div>
+
+      {/* Competitive Intelligence strip */}
+      <div className="px-1 mb-2">
+        <PageAgent context="video-gen" />
       </div>
 
       {/* Scorecard strip */}
