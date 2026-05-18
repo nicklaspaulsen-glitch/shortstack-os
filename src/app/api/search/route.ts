@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
   const results = [
     ...(leads || []).map(l => ({ type: "lead", id: l.id, title: l.business_name, subtitle: `${l.industry || "Lead"} · ${l.status}`, href: "/dashboard/leads" })),
     ...(clients || []).map(c => ({ type: "client", id: c.id, title: c.business_name, subtitle: `${c.contact_name} · ${c.package_tier || "Client"}`, href: `/dashboard/clients/${c.id}` })),
-    ...(deals || []).map(d => ({ type: "deal", id: d.id, title: d.client_name, subtitle: `${d.service} · $${d.amount}`, href: "/dashboard/team" })),
+    ...(deals || []).map(d => ({ type: "deal", id: d.id, title: d.client_name, subtitle: `${d.service} · $${d.amount}`, href: "/dashboard/deals" })),
     ...(scripts || []).map(s => ({ type: "content", id: s.id, title: s.title, subtitle: `${s.script_type} · ${s.status}`, href: "/dashboard/content" })),
     ...(team || []).map(t => ({ type: "team", id: t.id, title: t.full_name, subtitle: t.role, href: "/dashboard/team" })),
     ...(trinity || []).map(t => ({ type: "action", id: t.id, title: t.description, subtitle: `${t.action_type} · ${t.status}`, href: "/dashboard/trinity" })),

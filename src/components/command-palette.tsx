@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   Search, LayoutDashboard, BarChart3, Zap, Users, FileText,
@@ -34,12 +34,12 @@ type FlatItem =
   | { kind: "record"; data: SearchResult };
 
 const RECORD_ICONS: Record<string, React.ReactNode> = {
-  lead: <Zap size={14} className="text-amber-500" />,
-  client: <Building2 size={14} className="text-[#2563EB]" />,
-  deal: <Briefcase size={14} className="text-emerald-600" />,
-  content: <Film size={14} className="text-violet-500" />,
-  team: <UserCheck size={14} className="text-[#6B7280]" />,
-  action: <Bot size={14} className="text-[#2563EB]" />,
+  lead: <Zap size={14} className="text-amber-400" />,
+  client: <Building2 size={14} className="text-[#60A5FA]" />,
+  deal: <Briefcase size={14} className="text-emerald-400" />,
+  content: <Film size={14} className="text-violet-400" />,
+  team: <UserCheck size={14} className="text-slate-400" />,
+  action: <Bot size={14} className="text-[#60A5FA]" />,
 };
 
 export default function CommandPalette() {
@@ -133,26 +133,33 @@ export default function CommandPalette() {
     return () => clearTimeout(timeout);
   }, [query]);
 
-  const filteredCommands = query.trim()
-    ? commands.filter(c =>
-        c.label.toLowerCase().includes(query.toLowerCase()) ||
-        c.keywords.toLowerCase().includes(query.toLowerCase()) ||
-        (c.description || "").toLowerCase().includes(query.toLowerCase())
-      )
-    : commands;
+  const filteredCommands = useMemo(() =>
+    query.trim()
+      ? commands.filter(c =>
+          c.label.toLowerCase().includes(query.toLowerCase()) ||
+          c.keywords.toLowerCase().includes(query.toLowerCase()) ||
+          (c.description || "").toLowerCase().includes(query.toLowerCase())
+        )
+      : commands,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [query]
+  );
 
   // Flat unified list for keyboard navigation
-  const allItems: FlatItem[] = [
+  const allItems: FlatItem[] = useMemo(() => [
     ...filteredCommands.map(c => ({ kind: "command" as const, data: c })),
     ...liveResults.map(r => ({ kind: "record" as const, data: r })),
-  ];
+  ], [filteredCommands, liveResults]);
 
   // Grouped nav commands for visual sections
-  const grouped = filteredCommands.reduce<Record<string, CommandItem[]>>((acc, item) => {
-    if (!acc[item.category]) acc[item.category] = [];
-    acc[item.category].push(item);
-    return acc;
-  }, {});
+  const grouped = useMemo(() =>
+    filteredCommands.reduce<Record<string, CommandItem[]>>((acc, item) => {
+      if (!acc[item.category]) acc[item.category] = [];
+      acc[item.category].push(item);
+      return acc;
+    }, {}),
+    [filteredCommands]
+  );
 
   // ── Keyboard shortcut: Cmd+K and custom event ──
   useEffect(() => {
@@ -208,8 +215,7 @@ export default function CommandPalette() {
     }
     window.addEventListener("keydown", handleNav);
     return () => window.removeEventListener("keydown", handleNav);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, allItems, selectedIndex]);
+  }, [open, allItems, selectedIndex, router]);
 
   useEffect(() => { setSelectedIndex(0); }, [query]);
 
@@ -224,31 +230,41 @@ export default function CommandPalette() {
 
   return (
     <div className="fixed inset-0 z-[9999]">
+      {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
+        className="absolute inset-0 bg-black/60 backdrop-blur-[3px]"
         onClick={() => setOpen(false)}
       />
+
+      {/* Panel */}
       <div className="relative max-w-xl mx-auto mt-[12vh] px-4">
         <div
-          className="overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.09)]"
+          className="overflow-hidden rounded-2xl"
           style={{
-            background: "rgba(255,255,255,0.97)",
-            boxShadow: "0 24px 64px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04)",
+            background: "rgba(9,13,24,0.95)",
+            backdropFilter: "blur(20px) saturate(160%)",
+            WebkitBackdropFilter: "blur(20px) saturate(160%)",
+            border: "1px solid rgba(99,146,255,0.22)",
+            boxShadow: "0 32px 72px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(99,146,255,0.08)",
           }}
         >
-          {/* Input */}
-          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[rgba(0,0,0,0.07)]">
-            <Search size={16} className="text-[#6B7280] shrink-0" />
+          {/* Input row */}
+          <div
+            className="flex items-center gap-3 px-4 py-3.5"
+            style={{ borderBottom: "1px solid rgba(99,146,255,0.10)" }}
+          >
+            <Search size={16} className="text-[#4A4A5A] shrink-0" />
             <input
               ref={inputRef}
               type="text"
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="Search commands, clients, deals, content…"
-              className="flex-1 bg-transparent text-sm text-[#111827] placeholder-[#9CA3AF] outline-none"
+              className="flex-1 bg-transparent text-sm text-[#F0F0F4] placeholder-[#4A4A5A] outline-none"
             />
-            {liveLoading && <Loader2 size={13} className="text-text-muted animate-spin shrink-0" />}
-            <kbd className="hidden sm:inline-flex text-[9px] text-text-muted bg-[rgba(0,0,0,0.05)] px-1.5 py-0.5 rounded font-mono border border-[rgba(0,0,0,0.08)]">
+            {liveLoading && <Loader2 size={13} className="text-[#4A4A5A] animate-spin shrink-0" />}
+            <kbd className="hidden sm:inline-flex text-[9px] text-[#4A4A5A] px-1.5 py-0.5 rounded font-mono"
+              style={{ background: "rgba(99,146,255,0.08)", border: "1px solid rgba(99,146,255,0.12)" }}>
               ESC
             </kbd>
           </div>
@@ -259,7 +275,7 @@ export default function CommandPalette() {
             {/* Nav commands — grouped by category */}
             {Object.entries(grouped).map(([category, items]) => (
               <div key={category}>
-                <p className="text-[9px] text-text-muted uppercase tracking-[0.18em] font-semibold px-4 pt-2.5 pb-1">
+                <p className="text-[9px] text-[#4A4A5A] uppercase tracking-[0.18em] font-semibold px-4 pt-2.5 pb-1">
                   {category}
                 </p>
                 {items.map((item) => {
@@ -271,25 +287,26 @@ export default function CommandPalette() {
                       data-selected={isSelected}
                       onClick={item.action}
                       onMouseEnter={() => setSelectedIndex(flatIdx)}
-                      className={`w-full flex items-center gap-3 px-4 py-2 text-left transition-colors ${
-                        isSelected
-                          ? "bg-[rgba(59,130,246,0.07)]"
-                          : "hover:bg-[rgba(0,0,0,0.03)]"
-                      }`}
+                      className="w-full flex items-center gap-3 px-4 py-2 text-left transition-colors"
+                      style={{
+                        background: isSelected ? "rgba(59,130,246,0.14)" : "transparent",
+                      }}
+                      onMouseLeave={() => {}}
                     >
-                      <span className={`shrink-0 ${isSelected ? "text-[#2563EB]" : "text-text-muted"}`}>
+                      <span className={`shrink-0 ${isSelected ? "text-[#60A5FA]" : "text-[#4A4A5A]"}`}>
                         {item.icon}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className={`text-xs font-medium truncate ${isSelected ? "text-[#1D4ED8]" : "text-[#374151]"}`}>
+                        <p className={`text-xs font-medium truncate ${isSelected ? "text-[#93C5FD]" : "text-[#A8A8B2]"}`}>
                           {item.label}
                         </p>
                         {item.description && (
-                          <p className="text-[10px] text-text-muted truncate">{item.description}</p>
+                          <p className="text-[10px] text-[#4A4A5A] truncate">{item.description}</p>
                         )}
                       </div>
                       {isSelected && (
-                        <kbd className="text-[8px] text-text-muted bg-[rgba(0,0,0,0.05)] px-1 py-0.5 rounded font-mono shrink-0">
+                        <kbd className="text-[8px] text-[#4A4A5A] px-1 py-0.5 rounded font-mono shrink-0"
+                          style={{ background: "rgba(99,146,255,0.08)", border: "1px solid rgba(99,146,255,0.12)" }}>
                           ↵
                         </kbd>
                       )}
@@ -299,11 +316,11 @@ export default function CommandPalette() {
               </div>
             ))}
 
-            {/* Live DB results — shown below nav when query has >= 2 chars */}
+            {/* Live DB results */}
             {liveResults.length > 0 && (
               <>
-                <div className="mx-4 my-1.5 border-t border-[rgba(0,0,0,0.06)]" />
-                <p className="text-[9px] text-text-muted uppercase tracking-[0.18em] font-semibold px-4 pt-1.5 pb-1">
+                <div className="mx-4 my-1.5" style={{ borderTop: "1px solid rgba(99,146,255,0.08)" }} />
+                <p className="text-[9px] text-[#4A4A5A] uppercase tracking-[0.18em] font-semibold px-4 pt-1.5 pb-1">
                   Records
                 </p>
                 {liveResults.map((r) => {
@@ -315,20 +332,20 @@ export default function CommandPalette() {
                       data-selected={isSelected}
                       onClick={() => { router.push(r.href); setOpen(false); }}
                       onMouseEnter={() => setSelectedIndex(flatIdx)}
-                      className={`w-full flex items-center gap-3 px-4 py-2 text-left transition-colors ${
-                        isSelected
-                          ? "bg-[rgba(59,130,246,0.07)]"
-                          : "hover:bg-[rgba(0,0,0,0.03)]"
-                      }`}
+                      className="w-full flex items-center gap-3 px-4 py-2 text-left transition-colors"
+                      style={{
+                        background: isSelected ? "rgba(59,130,246,0.14)" : "transparent",
+                      }}
                     >
-                      <span className="shrink-0">{RECORD_ICONS[r.type] ?? <Search size={14} className="text-text-muted" />}</span>
+                      <span className="shrink-0">{RECORD_ICONS[r.type] ?? <Search size={14} className="text-[#4A4A5A]" />}</span>
                       <div className="flex-1 min-w-0">
-                        <p className={`text-xs font-medium truncate ${isSelected ? "text-[#1D4ED8]" : "text-[#374151]"}`}>
+                        <p className={`text-xs font-medium truncate ${isSelected ? "text-[#93C5FD]" : "text-[#A8A8B2]"}`}>
                           {r.title}
                         </p>
-                        <p className="text-[10px] text-text-muted truncate">{r.subtitle}</p>
+                        <p className="text-[10px] text-[#4A4A5A] truncate">{r.subtitle}</p>
                       </div>
-                      <span className="text-[9px] text-text-muted bg-[rgba(0,0,0,0.05)] px-1.5 py-0.5 rounded capitalize shrink-0">
+                      <span className="text-[9px] text-[#4A4A5A] px-1.5 py-0.5 rounded capitalize shrink-0"
+                        style={{ background: "rgba(99,146,255,0.08)", border: "1px solid rgba(99,146,255,0.10)" }}>
                         {r.type}
                       </span>
                     </button>
@@ -339,20 +356,21 @@ export default function CommandPalette() {
 
             {/* Empty state */}
             {allItems.length === 0 && !liveLoading && query.trim() && (
-              <p className="text-xs text-text-muted text-center py-10">
+              <p className="text-xs text-[#4A4A5A] text-center py-10">
                 No results for &ldquo;{query}&rdquo;
               </p>
             )}
           </div>
 
-          {/* Footer hint */}
-          <div className="border-t border-[rgba(0,0,0,0.06)] px-4 py-2 flex items-center justify-between">
-            <div className="flex items-center gap-4 text-[9px] text-text-muted">
+          {/* Footer */}
+          <div className="px-4 py-2 flex items-center justify-between"
+            style={{ borderTop: "1px solid rgba(99,146,255,0.08)" }}>
+            <div className="flex items-center gap-4 text-[9px] text-[#4A4A5A]">
               <span>↑↓ navigate</span>
               <span>↵ open</span>
               <span>esc close</span>
             </div>
-            <span className="text-[9px] text-text-muted">ShortStack OS</span>
+            <span className="text-[9px] text-[#4A4A5A]">ShortStack OS</span>
           </div>
         </div>
       </div>
