@@ -657,7 +657,7 @@ export default function ClientsPage() {
 
   if (loading) return (
     <div className="space-y-4">
-      <div className="animate-pulse h-28 rounded-xl bg-[#F2F2F4] border border-border-subtle" />
+      <div className="animate-pulse h-28 rounded-xl bg-white/[0.04] border border-border-subtle" />
       <TableSkeleton rows={8} />
     </div>
   );
@@ -693,7 +693,7 @@ export default function ClientsPage() {
         <div className="flex items-center gap-2 shrink-0">
           {/* Scope toggle — admin/founder only */}
           {(callerRole === "admin" || callerRole === "founder") && (
-            <div className="flex items-center bg-[#F2F2F4] border border-border-subtle rounded-lg p-0.5">
+            <div className="flex items-center bg-white/[0.05] border border-border-subtle rounded-lg p-0.5">
               <button
                 onClick={() => setScope("all")}
                 className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
