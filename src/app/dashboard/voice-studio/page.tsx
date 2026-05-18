@@ -90,6 +90,15 @@ const SURFACE_FLAGS: Array<{
 const TEST_PROMPT_DEFAULT =
   "Hi there — this is a quick test of my new voice clone. How does it sound?";
 
+const SAMPLE_PHRASES = [
+  "Hi there — this is a quick test of my new voice clone. How does it sound?",
+  "Thanks for calling! I'm not available right now, but leave a message and I'll get back to you.",
+  "Hey, just following up on our conversation from earlier this week. Give me a call when you get a chance.",
+  "This is a quick voice note — I wanted to share some exciting news with you today.",
+  "Good morning! Just checking in to see if you had any questions after our last meeting.",
+  "Hey, it's great to hear from you. Let's connect soon and talk through the details.",
+] as const;
+
 export default function VoiceStudioPage() {
   const [tab, setTab] = useState<Tab>("my_voices");
   const [mine, setMine] = useState<VoiceClone[]>([]);
@@ -858,11 +867,13 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   const [langFilter, setLangFilter] = useState<string>("all");
   const [genderFilter, setGenderFilter] = useState<"all" | "female" | "male">("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [previewOnly, setPreviewOnly] = useState(false);
   const resetFilters = useCallback(() => {
     setCategoryFilter("all");
     setLangFilter("all");
     setGenderFilter("all");
     setSearchQuery("");
+    setPreviewOnly(false);
   }, []);
   // Persist preview audio URLs and custom test texts across tab switches.
   // Seeded from consent_evidence.preview_url so presets with stored ElevenLabs
@@ -901,10 +912,11 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
       if (categoryFilter !== "all" && cat !== categoryFilter) return false;
       if (langFilter !== "all" && (p.language || "en") !== langFilter) return false;
       if (genderFilter !== "all" && inferGender(p) !== genderFilter) return false;
+      if (previewOnly && !p.consent_evidence?.preview_url) return false;
       if (q && !`${p.label} ${p.description ?? ""}`.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [presets, categoryFilter, langFilter, genderFilter, searchQuery]);
+  }, [presets, categoryFilter, langFilter, genderFilter, searchQuery, previewOnly]);
 
   if (loading) {
     return (
@@ -957,6 +969,20 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
           <span className="flex-shrink-0 rounded-full border border-border-subtle bg-white/[0.03] px-2.5 py-1 text-[10px] font-medium text-[#71717A] tabular-nums">
             {filtered.length}/{presets.length}
           </span>
+          <button
+            type="button"
+            onClick={() => setPreviewOnly((v) => !v)}
+            title="Show only presets with instant audio preview"
+            className={[
+              "flex-shrink-0 flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium transition-colors duration-150 cursor-pointer",
+              previewOnly
+                ? "border border-white/[0.15] bg-white/[0.06] text-brand-accent"
+                : "border border-border-subtle bg-white/[0.02] text-[#71717A] hover:text-text-primary hover:bg-white/[0.05]",
+            ].join(" ")}
+          >
+            <Play size={9} />
+            Instant
+          </button>
         </div>
         {/* Gender row */}
         <div className="flex flex-wrap items-center gap-2">
@@ -1082,8 +1108,26 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   // Keep previous audio URL while re-generating so the player doesn't vanish.
   const prevUrlRef = useRef<string | null>(cachedUrl);
+
+  // Sync testUrl when the parent seeds a stored preview URL into previewCache.
+  // previewCache is populated in a second render cycle (useEffect in PresetsTab)
+  // after presets load, but useState(cachedUrl) only evaluates once — so without
+  // this sync, testUrl would stay null for presets that have a stored audio URL.
+  useEffect(() => {
+    setTestUrl((prev) => prev ?? cachedUrl);
+    if (cachedUrl && !prevUrlRef.current) prevUrlRef.current = cachedUrl;
+  }, [cachedUrl]);
+
+  // Auto-focus the textarea when entering edit mode.
+  useEffect(() => {
+    if (editMode && textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.select();
+    }
+  }, [editMode]);
 
   const onTest = useCallback(async () => {
     setTesting(true);
@@ -1218,6 +1262,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         {editMode ? (
           <div className="mt-3 space-y-1.5">
             <textarea
+              ref={textareaRef}
               value={testText}
               onChange={(e) => { setTestText(e.target.value); onTextChanged(e.target.value); }}
               rows={3}
@@ -1226,7 +1271,22 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               className="w-full rounded-lg border border-border-subtle bg-white/[0.06] px-3 py-2 text-xs text-text-primary placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50 resize-none"
             />
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-[#71717A]">{testText.length}/300</span>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-[#71717A]">{testText.length}/300</span>
+                <button
+                  type="button"
+                  title="Try a different sample phrase"
+                  onClick={() => {
+                    const others = SAMPLE_PHRASES.filter((p) => p !== testText);
+                    const next = others[Math.floor(Math.random() * others.length)];
+                    setTestText(next);
+                    onTextChanged(next);
+                  }}
+                  className="text-[10px] text-[#71717A] hover:text-brand-accent transition-colors duration-150 cursor-pointer underline-offset-2 hover:underline"
+                >
+                  Shuffle
+                </button>
+              </div>
               <div className="flex items-center gap-1.5">
                 <button
                   type="button"
