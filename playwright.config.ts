@@ -28,13 +28,6 @@ export default defineConfig({
     "e2e/setup/*.setup.ts",
   ],
   timeout: 60_000,
-  // Cap all page.goto() / page.waitForNavigation() calls at 30 s regardless
-  // of individual test.setTimeout() overrides. Without this, raising a test's
-  // timeout via test.setTimeout(200_000) propagates to the page's navigation
-  // timeout, causing page.goto() to hang the full 200 s on a stalled Vercel
-  // connection instead of throwing quickly and letting the auth recovery path
-  // start. 30 s is generous for any production Next.js page load.
-  navigationTimeout: 30_000,
   expect: { timeout: 8_000 },
   fullyParallel: true,
   retries: process.env.CI ? 2 : 1,
@@ -43,6 +36,10 @@ export default defineConfig({
   use: {
     baseURL:
       process.env.PLAYWRIGHT_BASE_URL || "https://app.shortstack.work",
+    // Cap page.goto() / waitForNavigation() at 30 s regardless of
+    // individual test.setTimeout(200_000). Prevents a stalled Vercel
+    // connection from hanging the full test timeout.
+    navigationTimeout: 30_000,
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
