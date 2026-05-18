@@ -833,8 +833,8 @@ export default function SchedulingPage() {
                           <td key={h} className="py-0.5 px-0.5">
                             <div className="w-full h-7 rounded flex items-center justify-center text-[8px] font-bold transition-all"
                               style={{
-                                background: intensity > 0.7 ? "rgba(201,168,76,0.35)" : intensity > 0.4 ? "rgba(201,168,76,0.2)" : intensity > 0.1 ? "rgba(201,168,76,0.08)" : "rgba(0,0,0,0.03)",
-                                color: intensity > 0.4 ? "#2563EB" : "rgba(0,0,0,0.25)"
+                                background: intensity > 0.7 ? "rgba(59,130,246,0.35)" : intensity > 0.4 ? "rgba(59,130,246,0.20)" : intensity > 0.1 ? "rgba(59,130,246,0.08)" : "rgba(99,146,255,0.03)",
+                                color: intensity > 0.4 ? "#60A5FA" : "rgba(160,160,180,0.40)"
                               }}>
                               {val}
                             </div>
@@ -848,13 +848,13 @@ export default function SchedulingPage() {
             </div>
             <div className="flex items-center gap-3 mt-3 justify-center">
               <div className="flex items-center gap-1 text-[8px] text-text-muted">
-                <div className="w-3 h-3 rounded" style={{ background: "rgba(201,168,76,0.08)" }} /> Low
+                <div className="w-3 h-3 rounded" style={{ background: "rgba(59,130,246,0.08)" }} /> Low
               </div>
               <div className="flex items-center gap-1 text-[8px] text-text-muted">
-                <div className="w-3 h-3 rounded" style={{ background: "rgba(201,168,76,0.2)" }} /> Medium
+                <div className="w-3 h-3 rounded" style={{ background: "rgba(59,130,246,0.20)" }} /> Medium
               </div>
               <div className="flex items-center gap-1 text-[8px] text-text-muted">
-                <div className="w-3 h-3 rounded" style={{ background: "rgba(201,168,76,0.35)" }} /> High
+                <div className="w-3 h-3 rounded" style={{ background: "rgba(59,130,246,0.35)" }} /> High
               </div>
             </div>
           </div>

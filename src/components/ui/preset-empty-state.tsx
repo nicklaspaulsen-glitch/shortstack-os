@@ -55,7 +55,7 @@ export function PresetEmptyState({ onReset, label = "presets" }: PresetEmptyStat
           cx="60"
           cy="60"
           r="20"
-          fill="rgba(201,168,76,0.06)"
+          fill="rgba(59,130,246,0.06)"
         />
         <line
           x1="82"

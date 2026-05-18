@@ -216,7 +216,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
             position: absolute;
             inset: 0;
             border-radius: 9999px;
-            background: radial-gradient(circle, rgba(201,168,76,0.5) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(59,130,246,0.5) 0%, transparent 70%);
             animation: orb-halo-pulse 2.4s ease-out infinite;
           }
           .orb-halo-delay {

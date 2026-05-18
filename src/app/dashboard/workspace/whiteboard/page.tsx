@@ -50,9 +50,9 @@ const KIND_STYLES: Record<WhiteboardItemKind, { bg: string; border: string; text
     icon: ListChecks,
   },
   video_render: {
-    bg: "rgba(201,168,76,0.10)",
-    border: "rgba(201,168,76,0.35)",
-    text: "rgb(228,200,118)",
+    bg: "rgba(59,130,246,0.10)",
+    border: "rgba(59,130,246,0.35)",
+    text: "rgb(96,165,250)",
     label: "Video",
     icon: Film,
   },

@@ -6638,7 +6638,7 @@ export default function VideoEditorPage() {
                                 onMouseLeave={() => setHoveredMood(null)}
                                 className={`group flex flex-col items-center gap-1 rounded-lg border p-2 transition-all ${
                                   active
-                                    ? "border-brand-accent/40 bg-brand-accent/[0.08] text-brand-accent shadow-[0_0_0_1px_rgba(201,168,76,0.15)]"
+                                    ? "border-brand-accent/40 bg-brand-accent/[0.08] text-brand-accent shadow-[0_0_0_1px_rgba(59,130,246,0.20)]"
                                     : "border-border-subtle text-text-muted hover:border-border-subtle/80 hover:text-text-primary"
                                 }`}
                                 title={m.name}
