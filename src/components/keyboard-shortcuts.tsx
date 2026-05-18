@@ -98,11 +98,15 @@ export default function KeyboardShortcuts() {
     <div className="fixed inset-0 z-[9999]">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowHelp(false)} />
       <div className="relative max-w-md mx-auto mt-[15vh]">
-        <div className="rounded-2xl overflow-hidden bg-white"
-          style={{ boxShadow: "0 24px 64px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.06)" }}>
-          <div className="px-5 py-4 border-b border-[rgba(0,0,0,0.08)]">
-            <h2 className="text-sm font-semibold text-[#111827]">Keyboard Shortcuts</h2>
-            <p className="text-[10px] text-[#6B7280] mt-0.5">Press <kbd className="px-1.5 py-0.5 rounded text-[9px] bg-[#F3F4F6] font-mono">?</kbd> to toggle</p>
+        <div className="rounded-2xl overflow-hidden border border-[rgba(99,146,255,0.22)]"
+          style={{
+            background: "rgba(9,13,24,0.95)",
+            backdropFilter: "blur(20px) saturate(160%)",
+            boxShadow: "0 24px 64px rgba(0,0,0,0.60), 0 2px 8px rgba(0,0,0,0.40), inset 0 1px 0 rgba(99,146,255,0.08)",
+          }}>
+          <div className="px-5 py-4 border-b border-[rgba(99,146,255,0.10)]">
+            <h2 className="text-sm font-semibold text-text-primary">Keyboard Shortcuts</h2>
+            <p className="text-[10px] text-text-muted mt-0.5">Press <kbd className="px-1.5 py-0.5 rounded text-[9px] bg-[rgba(99,146,255,0.08)] border border-[rgba(99,146,255,0.14)] text-[#60A5FA] font-mono">?</kbd> to toggle</p>
           </div>
 
           <div className="px-5 py-4 max-h-[400px] overflow-y-auto space-y-5">
@@ -111,12 +115,12 @@ export default function KeyboardShortcuts() {
                 <p className="text-[9px] text-text-muted uppercase tracking-[0.15em] font-bold mb-2">{cat}</p>
                 <div className="space-y-0.5">
                   {shortcuts.filter(s => s.category === cat).map(s => (
-                    <div key={s.keys} className="flex items-center justify-between py-1.5 px-1 rounded-lg hover:bg-[#F9FAFB] transition-colors">
-                      <span className="text-xs text-[#374151]">{s.label}</span>
+                    <div key={s.keys} className="flex items-center justify-between py-1.5 px-1 rounded-lg hover:bg-[rgba(99,146,255,0.06)] transition-colors">
+                      <span className="text-xs text-text-secondary">{s.label}</span>
                       <div className="flex items-center gap-1">
                         {s.keys.split(" ").map((k, i) => (
                           <span key={i} className="flex items-center gap-1">
-                            <kbd className="px-1.5 py-0.5 rounded-md text-[10px] font-mono bg-[#F3F4F6] text-[#2563EB] border border-[rgba(0,0,0,0.08)]">
+                            <kbd className="px-1.5 py-0.5 rounded-md text-[10px] font-mono bg-[rgba(99,146,255,0.08)] text-[#60A5FA] border border-[rgba(99,146,255,0.16)]">
                               {k}
                             </kbd>
                             {i < s.keys.split(" ").length - 1 && <span className="text-text-muted text-[9px]">then</span>}
@@ -130,8 +134,8 @@ export default function KeyboardShortcuts() {
             ))}
           </div>
 
-          <div className="px-5 py-3 border-t border-[rgba(0,0,0,0.06)] text-center">
-            <p className="text-[9px] text-text-muted">Press <kbd className="px-1 py-0.5 rounded text-[8px] bg-[#F3F4F6] font-mono">Esc</kbd> to close</p>
+          <div className="px-5 py-3 border-t border-[rgba(99,146,255,0.10)] text-center">
+            <p className="text-[9px] text-text-muted">Press <kbd className="px-1 py-0.5 rounded text-[8px] bg-[rgba(99,146,255,0.08)] border border-[rgba(99,146,255,0.14)] text-[#60A5FA] font-mono">Esc</kbd> to close</p>
           </div>
         </div>
       </div>

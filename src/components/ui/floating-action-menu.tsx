@@ -145,7 +145,12 @@ export function FloatingActionMenu({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 4 }}
               transition={{ delay: reducedMotion ? 0 : (actions.length - 1 - i) * 0.04 + 0.08, duration: 0.18 }}
-              className="whitespace-nowrap rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-text-primary shadow-[0_2px_8px_rgba(0,0,0,0.10)] border border-[rgba(0,0,0,0.07)]"
+              className="whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium text-text-primary border border-[rgba(99,146,255,0.20)]"
+              style={{
+                background: "rgba(9,13,24,0.92)",
+                backdropFilter: "blur(12px) saturate(150%)",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.40)",
+              }}
             >
               {action.label}
             </motion.span>
@@ -160,13 +165,14 @@ export function FloatingActionMenu({
               aria-label={action.label}
               className={cn(
                 "relative flex h-11 w-11 items-center justify-center rounded-full",
-                "bg-white shadow-[0_2px_12px_rgba(0,0,0,0.12)] border border-[rgba(0,0,0,0.07)]",
-                "text-text-primary cursor-pointer select-none",
+                "shadow-[0_2px_16px_rgba(0,0,0,0.40)] border border-[rgba(99,146,255,0.18)]",
+                "text-text-secondary cursor-pointer select-none",
                 "transition-all duration-150 ease-out",
-                "hover:shadow-[0_4px_20px_rgba(59,130,246,0.20)] hover:border-[rgba(59,130,246,0.20)] hover:text-[#2563EB]",
+                "hover:shadow-[0_4px_20px_rgba(59,130,246,0.20)] hover:border-[rgba(59,130,246,0.30)] hover:text-[#60A5FA]",
                 "active:scale-95",
                 "disabled:opacity-40 disabled:pointer-events-none"
               )}
+              style={{ background: "rgba(9,13,24,0.92)", backdropFilter: "blur(12px) saturate(150%)" }}
             >
               <span className="h-5 w-5">{action.icon}</span>
               {action.badge !== undefined && action.badge > 0 && (

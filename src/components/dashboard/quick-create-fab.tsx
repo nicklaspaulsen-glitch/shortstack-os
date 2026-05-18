@@ -62,7 +62,7 @@ export default function QuickCreateFab() {
             ? "bg-surface border border-border-subtle text-text-muted hover:text-text-primary"
             : "bg-gradient-to-br from-[#2563EB] to-[rgba(59,130,246,0.8)] text-white hover:scale-110"
         }`}
-        style={open ? {} : { boxShadow: "0 8px 24px -4px rgba(201,168,76,0.55)" }}
+        style={open ? {} : { boxShadow: "0 8px 24px -4px rgba(59,130,246,0.55)" }}
       >
         {open ? <X size={18} /> : <Plus size={18} />}
       </button>
