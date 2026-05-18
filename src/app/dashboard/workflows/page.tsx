@@ -15,9 +15,10 @@ import {
   RotateCcw, Eye, Search, BookOpen, ChevronRight,
   Users, UserPlus, Globe, CreditCard, Star,
   Target, BarChart, Calendar, Bell, ShoppingCart,
-  Briefcase, Database, BarChart3, Building
+  Briefcase, Database, BarChart3, Building, Upload, Library
 } from "lucide-react";
 import { WORKFLOW_PRESETS, WORKFLOW_CATEGORIES, type WorkflowPreset } from "@/lib/workflow-presets";
+import Link from "next/link";
 import toast from "react-hot-toast";
 import { TelegramIcon, SlackIcon } from "@/components/ui/platform-icons";
 import AiWorkflowHero from "@/components/workflows/ai-workflow-hero";
@@ -370,6 +371,16 @@ export default function WorkflowsPage() {
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <button onClick={() => setShowCreate(true)} className="btn-pill-ghost flex items-center gap-1.5">
                       <Plus size={13} /> New
+                    </button>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Link href="/dashboard/automations/library" className="btn-pill-ghost flex items-center gap-1.5 text-sm">
+                      <Library size={13} /> Templates
+                    </Link>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <button onClick={() => toast("Import via JSON coming soon", { icon: "📥" })} className="btn-pill-ghost flex items-center gap-1.5">
+                      <Upload size={13} /> Import
                     </button>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
@@ -998,8 +1009,9 @@ export default function WorkflowsPage() {
                   workflows.map((w) => (
                     <div key={w.id} className="card-hover flex items-center justify-between p-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center">
+                        <div className="relative w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center">
                           <Zap size={14} className="text-brand-accent" />
+                          <span className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full border border-background ${w.status === "completed" ? "bg-green-500" : "bg-zinc-500"}`} title={w.status === "completed" ? "Active" : "Paused"} />
                         </div>
                         <div>
                           <p className="text-xs font-medium">{w.workflow?.name || w.client_name}</p>

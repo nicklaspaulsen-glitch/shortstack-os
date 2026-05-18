@@ -113,6 +113,7 @@ export default function AnalyticsPage() {
   const [dateRange, setDateRange] = useState<"7d" | "30d" | "90d" | "custom">("30d");
   const [customStart, setCustomStart] = useState("");
   const [customEnd, setCustomEnd] = useState("");
+  const [compareEnabled, setCompareEnabled] = useState(false);
   const [activityFeed, setActivityFeed] = useState<ActivityItem[]>([]);
   const activityRef = useRef<HTMLDivElement>(null);
 
@@ -400,24 +401,42 @@ export default function AnalyticsPage() {
         <div className="flex items-center gap-2 shrink-0">
           {/* Date-range pills */}
           <div className="hidden sm:flex tab-pill-strip">
-            {(["7d", "30d", "90d"] as const).map(r => (
+            {([
+              { key: "7d", label: "Last 7 days" },
+              { key: "30d", label: "Last 30 days" },
+              { key: "90d", label: "Last 90 days" },
+            ] as const).map(r => (
               <button
-                key={r}
+                key={r.key}
                 type="button"
-                onClick={() => setDateRange(r)}
-                className={`tab-pill${dateRange === r ? " active" : ""}`}
+                onClick={() => setDateRange(r.key)}
+                className={`tab-pill${dateRange === r.key ? " active" : ""}`}
+                title={r.label}
               >
-                {r}
+                {r.key}
               </button>
             ))}
           </div>
-          {/* Export */}
+          {/* Compare to previous period toggle */}
+          <button
+            type="button"
+            onClick={() => setCompareEnabled(v => !v)}
+            className={`hidden sm:flex items-center gap-1.5 text-[10px] border px-2.5 py-1.5 rounded-md transition-colors ${compareEnabled ? "border-brand-accent/40 text-brand-accent bg-brand-accent/5" : "border-border-subtle text-text-muted hover:text-text-primary"}`}
+            title="Compare to previous period"
+          >
+            <span className={`w-3 h-3 rounded-sm border flex items-center justify-center ${compareEnabled ? "bg-brand-accent border-brand-accent" : "border-text-muted"}`}>
+              {compareEnabled && <span className="w-1.5 h-1.5 bg-white rounded-sm" />}
+            </span>
+            Compare
+          </button>
+          {/* Export CSV */}
           <button
             onClick={handleExport}
-            className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary transition-colors border border-border-subtle px-2.5 py-1.5 rounded-md"
+            className="flex items-center gap-1.5 text-[10px] text-text-muted hover:text-text-primary transition-colors border border-border-subtle px-2.5 py-1.5 rounded-md"
             title="Export report as JSON"
->
+          >
             <Download size={11} />
+            Export CSV
           </button>
           {/* Live MRR badge */}
           {stats.totalMRR> 0 && (

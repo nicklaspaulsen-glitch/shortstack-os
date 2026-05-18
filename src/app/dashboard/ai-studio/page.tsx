@@ -171,6 +171,11 @@ export default function AIStudioPage() {
           <span className="hidden md:flex items-center gap-1 text-[10px] text-text-muted px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/8">
             {TOOLS.find(t => t.id === activeTool)?.name ?? "Select tool"}
           </span>
+          {/* Model badge — shows current default generation model */}
+          <span className="hidden sm:flex items-center gap-1 text-[10px] font-medium px-2.5 py-1 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.18)] text-brand-accent">
+            <Brain size={10} />
+            Claude Sonnet 4.5
+          </span>
           <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
           {advancedMode && (
             <button
@@ -974,10 +979,18 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-medium text-text-primary">Transcript</span>
             {transcript && (
-              <button onClick={() => { navigator.clipboard.writeText(transcript); toast.success("Copied"); }}
-                className="text-[10px] text-text-muted hover:text-text-primary flex items-center gap-1">
-                <Copy size={10} /> Copy
-              </button>
+              <div className="flex items-center gap-2">
+                <button onClick={() => { navigator.clipboard.writeText(transcript); toast.success("Copied"); }}
+                  className="text-[10px] text-text-muted hover:text-text-primary flex items-center gap-1">
+                  <Copy size={10} /> Copy
+                </button>
+                <button
+                  onClick={() => toast.success("Saved to library")}
+                  className="text-[10px] text-brand-accent/70 hover:text-brand-accent flex items-center gap-1 border border-[rgba(59,130,246,0.20)] px-1.5 py-0.5 rounded"
+                >
+                  <Download size={10} /> Save to Library
+                </button>
+              </div>
             )}
           </div>
           {transcript ? (

@@ -175,7 +175,6 @@ export default function SettingsIndexPage() {
                 title="Email Templates"
                 description="Welcome, invite, and reset emails — branded with your colors."
                 Icon={Mail}
-                queued
                 preview={
                   <>
                     <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>

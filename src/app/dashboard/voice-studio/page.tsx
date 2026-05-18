@@ -195,6 +195,10 @@ export default function VoiceStudioPage() {
                 {stats.presetCount} presets
               </span>
             )}
+            {/* Usage this month — driven by renders loaded lazily on the renders tab */}
+            <span className="hidden lg:flex items-center gap-1 text-[9px] text-[#71717A] px-2 py-1 rounded-md bg-white/[0.02] border border-border-subtle">
+              {stats.rendersThisMonth > 0 ? `${stats.rendersThisMonth} renders this month` : "No renders yet"}
+            </span>
             <button
               type="button"
               onClick={refresh}
@@ -374,6 +378,8 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
       if (!res.ok) {
         throw new Error(data.error || `Upload failed (${res.status})`);
       }
+      // TODO: add toast feedback here once react-hot-toast is imported in this component
+      // e.g. toast.success("Clone trained!") on success, toast.error(msg) on failure
       setSubmitMsg(
         data.status === "ready"
           ? "Clone trained successfully — try it from the row below."

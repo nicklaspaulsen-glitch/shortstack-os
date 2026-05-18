@@ -20,9 +20,6 @@ import {
   MessageSquare,
   Zap,
   StickyNote,
-  Cpu,
-  MemoryStick,
-  Wifi,
   Activity,
   ChevronRight,
   ArrowUpRight,
@@ -31,6 +28,7 @@ import {
 } from "lucide-react";
 
 import { useAuth } from "@/lib/auth-context";
+import { createClient as createSupabaseClient } from "@/lib/supabase/client";
 import BrainLogo from "@/components/brand/brain-logo";
 import TrinityOrb from "@/components/dashboard/trinity-orb";
 
@@ -114,7 +112,7 @@ const QUICK_ACTIONS: QuickAction[] = [
   {
     label: "Upload File",
     icon: Upload,
-    href: "/dashboard/files",
+    href: "/dashboard/ai-studio",
     color: "#34D399",
     bgFrom: "rgba(52,211,153,0.10)",
     bgTo: "rgba(16,185,129,0.06)",
@@ -153,64 +151,45 @@ const QUICK_ACTIONS: QuickAction[] = [
   },
 ];
 
-// ─── System overview tiles ────────────────────────────────────────────────────
+// ─── Agency Pulse (real stats) ───────────────────────────────────────────────
 
-interface SysTile {
+interface PulseStat {
   label: string
-  icon: React.ElementType
-  value: number
-  unit: string
+  value: string | number
+  sub: string
   color: string
 }
 
-function useFakeMetrics() {
-  const [vals, setVals] = useState({ cpu: 34, mem: 61, net: 2.4 });
+function useAgencyStats() {
+  const [stats, setStats] = useState<{ clients: number; workflows: number; leads: number } | null>(null);
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setVals((v) => ({
-        cpu: Math.max(10, Math.min(90, v.cpu + (Math.random() - 0.5) * 8)),
-        mem: Math.max(40, Math.min(85, v.mem + (Math.random() - 0.5) * 3)),
-        net: Math.max(0.5, Math.min(12, v.net + (Math.random() - 0.5) * 1.2)),
-      }));
-    }, 2800);
-    return () => clearInterval(id);
+    const db = createSupabaseClient();
+    Promise.all([
+      db.from("clients").select("id", { count: "exact", head: true }),
+      db.from("workflows").select("id", { count: "exact", head: true }).eq("enabled", true),
+      db.from("leads").select("id", { count: "exact", head: true }),
+    ]).then(([c, w, l]) => {
+      setStats({
+        clients: c.count ?? 0,
+        workflows: w.count ?? 0,
+        leads: l.count ?? 0,
+      });
+    }).catch(() => {
+      // non-fatal — leave stats null so the UI shows dashes
+    });
   }, []);
 
-  return vals;
+  return stats;
 }
 
-function MiniGauge({ pct, color }: { pct: number; color: string }) {
-  const r = 14;
-  const circ = 2 * Math.PI * r;
-  const fill = circ * (1 - pct / 100);
+function AgencyPulse() {
+  const data = useAgencyStats();
 
-  return (
-    <svg width={36} height={36} viewBox="0 0 36 36" style={{ flexShrink: 0 }}>
-      <circle cx="18" cy="18" r={r} fill="none" stroke="var(--sidebar-border)" strokeWidth={3} />
-      <circle
-        cx="18"
-        cy="18"
-        r={r}
-        fill="none"
-        stroke={color}
-        strokeWidth={3}
-        strokeDasharray={circ}
-        strokeDashoffset={fill}
-        strokeLinecap="round"
-        transform="rotate(-90 18 18)"
-        style={{ transition: "stroke-dashoffset 0.6s cubic-bezier(0.32,0.72,0,1)" }}
-      />
-    </svg>
-  );
-}
-
-function SystemOverview() {
-  const { cpu, mem, net } = useFakeMetrics();
-  const tiles: SysTile[] = [
-    { label: "CPU", icon: Cpu, value: Math.round(cpu), unit: "%", color: "#60A5FA" },
-    { label: "Memory", icon: MemoryStick, value: Math.round(mem), unit: "%", color: "#A78BFA" },
-    { label: "Network", icon: Wifi, value: parseFloat(net.toFixed(1)), unit: " MB/s", color: "#34D399" },
+  const tiles: PulseStat[] = [
+    { label: "Clients", value: data?.clients ?? "—", sub: "total", color: "#60A5FA" },
+    { label: "Workflows", value: data?.workflows ?? "—", sub: "active", color: "#A78BFA" },
+    { label: "Leads", value: data?.leads ?? "—", sub: "in pipeline", color: "#34D399" },
   ];
 
   return (
@@ -233,30 +212,28 @@ function SystemOverview() {
             letterSpacing: "0.06em",
           }}
         >
-          System Overview
+          Agency Pulse
         </span>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
         {tiles.map((t) => (
-          <div key={t.label} className="flex flex-col items-center gap-2">
-            <MiniGauge pct={t.label === "Network" ? Math.min(100, (t.value / 15) * 100) : t.value} color={t.color} />
+          <div key={t.label} className="flex flex-col items-center gap-1.5">
             <p
               style={{
                 margin: 0,
-                fontSize: 16,
+                fontSize: 24,
                 fontWeight: 800,
-                color: "var(--sidebar-text-primary)",
+                color: t.color,
                 lineHeight: 1,
-                letterSpacing: "-0.02em",
+                letterSpacing: "-0.03em",
+                fontVariantNumeric: "tabular-nums",
               }}
             >
               {t.value}
-              <span style={{ fontSize: 11, fontWeight: 500, color: "var(--sidebar-text-secondary)" }}>
-                {t.unit}
-              </span>
             </p>
-            <p style={{ margin: 0, fontSize: 11, color: "var(--sidebar-text-secondary)" }}>{t.label}</p>
+            <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: "var(--sidebar-text-primary)" }}>{t.label}</p>
+            <p style={{ margin: 0, fontSize: 10, color: "var(--sidebar-text-secondary)" }}>{t.sub}</p>
           </div>
         ))}
       </div>
@@ -474,7 +451,7 @@ function StorageDonut() {
       }}
     >
       <div className="flex items-center gap-2 mb-4">
-        <Cpu size={15} style={{ color: "var(--sidebar-icon-active)" }} />
+        <Activity size={15} style={{ color: "var(--sidebar-icon-active)" }} />
         <span
           style={{
             fontSize: 12,
@@ -958,7 +935,7 @@ function AgencyDashboard() {
         }}
         className="grid-cols-1 md:grid-cols-2"
       >
-        <SystemOverview />
+        <AgencyPulse />
         <RecentApps />
       </div>
 

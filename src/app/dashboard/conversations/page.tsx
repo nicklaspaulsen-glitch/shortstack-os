@@ -52,6 +52,7 @@ import {
   Loader2,
   Circle,
   ChevronLeft,
+  Download,
 } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -387,10 +388,33 @@ export default function ConversationsPage() {
   return (
     <MotionPage className="flex h-[calc(100vh-4rem)] bg-[#020711] text-text-primary">{/* -- LEFT: conversation list � hidden on mobile when viewing a thread -- */}<aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-border-subtle flex-col`}>
               <div className="p-4 border-b border-border-subtle">
-                <h1 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                  <Inbox size={18} className="text-indigo-400" />
-                  Conversations
-                </h1>
+                <div className="flex items-center justify-between mb-3">
+                  <h1 className="text-lg font-semibold flex items-center gap-2">
+                    <Inbox size={18} className="text-indigo-400" />
+                    Conversations
+                  </h1>
+                  <button
+                    onClick={() => {
+                      const rows = conversations.map((c) => [
+                        c.id, c.channel, c.status,
+                        c.contact?.business_name || c.external_thread_id,
+                        c.last_message_preview || "",
+                        c.last_message_at,
+                      ].join(",")).join("\n");
+                      const blob = new Blob([`id,channel,status,contact,preview,last_message_at\n${rows}`], { type: "text/csv" });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = url;
+                      a.download = `conversations-${new Date().toISOString().slice(0, 10)}.csv`;
+                      a.click();
+                      URL.revokeObjectURL(url);
+                    }}
+                    className="p-1.5 text-text-muted hover:text-text-primary rounded border border-border-subtle hover:border-brand-accent/30 transition-colors"
+                    title="Export Conversations"
+                  >
+                    <Download size={13} />
+                  </button>
+                </div>
                 <div className="relative">
                   <Search
                     size={14}
