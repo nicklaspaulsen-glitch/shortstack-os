@@ -369,8 +369,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <MainNavbar />
         </div>
 
-        <main id="main" className="flex-1 min-w-0 overflow-x-hidden">
-          {/* Floating top nav is 52px tall + 10px top gap = 62px; pt-[72px] clears it */}
+        <main id="main" className="flex-1 min-w-0 overflow-x-hidden lg:ml-[220px]">
+          {/* Left sidebar is 220px fixed — lg:ml-[220px] clears it */}
 
           {/* Managed client banner */}
           <ManagedClientBanner />
@@ -399,7 +399,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               pages just appear. Faster perceived load + no layout
               jitter. Honors prefers-reduced-motion via the underlying
               `.page-soft-enter` keyframe. */}
-          <div className="pt-[72px] p-4 lg:p-6 pb-8">
+          <div className="p-4 lg:p-6 pb-8">
             <ErrorBoundary>
               <PageTransition>
                 {children}
