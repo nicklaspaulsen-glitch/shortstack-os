@@ -90,29 +90,29 @@ export function ValidationSummaryPanel({
 
   if (uniqueEmails.length === 0) {
     return (
-      <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm text-gray-600">
+      <div className="rounded-lg border border-border-subtle bg-surface p-3 text-sm text-text-muted">
         No recipients to validate.
       </div>
     );
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4 text-sm">
+    <div className="rounded-lg border border-border-subtle bg-surface p-4 text-sm">
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-900">
+        <h3 className="text-sm font-semibold text-text-primary">
           Pre-send validation
         </h3>
         <button
           type="button"
           onClick={() => void run()}
           disabled={running}
-          className="rounded border border-gray-300 px-2 py-0.5 text-xs hover:bg-gray-100 disabled:opacity-50"
+          className="rounded border border-border-subtle px-2 py-0.5 text-xs text-text-muted hover:bg-[rgba(99,146,255,0.06)] hover:border-[rgba(99,146,255,0.25)] hover:text-text-primary transition-colors disabled:opacity-50"
         >
           {running ? "Validating..." : "Re-run"}
         </button>
       </div>
       {error && (
-        <div className="mb-2 rounded bg-red-50 px-2 py-1 text-xs text-red-800">
+        <div className="mb-2 rounded px-2 py-1 text-xs text-[#F87171]" style={{ background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.20)" }}>
           {error}
         </div>
       )}
@@ -123,10 +123,10 @@ export function ValidationSummaryPanel({
         <SummaryTile label="Unknown" value={summary.unknown} tone="gray" />
         <SummaryTile label="Skipped" value={summary.skipped} tone="gray" />
       </div>
-      <p className="mt-2 text-[11px] leading-relaxed text-gray-500">
+      <p className="mt-2 text-[11px] leading-relaxed text-text-muted">
         {summary.invalid > 0 ? (
           <>
-            <strong>{summary.invalid}</strong> invalid address
+            <strong className="text-text-secondary">{summary.invalid}</strong> invalid address
             {summary.invalid === 1 ? "" : "es"} will be skipped on send.{" "}
           </>
         ) : null}
@@ -143,16 +143,20 @@ interface TileProps {
 }
 
 function SummaryTile({ label, value, tone }: TileProps) {
-  const toneClasses: Record<TileProps["tone"], string> = {
-    green: "bg-green-50 text-green-800",
-    amber: "bg-amber-50 text-amber-800",
-    red: "bg-red-50 text-red-800",
-    gray: "bg-gray-50 text-gray-700",
+  const toneStyles: Record<TileProps["tone"], { bg: string; text: string }> = {
+    green:  { bg: "rgba(34,197,94,0.10)",    text: "#4ADE80" },
+    amber:  { bg: "rgba(234,179,8,0.10)",    text: "#FDE047" },
+    red:    { bg: "rgba(239,68,68,0.10)",    text: "#F87171" },
+    gray:   { bg: "rgba(99,146,255,0.06)",   text: "#A8A8B2" },
   };
+  const s = toneStyles[tone];
   return (
-    <div className={`rounded p-2 ${toneClasses[tone]}`}>
-      <div className="text-lg font-semibold">{value}</div>
-      <div className="text-[11px] uppercase tracking-wide">{label}</div>
+    <div
+      className="rounded p-2 text-center"
+      style={{ background: s.bg, border: `1px solid ${s.bg.replace("0.10", "0.20").replace("0.06", "0.12")}` }}
+    >
+      <div className="text-lg font-semibold" style={{ color: s.text }}>{value}</div>
+      <div className="text-[11px] uppercase tracking-wide text-text-muted">{label}</div>
     </div>
   );
 }
