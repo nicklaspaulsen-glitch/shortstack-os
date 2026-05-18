@@ -59,9 +59,15 @@ test.describe("AI Studio", () => {
     // Navigate to the page. If the Supabase JWT is expired, Next.js middleware
     // redirects to /login. waitForDashboardReady handles that recovery in ONE
     // signIn call — no duplicate recovery block here to avoid double-signIn.
-    await page.goto("/dashboard/ai-studio");
-    await page.waitForLoadState("domcontentloaded");
-    await waitForDashboardReady(page);
+    //
+    // waitUntil: "domcontentloaded" instead of the default "load" prevents
+    // the goto from hanging when background fetches (lazy images, API calls)
+    // keep the load event from firing within navigationTimeout (30 s).
+    await page.goto("/dashboard/ai-studio", { waitUntil: "domcontentloaded" });
+    // 20 s budget: domcontentloaded returns before React mounts the sidebar nav,
+    // so late tests (run after 17+ warmed-up requests) need a larger window than
+    // the 5 s default to handle a brief Vercel scheduling hiccup.
+    await waitForDashboardReady(page, 20_000);
     await dismissTourIfPresent(page);
   });
 
@@ -291,7 +297,10 @@ test.describe("AI Studio", () => {
     await expect(newWithAiBtn).toBeVisible({ timeout: 4000 });
     // Explicit timeout: without it Playwright waits the full test-level 60s if
     // the button is visible but temporarily non-actionable.
-    await newWithAiBtn.click({ timeout: 5000 });
+    // noWaitAfter: the click may trigger a shallow router.push (URL params)
+    // which Playwright treats as a navigation and waits navigationTimeout for
+    // it to settle. We don't need that wait — the modal check below is enough.
+    await newWithAiBtn.click({ timeout: 5000, noWaitAfter: true });
 
     // The CreationWizard modal should open — it renders a dialog or overlay
     // with a step indicator or prompt input
